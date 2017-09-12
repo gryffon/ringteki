@@ -586,6 +586,7 @@ class Player extends Spectator {
         this.game.raiseEvent('onIncomeCollected', { player: this });
 
         this.limitedPlayed = 0;
+        this.drawBid = 0;
     }
 
     hasUnmappedAttachments() {
