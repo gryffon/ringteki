@@ -184,6 +184,7 @@ class Game extends EventEmitter {
         }
 
         var card = this.findAnyCardInAnyList(cardId);
+        console.log(card.name, card.isUnique(), player.canPutIntoPlay(card));
 
         if(!card) {
             return;
@@ -194,7 +195,7 @@ class Game extends EventEmitter {
         }
 
         // Attempt to play cards that are not already in the play area.
-        if(['hand', 'conflict discard pile', 'dynasty discard pile'].includes(card.location) && player.playCard(card)) {
+        if(['hand', 'province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && player.playCard(card)) {
             return;
         }
 
@@ -225,8 +226,6 @@ class Game extends EventEmitter {
         if(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location) && card.controller === player && (card.isDynasty || card.isProvince)) {
             if(card.facedown) {
                 card.facedown = false;
-            } else {
-                card.facedown = true;
             }
 
             this.addMessage('{0} {1} {2}', player, card.facedown ? 'hides' : 'reveals', card);
@@ -329,7 +328,7 @@ class Game extends EventEmitter {
                 // log the moved card only if it moved from/to a public place
                 var card = this.findAnyCardInAnyList(cardId);
                 if(card && !(['dynasty deck', 'province deck'].includes(source) && ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(target))) {
-                    movedCard = card;
+                    movedCard = card.name;
                 }
             }
 

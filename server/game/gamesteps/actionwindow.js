@@ -1,11 +1,24 @@
-const PlayerOrderPrompt = require('./playerorderprompt.js');
+const _ = require('underscore');
+const UiPrompt = require('./uiprompt.js');
 
-class ActionWindow extends PlayerOrderPrompt {
+class ActionWindow extends UiPrompt {
     constructor(game, title, windowName) {
         super(game);
 
         this.title = title;
         this.windowName = windowName;
+        this.currentPlayer = game.getFirstPlayer();
+        this.prevPlayerPassed = false;
+        /*
+        if (!this.currentPlayer.promptedActionWindows[this.windowName]) {
+            this.prevPlayerPassed = true;
+            this.nextPlayer();
+        }
+        */
+    }
+    
+    activeCondition(player) {
+        return player === this.currentPlayer;
     }
 
     continue() {
@@ -30,6 +43,10 @@ class ActionWindow extends PlayerOrderPrompt {
         };
     }
 
+    waitingPrompt() {
+        return { menuTitle: 'Waiting for opponent to take an action or pass.' };
+    }
+
     skipCondition(player) {
         return !this.forceWindow && !player.promptedActionWindows[this.windowName];
     }
@@ -38,15 +55,33 @@ class ActionWindow extends PlayerOrderPrompt {
         if(this.currentPlayer !== player) {
             return false;
         }
+        
+        if(this.prevPlayerPassed) {
+            this.complete();
+            return true;
+        }
 
-        this.completePlayer();
+        this.prevPlayerPassed = true;
+        this.nextPlayer()
 
         return true;
     }
+    
+    nextPlayer() {
+        let otherplayer = _.find(this.game.getPlayers(), !this.currentPlayer);
+        
+        if (!otherplayer || !otherplayer.promptedActionWindows[this.windowName]) {
+            if (this.prevPlayerPassed) {
+                this.complete();
+            }
+        } else {
+            this.currentPlayer = otherplayer;
+        }
+    }
 
     markActionAsTaken() {
-        this.setPlayers(this.rotatedPlayerOrder(this.currentPlayer));
-        this.forceWindow = true;
+        this.prevPlayerPassed = false;
+        this.nextPlayer();
     }
 
     rotatedPlayerOrder(player) {
