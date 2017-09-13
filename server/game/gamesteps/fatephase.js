@@ -16,11 +16,24 @@ class FatePhase extends Phase {
     constructor(game) {
         super(game, 'fate');
         this.initialise([
+            new SimpleStep(game, () => this.discardCharactersWithNoFate()),
+            new SimpleStep(game, () => this.removeFateFromCharacters()),
+            new SimpleStep(game, () => this.placeFateOnUnclaimedRings()),
             new ActionWindow(this.game, 'After place fate on rings', 'placing')
         ]);
     }
 
-
+    discardCharactersWithNoFate() {
+        _.each(this.game.getPlayersInFirstPlayerOrder, player => player.discardCharactersWithNoFate())
+    }
+    
+    removeFateFromCharacters() {
+        _.each(this.game.findAnyCardInPlay(card => card.type === 'character'), card => card.modifyFate(-1));
+    }
+    
+    placeFateOnUnclaimedRings() {
+        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', this.game, this.game.placeFateOnUnclaimedRings);
+    }
 }
 
 module.exports = FatePhase;
