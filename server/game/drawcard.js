@@ -8,7 +8,9 @@ const PlayCardAction = require('./playcardaction.js');
 const StandardPlayActions = [
     new SetupCardAction(),
     new DynastyCardAction(),
-    new PlayCardAction()
+    new PlayCardAction(),
+    new PlayCharacterAction(),
+    new PlayAttachmentAction()
 ];
 
 class DrawCard extends BaseCard {
