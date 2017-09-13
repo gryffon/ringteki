@@ -1,8 +1,8 @@
 const BaseAbility = require('./baseability.js');
 const Costs = require('./costs.js');
-const ChooseFate = require('./costs/choosefate.js')
+const ChooseFate = require('./costs/choosefate.js');
 
-class DynastyCardAction extends BaseAbility {
+class PlayCharacterAction extends BaseAbility {
     constructor() {
         super({
             cost: [
@@ -11,7 +11,7 @@ class DynastyCardAction extends BaseAbility {
                 Costs.playLimited()
             ]
         });
-        this.title = 'Dynasty';
+        this.title = 'PlayCharacterAction';
     }
 
     meetsRequirements(context) {
@@ -19,12 +19,13 @@ class DynastyCardAction extends BaseAbility {
         let currentprompt = player.currentPrompt();
 
         return (
-            !source.facedown &&
-            source.isDynasty &&
+            game.currentPhase !== 'dynasty' &&
             source.getType() === 'character' &&
-            player.isCardInPlayableLocation(source, 'dynasty') &&
+            source.location === 'hand' &&
             player.canPutIntoPlay(source) &&
-            currentprompt.promptTitle === 'Play cards from provinces'
+            game.actionWindow &&
+            game.actionWindow.currentPlayer === player &&
+            currentprompt.menuTitle === 'Initiate an action'
         );
     }
 
@@ -33,6 +34,7 @@ class DynastyCardAction extends BaseAbility {
         let extrafate = this.cost[0].fate;
         context.game.addMessage('{0} plays {1} with {2} additional fate', context.player, context.source.name, extrafate);
 
+        // need to add an additional selection prompt if conflict ongoing
         context.player.playCharacterWithFate(context.source, extrafate);
     }
 
@@ -41,4 +43,5 @@ class DynastyCardAction extends BaseAbility {
     }
 }
 
-module.exports = DynastyCardAction;
+module.exports = PlayCharacterAction;
+

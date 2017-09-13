@@ -8,3 +8,6 @@ coverage
 server/events.txt
 .DS_Store
 config/local*
+/nbproject/private/
+*.xml
+*.properties
