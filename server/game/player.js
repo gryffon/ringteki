@@ -1112,6 +1112,21 @@ class Player extends Spectator {
     setDrawBid(bid) {
         this.drawBid = bid;
     }
+    
+    discardCharactersWithNoFate() {
+        _.each(this.filterCardsInPlay(card => card.type === 'character' && card.fate === 0), () => {
+            this.game.promptForSelect(this, {
+                activePromptTitle: 'Choose character to discard',
+                waitingPromptTitle: 'Waiting for opponent to discard a character',
+                cardCondition: card => {
+                    return card.location === 'in play' && card.fate === 0;
+                },
+                cardType: 'character',
+                onSelect: card => this.discard(card),
+                onCancel: () => false
+            });
+        });
+    }
 
     getState(activePlayer) {
         let isActivePlayer = activePlayer === this;
