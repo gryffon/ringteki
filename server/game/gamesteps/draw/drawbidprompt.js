@@ -1,13 +1,16 @@
-const UiPrompt = require('../uiprompt.js');
+const AllPlayerPrompt = require('../allplayerprompt.js');
 
-class DrawBidPrompt extends UiPrompt {
-    constructor(game, player) {
+class DrawBidPrompt extends AllPlayerPrompt {
+    constructor(game) {
         super(game);
-        this.player = player;
     }
 
     activeCondition(player) {
-        return this.player === player;
+        return player.drawBid === 0;
+    }
+    
+    completionCondition(player) {
+        return player.drawBid > 0;
     }
 
     activePrompt() {

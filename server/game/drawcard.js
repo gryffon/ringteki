@@ -4,11 +4,15 @@ const BaseCard = require('./basecard.js');
 const SetupCardAction = require('./setupcardaction.js');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayCardAction = require('./playcardaction.js');
+const PlayCharacterAction = require('./playcharacteraction.js');
+const PlayAttachmentAction = require('./playattachmentaction.js');
 
 const StandardPlayActions = [
     new SetupCardAction(),
     new DynastyCardAction(),
-    new PlayCardAction()
+    new PlayCardAction(),
+    new PlayCharacterAction(),
+    new PlayAttachmentAction()
 ];
 
 class DrawCard extends BaseCard {
