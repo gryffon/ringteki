@@ -1,6 +1,6 @@
 const BaseAbility = require('./baseability.js');
 const Costs = require('./costs.js');
-const ChooseFate = require('./costs/choosefate.js')
+const ChooseFate = require('./costs/choosefate.js');
 
 class PlayCharacterAction extends BaseAbility {
     constructor() {
@@ -19,7 +19,7 @@ class PlayCharacterAction extends BaseAbility {
         let currentprompt = player.currentPrompt();
 
         return (
-            game.currentPhase !=== 'dynasty' &&
+            game.currentPhase !== 'dynasty' &&
             source.getType() === 'character' &&
             source.location === 'hand' &&
             player.canPutIntoPlay(source) &&

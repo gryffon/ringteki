@@ -14,11 +14,11 @@ class PlayAttachmentAction extends BaseAbility {
             target: {
              cardCondition: this.cardCondition
             }
-        }
+        };
     }
     
     cardCondition(card, context) {
-        return context.source.owner.canAttach(context.source, card)
+        return context.source.owner.canAttach(context.source, card);
     }
 
     meetsRequirements(context) {
@@ -26,7 +26,7 @@ class PlayAttachmentAction extends BaseAbility {
         let currentprompt = player.currentPrompt();
 
         return (
-            game.currentPhase !=== 'dynasty' &&
+            game.currentPhase !== 'dynasty' &&
             source.getType() === 'attachment' &&
             source.location === 'hand' &&
             game.actionWindow &&
@@ -45,5 +45,5 @@ class PlayAttachmentAction extends BaseAbility {
     }
 }
 
-module.exports = PlayCharacterAction;
+module.exports = PlayAttachmentAction;
 
