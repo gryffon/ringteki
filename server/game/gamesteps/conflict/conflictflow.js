@@ -3,6 +3,7 @@ const BaseStep = require('../basestep.js');
 const GamePipeline = require('../../gamepipeline.js');
 const SimpleStep = require('../simplestep.js');
 const ActionWindow = require('../actionwindow.js');
+const InitiateConflictPrompt = require('./initiateconflictprompt.js');
 
 /**
 Conflict Resolution
@@ -25,15 +26,19 @@ class ConflictFlow extends BaseStep {
         this.pipeline = new GamePipeline();
         this.pipeline.initialise([
             new SimpleStep(this.game, () => this.resetCards()),
-            new SimpleStep(this.game, () => this.announceConflict()),
-            new SimpleStep(this.game, () => this.promptForAttackers()),
-            //Reveal province
+            new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer),
+            new SimpleStep(this.game, () => this.checkRevealProvince()),
             new SimpleStep(this.game, () => this.announceAttackerSkill()),
             new SimpleStep(this.game, () => this.promptForDefenders()),
-            new SimpleStep(this.game, () => this.announceDefenderSskill()),
+            new SimpleStep(this.game, () => this.announceDefenderSkill()),
             new ActionWindow(this.game, 'Conflict Action Window', 'conflictAction'),
             new SimpleStep(this.game, () => this.determineWinner()),
-            new SimpleStep(this.game, () => this.applyKeywords()),
+            //new SimpleStep(this.game, () => this.applyKeywords()),
+            new SimpleStep(this.game, () => this.applyUnopposed()),
+            new SimpleStep(this.game, () => this.checkBreakProvince()),
+            new SimpleStep(this.game, () => this.resolveRingEffects()),
+            new SimpleStep(this.game, () => this.claimRing()),
+            new SimpleStep(this.game, () => this.returnHome()),
             new SimpleStep(this.game, () => this.completeConflict())
         ]);
     }
@@ -72,14 +77,33 @@ class ConflictFlow extends BaseStep {
 
         return true;
     }
+    
+    checkRevealProvince() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
+        if (this.conflict.conflictprovince.facedown) {
+            this.conflict.defendingPlayer.revealProvince(conflict.conflictprovince);
+        }
+        this.game.raiseEvent('onConflictDeclared', this.conflict);
+    }
 
     announceAttackerSkill() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
         // Explicitly recalculate strength in case an effect has modified character strength.
         this.conflict.calculateStrength();
         this.game.addMessage('{0} has initiated a {1} conflict with strength {2}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.attackerStrength);
     }
 
     promptForDefenders() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
         if(this.conflict.isSinglePlayer) {
             return;
         }
@@ -115,7 +139,7 @@ class ConflictFlow extends BaseStep {
     announceDefenderSkill() {
         // Explicitly recalculate strength in case an effect has modified character strength.
         this.conflict.calculateStrength();
-        if(this.conflict.defenderStrength > 0) {
+        if(this.conflict.defenders.length > 0) {
             this.game.addMessage('{0} has defended with strength {1}', this.conflict.defendingPlayer, this.conflict.defenderStrength);
         } else {
             this.game.addMessage('{0} does not defend the conflict', this.conflict.defendingPlayer);
@@ -123,6 +147,10 @@ class ConflictFlow extends BaseStep {
     }
 
     determineWinner() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
         this.conflict.determineWinner();
 
         if(!this.conflict.winner && !this.conflict.loser) {
@@ -133,11 +161,6 @@ class ConflictFlow extends BaseStep {
         }
 
         this.game.raiseEvent('afterConflict', this.conflict);
-
-        // Only open a winner action window if a winner / loser was determined.
-        if(this.conflict.winner) {
-            this.game.queueStep(new ActionWindow(this.game, 'After winner determined', 'winnerDetermined'));
-        }
     }
 
     applyKeywords() {
@@ -148,7 +171,66 @@ class ConflictFlow extends BaseStep {
         });
     }
 
+    applyUnopposed() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
+        if (this.conflict.winner === this.conflict.attackingPlayer && this.conflict.defenders.length === 0) {
+            this.game.addHonor(this.conflict.loser, -1);
+        }
+    }
+    
+    checkBreakProvince() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
+        let province = this.conflict.conflictProvince;
+        if (this.conflict.winner === this.conflict.attackingPlayer && 
+                this.conflict.skillDifference >= province.getStrength) {
+            this.game.raiseEvent('onBreakProvince', province, province.breakProvince);
+        }
+    }
+    
+    resolveRingEffects() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
+        if (this.conflict.winner === this.conflict.attackingPlayer) {
+            this.game.raiseEvent('onResolveRingEffects', this.conflict.conflictRing, this.conflict.winner.resolveRingEffects);
+        }       
+    }
+    
+    claimRing() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
+        if (this.conflict.winner) {
+            let ring = _.find(this.game.rings, ring => {
+                return ring.element === this.conflict.conflictRing;
+            });
+            this.game.raiseEvent('onClaimRing', this.conflict.winner, ring.claimRing);
+        }
+    }
+    
+    returnHome() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
+        this.game.raiseEvent('onReturnHome', this.conflict);
+        _.each(this.conflict.attackers, card => card.returnHomeFromConflict(this.conflict));
+        _.each(this.conflict.defenders, card => card.returnHomeFromConflict(this.conflict));
+    }
+    
     completeConflict() {
+        if (this.conflict.cancelled) {
+            return;
+        }
+
         this.game.raiseEvent('onConflictFinished', this.conflict);
 
         this.resetCards();

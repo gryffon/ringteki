@@ -1013,6 +1013,14 @@ class Player extends Spectator {
             this.game.raiseEvent('onCardPlaced', { card: card, location: targetLocation });
         }
     }
+    
+    honorCard(card) {
+        this.game.raiseEvent('onCardHonored', card, card.honor());
+    }
+
+    dishonorCard(card) {
+        this.game.raiseEvent('onCardDishonored', card, card.dishonor());
+    }
 
     bowCard(card) {
         if(card.bowed) {
@@ -1111,6 +1119,109 @@ class Player extends Spectator {
 
     setDrawBid(bid) {
         this.drawBid = bid;
+    }
+    
+    resolveRingEffects(player, element) {
+        if (element == '') {
+            return;
+        }
+
+        let otherPlayer = this.game.getOtherPlayer(this);
+       
+        switch(element) {
+            case 'air':
+                this.game.promptWithMenu(this, this, {
+                    activePrompt: {
+                        promptTitle: 'Air Ring',
+                        menuTitle: 'Choose an effect to resolve',
+                        buttons: [
+                            { text: 'Gain 2 Honor', arg: 'Gain 2 Honor', method: 'resolveAirRing' },
+                            { text: 'Take 1 Honor from Opponent', arg: 'Take 1 Honor from Opponent', method: 'resolveAirRing' }
+                        ]
+                    },
+                    waitingPromptTitle: 'Waiting for opponent to use Air Ring'
+                });
+                break;
+            case 'earth':
+                this.drawCardsToHand(1);
+                otherPlayer.discardAtRandom(1);
+                break;
+            case 'void':
+                this.game.promptForSelect(this, {
+                    activePromptTitle: 'Choose character to remove a Fate from',
+                    waitingPromptTitle: 'Waiting for opponent to use Void Ring',
+                    cardCondition: card => {
+                        return (card.location === 'in play' && card.fate > 0);
+                    },
+                    cardType: 'character',
+                    onSelect: card => {
+                        card.modifyFate(-1);
+                    }
+                });
+                break;
+            case 'water':
+                this.game.promptForSelect(this, {
+                    activePromptTitle: 'Choose character to bow or unbow',
+                    waitingPromptTitle: 'Waiting for opponent to use Water Ring',
+                    cardCondition: card => {
+                        return ((card.fate === 0 || card.bowed) && card.location === 'in play');
+                    },
+                    cardType: 'character',
+                    onSelect: card => {
+                        if (card.bowed) {
+                            this.readyCard(card);
+                        } else {
+                            this.bowCard(card);
+                        }
+                    }
+                });
+                break;
+            case 'fire':
+                this.game.promptForSelect(this, {
+                    activePromptTitle: 'Choose character to honor or dishonor',
+                    waitingPromptTitle: 'Waiting for opponent to use Fire Ring',
+                    cardCondition: card => {
+                        return card.location === 'in play';
+                    },
+                    cardType: 'character',
+                    onSelect: () => true,
+                    additionalButtons: [
+                        { text: 'Honor', arg: 'Honor' },
+                        { text: 'Dishonor', arg: 'Dishonor' }
+                    ],
+                    onMenuCommand: (card, arg) => {
+                        if (arg === 'Honor') {
+                            this.honorCard(card);
+                        } else if (arg === 'Dishonor') {
+                            this.dishonorCard(card);
+                        }
+                    }
+                });
+                break;
+        }
+        this.game.addMessage('{0} resolved the {1} ring', this.name, element);        
+    }
+    
+    chooseToResolveRingEffects(element) {
+        this.game.promptWithMenu(this, this, {
+            activePrompt: {
+                promptTitle: 'Resolve Ring',
+                menuTitle: ('Do you want to resolve the {0} ring?' , element),
+                buttons: [
+                    { text: 'Yes', arg: element, method: 'resolveRingEffects' },
+                    { text: 'No', arg: '', method: 'resolveRingEffects' }
+                ]
+            },
+            waitingPromptTitle: ('Waiting for opponent to use decide whether to resolve the {0} ring', element)
+        });
+    }
+    
+    resolveAirRing(player, choice) {
+        if (choice === 'Gain 2 Honor') {
+            this.game.addHonor(this, 2);
+        } else {
+            this.game.transferHonor(this, this.game.getOtherPlayer(this), 1);
+        }
     }
 
     getState(activePlayer) {
