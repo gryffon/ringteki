@@ -59,6 +59,9 @@ class SetupPhase extends Phase {
 
     doConflictMulligan() {
         _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
+            player.drawStartingHand();
+        });
+        _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
             this.game.queueStep(new MulliganConflictPrompt(this.game, player));
         });
     }

@@ -349,6 +349,10 @@ class Player extends Spectator {
         });
         this.hand = _([]);
         this.shuffleConflictDeck();
+        //this.drawCardsToHand(StartingHandSize);
+    }
+    
+    drawStartingHand() {
         this.drawCardsToHand(StartingHandSize);
     }
 
@@ -548,10 +552,12 @@ class Player extends Spectator {
     }
 
     setupDone() {
+        /*
         if(this.hand.size() < StartingHandSize) {
             this.drawCardsToHand(StartingHandSize - this.hand.size());
         }
-
+        */
+       
         //this.cardsInPlay = processedCards;
         this.fate = 0;
     }
