@@ -3,14 +3,16 @@ const Player = require('./player.js');
 const EventRegistrar = require('./eventregistrar.js');
 
 class Conflict {
-    constructor(game, attackingPlayer, defendingPlayer, conflictType, conflictRing, conflictProvince) {
+    constructor(game, attackingPlayer, defendingPlayer) {
         this.game = game;
         this.attackingPlayer = attackingPlayer;
+        this.conflictDeclared = false;
+        this.conflictPassed = false;
         this.isSinglePlayer = !defendingPlayer;
         this.defendingPlayer = defendingPlayer || this.singlePlayerDefender();
-        this.conflictType = conflictType;
-        this.conflictRing = conflictRing;
-        this.conflictProvince = conflictProvince;
+        this.conflictType = '';
+        this.conflictRing = '';
+        this.conflictProvince = null;
         this.attackers = [];
         this.attackerSkill = 0;
         this.attackerSkillModifier = 0;
@@ -165,7 +167,7 @@ class Conflict {
         const noWinnerRules = [
             {
                 condition: () => this.attackerSkill === 0 && this.defenderSkill === 0,
-                message: 'There is no winner or loser for this conflict because the attacker skill is 0'
+                message: 'There is no winner or loser for this conflict because both sides have 0 skill'
             },
             {
                 condition: () => this.attackerSkill >= this.defenderSkill && this.attackingPlayer.cannotWinConflict,

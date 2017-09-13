@@ -21,9 +21,9 @@ class DrawPhase extends Phase {
         this.initialise([
             new SimpleStep(game, () => this.bidPrompt()),
             new SimpleStep(game, () => this.showBids()),
-            new ActionWindow(this.game, 'After bids revealed', 'draw'),
             new SimpleStep(game, () => this.tradeHonor()),
-            new SimpleStep(game, () => this.drawConflict())
+            new SimpleStep(game, () => this.drawConflict()),
+            new ActionWindow(this.game, 'After bids revealed', 'draw')
         ]);
     }
 

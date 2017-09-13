@@ -3,6 +3,7 @@ const _ = require('underscore');
 class ConflictTracker {
     constructor() {
         this.complete = 0;
+        this.conflictOpportunities = 2;
         this.conflictTypes = {
             military: {
                 performed: 0,
@@ -25,51 +26,17 @@ class ConflictTracker {
                 performed: 0,
                 won: 0,
                 lost: 0
-            },
-            air: {
-                performed: 0,
-                max: 1,
-                won: 0,
-                lost: 0
-            },
-            earth: {
-                performed: 0,
-                max: 1,
-                won: 0,
-                lost: 0
-            },
-            fire: {
-                performed: 0,
-                max: 1,
-                won: 0,
-                lost: 0
-            },
-            water: {
-                performed: 0,
-                max: 1,
-                won: 0,
-                lost: 0
-            },
-            void: {
-                performed: 0,
-                max: 1,
-                won: 0,
-                lost: 0
             }
         };
     }
 
     reset() {
         this.complete = 0;
+        this.conflictOpportunities = 2;
         this.resetForType('military');
         this.resetForType('political');
         this.resetForType('defender');
         this.resetForType('attacker');
-        this.resetForType('air');
-        this.resetForType('earth');
-        this.resetForType('fire');
-        this.resetForType('water');
-        this.resetForType('void');
 
     }
 
@@ -115,8 +82,9 @@ class ConflictTracker {
         this.conflictTypes[conflictType].cannotInitiate = value;
     }
 
-    perform(conflictType) {
+    perform(conflictType, wasAttacker) {
         this.conflictTypes[conflictType].performed++;
+        this.conflictTypes[wasAttacker ? 'attacker' : 'defender'].performed++;
         this.complete++;
     }
 
@@ -132,6 +100,10 @@ class ConflictTracker {
 
     modifyMaxForType(conflictType, number) {
         this.conflictTypes[conflictType].max += number;
+    }
+    
+    usedOpportunity() {
+        this.conflictOpportunities -= 1;
     }
 }
 

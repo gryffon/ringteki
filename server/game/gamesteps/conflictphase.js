@@ -25,16 +25,74 @@ III Conflict Phase
 class ConflictPhase extends Phase {
     constructor(game) {
         super(game, 'conflict');
+        this.gloryTotals = [];
         this.initialise([
             new SimpleStep(this.game, () => this.beginPhase()),
             new ActionWindow(this.game, 'Before conflicts', 'conflictBegin'),
-            new SimpleStep(this.game, () => this.startConflictChoice())
+            new SimpleStep(this.game, () => this.newConflict())
         ]);
     }
 
     beginPhase() {
         this.remainingPlayers = this.game.getPlayersInFirstPlayerOrder();
         this.currentPlayer = this.remainingPlayers[0];
+    }
+    
+    newConflict() {
+        let conflictOpportunityRemaining = true;
+        
+        if (_.all(['military', 'political'], type => !this.currentPlayer.canInitiateConflict(type))) {
+            this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
+            if (_.all(['military', 'political'], type => this.currentPlayer.canInitiateConflict(type))) {
+                let conflictOpportunityRemaining = false;    
+            } 
+        }
+        
+        if (conflictOpportunityRemaining) {
+            this.currentPlayer.conflicts.usedOpportunity();
+            var conflict = new Conflict(this.game, this.currentPlayer, this.game.getOtherPlayer(this.currentPlayer));
+            this.game.currentConflict = conflict;
+            this.game.queueStep(new ConflictFlow(this.game, conflict));
+            this.game.queueStep(new SimpleStep(this.game, () => this.cleanupConflict()));
+        } else {
+            this.game.queueStep(new SimpleStep(this.game, () => this.determineImperialFavor()));
+            this.game.queueStep(new SimpleStep(this.game, () => this.countGlory()));
+            this.game.queueStep(new SimpleStep(this.game, () => this.claimImperialFavor()));            
+        }
+    }
+    
+    determineImperialFavor() {
+        this.game.raiseEvent('onDetermineImperialFavor');
+    }
+    
+    countGlory() {
+        this.glorytotals = _.map(this.game.getPlayersInFirstPlayerOrder(), player => {
+            rings = player.getClaimedRings();
+            return {player: player, glory: player.getFavor() + rings.length};
+        });
+    }
+    
+    claimImperialFavor() {
+        if (this.glorytotals[0].glory === this.glorytotals[1].glory) {
+            this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', this.glorytotals[0].glory);
+            this.game.raiseEvent('onFaviorGloryTied', glorytotals[0].glory);
+        } else {
+            let winner = _.max(this.glorytotals, tuplet => tuplet.player);
+            this.game.promptWithMenu(winner, this, {
+                activePrompt: {
+                    menuTitle: 'Which side of the Imperial Favor would you like to claim?',
+                    buttons: [
+                        { text: 'Military', method: 'giveImperialFavorToPlayer', arg: 'military' },
+                        { text: 'Political', method: 'giveImperialFavorToPlayer', arg: 'political' }
+                    ]
+                }
+            });
+        }
+    }
+    
+    giveImperialFavorToPlayer(arg) {
+        let winner = _.max(this.glorytotals, tuplet => tuplet.player);
+        this.game.raiseEvent('onClaimImperialFavor', arg, winner.claimImperialFavor);
     }
 
     startConflictChoice(attackingPlayer = null) {
@@ -128,6 +186,7 @@ class ConflictPhase extends Phase {
     cleanupConflict() {
         this.game.currentConflict.unregisterEvents();
         this.game.currentConflict = null;
+        this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
     }
 
     chooseOpponent(attackingPlayer) {
