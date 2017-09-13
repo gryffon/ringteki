@@ -233,6 +233,32 @@ class Game extends EventEmitter {
         }
     }
 
+    ringClicked(sourcePlayer, ring) {
+        var player = this.getPlayerByName(sourcePlayer);
+
+        if(!player) {
+            return;
+        }
+
+        let otherConflictType = ring.conflictType === 'military' ? 'political' : 'military';
+        let conflict = this.currentConflict;
+
+        if (!conflict && !ring.claimed) {
+            this.flipRing(player, ring);
+        } else if (conflict && !conflict.conflictDeclared && !player.conflicts.isAtMax(ring.element)) {
+            if ((conflict.conflictRing === ring.element && player.canInitiateConflict(otherConflictType)) ||
+                    (conflict.conflictRing !== ring.element && player.canInitiateConflict(ring.ConflictType))) {
+                this.flipRing(player, ring);
+            }
+            this.currentConflict.conflictRing = ring.element;
+            this.currecnConflict.conflictType = ring.conflictType;
+        }
+    }
+    
+    returnRings() {
+        _.each(this.rings, ring => ring.resetRing());
+    }
+
     cardHasMenuItem(card, menuItem) {
         return card.menu && card.menu.any(m => {
             return m.method === menuItem.method;

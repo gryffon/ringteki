@@ -29,13 +29,13 @@ class DrawCard extends BaseCard {
         this.isHonored = false;
         this.isDishonored = false;
         this.readysDuringReadying = true;
-        this.challengeOptions = {
+        this.conflictOptions = {
             doesNotBowAs: {
                 attacker: false,
                 defender: false
             }
         };
-        this.stealthLimit = 1;
+        this.stealth = false;
 
         if(cardData.side === 'conflict') {
             this.isConflict = true;
@@ -259,31 +259,31 @@ class DrawCard extends BaseCard {
     }
 
     resetForConflict() {
-        //this.stealth = false;
+        this.stealth = false;
         //this.stealthTarget = undefined;
         this.inConflict = false;
     }
 
-    canDeclareAsAttacker(challengeType) {
-        return this.allowGameAction('declareAsAttacker') && this.canDeclareAsParticipant(challengeType);
+    canDeclareAsAttacker(conflictType) {
+        return this.allowGameAction('declareAsAttacker') && this.canDeclareAsParticipant(conflictType);
     }
 
-    canDeclareAsDefender(challengeType) {
-        return this.allowGameAction('declareAsDefender') && this.canDeclareAsParticipant(challengeType);
+    canDeclareAsDefender(conflictType) {
+        return this.allowGameAction('declareAsDefender') && this.canDeclareAsParticipant(conflictType);
     }
 
-    canDeclareAsParticipant(challengeType) {
+    canDeclareAsParticipant(conflictType) {
         return (
-            this.canParticipateInChallenge() &&
+            this.canParticipateInConflict() &&
             this.location === 'play area' &&
             !this.stealth &&
-            (!this.bowed || this.challengeOptions.canBeDeclaredWhileBowing) &&
-            (this.hasIcon(challengeType) || this.challengeOptions.canBeDeclaredWithoutIcon)
+            (!this.bowed || this.conflictOptions.canBeDeclaredWhileBowing) &&
+            (this.hasIcon(conflictType) || this.conflictOptions.canBeDeclaredWithoutIcon)
         );
     }
 
     canParticipateInConflict() {
-        return this.allowGameAction('participateInChallenge');
+        return this.allowGameAction('participateInConflict');
     }
 
     canBeKilled() {
@@ -292,6 +292,11 @@ class DrawCard extends BaseCard {
 
     canBePlayed() {
         return this.allowGameAction('play');
+    }
+    
+    returnHomeFromConflict(conflict) {
+        this.bowed = true;
+        this.inConflict = false;
     }
 
     getSummary(activePlayer, hideWhenFaceup) {
