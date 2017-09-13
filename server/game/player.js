@@ -151,21 +151,17 @@ class Player extends Spectator {
         this.moveCard(this.stronghold, 'stronghold province');
     }
 
-    fillProvinces() {
+    flipDynastyCards() {
         var provinces = ['province 1', 'province 2', 'province 3', 'province 4'];
 
         _.each(provinces, province => {
             // Because all player locations are wrapped on creation we need to unwrap them
-            if(_.find(this.getSourceList(province)._wrapped, card => {
+            _.find(this.getSourceList(province)._wrapped, card => {
                 if(card.isDynasty) {
                     card.facedown = true;
                 }
                 return card.isDynasty;
-            })) {
-                //Noop
-            } else {
-                this.moveCard(this.dynastyDeck.first(), province);
-            }
+            });
         });
     }
 
@@ -587,6 +583,7 @@ class Player extends Spectator {
         this.game.raiseEvent('onIncomeCollected', { player: this });
 
         this.limitedPlayed = 0;
+        this.flipDynastyCards();
         this.drawBid = 0;
     }
 
@@ -1133,6 +1130,28 @@ class Player extends Spectator {
         this.drawBid = bid;
     }
     
+    playCharacterWithFate(card, fate) {
+        if (card.isDynasty) {
+            let location = card.location;
+        }
+        this.putIntoPlay(card);
+        card.modifyFate(fate);
+        if (card.isDynasty) {
+            this.moveCard(this.dynastyDeck.first(), location);
+        }        
+    }
+    
+    addFateToDuplicate(card) {
+        let duplicate = this.getDuplicateInPlay(card);
+        duplicate.modifyFate(1);
+        if (card.isDynasty) {
+            let location = card.location;
+        }
+        this.discardCard(card);
+        if (card.isDynasty) {
+            this.moveCard(this.dynastyDeck.first(), location);
+        }        
+
     resolveRingEffects(player, element) {
         if (element == '') {
             return;
