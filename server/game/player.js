@@ -29,6 +29,7 @@ class Player extends Spectator {
         this.dynastyDiscardPile = _([]);
         this.conflictDiscardPile = _([]);
         this.additionalPiles = {};
+        this.imperialFavor = '';
 
         this.faction = {};
         this.stronghold = new StrongholdCard(this, {});
@@ -318,7 +319,7 @@ class Player extends Spectator {
     }
 
     canInitiateConflict(conflictType) {
-        return !this.conflicts.isAtMax(conflictType);
+        return !this.conflicts.isAtMax(conflictType) && this.conflicts.conflictOpportunities > 0;
     }
 
     canSelectAsFirstPlayer(player) {
@@ -905,6 +906,16 @@ class Player extends Spectator {
         });
 
         return cardGlory;
+    }
+    
+    getClaimedRings() {
+        rings = [];
+        _.each(this.game.rings, ring => rings.push(ring.element));
+        return rings;
+    }
+    
+    claimImperialFavor(conflictType) {
+        this.imperialFavor = conflictType;
     }
 
     readyCards(notCharacters = false) {

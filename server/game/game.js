@@ -241,16 +241,17 @@ class Game extends EventEmitter {
         }
 
         let otherConflictType = ring.conflictType === 'military' ? 'political' : 'military';
+        let conflict = this.currentConflict;
 
-        if (!this.conflict && !ring.claimed) {
+        if (!conflict && !ring.claimed) {
             this.flipRing(player, ring);
-        } else if (this.conflict && !this.conflictDeclared && !player.conflicts.isAtMax(ring.element)) {
-            if ((this.conflict.conflictRing === ring.element && player.canInitiateConflict(otherConflictType)) ||
-                    (this.conflict.conflictRing !== ring.element && player.canInitiateConflict(ring.ConflictType))) {
+        } else if (conflict && !conflict.conflictDeclared && !player.conflicts.isAtMax(ring.element)) {
+            if ((conflict.conflictRing === ring.element && player.canInitiateConflict(otherConflictType)) ||
+                    (conflict.conflictRing !== ring.element && player.canInitiateConflict(ring.ConflictType))) {
                 this.flipRing(player, ring);
             }
-            this.conflict.conflictRing = ring.element;
-            this.conflict.conflictType = ring.conflictType;
+            this.currentConflict.conflictRing = ring.element;
+            this.currecnConflict.conflictType = ring.conflictType;
         }
     }
     

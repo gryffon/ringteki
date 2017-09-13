@@ -167,7 +167,7 @@ class Conflict {
         const noWinnerRules = [
             {
                 condition: () => this.attackerSkill === 0 && this.defenderSkill === 0,
-                message: 'There is no winner or loser for this conflict because the attacker skill is 0'
+                message: 'There is no winner or loser for this conflict because both sides have 0 skill'
             },
             {
                 condition: () => this.attackerSkill >= this.defenderSkill && this.attackingPlayer.cannotWinConflict,

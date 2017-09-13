@@ -82,9 +82,12 @@ class ConflictFlow extends BaseStep {
         if (this.conflict.cancelled) {
             return;
         }
+        
+        this.conflict.attackingPlayer.conflicts.perform(this.conflict.conflictType, true);
+        this.conflict.defendingPlayer.conflicts.perform(this.conflict.conflictType, false);
 
         if (this.conflict.conflictprovince.facedown) {
-            this.conflict.defendingPlayer.revealProvince(conflict.conflictprovince);
+            this.conflict.defendingPlayer.revealProvince(this.conflict.conflictprovince);
         }
         this.game.raiseEvent('onConflictDeclared', this.conflict);
     }
@@ -154,11 +157,15 @@ class ConflictFlow extends BaseStep {
         this.conflict.determineWinner();
 
         if(!this.conflict.winner && !this.conflict.loser) {
-            this.game.addMessage(this.conflict.noWinnerMessage);
+            this.game.addMessage('There is no winner or loser for this conflict because both sides have 0 skill');
         } else {
             this.game.addMessage('{0} won a {1} conflict {2} vs {3}',
                 this.conflict.winner, this.conflict.conflictType, this.conflict.winnerStrength, this.conflict.loserStrength);
         }
+        
+        this.conflict.winner.conflicts.won(this.conflict.conflictType, this.conflict.winner === this.conflict.attackingPlayer);
+        this.conflict.loser.conflicts.lost(this.conflict.conflictType, this.conflict.loser === this.conflict.attackingPlayer);
+        
 
         this.game.raiseEvent('afterConflict', this.conflict);
     }
