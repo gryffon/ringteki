@@ -1,15 +1,15 @@
 const _ = require('underscore');
-const SelectCardPrompt = require('../selectcardprompt.js');
+const UiPrompt = require('../uiprompt.js');
 
-class InitiateConflictPrompt extends SelectCardPrompt {
+class InitiateConflictPrompt extends UiPrompt {
     constructor(game, conflict, choosingPlayer) {
         super(game);
         
         this.conflict = conflict;
         this.choosingPlayer = choosingPlayer;
-        this.attackersSelected = [];
-        this.defendersSelected = [];
-        this.provinceSelected = null;
+        this.selectedAttackers = [];
+        this.selectedDefenders = [];
+        this.selectedProvince = null;
         this.covertRemaining = false;
     }
 
@@ -38,19 +38,19 @@ class InitiateConflictPrompt extends SelectCardPrompt {
         let promptTitle = '';
         
         if (this.conflict.conflictRing === '') {
-            let menuTitle = 'Choose an elemental ring';
-            let promptTitle = 'Initiate Conflict';
+            menuTitle = 'Choose an elemental ring';
+            promptTitle = 'Initiate Conflict';
         } else {
-            let promptTitle = ('{0} {1} Conflict', this.conflict.conflictType, this.conflict.conflictRing);
-            if (!this.conflict.conflictProvince){
-                    let menuTitle = 'Choose province to attack';
-            } else if (this.attackersSelected.length === 0) {
-                let menuTitle = 'Choose attackers';
+            promptTitle = this.conflict.conflictType.concat(' ',this.conflict.conflictRing, ' Conflict');
+            if (!this.selectedProvince){
+                menuTitle = 'Choose province to attack';
+            } else if (this.selectedAttackers.length === 0) {
+                menuTitle = 'Choose attackers';
             } else {
                 if (this.covertRemaining) {
-                    let menuTitle = 'Choose defenders to Covert';
+                    menuTitle = 'Choose defenders to Covert';
                 } else {
-                    let menuTitle = 'Click Done to declare conflict';
+                    menuTitle = 'Click Done to declare conflict';
                 }
                 buttons.unshift({ text: 'Done', arg: 'done' });
             }
@@ -59,12 +59,13 @@ class InitiateConflictPrompt extends SelectCardPrompt {
         return {
             menuTitle: menuTitle,
             buttons: buttons,
-            promptTitle: promptTitle
+            promptTitle: promptTitle,
+            selectCard: true
         };
     }
 
     waitingPrompt() {
-        return { menuTitle: this.properties.waitingPromptTitle || 'Waiting for opponent to declare conflict' };
+        return { menuTitle: 'Waiting for opponent to declare conflict' };
     }
 
     onCardClicked(player, card) {
@@ -76,32 +77,35 @@ class InitiateConflictPrompt extends SelectCardPrompt {
             return false;
         }
 
-        if(!this.selectCard(card)) {
-            return false;
-        }
+        return this.selectCard(card);
 
     }
 
     checkCardCondition(card) {
         if (card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken) {
-            if (!this.provinceSelected || card === this.provinceSelected) {
+            if (!this.selectedProvince || card === this.selectedProvince) {
                 return true;
             }
         } else if (card.type === 'character') {
             if (card.controller === this.choosingPlayer) {
-                if (card.canDeclareAsParticipant(this.conflict.conflictType) && card.canDeclareAsAttacker()) {
+                if (card.canDeclareAsAttacker(this.conflict.conflictType)) {
                     return true;
                 }
-            } else if (card.canBeBypassedByCovert() && this.covertRemaining) {
+            } else if (this.selectedDefenders.includes(card) || (card.canBeBypassedByCovert() && this.covertRemaining)) {
                 return true;
             }
         }
         return false;
     }
+    
+    recalculateCovert() {
+        let attackersWithCovert = _.size(_.filter(this.selectedAttackers, card => card.isCovert()));
+        this.covertRemaining = attackersWithCovert > _.size(this.selectedDefenders);
+    }
 
     selectCard(card) {
         if (card.isProvince) {
-            this.province = (card === this.provinceSelected) ? null : card;
+            this.selectedProvince = (card === this.selectedProvince) ? null : card;
         } else if (card.type === 'character') {
             if (card.controller === this.choosingPlayer) {
                 if (!this.selectedAttackers.includes(card)) {
@@ -118,8 +122,10 @@ class InitiateConflictPrompt extends SelectCardPrompt {
             }
             this.recalculateCovert();
         }
+        
+        let selectedCards = this.selectedAttackers.concat(this.selectedDefenders).concat([this.selectedProvince])
 
-        this.choosingPlayer.setSelectedCards(this.selectedCards);
+        this.choosingPlayer.setSelectedCards(selectedCards);
         
         /*
         if(this.properties.onCardToggle) {
@@ -139,10 +145,14 @@ class InitiateConflictPrompt extends SelectCardPrompt {
             this.conflict.conflictDeclared = true;
         } else if (arg === 'pass') {
             this.conflict.passed = true;
-            this.game.raiseEvent('onConflictPass',this.conflict,this.conflict.cancelConflict);
+            this.game.raiseEvent('onConflictPass',this.conflict,this.clickedPass);
         }
         
         this.complete();
+    }
+    
+    clickedPass(conflict) {
+        conflict.cancelConflict();
     }
     
     complete() {

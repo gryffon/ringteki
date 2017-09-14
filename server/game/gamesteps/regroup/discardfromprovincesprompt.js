@@ -12,7 +12,11 @@ class DiscardFromProvincesPrompt extends SelectCardPrompt {
                         choosingPlayer === card.owner && !card.facedown);
             },
             onSelect: (player, cards) => {
-                _.each(cards, card => player.moveTo(card, 'dynasty discard pile'));
+                _.each(cards, card => {
+                    let location = card.location;
+                    player.moveTo(card, 'dynasty discard pile');
+                    player.moveCard(player.dynastyDeck.first(), location);
+                });
                 this.complete();
                 return true;
             }

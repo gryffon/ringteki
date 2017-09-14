@@ -19,6 +19,7 @@ class Conflict {
         this.defenders = [];
         this.defenderSkill = 0;
         this.defenderSkillModifier = 0;
+        this.provinceRevealedDuringConflict = false;
         this.events = new EventRegistrar(game, this);
         this.registerEvents(['onCardLeftPlay']);
     }
@@ -112,6 +113,13 @@ class Conflict {
 
         this.attackerSkill = this.calculateSkillFor(this.attackers) + this.attackerSkillModifier;
         this.defenderSkill = this.calculateSkillFor(this.defenders) + this.defenderSkillModifier;
+        
+        if (this.attackingPlayer.imperialFavor == this.conflictType) {
+            this.attackerSkill++;
+        }
+        if (this.defendingPlayer.imperialFavor == this.conflictType) {
+            this.defenderSkill++;
+        }
     }
 
     calculateSkillFor(cards) {

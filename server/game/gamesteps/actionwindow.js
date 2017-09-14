@@ -7,8 +7,13 @@ class ActionWindow extends UiPrompt {
 
         this.title = title;
         this.windowName = windowName;
-        this.currentPlayer = game.getFirstPlayer();
+        if (this.game.currentConflict) {
+            this.currentPlayer = this.game.currentConflict.defendingPlayer;
+        } else {
+            this.currentPlayer = game.getFirstPlayer();
+        }
         this.prevPlayerPassed = false;
+        this.game.actionWindow = this;
         /*
         if (!this.currentPlayer.promptedActionWindows[this.windowName]) {
             this.prevPlayerPassed = true;
@@ -62,18 +67,16 @@ class ActionWindow extends UiPrompt {
         }
 
         this.prevPlayerPassed = true;
-        this.nextPlayer()
+        this.nextPlayer();
 
         return true;
     }
     
     nextPlayer() {
-        let otherplayer = _.find(this.game.getPlayers(), !this.currentPlayer);
+        let otherplayer = this.game.getOtherPlayer(this.currentPlayer);
         
-        if (!otherplayer || !otherplayer.promptedActionWindows[this.windowName]) {
-            if (this.prevPlayerPassed) {
-                this.complete();
-            }
+        if (!otherplayer && this.prevPlayerPassed) {
+            this.complete();
         } else {
             this.currentPlayer = otherplayer;
         }

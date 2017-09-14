@@ -9,23 +9,27 @@ class ConflictTracker {
                 performed: 0,
                 max: 1,
                 won: 0,
-                lost: 0
+                lost: 0,
+                cannotInitiate: false
             },
             political: {
                 performed: 0,
                 max: 1,
                 won: 0,
-                lost: 0
+                lost: 0,
+                cannotInitiate: false
             },
             defender: {
                 performed: 0,
                 won: 0,
-                lost: 0
+                lost: 0,
+                cannotInitiate: false
             },
             attacker: {
                 performed: 0,
                 won: 0,
-                lost: 0
+                lost: 0,
+                cannotInitiate: false
             }
         };
     }

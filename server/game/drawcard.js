@@ -61,6 +61,10 @@ class DrawCard extends BaseCard {
     isAncestral() {
         return this.hasKeyword('ancestral');
     }
+    
+    isCovert() {
+        return this.hasKeyword('covert');
+    }
 
     hasSincerity() {
         return this.hasKeyword('sincerity');
@@ -209,6 +213,10 @@ class DrawCard extends BaseCard {
     canUseCovertToBypass(targetCard) {
         return this.isCovert() && targetCard.canBeBypassedByCovert();
     }
+    
+    canBeBypassedByCovert() {
+        return !this.isCovert();
+    }
 
     useCovertToBypass(targetCard) {
         if(!this.canUseCovertToBypass(targetCard)) {
@@ -283,8 +291,7 @@ class DrawCard extends BaseCard {
             this.canParticipateInConflict() &&
             this.location === 'play area' &&
             !this.stealth &&
-            (!this.bowed || this.conflictOptions.canBeDeclaredWhileBowing) &&
-            (this.hasIcon(conflictType) || this.conflictOptions.canBeDeclaredWithoutIcon)
+            (!this.bowed || this.conflictOptions.canBeDeclaredWhileBowing)
         );
     }
 
@@ -304,7 +311,7 @@ class DrawCard extends BaseCard {
         this.bowed = true;
         this.inConflict = false;
     }
-
+    
     getSummary(activePlayer, hideWhenFaceup) {
         let baseSummary = super.getSummary(activePlayer, hideWhenFaceup);
 

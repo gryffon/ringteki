@@ -16,16 +16,16 @@ class PlayCharacterAction extends BaseAbility {
 
     meetsRequirements(context) {
         var {game, player, source} = context;
-        let currentprompt = player.currentPrompt();
+        let currentPrompt = player.currentPrompt();
+        if (currentPrompt === undefined) {
+            return false
+        }
 
         return (
             game.currentPhase !== 'dynasty' &&
             source.getType() === 'character' &&
             source.location === 'hand' &&
-            player.canPutIntoPlay(source) &&
-            game.actionWindow &&
-            game.actionWindow.currentPlayer === player &&
-            currentprompt.menuTitle === 'Initiate an action'
+            currentPrompt.promptTitle.includes('Action Window')
         );
     }
 
@@ -36,6 +36,28 @@ class PlayCharacterAction extends BaseAbility {
 
         // need to add an additional selection prompt if conflict ongoing
         context.player.playCharacterWithFate(context.source, extrafate);
+        if (context.game.currentConflict) {
+            context.game.promptWithMenu(context.player, context.player, {
+                activePrompt: {
+                    promptTitle: context.source.name,
+                    menuTitle: 'Where do you wish to play this character?',
+                    buttons: [
+                        { text: 'Conflict', arg: context.source.uuid, method: 'moveToConflict' },
+                        { text: 'Home', arg: '', method: 'moveToConflict' }
+                    ]
+                },
+                waitingPromptTitle: 'Waiting for opponent to take an action or pass.'
+            });
+        }
+    }
+    
+    moveToConflict(player, arg) {
+        if (arg !== '') {
+            let card = player.findCardInPlayByUuid(arg);
+            card.inConflict = true;
+            player.game.currentConflict.attackers.push(card);
+        }
+        return true;
     }
 
     isCardAbility() {

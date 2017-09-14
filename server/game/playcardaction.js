@@ -10,19 +10,25 @@ class PlayCardAction extends BaseAbility {
     }
 
     meetsRequirements(context) {
+        var {game, player, source} = context;
+        let currentPrompt = player.currentPrompt();
+        if (currentPrompt === undefined) {
+            return false
+        }
+
         return (
-            context.game.currentPhase !== 'setup' &&
-            context.source.getType() === 'event' &&
+            game.currentPhase !== 'setup' &&
+            source.getType() === 'event' &&
+            source.location === 'hand' &&
+            source.canBePlayed() &&
             context.source.abilities.actions.length === 0 &&
-            context.source.canBePlayed() &&
-            context.player.isCardInPlayableLocation(context.source, 'play') &&
-            context.source.canPlay(context.player, context.source)
+            currentPrompt.promptTitle.includes('Action Window')
         );
     }
 
     executeHandler(context) {
         context.game.addMessage('{0} plays {1} costing {2}', context.player, context.source, context.costs.gold);
-        context.source.play(context.player);
+        //context.source.play(context.player);
     }
 
     isPlayableEventAbility() {

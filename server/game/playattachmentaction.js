@@ -23,21 +23,22 @@ class PlayAttachmentAction extends BaseAbility {
 
     meetsRequirements(context) {
         var {game, player, source} = context;
-        let currentprompt = player.currentPrompt();
+        let currentPrompt = player.currentPrompt();
+        if (currentPrompt === undefined) {
+            return false
+        }
 
         return (
             game.currentPhase !== 'dynasty' &&
             source.getType() === 'attachment' &&
             source.location === 'hand' &&
-            game.actionWindow &&
-            game.actionWindow.currentPlayer === player &&
-            currentprompt.menuTitle === 'Initiate an action'
+            currentPrompt.promptTitle.includes('Action Window')
         );
     }
 
     executeHandler(context) {
-                let targetPlayer = context.target.controller;
-                targetPlayer.attach(context.player, context.source, context.target, 'play');
+        let targetPlayer = context.target.controller;
+        targetPlayer.attach(context.player, context.source, context.target, 'play');
     }
 
     isCardAbility() {

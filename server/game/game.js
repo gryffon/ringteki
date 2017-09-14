@@ -138,7 +138,7 @@ class Game extends EventEmitter {
     }
 
     findAnyCardInAnyList(cardId) {
-        return _.reduce(this.getPlayers(), (card, player) => {
+       return _.reduce(this.getPlayers(), (card, player) => {
             if(card) {
                 return card;
             }
@@ -184,7 +184,6 @@ class Game extends EventEmitter {
         }
 
         var card = this.findAnyCardInAnyList(cardId);
-        console.log(card.name, card.isUnique(), player.canPutIntoPlay(card));
 
         if(!card) {
             return;
@@ -195,7 +194,8 @@ class Game extends EventEmitter {
         }
 
         // Attempt to play cards that are not already in the play area.
-        if(['hand', 'province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && player.playCard(card)) {
+        if(['hand', 'province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && 
+                !card.isProvince && player.playCard(card)) {
             return;
         }
 
@@ -232,25 +232,27 @@ class Game extends EventEmitter {
         }
     }
 
-    ringClicked(sourcePlayer, ring) {
+    ringClicked(sourcePlayer, ringindex) {
+        var ring = this.rings[ringindex];
         var player = this.getPlayerByName(sourcePlayer);
 
-        if(!player) {
+        if(!player || ring.claimed) {
             return;
         }
 
-        let otherConflictType = ring.conflictType === 'military' ? 'political' : 'military';
-        let conflict = this.currentConflict;
-
-        if (!conflict && !ring.claimed) {
+        var canInitiateThisConflictType = !player.conflicts.isAtMax(ring.conflictType);        
+        var canInitiateOtherConflictType = !player.conflicts.isAtMax(ring.conflictType === 'military' ? 'political' : 'military');        
+        var conflict = this.currentConflict;
+    
+        if (!conflict) {
             this.flipRing(player, ring);
-        } else if (conflict && !conflict.conflictDeclared && !player.conflicts.isAtMax(ring.element)) {
-            if ((conflict.conflictRing === ring.element && player.canInitiateConflict(otherConflictType)) ||
-                    (conflict.conflictRing !== ring.element && player.canInitiateConflict(ring.ConflictType))) {
+        } else if (conflict && !conflict.conflictDeclared) {
+            if ((conflict.conflictRing === ring.element && canInitiateOtherConflictType) ||
+                    (conflict.conflictRing !== ring.element && !canInitiateThisConflictType)) {
                 this.flipRing(player, ring);
             }
             this.currentConflict.conflictRing = ring.element;
-            this.currecnConflict.conflictType = ring.conflictType;
+            this.currentConflict.conflictType = ring.conflictType;
         }
     }
     
@@ -688,7 +690,7 @@ class Game extends EventEmitter {
     }
 
     flipRing(sourcePlayer, ring) {
-        this.rings[ring].flipConflictType();
+        ring.flipConflictType();
     }
     
     placeFateOnUnclaimedRings() {

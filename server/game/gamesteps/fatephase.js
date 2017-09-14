@@ -1,6 +1,6 @@
 const Phase = require('./phase.js');
 const ActionWindow = require('./actionwindow.js');
-//const SimpleStep = require('./simplestep.js');
+const SimpleStep = require('./simplestep.js');
 
 /*
 IV Fate Phase

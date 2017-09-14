@@ -39,8 +39,12 @@ class SetupPhase extends Phase {
     }
 
     fillProvinces() {
+        var provinces = ['province 1', 'province 2', 'province 3', 'province 4'];
+
         _.each(this.game.getPlayers(), player => {
-            player.fillProvinces();
+            _.each(provinces, location => {
+                player.moveCard(player.dynastyDeck.first(), location);
+            });
         });
         this.game.allCards.each(card => {
             card.applyAnyLocationPersistentEffects();

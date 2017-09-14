@@ -31,13 +31,9 @@ class DrawBidPrompt extends AllPlayerPrompt {
     }
 
     onMenuCommand(player, bid) {
-        if(this.player !== player) {
-            return false;
-        }
-
         this.game.addMessage('{0} has chosen a bid.', player);
 
-        this.player.setDrawBid(bid);
+        player.setDrawBid(bid);
 
         this.complete();
     }

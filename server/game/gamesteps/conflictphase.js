@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const Phase = require('./phase.js');
 const SimpleStep = require('./simplestep.js');
 const Conflict = require('../conflict.js');
@@ -28,7 +29,7 @@ class ConflictPhase extends Phase {
         this.gloryTotals = [];
         this.initialise([
             new SimpleStep(this.game, () => this.beginPhase()),
-            new ActionWindow(this.game, 'Before conflicts', 'conflictBegin'),
+            new ActionWindow(this.game, 'Action Window', 'conflictBegin'),
             new SimpleStep(this.game, () => this.newConflict())
         ]);
     }
@@ -187,6 +188,8 @@ class ConflictPhase extends Phase {
         this.game.currentConflict.unregisterEvents();
         this.game.currentConflict = null;
         this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
+        this.game.queueStep(new ActionWindow(this.game, 'Before conflicts', 'conflictBegin'));
+        this.game.queueStep(new SimpleStep(this.game, () => this.newConflict()));
     }
 
     chooseOpponent(attackingPlayer) {

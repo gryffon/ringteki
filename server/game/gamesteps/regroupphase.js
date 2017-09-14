@@ -39,10 +39,8 @@ class RegroupPhase extends Phase {
     }
     
     discardFromProvinces() {
-        _.each(this.game.getPlayers(), player => {
-            player.discardFromBrokenProvinces();
-            this.game.queueStep(new DiscardFromProvincesPrompt(this.game, player));
-        });
+        _.each(this.game.getPlayers(), player => player.discardFromBrokenProvinces());
+        _.each(this.game.getPlayers(), player => this.game.queueStep(new DiscardFromProvincesPrompt(this.game, player)));
     }
     
     returnRings() {
