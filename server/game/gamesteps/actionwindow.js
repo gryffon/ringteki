@@ -26,7 +26,7 @@ class ActionWindow extends UiPrompt {
     }
 
     continue() {
-       let completed = super.continue();
+        let completed = super.continue();
 
         if(!completed) {
             this.game.currentActionWindow = this;
