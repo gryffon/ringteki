@@ -76,7 +76,7 @@ class ConflictPhase extends Phase {
     claimImperialFavor() {
         if(this.glorytotals[0].glory === this.glorytotals[1].glory) {
             this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', this.glorytotals[0].glory);
-            this.game.raiseEvent('onFaviorGloryTied', this.glorytotals[0].glory);
+            this.game.raiseEvent('onFavorGloryTied', this.glorytotals[0].glory);
         } else {
             let winner = _.max(this.glorytotals, tuplet => tuplet.player);
             this.game.promptWithMenu(winner, this, {
@@ -93,11 +93,9 @@ class ConflictPhase extends Phase {
     
     giveImperialFavorToPlayer(player, arg) {
         let winner = _.max(this.glorytotals, tuplet => tuplet.player);
-        let context = {
-            player: winner,
-            choice: arg
-        };
-        this.game.raiseEvent('onClaimImperialFavor', context, winner.claimImperialFavor);
+        this.game.raiseEvent('onClaimImperialFavor', arg, conflictType => {
+            winner.claimImperialFavor(conflictType);
+        });
         return true;
     }
 

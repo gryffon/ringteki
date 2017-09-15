@@ -936,8 +936,8 @@ class Player extends Spectator {
         return _.filter(this.game.rings, ring => ring.claimedby === this.name);
     }
     
-    claimImperialFavor(context) {
-        context.player.imperialFavor = context.choice;
+    claimImperialFavor(conflictType) {
+        this.imperialFavor = conflictType;
     }
 
     readyCards(notCharacters = false) {
@@ -1075,7 +1075,7 @@ class Player extends Spectator {
         this.game.applyGameAction('ready', card, card => {
             card.bowed = false;
 
-            this.game.raiseEvent('onCardStood', { player: this, card: card });
+            this.game.raiseEvent('onCardReadied', { player: this, card: card });
         });
     }
 

@@ -693,8 +693,13 @@ class Game extends EventEmitter {
         ring.flipConflictType();
     }
     
+<<<<<<< HEAD
     placeFateOnUnclaimedRings(game) {
         _.each(game.rings, ring => {
+=======
+    placeFateOnUnclaimedRings() {
+        _.each(this.rings, ring => {
+>>>>>>> 1ab1ac3057fc16f5d50b68b6e0f9e4dadfff6ade
             if(!ring.claimed) {
                 ring.modifyFate(1);
             }

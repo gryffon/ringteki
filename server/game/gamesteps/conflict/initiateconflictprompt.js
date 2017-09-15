@@ -157,16 +157,14 @@ class InitiateConflictPrompt extends UiPrompt {
             this.conflict.conflictDeclared = true;
         } else if(arg === 'pass') {
             this.conflict.passed = true;
-            this.game.raiseEvent('onConflictPass',this,this.clickedPass);
+            this.game.raiseEvent('onConflictPass', this.conflict, () => {
+                this.conflict.cancelConflict();
+            });
         }
         
         this.complete();
     }
-    
-    clickedPass(context) {
-        context.conflict.cancelConflict();
-    }
-    
+        
     complete() {
         this.conflict.attackers = this.selectedAttackers;
         _.each(this.selectedDefenders, card => {

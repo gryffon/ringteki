@@ -33,7 +33,9 @@ class FatePhase extends Phase {
     }
     
     placeFateOnUnclaimedRings() {
-        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', this.game, this.game.placeFateOnUnclaimedRings);
+        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', this, () => {
+            this.game.placeFateOnUnclaimedRings();
+        });
     }
 }
 
