@@ -16,7 +16,10 @@ class DynastyCardAction extends BaseAbility {
 
     meetsRequirements(context) {
         var {game, player, source} = context;
-        let currentprompt = player.currentPrompt();
+        let currentPrompt = player.currentPrompt();
+        if (currentPrompt === undefined) {
+            return false;
+        }
 
         return (
             !source.facedown &&
@@ -24,7 +27,7 @@ class DynastyCardAction extends BaseAbility {
             source.getType() === 'character' &&
             player.isCardInPlayableLocation(source, 'dynasty') &&
             player.canPutIntoPlay(source) &&
-            currentprompt.promptTitle === 'Play cards from provinces'
+            currentPrompt.promptTitle === 'Play cards from provinces'
         );
     }
 

@@ -51,15 +51,6 @@ class PlayCharacterAction extends BaseAbility {
         }
     }
     
-    moveToConflict(player, arg) {
-        if (arg !== '') {
-            let card = player.findCardInPlayByUuid(arg);
-            card.inConflict = true;
-            player.game.currentConflict.attackers.push(card);
-        }
-        return true;
-    }
-
     isCardAbility() {
         return false;
     }

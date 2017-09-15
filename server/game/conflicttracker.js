@@ -107,7 +107,7 @@ class ConflictTracker {
     }
     
     usedOpportunity() {
-        this.conflictOpportunities -= 1;
+        this.conflictOpportunities--;
     }
 }
 

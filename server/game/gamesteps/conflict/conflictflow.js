@@ -164,10 +164,10 @@ class ConflictFlow extends BaseStep {
         } else {
             this.game.addMessage('{0} won a {1} conflict {2} vs {3}',
                 this.conflict.winner, this.conflict.conflictType, this.conflict.winnerSkill, this.conflict.loserSkill);
+            this.conflict.winner.conflicts.won(this.conflict.conflictType, this.conflict.winner === this.conflict.attackingPlayer);
+            this.conflict.loser.conflicts.lost(this.conflict.conflictType, this.conflict.loser === this.conflict.attackingPlayer);
         }
         
-        this.conflict.winner.conflicts.won(this.conflict.conflictType, this.conflict.winner === this.conflict.attackingPlayer);
-        this.conflict.loser.conflicts.lost(this.conflict.conflictType, this.conflict.loser === this.conflict.attackingPlayer);
         
 
         this.game.raiseEvent('afterConflict', this.conflict);
@@ -197,10 +197,9 @@ class ConflictFlow extends BaseStep {
         }
 
         let province = this.conflict.conflictProvince;
-        console.log(this.conflict.skillDifference);
-        if (this.conflict.isAttackerTheWinner() && this.conflict.skillDifference >= province.getStrength) {
+        if (this.conflict.isAttackerTheWinner() && this.conflict.skillDifference >= province.getStrength()) {
             this.game.raiseEvent('onBreakProvince', province, province.breakProvince);
-            console.log('broken');
+            this.game.addMessage('{0} hs broken the province!', this.conflict.winner.name);
         }
     }
     
@@ -217,8 +216,8 @@ class ConflictFlow extends BaseStep {
                     promptTitle: 'Resolve Ring',
                     menuTitle: menuTitle,
                     buttons: [
-                        { text: 'Yes', arg: this.conflict.conflictRing, method: 'triggerRingResolutionEvent' },
-                        { text: 'No', arg: '', method: 'triggerRingResolutionEvent' }
+                        { text: 'Yes', arg: 'Yes', method: 'triggerRingResolutionEvent' },
+                        { text: 'No', arg: 'No', method: 'triggerRingResolutionEvent' }
                     ]
                 },
                 waitingPromptTitle: waitingPromptTitle
@@ -227,7 +226,7 @@ class ConflictFlow extends BaseStep {
     }
     
     triggerRingResolutionEvent(player, arg, method) {
-        if (arg !== '') {
+        if (arg !== 'No') {
             this.game.raiseEvent('onResolveRingEffects', this.conflict, this.resolveRingforWinner);
         }
         return true;
@@ -246,10 +245,15 @@ class ConflictFlow extends BaseStep {
             let ring = _.find(this.game.rings, ring => {
                 return ring.element === this.conflict.conflictRing;
             });
-            this.game.raiseEvent('onClaimRing', this.conflict.winner, ring.claimRing);
+            ring.claimRing(this.conflict.winner);
         }
     }
-    
+    /*
+    winnerClaimsRing(conflict) {
+        let ring = _.find(conflict.game.rings, ring => conflict.conflictRing === ring.element);
+        ring.claimRing(conflict.winner);
+    }
+    */
     returnHome() {
         if (this.conflict.cancelled) {
             return;

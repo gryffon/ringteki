@@ -20,7 +20,7 @@ class RegroupPhase extends Phase {
     constructor(game) {
         super(game, 'regroup');
         this.initialise([
-            new ActionWindow(this.game, 'After regroup phase begins', 'beginning'),
+            new ActionWindow(this.game, 'Action Window', 'regroupActionWindow'),
             new SimpleStep(game, () => this.readyCards()),
             new SimpleStep(game, () => this.discardFromProvinces()),
             new SimpleStep(game, () => this.returnRings()),

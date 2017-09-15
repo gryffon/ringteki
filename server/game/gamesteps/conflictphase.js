@@ -44,8 +44,8 @@ class ConflictPhase extends Phase {
         
         if (_.all(['military', 'political'], type => !this.currentPlayer.canInitiateConflict(type))) {
             this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
-            if (_.all(['military', 'political'], type => this.currentPlayer.canInitiateConflict(type))) {
-                let conflictOpportunityRemaining = false;    
+            if (_.all(['military', 'political'], type => !this.currentPlayer.canInitiateConflict(type))) {
+                conflictOpportunityRemaining = false;    
             } 
         }
         
@@ -68,7 +68,7 @@ class ConflictPhase extends Phase {
     
     countGlory() {
         this.glorytotals = _.map(this.game.getPlayersInFirstPlayerOrder(), player => {
-            rings = player.getClaimedRings();
+            let rings = player.getClaimedRings();
             return {player: player, glory: player.getFavor() + rings.length};
         });
     }
@@ -76,7 +76,7 @@ class ConflictPhase extends Phase {
     claimImperialFavor() {
         if (this.glorytotals[0].glory === this.glorytotals[1].glory) {
             this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', this.glorytotals[0].glory);
-            this.game.raiseEvent('onFaviorGloryTied', glorytotals[0].glory);
+            this.game.raiseEvent('onFaviorGloryTied', this.glorytotals[0].glory);
         } else {
             let winner = _.max(this.glorytotals, tuplet => tuplet.player);
             this.game.promptWithMenu(winner, this, {
@@ -91,9 +91,14 @@ class ConflictPhase extends Phase {
         }
     }
     
-    giveImperialFavorToPlayer(arg) {
+    giveImperialFavorToPlayer(player, arg) {
         let winner = _.max(this.glorytotals, tuplet => tuplet.player);
-        this.game.raiseEvent('onClaimImperialFavor', arg, winner.claimImperialFavor);
+        let context = {
+            player: winner,
+            choice: arg
+        };
+        this.game.raiseEvent('onClaimImperialFavor', context, winner.claimImperialFavor);
+        return true;
     }
 
     startConflictChoice(attackingPlayer = null) {

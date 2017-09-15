@@ -1,6 +1,16 @@
 const _ = require('underscore');
 const UiPrompt = require('../uiprompt.js');
 
+const capitalize = {
+    military: 'Military',
+    political: 'Political',
+    air: 'Air',
+    water: 'Water',
+    earth: 'Earth',
+    fire: 'Fire',
+    void: 'Void'
+};
+
 class InitiateConflictPrompt extends UiPrompt {
     constructor(game, conflict, choosingPlayer) {
         super(game);
@@ -41,7 +51,7 @@ class InitiateConflictPrompt extends UiPrompt {
             menuTitle = 'Choose an elemental ring';
             promptTitle = 'Initiate Conflict';
         } else {
-            promptTitle = this.conflict.conflictType.concat(' ',this.conflict.conflictRing, ' Conflict');
+            promptTitle = capitalize[this.conflict.conflictType] + ' ' + capitalize[this.conflict.conflictRing] + ' Conflict';
             if (!this.selectedProvince){
                 menuTitle = 'Choose province to attack';
             } else if (this.selectedAttackers.length === 0) {
@@ -50,9 +60,11 @@ class InitiateConflictPrompt extends UiPrompt {
                 if (this.covertRemaining) {
                     menuTitle = 'Choose defenders to Covert';
                 } else {
-                    menuTitle = 'Click Done to declare conflict';
+                    this.conflict.attackers = this.selectedAttackers;
+                    this.conflict.calculateSkill();
+                    menuTitle = capitalize[this.conflict.conflictType] + ' skill: '.concat(this.conflict.attackerSkill);
                 }
-                buttons.unshift({ text: 'Done', arg: 'done' });
+                buttons.unshift({ text: 'Initiate Conflict', arg: 'done' });
             }
         }
         
@@ -145,14 +157,14 @@ class InitiateConflictPrompt extends UiPrompt {
             this.conflict.conflictDeclared = true;
         } else if (arg === 'pass') {
             this.conflict.passed = true;
-            this.game.raiseEvent('onConflictPass',this.conflict,this.clickedPass);
+            this.game.raiseEvent('onConflictPass',this,this.clickedPass);
         }
         
         this.complete();
     }
     
-    clickedPass(conflict) {
-        conflict.cancelConflict();
+    clickedPass(context) {
+        context.conflict.cancelConflict();
     }
     
     complete() {

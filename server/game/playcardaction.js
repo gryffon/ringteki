@@ -12,7 +12,7 @@ class PlayCardAction extends BaseAbility {
     meetsRequirements(context) {
         var {game, player, source} = context;
         let currentPrompt = player.currentPrompt();
-        if (currentPrompt === undefined) {
+        if (currentPrompt.promptTitle === undefined) {
             return false
         }
 

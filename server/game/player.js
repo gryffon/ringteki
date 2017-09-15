@@ -916,7 +916,7 @@ class Player extends Spectator {
     getFavor() {
         var cardGlory = this.cardsInPlay.reduce((memo, card) => {
             if(!card.bowed && card.getType() === 'character' && card.contributesToFavor) {
-                return memo + card.getGlory();
+                return memo + card.glory;
             }
 
             return memo;
@@ -930,13 +930,13 @@ class Player extends Spectator {
     }
     
     getClaimedRings() {
-        rings = [];
+        let rings = [];
         _.each(this.game.rings, ring => rings.push(ring.element));
         return rings;
     }
     
-    claimImperialFavor(conflictType) {
-        this.imperialFavor = conflictType;
+    claimImperialFavor(context) {
+        context.player.imperialFavor = context.choice;
     }
 
     readyCards(notCharacters = false) {
@@ -1177,6 +1177,15 @@ class Player extends Spectator {
         }        
     }
     
+    moveToConflict(player, arg) {
+        if (arg !== '') {
+            let card = player.findCardInPlayByUuid(arg);
+            card.inConflict = true;
+            player.game.currentConflict.attackers.push(card);
+        }
+        return true;
+    }
+
     addFateToDuplicate(card) {
         let duplicate = this.getDuplicateInPlay(card);
         duplicate.modifyFate(1);
