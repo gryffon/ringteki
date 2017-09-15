@@ -42,14 +42,14 @@ class ConflictPhase extends Phase {
     newConflict() {
         let conflictOpportunityRemaining = true;
         
-        if (_.all(['military', 'political'], type => !this.currentPlayer.canInitiateConflict(type))) {
+        if(_.all(['military', 'political'], type => !this.currentPlayer.canInitiateConflict(type))) {
             this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
-            if (_.all(['military', 'political'], type => !this.currentPlayer.canInitiateConflict(type))) {
+            if(_.all(['military', 'political'], type => !this.currentPlayer.canInitiateConflict(type))) {
                 conflictOpportunityRemaining = false;    
             } 
         }
         
-        if (conflictOpportunityRemaining) {
+        if(conflictOpportunityRemaining) {
             this.currentPlayer.conflicts.usedOpportunity();
             var conflict = new Conflict(this.game, this.currentPlayer, this.game.getOtherPlayer(this.currentPlayer));
             this.game.currentConflict = conflict;
@@ -74,7 +74,7 @@ class ConflictPhase extends Phase {
     }
     
     claimImperialFavor() {
-        if (this.glorytotals[0].glory === this.glorytotals[1].glory) {
+        if(this.glorytotals[0].glory === this.glorytotals[1].glory) {
             this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', this.glorytotals[0].glory);
             this.game.raiseEvent('onFaviorGloryTied', this.glorytotals[0].glory);
         } else {
@@ -193,7 +193,7 @@ class ConflictPhase extends Phase {
         this.game.currentConflict.unregisterEvents();
         this.game.currentConflict = null;
         this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
-        this.game.queueStep(new ActionWindow(this.game, 'Before conflicts', 'conflictBegin'));
+        this.game.queueStep(new ActionWindow(this.game, 'Action Window', 'conflictBegin'));
         this.game.queueStep(new SimpleStep(this.game, () => this.newConflict()));
     }
 

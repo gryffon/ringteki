@@ -38,17 +38,14 @@ class DynastyActionWindow extends ActionWindow {
     
     nextPlayer() {
         let otherplayer = this.game.getOtherPlayer(this.currentPlayer);
-        if (otherplayer && !otherplayer.passedDynasty) {
+        if(otherplayer && !otherplayer.passedDynasty) {
             this.currentPlayer = otherplayer;
         }
         
-        if (this.currentPlayer.passedDynasty) {
+        if(this.currentPlayer.passedDynasty) {
             this.complete();
         }
     }
 }
 
 module.exports = DynastyActionWindow;
-
-
-

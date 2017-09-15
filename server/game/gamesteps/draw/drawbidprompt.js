@@ -1,10 +1,6 @@
 const AllPlayerPrompt = require('../allplayerprompt.js');
 
 class DrawBidPrompt extends AllPlayerPrompt {
-    constructor(game) {
-        super(game);
-    }
-
     activeCondition(player) {
         return player.drawBid === 0;
     }

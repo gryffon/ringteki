@@ -86,9 +86,8 @@ class ConflictTracker {
         this.conflictTypes[conflictType].cannotInitiate = value;
     }
 
-    perform(conflictType, wasAttacker) {
+    perform(conflictType) {
         this.conflictTypes[conflictType].performed++;
-        this.conflictTypes[wasAttacker ? 'attacker' : 'defender'].performed++;
         this.complete++;
     }
 

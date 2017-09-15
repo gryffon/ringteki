@@ -47,17 +47,17 @@ class InitiateConflictPrompt extends UiPrompt {
         let menuTitle = '';
         let promptTitle = '';
         
-        if (this.conflict.conflictRing === '') {
+        if(this.conflict.conflictRing === '') {
             menuTitle = 'Choose an elemental ring';
             promptTitle = 'Initiate Conflict';
         } else {
             promptTitle = capitalize[this.conflict.conflictType] + ' ' + capitalize[this.conflict.conflictRing] + ' Conflict';
-            if (!this.selectedProvince){
+            if(!this.selectedProvince) {
                 menuTitle = 'Choose province to attack';
-            } else if (this.selectedAttackers.length === 0) {
+            } else if(this.selectedAttackers.length === 0) {
                 menuTitle = 'Choose attackers';
             } else {
-                if (this.covertRemaining) {
+                if(this.covertRemaining) {
                     menuTitle = 'Choose defenders to Covert';
                 } else {
                     this.conflict.attackers = this.selectedAttackers;
@@ -94,16 +94,16 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     checkCardCondition(card) {
-        if (card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken) {
-            if (!this.selectedProvince || card === this.selectedProvince) {
+        if(card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken) {
+            if(!this.selectedProvince || card === this.selectedProvince) {
                 return true;
             }
-        } else if (card.type === 'character') {
-            if (card.controller === this.choosingPlayer) {
-                if (card.canDeclareAsAttacker(this.conflict.conflictType)) {
+        } else if(card.type === 'character') {
+            if(card.controller === this.choosingPlayer) {
+                if(card.canDeclareAsAttacker(this.conflict.conflictType)) {
                     return true;
                 }
-            } else if (this.selectedDefenders.includes(card) || (card.canBeBypassedByCovert() && this.covertRemaining)) {
+            } else if(this.selectedDefenders.includes(card) || (card.canBeBypassedByCovert() && this.covertRemaining)) {
                 return true;
             }
         }
@@ -116,17 +116,17 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     selectCard(card) {
-        if (card.isProvince) {
+        if(card.isProvince) {
             this.selectedProvince = (card === this.selectedProvince) ? null : card;
-        } else if (card.type === 'character') {
-            if (card.controller === this.choosingPlayer) {
-                if (!this.selectedAttackers.includes(card)) {
+        } else if(card.type === 'character') {
+            if(card.controller === this.choosingPlayer) {
+                if(!this.selectedAttackers.includes(card)) {
                     this.selectedAttackers.push(card);
                 } else {
                     this.selectedAttackers = _.reject(this.selectedAttackers, c => c === card);
                 }
             } else {
-                if (!this.selectedDefenders.includes(card)) {
+                if(!this.selectedDefenders.includes(card)) {
                     this.selectedDefenders.push(card);
                 } else {
                     this.selectedDefenders = _.reject(this.selectedDefenders, c => c === card);
@@ -135,7 +135,7 @@ class InitiateConflictPrompt extends UiPrompt {
             this.recalculateCovert();
         }
         
-        let selectedCards = this.selectedAttackers.concat(this.selectedDefenders).concat([this.selectedProvince])
+        let selectedCards = this.selectedAttackers.concat(this.selectedDefenders).concat([this.selectedProvince]);
 
         this.choosingPlayer.setSelectedCards(selectedCards);
         
@@ -155,7 +155,7 @@ class InitiateConflictPrompt extends UiPrompt {
 
         if(arg === 'done') {
             this.conflict.conflictDeclared = true;
-        } else if (arg === 'pass') {
+        } else if(arg === 'pass') {
             this.conflict.passed = true;
             this.game.raiseEvent('onConflictPass',this,this.clickedPass);
         }
@@ -184,6 +184,3 @@ class InitiateConflictPrompt extends UiPrompt {
 }
 
 module.exports = InitiateConflictPrompt;
-
-
-

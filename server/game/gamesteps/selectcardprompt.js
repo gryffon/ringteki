@@ -199,8 +199,7 @@ class SelectCardPrompt extends UiPrompt {
 
         if(this.selectedCards.length > 0) {
             this.fireOnSelect();
-        } else {
-            this.properties.onCancel(player);
+        } else if(this.properties.onCancel(player)) {
             this.complete();
         }
     }

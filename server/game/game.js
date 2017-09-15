@@ -138,7 +138,7 @@ class Game extends EventEmitter {
     }
 
     findAnyCardInAnyList(cardId) {
-       return _.reduce(this.getPlayers(), (card, player) => {
+        return _.reduce(this.getPlayers(), (card, player) => {
             if(card) {
                 return card;
             }
@@ -228,7 +228,7 @@ class Game extends EventEmitter {
                 card.facedown = false;
             }
 
-            this.addMessage('{0} {1} {2}', player, card.facedown ? 'hides' : 'reveals', card);
+            //this.addMessage('{0} {1} {2}', player, card.facedown ? 'hides' : 'reveals', card);
         }
     }
 
@@ -244,10 +244,10 @@ class Game extends EventEmitter {
         var canInitiateOtherConflictType = !player.conflicts.isAtMax(ring.conflictType === 'military' ? 'political' : 'military');        
         var conflict = this.currentConflict;
     
-        if (!conflict) {
+        if(!conflict) {
             this.flipRing(player, ring);
-        } else if (conflict && !conflict.conflictDeclared) {
-            if ((conflict.conflictRing === ring.element && canInitiateOtherConflictType) ||
+        } else if(conflict && !conflict.conflictDeclared) {
+            if((conflict.conflictRing === ring.element && canInitiateOtherConflictType) ||
                     (conflict.conflictRing !== ring.element && !canInitiateThisConflictType)) {
                 this.flipRing(player, ring);
             }
@@ -695,7 +695,7 @@ class Game extends EventEmitter {
     
     placeFateOnUnclaimedRings(game) {
         _.each(game.rings, ring => {
-            if (!ring.claimed) {
+            if(!ring.claimed) {
                 ring.modifyFate(1);
             }
         });

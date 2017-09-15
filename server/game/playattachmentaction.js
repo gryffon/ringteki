@@ -12,7 +12,7 @@ class PlayAttachmentAction extends BaseAbility {
         this.title = 'PlayAttachmentAction';
         this.targets = { 
             target: {
-             cardCondition: this.cardCondition
+                cardCondition: this.cardCondition
             }
         };
     }
@@ -24,8 +24,8 @@ class PlayAttachmentAction extends BaseAbility {
     meetsRequirements(context) {
         var {game, player, source} = context;
         let currentPrompt = player.currentPrompt();
-        if (currentPrompt === undefined) {
-            return false
+        if(currentPrompt.promptTitle === undefined) {
+            return false;
         }
 
         return (

@@ -39,7 +39,8 @@ class DrawCard extends BaseCard {
             doesNotBowAs: {
                 attacker: false,
                 defender: false
-            }
+            },
+            canBeDeclaredWhileBowed: false
         };
         this.stealth = false;
 
@@ -291,7 +292,7 @@ class DrawCard extends BaseCard {
             this.canParticipateInConflict() &&
             this.location === 'play area' &&
             !this.stealth &&
-            (!this.bowed || this.conflictOptions.canBeDeclaredWhileBowing)
+            (!this.bowed || this.conflictOptions.canBeDeclaredWhileBowed)
         );
     }
 
@@ -307,7 +308,7 @@ class DrawCard extends BaseCard {
         return this.allowGameAction('play');
     }
     
-    returnHomeFromConflict(conflict) {
+    returnHomeFromConflict() {
         this.bowed = true;
         this.inConflict = false;
     }
