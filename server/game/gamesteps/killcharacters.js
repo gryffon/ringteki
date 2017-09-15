@@ -96,16 +96,9 @@ class KillCharacters extends BaseStep {
         }
         if(card.isDynasty) {
             player.moveCard(card, 'dynasty discard pile');
-<<<<<<< HEAD
-        } else{
-            player.moveCard(card, 'conflict discard pile');
-        }
-
-=======
         } else {
             player.moveCard(card, 'conflict discard pile');
         }
->>>>>>> 1ab1ac3057fc16f5d50b68b6e0f9e4dadfff6ade
         
         this.game.addMessage('{0} kills {1}', player, card);
     }

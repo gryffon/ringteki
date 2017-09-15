@@ -208,13 +208,7 @@ class ConflictFlow extends BaseStep {
 
         let province = this.conflict.conflictProvince;
         if(this.conflict.isAttackerTheWinner() && this.conflict.skillDifference >= province.getStrength()) {
-<<<<<<< HEAD
-            this.game.raiseEvent('onBreakProvince', province, province.breakProvince);
-=======
-            this.game.raiseEvent('onBreakProvince', province, () => {
-                province.breakProvince();
-            });
->>>>>>> 1ab1ac3057fc16f5d50b68b6e0f9e4dadfff6ade
+            this.game.raiseEvent('onBreakProvince', province, province.breakProvince());
             this.game.addMessage('{0} has broken the province!', this.conflict.winner.name);
         }
     }
@@ -243,13 +237,9 @@ class ConflictFlow extends BaseStep {
     
     triggerRingResolutionEvent(player, arg) {
         if(arg !== 'No') {
-<<<<<<< HEAD
-            this.game.raiseEvent('onResolveRingEffects', this.conflict, this.resolveRingforWinner);
-=======
             this.game.raiseEvent('onResolveRingEffects', this.conflict, () => {
                 player.resolveRingEffects(this.conflict.conflictRing);
             });
->>>>>>> 1ab1ac3057fc16f5d50b68b6e0f9e4dadfff6ade
         }
         return true;
     }
@@ -263,15 +253,10 @@ class ConflictFlow extends BaseStep {
             let ring = _.find(this.game.rings, ring => {
                 return ring.element === this.conflict.conflictRing;
             });
-            ring.claimRing(this.conflict.winner);
+            this.game.raiseEvent('onClaimRing', this.conflict, ring.claimRing(this.conflict.winner));
         }
     }
-    /*
-    winnerClaimsRing(conflict) {
-        let ring = _.find(conflict.game.rings, ring => conflict.conflictRing === ring.element);
-        ring.claimRing(conflict.winner);
-    }
-    */
+
     returnHome() {
         if(this.conflict.cancelled) {
             return;
