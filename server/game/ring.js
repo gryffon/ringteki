@@ -24,6 +24,10 @@ class Ring {
     getFate() {
         return this.fate;
     }
+    
+    removeFate() {
+        this.fate = 0;
+    }
 
     modifyFate(fate) {
         /**

@@ -31,7 +31,7 @@ class RegroupPhase extends Phase {
     }
 
     readyCards() {
-        this.game.raiseEvent('onReadyAllCards', () => {
+        this.game.raiseEvent('onReadyAllCards', this, () => {
             _.each(this.game.getPlayers(), player => {
                 player.readyCards();
             });
@@ -39,12 +39,14 @@ class RegroupPhase extends Phase {
     }
     
     discardFromProvinces() {
-        _.each(this.game.getPlayers(), player => player.discardFromBrokenProvinces());
-        _.each(this.game.getPlayers(), player => this.game.queueStep(new DiscardFromProvincesPrompt(this.game, player)));
+        _.each(this.game.getPlayersInFirstPlayerOrder(), player => player.discardFromBrokenProvinces());
+        _.each(this.game.getPlayersInFirstPlayerOrder(), player => this.game.queueStep(new DiscardFromProvincesPrompt(this.game, player)));
     }
     
     returnRings() {
-        this.game.raiseEvent('onReturnRings', this.game, this.game.returnRings);
+        this.game.raiseEvent('onReturnRings', this.game, () => {
+            this.game.returnRings();
+        });
     }
 
     passFirstPlayer() {

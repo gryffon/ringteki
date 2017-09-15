@@ -114,10 +114,10 @@ class Conflict {
         this.attackerSkill = this.calculateSkillFor(this.attackers) + this.attackerSkillModifier;
         this.defenderSkill = this.calculateSkillFor(this.defenders) + this.defenderSkillModifier;
         
-        if (this.attackingPlayer.imperialFavor == this.conflictType) {
+        if(this.attackingPlayer.imperialFavor === this.conflictType) {
             this.attackerSkill++;
         }
-        if (this.defendingPlayer.imperialFavor == this.conflictType) {
+        if(this.defendingPlayer.imperialFavor === this.conflictType) {
             this.defenderSkill++;
         }
     }
@@ -247,7 +247,7 @@ class Conflict {
 
         this.resetCards();
 
-        this.game.addMessage('{0}\'s {1} conflict is cancelled', this.attackingPlayer, this.conflictType);
+        this.game.addMessage('{0}\'s passed on initiating a conflict', this.attackingPlayer, this.conflictType);
     }
 }
 

@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const UiPrompt = require('./uiprompt.js');
 
 class ActionWindow extends UiPrompt {
@@ -7,7 +6,7 @@ class ActionWindow extends UiPrompt {
 
         this.title = title;
         this.windowName = windowName;
-        if (this.game.currentConflict) {
+        if(this.game.currentConflict) {
             this.currentPlayer = this.game.currentConflict.defendingPlayer;
         } else {
             this.currentPlayer = game.getFirstPlayer();
@@ -75,7 +74,7 @@ class ActionWindow extends UiPrompt {
     nextPlayer() {
         let otherplayer = this.game.getOtherPlayer(this.currentPlayer);
         
-        if (!otherplayer && this.prevPlayerPassed) {
+        if(!otherplayer && this.prevPlayerPassed) {
             this.complete();
         } else {
             this.currentPlayer = otherplayer;

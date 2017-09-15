@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const ChooseCost = require('./choosecost.js')
+const ChooseCost = require('./choosecost.js');
 const Costs = require('../costs.js');
 
 class ChooseFate extends ChooseCost {
@@ -10,12 +10,12 @@ class ChooseFate extends ChooseCost {
             Costs.payFate(2),
             Costs.payFate(3)
         ]);
-        this.fate = 0
+        this.fate = 0;
     }
 
     resolve(context, result = { resolved: false }) {
         let extrafate = context.player.fate - context.player.getReducedCost('play', context.source);
-        if (extrafate > 3) {
+        if(extrafate > 3) {
             extrafate = 3;
         }
         
@@ -26,14 +26,6 @@ class ChooseFate extends ChooseCost {
         }
 
         let payableCosts = _.first(this.choices, extrafate + 1);
-        let payableCostsSize = _.size(payableCosts);
-
-
-        if(payableCostsSize === 1) {
-            this.chosenCost = _.values(payableCosts)[0];
-            return this.resolveCost(this.chosenCost, context, result);
-        }
-
         this.context = context;
         this.result = result;
         
@@ -53,7 +45,7 @@ class ChooseFate extends ChooseCost {
         return result;
     }
 
-        chooseCost(player, choice) {
+    chooseCost(player, choice) {
         this.chosenCost = choice !== 'Cancel' ? this.choices[choice] : Costs.payHonor(30); // An Impossible cost, as we want to cancel this action 
         this.fate = choice;
         this.resolveCost(this.chosenCost, this.context, this.result);

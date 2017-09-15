@@ -17,8 +17,8 @@ class PlayCharacterAction extends BaseAbility {
     meetsRequirements(context) {
         var {game, player, source} = context;
         let currentPrompt = player.currentPrompt();
-        if (currentPrompt === undefined) {
-            return false
+        if(currentPrompt.promptTitle === undefined) {
+            return false;
         }
 
         return (
@@ -36,8 +36,8 @@ class PlayCharacterAction extends BaseAbility {
 
         // need to add an additional selection prompt if conflict ongoing
         context.player.playCharacterWithFate(context.source, extrafate);
-        if (context.game.currentConflict) {
-            context.game.promptWithMenu(context.player, context.player, {
+        if(context.game.currentConflict) {
+            context.game.promptWithMenu(context.player, this, {
                 activePrompt: {
                     promptTitle: context.source.name,
                     menuTitle: 'Where do you wish to play this character?',
@@ -51,6 +51,17 @@ class PlayCharacterAction extends BaseAbility {
         }
     }
     
+    moveToConflict(player, arg) {
+        if(arg !== '') {
+            let card = player.findCardInPlayByUuid(arg);
+            if(card) {
+                card.inConflict = true;
+                player.game.currentConflict.attackers.push(card);
+            }
+        }
+        return true;
+    }
+
     isCardAbility() {
         return false;
     }

@@ -168,12 +168,14 @@ class Player extends Spectator {
     discardFromBrokenProvinces() {
         var provinces = ['province 1', 'province 2', 'province 3', 'province 4'];
 
-        _.each(provinces, location => {
-            province = this.getSourceList(location);
-            if (province.isBroken) {
-                _.find(province._wrapped, card => {
-                    this.movecard(card,'dynasty discard pile');
-                    this.movecard(this.dynastyDeck.first(), location);
+        _.each(provinces, province => {
+            let provinceCard = _.find(this.getSourceList(province)._wrapped, card => card.isProvince);
+            if(provinceCard.isBroken) {
+                _.find(this.getSourceList(province)._wrapped, card => {
+                    if(card.isDynasty && !card.facedown) {
+                        this.movecard(card,'dynasty discard pile');
+                        this.movecard(this.dynastyDeck.first(), province);
+                    }
                     return card.isDynasty;
                 });
             }
@@ -324,7 +326,7 @@ class Player extends Spectator {
         }
 
         this.discardCards(cards, false, discarded => {
-            this.game.addMessage('{0} discards {1} at random', this, discarded);
+            this.game.addMessage('{0} discards {1} at random', this, discarded[0]);
             callback(discarded);
         });
     }
@@ -605,6 +607,7 @@ class Player extends Spectator {
 
         this.game.raiseEvent('onIncomeCollected', { player: this });
 
+        this.passedDynasty = false;
         this.limitedPlayed = 0;
         this.flipDynastyCards();
         this.drawBid = 0;
@@ -930,13 +933,11 @@ class Player extends Spectator {
     }
     
     getClaimedRings() {
-        let rings = [];
-        _.each(this.game.rings, ring => rings.push(ring.element));
-        return rings;
+        return _.filter(this.game.rings, ring => ring.claimedby === this.name);
     }
     
-    claimImperialFavor(context) {
-        context.player.imperialFavor = context.choice;
+    claimImperialFavor(conflictType) {
+        this.imperialFavor = conflictType;
     }
 
     readyCards(notCharacters = false) {
@@ -1074,7 +1075,7 @@ class Player extends Spectator {
         this.game.applyGameAction('ready', card, card => {
             card.bowed = false;
 
-            this.game.raiseEvent('onCardStood', { player: this, card: card });
+            this.game.raiseEvent('onCardReadied', { player: this, card: card });
         });
     }
 
@@ -1154,50 +1155,30 @@ class Player extends Spectator {
     }
     
     discardCharactersWithNoFate() {
-        _.each(this.filterCardsInPlay(card => card.type === 'character' && card.fate === 0), () => {
-            this.game.promptForSelect(this, {
-                activePromptTitle: 'Choose character to discard',
-                waitingPromptTitle: 'Waiting for opponent to discard a character',
-                cardCondition: card => {
-                    return card.location === 'in play' && card.fate === 0;
-                },
-                cardType: 'character',
-                onSelect: card => this.discard(card),
-                onCancel: () => false
-            });
-        });
+        this.discardCards(this.filterCardsInPlay(card => card.type === 'character' && card.fate === 0));
     }
 
     playCharacterWithFate(card, fate) {
         let location = card.location;
         this.putIntoPlay(card);
         card.modifyFate(fate);
-        if (card.isDynasty) {
+        if(card.isDynasty) {
             this.moveCard(this.dynastyDeck.first(), location);
         }        
     }
     
-    moveToConflict(player, arg) {
-        if (arg !== '') {
-            let card = player.findCardInPlayByUuid(arg);
-            card.inConflict = true;
-            player.game.currentConflict.attackers.push(card);
-        }
-        return true;
-    }
-
     addFateToDuplicate(card) {
         let duplicate = this.getDuplicateInPlay(card);
         duplicate.modifyFate(1);
         let location = card.location;
         this.discardCard(card);
-        if (card.isDynasty) {
+        if(card.isDynasty) {
             this.moveCard(this.dynastyDeck.first(), location);
         }
     }
 
     resolveRingEffects(element) {
-        if (element === '') {
+        if(element === '') {
             return;
         }
 
@@ -1244,7 +1225,7 @@ class Player extends Spectator {
                     },
                     cardType: 'character',
                     onSelect: (player, card) => {
-                        if (card.bowed) {
+                        if(card.bowed) {
                             this.readyCard(card);
                         } else {
                             this.bowCard(card);
@@ -1265,13 +1246,13 @@ class Player extends Spectator {
                     },
                     waitingPromptTitle: 'Waiting for opponent to use Fire Ring'
                 });
-           break;
+                break;
         }
         this.game.addMessage('{0} resolved the {1} ring', this.name, element);        
     }
     
     resolveAirRing(player, choice) {
-        if (choice === 'Gain 2 Honor') {
+        if(choice === 'Gain 2 Honor') {
             this.game.addHonor(this, 2);
         } else {
             this.game.transferHonor(this, this.game.getOtherPlayer(this), 1);
@@ -1280,7 +1261,7 @@ class Player extends Spectator {
     }
     
     resolveFireRing(player, choice) {
-        if (choice === 'honor') {
+        if(choice === 'honor') {
             this.game.promptForSelect(this, {
                 activePromptTitle: 'Choose character to '.concat(choice),
                 waitingPromptTitle: 'Waiting for opponent to use Fire Ring',

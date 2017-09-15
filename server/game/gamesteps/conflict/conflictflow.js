@@ -27,6 +27,7 @@ class ConflictFlow extends BaseStep {
         this.pipeline.initialise([
             new SimpleStep(this.game, () => this.resetCards()),
             new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer),
+            new SimpleStep(this.game, () => this.initiateConflict()),
             new SimpleStep(this.game, () => this.checkRevealProvince()),
             new SimpleStep(this.game, () => this.announceAttackerSkill()),
             new SimpleStep(this.game, () => this.promptForDefenders()),
@@ -47,8 +48,18 @@ class ConflictFlow extends BaseStep {
         this.conflict.resetCards();
     }
 
-    announceConflict() {
-        this.game.addMessage('{0} is initiating a {1} conflict', this.conflict.attackingPlayer, this.conflict.conflictType);
+    initiateConflict() {
+        if(this.conflict.cancelled) {
+            return;
+        }
+
+        let ring = this.game.rings[this.conflict.conflictRing];
+        this.conflict.attackingPlayer.conflicts.perform(this.conflict.conflictType);
+        _.each(this.conflict.attackers, card => card.inConflict = true);
+        this.game.addFate(this.conflict.attackingPlayer, ring.fate);
+        ring.removeFate();
+
+        this.game.addMessage('{0} is initiating a {1} conflict, contesting the {2} ring', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictRing);
     }
 
     promptForAttackers() {
@@ -79,14 +90,11 @@ class ConflictFlow extends BaseStep {
     }
     
     checkRevealProvince() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
         
-        this.conflict.attackingPlayer.conflicts.perform(this.conflict.conflictType, true);
-        _.each(this.conflict.attackers, card => card.inConflict = true);
-
-        if (this.conflict.conflictProvince.facedown) {
+        if(this.conflict.conflictProvince.facedown) {
             this.conflict.conflictProvince.facedown = false;
             this.conflict.provinceRevealedDuringConflict = true;
         }
@@ -94,7 +102,7 @@ class ConflictFlow extends BaseStep {
     }
 
     announceAttackerSkill() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
@@ -104,7 +112,7 @@ class ConflictFlow extends BaseStep {
     }
 
     promptForDefenders() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
@@ -142,6 +150,10 @@ class ConflictFlow extends BaseStep {
     }
 
     announceDefenderSkill() {
+        if(this.conflict.cancelled) {
+            return;
+        }
+
         // Explicitly recalculate strength in case an effect has modified character strength.
         _.each(this.conflict.defenders, card => card.inConflict = true);
         this.conflict.calculateSkill();
@@ -153,7 +165,7 @@ class ConflictFlow extends BaseStep {
     }
 
     determineWinner() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
@@ -168,8 +180,6 @@ class ConflictFlow extends BaseStep {
             this.conflict.loser.conflicts.lost(this.conflict.conflictType, this.conflict.loser === this.conflict.attackingPlayer);
         }
         
-        
-
         this.game.raiseEvent('afterConflict', this.conflict);
     }
 
@@ -182,33 +192,35 @@ class ConflictFlow extends BaseStep {
     }
 
     applyUnopposed() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
-        if (this.conflict.winner === this.conflict.attackingPlayer && this.conflict.defenders.length === 0) {
+        if(this.conflict.winner === this.conflict.attackingPlayer && this.conflict.defenders.length === 0) {
             this.game.addHonor(this.conflict.loser, -1);
         }
     }
     
     checkBreakProvince() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
         let province = this.conflict.conflictProvince;
-        if (this.conflict.isAttackerTheWinner() && this.conflict.skillDifference >= province.getStrength()) {
-            this.game.raiseEvent('onBreakProvince', province, province.breakProvince);
-            this.game.addMessage('{0} hs broken the province!', this.conflict.winner.name);
+        if(this.conflict.isAttackerTheWinner() && this.conflict.skillDifference >= province.getStrength()) {
+            this.game.raiseEvent('onBreakProvince', province, () => {
+                province.breakProvince();
+            });
+            this.game.addMessage('{0} has broken the province!', this.conflict.winner.name);
         }
     }
     
     resolveRingEffects() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
-        if (this.conflict.isAttackerTheWinner()) {
+        if(this.conflict.isAttackerTheWinner()) {
             let menuTitle = 'Do you want to resolve the '.concat(this.conflict.conflictRing).concat(' ring?');
             let waitingPromptTitle = 'Waiting for opponent to use decide whether to resolve the '.concat(this.conflict.conflictRing).concat(' ring');
             this.game.promptWithMenu(this.conflict.winner, this, {
@@ -225,23 +237,21 @@ class ConflictFlow extends BaseStep {
         }       
     }
     
-    triggerRingResolutionEvent(player, arg, method) {
-        if (arg !== 'No') {
-            this.game.raiseEvent('onResolveRingEffects', this.conflict, this.resolveRingforWinner);
+    triggerRingResolutionEvent(player, arg) {
+        if(arg !== 'No') {
+            this.game.raiseEvent('onResolveRingEffects', this.conflict, () => {
+                player.resolveRingEffects(this.conflict.conflictRing);
+            });
         }
         return true;
     }
     
-    resolveRingforWinner(conflict) {
-        conflict.winner.resolveRingEffects(conflict.conflictRing);
-    }
-      
     claimRing() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
-        if (this.conflict.winner) {
+        if(this.conflict.winner) {
             let ring = _.find(this.game.rings, ring => {
                 return ring.element === this.conflict.conflictRing;
             });
@@ -255,17 +265,17 @@ class ConflictFlow extends BaseStep {
     }
     */
     returnHome() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 
         this.game.raiseEvent('onReturnHome', this.conflict);
-        _.each(this.conflict.attackers, card => card.returnHomeFromConflict(this.conflict));
-        _.each(this.conflict.defenders, card => card.returnHomeFromConflict(this.conflict));
+        _.each(this.conflict.attackers, card => card.returnHomeFromConflict());
+        _.each(this.conflict.defenders, card => card.returnHomeFromConflict());
     }
     
     completeConflict() {
-        if (this.conflict.cancelled) {
+        if(this.conflict.cancelled) {
             return;
         }
 

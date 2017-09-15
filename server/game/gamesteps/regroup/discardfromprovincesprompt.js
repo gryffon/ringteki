@@ -14,7 +14,7 @@ class DiscardFromProvincesPrompt extends SelectCardPrompt {
             onSelect: (player, cards) => {
                 _.each(cards, card => {
                     let location = card.location;
-                    player.moveTo(card, 'dynasty discard pile');
+                    player.moveCard(card, 'dynasty discard pile');
                     player.moveCard(player.dynastyDeck.first(), location);
                 });
                 this.complete();
@@ -29,6 +29,3 @@ class DiscardFromProvincesPrompt extends SelectCardPrompt {
 }
 
 module.exports = DiscardFromProvincesPrompt;
-
-
-

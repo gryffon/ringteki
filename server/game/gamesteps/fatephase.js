@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const Phase = require('./phase.js');
 const ActionWindow = require('./actionwindow.js');
 const SimpleStep = require('./simplestep.js');
@@ -19,20 +20,22 @@ class FatePhase extends Phase {
             new SimpleStep(game, () => this.discardCharactersWithNoFate()),
             new SimpleStep(game, () => this.removeFateFromCharacters()),
             new SimpleStep(game, () => this.placeFateOnUnclaimedRings()),
-            new ActionWindow(this.game, 'After place fate on rings', 'placing')
+            new ActionWindow(this.game, 'Action Window', 'FatePhaseActionWindow')
         ]);
     }
 
     discardCharactersWithNoFate() {
-        _.each(this.game.getPlayersInFirstPlayerOrder, player => player.discardCharactersWithNoFate())
+        _.each(this.game.getPlayersInFirstPlayerOrder(), player => player.discardCharactersWithNoFate());
     }
     
     removeFateFromCharacters() {
-        _.each(this.game.findAnyCardInPlay(card => card.type === 'character'), card => card.modifyFate(-1));
+        _.each(this.game.findAnyCardsInPlay(card => card.type === 'character'), card => card.modifyFate(-1));
     }
     
     placeFateOnUnclaimedRings() {
-        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', this.game, this.game.placeFateOnUnclaimedRings);
+        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', this, () => {
+            this.game.placeFateOnUnclaimedRings();
+        });
     }
 }
 

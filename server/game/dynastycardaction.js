@@ -1,6 +1,6 @@
 const BaseAbility = require('./baseability.js');
 const Costs = require('./costs.js');
-const ChooseFate = require('./costs/choosefate.js')
+const ChooseFate = require('./costs/choosefate.js');
 
 class DynastyCardAction extends BaseAbility {
     constructor() {
@@ -15,18 +15,17 @@ class DynastyCardAction extends BaseAbility {
     }
 
     meetsRequirements(context) {
-        var {game, player, source} = context;
-        let currentPrompt = player.currentPrompt();
-        if (currentPrompt === undefined) {
+        let currentPrompt = context.player.currentPrompt();
+        if(currentPrompt === undefined) {
             return false;
         }
 
         return (
-            !source.facedown &&
-            source.isDynasty &&
-            source.getType() === 'character' &&
-            player.isCardInPlayableLocation(source, 'dynasty') &&
-            player.canPutIntoPlay(source) &&
+            !context.source.facedown &&
+            context.source.isDynasty &&
+            context.source.getType() === 'character' &&
+            context.player.isCardInPlayableLocation(context.source, 'dynasty') &&
+            context.player.canPutIntoPlay(context.source) &&
             currentPrompt.promptTitle === 'Play cards from provinces'
         );
     }
