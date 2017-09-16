@@ -3,20 +3,23 @@ const Player = require('./player.js');
 const EventRegistrar = require('./eventregistrar.js');
 
 class Conflict {
-    constructor(game, attackingPlayer, defendingPlayer, conflictType, conflictRing, conflictProvince) {
+    constructor(game, attackingPlayer, defendingPlayer) {
         this.game = game;
         this.attackingPlayer = attackingPlayer;
+        this.conflictDeclared = false;
+        this.conflictPassed = false;
         this.isSinglePlayer = !defendingPlayer;
         this.defendingPlayer = defendingPlayer || this.singlePlayerDefender();
-        this.conflictType = conflictType;
-        this.conflictRing = conflictRing;
-        this.conflictProvince = conflictProvince;
+        this.conflictType = '';
+        this.conflictRing = '';
+        this.conflictProvince = null;
         this.attackers = [];
         this.attackerSkill = 0;
         this.attackerSkillModifier = 0;
         this.defenders = [];
         this.defenderSkill = 0;
         this.defenderSkillModifier = 0;
+        this.provinceRevealedDuringConflict = false;
         this.events = new EventRegistrar(game, this);
         this.registerEvents(['onCardLeftPlay']);
     }
@@ -110,6 +113,13 @@ class Conflict {
 
         this.attackerSkill = this.calculateSkillFor(this.attackers) + this.attackerSkillModifier;
         this.defenderSkill = this.calculateSkillFor(this.defenders) + this.defenderSkillModifier;
+        
+        if(this.attackingPlayer.imperialFavor === this.conflictType) {
+            this.attackerSkill++;
+        }
+        if(this.defendingPlayer.imperialFavor === this.conflictType) {
+            this.defenderSkill++;
+        }
     }
 
     calculateSkillFor(cards) {
@@ -165,7 +175,7 @@ class Conflict {
         const noWinnerRules = [
             {
                 condition: () => this.attackerSkill === 0 && this.defenderSkill === 0,
-                message: 'There is no winner or loser for this conflict because the attacker skill is 0'
+                message: 'There is no winner or loser for this conflict because both sides have 0 skill'
             },
             {
                 condition: () => this.attackerSkill >= this.defenderSkill && this.attackingPlayer.cannotWinConflict,
@@ -237,7 +247,7 @@ class Conflict {
 
         this.resetCards();
 
-        this.game.addMessage('{0}\'s {1} conflict is cancelled', this.attackingPlayer, this.conflictType);
+        this.game.addMessage('{0}\'s passed on initiating a conflict', this.attackingPlayer, this.conflictType);
     }
 }
 

@@ -6,16 +6,22 @@ class ProvinceCard extends BaseCard {
     constructor(owner, cardData) {
         super(owner, cardData);
 
+        this.provinceStrength = 0;
         this.strengthModifier = 0;
         this.isProvince = true;
+        this.isBroken = false;
     }
 
     getStrength() {
-        return this.cardData.province_strength + this.strengthModifier;
+        return this.cardData.strength + this.strengthModifier;
     }
 
     flipFaceup() {
         this.facedown = false;
+    }
+    
+    breakProvince() {
+        this.broken = true;
     }
 
     getSummary(activePlayer, hideWhenFaceup) {
@@ -23,7 +29,8 @@ class ProvinceCard extends BaseCard {
 
         return _.extend(baseSummary, {
             isProvince: this.isProvince,
-            strength: this.getStrength
+            strength: this.getStrength(),
+            isBroken: this.isBroken
         });
     }
 

@@ -24,6 +24,10 @@ class Ring {
     getFate() {
         return this.fate;
     }
+    
+    removeFate() {
+        this.fate = 0;
+    }
 
     modifyFate(fate) {
         /**
@@ -44,7 +48,7 @@ class Ring {
 
     claimRing(player) {
         this.claimed = true;
-        this.claimedBy = player;
+        this.claimedBy = player.name;
     }
 
     resetRing() {

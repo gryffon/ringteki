@@ -3,6 +3,7 @@ const Phase = require('./phase.js');
 const SimpleStep = require('./simplestep.js');
 const ActionWindow = require('./actionwindow.js');
 const EndRoundPrompt = require('./regroup/endroundprompt.js');
+const DiscardFromProvincesPrompt = require('./regroup/discardfromprovincesprompt.js');
 
 /*
 V Regroup Phase
@@ -19,8 +20,10 @@ class RegroupPhase extends Phase {
     constructor(game) {
         super(game, 'regroup');
         this.initialise([
-            new ActionWindow(this.game, 'After regroup phase begins', 'beginning'),
+            new ActionWindow(this.game, 'Action Window', 'regroupActionWindow'),
             new SimpleStep(game, () => this.readyCards()),
+            new SimpleStep(game, () => this.discardFromProvinces()),
+            new SimpleStep(game, () => this.returnRings()),
             new SimpleStep(game, () => this.passFirstPlayer()),
             new EndRoundPrompt(game),
             new SimpleStep(game, () => this.roundEnded())
@@ -28,10 +31,21 @@ class RegroupPhase extends Phase {
     }
 
     readyCards() {
-        this.game.raiseEvent('onReadyAllCards', () => {
+        this.game.raiseEvent('onReadyAllCards', this, () => {
             _.each(this.game.getPlayers(), player => {
                 player.readyCards();
             });
+        });
+    }
+    
+    discardFromProvinces() {
+        _.each(this.game.getPlayersInFirstPlayerOrder(), player => player.discardFromBrokenProvinces());
+        _.each(this.game.getPlayersInFirstPlayerOrder(), player => this.game.queueStep(new DiscardFromProvincesPrompt(this.game, player)));
+    }
+    
+    returnRings() {
+        this.game.raiseEvent('onReturnRings', this.game, () => {
+            this.game.returnRings();
         });
     }
 
