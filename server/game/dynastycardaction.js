@@ -16,7 +16,7 @@ class DynastyCardAction extends BaseAbility {
 
     meetsRequirements(context) {
         let currentPrompt = context.player.currentPrompt();
-        if(currentPrompt === undefined) {
+        if(currentPrompt.promptTitle === undefined) {
             return false;
         }
 

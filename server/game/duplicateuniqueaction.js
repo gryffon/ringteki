@@ -7,13 +7,18 @@ class DuplicateUniqueAction extends BaseAbility {
     }
 
     meetsRequirements(context) {
-        var {game, player, source} = context;
+        let currentPrompt = context.player.currentPrompt();
+        if(currentPrompt.promptTitle === undefined) {
+            return false;
+        }
 
         return (
-            game.currentPhase === 'dynasty' &&
-            source.getType() === 'character' &&
-            (player.isCardInPlayableLocation(source, 'dynasty') || player.isCardInPlayableLocation(source, 'play')) &&
-            !player.canPutIntoPlay(source)
+            !context.source.facedown &&
+            context.source.isDynasty &&
+            context.source.getType() === 'character' &&
+            (context.player.isCardInPlayableLocation(context.source, 'dynasty') || context.player.isCardInPlayableLocation(context.source, 'hand')) &&
+            !context.player.canPutIntoPlay(context.source) &&
+            currentPrompt.promptTitle === 'Play cards from provinces'
         );
     }
     
