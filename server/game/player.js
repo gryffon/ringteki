@@ -977,10 +977,9 @@ class Player extends Spectator {
             }
             
             // card.attachments is wrapped
-            if(_.size(card.attachments) > 0) {
-                let attachments = _.clone(card.attachments);
-                _.each(attachments._wrapped, card => this.discardAttachment(card, true));
-            }
+            card.attachments.each(attachment => {
+                this.discardAttachment(attachment, true);
+            });
 
             /* Ignore dupe mechanic
             while(card.dupes.size() > 0 && targetLocation !== 'play area') {
