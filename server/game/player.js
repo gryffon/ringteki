@@ -995,13 +995,6 @@ class Player extends Spectator {
 
             this.game.raiseEvent('onCardLeftPlay', params, event => {
                 event.card.leavesPlay();
-                /*
-                if(event.card.parent && event.card.parent.attachments) {
-                    event.card.parent.attachments = this.removeCardByUuid(event.card.parent.attachments, event.card.uuid);
-                    event.card.parent = undefined;
-                }
-                */
-
                 card.moveTo(targetLocation);
             });
         }
