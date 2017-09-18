@@ -640,13 +640,22 @@ class Player extends Spectator {
         let originalLocation = attachment.location;
         let originalParent = attachment.parent;
 
-        attachment.owner.removeCardFromPile(attachment);
         if(originalParent) {
             originalParent.removeAttachment(attachment);
         }
-        attachment.moveTo('play area', card);
-        card.attachments.push(attachment);
 
+        if(originalLocation !== 'play area') {
+            attachment.owner.removeCardFromPile(attachment);
+            attachment.moveTo('play area', card);
+        }
+        
+        card.attachments.push(attachment);
+        attachment.parent = card;
+        
+        if(attachment.controller !== this) {
+            attachment.controller = this;
+        }
+        
         this.game.queueSimpleStep(() => {
             attachment.applyPersistentEffects();
         });
@@ -959,9 +968,10 @@ class Player extends Spectator {
         this.stronghold.bowed = false;
     }
 
-    removeAttachment(attachment) {
-
-        if(attachment.isAncestral()) {
+    discardAttachment(attachment, parentLeftPlay = false) {
+        
+        attachment.parent.removeAttachment(attachment);
+        if(attachment.isAncestral() && parentLeftPlay) {
             attachment.owner.moveCard(attachment, 'hand');
         } else {
             attachment.owner.moveCard(attachment, 'conflict discard pile');
@@ -976,6 +986,15 @@ class Player extends Spectator {
         this.stronghold.cardData = deck.stronghold[0];
         this.faction = deck.faction;
     }
+    
+    /*
+     * This is called whenever a card is moved from one location to another 
+     * (e.g. when a card is played or discarded from play or hand.
+     * It doesn't actually move a card from one location to another (that's 
+     * handled by card.moveTo), but it implements all the bookkeeping involved,
+     * such as leaving/coming into play events, changing arrays which store card
+     * locations, and handling attachments     * 
+     */
 
     moveCard(card, targetLocation, options = {}) {
 
@@ -987,14 +1006,15 @@ class Player extends Spectator {
             return;
         }
 
-        if(card.location === 'play area') {
+        if(card.location === 'play area') { // This card is leaving play
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation);
                 return;
             }
-
+            
+            // card.attachments is wrapped
             card.attachments.each(attachment => {
-                this.removeAttachment(attachment, false);
+                this.discardAttachment(attachment, true);
             });
 
             /* Ignore dupe mechanic
@@ -1010,12 +1030,6 @@ class Player extends Spectator {
 
             this.game.raiseEvent('onCardLeftPlay', params, event => {
                 event.card.leavesPlay();
-
-                if(event.card.parent && event.card.parent.attachments) {
-                    event.card.parent.attachments = this.removeCardByUuid(event.card.parent.attachments, event.card.uuid);
-                    event.card.parent = undefined;
-                }
-
                 card.moveTo(targetLocation);
             });
         }
