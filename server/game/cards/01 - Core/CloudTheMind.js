@@ -11,7 +11,7 @@ class CloudTheMind extends DrawCard {
         
     //Need to control a Shugenja
     canBePlayed() {
-        if(!_.any(this.controller.cardsInPlay), card => card.getType() === 'character' && card.hasTrait('shugenja')) {
+        if(!_.any(this.controller.cardsInPlay, card => card.getType() === 'character' && card.hasTrait('shugenja'))) {
             return false;
         }
         
