@@ -361,6 +361,9 @@ class DrawCard extends BaseCard {
             .concat(this.abilities.playActions)
             .concat(_.filter(this.abilities.actions, action => !action.allowMenu()));
     }
+    
+    entersPlay() {
+    }
 
     leavesPlay() {
         // If this is an attachment and is attached to another card, we need to remove all links between them
