@@ -11,10 +11,9 @@ class WayOfTheLion extends DrawCard {
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to double the military skill of {2}', this.controller, this, context.target);
-                let newMilitarySkill = context.target.getMilitarySkill() * 2;
                 this.untilEndOfConflict(ability => ({
                     match: context.target,
-                    effect: ability.effects.modifyMilitarySkill(newMilitarySkill)
+                    effect: ability.effects.modifyMilitarySkill(context.target.getMilitarySkill(true))
                 }));
             }
         });
