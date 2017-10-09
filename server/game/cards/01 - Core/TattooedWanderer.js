@@ -5,6 +5,7 @@ class TattooedWanderer extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Play Tattooed Wanderer as an attachment',
+            clickToActivate: true,
             condition: () => {
                 let clone = new TattooedWanderer(this.owner, this.cardData);
                 clone.type = 'attachment';
