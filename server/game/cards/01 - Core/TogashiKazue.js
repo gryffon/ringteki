@@ -5,6 +5,7 @@ class TogashiKazue extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Play Togashi Kazue as an attachment',
+            clickToActivate: true,
             condition: () => {
                 let clone = new TogashiKazue(this.owner, this.cardData);
                 clone.type = 'attachment';
