@@ -8,7 +8,7 @@ class HidaKisada extends DrawCard {
         this.abilityRegistrar.register(['onCardAbilityInitiatedOtherEffects', 'onConflictDeclared', 'onConflictFinished']);
     }
     
-    onCardabilityInitiatedOtherEffects(event) {
+    onCardAbilityInitiatedOtherEffects(event) {
         if(event.resolver.ability.abilityType === 'action') {
             if(event.player !== this.controller && this.canCancel && this.location === 'playarea' && !this.isBlank() && (this.controller.conflicts.getTotalLost() === 0)) {
                 event.cancel();
