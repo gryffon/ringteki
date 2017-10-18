@@ -4,8 +4,8 @@ const EventRegistrar = require('../../eventregistrar.js');
 class HidaKisada extends DrawCard {
     setupCardAbilities(ability) {
         this.canCancel = false;
-        this.events = new EventRegistrar(this.game, this);
-        this.events.register(['onCardAbilityInitiatedOtherEffects', 'onConflictDeclared', 'onConflictFinished']);
+        this.abilityRegistrar = new EventRegistrar(this.game, this);
+        this.abilityRegistrar.register(['onCardAbilityInitiatedOtherEffects', 'onConflictDeclared', 'onConflictFinished']);
     }
     
     onCardabilityInitiatedOtherEffects(event) {
