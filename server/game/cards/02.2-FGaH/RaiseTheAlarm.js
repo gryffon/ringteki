@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class RaiseTheAlarm extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Flip A Province',
+            title: 'Flip a dynasty card',
             condition: () => this.game.currentConflict && this.game.currentConflict.defendingPlayer === this.controller && this.game.currentConflict.conflictType === 'military',
             target: {
                 cardCondition: card => {
@@ -13,7 +13,7 @@ class RaiseTheAlarm extends DrawCard {
             },
             handler: context => {
                 context.target.facedown = false;
-                if(context.target.type === 'character' && this.controller.canPutIntoPlay(context.target)) {
+                if(context.target.type === 'character' && this.controller.canPutIntoPlay(context.target, true)) {
                     this.game.addMessage('{0} uses {1} to bring {2} into the conflict!', this.controller, this, context.target);
                     this.controller.putIntoPlay(context.target, true);
                 }
