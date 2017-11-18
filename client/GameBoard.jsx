@@ -20,6 +20,7 @@ import Messages from './GameComponents/Messages.jsx';
 import Card from './GameComponents/Card.jsx';
 import CardPile from './GameComponents/CardPile.jsx';
 import GameConfiguration from './GameComponents/GameConfiguration.jsx';
+import ConflictHand from './GameComponents/conflictCards/conflictHand.jsx';
 import { tryParseJSON } from './util.js';
 
 import * as actions from './actions';
@@ -499,8 +500,12 @@ export class InnerGameBoard extends React.Component {
                 { this.getPrompt(thisPlayer) }
                 { this.getPlayerHand(thisPlayer) }
                 <div className='player-stats-row'>
-                    <PlayerStats stats={ otherPlayer ? otherPlayer.stats : null }
-                        user={ otherPlayer ? otherPlayer.user : null } firstPlayer={ otherPlayer && otherPlayer.firstPlayer } otherPlayer handSize={ otherPlayer && otherPlayer.cardPiles.hand ? otherPlayer.cardPiles.hand.length : 0 } />
+                    <PlayerStats
+                        stats={ otherPlayer ? otherPlayer.stats : null }
+                        user={ otherPlayer ? otherPlayer.user : null }
+                        firstPlayer={ otherPlayer && otherPlayer.firstPlayer }
+                        otherPlayer handSize={ otherPlayer && otherPlayer.cardPiles.hand ? otherPlayer.cardPiles.hand.length : 0 }
+                    />
                 </div>
                 <div className='main-window'>
                     { this.getProvinces(thisPlayer, otherPlayer) }
@@ -606,9 +611,21 @@ export class InnerGameBoard extends React.Component {
                     </div>
                 </div>
                 <div className='player-stats-row our-side'>
-                    <PlayerStats { ...boundActionCreators } stats={ thisPlayer.stats } showControls={ !this.state.spectating } user={ thisPlayer.user }
-                        firstPlayer={ thisPlayer.firstPlayer } otherPlayer={ false } onSettingsClick={ this.onSettingsClick.bind(this) } spectating={ this.state.spectating } handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
+                    <PlayerStats
+                        { ...boundActionCreators }
+                        stats={ thisPlayer.stats }
+                        showControls={ !this.state.spectating }
+                        user={ thisPlayer.user }
+                        firstPlayer={ thisPlayer.firstPlayer }
+                        otherPlayer={ false }
+                        onSettingsClick={ this.onSettingsClick.bind(this) }
+                        spectating={ this.state.spectating }
+                        handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 }
+                    />
                 </div>
+                <ConflictHand
+                    onCardClick = { this.onCardClick }
+                />
             </div>);
     }
 }
