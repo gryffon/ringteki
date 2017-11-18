@@ -829,10 +829,7 @@ class Player extends Spectator {
             source: card
         });
 
-        var actions = _.filter(card.getActions(), action => {
-            context.ability = action;
-            return action.meetsRequirements(context);
-        });
+        let actions = this.getLegalActionsForCard(card);
 
         if(actions.length === 0) {
             return false;
@@ -848,6 +845,20 @@ class Player extends Spectator {
         return true;
     }
 
+    getLegalActionsForCard(card) {
+        var context = new AbilityContext({
+            game: this.game,
+            player: this,
+            source: card
+        });
+
+        var actions = _.filter(card.getActions(), action => {
+            context.ability = action;
+            return action.meetsRequirements(context);
+        });
+        return actions;
+    }
+
     /**
      * Checks to see if a card can be put into play (in the current conflict). Checks for any other unique cards with the same title, and
      * for any relevant conflict restrictions
@@ -855,7 +866,7 @@ class Player extends Spectator {
      * @param {Boolean} inConflict
      */
     canPutIntoPlay(card, inConflict = false) {
-        if(inConflict && (!this.game.currentConflict ||
+        if(inConflict && card.allowGameAction('playIntoConflict') && (!this.game.currentConflict ||
                 (this.isAttackingPlayer() && !card.allowGameAction('participateAsAttacker')) || 
                 (this.isDefendingPlayer() && !card.allowGameAction('participateAsDefender')) || 
                 card.conflictOptions.cannotParticipateIn[this.game.currentConflict.conflictType])) {
@@ -876,49 +887,57 @@ class Player extends Spectator {
     }
 
     /**
-     * Puts a character into play, calling the onCardEntersPlay and onCardPlayed events if necessary
-     * @param {DrawCard} card 
+     * Puts one or more characters into play, calling the onCardEntersPlay and onCardPlayed events if necessary
+     * @param {DrawCard} card - can also pass an Array of DrawCard
      * @param {Boolean} intoConflict 
      * @param {Boolean} raiseCardPlayed 
      */
-    putIntoPlay(card, intoConflict = false, raiseCardPlayed = false) {
-        if(!this.canPutIntoPlay(card, intoConflict)) {
+    putIntoPlay(cards, intoConflict = false, raiseCardPlayed = false) {
+        if(!_.isArray(cards)) {
+            cards = [cards];
+        }
+
+        cards = _.filter(cards, card => this.canPutIntoPlay(card, intoConflict));
+        if(cards.length === 0) {
             return;
         }
 
-        // this is deprecated, as this function should never be called for attachments, unless they get dragged into play
-        if(card.getType() === 'attachment') {
-            this.promptForAttachment(card);
-            return;
-        }
-
-        let originalLocation = card.location;
-
-        card.new = true;
-        this.moveCard(card, 'play area');
-        card.controller = this;
-
-        if(intoConflict && this.game.currentConflict && card.allowGameAction('playIntoConflict')) {
-            if(this.game.currentConflict.attackingPlayer === this) {
-                this.game.currentConflict.addAttacker(card);
-            } else {
-                this.game.currentConflict.addDefender(card);
+        let events = [];
+        _.each(cards, card => {
+            // this is deprecated, as this function should never be called for attachments, unless they get dragged into play
+            if(card.getType() === 'attachment') {
+                this.promptForAttachment(card);
+                return;
             }
-        }
 
-        card.applyPersistentEffects();
+            let originalLocation = card.location;
 
-        let events = [{
-            name: 'onCardEntersPlay',
-            params: { card: card, originalLocation: originalLocation }
-        }];
+            card.new = true;
+            this.moveCard(card, 'play area');
+            card.controller = this;
 
-        if(raiseCardPlayed) {
+            if(intoConflict && this.game.currentConflict) {
+                if(this.game.currentConflict.attackingPlayer === this) {
+                    this.game.currentConflict.addAttacker(card);
+                } else {
+                    this.game.currentConflict.addDefender(card);
+                }
+            }
+
             events.push({
-                name: 'onCardPlayed',
-                params: { player: this, card: card, originalLocation: originalLocation }
+                name: 'onCardEntersPlay',
+                params: { card: card, originalLocation: originalLocation }
             });
-        }
+
+            if(raiseCardPlayed) {
+                events.push({
+                    name: 'onCardPlayed',
+                    params: { player: this, card: card, originalLocation: originalLocation }
+                });
+            }
+        });
+    
+        _.each(cards, card => card.applyPersistentEffects());
 
         this.game.raiseMultipleEvents(events);
     }
@@ -977,7 +996,7 @@ class Player extends Spectator {
     }
 
     /**
-     * Checks whether attaching passed attachments to passed card is legal
+     * Checks whether attaching passed attachment to passed card is legal
      * @param {DrawCard} attachment 
      * @param {DrawCard} card 
      */
