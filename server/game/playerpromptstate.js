@@ -54,21 +54,36 @@ class PlayerPromptState {
     }
 
     getCardSelectionState(card) {
-        let selectable = this.selectableCards.includes(card);
-        let index = _.indexOf(this.selectedCards, card);
-        let result = {
-            // The `card.selected` property here is a hack for plot selection,
-            // which we do differently from normal card selection.
-            selected: card.selected || (index !== -1),
-            selectable: selectable,
-            unselectable: this.selectCard && !selectable
-        };
+        if(this.selectCard) {
+            let selectable = this.selectableCards.includes(card);
+            let index = _.indexOf(this.selectedCards, card);
+            let result = {
+                // The `card.selected` property here is a hack for plot selection,
+                // which we do differently from normal card selection.
+                selected: card.selected || (index !== -1),
+                selectable: selectable,
+                unselectable: this.selectCard && !selectable
+            };
 
-        if(index !== -1 && this.selectOrder) {
-            return _.extend({ order: index + 1 }, result);
+            if(index !== -1 && this.selectOrder) {
+                return _.extend({ order: index + 1 }, result);
+            }
+
+            return result;
         }
-
-        return result;
+        if(card.location === 'hand') {
+            let actions = card.controller.getLegalActionsForCard(card);
+            return { 
+                selected: card.selected,
+                selectable: actions.length > 0,
+                unselectable: actions.length === 0
+            };
+        }
+        return {
+            selected: card.selected,
+            selectable: false,
+            unselectable: false
+        };
     }
 
     getState() {

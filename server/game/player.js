@@ -829,10 +829,7 @@ class Player extends Spectator {
             source: card
         });
 
-        var actions = _.filter(card.getActions(), action => {
-            context.ability = action;
-            return action.meetsRequirements(context);
-        });
+        let actions = this.getLegalActionsForCard(card);
 
         if(actions.length === 0) {
             return false;
@@ -846,6 +843,20 @@ class Player extends Spectator {
         }
 
         return true;
+    }
+
+    getLegalActionsForCard(card) {
+        var context = new AbilityContext({
+            game: this.game,
+            player: this,
+            source: card
+        });
+
+        var actions = _.filter(card.getActions(), action => {
+            context.ability = action;
+            return action.meetsRequirements(context);
+        });
+        return actions;
     }
 
     /**
