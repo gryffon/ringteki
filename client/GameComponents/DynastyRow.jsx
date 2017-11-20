@@ -8,6 +8,7 @@ import Card from './Card.jsx';
 import CardPile from './CardPile.jsx';
 import Province from './Province.jsx';
 import {tryParseJSON} from '../util.js';
+import OpenHand from './hand/OpenHand.jsx';
 
 class DynastyRow extends React.Component {
     constructor() {
@@ -290,6 +291,9 @@ class DynastyRow extends React.Component {
                             popupLocation={ this.props.isMe || this.props.spectating ? 'top' : 'bottom' } 
                             onDragDrop={ this.props.onDragDrop }
                             size={ this.props.cardSize } />
+                        <div className='dynasty'>
+                            <OpenHand onClick = { this.props.openConflictHand } />
+                        </div>
                     </div>
                 </div>
             );
@@ -390,6 +394,7 @@ DynastyRow.propTypes = {
     onMenuItemClick: PropTypes.func,
     onMouseOut: PropTypes.func,
     onMouseOver: PropTypes.func,
+    openConflictHand: PropTypes.func,
     otherPlayer: PropTypes.object,
     province1Cards: PropTypes.array,
     province2Cards: PropTypes.array,

@@ -66,12 +66,6 @@ export class PlayerStats extends React.Component {
                 { this.props.showControls ? <div className='state'>
                     <button className='btn btn-transparent' onClick={ this.onSettingsClick.bind(this) }><span className='glyphicon glyphicon-cog' />Settings</button>
                 </div> : null }
-
-                {
-                    this.props.showControls
-                        ? <span onClick={ this.props.openHand }>Hand</span>
-                        : null
-                }
             </div>
         );
     }

@@ -11,21 +11,17 @@ const defaults = {
     zIndex: 1
 };
 
-const content = {
-    x: '\u2715',
-    check: '\u2713'
-};
-
 export default class CircleButton extends React.PureComponent {
     render() {
-        let styledProps = {...defaults, ...this.props };
+        let styledProps = { ...defaults, ...this.props };
+
         return (
             <StyledCircleButton
                 { ...styledProps }
                 onClick = { this.props.onClick }
                 className = 'circle-button'
             >
-                { this.props.content && content[this.props.content] }
+                { this.props.children }
             </StyledCircleButton>
         );
     }
@@ -33,7 +29,7 @@ export default class CircleButton extends React.PureComponent {
 
 CircleButton.propTypes = {
     borderSize: PropTypes.number,
-    content: PropTypes.string,
+    children: PropTypes.node,
     onClick: PropTypes.func,
     primary: PropTypes.string,
     rotate: PropTypes.bool,
@@ -46,14 +42,17 @@ const StyledCircleButton = styled.div`
     width: ${ props => props.size }px;
     height: ${ props => props.size }px;
     position: relative;
-    text-align: center;
-    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: ${ props => Math.round(props.size * .6) }px;
     color: ${ props => props.primary };
     border-radius: 50%;
     transition: color .3s, transform .3s;
     border: ${ props => props.borderSize }px solid ${ props => props.primary };
     z-index: ${ props => props.zIndex };
+    fill: ${ props => props.primary };
+    stroke: ${ props => props.secondary };
     
     &:before {
         content: '';
@@ -71,13 +70,15 @@ const StyledCircleButton = styled.div`
         box-sizing: border-box;
         border: ${ props => props.borderSize }px solid ${ props => props.secondary };
     }
-    
+
     &:hover {
         transition: all .3s ease-out;
         color: ${ props => props.tertiary || props.secondary };
         transform: ${ props => props.turn ? 'rotate(90deg)' : '' };
+        fill: ${ props => props.tertiary || props.secondary };
+        stroke: ${ props => props.primary };
     }
-    
+
     &:hover:before {
         transform: scale(.95);
         transition: transform .3s;

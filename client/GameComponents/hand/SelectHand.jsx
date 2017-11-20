@@ -121,9 +121,10 @@ class SelectHand extends React.PureComponent {
                                 size = { 80 }
                                 border = { 4 }
                                 onClick = { this.exit.bind(this, () => {}) }
-                                content = 'x'
                                 turn
-                            />
+                            >
+                                { '\u2715' }
+                            </CircleButton>
                         }
                         {
                             canSubmit(selected, cards) &&
@@ -133,7 +134,9 @@ class SelectHand extends React.PureComponent {
                                 onClick = { this.playCards }
                                 content = 'check'
                                 tertiary = 'rgba(0,128,0,0.85)'
-                            />
+                            >
+                                { '\u2713' }
+                            </CircleButton>
                         }
                     </StyledCloseButtonContainer>
                     <StyledCards className = 'conflict-hand-cards'>
@@ -182,8 +185,10 @@ class SelectHand extends React.PureComponent {
 }
 
 SelectHand.propTypes = {
+    canSubmit: PropTypes.func,
     cards: PropTypes.array,
     closeHand: PropTypes.func,
+    mustSubmit: PropTypes.bool,
     onExit: PropTypes.func,
     onSubmit: PropTypes.func,
     open: PropTypes.bool,

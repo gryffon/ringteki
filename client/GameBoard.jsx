@@ -19,7 +19,7 @@ import Messages from './GameComponents/Messages.jsx';
 import Card from './GameComponents/Card.jsx';
 import CardPile from './GameComponents/CardPile.jsx';
 import GameConfiguration from './GameComponents/GameConfiguration.jsx';
-import ConflictHand from './GameComponents/hand/conflictHand.jsx';
+import ConflictHand from './GameComponents/hand/ConflictHand.jsx';
 import { tryParseJSON } from './util.js';
 
 import * as actions from './actions';
@@ -558,6 +558,7 @@ export class InnerGameBoard extends React.Component {
                                 onConflictTopCardClick={ this.onConflictTopCardClick }
                                 onMouseOver={ this.onMouseOver }
                                 onMouseOut={ this.onMouseOut }
+                                openConflictHand={ boundActionCreators.openHand }
                                 manualMode={ manualMode }
                                 numConflictCards={ thisPlayer.numConflictCards }
                                 numDynastyCards={ thisPlayer.numDynastyCards }
