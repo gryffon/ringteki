@@ -9,7 +9,6 @@ import { bindActionCreators } from 'redux';
 import Draggable from 'react-draggable';
 
 import PlayerStats from './GameComponents/PlayerStats.jsx';
-import PlayerHand from './GameComponents/PlayerHand.jsx';
 import DynastyRow from './GameComponents/DynastyRow.jsx';
 import StrongholdRow from './GameComponents/StrongholdRow.jsx';
 import Ring from './GameComponents/Ring.jsx';
@@ -20,7 +19,7 @@ import Messages from './GameComponents/Messages.jsx';
 import Card from './GameComponents/Card.jsx';
 import CardPile from './GameComponents/CardPile.jsx';
 import GameConfiguration from './GameComponents/GameConfiguration.jsx';
-import ConflictHand from './GameComponents/conflictCards/conflictHand.jsx';
+import ConflictHand from './GameComponents/hand/conflictHand.jsx';
 import { tryParseJSON } from './util.js';
 
 import * as actions from './actions';
@@ -414,24 +413,6 @@ export class InnerGameBoard extends React.Component {
         </div>);
     }
 
-    getPlayerHand(thisPlayer) {
-        if(!this.state.spectating) {
-            return (<Draggable
-                defaultPosition={ { x: 800, y: 700 } } >
-                <div className='player-home-row-container'>
-                    <PlayerHand
-                        cards={ thisPlayer.cardPiles.hand }
-                        isMe={ !this.state.spectating }
-                        onCardClick={ this.onCardClick }
-                        onDragDrop={ this.onDragDrop }
-                        onMouseOut={ this.onMouseOut }
-                        onMouseOver={ this.onMouseOver }
-                        cardSize={ this.props.user.settings.cardSize } />
-                </div>
-            </Draggable>);
-        }
-    }
-
     render() {
         if(!this.props.currentGame) {
             return <div>Waiting for server...</div>;
@@ -498,7 +479,6 @@ export class InnerGameBoard extends React.Component {
             <div className='game-board'>
                 { popup }
                 { this.getPrompt(thisPlayer) }
-                { this.getPlayerHand(thisPlayer) }
                 <div className='player-stats-row'>
                     <PlayerStats
                         stats={ otherPlayer ? otherPlayer.stats : null }
