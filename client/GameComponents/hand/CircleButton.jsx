@@ -51,8 +51,11 @@ const StyledCircleButton = styled.div`
     transition: color .3s, transform .3s;
     border: ${ props => props.borderSize }px solid ${ props => props.primary };
     z-index: ${ props => props.zIndex };
-    fill: ${ props => props.primary };
-    stroke: ${ props => props.secondary };
+
+    & > svg {
+        fill: ${ props => props.primary };
+        stroke: ${ props => props.secondary };
+    }
     
     &:before {
         content: '';
@@ -75,6 +78,9 @@ const StyledCircleButton = styled.div`
         transition: all .3s ease-out;
         color: ${ props => props.tertiary || props.secondary };
         transform: ${ props => props.turn ? 'rotate(90deg)' : '' };
+    }
+    
+    &:hover > svg {
         fill: ${ props => props.tertiary || props.secondary };
         stroke: ${ props => props.primary };
     }

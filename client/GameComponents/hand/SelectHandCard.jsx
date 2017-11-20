@@ -15,7 +15,7 @@ const StyledCard = styled.img`
     position: absolute;
     box-shadow: ${ props => props.selected && !props.close ? '0 0 8px 7px rgba(0, 128, 0, 0.85)' : props.shadow };
     outline: ${ props => props.selected && !props.close ? 'light solid rgba(0,128,0,0.85)' : ''};
-    animation: ${open} ${ props => props.openDuration }s;
+    animation: ${open} ${ props => props.durationOpen }s;
     transition: transform .15s;
     border-radius: 15px;
     filter: ${ props => props.selectable ? 'contrast(1.1) saturate(1.1)' : 'grayscale(80%)' };
@@ -24,7 +24,7 @@ const StyledCard = styled.img`
         transform: translate(0, 0) scale(.6, .6) rotate(0);
         box-shadow: initial;
         outline: initial;
-        transition: all ${props => props.exitDuration}
+        transition: all ${ props => props.durationExit }
     }
 `;
 
