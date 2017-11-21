@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 
 class ChasingTheSun extends DrawCard {
@@ -17,6 +18,11 @@ class ChasingTheSun extends DrawCard {
                     card.inConflict = true;
                     this.game.currentConflict.conflictProvince.inConflict = false;
                     this.game.currentConflict.conflictProvince = card;
+                    if(card.facedown) {
+                        card.facedown = false;
+                        this.game.raiseEvent('onProvinceRevealed', { conflict: this.game.currentConflict, province: card });
+                    }
+                    return true;
                 }
             })
         });
