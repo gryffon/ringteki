@@ -29,6 +29,6 @@ class ChasingTheSun extends DrawCard {
     }
 }
 
-ChasingTheSun.id = 'chasing-the-sun'; // This is a guess at what the id might be - please check it!!!
+ChasingTheSun.id = 'chasing-the-sun';
 
 module.exports = ChasingTheSun;
