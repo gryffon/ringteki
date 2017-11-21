@@ -32,7 +32,8 @@ class PlayerPromptState {
     setPrompt(prompt) {
         this.selectCard = prompt.selectCard || false;
         this.selectOrder = prompt.selectOrder || false;
-        this.selectNum = prompt.selectNum;
+        this.selectMode = prompt.selectMode || false;
+        this.selectAutomatic = prompt.selectAutomatic || false;
         this.menuTitle = prompt.menuTitle || '';
         this.promptTitle = prompt.promptTitle;
         this.buttons = _.map(prompt.buttons || [], button => {
@@ -91,7 +92,8 @@ class PlayerPromptState {
         return {
             selectCard: this.selectCard,
             selectOrder: this.selectOrder,
-            selectNum: this.selectNum,
+            selectMode: this.selectMode,
+            selectAutomatic: this.selectAutomatic,
             menuTitle: this.menuTitle,
             promptTitle: this.promptTitle,
             buttons: this.buttons,

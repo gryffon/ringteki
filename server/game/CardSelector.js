@@ -35,21 +35,22 @@ class CardSelector {
 
     static getDefaultedProperties(properties) {
         properties = Object.assign({}, defaultProperties, properties);
-        if(properties.mode) {
-            return properties;
-        }
-
-        if(properties.maxStat) {
-            properties.mode = 'maxStat';
-        } else if(properties.numCards === 1 && !properties.multiSelect) {
-            properties.mode = 'single';
-        } else if(properties.numCards === 0) {
-            properties.mode = 'unlimited';
-        } else {
-            properties.mode = 'upTo';
-        }
-
+        properties.mode = CardSelector.getMode(properties);
         return properties;
+    }
+
+    static getMode(properties) {
+        if(properties.mode) {
+            return properties.mode;
+        } else if(properties.maxStat) {
+            return 'maxStat';
+        } else if(properties.numCards === 1 && !properties.multiSelect) {
+            return 'single';
+        } else if(properties.numCards === 0) {
+            return 'unlimited';
+        }
+
+        return 'upTo';
     }
 }
 

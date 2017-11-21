@@ -18,7 +18,7 @@ const StyledCard = styled.img`
     animation: ${open} ${ props => props.durationOpen }s;
     transition: transform .15s;
     border-radius: 15px;
-    filter: ${ props => props.selectable ? 'contrast(1.1) saturate(1.1)' : 'grayscale(80%)' };
+    filter: ${ props => props.selectable || props.selected ? 'contrast(1.1) saturate(1.1)' : 'grayscale(80%)' };
 
     &.exiting {
         transform: translate(0, 0) scale(.6, .6) rotate(0);
@@ -85,7 +85,7 @@ export default class SelectHandCard extends React.PureComponent {
                 height = { height }
                 onMouseOut = { onMouseOut }
                 onMouseEnter = { onMouseEnter }
-                onClick = { selectable ? click : undefined }
+                onClick = { selectable || selected ? click : undefined }
                 rotate = { rotate }
                 selected = { selected }
                 selectable = { selectable }

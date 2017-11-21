@@ -107,7 +107,8 @@ class SelectCardPrompt extends UiPrompt {
         return {
             selectCard: true,
             selectOrder: this.properties.ordered,
-            selectNum: this.properties.numCards,
+            selectMode: CardSelector.getMode(this.properties),
+            selectAutomatic: this.selector.automaticFireOnSelect(),
             menuTitle: this.properties.activePromptTitle || this.selector.defaultActivePromptTitle(),
             buttons: this.properties.buttons,
             promptTitle: this.properties.source ? this.properties.source.name : undefined,

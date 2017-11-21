@@ -55,56 +55,58 @@ class SelectHand extends React.PureComponent {
         this.baseTranslateX = Math.min(this.maxTranslateX / this.props.cards.length, this.maxDisplacementX);
         this.baseTranslateY = Math.min(this.maxTranslateY / this.props.cards.length, this.maxDisplacementY);
         this.baseRotate = Math.min(this.maxRotate / this.props.cards.length, this.maxRadial);
-    }
+    };
 
-    playCards = () => this.exit(() => {
-        const { cards, onSubmit } = this.props;
-        const selectedCards = this.state.selected.map(i => cards[i]);
-        onSubmit(selectedCards);
-    });
+    playCards = () => this.exit(this.props.onSubmit);
+
+    exitHand = () => this.exit(this.props.onExit);
     
     exit = (cb) => {
-        const { closeHand } = this.props
+        const { cards, onSubmit } = this.props;
+        const selectedCards = this.state.selected.map(i => cards[i]);
 
         let afterExit = () => {
-            closeHand();
-            cb();
+            cb && cb(selectedCards);
             this.setState(this.initialState);
         };
-
+        
         this.setState(
             { exiting: true },
             () => window.setTimeout(afterExit, this.exitDuration * 1000)
         );
-    }
+    };
 
     select = (i) => {
         const selected = this.state.selected;
+        const { cards, onSelect } = this.props;
+        onSelect(cards[i]);
         this.setState({ selected: [...selected, i] });
-    }
+    };
 
     unselect = (i) => {
         let selected = this.state.selected;
-        let index = selected.indexOf(i);
+        const { cards, onUnselect } = this.props;
+        const index = selected.indexOf(i);
 
+        onUnselect(cards[i]);
         selected = [
             ...selected.slice(0, index),
             ...selected.slice(index + 1)
         ];
         this.setState({ selected });
-    }
+    };
 
     moveOut = () => {
         this.timer = window.setTimeout(
             () => this.setState({ hovered: undefined }),
             250
         );
-    }
+    };
 
     moveIn = (i) => {
         window.clearTimeout(this.timer)
         this.setState({ hovered: i })
-    }
+    };
 
     render = () => {
         const { selected, hovered, exiting } = this.state;
@@ -120,14 +122,14 @@ class SelectHand extends React.PureComponent {
                             <CircleButton
                                 size = { 80 }
                                 border = { 4 }
-                                onClick = { this.exit.bind(this, () => {}) }
+                                onClick = { this.exitHand }
                                 turn
                             >
                                 { '\u2715' }
                             </CircleButton>
                         }
                         {
-                            canSubmit(selected, cards) &&
+                            canSubmit && canSubmit(selected, cards) &&
                             <CircleButton
                                 size = { 80 }
                                 border = { 4 }
@@ -181,18 +183,18 @@ class SelectHand extends React.PureComponent {
         }
 
         return null;
-    }
+    };
 }
 
 SelectHand.propTypes = {
     canSubmit: PropTypes.func,
     cards: PropTypes.array,
-    closeHand: PropTypes.func,
     mustSubmit: PropTypes.bool,
     onExit: PropTypes.func,
+    onSelect: PropTypes.func,
     onSubmit: PropTypes.func,
-    open: PropTypes.bool,
-    playCardsFromHand: PropTypes.func
+    onUnselect: PropTypes.func,
+    open: PropTypes.bool
 };
 
 export default SelectHand;
