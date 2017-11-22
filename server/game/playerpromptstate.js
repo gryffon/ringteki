@@ -33,7 +33,7 @@ class PlayerPromptState {
         this.selectCard = prompt.selectCard || false;
         this.selectOrder = prompt.selectOrder || false;
         this.selectMode = prompt.selectMode || false;
-        this.selectAutomatic = prompt.selectAutomatic || false;
+        this.selectAutomatic = prompt.selectAutomatic === undefined ? true : prompt.selectAutomatic;
         this.menuTitle = prompt.menuTitle || '';
         this.promptTitle = prompt.promptTitle;
         this.buttons = _.map(prompt.buttons || [], button => {

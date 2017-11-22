@@ -19,8 +19,6 @@ const StyledCard = styled.img`
     transition: transform .15s;
     border-radius: 15px;
     filter: ${ props => props.selectable || props.selected ? '' : 'grayscale(80%)' };
-    background-position-y: -1px;
-    bottom: -1px;
 
     &.exiting {
         transform: translate(0, 0) scale(.6, .6) rotate(0);

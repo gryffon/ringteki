@@ -26,12 +26,11 @@ class ConflictHand extends React.PureComponent {
 
     onSubmit(selectedCards) {
         this.props.playCardsFromHand(selectedCards);
-
         if(this.props.selectAutomatic) {
             selectedCards.forEach(card => this.props.gameSelectCard(card.uuid));
-        } else {
-            this.props.gameStepDone();
         }
+
+        this.props.gameStepDone();
     }
 
     cardClicked(card) {
@@ -85,14 +84,17 @@ function mapStateToProps(state) {
 
     let canSubmit;
     switch(selectMode) {
-        case 'single':
-            canSubmit = (selected) => selected.length === 1;
-            break;
         case 'unlimited':
             canSubmit = () => true;
             break;
-        default:
+        case 'maxStat':
+        case 'upTo':
             canSubmit = (selected) => selected.length > 0;
+            break;
+        case 'single':
+        default:
+            canSubmit = (selected) => selected.length === 1;
+            break;
     }
 
     return {
