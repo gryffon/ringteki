@@ -24,29 +24,41 @@ const StyledCloseButtonContainer = styled.div`
 `;
 
 class SelectHand extends React.PureComponent {
-    state = {
-        selected: [],
-        hovered: undefined,
-        exiting: false
-    };
-    initialState = this.state;
-    
-    maxRotate = 40;
-    maxDisplacementX = 100;
-    maxDisplacementY = 15;
-    maxRadial = 15;
-    openDuration = .5;
-    exitDuration = .4;
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            selected: [],
+            hovered: undefined,
+            exiting: false
+        };
+        this.initialState = this.state;
+        this.maxRotate = 40;
+        this.maxDisplacementX = 100;
+        this.maxDisplacementY = 15;
+        this.maxRadial = 15;
+        this.openDuration = .5;
+        this.exitDuration = .4;
+
+        this.resize = this.resize.bind(this);
+        this.playCards = this.playCards.bind(this);
+        this.exitHand = this.exitHand.bind(this);
+        this.exit = this.exit.bind(this);
+        this.select = this.select.bind(this);
+        this.unselect = this.unselect.bind(this);
+        this.moveOut = this.moveOut.bind(this);
+        this.moveIn = this.moveIn.bind(this);
+    }
 
     componentWillMount() {
         this.resize();
     }
 
-    componentWillReceiveProps(nextProps) {   
+    componentWillReceiveProps() {   
         this.resize();  
     }
     
-    resize = () => {
+    resize() {
         this.cardHeight = Math.min(420, window.innerHeight * .95);
         this.cardWidth = this.cardHeight * 30 / 42;
         this.maxTranslateX = window.innerWidth - this.cardWidth * 2;
@@ -55,14 +67,18 @@ class SelectHand extends React.PureComponent {
         this.baseTranslateX = Math.min(this.maxTranslateX / this.props.cards.length, this.maxDisplacementX);
         this.baseTranslateY = Math.min(this.maxTranslateY / this.props.cards.length, this.maxDisplacementY);
         this.baseRotate = Math.min(this.maxRotate / this.props.cards.length, this.maxRadial);
-    };
+    }
 
-    playCards = () => this.exit(this.props.onSubmit);
+    playCards() {
+        this.exit(this.props.onSubmit);
+    }
 
-    exitHand = () => this.exit(this.props.onExit);
+    exitHand() {
+        this.exit(this.props.onExit);
+    }
     
-    exit = (cb) => {
-        const { cards, onSubmit } = this.props;
+    exit(cb) {
+        const { cards } = this.props;
         const selectedCards = this.state.selected.map(i => cards[i]);
 
         let afterExit = () => {
@@ -74,16 +90,16 @@ class SelectHand extends React.PureComponent {
             { exiting: true },
             () => window.setTimeout(afterExit, this.exitDuration * 1000)
         );
-    };
+    }
 
-    select = (i) => {
+    select(i) {
         const selected = this.state.selected;
         const { cards, onSelect } = this.props;
         onSelect(cards[i]);
         this.setState({ selected: [...selected, i] });
-    };
+    }
 
-    unselect = (i) => {
+    unselect(i) {
         let selected = this.state.selected;
         const { cards, onUnselect } = this.props;
         const index = selected.indexOf(i);
@@ -94,21 +110,21 @@ class SelectHand extends React.PureComponent {
             ...selected.slice(index + 1)
         ];
         this.setState({ selected });
-    };
+    }
 
-    moveOut = () => {
+    moveOut() {
         this.timer = window.setTimeout(
             () => this.setState({ hovered: undefined }),
             250
         );
-    };
+    }
 
-    moveIn = (i) => {
-        window.clearTimeout(this.timer)
-        this.setState({ hovered: i })
-    };
+    moveIn(i) {
+        window.clearTimeout(this.timer);
+        this.setState({ hovered: i });
+    }
 
-    render = () => {
+    render() {
         const { selected, hovered, exiting } = this.state;
         const { cards, canSubmit, mustSubmit, open } = this.props;
         const cardsCenter = cards.length / 2 - .5;
@@ -183,7 +199,7 @@ class SelectHand extends React.PureComponent {
         }
 
         return null;
-    };
+    }
 }
 
 SelectHand.propTypes = {

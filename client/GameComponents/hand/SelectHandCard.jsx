@@ -18,7 +18,9 @@ const StyledCard = styled.img`
     animation: ${open} ${ props => props.durationOpen }s;
     transition: transform .15s;
     border-radius: 15px;
-    filter: ${ props => props.selectable || props.selected ? 'contrast(1.1) saturate(1.1)' : 'grayscale(80%)' };
+    filter: ${ props => props.selectable || props.selected ? '' : 'grayscale(80%)' };
+    background-position-y: -1px;
+    bottom: -1px;
 
     &.exiting {
         transform: translate(0, 0) scale(.6, .6) rotate(0);
@@ -38,23 +40,7 @@ function calculateShadow(cardWidth, rotate, percentage) {
 }
 
 export default class SelectHandCard extends React.PureComponent {
-    default = {
-        durationOpen: .5,
-        durationExit: .4,
-        exiting: false,
-        height: 400,
-        percentage: 0,
-        rotate: 0,
-        selectable: true,
-        selected: false,
-        showShadow: false,
-        translateX: 0,
-        translateY: 0,
-        width: 320
-    }
-
     render() {
-        const mergedProps = {...this.default, ...this.props};
         const {
             cardId,
             durationExit,
@@ -73,7 +59,7 @@ export default class SelectHandCard extends React.PureComponent {
             translateX,
             translateY,
             width
-        } = mergedProps;
+        } = this.props;
     
         const click = selected ? onSelectClick : onClick;
     
@@ -117,4 +103,19 @@ SelectHandCard.propTypes = {
     translateX: PropTypes.number,
     translateY: PropTypes.number,
     width: PropTypes.number
+};
+
+SelectHandCard.defaultProps = {
+    durationOpen: .5,
+    durationExit: .4,
+    exiting: false,
+    height: 420,
+    percentage: 0,
+    rotate: 0,
+    selectable: true,
+    selected: false,
+    showShadow: false,
+    translateX: 0,
+    translateY: 0,
+    width: 300
 };

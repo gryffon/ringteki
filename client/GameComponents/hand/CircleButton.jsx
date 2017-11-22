@@ -2,26 +2,33 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const defaults = {
-    primary: 'white',
-    secondary: 'black',
-    turn: false,
-    size: 150,
-    borderSize: 5,
-    zIndex: 1
-};
-
 export default class CircleButton extends React.PureComponent {
     render() {
-        let styledProps = { ...defaults, ...this.props };
+        const {
+            borderSize,
+            children,
+            onClick,
+            primary,
+            secondary,
+            size,
+            tertiary,
+            turn,
+            zIndex
+        } = this.props;
 
         return (
             <StyledCircleButton
-                { ...styledProps }
-                onClick = { this.props.onClick }
+                onClick = { onClick }
                 className = 'circle-button'
+                borderSize = { borderSize }
+                primary = { primary }
+                secondary = { secondary }
+                size = { size }
+                tertiary = { tertiary }
+                turn = { turn }
+                zIndex = { zIndex }
             >
-                { this.props.children }
+                { children }
             </StyledCircleButton>
         );
     }
@@ -32,10 +39,20 @@ CircleButton.propTypes = {
     children: PropTypes.node,
     onClick: PropTypes.func,
     primary: PropTypes.string,
-    rotate: PropTypes.bool,
     secondary: PropTypes.string,
     size: PropTypes.number,
+    tertiary: PropTypes.string,
+    turn: PropTypes.bool,
     zIndex: PropTypes.number
+};
+
+CircleButton.defaultProps = {
+    primary: 'white',
+    secondary: 'black',
+    turn: false,
+    size: 150,
+    borderSize: 5,
+    zIndex: 1
 };
 
 const StyledCircleButton = styled.div`

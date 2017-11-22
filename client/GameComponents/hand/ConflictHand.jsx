@@ -6,7 +6,17 @@ import { closeHand, playCardsFromHand } from '../../ReduxActions/hand';
 import SelectHand from './SelectHand.jsx';
 
 class ConflictHand extends React.PureComponent {
-    onExit = (selectedCards) => {
+    constructor(props) {
+        super(props);
+
+        this.onExit = this.onExit.bind(this);
+        this.onSubmit = this.onSubmit.bind(this);
+        this.cardClicked = this.cardClicked.bind(this);
+        this.onSelect = this.cardClicked;
+        this.onUnselect = this.cardClicked;
+    }
+
+    onExit(selectedCards) {
         this.props.closeHand();
 
         if(! this.props.selectAutomatic) {
@@ -14,7 +24,7 @@ class ConflictHand extends React.PureComponent {
         }
     }
 
-    onSubmit = (selectedCards) => {
+    onSubmit(selectedCards) {
         this.props.playCardsFromHand(selectedCards);
 
         if(this.props.selectAutomatic) {
@@ -22,18 +32,13 @@ class ConflictHand extends React.PureComponent {
         } else {
             this.props.gameStepDone();
         }
-    };
+    }
 
-    cardClicked = (card) => {
-        if (! this.props.selectAutomatic) {
+    cardClicked(card) {
+        if(! this.props.selectAutomatic) {
             this.props.gameSelectCard(card.uuid);
         }
-    };
-
-    onSelect = this.cardClicked;
-
-    onUnselect = this.cardClicked;
-
+    }
 
     render() {
         return (
@@ -74,12 +79,9 @@ function mapStateToProps(state) {
     const sendGameMessage = (message, ...args) => gameSocket.emit('game', message, ...args);
     const gameSelectCard = sendGameMessage.bind(null, 'cardClicked');
     const doneButton = ! selectAutomatic && buttons.find(b => b.arg === 'done');
-    const gameStepDone = doneButton && sendGameMessage.bind(
-        null,
-        'menuButton',
-        doneButton.arg,
-        doneButton.uuid
-    );
+    const gameStepDone = doneButton
+        ? sendGameMessage.bind(null, 'menuButton', doneButton.arg, doneButton.uuid)
+        : () => {};
 
     let canSubmit;
     switch(selectMode) {
