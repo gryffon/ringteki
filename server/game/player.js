@@ -1428,6 +1428,7 @@ class Player extends Spectator {
             } else if(event.card.isDynasty) {
                 this.moveCard(event.card, 'dynasty discard pile');
             }
+            return { resolved: true, success: true };
         });
     }
 
@@ -1636,6 +1637,7 @@ class Player extends Spectator {
                     }
                 }
             }
+            return { resolved: true, success: true };
         });
     }
 
@@ -1645,7 +1647,9 @@ class Player extends Spectator {
      * @param {EffectSource} source 
      */
     honorCard(card, source) {
-        this.game.raiseEvent('onCardHonored', { player: this, card: card, source: source }, () => card.honor());
+        this.game.raiseEvent('onCardHonored', { player: this, card: card, source: source }, () => {
+            return { resolved: true, success: card.honor() };
+        });
     }
 
     /**
@@ -1654,7 +1658,9 @@ class Player extends Spectator {
      * @param {EffectSource} source 
      */
     dishonorCard(card, source) {
-        this.game.raiseEvent('onCardDishonored', { player: this, card: card, source: source }, () => card.dishonor());
+        this.game.raiseEvent('onCardDishonored', { player: this, card: card, source: source }, () => {
+            return { resolved: true, result: card.dishonor() };
+        });
     }
 
     /**

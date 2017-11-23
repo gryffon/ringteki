@@ -17,13 +17,13 @@ const FatePhase = require('./gamesteps/fatephase.js');
 const RegroupPhase = require('./gamesteps/regroupphase.js');
 const SimpleStep = require('./gamesteps/simplestep.js');
 const DeckSearchPrompt = require('./gamesteps/decksearchprompt.js');
-const HonorBidPrompt = require('./gamesteps/honorbidprompt.js');
 const MenuPrompt = require('./gamesteps/menuprompt.js');
 const HandlerMenuPrompt = require('./gamesteps/handlermenuprompt.js');
 const SelectCardPrompt = require('./gamesteps/selectcardprompt.js');
 const SelectRingPrompt = require('./gamesteps/selectringprompt.js');
 const EventBuilder = require('./Events/EventBuilder.js');
 const EventWindow = require('./gamesteps/EventWindow.js');
+const ThenEventWindow = require('./gamesteps/ThenEventWindow.js');
 const InitateAbilityEventWindow = require('./gamesteps/InitiateAbilityEventWindow.js');
 const AbilityResolver = require('./gamesteps/abilityresolver.js');
 const ForcedTriggeredAbilityWindow = require('./gamesteps/forcedtriggeredabilitywindow.js');
@@ -1204,7 +1204,7 @@ class Game extends EventEmitter {
      * @returns {Event} - this allows the caller to track Event.resolved and
      * tell whether or not the handler resolved successfully
      */
-    raiseEvent(eventName, params, handler) {
+    raiseEvent(eventName, params = {}, handler) {
         let event = EventBuilder.for(eventName, params, handler);
         this.openEventWindow([event]);
         return event;
@@ -1220,6 +1220,15 @@ class Game extends EventEmitter {
             events = [events];
         }
         this.queueStep(new EventWindow(this, events));
+    }
+
+    openThenEventWindow(events) {
+        if(!_.isArray(events)) {
+            events = [events];
+        }
+        let window = new ThenEventWindow(this, events);
+        this.queueStep(window);
+        return window;
     }
 
     /**
