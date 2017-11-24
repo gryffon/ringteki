@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class DojiShizue extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
             condition: () => this.game.currentPhase === 'fate' && this.controller.imperialFavor !== '',
