@@ -11,12 +11,12 @@ const open = keyframes`
 const StyledCard = styled.img`
     height: ${ props => props.height}px;
     width: ${ props => props.width}px;
-    transform: translate(${ props => props.translateX }px, ${ props => props.translateY }px) rotate(${ props => props.rotate }deg);
+    transform: translate(${ props => props.translateX }px, ${ props => props.translateY }px) rotate(${ props => props.rotate }deg) translateZ(0);
     position: absolute;
     box-shadow: ${ props => props.selected && !props.close ? '0 0 8px 7px rgba(0, 128, 0, 0.85)' : props.shadow };
     outline: ${ props => props.selected && !props.close ? 'light solid rgba(0,128,0,0.85)' : ''};
     animation: ${open} ${ props => props.durationOpen }s;
-    transition: transform .15s;
+    transition: transform .25s;
     border-radius: 15px;
     filter: ${ props => props.selectable || props.selected ? '' : 'grayscale(80%)' };
 

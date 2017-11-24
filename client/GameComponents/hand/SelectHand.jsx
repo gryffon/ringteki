@@ -64,9 +64,18 @@ class SelectHand extends React.PureComponent {
         this.maxTranslateX = window.innerWidth - this.cardWidth * 2;
         this.maxTranslateY = 200;
     
-        this.baseTranslateX = Math.min(this.maxTranslateX / this.props.cards.length, this.maxDisplacementX);
-        this.baseTranslateY = Math.min(this.maxTranslateY / this.props.cards.length, this.maxDisplacementY);
-        this.baseRotate = Math.min(this.maxRotate / this.props.cards.length, this.maxRadial);
+        this.baseTranslateX = Math.min(
+            this.maxTranslateX / this.props.cards.length,
+            this.maxDisplacementX
+        );
+        this.baseTranslateY = Math.min(
+            this.maxTranslateY / this.props.cards.length,
+            this.maxDisplacementY
+        );
+        this.baseRotate = Math.min(
+            this.maxRotate / this.props.cards.length,
+            this.maxRadial
+        );
     }
 
     playCards() {
@@ -163,7 +172,9 @@ class SelectHand extends React.PureComponent {
                                 const seperation = i - cardsCenter;
                                 const rotate = this.baseRotate * seperation;
                                 const percentage = Math.abs(rotate) / this.maxRotate;
-                                const translateY = Math.abs(this.baseTranslateY * seperation);
+                                const translateY = (
+                                    Math.abs(seperation) - (cardsCenter / 2)
+                                ) * this.baseTranslateY;
                                 const translateX = i > hovered
                                     ? this.baseTranslateX * (seperation - .5) + this.cardWidth
                                     : this.baseTranslateX * seperation;
