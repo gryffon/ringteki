@@ -7,12 +7,12 @@ class ArtisanAcademy extends DrawCard {
             phase: 'conflict',
             condition: () => this.controller.conflictDeck.size() > 0,
             handler: () => {
-                this.topCard = this.controller.conflictDeck.first();
-                this.game.addMessage('{0} uses {1} to reveal the top card of their conflict deck: {2}', this.controller, this, this.topCard);
+                let topCard = this.controller.conflictDeck.first();
+                this.game.addMessage('{0} uses {1} to reveal the top card of their conflict deck: {2}', this.controller, this, topCard);
                 this.lastingEffect(ability => ({
                     targetType: 'player',
                     until: {
-                        onCardMoved: event => event.card === this.topCard && event.originalLocation === 'conflict deck',
+                        onCardMoved: event => event.card === topCard && event.originalLocation === 'conflict deck',
                         onPhaseEnded: event => event.phase === 'conflict',
                         onDeckShuffled: event => event.player === this.controller && event.deck === 'conflict deck'
                     },
