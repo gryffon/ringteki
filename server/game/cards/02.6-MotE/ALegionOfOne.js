@@ -23,7 +23,7 @@ class ALegionOfOne extends DrawCard {
                 if(context.target.fate > 1 && context.target.allowGameAction('removeFate')) {
                     let resolveAgain = () => {
                         this.game.addMessage('{0} removes a fate from {1}, resolving {2} again', this.controller, context.target, this);
-                        this.game.raiseEvent('onCardFateRemoved', { card: context.target, fate: 1 });
+                        this.game.raiseEvent('onCardRemoveFate', { card: context.target, fate: 1 });
                         context.dontRaiseCardPlayed = true;
                         this.game.raiseInitiateAbilityEvent({ card: this, context: context }, resolveAbility);
                     };
