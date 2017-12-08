@@ -330,6 +330,12 @@ class Player extends Spectator {
         return _.any(this.playableLocations, location => location.playingType === playingType && location.contains(card));
     }
 
+    addPlayableLocation(playingType, location) {
+        let newPlayableLocation = new PlayableLocation(playingType, this, location)
+        this.playableLocations.push(newPlayableLocation);
+        return newPlayableLocation;
+    }
+
     /**
      * Returns a card in play under this player's control which matches (for uniqueness) the passed card.
      * @param {DrawCard} card
