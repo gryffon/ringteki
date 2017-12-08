@@ -322,7 +322,6 @@ class Player extends Spectator {
 
     /**
      * Checks whether the passes card is in a legal location for the passed type of play
-     * TODO: This isn't currently used by the code, but could be a better solution than what we're currently using for e.g. Artisan Academy
      * @param {BaseCard} card
      * @param {String} playingType
      */
@@ -330,8 +329,13 @@ class Player extends Spectator {
         return _.any(this.playableLocations, location => location.playingType === playingType && location.contains(card));
     }
 
+    /**
+     * Adds a new PlayableLocation of the specified type, and returns it
+     * @param {String} playingType 
+     * @param {String} location 
+     */
     addPlayableLocation(playingType, location) {
-        let newPlayableLocation = new PlayableLocation(playingType, this, location)
+        let newPlayableLocation = new PlayableLocation(playingType, this, location);
         this.playableLocations.push(newPlayableLocation);
         return newPlayableLocation;
     }
