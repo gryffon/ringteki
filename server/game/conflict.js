@@ -25,6 +25,7 @@ class Conflict {
         this.defenderSkill = 0;
         this.maxAllowedDefenders = 0;
         this.defenderSkillModifier = 0;
+        this.skillFunction = card => card.getSkill(this.conflictType);
     }
 
     singlePlayerDefender() {
@@ -304,14 +305,35 @@ class Conflict {
         }
     }
 
-    calculateSkillFor(cards) {
+    /**
+     * Compares skill in cases where a card wants a specific basis of comparison (such as political or military),
+     * rather than using whatever the conflict is currently using. Returns an relative integer comparison for the
+     * passed player (so positive if that player has the higher total)
+     * @param {Function} skillFunction - card => Integer, the function which should be used for the comparison
+     * @param {Player} player
+     */
+    compareSkill(skillFunction, player = this.attackingPlayer) {
+        let attackerSkill = this.calculateSkillFor(this.attackers, skillFunction) + this.attackerSkillModifier;
+        let defenderSkill = this.calculateSkillFor(this.defenders, skillFunction) + this.defenderSkillModifier;
+
+        if(this.attackingPlayer.imperialFavor === this.conflictType && this.attackers.length > 0) {
+            attackerSkill++;
+        } else if(this.defendingPlayer.imperialFavor === this.conflictType && this.defenders.length > 0) {
+            defenderSkill++;
+        }
+
+        return this.attackingPlayer === player ? attackerSkill - defenderSkill : defenderSkill - attackerSkill;
+    }
+
+    calculateSkillFor(cards, skillFunction = this.skillFunction) {
         return _.reduce(cards, (sum, card) => {
             if(card.bowed || !card.allowGameAction('countForResolution')) {
                 return sum;
             }
-            return sum + card.getSkill(this.conflictType);
+            return sum + skillFunction(card);
         }, 0);
     }
+
 
     modifyAttackerSkill(value) {
         this.attackerSkillModifier += value;
