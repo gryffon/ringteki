@@ -20,11 +20,9 @@ class Conflict {
         this.elements = [];
         this.attackers = [];
         this.attackerSkill = 0;
-        this.attackerSkillModifier = 0;
         this.defenders = [];
         this.defenderSkill = 0;
         this.maxAllowedDefenders = 0;
-        this.defenderSkillModifier = 0;
     }
 
     singlePlayerDefender() {
@@ -80,7 +78,7 @@ class Conflict {
         this.markAsParticipating([defender]);
         this.calculateSkill();
     }
-    
+
     moveToConflict(cards) {
         if(!_.isArray(cards)) {
             cards = [cards];
@@ -118,27 +116,27 @@ class Conflict {
     modifyElementsToResolve(amount) {
         this.elementsToResolve += amount;
     }
-        
-    
+
+
     hasElement(element) {
         return this.elements.includes(element);
     }
-    
+
     getElements() {
         return _.uniq(this.elements);
     }
-    
+
     addElement(element) {
         this.elements.push(element);
     }
-    
+
     removeElement(element) {
         let index = _.indexOf(this.elements, element);
         if(index > -1) {
             this.elements.splice(index, 1);
         }
     }
-    
+
     chooseWhetherToResolveRingEffect(player = this.attackingPlayer, optional = true) {
         this.game.raiseEvent('onResolveRingEffect', { player: player, conflict: this }, () => {
             let elements = this.getElements();
@@ -153,10 +151,10 @@ class Conflict {
             } else {
                 this.resolveConflictRing(player, optional);
             }
-            return { resolved: true, success: true };        
+            return { resolved: true, success: true };
         });
     }
-    
+
     resolveConflictRing(player, optional) {
         let elements = this.getElements();
         if(elements.length === 0) {
@@ -182,7 +180,7 @@ class Conflict {
         }
         this.chooseElementsToResolve(player, optional, this.elementsToResolve, elements);
     }
-        
+
     chooseElementsToResolve(player, optional, elementsToResolve, elements, chosenElements = []) {
         if(elements.length === 0 || elementsToResolve === 0) {
             player.resolveRingEffects(chosenElements, optional);
@@ -204,7 +202,7 @@ class Conflict {
             onCancel: () => player.resolveRingEffects(chosenElements, optional)
         });
     }
-    
+
     switchType() {
         let ring = this.game.rings[this.conflictRing];
         ring.flipConflictType();
@@ -213,7 +211,7 @@ class Conflict {
         this.game.reapplyStateDependentEffects();
         this.checkForIllegalParticipants();
     }
-    
+
     switchElement(element) {
         let oldRing = this.game.rings[this.conflictRing];
         oldRing.resetRing();
@@ -230,7 +228,7 @@ class Conflict {
         }
         this.addElement(element);
     }
-    
+
     checkForIllegalParticipants() {
         _.each(this.attackers, card => {
             if(!card.canParticipateAsAttacker(this.conflictType)) {
@@ -294,9 +292,9 @@ class Conflict {
             return;
         }
 
-        this.attackerSkill = this.calculateSkillFor(this.attackers) + this.attackerSkillModifier;
-        this.defenderSkill = this.calculateSkillFor(this.defenders) + this.defenderSkillModifier;
-        
+        this.attackerSkill = this.calculateSkillFor(this.attackers);
+        this.defenderSkill = this.calculateSkillFor(this.defenders);
+
         if(this.attackingPlayer.imperialFavor === this.conflictType && this.attackers.length > 0) {
             this.attackerSkill++;
         } else if(this.defendingPlayer.imperialFavor === this.conflictType && this.defenders.length > 0) {
@@ -311,16 +309,6 @@ class Conflict {
             }
             return sum + card.getSkill(this.conflictType);
         }, 0);
-    }
-
-    modifyAttackerSkill(value) {
-        this.attackerSkillModifier += value;
-        this.calculateSkill();
-    }
-
-    modifyDefenderSkill(value) {
-        this.defenderSkillModifier += value;
-        this.calculateSkill();
     }
 
     determineWinner() {
