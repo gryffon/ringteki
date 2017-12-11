@@ -25,6 +25,7 @@ class MiyaSatoshi extends DrawCard {
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} chooses to discard {1}, and puts {2} faceup in its place', player, card, firstImperial);
                         this.controller.moveCard(firstImperial, card.location);
+                        firstImperial.facedown = false;
                         this.controller.moveCard(card, 'dynasty discard pile');
                         return true;
                     }
