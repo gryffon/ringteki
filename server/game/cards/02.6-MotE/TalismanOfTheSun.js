@@ -5,7 +5,7 @@ class TalismanOfTheSun extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Move conflict to a different province',
-            condition: this.controller.isDefendingPlayer(),
+            condition: () => this.controller.isDefendingPlayer(),
             cost: ability.costs.bowSelf(),
             handler: () => this.game.promptForSelect(this.controller, {
                 source: this,
