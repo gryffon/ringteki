@@ -14,7 +14,7 @@ class ConflictActionWindow extends ActionWindow {
     constructor(game, title, conflict) {
         super(game, title, 'conflict');
         this.conflict = conflict;
-        this.displayTotals = false;    
+        this.displayTotals = true;    
     }
 
     continue() {
