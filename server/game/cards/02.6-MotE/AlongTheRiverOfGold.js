@@ -4,17 +4,10 @@ class AlongTheRiverOfGold extends ProvinceCard {
     setupCardAbilities() {
         this.action({
             title: 'During water Province chose a participating caracter, switch character base skils until end of turn',
-<<<<<<< HEAD
-            condition: () => this.game.currentConflict.conflictProvince.getElement() === 'water' && this.game.currentConflict(),
-            target: {
-                cardType: 'character',
-                cardCondition: card => card.isParticipating && card.cardData.military !== undefined && card.cardData.political !== undefined
-=======
             condition: () => this.game.currentConflict && this.game.currentConflict.conflictProvince.getElement() === 'water',
             target: {
                 cardType: 'character',
                 cardCondition: card => card.isParticipating() && card.cardData.military !== undefined && card.cardData.political !== undefined
->>>>>>> aff9e5a1... some changes as sugested
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to switch {2}\'s military and political skill', this.controller, this, context.target);
@@ -34,3 +27,4 @@ class AlongTheRiverOfGold extends ProvinceCard {
 AlongTheRiverOfGold.id = 'along-the-river-of-gold';
 
 module.exports = AlongTheRiverOfGold;
+
