@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class KuniRitsuko extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.reaction({
             title: 'Remove a fate',
             when: {
