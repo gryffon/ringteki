@@ -2,7 +2,7 @@ const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 
 class WrittenInTheStars extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.action({
             title: 'Place or take fate from rings',
             condition: () => true,
@@ -10,10 +10,10 @@ class WrittenInTheStars extends DrawCard {
                 player: 'self',
                 mode: 'select',
                 choices: {
-                    'Place one fate on each unclaimed ring with no fate': context => _.any(this.game.rings, ring => {
+                    'Place one fate on each unclaimed ring with no fate': () => _.any(this.game.rings, ring => {
                         return !ring.claimed && ring.getFate() === 0;
                     }),
-                    'Remove one fate from each unclaimed ring': context => _.any(this.game.rings, ring => {
+                    'Remove one fate from each unclaimed ring': () => _.any(this.game.rings, ring => {
                         return !ring.claimed && ring.getFate() > 0;
                     })
                 }
