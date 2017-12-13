@@ -19,6 +19,6 @@ class KuniRitsuko extends DrawCard {
     }
 }
 
-MiyaSatoshi.id = 'kuni-ritsuko';
+KuniRitsuko.id = 'kuni-ritsuko';
 
 module.exports = KuniRitsuko;
