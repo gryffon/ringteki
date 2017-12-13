@@ -19,7 +19,7 @@ class KanjoDistrict extends DrawCard {
                     message = message ? '{0} uses {1} to bow and send {2} home' : '{0} uses {1} to send {2} home';
                     this.game.currentConflict.sendHome(context.target);                    
                 }
-                this.game.addMessage('{0} uses {1} to send {2} home', this.controller, this, context.target);
+                this.game.addMessage(message, this.controller, this, context.target);
             }
         });
     }
