@@ -9,7 +9,7 @@ class AsakoTsuki extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.hasTrait('scholar') && card.allowGameAction('honor', context)
+                cardCondition: (card, context) => card.location === 'play area' && card.hasTrait('scholar') && card.allowGameAction('honor', context)
             },
             handler: context => {                
                 this.game.addMessage('{0} uses {1} to honor {2}', this.controller, this, context.target);
