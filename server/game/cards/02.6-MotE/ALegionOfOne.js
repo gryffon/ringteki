@@ -20,12 +20,25 @@ class ALegionOfOne extends DrawCard {
                     }));
                 };
                 resolveAbility();
-                if(context.target.fate > 1 && context.target.allowGameAction('removeFate')) {
+                if(context.target.fate > 0 && context.target.allowGameAction('removeFate')) {
                     let resolveAgain = () => {
                         this.game.addMessage('{0} removes a fate from {1}, resolving {2} again', this.controller, context.target, this);
                         this.game.raiseEvent('onCardRemoveFate', { card: context.target, fate: 1 });
                         context.dontRaiseCardPlayed = true;
-                        this.game.raiseInitiateAbilityEvent({ card: this, context: context }, resolveAbility);
+                        this.game.raiseInitiateAbilityEvent({ card: this, context: context }, () => {
+                            resolveAbility();
+                            if(context.target.fate > 0 && context.target.allowGameAction('removeFate')) {
+                                this.game.promptWithHandlerMenu(this.controller, {
+                                    activePromptTitle: 'Discard a fate for no effect?',
+                                    source: this,
+                                    choices: ['Yes', 'No'],
+                                    handlers: [() => {
+                                        this.game.addMessage('{0} removes a fate from {1} for no effect', this.controller, context.target);
+                                        this.game.raiseEvent('onCardRemoveFate', { card: context.target, fate: 1 });
+                                    }, () => true]
+                                });
+                            }                                 
+                        });
                     };
                     this.game.promptWithHandlerMenu(this.controller, {
                         activePromptTitle: 'Discard a fate to resolve A Legion of One again?',
