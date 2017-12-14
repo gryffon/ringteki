@@ -9,7 +9,7 @@ class MiyaSatoshi extends DrawCard {
             handler: () => {
                 let firstImperial = this.controller.dynastyDeck.find(card => card.hasTrait('imperial'));
                 if(!firstImperial) {
-                    this.game.addMessage('{0} uses {1} and discards their entire dynasty deck');
+                    this.game.addMessage('{0} uses {1} and discards their entire dynasty deck: {2}', this.controller, this, this.controller.dynastyDeck.toArray());
                     this.controller.dynastyDeck.each(card => this.controller.moveCard(card, 'dynasty discard pile'));
                     return;
                 }
