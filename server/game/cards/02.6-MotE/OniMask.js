@@ -4,7 +4,7 @@ class OniMask extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Blank participating character',
-            cost: ability.costs.discardFate(card => card === this.parent),
+            cost: ability.costs.discardFateFromParent(),
             condition: () => this.game.currentConflict,
             target: {
                 activePromptTitle: 'Choose a character',
@@ -29,6 +29,6 @@ class OniMask extends DrawCard {
     }
 }
 
-OniMask.id = 'oni-mask'; // This is a guess at what the id might be - please check it!!!
+OniMask.id = 'oni-mask';
 
 module.exports = OniMask;
