@@ -77,6 +77,10 @@ const Costs = {
      */
     discardFateFromSelf: () => CostBuilders.discardFate.self(),
     /**
+     * Cost that will discard a fate from the card' parent
+     */
+    discardFateFromParent: () => CostBuilders.discardFate.parent(),
+    /**
      * Cost that will discard a fate from a selected card
      */
     discardFate: condition => CostBuilders.discardFate.select(condition),
