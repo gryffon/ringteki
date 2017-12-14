@@ -430,6 +430,9 @@ class Player extends Spectator {
      * @param {String} location - one of 'province 1', 'province 2', 'province 3', 'province 4'
      */
     replaceDynastyCard(location) {
+        if(this.getSourceList(location).size() > 1) {
+            return;
+        }
         if(this.dynastyDeck.size() === 0) {
             this.deckRanOutOfCards('dynasty');
         }
