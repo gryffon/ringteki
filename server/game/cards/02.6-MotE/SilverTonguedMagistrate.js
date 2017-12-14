@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class SilvertonguedMagistrate extends DrawCard {
+class SilverTonguedMagistrate extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: () => this.isAttacking(),
@@ -11,6 +11,6 @@ class SilvertonguedMagistrate extends DrawCard {
     }
 }
 
-SilvertonguedMagistrate.id = 'silver-tongued-magistrate';
+SilverTonguedMagistrate.id = 'silver-tongued-magistrate';
 
-module.exports = SilvertonguedMagistrate;
+module.exports = SilverTonguedMagistrate;
