@@ -4,6 +4,7 @@ const CostBuilder = require('./CostBuilder.js');
 const DiscardFromHandCost = require('./DiscardFromHandCost.js');
 const DiscardFateCost = require('./DiscardFateCost.js');
 const DishonorCost = require('./DishonorCost.js');
+const PutIntoPlayCost = require('./PutIntoPlayCost.js');
 const ReturnToHandCost = require('./ReturnToHandCost.js');
 const SacrificeCost = require('./SacrificeCost.js');
 
@@ -27,6 +28,10 @@ const CostBuilders = {
     dishonor: new CostBuilder(new DishonorCost(), {
         select: 'Select character to dishonor',
         selectMultiple: number => `Select ${number} characters to dishonor`
+    }),
+    putIntoPlay: new CostBuilder(new PutIntoPlayCost(), {
+        select: 'Select card to put into play',
+        selectMultiple: number => `Select ${number} cards to put into play`
     }),
     returnToHand: new CostBuilder(new ReturnToHandCost(), {
         select: 'Select card to return to hand',
