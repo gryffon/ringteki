@@ -9,11 +9,15 @@ class KuniRitsuko extends DrawCard {
             },
             target: {
                 cardType: 'character',
+                gameAction: 'removeFate',
                 cardCondition: card => card.isAttacking() && card.fate > 0
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to remove a fate from {2}', this.controller, this, context.target);
-                context.target.modifyFate(-1);
+                this.game.raiseEvent('onCardRemoveFate', {
+                    card: context.target,
+                    fate: 1
+                });
             }
         });
     }
