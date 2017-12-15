@@ -5,7 +5,6 @@ class WrittenInTheStars extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Place or take fate from rings',
-            condition: () => this.controller.allowGameAction('takeFateFromRings'),
             target: {
                 player: 'self',
                 mode: 'select',
@@ -13,7 +12,7 @@ class WrittenInTheStars extends DrawCard {
                     'Place one fate on each unclaimed ring with no fate': () => _.any(this.game.rings, ring => {
                         return !ring.claimed && ring.getFate() === 0;
                     }),
-                    'Remove one fate from each unclaimed ring': () => _.any(this.game.rings, ring => {
+                    'Remove one fate from each unclaimed ring': () => this.controller.allowGameAction('takeFateFromRings') && _.any(this.game.rings, ring => {
                         return !ring.claimed && ring.getFate() > 0;
                     })
                 }
