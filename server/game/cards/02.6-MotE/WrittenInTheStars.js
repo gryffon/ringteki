@@ -2,10 +2,10 @@ const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 
 class WrittenInTheStars extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities() {
         this.action({
             title: 'Place or take fate from rings',
-            condition: () => true,
+            condition: () => this.controller.allowGameAction('takeFateFromRings'),
             target: {
                 player: 'self',
                 mode: 'select',
@@ -19,20 +19,23 @@ class WrittenInTheStars extends DrawCard {
                 }
             },
             handler: context => {
+                let ringsChanged = [];
                 if(context.select === 'Place one fate on each unclaimed ring with no fate') {
                     _.each(this.game.rings, ring => {
                         if(!ring.claimed && ring.getFate() === 0) {
-                            this.game.addMessage('{0} adds a fate to the {1} ring', this.controller, ring.getElement());
                             ring.modifyFate(1);
+                            ringsChanged.push(ring.getElement());
                         }
                     });
+                    this.game.addMessage('{0} adds a fate to the {1} ring(s)', this.controller, ringsChanged);
                 } else {
                     _.each(this.game.rings, ring => {
                         if(!ring.claimed && ring.getFate() > 0) {
-                            this.game.addMessage('{0} removes a fate from the {1} ring', this.controller, ring.getElement());
                             ring.modifyFate(-1);
+                            ringsChanged.push(ring.getElement());
                         }
                     });
+                    this.game.addMessage('{0} removes a fate from the {1} ring(s)', this.controller, ringsChanged);
                 }
             }
         });
