@@ -19,6 +19,7 @@ class RestorationOfBalance extends ProvinceCard {
                     source: this,
                     cardCondition: card => card.location === 'hand',
                     numCards: num,
+                    ordered: true,
                     mode: 'exactly',
                     multiSelect: true,
                     onSelect: (player, card) => {

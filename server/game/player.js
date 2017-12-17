@@ -563,8 +563,22 @@ class Player extends Spectator {
                 cards.push(card);
             }
         }
-
-        this.discardCardsFromHand(cards, true);
+        if(toDiscard > 1) {
+            this.game.promptForSelect(this, {
+                activePromptTitle: 'Choose order for random discard',
+                mode: 'exactly',
+                num: toDiscard,
+                multiselect: true,
+                ordered: true,
+                cardCondition: card => cards.includes(card),
+                onSelect: (player, cards) => {
+                    this.discardCardsFromHand(cards, true);
+                    return true;
+                }
+            });
+        } else {
+            this.discardCardsFromHand(cards, true);
+        }
     }
 
     /**

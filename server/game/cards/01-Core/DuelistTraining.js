@@ -47,6 +47,7 @@ class DuelistTraining extends DrawCard {
                                         activePromptTitle: promptTitle,
                                         source: this,
                                         cardCondition: card => card.location === 'hand',
+                                        ordered: true,
                                         numCards: difference,
                                         mode: 'exactly',
                                         multiSelect: true,
