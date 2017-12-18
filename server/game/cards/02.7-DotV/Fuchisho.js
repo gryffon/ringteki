@@ -3,6 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class Fushicho extends DrawCard {
     setupCardAbilities() {
         this.interrupt({
+            title: 'Resurrect a character',
             when: {
                 onCardLeavesPlay: event => event.card === this
             },
