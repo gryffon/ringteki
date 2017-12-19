@@ -16,7 +16,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             new SimpleStep(game, () => this.resolveCosts()),
             new SimpleStep(game, () => this.waitForCostResolution()),
             new SimpleStep(game, () => this.payCosts()),
-            new SimpleStep(game, () => this.checkCostsHaveBeenPaid()),
+            //new SimpleStep(game, () => this.checkCostsHaveBeenPaid()),
             new SimpleStep(game, () => this.resolveTargets()),
             new SimpleStep(game, () => this.waitForTargetResolution()),
             new SimpleStep(game, () => this.initiateAbility())
@@ -56,9 +56,9 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.costEvents = this.context.ability.payCosts(this.context);
+        this.context.ability.payCosts(this.context);
     }
-
+/*
     checkCostsHaveBeenPaid() {
         if(this.cancelled) {
             return;
@@ -73,7 +73,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             return false;
         }
     }
-
+*/
     resolveEarlyTargets() {
         if(this.cancelled) {
             return;
