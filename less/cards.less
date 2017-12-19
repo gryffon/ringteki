@@ -4,7 +4,43 @@
   display: inline-block;
 
   &.imperial-favor {
-    margin: 0px 5px;
+    margin: 0 7px 10px;
+
+    &.small {
+      &.vertical {
+        height: @card-sm-height;
+        min-width: @card-sm-width;
+      }
+
+      &.horizontal {
+        height: @card-sm-width;
+        width: @card-sm-height;
+      }
+    }
+
+    &.large {
+      &.vertical {
+        height: @card-lg-height;
+        min-width: @card-lg-width;
+      }
+
+      &.horizontal {
+        height: @card-lg-width;
+        width: @card-lg-height;
+      }
+    }
+
+    &.x-large {
+      &.vertical {
+        height: @card-xl-height;
+        min-width: @card-xl-width;
+      }
+
+      &.horizontal {
+        height: @card-xl-width;
+        width: @card-xl-height;
+      }
+    }
   }
 }
 
@@ -136,7 +172,7 @@
   &.small {
     &.vertical {
       height: @card-sm-height;
-      width: @card-sm-width;      
+      width: @card-sm-width;
     }
 
     &.horizontal {
@@ -158,7 +194,7 @@
   &.large {
     &.vertical {
       height: @card-lg-height;
-      width: @card-lg-width;      
+      width: @card-lg-width;
     }
 
     &.horizontal {
@@ -175,7 +211,7 @@
   &.x-large {
     &.vertical {
       height: @card-xl-height;
-      width: @card-xl-width;      
+      width: @card-xl-width;
     }
 
     &.horizontal {
@@ -195,7 +231,7 @@
     transform: rotate(90deg);
 
   }
-  
+
   &.broken {
       transform: rotate(180deg);
   }
@@ -266,17 +302,17 @@
   margin-top: -(@card-height);
 
   &.small {
-    margin-top: -(@card-sm-height); 
+    margin-top: -(@card-sm-height);
 
   }
 
   &.large {
-    margin-top: -(@card-lg-height);  
+    margin-top: -(@card-lg-height);
 
   }
 
   &.x-large {
-    margin-top: -(@card-xl-height); 
+    margin-top: -(@card-xl-height);
 
   }
 
@@ -367,7 +403,7 @@
   text-align: center;
   font-size: 14px;
   color: white;
-  text-shadow: 1px 1px 2px #000;  
+  text-shadow: 1px 1px 2px #000;
 }
 
 .fatecounter {
