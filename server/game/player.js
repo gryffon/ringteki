@@ -31,6 +31,7 @@ class Player extends Spectator {
         this.provinceFour = _([]);
         this.dynastyDiscardPile = _([]);
         this.conflictDiscardPile = _([]);
+        this.removedFromGame = _([]);
         this.additionalPiles = {};
 
         this.faction = {};
@@ -1153,6 +1154,8 @@ class Player extends Spectator {
                 return this.conflictDiscardPile;
             case 'dynasty discard pile':
                 return this.dynastyDiscardPile;
+            case 'removed from game':
+                return this.removedFromGame;
             case 'play area':
                 return this.cardsInPlay;
             case 'province 1':
@@ -1199,6 +1202,9 @@ class Player extends Spectator {
                 break;
             case 'dynasty discard pile':
                 this.dynastyDiscardPile = targetList;
+                break;
+            case 'removed from game':
+                this.removedFromGame = targetList;
                 break;
             case 'play area':
                 this.cardsInPlay = targetList;
@@ -1634,7 +1640,7 @@ class Player extends Spectator {
             targetPile.push(card);
         } else if(['conflict deck', 'dynasty deck'].includes(targetLocation) && !options.bottom) {
             targetPile.unshift(card);
-        } else if(['conflict discard pile', 'dynasty discard pile'].includes(targetLocation)) {
+        } else if(['conflict discard pile', 'dynasty discard pile', 'removed from game'].includes(targetLocation)) {
             // new cards go on the top of the discard pile
             targetPile.unshift(card);
         } else {
@@ -1945,7 +1951,7 @@ class Player extends Spectator {
                 conflictDiscardPile: this.getSummaryForCardList(this.conflictDiscardPile, activePlayer),
                 dynastyDiscardPile: this.getSummaryForCardList(this.dynastyDiscardPile, activePlayer),
                 hand: this.getSummaryForCardList(this.hand, activePlayer, true),
-                /* outOfGamePile: this.getSummaryForCardList(this.outOfGamePile, activePlayer, false), */
+                removedFromGame: this.getSummaryForCardList(this.removedFromGame, activePlayer),
                 provinceDeck: this.getSummaryForCardList(this.provinceDeck, activePlayer, true)
             },
             conflictDeckTopCardHidden: this.conflictDeckTopCardHidden,

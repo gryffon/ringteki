@@ -290,6 +290,17 @@ class DynastyRow extends React.Component {
                             popupLocation={ this.props.isMe || this.props.spectating ? 'top' : 'bottom' } 
                             onDragDrop={ this.props.onDragDrop }
                             size={ this.props.cardSize } />
+                        <CardPile 
+                            className='removed from game' 
+                            title='Removed From Game' 
+                            source='removed from game' 
+                            cards={ this.props.removedFromGame }
+                            onMouseOver={ this.props.onMouseOver } 
+                            onMouseOut={ this.props.onMouseOut } 
+                            onCardClick={ this.props.onCardClick }
+                            popupLocation={ this.props.isMe || this.props.spectating ? 'top' : 'bottom' } 
+                            onDragDrop={ this.props.onDragDrop }
+                            size={ this.props.cardSize } />
                     </div>
                 </div>
             );
@@ -297,6 +308,17 @@ class DynastyRow extends React.Component {
         return (
             <div className='dynasty-row'>
                 <div className='deck-cards'>
+                    <CardPile 
+                        className='conflict discard pile' 
+                        title='Removed From Game' 
+                        source='removed from game' 
+                        cards={ this.props.removedFromGame }
+                        onMouseOver={ this.props.onMouseOver } 
+                        onMouseOut={ this.props.onMouseOut } 
+                        onCardClick={ this.props.onCardClick }
+                        popupLocation={ this.props.isMe || this.props.spectating ? 'top' : 'bottom' } 
+                        onDragDrop={ this.props.onDragDrop }
+                        size={ this.props.cardSize } />
                     <CardPile 
                         className='conflict discard pile' 
                         title='Conflict Discard' 
