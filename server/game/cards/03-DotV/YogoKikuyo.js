@@ -13,7 +13,7 @@ class YogoKikuyo extends DrawCard {
             location: 'hand',
             canCancel: true,
             handler: context => {
-                this.game.addMessage('{0} uses {1} to put it into play and cancel the effects of {2}', this.controller, this, context.event.card);
+                this.game.addMessage('{0} puts {1} into play to cancel the effects of {2}', this.controller, this, context.event.card);
                 context.cancel();
             }
         });
