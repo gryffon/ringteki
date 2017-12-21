@@ -1,30 +1,26 @@
-const fs = require('fs');
-const path = require('path');
 const _ = require('underscore');
+const monk = require('monk');
 
+const CardService = require('../../server/services/CardService.js');
 const {matchCardByNameAndPack} = require('./cardutil.js');
-
-const PathToSubModulePacks = path.join(__dirname,  '../../fiveringsdb-data/Card');
 
 class DeckBuilder {
     constructor() {
-        this.cards = this.loadCards(PathToSubModulePacks);
+        this.cards = {};
     }
 
-    loadCards(directory) {
-        var cards = {};
-
-        var jsonCards = fs.readdirSync(directory).filter(file => file.endsWith('.json'));
-
-        _.each(jsonCards, file => {
-            var cardsInPack = require(path.join(PathToSubModulePacks, file));
-
-            _.each(cardsInPack, card => {
-                cards[card.id] = card;
-            });
-        });
-
-        return cards;
+    async loadCards() {
+        let db = monk('mongodb://127.0.0.1:27017/ringteki');
+        let cardService = new CardService(db);
+        this.cards = {};
+        await cardService.getAllCards()
+            .then((cards) => {
+                _.each(cards, card => {
+                    this.cards[card.id] = card;
+                });
+            })
+            .then(() => db.close())
+            .catch(() => db.close());
     }
 
     buildDeck(faction, cardLabels) {
