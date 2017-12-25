@@ -25,6 +25,27 @@ class PlayerInteractionWrapper {
         this.player.fate = newFate;
     }
 
+    get hand() {
+        return this.player.hand._wrapped;
+    }
+
+    /**
+     * Sets the player's hand to contain the specified cards. Moves cards between
+     * hand and conflict deck
+     * @param {String|DrawCard)[]} [cards] - a list of card names, ids or objects
+     */
+    set hand(cards) {
+        if(!cards) {
+            return;
+        }
+        //Move all cards in hand to the deck
+        var cardsInHand = this.hand;
+        _.each(cardsInHand, card => this.moveCard(card, 'conflict deck'));
+        cards = this.mixedListToCardList(cards, 'conflict deck');
+        _.each(cards, card => this.moveCard(card, 'hand'));
+        /*  ************* STUB ************* */
+    }
+
     get firstPlayer() {
         return this.player.firstPlayer;
     }
@@ -60,23 +81,19 @@ class PlayerInteractionWrapper {
         return prompt.menuTitle + '\n' + _.map(prompt.buttons, button => '[ ' + button.text + ' ]').join('\n');
     }
 
-    findCardByName(name, location = 'any', side) {
-        return this.filterCardsByName(name, location, side)[0];
+    findCardByName(name, locations = 'any', side) {
+        return this.filterCardsByName(name, locations, side)[0];
     }
 
-    filterCardsByName(name, location = 'any', side) {
+    filterCardsByName(name, locations = 'any', side) {
         var matchFunc = matchCardByNameAndPack(name);
-        var locations = [location];
-        if(location === 'provinces') {
+        if(_.isString(locations)) {
+            locations = [locations];
+        }
+        if(locations === 'provinces') {
             locations = ['province 1', 'province 2', 'province 3', 'province 4'];
         }
-        var cards = this.filterCards(card => matchFunc(card.cardData) && (location === 'any' || _.contains(locations, card.location)), side);
-
-        if(cards.length === 0) {
-            var locationString = location === 'any' ? 'any location' : location;
-            throw new Error(`Could not find any matching card "${name}" for ${this.player.name} in ${locationString}`);
-        }
-
+        var cards = this.filterCards(card => matchFunc(card.cardData) && (locations === ['any'] || _.contains(locations, card.location)), side);
         return cards;
     }
 
@@ -104,7 +121,7 @@ class PlayerInteractionWrapper {
 
     hasPrompt(title) {
         var currentPrompt = this.player.currentPrompt();
-        return !!currentPrompt && (currentPrompt.menuTitle.toLowerCase() === title.toLowerCase() || currentPrompt.promptTitle === title.toLowerCase());
+        return !!currentPrompt && currentPrompt.menuTitle.toLowerCase() === title.toLowerCase();
     }
 
 
@@ -135,6 +152,7 @@ class PlayerInteractionWrapper {
 
     clickRing(element) {
         this.game.ringClicked(this.player.name, element);
+        this.game.continue();
     }
 
     clickMenu(card, menuText) {
@@ -154,6 +172,11 @@ class PlayerInteractionWrapper {
 
     dragCard(card, targetLocation) {
         this.game.drop(this.player.name, card.uuid, card.location, targetLocation);
+        this.game.continue();
+    }
+
+    moveCard(card, targetLocation) {
+        this.player.moveCard(card, targetLocation);
         this.game.continue();
     }
 
@@ -250,32 +273,36 @@ class PlayerInteractionWrapper {
         @param {(String|DrawCard)[]} defenders - a list of defender names, ids or
         card objects
      */
-    assignDefenders(defenders) {
+    assignDefenders(defenders = []) {
         if(!defenders) {
             return;
         }
-        var conflictType = this.game.currentConflict.conflictType;
-        // Turn to list of card objects
-        defenders = this.mixedListToCardList(defenders, 'play area');
-        // Filter out those that can't participate
-        defenders = this.filterUnableToParticipate(defenders, conflictType);
-        if(defenders.length === 0) {
-            throw new Error(`None of the specified attackers can participate in ${conflictType} conflicts`);
+        //Some defenders assigned
+        if(defenders.length !== 0) {
+            var conflictType = this.game.currentConflict.conflictType;
+            // Turn to list of card objects
+            defenders = this.mixedListToCardList(defenders, 'play area');
+            // Filter out those that can't participate
+            defenders = this.filterUnableToParticipate(defenders, conflictType);
+            if(defenders.length === 0) {
+                throw new Error(`None of the specified attackers can participate in ${conflictType} conflicts`);
+            }
+
+            _.each(defenders, card => {
+                this.clickCard(card);
+            });
         }
-        _.each(defenders, card => {
-            this.clickCard(card);
-        });
         this.clickPrompt('Done');
     }
 
-    mixedListToCardList(mixed, location = 'any') {
+    mixedListToCardList(mixed, locations = 'any') {
         // Yank all the non-string cards
         var cardList = _.reject(mixed, card => _.isString(card));
         mixed = _.filter(mixed, card => _.isString(card));
         // Find cards objects for the rest
         _.each(mixed, (card) => {
             //Find only those cards that aren't already attacking
-            var cardObject = this.filterCardsByName(card, location).find(card => !_.contains(cardList, card));
+            var cardObject = this.filterCardsByName(card, locations).find(card => !_.contains(cardList, card));
             if(!cardObject) {
                 throw new Error (`Could not find card named ${card}`);
             }

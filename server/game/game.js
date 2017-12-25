@@ -94,7 +94,6 @@ class Game extends EventEmitter {
      * @returns {undefined}
      */
     reportError(e) {
-        console.log(e);
         this.router.handleError(this, e);
     }
 

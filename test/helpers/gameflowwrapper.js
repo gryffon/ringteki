@@ -3,14 +3,13 @@
 const _ = require('underscore');
 const Jasmine = require('jasmine');
 const jasmine = (new Jasmine()).jasmine;
-
 const Game = require('../../server/game/game.js');
 const PlayerInteractionWrapper = require('./playerinteractionwrapper.js');
 const Settings = require('../../server/settings.js');
 
 class GameFlowWrapper {
     constructor() {
-        var gameRouter = jasmine.createSpyObj('gameRouter', ['gameWon', 'playerLeft']);
+        var gameRouter = jasmine.createSpyObj('gameRouter', ['gameWon', 'playerLeft', 'reportError']);
         var details = {
             name: 'player1\'s game',
             id: 12345,
@@ -67,22 +66,28 @@ class GameFlowWrapper {
         this.eachPlayerInFirstPlayerOrder(player => player.clickPrompt('Done'));
     }
 
-    completeDynasty() {
-        this.eachPlayerStartingWithPrompted(player => {
-            if(!player.player.passedDynasty) {
-                player.clickPrompt('Pass');
-            }
-        });
+    skipSetupPhase() {
+        this.selectProvinces();
+        this.keepDynasty();
+        this.keepConflict();
     }
 
     noMoreActions() {
-        this.eachPlayerStartingWithPrompted(player => player.clickPrompt('Pass'));
+        if(this.game.currentPhase === 'dynasty') {
+            this.eachPlayerStartingWithPrompted(player => {
+                if(!player.player.passedDynasty) {
+                    player.clickPrompt('Pass');
+                }
+            });
+        } else {
+            this.eachPlayerStartingWithPrompted(player => player.clickPrompt('Pass'));
+        }
     }
 
     /*
         Executes the honor bidding
     */
-    bidHonor(player1amt, player2amt) {
+    bidHonor(player1amt = 1, player2amt = 1) {
         this.guardCurrentPhase('draw');
         this.player1.bidHonor(player1amt);
         this.player2.bidHonor(player2amt);

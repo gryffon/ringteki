@@ -9,8 +9,8 @@ const DeckBuilder = require('./deckbuilder.js');
 const GameFlowWrapper = require('./gameflowwrapper.js');
 
 const ProxiedGameFlowWrapperMethods = [
-    'startGame', 'keepStartingHands', 'skipSetupPhase', 'selectFirstPlayer',
-    'completeSetup', 'skipActionWindow', 'selectProvinces'
+    'startGame', 'keepConflict', 'keepDynasty', 'skipSetupPhase', 'selectFirstPlayer',
+    'completeSetup', 'noMoreActions', 'selectProvinces', 'bidHonor'
 ];
 
 const deckBuilder = new DeckBuilder();
@@ -75,7 +75,7 @@ global.integration = function(definitions) {
             });
 
             this.buildDeck = function(faction, cards) {
-                return deckBuilder.buildDeck(faction, cards);
+                return deckBuilder.customDeck(faction, cards);
             };
         });
 
