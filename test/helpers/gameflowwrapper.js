@@ -1,6 +1,8 @@
 /* global jasmine */
 
 const _ = require('underscore');
+const Jasmine = require('jasmine');
+const jasmine = (new Jasmine()).jasmine;
 
 const Game = require('../../server/game/game.js');
 const PlayerInteractionWrapper = require('./playerinteractionwrapper.js');
@@ -26,55 +28,71 @@ class GameFlowWrapper {
         this.allPlayers = [this.player1, this.player2];
     }
 
+    get firstPlayer() {
+        return _.find(this.allPlayers, player => player.firstPlayer);
+    }
+
     eachPlayerInFirstPlayerOrder(handler) {
         var playersInOrder = _.sortBy(this.allPlayers, player => !player.firstPlayer);
 
         _.each(playersInOrder, player => handler(player));
     }
 
+    eachPlayerStartingWithPrompted(handler) {
+        var playersInPromptedOrder = _.sortBy(this.allPlayers, player => player.hasPrompt('Waiting for opponent to take an action or pass'));
+
+        _.each(playersInPromptedOrder, player=> handler(player));
+    }
+
     startGame() {
         this.game.initialise();
     }
 
-    keepStartingHands() {
-        _.each(this.allPlayers, player => player.clickPrompt('Keep Hand'));
+    selectProvinces() {
+        this.guardCurrentPhase('setup');
+        this.eachPlayerInFirstPlayerOrder(player => {
+            let card = player.player.provinceDeck.value()[0];
+            player.clickCard(card);
+            player.clickPrompt('Done');
+        });
     }
 
-    skipSetupPhase() {
-        this.keepStartingHands();
-        _.each(this.allPlayers, player => player.clickPrompt('Done'));
+    keepDynasty() {
+        this.guardCurrentPhase('setup');
+        this.eachPlayerInFirstPlayerOrder(player => player.clickPrompt('Done'));
+    }
+
+    keepConflict() {
+        this.guardCurrentPhase('setup');
+        this.eachPlayerInFirstPlayerOrder(player => player.clickPrompt('Done'));
+    }
+
+    completeDynasty() {
+        this.eachPlayerStartingWithPrompted(player => {
+            if(!player.player.passedDynasty) {
+                player.clickPrompt('Pass');
+            }
+        });
+    }
+
+    noMoreActions() {
+        this.eachPlayerStartingWithPrompted(player => player.clickPrompt('Pass'));
+    }
+
+    /*
+        Executes the honor bidding
+    */
+    bidHonor(player1amt, player2amt) {
+        this.guardCurrentPhase('draw');
+        this.player1.bidHonor(player1amt);
+        this.player2.bidHonor(player2amt);
+        this.guardCurrentPhase('conflict');
     }
 
     guardCurrentPhase(phase) {
         if(this.game.currentPhase !== phase) {
             throw new Error(`Expected to be in the ${phase} phase but actually was ${this.game.currentPhase}`);
         }
-    }
-
-    selectProvinces() {
-        const provinceLocations = [
-            'province 1',
-            'province 2',
-            'province 3',
-            'province 4',
-            'stronghold province'
-        ];
-        _.each(this.allPlayers, player => {
-            _.each(provinceLocations, (loc) => {
-                let card = player.player.provinceDeck.value()[0];
-                player.dragCard(card, loc);
-            });
-            player.clickPrompt('Done');
-        });
-    }
-
-    completeSetup() {
-        this.guardCurrentPhase('setup');
-        _.each(this.allPlayers, player => player.clickPrompt('Done'));
-    }
-
-    skipActionWindow() {
-        this.eachPlayerInFirstPlayerOrder(player => player.clickPrompt('Pass'));
     }
 
     getPromptedPlayer(title) {
@@ -89,9 +107,14 @@ class GameFlowWrapper {
     }
 
     selectFirstPlayer(player) {
-        var promptedPlayer = this.getPromptedPlayer('Select first player');
-        promptedPlayer.clickPrompt(player.name);
+        var promptedPlayer = this.getPromptedPlayer('You won the flip. Do you want to be:');
+        if(player === promptedPlayer) {
+            promptedPlayer.clickPrompt('First Player');
+        } else {
+            promptedPlayer.clickPrompt('Second Player');
+        }
     }
+
 }
 
 module.exports = GameFlowWrapper;

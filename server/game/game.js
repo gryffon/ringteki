@@ -94,6 +94,7 @@ class Game extends EventEmitter {
      * @returns {undefined}
      */
     reportError(e) {
+        console.log(e);
         this.router.handleError(this, e);
     }
 
@@ -322,7 +323,7 @@ class Game extends EventEmitter {
                 card.facedown = false;
                 this.addMessage('{0} reveals {1}', player, card);
             }
-        }*/        
+        }*/
     }
 
     /*
