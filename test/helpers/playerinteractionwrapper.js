@@ -356,6 +356,18 @@ class PlayerInteractionWrapper {
         return cards;
     }
 
+    placeCardInProvince(card, location) {
+        if(_.isString(card)) {
+            card = this.findCardByName(card);
+        }
+        if(card.location !== location) {
+            this.player.moveCard(this.player.getDynastyCardInProvince(location), 'dynasty deck');
+            this.player.moveCard(card, location);
+        }
+        card.facedown = false;
+        return card;
+    }
+
     hasPrompt(title) {
         var currentPrompt = this.player.currentPrompt();
         return !!currentPrompt && currentPrompt.menuTitle.toLowerCase() === title.toLowerCase();

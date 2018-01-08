@@ -9,8 +9,8 @@ const DeckBuilder = require('./deckbuilder.js');
 const GameFlowWrapper = require('./gameflowwrapper.js');
 
 const ProxiedGameFlowWrapperMethods = [
-    'startGame', 'keepConflict', 'keepDynasty', 'skipSetupPhase', 'selectFirstPlayer',
-    'completeSetup', 'noMoreActions', 'selectProvinces', 'bidHonor'
+    'eachPlayerInFirstPlayerOrder', 'startGame', 'keepStartingHands', 'skipSetupPhase', 'selectFirstPlayer',
+    'completeSetup', 'skipActionWindow', 'selectProvinces'
 ];
 
 const deckBuilder = new DeckBuilder();
@@ -47,6 +47,26 @@ var customMatchers = {
                 } else {
                     var buttonText = _.map(buttons, button => '[' + button.text + ']').join('\n');
                     result.message = `Expected ${actual.name} to have prompt button "${expected}" but it had buttons:\n${buttonText}`;
+                }
+
+                return result;
+            }
+        };
+    },
+    toBeAbleToSelect: function(util, customEqualityMatchers) {
+        return {
+            compare: function(player, card) {
+                if(_.isString(card)) {
+                    card = player.findCardByName(card);
+                }
+                let result = {};
+
+                result.pass = player.player.promptState.getCardSelectionState(card).selectable;
+
+                if(result.pass) {
+                    result.message = `Expected ${card.name} not to be selectable by ${player.name} but it was.`;
+                } else {
+                    result.message = `Expected ${card.name} to be selectable by ${player.name} but it wasn't.`;
                 }
 
                 return result;
