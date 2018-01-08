@@ -12,12 +12,8 @@ const CardUtil = {
         }
 
         return function(cardData) {
-<<<<<<< HEAD
             return (cardData.name === name && (!pack || cardData.pack_code === pack)) ||
                 cardData.id === name;
-=======
-            return (cardData.name === name || cardData.id === name) && (!pack || cardData.pack_code === pack);
->>>>>>> 61246a588223fcda50a5c60ee707f3cfcb292ab8
         };
     }
 };

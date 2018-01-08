@@ -200,6 +200,10 @@ class PlayerInteractionWrapper {
             if(options.bowed !== undefined) {
                 options.bowed ? card.bow() : card.ready();
             }
+            // Set covert state
+            if(options.covert !== undefined) {
+                card.covert = options.covert;
+            }
             // Get the attachments
             if(options.attachments) {
                 var attachments = [];

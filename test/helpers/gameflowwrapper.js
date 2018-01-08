@@ -199,9 +199,9 @@ class GameFlowWrapper {
 
     /**
      * Factory method. Creates a new simulation of a game.
-     * @param {Object} options - specifies the state of the game
+     * @param {Object} [options = {}] - specifies the state of the game
      */
-    static async setupTest(options) {
+    static async setupTest(options = {}) {
         var game = new GameFlowWrapper();
         var player1 = game.player1;
         var player2 = game.player2;
