@@ -90,7 +90,7 @@ class PlayerInteractionWrapper {
     /**
         Sets the contents of a user's provinces
         Does not touch the stronghold. Assumed that the stronghold is set during setup.
-        @param {Object} [newProvinceState = {}] - new contents of provinces
+        @param {!Object} newProvinceState - new contents of provinces
         @param {Object} newProvinceState['province 1'] - contents of province 1
         @param {String|DrawCard} newProvinceState['province 1'].provinceCard - Province card for province 1
         @param {(String|DrawCard)[]} newProvinceState['province 1'].dynastyCards - list of dynasty cards for province 1
@@ -104,7 +104,10 @@ class PlayerInteractionWrapper {
         @param {String|DrawCard} newProvinceState['province 4'].provinceCard - Province card for province 4
         @param {(String|DrawCard)[]} newProvinceState['province 4'].dynastyCards - list of dynasty cards for province 4
     */
-    set provinces(newProvinceState = {}) {
+    set provinces(newProvinceState) {
+        if(!newProvinceState) {
+            return;
+        }
         //Move all cards from all provinces to decks
         var allProvinceLocations = _.keys(this.provinces);
         _.each(this.provinces, (contents) => {
