@@ -5,15 +5,30 @@ const CardService = require('../../server/services/CardService.js');
 const {matchCardByNameAndPack} = require('./cardutil.js');
 
 const defaultFaction = 'phoenix';
-const defaultStronghold = 'city-of-the-open-hand'
-const defaultProvinces = ['shameful-display', 'shameful-display', 'shameful-display', 'shameful-display', 'shameful-display'];
-const defaultDynasty = ['adept-of-the-waves','adept-of-the-waves','adept-of-the-waves','adept-of-the-waves','adept-of-the-waves', 'adept-of-the-waves', 'adept-of-the-waves'];
-const defaultConflict = ['a-legion-of-one', 'a-legion-of-one', 'a-legion-of-one', 'a-legion-of-one', 'a-legion-of-one', 'a-legion-of-one', 'a-legion-of-one'];
+const defaultRole = 'seeker-of-water';
+const defaultStronghold = 'city-of-the-open-hand';
+const minProvince = 5;
+const provinceFiller = 'shameful-display';
+const minDynasty = 8;
+const dynastyFiller = 'adept-of-the-waves';
+const minConflict = 10;
+const conflictFiller = 'supernatural-storm';
+
 
 class DeckBuilder {
     constructor() {
         this.cards = {};
         this.loaded = false;
+        // Filler info which might be used outside the class
+        this.fillers = {
+            faction: defaultFaction,
+            role: defaultRole,
+            stronghold: defaultStronghold,
+            province: provinceFiller,
+            dynasty: dynastyFiller,
+            conflict: conflictFiller
+        };
+        this.loadCards();
     }
 
     // Lazily loads the cards from the db
@@ -36,44 +51,96 @@ class DeckBuilder {
     }
 
     /*
-        options:
-        - faction {String} faction for the deck
-        - stronghold {String} id or name of the stronghold
-        - provinces {String[]} list of ids or names of provinces to include
-        - dynasty {String[]} list of ids or names of cards to put in the dynasty deck
-        - conflict {String[]} list of ids or names of cards to put in the conflict deck
+        options: as player1 and player2 are described in setupTest #1514
     */
-    async customDeck(options = {}) {
+    async customDeck(player = {}) {
         let faction = defaultFaction;
-        let deck = [];
-        if(options.faction) {
-            faction = options.faction;
+        let role = defaultRole;
+        let stronghold = defaultStronghold;
+        let provinceDeck = [];
+        let conflictDeck = [];
+        let dynastyDeck = [];
+        let inPlayCards = []; // Considered separately, because may consist of both dynasty and conflict
+        if(player.faction) {
+            faction = player.faction;
         }
-        if(options.stronghold) {
-            deck.push(options.stronghold);
-        } else {
-            deck.push(defaultStronghold);
+        if(player.role) {
+            role = player.role;
         }
-        /* Provinces, dynasty and conflict all need to be padded, so as to not
-        break the game */
-        if(options.provinces) {
-            deck.push(...options.provinces);
-            deck.push(...defaultProvinces.slice(options.provinces.length));
-        } else {
-            deck.push(...defaultProvinces);
+        if(player.stronghold) {
+            stronghold = player.stronghold;
         }
-        if(options.dynasty) {
-            deck.push(...options.dynasty);
-            deck.push(...defaultDynasty.slice(options.dynasty.length));
-        } else {
-            deck.push(...defaultDynasty);
+        //Create the province deck
+        if(player.strongholdProvince) {
+            provinceDeck.push(player.strongholdProvince);
         }
-        if(options.conflict) {
-            deck.push(...options.conflict);
-            deck.push(...defaultConflict.slice(options.conflict.length));
-        } else {
-            deck.push(...defaultConflict);
+        if(player.provinces) {
+            _.each(player.provinces, province => {
+                if(province.provinceCard) {
+                    provinceDeck.push(province.provinceCard);
+                }
+            });
         }
+        //Fill the deck up to minimum number of provinces
+        while(provinceDeck.length < minProvince) {
+            provinceDeck.push(provinceFiller);
+        }
+        /*
+         * Create the dynasty deck - dynasty deck consists of cards in decks,
+         * provinces and discard
+         */
+        if(player.dynastyDeck) {
+            dynastyDeck.push(...player.dynastyDeck);
+        }
+        if(player.dynastyDiscard) {
+            dynastyDeck.push(...player.dynastyDiscard);
+        }
+        _.each(player.provinces, province => {
+            if(province.dynastyCards) {
+                dynastyDeck.push(...province.dynastyCards);
+            }
+        });
+        //Fill the deck up to minimum
+        while(dynastyDeck.length < minDynasty) {
+            dynastyDeck.push(dynastyFiller);
+        }
+        /**
+         * Create the conflict deck - conflict deck consists of cards in decks,
+         * hand and discard
+         */
+        if(player.conflictDeck) {
+            conflictDeck.push(...player.conflictDeck);
+        }
+        if(player.conflictDiscard) {
+            conflictDeck.push(...player.conflictDiscard);
+        }
+        if(player.hand) {
+            conflictDeck.push(...player.hand);
+        }
+        //Fill the deck up to minimum
+        while(conflictDeck.length < minConflict) {
+            conflictDeck.push(conflictFiller);
+        }
+
+        //Collect the names of cards in play
+        _.each(player.inPlay, card => {
+            if(_.isString(card)) {
+                inPlayCards.push(card);
+            } else {
+                //Add the card itself
+                inPlayCards.push(card.card);
+                //Add any attachments
+                if(card.attachments) {
+                    inPlayCards.push(...card.attachments);
+                }
+            }
+        });
+
+        //Collect all the cards together
+        var deck = provinceDeck.concat(conflictDeck)
+            .concat(dynastyDeck).concat(inPlayCards)
+            .concat(role).concat(stronghold);
+
         return this.buildDeck(faction, deck);
     }
 
