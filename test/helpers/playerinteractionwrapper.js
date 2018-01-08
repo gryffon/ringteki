@@ -33,7 +33,7 @@ class PlayerInteractionWrapper {
 
     set honor(newHonor) {
         if(newHonor > 0) {
-            this.player.newHonor = newHonor;
+            this.player.honor = newHonor;
         }
     }
 
@@ -58,6 +58,10 @@ class PlayerInteractionWrapper {
         return this.player.strongholdProvince.value();
     }
 
+    /**
+     * Gives information about the contents of the player's provinces
+     * @return {Object} contents of provinces 1,2,3,4
+     */
     get provinces() {
         var provinceOne = this.player.provinceOne.value();
         var provinceTwo = this.player.provinceTwo.value();
@@ -83,15 +87,22 @@ class PlayerInteractionWrapper {
         };
     }
 
-    /*
-        new ProvinceState
-        -province 1: {
-            - {String|DrawCard} provinceCard
-            - {(String|DrawCard)[]} dynastyCards
-        },
-        -province 2,3,4 similarly
-
+    /**
+        Sets the contents of a user's provinces
         Does not touch the stronghold. Assumed that the stronghold is set during setup.
+        @param {Object} [newProvinceState = {}] - new contents of provinces
+        @param {Object} newProvinceState['province 1'] - contents of province 1
+        @param {String|DrawCard} newProvinceState['province 1'].provinceCard - Province card for province 1
+        @param {(String|DrawCard)[]} newProvinceState['province 1'].dynastyCards - list of dynasty cards for province 1
+        @param {Object} newProvinceState['province 2'] - contents of province 2
+        @param {String|DrawCard} newProvinceState['province 2'].provinceCard - Province card for province 2
+        @param {(String|DrawCard)[]} newProvinceState['province 2'].dynastyCards - list of dynasty cards for province 2
+        @param {Object} newProvinceState['province 3'] - contents of province 3
+        @param {String|DrawCard} newProvinceState['province 3'].provinceCard - Province card for province 3
+        @param {(String|DrawCard)[]} newProvinceState['province 3'].dynastyCards - list of dynasty cards for province 3
+        @param {Object} newProvinceState['province 4'] - contents of province 4
+        @param {String|DrawCard} newProvinceState['province 4'].provinceCard - Province card for province 4
+        @param {(String|DrawCard)[]} newProvinceState['province 4'].dynastyCards - list of dynasty cards for province 4
     */
     set provinces(newProvinceState = {}) {
         //Move all cards from all provinces to decks
@@ -129,20 +140,24 @@ class PlayerInteractionWrapper {
 
     /**
      * Gets all cards in play for a player
+     * @return {DrawCard[]} - List of player's cards currently in play
      */
     get inPlay() {
         return this.player.filterCardsInPlay(() => true);
     }
     /**
      * List of objects describing characters in play and any attachments:
-     * [ {
-          card: String,
-          fate: Integer,
-          honor: 'honored' or 'dishonored',
-          bowed: Boolean
-          covert: Boolean,
-          attachments: String[]
-        },...]
+     * Either as Object:
+     * {
+     *    card: String,
+     *    fate: Integer,
+     *    honor: 'honored' or 'dishonored',
+     *    bowed: Boolean
+     *    covert: Boolean,
+     *    attachments: String[]
+     *  }
+     * or String containing name or id of the card
+     * @param {(Object|String)[]} newState - list of cards in play and their states
      */
     set inPlay(newState = []) {
         // First, move all cards in play back to the appropriate decks
@@ -204,16 +219,17 @@ class PlayerInteractionWrapper {
         return this.player.conflictDeck.value();
     }
 
-    get conflictDiscardPile() {
+    get conflictDiscard() {
         return this.player.conflictDiscardPile.value();
     }
 
     /**
      * Sets the contents of the conflict discard pile
+     * @param {String[]} newContents - list of names of cards to be put in conflict discard
      */
-    set conflictDiscardPile(newContents = []) {
+    set conflictDiscard(newContents = []) {
         //  Move cards to the deck
-        _.each(this.conflictDiscardPile, card => {
+        _.each(this.conflictDiscard, card => {
             this.moveCard(card, 'conflict deck');
         });
         // Move cards to the discard
@@ -227,13 +243,17 @@ class PlayerInteractionWrapper {
         return this.player.dynastyDeck.value();
     }
 
-    get dynastyDiscardPile() {
+    get dynastyDiscard() {
         return this.player.dynastyDiscardPile.value();
     }
 
-    set dynastyDiscardPile(newContents = []) {
+    /**
+     * Sets the contents of the dynasty discard pile
+     * @param {String[]} newContents - list of names of cards to be put in dynasty discard
+     */
+    set dynastyDiscard(newContents = []) {
         // Move cards to the deck
-        _.each(this.dynastyDiscardPile, card => {
+        _.each(this.dynastyDiscard, card => {
             this.moveCard(card, 'dynasty deck');
         });
         // Move cards to the discard
@@ -268,6 +288,10 @@ class PlayerInteractionWrapper {
         return this.player.playerState.selectableCards;
     }
 
+    /**
+     * Determines whether a player can initiate actions
+     * @return {Boolean} - whether the player can initiate actions or has to wait
+     */
     get canAct() {
         return !this.hasPrompt('Waiting for opponent to take an action or pass');
     }
@@ -286,6 +310,12 @@ class PlayerInteractionWrapper {
         return this.filterCardsByName(name, locations, side)[0];
     }
 
+    /**
+     * Filters all of a player's cards using the name and location of a card
+     * @param {String} name - the name of the card
+     * @param {String[]|String} [locations = 'any'] - locations in which to look for. 'provinces' = 'province 1', 'province 2', etc.
+     * @param {?String} side - set to 'opponent' to search in opponent's cards
+     */
     filterCardsByName(name, locations = 'any', side) {
         var matchFunc = matchCardByNameAndPack(name);
         // So that function can accept either lists or single locations
@@ -308,10 +338,10 @@ class PlayerInteractionWrapper {
         return this.filterCards(condition, side)[0];
     }
 
-    /*
-        Filters cards by given condition
-        - {function(card: DrawCard)} condition - card matching function
-        - {String} [side] - if set to 'opponent', filters opponent's cards instead
+    /**
+    *   Filters cards by given condition
+    *   @param {function(card: DrawCard)} condition - card matching function
+    *   @param {String} [side] - set to 'opponent' to search in opponent's cards
     */
     filterCards(condition, side) {
         var player = this.player;
@@ -391,6 +421,9 @@ class PlayerInteractionWrapper {
         this.player.promptedActionWindows[window] = value;
     }
 
+    /**
+     * Player's action of passing priority
+     */
     pass() {
         if(!this.canAct) {
             throw new Error(`${this.name} can't pass, because they don't have priority`);
@@ -398,6 +431,10 @@ class PlayerInteractionWrapper {
         this.clickPrompt('Pass');
     }
 
+    /**
+     * Selects a stronghold province at the beginning of the game
+     * @param {!String} card - the province to select
+     */
     selectStrongholdProvince(card) {
         if(!this.hasPrompt('Select stronghold province')) {
             throw new Error(`${this.name} is not prompted to select a province`);
@@ -407,7 +444,11 @@ class PlayerInteractionWrapper {
         this.clickPrompt('Done');
     }
 
-    bidHonor(honoramt) {
+    /**
+     * Bids the specified amount of honor during the draw phase
+     * @param {number} [honoramt = 1] - amount of honor to be bid
+     */
+    bidHonor(honoramt = 1) {
         if(!_.contains(this.currentButtons, honoramt.toString())) {
             throw new Error(`${honoramt} is not a valid selection for ${this.name}`);
         }
@@ -417,8 +458,10 @@ class PlayerInteractionWrapper {
         this.clickPrompt(honoramt);
     }
 
-    /*
-        Playes a card during the dynasty phase
+    /**
+    *   Plays a card from provinces during the dynasty phase
+    *   @param {String} card - Name or id of the card to be playersInOrder
+    *   @param {Number} [fate = 0] - number of additional fate to be placed
     */
     playFromProvinces(card, fate = 0) {
         if(!this.canAct) {
@@ -444,6 +487,7 @@ class PlayerInteractionWrapper {
         }
         this.clickPrompt(fate);
     }
+
     /**
       Initiates a conflict for the player
       @param {String} [ring] - element of the ring to initiate on, void by default
@@ -514,6 +558,11 @@ class PlayerInteractionWrapper {
         this.clickPrompt('Done');
     }
 
+    /**
+     * Converts a mixed list of card objects and card names to a list of card objects
+     * @param {(DrawCard|String)[]} mixed - mixed list of cards and names or ids
+     * @param {String[]|String} locations - list of locations to get card objects from
+     */
     mixedListToCardList(mixed, locations = 'any') {
         // Yank all the non-string cards
         var cardList = _.reject(mixed, card => _.isString(card));
@@ -531,6 +580,11 @@ class PlayerInteractionWrapper {
         return cardList;
     }
 
+    /**
+     * Removes cards unable to participate in a specified type of conflict from a list
+     * @param {DrawCard[]} cardList - list of card objects
+     * @param {String} type - type of conflict 'military' or 'political'
+     */
     filterUnableToParticipate(cardList, type) {
         return _.filter(cardList, card => {
             if(!card) {

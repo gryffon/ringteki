@@ -23,7 +23,7 @@ let options = {
             {
                 card: 'Fearsome Mystic',
                 fate: 10,
-                honored: true,
+                honor: 'honored',
                 bowed: true,
                 attachments: ['Ornate Fan', 'fine-katana']
             }
@@ -108,6 +108,6 @@ Promise.all([deck1, deck2])
     player2.provinces = options.player2.provinces;
     player1.dynastyDiscardPile = options.player1.dynastyDiscard;
     player2.dynastyDiscardPile = options.player2.dynastyDiscard;
-    player1.conflictDiscardPile = options.player1.conflictDiscard;
-    player2.conflictDiscardPile = options.player2.conflictDiscard;
+    player1.conflictDiscard = options.player1.conflictDiscard;
+    player2.conflictDiscard = options.player2.conflictDiscard;
 });

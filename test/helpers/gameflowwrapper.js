@@ -39,6 +39,10 @@ class GameFlowWrapper {
         _.each(playersInOrder, player => handler(player));
     }
 
+    /**
+     * Executes a function for each player, starting with the one prompted for action
+     * @param {Function} handler - function of a player to be executed
+     */
     eachPlayerStartingWithPrompted(handler) {
         var playersInPromptedOrder = _.sortBy(this.allPlayers, player => player.hasPrompt('Waiting for opponent to take an action or pass'));
         _.each(playersInPromptedOrder, player => handler(player));
@@ -48,35 +52,45 @@ class GameFlowWrapper {
         this.game.initialise();
     }
 
-    /*
-     * strongholds: {
-        player1: String,
-        player2: String
-    }
+    /**
+     * Selects stronghold provinces for both players
+     * @param {Object} [strongholds = {}] - names of provinces to select for each player
+     * @param {String} strongholds.player1 - stronghold province for player 1
+     * @param {String} strongholds.player2 - stronghold province for player 2
      */
     selectStrongholdProvinces(strongholds = {}) {
         this.guardCurrentPhase('setup');
-        this.player1.selectStrongholdProvince(strongholds.player1);
-        this.player2.selectStrongholdProvince(strongholds.player2);
-
+        //Select the fillers, so that province cards specified for province setup aren't used
+        this.player1.selectStrongholdProvince(strongholds.player1 || deckBuilder.fillers.province);
+        this.player2.selectStrongholdProvince(strongholds.player2 || deckBuilder.fillers.province);
     }
 
+    /**
+     * Keeps provinces during prompts for dynasty mulligan
+     */
     keepDynasty() {
         this.guardCurrentPhase('setup');
         this.eachPlayerInFirstPlayerOrder(player => player.clickPrompt('Done'));
     }
-
+    /**
+     * Keeps hand during prompt for conflict mulligan
+     */
     keepConflict() {
         this.guardCurrentPhase('setup');
         this.eachPlayerInFirstPlayerOrder(player => player.clickPrompt('Done'));
     }
-
+    /**
+     * Skips setup phase with defaults
+     */
     skipSetupPhase() {
         this.selectStrongholdProvinces();
         this.keepDynasty();
         this.keepConflict();
     }
 
+    /**
+     * Both players pass for the rest of the action window
+     */
     noMoreActions() {
         if(this.game.currentPhase === 'dynasty') {
             // Players that have already passed aren't prompted again in dynasty
@@ -90,6 +104,9 @@ class GameFlowWrapper {
         }
     }
 
+    /**
+     * Skips any remaining conflicts, skips the action window
+     */
     finishConflictPhase() {
         this.guardCurrentPhase('conflict');
         while(this.player1.player.conflicts.conflictOpportunities > 0 ||
@@ -112,6 +129,9 @@ class GameFlowWrapper {
         // this.guardCurrentPhase('fate');
     }
 
+    /**
+     * Completes the fate phase
+     */
     finishFatePhase() {
         // this.guardCurrentPhase('fate');
         var playersInPromptedOrder = _.sortBy(this.allPlayers, player => player.hasPrompt('Waiting for opponent to discard dynasty cards'));
@@ -123,6 +143,9 @@ class GameFlowWrapper {
         this.guardCurrentPhase('regroup');
     }
 
+    /**
+     * Completes the regroup phase
+     */
     finishRegroupPhase() {
         this.guardCurrentPhase('regroup');
         var playersInPromptedOrder = _.sortBy(this.allPlayers, player => player.hasPrompt('Waiting for opponent to discard dynasty cards'));
@@ -133,16 +156,21 @@ class GameFlowWrapper {
         this.guardCurrentPhase('dynasty');
     }
 
-    /*
-        Executes the honor bidding
+    /**
+    *   Executes the honor bidding
+    *   @param {?number} player1amt - amount for player1 to bid
+    *   @param {?number} player2amt = amount for player2 to bid
     */
-    bidHonor(player1amt = 1, player2amt = 1) {
+    bidHonor(player1amt, player2amt) {
         this.guardCurrentPhase('draw');
         this.player1.bidHonor(player1amt);
         this.player2.bidHonor(player2amt);
         this.guardCurrentPhase('conflict');
     }
 
+    /**
+     * Asserts that the game is in the expected phase
+     */
     guardCurrentPhase(phase) {
         if(this.game.currentPhase !== phase) {
             throw new Error(`Expected to be in the ${phase} phase but actually was ${this.game.currentPhase}`);
@@ -168,8 +196,10 @@ class GameFlowWrapper {
             promptedPlayer.clickPrompt('Second Player');
         }
     }
+
     /**
      * Factory method. Creates a new simulation of a game.
+     * @param {Object} options - specifies the state of the game
      */
     static async setupTest(options) {
         var game = new GameFlowWrapper();
@@ -194,11 +224,10 @@ class GameFlowWrapper {
         game.startGame();
         //Setup phase
         game.selectFirstPlayer(player1);
-        // Select the filler province, so that provinces specified in options
-        // aren't accidentally selected for stronghold
+
         game.selectStrongholdProvinces({
-            player1: options.player1.strongholdProvince || deckBuilder.fillers.province,
-            player2: options.player2.strongholdProvince || deckBuilder.fillers.province
+            player1: options.player1.strongholdProvince ,
+            player2: options.player2.strongholdProvince
         });
         game.keepDynasty();
         game.keepConflict();
