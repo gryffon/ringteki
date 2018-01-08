@@ -214,7 +214,7 @@ class GameFlowWrapper {
             options.player2 = {};
         }
 
-        //Build decks (somehow)
+        //Build decks
         var deck1 = deckBuilder.customDeck(options.player1)
             .then(deck => player1.selectDeck(deck));
         var deck2 = deckBuilder.customDeck(options.player2)
@@ -226,7 +226,7 @@ class GameFlowWrapper {
         game.selectFirstPlayer(player1);
 
         game.selectStrongholdProvinces({
-            player1: options.player1.strongholdProvince ,
+            player1: options.player1.strongholdProvince,
             player2: options.player2.strongholdProvince
         });
         game.keepDynasty();
@@ -238,14 +238,18 @@ class GameFlowWrapper {
         //Set state
         player1.fate = options.player1.fate;
         player2.fate = options.player2.fate;
-        player1.hand = options.player1.hand;
-        player2.hand = options.player2.hand;
+        player1.honor = options.player1.honor;
+        player2.honor = options.player2.honor;
         player1.inPlay = options.player1.inPlay;
         player2.inPlay = options.player2.inPlay;
+        player1.hand = options.player1.hand;
+        player2.hand = options.player2.hand;
+        player1.provinces = options.player1.provinces;
+        player2.provinces = options.player2.provinces;
         player1.dynastyDiscardPile = options.player1.dynastyDiscard;
         player2.dynastyDiscardPile = options.player2.dynastyDiscard;
-        player1.conflictDiscardPile = options.player1.conflictDiscard;
-        player2.conflictDiscardPile = options.player2.conflictDiscard;
+        player1.conflictDiscard = options.player1.conflictDiscard;
+        player2.conflictDiscard = options.player2.conflictDiscard;
 
         return game;
     }
