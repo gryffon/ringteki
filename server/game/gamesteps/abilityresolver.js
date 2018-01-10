@@ -58,7 +58,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         }
         this.context.ability.payCosts(this.context);
     }
-/*
+    /*
     checkCostsHaveBeenPaid() {
         if(this.cancelled) {
             return;
@@ -73,7 +73,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             return false;
         }
     }
-*/
+    */
     resolveEarlyTargets() {
         if(this.cancelled) {
             return;
