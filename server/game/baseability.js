@@ -102,7 +102,7 @@ class BaseAbility {
         /*
         return _.compact(_.flatten(_.map(this.cost, cost => {
             if(cost.pay) {
-                return cost.pay(context);
+                cost.pay(context);
             }
         })));
         */
