@@ -71,6 +71,31 @@ var customMatchers = {
                 return result;
             }
         };
+    },
+    toInclude: function(util, customEqualityMatchers) {
+        return {
+            compare: function(list, item) {
+                let result = {};
+                result.pass = _.includes(list, item);
+
+                // Represent the list as strings - assumes it's passed a list of cards
+                if(!_.isString(list[0])){
+                    list = _.pluck(list, 'name');
+                }
+
+                if(!_.isString(item)) {
+                    item = item.name;
+                }
+
+                if(result.pass) {
+                    result.message = `Expected [${list}] not to include ${item}, but it did`;
+                } else {
+                    result.message = `Expedted [${list}] to include ${item} but it did not`;
+                }
+
+                return result;
+            }
+        }
     }
 };
 
