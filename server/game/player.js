@@ -1695,6 +1695,10 @@ class Player extends Spectator {
      * @param {EffectSource} source
      */
     honorCard(card, source) {
+        //Temporary fix until event success checks are implemented
+        if(!card.allowGameAction('honor')) {
+            return;
+        }
         this.game.raiseEvent('onCardHonored', { player: this, card: card, source: source }, () => {
             return { resolved: true, success: card.honor() };
         });
@@ -1706,8 +1710,12 @@ class Player extends Spectator {
      * @param {EffectSource} source
      */
     dishonorCard(card, source) {
+        //Temporary fix until event success checks are implemented
+        if(!card.allowGameAction('dishonor')) {
+            return;
+        }
         this.game.raiseEvent('onCardDishonored', { player: this, card: card, source: source }, () => {
-            return { resolved: true, result: card.dishonor() };
+            return { resolved: true, success: card.dishonor() };
         });
     }
 
