@@ -5,13 +5,13 @@ fdescribe('Shiba Tetsu', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay:['Shiba Tetsu', 'Keeper Initiate'],
+                        inPlay:['Shiba Tetsu', 'Keeper Initiate', 'Adept of the Waves'],
                         hand: ['Supernatural Storm', 'Supernatural Storm', 'Supernatural Storm']
                     }
                 });
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: ['Keeper Initiate'],
+                    attackers: ['Keeper Initiate', 'Adept of the Waves'],
                     defenders: []
                 })
 
