@@ -13,7 +13,7 @@ describe('Shiba Tetsu', function() {
                 this.initiateConflict({
                     attackers: ['Keeper Initiate', 'Adept of the Waves'],
                     defenders: []
-                })
+                });
 
                 this.player2.pass(); //Pass priority to player 1
                 this.storm1 = this.player1.hand[0];
@@ -54,7 +54,7 @@ describe('Shiba Tetsu', function() {
                     this.player2.pass();
                     this.player1.clickCard(this.storm2);
                     this.player1.clickCard(this.keeper);
-                })
+                });
 
                 it('should prompt the player again', function() {
                     expect(this.player1).toHavePrompt('Triggered Abilities');
@@ -65,7 +65,7 @@ describe('Shiba Tetsu', function() {
                     this.player1.clickCard(this.shiba);
                     expect(this.shiba.getMilitarySkill()).toBe(4);
                     expect(this.shiba.getPoliticalSkill()).toBe(3);
-                })
+                });
             });
         });
     });
