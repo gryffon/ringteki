@@ -15,7 +15,7 @@ class ShibaTetsu extends DrawCard {
                     match: this,
                     effect: [
                         ability.effects.modifyMilitarySkill(1),
-                        ability.effects.modifyMilitarySkill(1)
+                        ability.effects.modifyPoliticalSkill(1)
                     ]
                 }));
             }
