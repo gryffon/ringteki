@@ -9,7 +9,7 @@ class PlayAttachmentAction extends BaseAbility {
                 Costs.playLimited(),
                 Costs.useInitiateAction()
             ],
-            target: { 
+            target: {
                 cardCondition: (card, context) => context.player.canAttach(context.source, card) && context.source.canPlayOn(card)
             }
         });
@@ -24,7 +24,6 @@ class PlayAttachmentAction extends BaseAbility {
             context.game.currentPhase !== 'dynasty' &&
             context.source.getType() === 'attachment' &&
             context.player.isCardInPlayableLocation(context.source, 'play') &&
-            context.player.canPutIntoPlay(context.source) &&
             context.source.canPlay(context) &&
             context.player.canInitiateAction &&
             this.canResolveTargets(context)
