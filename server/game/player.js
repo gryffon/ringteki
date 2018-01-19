@@ -1022,7 +1022,7 @@ class Player extends Spectator {
      * @param {DrawCard} card
      */
     canAttach(attachment, card) {
-        if(!attachment || !card) {
+        if(!attachment || !card || !this.canPutIntoPlay(attachment)) {
             return false;
         }
 
@@ -1041,7 +1041,7 @@ class Player extends Spectator {
      * @param {Boolean} raiseCardPlayed
      */
     attach(attachment, card, raiseCardPlayed = false) {
-        if(!card || !attachment || !this.canPutIntoPlay(attachment)) {
+        if(!card || !attachment) {
             return;
         }
 
