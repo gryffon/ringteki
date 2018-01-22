@@ -63,13 +63,13 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.cancelled = _.any(this.costEvents, event => event.result.resolved && !event.result.success);
+        this.cancelled = _.any(this.costEvents, event => event.cancelled);
 
         if(this.cancelled) {
             this.game.addMessage('{0} attempted to use {1}, but did not successfully pay the required costs', this.context.player, this.context.source);
         }
 
-        if(!_.all(this.costEvents, event => event.result.resolved)) {
+        if(!_.all(this.costEvents, event => event.success || event.cancelled)) {
             return false;
         }
     }
@@ -102,6 +102,10 @@ class AbilityResolver extends BaseStepWithPipeline {
         }
 
         this.cancelled = _.any(this.targetResults, result => result.resolved && !result.value);
+
+        if(this.cancelled) {
+            this.game.addMessage('{0} attempted to use {1}, but targets were not successfully chosen', this.context.player, this.context.source);
+        }
 
         if(!_.all(this.targetResults, result => result.resolved || (pretarget && result.costsFirst))) {
             return false;
