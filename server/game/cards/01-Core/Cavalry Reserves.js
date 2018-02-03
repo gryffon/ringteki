@@ -11,7 +11,6 @@ class CavalryReserves extends DrawCard {
                 activePromptTitle: 'Choose characters',
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
-                numCards: 0,
                 multiSelect: true,
                 cardType: 'character',
                 cardCondition: card => {
