@@ -252,8 +252,9 @@ class PlayerInteractionWrapper {
         _.each(this.conflictDiscard, card => {
             this.moveCard(card, 'conflict deck');
         });
-        // Move cards to the discard
-        _.each(newContents, name => {
+        // Move cards to the discard in reverse order
+        // (helps with referring to cards by index)
+        _.chain(newContents).reverse().each(name => {
             var card = this.findCardByName(name, 'conflict deck');
             this.moveCard(card, 'conflict discard pile');
         });
