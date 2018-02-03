@@ -106,7 +106,18 @@ class PlayerInteractionWrapper {
     */
     set provinces(newProvinceState) {
         if(!newProvinceState) {
-            return;
+            newProvinceState = {};
+        }
+        // If function recieves an array of province cards, adapt it into an
+        // object
+        if(!_.isArray(newProvinceState)) {
+            let provincesObject = {};
+            _.each(newProvinceState, (card, index) => {
+                provincesObject[`province ${index}`] = {
+                    provinceCard: card
+                }
+            });
+            newProvinceState = provincesObject;
         }
         //Move all cards from all provinces to decks
         var allProvinceLocations = _.keys(this.provinces);
@@ -265,8 +276,9 @@ class PlayerInteractionWrapper {
         _.each(this.dynastyDiscard, card => {
             this.moveCard(card, 'dynasty deck');
         });
-        // Move cards to the discard
-        _.each(newContents, name => {
+        // Move cards to the discard in reverse order
+        // (helps with referencing cards in tests by index)
+        _.chain(newContents).reverse().each(name => {
             var card = this.findCardByName(name, 'dynasty deck');
             this.moveCard(card, 'dynasty discard pile');
         });
