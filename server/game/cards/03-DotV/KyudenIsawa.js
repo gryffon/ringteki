@@ -8,6 +8,7 @@ class KyudenIsawa extends StrongholdCard {
         this.action({
             title: 'Play a spell event from discard',
             cost: ability.costs.bowSelf(),
+            condition: () => this.game.currentConflict,
             target: {
                 activePromptTitle: 'Choose a spell event',
                 cardType: 'event',
