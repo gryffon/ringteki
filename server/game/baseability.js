@@ -99,6 +99,13 @@ class BaseAbility {
                 cost.pay(context);
             }
         });
+        /*
+        return _.compact(_.flatten(_.map(this.cost, cost => {
+            if(cost.pay) {
+                return cost.pay(context);
+            }
+        })));
+        */
     }
 
     /**
