@@ -51,6 +51,8 @@ class Player extends Spectator {
         this.totalGloryForFavor = 0;
         this.gloryModifier = 0;
 
+        this.chessClockLeft = -1; // time left on clock in seconds
+        this.timerStart = 0;
 
         this.deck = {};
         this.conflicts = new ConflictTracker();
@@ -82,6 +84,23 @@ class Player extends Spectator {
         this.createAdditionalPile('out of game', { title: 'Out of Game', area: 'player row' });
 
         this.promptState = new PlayerPromptState(this);
+    }
+
+    startClock() {
+        this.timerStart = Date.now();
+        console.log('starting clock', this.chessClockLeft);
+    }
+
+    stopClock() {
+        console.log('stopping clock', this.chessClockLeft);
+        if(this.timerStart > 0 && this.chessClockLeft > 0) {
+            this.chessClockLeft -= Math.floor((Date.now() - this.timerStart) / 1000);
+            this.timerStart = 0;
+            if(this.chessClockLeft < 0 && this.opponent) {
+                this.game.addMessage('{0}\'s clock has run out', this);
+                this.game.recordWinner(this.opponent, 'chessClock');
+            }
+        }
     }
 
     /**
@@ -1926,6 +1945,8 @@ class Player extends Spectator {
         return {
             fate: this.fate,
             honor: this.getTotalHonor(),
+            chessClockLeft: this.chessClockLeft,
+            timerStart: this.timerStart,
             conflictsRemaining: this.conflicts.conflictOpportunities,
             militaryRemaining: !this.conflicts.isAtMax('military'),
             politicalRemaining: !this.conflicts.isAtMax('political')
