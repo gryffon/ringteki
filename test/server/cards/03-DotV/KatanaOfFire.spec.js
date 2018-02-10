@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 describe('Katana of Fire', function() {
     integration(function() {
         describe('If you control a Shugenja', function() {
