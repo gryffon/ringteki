@@ -108,11 +108,18 @@ class PlayerInteractionWrapper {
         if(!newProvinceState) {
             return;
         }
-        //Move all cards from all provinces to decks
+        if(_.isArray(newProvinceState)) {
+            var provinceObject = {};
+            // Convert to an object
+            _.each(newProvinceState, (card, index) => {
+                provinceObject[`province ${index + 1}`] = { provinceCard: card };
+            });
+            newProvinceState = provinceObject;
+        }
+        //Move all province cards to province deck
         var allProvinceLocations = _.keys(this.provinces);
         _.each(this.provinces, (contents) => {
             this.moveCard(contents.provinceCard, 'province deck');
-            _.each(contents.dynastyCards, card => this.moveCard(card, 'dynasty deck'));
         });
         //Fill the specified provinces
         _.each(newProvinceState, (state, location) => {
@@ -127,7 +134,8 @@ class PlayerInteractionWrapper {
             }
             if(dynastyCards) {
                 dynastyCards = this.mixedListToCardList(dynastyCards, 'dynasty deck');
-                _.each(dynastyCards, (card) => this.moveCard(card, location));
+                // WIP: Not sure if possible to have >1 dynasty card in a province
+                _.each(dynastyCards, (card) => this.placeCardInProvince(card, location));
             }
         });
         //Assign the rest of province cards
@@ -207,6 +215,8 @@ class PlayerInteractionWrapper {
             if(options.covert !== undefined) {
                 card.covert = options.covert;
             }
+            // Activate persistent effects of the card
+            card.applyPersistentEffects();
             // Get the attachments
             if(options.attachments) {
                 var attachments = [];
@@ -239,8 +249,9 @@ class PlayerInteractionWrapper {
         _.each(this.conflictDiscard, card => {
             this.moveCard(card, 'conflict deck');
         });
-        // Move cards to the discard
-        _.each(newContents, name => {
+        // Move cards to the discard in reverse order
+        // (helps with referring to cards by index)
+        _.chain(newContents).reverse().each(name => {
             var card = this.findCardByName(name, 'conflict deck');
             this.moveCard(card, 'conflict discard pile');
         });
@@ -258,14 +269,18 @@ class PlayerInteractionWrapper {
      * Sets the contents of the dynasty discard pile
      * @param {String[]} newContents - list of names of cards to be put in dynasty discard
      */
-    set dynastyDiscard(newContents = []) {
+    set dynastyDiscard(newContents) {
+        if(!newContents) {
+            return;
+        }
         // Move cards to the deck
         _.each(this.dynastyDiscard, card => {
             this.moveCard(card, 'dynasty deck');
         });
-        // Move cards to the discard
-        _.each(newContents, name => {
-            var card = this.findCardByName(name, 'dynasty deck');
+        // Move cards to the discard in reverse order
+        // (helps with referencing cards in tests by index)
+        _.chain(newContents).reverse().each(name => {
+            var card = this.findCardByName(name, ['dynasty deck', 'provinces']);
             this.moveCard(card, 'dynasty discard pile');
         });
     }
@@ -291,8 +306,20 @@ class PlayerInteractionWrapper {
         return _.map(buttons, button => button.text.toString());
     }
 
+    /**
+     * Lists cards selectable by the player during the action
+     * @return {DrawCard[]} - selectable cards
+     */
     get currentActionTargets() {
         return this.player.promptState.selectableCards;
+    }
+
+    /**
+     * Lists cards currently selected by the player
+     * @return {DrawCard[]} - selected cards
+     */
+    get selectedCards() {
+        return this.player.promptState.selectedCards;
     }
 
     /**
@@ -368,6 +395,9 @@ class PlayerInteractionWrapper {
     placeCardInProvince(card, location) {
         if(_.isString(card)) {
             card = this.findCardByName(card);
+        }
+        if(!_.contains(['province 1', 'province 2', 'province 3', 'province 4'], location)) {
+            throw new Error(`${location} is not a valid province`);
         }
         if(card.location !== location) {
             this.player.moveCard(this.player.getDynastyCardInProvince(location), 'dynasty deck');
@@ -449,6 +479,7 @@ class PlayerInteractionWrapper {
         }
         this.player.moveCard(card, targetLocation);
         this.game.continue();
+        return card;
     }
 
     // Proxied method
