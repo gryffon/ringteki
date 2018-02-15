@@ -21,8 +21,6 @@ class ActionWindow extends UiPrompt {
             this.game.addMessage('{0} has chosen to pass', this.currentPlayer);
             this.prevPlayerPassed = true;
             this.nextPlayer();
-        } else {
-            this.currentPlayer.startClock();
         }
         
     }
@@ -79,7 +77,6 @@ class ActionWindow extends UiPrompt {
             return true;
         }
         
-        this.currentPlayer.stopClock();
         this.game.addMessage('{0} has chosen to pass', this.currentPlayer);
         
         if(this.prevPlayerPassed) {
@@ -103,11 +100,9 @@ class ActionWindow extends UiPrompt {
                     this.complete();
                 } else {
                     this.prevPlayerPassed = true;
-                    this.currentPlayer.startClock();
                 }
             } else {
                 this.currentPlayer = otherPlayer;
-                this.currentPlayer.startClock();
             }
         } else if(this.prevPlayerPassed) {
             this.complete();
@@ -115,7 +110,6 @@ class ActionWindow extends UiPrompt {
     }
 
     markActionAsTaken() {
-        this.currentPlayer.stopClock();
         this.prevPlayerPassed = false;
         this.nextPlayer();
     }
