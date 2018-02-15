@@ -87,12 +87,14 @@ class Player extends Spectator {
     }
 
     startClock() {
-        this.timerStart = Date.now();
-        console.log('starting clock', this.chessClockLeft);
+        if(this.chessClockLeft > -1 && this.timerStart === 0) {
+            this.timerStart = Date.now();
+            console.log('starting clock for ', this.name, this.chessClockLeft);
+        }
     }
 
     stopClock() {
-        console.log('stopping clock', this.chessClockLeft);
+        console.log('stopping clock for ', this.name, this.chessClockLeft);
         if(this.timerStart > 0 && this.chessClockLeft > 0) {
             this.chessClockLeft -= Math.floor((Date.now() - this.timerStart) / 1000);
             this.timerStart = 0;

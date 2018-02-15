@@ -21,6 +21,7 @@ class UiPrompt extends BaseStep {
         _.each(this.game.getPlayers(), player => {
             if(this.activeCondition(player)) {
                 player.setPrompt(this.addDefaultCommandToButtons(this.activePrompt()));
+                player.startClock();
             } else {
                 player.setPrompt(this.waitingPrompt());
             }
@@ -50,13 +51,14 @@ class UiPrompt extends BaseStep {
     }
 
     continue() {
+        _.each(this.game.getPlayers(), player => player.stopClock())
         var completed = this.isComplete();
 
         if(completed) {
             this.clearPrompts();
         } else {
             this.setPrompt();
-        }
+       }
 
         return completed;
     }
