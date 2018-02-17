@@ -1912,7 +1912,7 @@ class Player extends Spectator {
             fate: this.fate,
             honor: this.getTotalHonor(),
             chessClockLeft: this.chessClockLeft,
-            timerStart: this.timerStart,
+            chessClockActive: this.timerStart > 0,
             conflictsRemaining: this.conflicts.conflictOpportunities,
             militaryRemaining: !this.conflicts.isAtMax('military'),
             politicalRemaining: !this.conflicts.isAtMax('political')
