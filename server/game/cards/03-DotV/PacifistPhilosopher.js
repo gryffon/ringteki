@@ -6,7 +6,7 @@ class PacifistPhilosopher extends DrawCard {
             title: 'Gain 1 fate',
             limit: ability.limit.perRound(2),
             when: {
-                onConflictPass: event => true
+                onConflictPass: () => true
             },
             handler: () => {
                 this.game.addMessage('{0} uses {1} to gain 1 fate.', this.controller, this);
