@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class PacifistPhilosopher extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Gain 1 fate',
             limit: ability.limit.perRound(2),
