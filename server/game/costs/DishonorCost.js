@@ -7,8 +7,8 @@ class DishonorCost {
         return card.location === 'play area' && card.type === 'character' && card.allowGameAction('dishonor');
     }
 
-    pay(cards, context) {
-        context.game.applyGameAction(context, { dishonor: cards });
+    payEvent(cards, context) {
+        return context.game.getEventsForGameAction('dishonor', cards, context);
     }
 }
 

@@ -7,8 +7,8 @@ class ReturnToHandCost {
         return card.location === 'play area';
     }
 
-    pay(cards, context) {
-        context.game.applyGameAction(context, { returnToHand: cards });
+    payEvent(cards, context) {
+        return context.game.getEventsForGameAction('returnToHand', cards, context);
     }
 }
 

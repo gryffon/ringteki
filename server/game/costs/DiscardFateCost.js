@@ -7,8 +7,8 @@ class DiscardFateCost {
         return card.location === 'play area' && card.type === 'character' && card.fate > 0 && card.allowGameAction('removeFate');
     }
 
-    pay(cards, context) {
-        context.game.applyGameAction(context, { removeFate: cards });
+    payEvent(cards, context) {
+        return context.game.getEventsForGameAction('removeFate', cards, context);
     }
 }
 

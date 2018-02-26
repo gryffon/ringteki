@@ -7,8 +7,8 @@ class SacrificeCost {
         return (card.location === 'play area' || card.type === 'holding') && !card.facedown;
     }
 
-    pay(cards, context) {
-        context.game.applyGameAction(context, { sacrifice: cards });
+    payEvent(cards, context) {
+        return context.game.getEventsForGameAction('sacrifice', cards, context);
     }
 }
 

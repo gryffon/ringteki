@@ -7,8 +7,8 @@ class BowCost {
         return (card.location === 'play area' || card.isStronghold) && !card.bowed;
     }
 
-    pay(cards, context) {
-        context.game.applyGameAction(context, { bow: cards });
+    payEvent(cards, context) {
+        return context.game.getEventsForGameAction('bow', cards, context);
     }
 }
 

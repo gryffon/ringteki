@@ -7,8 +7,8 @@ class BreakCost {
         return card.type === 'province' && !card.isBroken && card.allowGameAction('break');
     }
 
-    pay(cards, context) {
-        context.game.applyGameAction(context, { break: cards });
+    payEvent(cards, context) {
+        return context.game.getEventsForGameAction('break', cards, context);
     }
 }
 
