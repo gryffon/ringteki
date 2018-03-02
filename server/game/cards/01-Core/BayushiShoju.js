@@ -16,8 +16,11 @@ class BayushiShoju extends DrawCard {
                 this.untilEndOfConflict(ability => ({
                     match: context.target,
                     effect: [
-                        ability.effects.discardByPoliticalSkill,
-                        ability.effects.modifyPoliticalSkill(-1)
+                        ability.effects.modifyPoliticalSkill(-1),
+                        ability.effects.delayedEffect({
+                            condition: card => card.getPoliticalSkill() < 1,
+                            gameAction: 'discard'
+                        })
                     ]
                 }));
             }

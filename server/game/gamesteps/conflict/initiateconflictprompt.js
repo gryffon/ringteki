@@ -45,6 +45,8 @@ class InitiateConflictPrompt extends UiPrompt {
         let menuTitle = '';
         let promptTitle = '';
         
+        this.recalculateCovert();
+
         if(this.conflict.conflictRing === '') {
             menuTitle = 'Choose an elemental ring\n(click the ring again to change conflict type)';
             promptTitle = 'Initiate Conflict';
@@ -63,8 +65,8 @@ class InitiateConflictPrompt extends UiPrompt {
                 }
                 buttons.unshift({ text: 'Initiate Conflict', arg: 'done' });
             }
-        }
-        
+        }        
+
         return {
             selectRing: true,
             menuTitle: menuTitle,
@@ -125,9 +127,6 @@ class InitiateConflictPrompt extends UiPrompt {
             this.conflict.conflictProvince.inConflict = false;
             this.conflict.conflictProvince = null;
         }
-        this.game.reapplyStateDependentEffects();
-        this.conflict.calculateSkill();
-        this.recalculateCovert();
         return true;
     }
 
@@ -193,7 +192,6 @@ class InitiateConflictPrompt extends UiPrompt {
                     card.covert = false;
                 }         
             }
-            this.recalculateCovert();
         }
 
         return true;

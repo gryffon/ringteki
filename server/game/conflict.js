@@ -210,7 +210,6 @@ class Conflict {
         ring.flipConflictType();
         this.conflictType = ring.conflictType;
         this.conflictTypeSwitched = true;
-        this.game.reapplyStateDependentEffects();
         this.checkForIllegalParticipants();
     }
     

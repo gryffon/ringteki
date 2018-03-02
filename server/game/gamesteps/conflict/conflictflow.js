@@ -130,7 +130,6 @@ class ConflictFlow extends BaseStepWithPipeline {
             }
         }
 
-        this.game.reapplyStateDependentEffects();
         this.game.raiseMultipleEvents(events);
     }
 
@@ -292,8 +291,6 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        this.game.reapplyStateDependentEffects();
-
         if(this.conflict.isAttackerTheWinner()) {
             this.conflict.chooseWhetherToResolveRingEffect();
         }       
@@ -352,7 +349,6 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
-        this.game.raiseEvent('onAtEndOfConflict');
 
         this.resetCards();
         if(!this.game.militaryConflictCompleted && (this.conflict.conflictType === 'military' || this.conflict.conflictTypeSwitched)) {

@@ -217,37 +217,18 @@ const Effects = {
             isStateDependent: true
         };
     },
-    discardByPoliticalSkill: {
-        apply: function(card, context) {
-            context.discardEvent = context.discardEvent || {};
-            if(card.getPoliticalSkill() <= 0) {
-                context.discardEvent[card.uuid] = context.game.applyGameAction(null, { discardFromPlay: card })[0];
-                context.game.addMessage('{0} is killed as their political skill is 0', card);
-            }
-        },
-        reapply: function(card, context) {
-            if(card.getPoliticalSkill() <= 0 && (!context.discardEvent[card.uuid] || context.discardEvent[card.uuid].cancelled)) {
-                context.discardEvent[card.uuid] = context.game.applyGameAction(null, { discardFromPlay: card })[0];
-                context.game.addMessage('{0} is killed as their political skill is 0', card);
-            }
-        },
-        unapply: function(card, context) {
-            if(context.discardEvent[card.uuid]) {
-                delete context.discardEvent[card.uuid];
-            }
-        },
-        isStateDependent: true
-    },
-    discardFromPlayEffect: function() {
+    delayedEffect: function(properties) {
         return {
             apply: function(card, context) {
-                context.game.applyGameAction(null, { discardFromPlay: card });
-                context.game.addMessage('{0} is discarded from play', card);
+                properties.match = card;
+                context.delayedEffect = context.delayedEffect || {};
+                context.delayedEffect[card.uuid] = context.source.delayedEffect(properties);
             },
-            unapply: function() {
-                // nothing happens when this effect expires.
+            unapply: function(card, context) {
+                context.game.effectEngine.removeDelayedEffect(context.delayedEffect[card.uuid]);
+                delete context.delayedEffect[card.uuid];
             }
-        };
+        }
     },
     addKeyword: function(keyword) {
         return {

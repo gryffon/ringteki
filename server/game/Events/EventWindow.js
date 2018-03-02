@@ -102,7 +102,7 @@ class EventWindow extends BaseStepWithPipeline {
             }
         });
 
-        //TODO: need to reapply state dependent effects here
+        this.game.checkGameState();
 
         if(thenEvents.length > 0) {
             let thenEventWindow = this.game.openThenEventWindow(thenEvents);

@@ -6,8 +6,9 @@ class EffectEngine {
     constructor(game) {
         this.game = game;
         this.events = new EventRegistrar(game, this);
-        this.events.register(['onCardMoved', 'onCardTraitChanged', 'onCardFactionChanged', 'onCardTakenControl', 'onCardBlankToggled', 'onConflictFinished', 'onAtEndOfConflict', 'onPhaseEnded', 'onAtEndOfPhase', 'onRoundEnded', 'onDuelFinished']);
+        this.events.register(['onCardMoved', 'onCardTraitChanged', 'onCardFactionChanged', 'onCardTakenControl', 'onCardBlankToggled', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
         this.effects = [];
+        this.delayedEffects = [];
         this.recalculateEvents = {};
         this.customDurationEvents = [];
     }
@@ -20,10 +21,24 @@ class EffectEngine {
         this.effects.push(effect);
         this.effects = _.sortBy(this.effects, effect => effect.order);
         effect.getTargets();
-        this.registerRecalculateEvents(effect.recalculateWhen);
         if(effect.duration === 'custom') {
             this.registerCustomDurationEvents(effect);
         }
+    }
+
+    addDelayedEffect(effect) {
+        this.delayedEffects.push(effect);
+        if(effect.trigger.length > 0) {
+            
+        }
+    }
+
+    removeDelayedEffect(effect) {
+        this.delayedEffects = _.reject(this.delayedEffects, e => e === effect);
+    }
+
+    checkDelayedEffects() {
+        _.each(this.delayedEffects)
     }
 
     reapplyStateDependentEffects() {
@@ -115,56 +130,12 @@ class EffectEngine {
         this.unapplyAndRemove(effect => effect.duration === 'untilEndOfDuel');
     }
 
-    onAtEndOfConflict() {
-        this.unapplyAndRemove(effect => effect.duration === 'atEndOfConflict');
-    }
-
     onPhaseEnded() {
         this.unapplyAndRemove(effect => effect.duration === 'untilEndOfPhase');
     }
 
-    onAtEndOfPhase() {
-        this.unapplyAndRemove(effect => effect.duration === 'atEndOfPhase');
-    }
-
     onRoundEnded() {
         this.unapplyAndRemove(effect => effect.duration === 'untilEndOfRound');
-    }
-
-    registerRecalculateEvents(eventNames) {
-        _.each(eventNames, eventName => {
-            if(!this.recalculateEvents[eventName]) {
-                var handler = this.recalculateEvent.bind(this);
-                this.recalculateEvents[eventName] = {
-                    name: eventName,
-                    handler: handler,
-                    count: 1
-                };
-                this.game.on(eventName, handler);
-            } else {
-                this.recalculateEvents[eventName].count++;
-            }
-        });
-    }
-
-    unregisterRecalculateEvents(eventNames) {
-        _.each(eventNames, eventName => {
-            var event = this.recalculateEvents[eventName];
-            if(event && event.count <= 1) {
-                this.game.removeListener(event.name, event.handler);
-                delete this.recalculateEvents[eventName];
-            } else if(event) {
-                event.count--;
-            }
-        });
-    }
-
-    recalculateEvent(event) {
-        _.each(this.effects, effect => {
-            if(effect.isStateDependent && effect.recalculateWhen.includes(event.name)) {
-                effect.reapply(this.getTargets());
-            }
-        });
     }
 
     registerCustomDurationEvents(effect) {
@@ -200,7 +171,6 @@ class EffectEngine {
             let listener = customDurationEffect.until[event.name];
             if(listener && listener(...args)) {
                 customDurationEffect.cancel();
-                this.unregisterRecalculateEvents(customDurationEffect.recalculateWhen);
                 this.unregisterCustomDurationEvents(customDurationEffect);
                 this.effects = _.reject(this.effects, effect => effect === customDurationEffect);
             }
@@ -211,7 +181,6 @@ class EffectEngine {
         var [matchingEffects, remainingEffects] = _.partition(this.effects, match);
         _.each(matchingEffects, effect => {
             effect.cancel();
-            this.unregisterRecalculateEvents(effect.recalculateWhen);
             if(effect.duration === 'custom') {
                 this.unregisterCustomDurationEvents(effect);
             }
