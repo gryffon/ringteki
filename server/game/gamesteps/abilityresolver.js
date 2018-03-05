@@ -102,7 +102,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         }
 
         this.cancelled = _.any(this.targetResults, result => result.resolved && !result.value);
-        if(this.cancelled) {
+        if(this.cancelled && !pretarget) {
             this.game.addMessage('{0} attempted to use {1}, but targets were not successfully chosen', this.context.player, this.context.source);
             return;
         }
