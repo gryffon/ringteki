@@ -5,6 +5,8 @@ const _ = require('underscore');
 describe('BaseAbility', function () {
     beforeEach(function () {
         this.gameSpy = jasmine.createSpyObj('game', ['promptForSelect', 'getEvent']);
+        this.allCardsSpy = jasmine.createSpyObj('allCards', ['filter']);
+        this.gameSpy.allCards = this.allCardsSpy;
         this.properties = { game: this.gameSpy };
     });
 
@@ -258,6 +260,7 @@ describe('BaseAbility', function () {
             this.ability = new BaseAbility(this.properties);
 
             this.context = { game: this.gameSpy, player: this.player, source: this.source, ability: this.ability, targets: {} };
+            this.allCardsSpy.filter.and.returnValue([this.target1, this.target2]);
         });
 
         it('should return target results for each target', function() {
