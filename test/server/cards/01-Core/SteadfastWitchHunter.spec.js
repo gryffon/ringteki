@@ -18,12 +18,8 @@ describe('Steadfast Witch Hunter', function() {
         describe('Steadfast Witch Hunter\'s ability', function() {
             it('should be illegal when there are no legal targets', function() {
                 this.player1.pass();
-                //console.log(this.steadfastWitchHunter.abilities.actions[0].targets[0].selector)
-                //this.spy2 = spyOn(this.steadfastWitchHunter.abilities.actions[0].targets[0].selector, 'canTarget');
-                //this.spy2.and.returnValue(false);
                 expect(this.steadfastWitchHunter.allowGameAction('ready')).toBe(false);
                 this.player2.clickCard(this.steadfastWitchHunter);
-                //expect(this.spy2).toHaveBeenCalled();
                 expect(this.player2).toHavePrompt('Action Window');
             });
 
