@@ -67,7 +67,7 @@ describe('Vanguard Warrior', function() {
 
             it('should not give the target a fate', function() {
                 expect(this.borderlandsDefender.fate).toBe(0);
-            })
+            });
 
             it('should terminate the ability', function() {
                 expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');

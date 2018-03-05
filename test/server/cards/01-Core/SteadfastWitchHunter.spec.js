@@ -1,4 +1,4 @@
-fdescribe('Steadfast Witch Hunter', function() {
+describe('Steadfast Witch Hunter', function() {
     integration(function() {
         beforeEach(function() {
             this.setupTest({
@@ -25,7 +25,7 @@ fdescribe('Steadfast Witch Hunter', function() {
                 this.player2.clickCard(this.steadfastWitchHunter);
                 //expect(this.spy2).toHaveBeenCalled();
                 expect(this.player2).toHavePrompt('Action Window');
-            })
+            });
 
             it('should display a message if the only legal target is sacrificed', function() {
                 this.player1.clickCard('against-the-waves');
