@@ -35,6 +35,18 @@ class StrongholdCard extends BaseCard {
         this.facedown = false;
     }
 
+    allowGameAction(actionType, context = null) {
+        let illegalActions = [
+            'dishonor', 'honor', 'sacrifice', 
+            'discardFromPlay', 'moveToConflict', 'sendHome', 'putIntoPlay', 'putIntoConflict', 
+            'break', 'returnToHand', 'takeControl', 'placeFate', 'removeFate'
+        ];
+        if(illegalActions.includes(actionType)) {
+            return false;
+        }
+        return super.allowGameAction(actionType, context);
+    }
+
     getSummary(activePlayer, hideWhenFaceup) {
         let baseSummary = super.getSummary(activePlayer, hideWhenFaceup);
 
@@ -44,8 +56,6 @@ class StrongholdCard extends BaseCard {
             bowed: this.bowed
         });
     }
-
-
 }
 
 module.exports = StrongholdCard;
