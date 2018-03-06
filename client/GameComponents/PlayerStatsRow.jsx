@@ -54,12 +54,7 @@ export class PlayerStatsRow extends React.Component {
             </div>);
 
         let secondsLeft = this.getStatValueOrDefault('chessClockLeft');
-        if(secondsLeft > 0) {
-            let chessClock = (
-                <div className='chessClock state'>
-                    <Clock secondsLeft={ secondsLeft } active={ this.props.stats['chessClockActive']} />
-                </div>);
-        }
+        let chessClock = (<Clock secondsLeft={ secondsLeft } active={ this.getStatValueOrDefault('chessClockActive') } />);
         return (
             <div className='panel player-stats'>
                 { playerAvatar }

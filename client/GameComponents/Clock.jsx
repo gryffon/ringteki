@@ -6,27 +6,42 @@ const formattedSeconds = (sec) => Math.floor(sec / 60) + ':' + ('0' + sec % 60).
 class Clock extends React.Component {
     constructor() {
         super();
-        this.state = { secondsLeft: this.props.secondsLeft };        
-    }
-/*
-    componentDidMount() {
-        this.incrementer = setInterval(() => increment(), 1000);
+
+        this.state = {};
     }
 
-    componentWillUnmount() {
-        clearInterval(this.incrementer);
+    shouldComponentUpdate(newProps, newState) {
+        return newProps.active !== this.props.active || newProps.secondsLeft !== this.props.secondsLeft;
     }
 
-    increment() {
-        if(this.props.active) {
-            this.setState({ secondsLeft: this.state.secondsLeft - 1 });
+    componentWillUpdate(newProps, newState) {
+        if(newProps.secondsLeft === 0) {
+            return;
         }
+
+        if(newProps.active) {
+            if(newState.timerHandle) {
+                return;
+            }
+
+            let handle = setInterval(() => {
+                this.setState({
+                    timeLeft: newState.timeLeft - 1
+                });
+            }, 1000);
+
+            this.setState({ timerHandle: handle, timeLeft: newProps.secondsLeft });
+        } else if(newState.timerHandle) {
+            clearInterval(newState.timerHandle);
+            this.setState({ timerHandle: null, timeLeft: newProps.secondsLeft });
+        }
+
     }
-*/
+
     render() {
         return (
             <div className={ 'hand-size' }>
-                { formattedSeconds(this.state.secondsLeft) }
+                { formattedSeconds(this.state.timeLeft) }
             </div>
         );
     }
@@ -35,7 +50,7 @@ class Clock extends React.Component {
 Clock.displayName = 'Clock';
 Clock.propTypes = {
     active: PropTypes.bool,
-    secondsLeft: PropTypes.int
+    secondsLeft: PropTypes.number,
 };
 
 export default Clock;
