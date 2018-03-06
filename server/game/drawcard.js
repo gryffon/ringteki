@@ -154,8 +154,11 @@ class DrawCard extends BaseCard {
             if(this.conflictOptions.cannotParticipateIn[this.game.currentConflict.conflictType]) {
                 return false;
             }            
-        } else if(actionType === 'putIntoPlay' && this.isUnique()) {
-            if(this.game.allCards.any(card => (
+        } else if(actionType === 'putIntoPlay') {
+            if(this.location === 'play area' || !['character', 'attachment'].includes(this.type)) {
+                return false;
+            }
+            if(this.isUnique() && this.game.allCards.any(card => (
                 card.location === 'play area' &&
                 card.name === this.name &&
                 ((card.owner === context.player || card.controller === context.player) || (card.owner === this.owner)) &&
