@@ -102,16 +102,21 @@ class EventWindow extends BaseStepWithPipeline {
             }
         });
 
-        this.game.checkGameState();
+        this.game.checkGameState(_.map(this.events, event => event.name), _.any(this.events, event => event.handler));
 
         if(thenEvents.length > 0) {
-            let thenEventWindow = this.game.openThenEventWindow(thenEvents);
-            this.game.queueSimpleStep(() => {
-                _.each(thenEventWindow.events, event => {
-                    this.addEvent(event);
-                });
-            });
+            this.openThenEventWindow(thenEvents);
         }
+    }
+
+    openThenEventWindow(events) {
+        let window = this.game.openThenEventWindow(events);
+        this.game.queueSimpleStep(() => {
+            _.each(window.events, event => {
+                this.addEvent(event);
+            });
+        });
+
     }
 
     resetCurrentEventWindow() {

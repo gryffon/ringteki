@@ -23,8 +23,12 @@ class Conflict {
         this.attackerSkillModifier = 0;
         this.defenders = [];
         this.defenderSkill = 0;
-        this.maxAllowedDefenders = 0;
+        this.maxAllowedDefenders = -1;
         this.defenderSkillModifier = 0;
+        this.skillFunction = card => card.getSkill(this.conflictType);
+    }
+
+    resetSkillFunction () {
         this.skillFunction = card => card.getSkill(this.conflictType);
     }
 

@@ -9,8 +9,8 @@ class EffectEngine {
         this.events.register(['onCardMoved', 'onCardTraitChanged', 'onCardFactionChanged', 'onCardTakenControl', 'onCardBlankToggled', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
         this.effects = [];
         this.delayedEffects = [];
-        this.recalculateEvents = {};
         this.customDurationEvents = [];
+        this.newEffect = false;
     }
 
     add(effect) {
@@ -28,25 +28,39 @@ class EffectEngine {
 
     addDelayedEffect(effect) {
         this.delayedEffects.push(effect);
-        if(effect.trigger.length > 0) {
-            
-        }
     }
 
     removeDelayedEffect(effect) {
         this.delayedEffects = _.reject(this.delayedEffects, e => e === effect);
     }
 
-    checkDelayedEffects() {
-        _.each(this.delayedEffects)
+    checkDelayedEffects(eventNames) {
+        _.each(this.delayedEffects, effect => {
+            if(effect.trigger.length === 0 || _.intersection(effect.trigger, eventNames).length > 0) {
+                effect.getTargets();
+            }
+        })
+    }
+
+    checkGameState(hasChanged = false) {
+        if(!hasChanged && !this.newEffect) {
+            return;
+        }
+        _.each(this.effects, effect => {
+            // Check each effect's condition and find new targets
+            // Reapply all effects which have reapply function
+            this.newEffect = effect.checkCondition() || effect.reapply();
+        });
+        this.reapplyStateDependentEffects();
+        this.checkGameState();
     }
 
     reapplyStateDependentEffects() {
         _.each(this.effects, effect => {
-            if(effect.isStateDependent) {
-                effect.reapply();
+            if(effect.reapplyOnCheckState) {
+
             }
-        });
+        })
     }
 
     onCardMoved(event) {
