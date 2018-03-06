@@ -3,6 +3,7 @@ const CardSelector = require('../CardSelector.js');
 class SelectCardCost {
     constructor(action, promptProperties) {
         this.action = action;
+        promptProperties.gameAction = action.gameAction;
         this.selector = this.createSelector(action, promptProperties);
         this.activePromptTitle = promptProperties.activePromptTitle;
     }
