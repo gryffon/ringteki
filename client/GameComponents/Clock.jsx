@@ -7,7 +7,7 @@ class Clock extends React.Component {
     constructor() {
         super();
 
-        this.state = {};
+        this.state = { timeLeft: 0 };
     }
 
     shouldComponentUpdate(newProps, newState) {
@@ -26,7 +26,7 @@ class Clock extends React.Component {
 
             let handle = setInterval(() => {
                 this.setState({
-                    timeLeft: newState.timeLeft - 1
+                    timeLeft: this.state.timeLeft - 1
                 });
             }, 1000);
 
