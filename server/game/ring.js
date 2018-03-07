@@ -43,7 +43,7 @@ class Ring {
     }
 
     canContest(player) {
-        return !_.any(this.effects.cannotContest, func => func(player))
+        return !_.any(this.effects.cannotContest, func => func(player)) && !this.claimed
     }
 
     flipConflictType() {

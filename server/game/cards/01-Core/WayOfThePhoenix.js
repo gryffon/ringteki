@@ -15,13 +15,15 @@ class WayOfThePhoenix extends DrawCard {
                 if(this.game.currentConflict && this.game.currentConflict.conflictRing === context.ring.element) {
                     elements = this.game.currentConflict.getElements();
                 }
-                let otherPlayer = this.game.getOtherPlayer(context.player);
-                this.game.addMessage('{0} uses {1} to prevent {2} from initiating a conflict with the {3} ring{4}', context.player, this, otherPlayer, elements, elements.length > 1 ? 's' : '');
-                this.untilEndOfPhase(ability => ({
-                    targetType: 'player',
-                    targetController: 'opponent',
-                    effect: ability.effects.playerCannotInitiateConflict(context => context && context.source.type === 'ring' && elements.includes(context.source.element))                    
-                }));
+                let otherPlayer = context.player.opponent;
+                this.game.addMessage('{0} plays {1} to prevent {2} from delcaring a conflict with the {3} ring{4}', context.player, context.source, otherPlayer, elements, elements.length > 1 ? 's' : '');
+                _.each(elements, element => {
+                    context.source.untilEndOfPhase(ability => ({
+                        targetType: 'ring',
+                        match: this.game.rings[element],
+                        effect: ability.effects.addRingEffect('cannotContest', player => player === otherPlayer)                    
+                    }));    
+                })
             }
         });
     }
