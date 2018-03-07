@@ -26,9 +26,9 @@ const Player = require('./player.js');
  */
 
 class DelayedEffect {
-    constructor(game, context, properties) {
+    constructor(game, properties) {
         this.game = game;
-        this.context = context;
+        this.context = properties.context;
         this.match = properties.match || (() => true);
         this.condition = properties.condition || (() => true);
         this.targetController = properties.targetController || 'current';

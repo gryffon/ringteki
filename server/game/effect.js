@@ -204,10 +204,9 @@ class Effect {
 
     reapply() {
         let stateChanged = false;
-        if(!this.active || !this.effect.reapply) {
-            return stateChanged;
+        if(this.active && this.effect.reapply) {
+            _.each(this.targets, target => stateChanged = this.effect.reapply(target, this.context) || stateChanged);
         }
-        _.each(this.targets, target => stateChanged = this.effect.reapply(target, this.context) || stateChanged);
         return stateChanged;
     }
 

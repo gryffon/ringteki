@@ -6,7 +6,7 @@ class EffectEngine {
     constructor(game) {
         this.game = game;
         this.events = new EventRegistrar(game, this);
-        this.events.register(['onCardMoved', 'onCardTraitChanged', 'onCardFactionChanged', 'onCardTakenControl', 'onCardBlankToggled', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
+        this.events.register(['onCardMoved', 'onCardBlankToggled', 'onCardTakenControl', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
         this.effects = [];
         this.delayedEffects = [];
         this.customDurationEvents = [];
@@ -42,7 +42,7 @@ class EffectEngine {
         })
     }
 
-    checkGameState(hasChanged = false) {
+    checkEffects(hasChanged = false) {
         if(!hasChanged && !this.newEffect) {
             return;
         }
@@ -51,16 +51,18 @@ class EffectEngine {
             // Reapply all effects which have reapply function
             this.newEffect = effect.checkCondition() || effect.reapply();
         });
+        let returnValue = this.newEffect;
         this.reapplyStateDependentEffects();
-        this.checkGameState();
+        this.checkEffects();
+        return returnValue;
     }
 
     reapplyStateDependentEffects() {
         _.each(this.effects, effect => {
             if(effect.reapplyOnCheckState) {
-
+                effect.unapplyThenApply();
             }
-        })
+        });
     }
 
     onCardMoved(event) {

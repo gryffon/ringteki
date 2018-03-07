@@ -18,7 +18,8 @@ class KitsuSpiritcaller extends DrawCard {
                 this.delayedEffect({
                     match: context.target,
                     trigger: 'onConflictFinished',
-                    gameAction: 'ReturnToDeck',
+                    // TODO: should go to bottom of deck
+                    gameAction: 'returnToDeck',
                     context: context
                 });
             }

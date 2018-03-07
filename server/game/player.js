@@ -967,7 +967,7 @@ class Player extends Spectator {
             }
         });
 
-        _.each(cards, card => card.applyPersistentEffects());
+        //_.each(cards, card => card.applyPersistentEffects());
 
         //this.game.raiseMultipleEvents(events);
     }

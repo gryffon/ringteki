@@ -42,7 +42,7 @@ const Effects = {
             },
             reapply: function(card, context) {
                 let stateChanged = false;
-                _.each(stateDependentEffects, effect => {
+                _.each(effects, effect => {
                     if(effect.reapply) {
                         stateChanged = effect.reapply(card, context) || stateChanged;
                     }
@@ -216,6 +216,7 @@ const Effects = {
         return {
             apply: function(card, context) {
                 properties.match = card;
+                properties.context = context;
                 context.delayedEffect = context.delayedEffect || {};
                 context.delayedEffect[card.uuid] = context.source.delayedEffect(properties);
             },

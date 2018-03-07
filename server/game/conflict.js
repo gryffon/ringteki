@@ -55,7 +55,7 @@ class Conflict {
         if(attackers.length > 0) {
             this.attackers = this.attackers.concat(attackers);
             this.markAsParticipating(attackers);
-            this.calculateSkill();
+            //this.calculateSkill();
         }
     }
 
@@ -65,7 +65,7 @@ class Conflict {
         }
         this.attackers.push(attacker);
         this.markAsParticipating([attacker]);
-        this.calculateSkill();
+        //this.calculateSkill();
     }
 
     addDefenders(defenders) {
@@ -73,7 +73,7 @@ class Conflict {
         if(defenders.length > 0) {
             this.defenders = this.defenders.concat(defenders);
             this.markAsParticipating(defenders);
-            this.calculateSkill();
+            //this.calculateSkill();
         }
     }
 
@@ -83,7 +83,7 @@ class Conflict {
         }
         this.defenders.push(defender);
         this.markAsParticipating([defender]);
-        this.calculateSkill();
+        //this.calculateSkill();
     }
     
     moveToConflict(cards) {
@@ -255,7 +255,7 @@ class Conflict {
 
         card.inConflict = false;
 
-        this.calculateSkill();
+        //this.calculateSkill();
     }
 
     markAsParticipating(cards) {
@@ -292,10 +292,12 @@ class Conflict {
         }, 0);
     }
 
-    calculateSkill() {
+    calculateSkill(stateChanged = false) {
         if(this.winnerDetermined) {
-            return;
+            return false;
         }
+
+        stateChanged = this.game.effectEngine.checkEffects(stateChanged);
 
         this.attackerSkill = this.calculateSkillFor(this.attackers) + this.attackerSkillModifier;
         this.defenderSkill = this.calculateSkillFor(this.defenders) + this.defenderSkillModifier;
@@ -305,6 +307,7 @@ class Conflict {
         } else if(this.defendingPlayer.imperialFavor === this.conflictType && this.defenders.length > 0) {
             this.defenderSkill++;
         }
+        return stateChanged;
     }
 
     calculateSkillFor(cards) {
@@ -318,18 +321,17 @@ class Conflict {
 
     modifyAttackerSkill(value) {
         this.attackerSkillModifier += value;
-        this.calculateSkill();
+        //this.calculateSkill();
     }
 
     modifyDefenderSkill(value) {
         this.defenderSkillModifier += value;
-        this.calculateSkill();
+        //this.calculateSkill();
     }
 
     determineWinner() {
-        this.winnerDetermined = true;
-
         this.calculateSkill();
+        this.winnerDetermined = true;
 
         let result = this.checkNoWinnerOrLoser();
         if(result.noWinner) {

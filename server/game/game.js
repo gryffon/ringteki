@@ -514,6 +514,7 @@ class Game extends EventEmitter {
                 }
                 break;
         }
+        this.checkGameState(true);
 
         /* deprecated code
         switch(card.location) {
@@ -606,6 +607,7 @@ class Game extends EventEmitter {
                 }
                 break;
         }
+        this.checkGameState(true);
     }
 
     /*
@@ -849,6 +851,7 @@ class Game extends EventEmitter {
 
         if(!this.isSpectator(player)) {
             if(this.chatCommands.executeCommand(player, args[0], args)) {
+                this.checkGameState(true);
                 return;
             }
 
@@ -1245,6 +1248,11 @@ class Game extends EventEmitter {
         return event;
     }
 
+    emitEvent(eventName, params = {}) {
+        let event = this.getEvent(eventName, params);
+        this.emit(event.name, event);
+    }
+
     /* Creates an EventWindow which will open windows for each kind of triggered
      * ability which can respond any passed events, and execute their handlers.
      * @param {type} events - Array of Event
@@ -1417,7 +1425,7 @@ class Game extends EventEmitter {
         card.controller.removeCardFromPile(card);
         player.cardsInPlay.push(card);
         card.controller = player;
-        card.checkForIllegalAttachments();
+        //card.checkForIllegalAttachments();
         if(card.isDefending()) {
             this.currentConflict.defenders = _.reject(this.currentConflict.defenders, c => c === card);
             if(card.canParticipateAsAttacker(this.currentConflict.conflictType)) {
@@ -1558,8 +1566,12 @@ class Game extends EventEmitter {
     }
 
     checkGameState(eventNames, hasChanged) {
-        this.effectEngine.checkGameState(hasChanged);
-        _.each(this.getPlayers(), player => player.cardsInPlay.each(card => card.checkForIllegalAttachments()));
+        if(
+            (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) ||
+            this.effectEngine.checkEffects(hasChanged) || hasChanged
+        ) {
+            _.each(this.getPlayers(), player => player.cardsInPlay.each(card => card.checkForIllegalAttachments()));
+        }
         this.effectEngine.checkDelayedEffects(eventNames);
     }
 
