@@ -26,23 +26,26 @@ const Player = require('./player.js');
  */
 
 class DelayedEffect {
-    constructor(game, properties) {
+    constructor(game, source, properties) {
         this.game = game;
         this.context = properties.context;
+        this.source = source;
         this.match = properties.match || (() => true);
         this.condition = properties.condition || (() => true);
         this.targetController = properties.targetController || 'current';
         this.targetType = properties.targetType || 'card';
         this.gameAction = properties.gameAction;
         this.effectFunc = properties.effectFunc;
+        this.message = properties.message;
         this.trigger = properties.trigger || [];
+        this.events = [];
         if(!_.isArray(this.trigger)) {
             this.trigger = [this.trigger];
         }
     }
 
     getTargets() {
-        if(!this.condition(this.context)) {
+        if(!this.condition(this.context) || _.any(this.events, event => !event.cancelled)) {
             return;
         }
 
@@ -63,12 +66,18 @@ class DelayedEffect {
     }
 
     resolveEffect(targets) {
-        let events = this.gameAction ? this.game.getEventsForGameAction(this.gameAction, targets, this.context) : this.effectFunc(targets, this.context);
+        if(targets.length === 0) {
+            return;
+        }
+        if(this.message) {
+            this.game.addMessage(this.message, targets, this.source)
+        }
+        this.events = this.gameAction ? this.game.getEventsForGameAction(this.gameAction, targets, this.context) : this.effectFunc(targets, this.context);
         if(this.game.currentEventWindow && this.trigger.length === 0) {
             // Terminal conditions share reaction windows with the effect which triggered them
-            this.game.currentEventWindow.openThenEventWindow(events);
+            this.game.currentEventWindow.openThenEventWindow(this.events);
         } else {
-            this.game.openEventWindow(events);
+            this.game.openEventWindow(this.events);
         }
     }
 

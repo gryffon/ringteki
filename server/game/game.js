@@ -264,7 +264,7 @@ class Game extends EventEmitter {
     }
 
     addDelayedEffect(source, properties) {
-        let effect = new DelayedEffect(this, properties);
+        let effect = new DelayedEffect(this, source, properties);
         this.effectEngine.addDelayedEffect(effect);
         return effect;
     }

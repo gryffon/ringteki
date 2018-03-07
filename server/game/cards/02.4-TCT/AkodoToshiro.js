@@ -21,6 +21,7 @@ class AkodoToshiro extends DrawCard {
                     match: context.source,
                     context: context,
                     trigger: 'onConflictFinished',
+                    message: '{0} is discarded due to his delayed effect',
                     gameAction: 'discardFromPlay',
                     condition: () => !context.player.cardsInPlay.any(card => card.hasTrait('commander'))
                 });
