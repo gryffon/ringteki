@@ -9,6 +9,7 @@ class Ring {
         this.contested = false;
         this.element = element;
         this.fate = 0;
+        this.effects = {};
         
         this.menu = _([
             { command: 'flip', text: 'Flip' },
@@ -20,7 +21,29 @@ class Ring {
             { command: 'takefate', text: 'Take all fate' },
             { command: 'conflict', text: 'Initiate Conflict' }
         ]);
+    }
 
+    addEffect(effectType, effectFunc) {
+        if(!this.effects[effectType]) {
+            this.effects[effectType] = [];
+        }
+        this.effects[effectType].push(effectFunc);
+    }
+
+    removeEffect(effectType, effectFunc) {
+        this.effects[effectType] = _.reject(this.effects[effectType], effect => effect === effectFunc);
+    }
+
+    isClaimed(player = null) {
+        let check = player => (_.any(this.effects.considerAsClaimed, func => func(player)) || this.claimedBy === player.name);
+        if(player) {
+            return check(player);
+        }
+        return _.any(this.game.getPlayers(), player => check(player));
+    }
+
+    canContest(player) {
+        return !_.any(this.effects.cannotContest, func => func(player))
     }
 
     flipConflictType() {
