@@ -70,7 +70,7 @@ describe('Yogo Hiroue', function() {
                 expect(this.game.currentConflict.defenders).not.toContain(this.seppunGuardsman);
                 this.player1.playCharacterFromHand('unassuming-yojimbo');
                 this.player1.clickPrompt('Conflict');
-                this.noMoreActions()
+                this.noMoreActions();
                 expect(this.player1).toHavePrompt('Yogo Hiroue');
                 this.player1.clickPrompt('Yes');
                 expect(this.seppunGuardsman.isDishonored).toBe(true);

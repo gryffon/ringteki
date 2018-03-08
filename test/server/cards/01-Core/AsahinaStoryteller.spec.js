@@ -27,7 +27,7 @@ describe('Asahina Storyteller', function() {
                 this.player1.clickCard('way-of-the-crane');
                 this.asahinaArtisan = this.player1.clickCard('asahina-artisan');
                 expect(this.asceticVisionary.hasSincerity()).toBe(false);
-            })
+            });
 
             it('should correctly remove Sincerity when a card loses Crane faction', function() {
                 this.player1.playAttachment('oni-mask', this.asahinaStoryteller);
