@@ -1495,7 +1495,7 @@ class Player extends Spectator {
      * Returns an Array of Rings of all rings claimed by this player
      */
     getClaimedRings() {
-        return _.filter(this.game.rings, ring => ring.isClaimed(this));
+        return _.filter(this.game.rings, ring => ring.isConsideredClaimed(this));
     }
 
     /**

@@ -34,7 +34,7 @@ class Ring {
         this.effects[effectType] = _.reject(this.effects[effectType], effect => effect === effectFunc);
     }
 
-    isClaimed(player = null) {
+    isConsideredClaimed(player = null) {
         let check = player => (_.any(this.effects.considerAsClaimed, func => func(player)) || this.claimedBy === player.name);
         if(player) {
             return check(player);
@@ -42,8 +42,12 @@ class Ring {
         return _.any(this.game.getPlayers(), player => check(player));
     }
 
-    canContest(player) {
-        return !_.any(this.effects.cannotContest, func => func(player)) && !this.claimed
+    canDeclare(player) {
+        return !_.any(this.effects.cannotDeclare, func => func(player)) && !this.claimed
+    }
+
+    isUnclaimed() {
+       return !this.contested && !this.claimed;
     }
 
     flipConflictType() {
@@ -54,8 +58,11 @@ class Ring {
         }
     }
 
-    getElement() {
-        return this.element;
+    getElements() {
+        if(this.game.currentConflict && this.game.currentConflict.conflictRing === this.element) {
+            return this.game.currentConflict.getElements();
+        }
+        return [this.element];
     }
 
     getFate() {

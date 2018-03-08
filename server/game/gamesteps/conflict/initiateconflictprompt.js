@@ -132,7 +132,7 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     checkRingCondition(ring) {
-        return ring.canContest(this.choosingPlayer);
+        return ring.canDeclare(this.choosingPlayer);
     }
 
     checkCardCondition(card) {
