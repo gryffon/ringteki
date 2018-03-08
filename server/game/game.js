@@ -1565,7 +1565,7 @@ class Game extends EventEmitter {
         this.addMessage('{0} has reconnected', player);
     }
 
-    checkGameState(eventNames, hasChanged) {
+    checkGameState(hasChanged = false, eventNames = []) {
         if(
             (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) ||
             this.effectEngine.checkEffects(hasChanged) || hasChanged

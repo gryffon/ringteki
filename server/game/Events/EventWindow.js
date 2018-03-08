@@ -102,7 +102,7 @@ class EventWindow extends BaseStepWithPipeline {
             }
         });
 
-        this.game.checkGameState(_.map(this.events, event => event.name), _.any(this.events, event => event.handler));
+        this.game.checkGameState(_.any(this.events, event => event.handler), _.map(this.events, event => event.name));
 
         if(thenEvents.length > 0) {
             this.openThenEventWindow(thenEvents);

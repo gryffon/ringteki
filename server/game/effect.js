@@ -75,9 +75,8 @@ class Effect {
             return this.addTargets([this.match]);
         } else if(this.targetType === 'player') {
             return this.addTargets(_.values(this.game.getPlayers()));
-        } else {
-            return this.addTargets(this.game.getTargetsForEffect(this.match));
         }
+        return this.addTargets(this.game.getTargetsForEffect(this.match));
     }
 
     addTargets(targets) {
@@ -193,7 +192,7 @@ class Effect {
             this.cancel();
         } else {
             let invalidTargets = _.filter(this.targets, target => !this.isValidTarget(target));
-            stateChanged = invalidTargets.length > 0
+            stateChanged = invalidTargets.length > 0;
             _.each(invalidTargets, target => {
                 this.removeTarget(target);
             });

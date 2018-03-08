@@ -61,10 +61,10 @@ const Effects = {
     cannotParticipateAsDefender: cardCannotEffect('participateAsDefender'),
     doesNotBowAsAttacker: function () {
         return {
-            apply: function(card, context) {
+            apply: function(card) {
                 card.conflictOptions.doesNotBowAs.attacker = true;
             },
-            unapply: function(card, context) {
+            unapply: function(card) {
                 card.conflictOptions.doesNotBowAs.attacker = false;
             },
             reapplyOnCheckState: true
@@ -72,10 +72,10 @@ const Effects = {
     },
     doesNotBowAsDefender: function () {
         return {
-            apply: function(card, context) {
+            apply: function(card) {
                 card.conflictOptions.doesNotBowAs.defender = true;
             },
-            unapply: function(card, context) {
+            unapply: function(card) {
                 card.conflictOptions.doesNotBowAs.defender = false;
             },
             reapplyOnCheckState: true
@@ -224,7 +224,7 @@ const Effects = {
                 context.game.effectEngine.removeDelayedEffect(context.delayedEffect[card.uuid]);
                 delete context.delayedEffect[card.uuid];
             }
-        }
+        };
     },
     addKeyword: function(keyword) {
         return {
@@ -442,7 +442,7 @@ const Effects = {
                     if(context.game.currentConflict.maxAllowedDefenders > -1) {
                         context.game.currentConflict.maxAllowedDefenders = Math.min(amount, context.game.currentConflict.maxAllowedDefenders);
                     } else {
-                        context.game.currentConflict.maxAllowedDefenders = amount
+                        context.game.currentConflict.maxAllowedDefenders = amount;
                     }
                 }
             },

@@ -1,8 +1,5 @@
 const _ = require('underscore');
 
-const Effects = require('./effects.js');
-const Player = require('./player.js');
-
 /**
  * Represents a delayed card based effect applied to one or more targets.
  *
@@ -70,7 +67,7 @@ class DelayedEffect {
             return;
         }
         if(this.message) {
-            this.game.addMessage(this.message, targets, this.source)
+            this.game.addMessage(this.message, targets, this.source);
         }
         this.events = this.gameAction ? this.game.getEventsForGameAction(this.gameAction, targets, this.context) : this.effectFunc(targets, this.context);
         if(this.game.currentEventWindow && this.trigger.length === 0) {

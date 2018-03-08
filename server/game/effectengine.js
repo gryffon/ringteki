@@ -24,6 +24,7 @@ class EffectEngine {
         if(effect.duration === 'custom') {
             this.registerCustomDurationEvents(effect);
         }
+        this.newEffect = true;
     }
 
     addDelayedEffect(effect) {
@@ -36,22 +37,23 @@ class EffectEngine {
 
     checkDelayedEffects(eventNames) {
         _.each(this.delayedEffects, effect => {
-            if(effect.trigger.length === 0 || _.intersection(effect.trigger, eventNames).length > 0) {
+            if(effect.trigger.length === 0 || _.any(effect.trigger, name => eventNames.includes(name))) {
                 effect.getTargets();
             }
-        })
+        });
     }
 
     checkEffects(hasChanged = false) {
         if(!hasChanged && !this.newEffect) {
             return;
         }
+        let returnValue = this.newEffect;
         _.each(this.effects, effect => {
             // Check each effect's condition and find new targets
             // Reapply all effects which have reapply function
             this.newEffect = effect.checkCondition() || effect.reapply();
         });
-        let returnValue = this.newEffect;
+        returnValue = returnValue || this.newEffect;
         this.reapplyStateDependentEffects();
         this.checkEffects();
         return returnValue;
@@ -71,6 +73,7 @@ class EffectEngine {
         this.unapplyAndRemove(effect => effect.duration === 'persistent' && effect.source === event.card && (effect.location === event.originalLocation || event.parentChanged));
         // Any lasting effects on this card should be removed when it leaves play
         this.unapplyAndRemove(effect => effect.match === event.card && effect.location !== 'any' && effect.duration !== 'persistent');
+        this.delayedEffects = _.reject(this.delayedEffects, effect => effect.match === event.card);
         this.addTargetForPersistentEffects(event.card, newArea);
     }
 
@@ -139,19 +142,19 @@ class EffectEngine {
     }
 
     onConflictFinished() {
-        this.unapplyAndRemove(effect => effect.duration === 'untilEndOfConflict');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfConflict');
     }
 
     onDuelFinished() {
-        this.unapplyAndRemove(effect => effect.duration === 'untilEndOfDuel');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfDuel');
     }
 
     onPhaseEnded() {
-        this.unapplyAndRemove(effect => effect.duration === 'untilEndOfPhase');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfPhase');
     }
 
     onRoundEnded() {
-        this.unapplyAndRemove(effect => effect.duration === 'untilEndOfRound');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfRound');
     }
 
     registerCustomDurationEvents(effect) {
@@ -202,6 +205,7 @@ class EffectEngine {
             }
         });
         this.effects = remainingEffects;
+        return matchingEffects.length > 0;
     }
 }
 

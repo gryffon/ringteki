@@ -1089,6 +1089,7 @@ class Player extends Spectator {
             }
         });
 
+        this.game.queueSimpleStep(() => this.game.checkGameState(true));
 
         let events = [{
             name: 'onCardAttached',

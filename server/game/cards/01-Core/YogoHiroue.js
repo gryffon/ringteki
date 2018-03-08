@@ -14,7 +14,7 @@ class YogoHiroue extends DrawCard {
                 let event = this.game.applyGameAction(context, { moveToConflict: context.target })[0];
                 let thenEvent = this.game.getEvent('unnamedEvent', {}, () => this.delayedEffect({
                     match: context.target,
-                    trigger: 'afterCombat',
+                    trigger: 'afterConflict',
                     context: context,
                     condition: () => this.game.currentConflict.winner === context.player && context.target.allowGameAction('dishonor', context),
                     effectFunc: (card, context) => {
