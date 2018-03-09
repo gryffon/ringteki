@@ -45,7 +45,7 @@ class EffectEngine {
 
     checkEffects(hasChanged = false) {
         if(!hasChanged && !this.newEffect) {
-            return;
+            return false;
         }
         let returnValue = this.newEffect;
         _.each(this.effects, effect => {
@@ -54,12 +54,12 @@ class EffectEngine {
             this.newEffect = effect.checkCondition() || effect.reapply();
         });
         returnValue = returnValue || this.newEffect;
-        this.reapplyStateDependentEffects();
+        this.reapplyOtherEffects();
         this.checkEffects();
         return returnValue;
     }
 
-    reapplyStateDependentEffects() {
+    reapplyOtherEffects() {
         _.each(this.effects, effect => {
             if(effect.reapplyOnCheckState) {
                 effect.unapplyThenApply();
@@ -71,7 +71,7 @@ class EffectEngine {
         let newArea = event.newLocation === 'hand' ? 'hand' : 'play area';
         this.removeTargetFromEffects(event.card, event.originalLocation);
         this.unapplyAndRemove(effect => effect.duration === 'persistent' && effect.source === event.card && (effect.location === event.originalLocation || event.parentChanged));
-        // Any lasting effects on this card should be removed when it leaves play
+        // Any lasting or delayed effects on this card should be removed when it leaves play
         this.unapplyAndRemove(effect => effect.match === event.card && effect.location !== 'any' && effect.duration !== 'persistent');
         this.delayedEffects = _.reject(this.delayedEffects, effect => effect.match === event.card);
         this.addTargetForPersistentEffects(event.card, newArea);

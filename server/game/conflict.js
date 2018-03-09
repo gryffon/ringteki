@@ -55,7 +55,6 @@ class Conflict {
         if(attackers.length > 0) {
             this.attackers = this.attackers.concat(attackers);
             this.markAsParticipating(attackers);
-            //this.calculateSkill();
         }
     }
 
@@ -65,7 +64,6 @@ class Conflict {
         }
         this.attackers.push(attacker);
         this.markAsParticipating([attacker]);
-        //this.calculateSkill();
     }
 
     addDefenders(defenders) {
@@ -73,7 +71,6 @@ class Conflict {
         if(defenders.length > 0) {
             this.defenders = this.defenders.concat(defenders);
             this.markAsParticipating(defenders);
-            //this.calculateSkill();
         }
     }
 
@@ -83,7 +80,6 @@ class Conflict {
         }
         this.defenders.push(defender);
         this.markAsParticipating([defender]);
-        //this.calculateSkill();
     }
     
     moveToConflict(cards) {
@@ -254,8 +250,6 @@ class Conflict {
         this.defenders = _.reject(this.defenders, c => c === card);
 
         card.inConflict = false;
-
-        //this.calculateSkill();
     }
 
     markAsParticipating(cards) {
@@ -321,12 +315,10 @@ class Conflict {
 
     modifyAttackerSkill(value) {
         this.attackerSkillModifier += value;
-        //this.calculateSkill();
     }
 
     modifyDefenderSkill(value) {
         this.defenderSkillModifier += value;
-        //this.calculateSkill();
     }
 
     determineWinner() {
