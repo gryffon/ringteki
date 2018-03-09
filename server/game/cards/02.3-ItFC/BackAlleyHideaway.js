@@ -70,6 +70,10 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
         event.fate = context.chooseFate;
         event.addThenGameAction(context, { sacrifice: this.backAlleyCard });
     }
+
+    isCardAbility() {
+        return true;
+    }
 }
 
 class BackAlleyHideaway extends DrawCard {
