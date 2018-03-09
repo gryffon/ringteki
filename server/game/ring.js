@@ -43,11 +43,11 @@ class Ring {
     }
 
     canDeclare(player) {
-        return !_.any(this.effects.cannotDeclare, func => func(player)) && !this.claimed
+        return !_.any(this.effects.cannotDeclare, func => func(player)) && !this.claimed;
     }
 
     isUnclaimed() {
-       return !this.contested && !this.claimed;
+        return !this.contested && !this.claimed;
     }
 
     flipConflictType() {
@@ -86,17 +86,11 @@ class Ring {
         /**
          * @param  {integer} fate - the amount of fate to modify this card's fate total by
          */
-        //var oldFate = this.fate;
-
         this.fate += fate;
 
         if(this.fate < 0) {
             this.fate = 0;
         }
-
-
-        //this.game.raiseEvent('onRingFateChanged', { ring: this, fate: this.fate - oldFate });
-
     }
     
     removeFate() {

@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class SecludedShrine extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.reaction({
             title: 'Count a ring as claimed',
             when: {
