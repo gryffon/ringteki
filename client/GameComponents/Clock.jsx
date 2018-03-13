@@ -10,37 +10,36 @@ class Clock extends React.Component {
         this.state = { timeLeft: 0 };
     }
 
-    shouldComponentUpdate(newProps, newState) {
-        return newProps.active !== this.props.active || newProps.secondsLeft !== this.props.secondsLeft;
-    }
-
-    componentWillUpdate(newProps, newState) {
+    componentWillReceiveProps(newProps) {
         if(newProps.secondsLeft === 0) {
             return;
         }
+        if(this.secondsLeft !== newProps.secondsLeft) {
+            this.secondsLeft = newProps.secondsLeft;
+            this.setState({ timeLeft: newProps.secondsLeft });
+        }
+
+        if(this.timerHandle) {
+            clearInterval(this.timerHandle);
+        }
 
         if(newProps.active) {
-            if(newState.timerHandle) {
-                return;
-            }
-
-            let handle = setInterval(() => {
+            this.timerHandle = setInterval(() => {
                 this.setState({
                     timeLeft: this.state.timeLeft - 1
                 });
             }, 1000);
-
-            this.setState({ timerHandle: handle, timeLeft: newProps.secondsLeft });
-        } else if(newState.timerHandle) {
-            clearInterval(newState.timerHandle);
-            this.setState({ timerHandle: null, timeLeft: newProps.secondsLeft });
-        }
+        } 
 
     }
 
     render() {
+        let className = 'player-stats-row';
+        if(this.props.active) {
+            className += ' clock-active';
+        }
         return (
-            <div className={ 'hand-size' }>
+            <div className={ className }>
                 { formattedSeconds(this.state.timeLeft) }
             </div>
         );

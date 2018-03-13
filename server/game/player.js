@@ -89,14 +89,12 @@ class Player extends Spectator {
     startClock() {
         if(this.chessClockLeft > -1 && this.timerStart === 0) {
             this.timerStart = Date.now();
-            console.log('starting clock for ', this.name, this.chessClockLeft);
         }
     }
 
     stopClock() {
-        console.log('stopping clock for ', this.name, this.chessClockLeft);
         if(this.timerStart > 0 && this.chessClockLeft > 0) {
-            this.chessClockLeft -= Math.floor((Date.now() - this.timerStart) / 1000);
+            this.chessClockLeft -= Math.floor(((Date.now() - this.timerStart) / 1000) - 0.5);
             this.timerStart = 0;
             if(this.chessClockLeft < 0 && this.opponent) {
                 this.game.addMessage('{0}\'s clock has run out', this);

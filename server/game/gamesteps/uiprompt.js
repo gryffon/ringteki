@@ -73,6 +73,8 @@ class UiPrompt extends BaseStep {
         if(!this.activeCondition(player) || uuid !== this.uuid) {
             return false;
         }
+
+        player.stopClock();
         
         return this.menuCommand(player, arg, method);
     }
