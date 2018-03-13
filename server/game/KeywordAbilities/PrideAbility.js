@@ -13,10 +13,10 @@ class PrideAbility extends TriggeredAbility {
             printedAbility: false,
             handler: context => {
                 if(context.event.conflict.winner === context.player) {
-                    this.game.addMessage('{0} is honored due to their Pride', context.source)
+                    this.game.addMessage('{0} is honored due to their Pride', context.source);
                     this.game.applyGameAction(context, { honor: context.source });
                 } else {
-                    this.game.addMessage('{0} is dishonored due to their Pride', context.source)
+                    this.game.addMessage('{0} is dishonored due to their Pride', context.source);
                     this.game.applyGameAction(context, { dishonor: context.source });
                 }
             }
