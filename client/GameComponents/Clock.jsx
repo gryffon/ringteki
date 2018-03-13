@@ -49,7 +49,7 @@ class Clock extends React.Component {
 Clock.displayName = 'Clock';
 Clock.propTypes = {
     active: PropTypes.bool,
-    secondsLeft: PropTypes.number,
+    secondsLeft: PropTypes.number
 };
 
 export default Clock;

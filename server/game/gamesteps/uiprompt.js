@@ -51,14 +51,14 @@ class UiPrompt extends BaseStep {
     }
 
     continue() {
-        _.each(this.game.getPlayers(), player => player.stopClock())
+        _.each(this.game.getPlayers(), player => player.stopClock());
         var completed = this.isComplete();
 
         if(completed) {
             this.clearPrompts();
         } else {
             this.setPrompt();
-       }
+        }
 
         return completed;
     }
