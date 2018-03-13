@@ -27,7 +27,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         this.conflict = conflict;
         this.pipeline.initialise([
             new SimpleStep(this.game, () => this.resetCards()),
-            new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer),
+            new SimpleStep(this.game, () => this.promptForNewConflict()),
             new SimpleStep(this.game, () => this.initiateConflict()),
             new SimpleStep(this.game, () => this.resolveCovert()),
             new SimpleStep(this.game, () => this.raiseDeclarationEvents()),
@@ -50,8 +50,37 @@ class ConflictFlow extends BaseStepWithPipeline {
         this.conflict.resetCards();
     }
 
+    promptForNewConflict() {
+        if(this.conflict.attackingPlayer.allowGameAction('chooseConflictRing')) {
+            this.pipeline.queueStep(new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer));
+            return;
+        }
+        this.game.promptWithHandlerMenu(this.conflict.attackingPlayer, {
+            source: 'Declare Conflict',
+            activePromptTitle: 'Do you wish to pass your conflict opportunity?',
+            choices: ['Yes', 'No'],
+            handlers: [
+                () => this.conflict.passConflict(),
+                () => this.game.promptForRingSelect(this.conflict.defendingPlayer, {
+                    activePromptTitle: 'Choose a ring for ' + this.conflict.attackingPlayer.name + '\'s conflict',
+                    source: 'Defender chooses conflict ring',
+                    waitingPromptTitle: 'Waiting for defender to choose conflict ring',
+                    ringCondition: ring => ring.canDeclare(this.conflict.attackingPlayer),
+                    onSelect: (player, ring) => {
+                        this.conflict.conflictRing = ring.element;
+                        if(this.conflict.attackingPlayer.conflicts.isAtMax(ring.conflictType)) {
+                            ring.flipConflictType();
+                        }
+                        this.conflict.conflictType = ring.conflictType;
+                        this.pipeline.queueStep(new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer));
+                    }
+                })
+            ]
+        });
+    }
+
     initiateConflict() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
         
@@ -64,7 +93,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     resolveCovert() {
-        if(this.conflict.cancelled || this.conflict.isSinglePlayer) {
+        if(this.conflict.conflictPassed || this.conflict.isSinglePlayer) {
             return;
         }
 
@@ -89,7 +118,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     raiseDeclarationEvents() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
 
@@ -134,25 +163,8 @@ class ConflictFlow extends BaseStepWithPipeline {
         this.game.raiseMultipleEvents(events);
     }
 
-    promptForAttackers() {
-        var title = 'Select conflict attackers';
-        if(this.conflict.attackingPlayer.conflictrLimit !== 0) {
-            title += ' (limit ' + this.conflict.attackingPlayer.conflictrLimit + ')';
-        }
-
-        this.game.promptForSelect(this.conflict.attackingPlayer, {
-            numCards: this.conflict.attackingPlayer.conflictrLimit,
-            multiSelect: true,
-            activePromptTitle: title,
-            waitingPromptTitle: 'Waiting for opponent to select attackers',
-            cardCondition: card => this.allowAsAttacker(card),
-            onSelect: (player, attackers) => this.chooseAttackers(player, attackers),
-            onCancel: () => this.conflict.cancelConflict()
-        });
-    }
-    
     announceAttackerSkill() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
 
@@ -162,7 +174,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     promptForDefenders() {
-        if(this.conflict.cancelled || this.conflict.isSinglePlayer) {
+        if(this.conflict.conflictPassed || this.conflict.isSinglePlayer) {
             return;
         }
 
@@ -170,7 +182,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     announceDefenderSkill() {
-        if(this.conflict.cancelled || this.conflict.isSinglePlayer) {
+        if(this.conflict.conflictPassed || this.conflict.isSinglePlayer) {
             return;
         }
 
@@ -188,14 +200,14 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
     
     openConflictActionWindow() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
         this.queueStep(new ConflictActionWindow(this.game, 'Conflict Action Window', this.conflict));
     }
 
     determineWinner() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
         
@@ -266,7 +278,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     applyUnopposed() {
-        if(this.conflict.cancelled || this.game.manualMode || this.conflict.isSinglePlayer) {
+        if(this.conflict.conflictPassed || this.game.manualMode || this.conflict.isSinglePlayer) {
             return;
         }
         
@@ -277,7 +289,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
     
     checkBreakProvince() {
-        if(this.conflict.cancelled || this.conflict.isSinglePlayer || this.game.manualMode) {
+        if(this.conflict.conflictPassed || this.conflict.isSinglePlayer || this.game.manualMode) {
             return;
         }
 
@@ -288,7 +300,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
     
     resolveRingEffects() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
 
@@ -300,7 +312,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
     
     claimRing() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
 
@@ -319,7 +331,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     returnHome() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
 
@@ -347,7 +359,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
     
     completeConflict() {
-        if(this.conflict.cancelled) {
+        if(this.conflict.conflictPassed) {
             return;
         }
 
