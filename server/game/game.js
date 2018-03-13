@@ -29,6 +29,7 @@ const InitiateAbilityEventWindow = require('./Events/InitiateAbilityEventWindow.
 const AbilityResolver = require('./gamesteps/abilityresolver.js');
 const ForcedTriggeredAbilityWindow = require('./gamesteps/forcedtriggeredabilitywindow.js');
 const TriggeredAbilityWindow = require('./gamesteps/triggeredabilitywindow.js');
+const DelayedAbilityWindow = require('./gamesteps/DelayedAbilityWindow');
 const AbilityContext = require('./AbilityContext.js');
 const Ring = require('./ring.js');
 const Conflict = require('./conflict.js');
@@ -310,11 +311,6 @@ class Game extends EventEmitter {
         // If the card is in the province deck, select it
         if(card.location === 'province deck') {
             this.selectProvince(player, cardId);
-            return;
-        }
-
-        // Check if the card itself is waiting for a click
-        if(card.onClick(player)) {
             return;
         }
 
@@ -1185,16 +1181,22 @@ class Game extends EventEmitter {
     /*
      * Opens a window for triggered card abilities to respond to an Event and
      * adds it to the window stack
-     * @param {Object} properties - { abilityType: String, event: Event or Array of Event }
+     * @param {String} abilityType
+     * @param {Array} events
      * @returns {undefined}
      */
-    openAbilityWindow(properties) {
-        let windowClass = ['forcedreaction', 'forcedinterrupt', 'whenrevealed'].includes(properties.abilityType) ? ForcedTriggeredAbilityWindow : TriggeredAbilityWindow;
-        let window = new windowClass(this, { abilityType: properties.abilityType, event: properties.event });
-        this.abilityWindowStack.push(window);
-        window.emitEvents();
+    openAbilityWindow(abilityType, events) {
+        if(['forcedreaction', 'forcedinterrupt'].includes(abilityType)) {
+            this.queueStep(new ForcedTriggeredAbilityWindow(this, abilityType, events));
+        } else {
+            this.queueStep(new TriggeredAbilityWindow(this, abilityType, events));
+        }
+    }
+
+    openDelayedAbilityWindow(choices) {
+        let window = new DelayedAbilityWindow(this);
+        _.each(choices, choice => window.addChoice(choice));
         this.queueStep(window);
-        this.queueSimpleStep(() => this.abilityWindowStack.pop());
     }
 
     /*

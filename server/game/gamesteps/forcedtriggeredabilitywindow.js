@@ -1,70 +1,115 @@
 const _ = require('underscore');
-const uuid = require('uuid');
 
-const BaseAbilityWindow = require('./baseabilitywindow.js');
+const BaseStep = require('./basestep.js');
 const TriggeredAbilityWindowTitles = require('./triggeredabilitywindowtitles.js');
 
-class ForcedTriggeredAbilityWindow extends BaseAbilityWindow {
-    registerAbility(ability, event) {
-        let context = ability.createContext(event);
-        let player = ability.card.controller;
-        this.abilityChoices.push({
-            id: uuid.v1(),
-            player: player,
-            ability: ability,
-            card: ability.card,
-            context: context
-        });
+class ForcedTriggeredAbilityWindow extends BaseStep {
+    constructor(game, abilityType, events) {
+        super(game);
+        this.choices = [];
+        this.events = events;
+        this.abilityType = abilityType;        
+        this.currentPlayer = this.game.getFirstPlayer();
+        this.abilitiesTriggered = [];
     }
 
     continue() {
-        this.abilityChoices = _.filter(this.abilityChoices, abilityChoice => abilityChoice.ability.meetsRequirements(abilityChoice.context));
+        this.game.currentAbilityWindow = this;
+        this.emitEvents();
 
-        if(this.abilityChoices.length > 1) {
-            this.promptPlayer();
-            return false;
+        if(this.filterChoices()) {
+            this.game.currentAbilityWindow = null;
+            return true;
         }
 
-        _.each(this.abilityChoices, abilityChoice => {
-            this.game.resolveAbility(abilityChoice.context);
-        });
-
-        return true;
+        return false;
     }
 
-    promptPlayer() {
-        let buttons = _.chain(this.abilityChoices)
-            .map(abilityChoice => {
-                let title = abilityChoice.player.name + ' - ' + abilityChoice.card.name;
-                return { text: title, method: 'chooseAbility', arg: abilityChoice.id, card: abilityChoice.card };
+    addChoice(context) {
+        if(!this.abilitiesTriggered.includes(context.ability)) {
+            this.choices.push(context);
+        }
+    }
+
+    filterChoices() {
+        if(this.choices.length === 0) {
+            return true;
+        }
+        if(this.choices.length === 1) {
+            this.resolveAbility(this.choices[0]);
+            return false;
+        }
+        let cards = _.uniq(this.choices, context => context.source);
+        if(cards.length === 1) {
+            this.promptBetweenChoices(this.choices);
+        } else {
+            this.game.promptForSelect(this.currentPlayer, this.getPromptForSelectProperties());
+        }
+    }
+
+    getPromptForSelectProperties() {
+        let cards = _.pluck(this.choices, 'source');
+        return {
+            source: 'Triggered Abilities',
+            activePromptTitle: TriggeredAbilityWindowTitles.getTitle(this.abilityType, this.events),
+            waitingPromptTitle: 'Waiting for opponent',
+            cardCondition: card => cards.includes(card),
+            onSelect: (player, card) => {
+                let choices = _.filter(this.choices, context => context.source === card);
+                // The card chosen corresponds to a single event/ability combination
+                if(choices.length === 1) {
+                    this.resolveAbility(choices[0]);
+                    return true;
+                }
+                // The card chosen has multiple abilities which can be used in this window - no cards can have multiple reaction abilities at the moment
+                // The card chosen has a single ability which can be used with multiple events in this window
+                // Differentiate between events by Event.card
+                let eventCards = _.map(choices, context => context.event.card);
+                this.game.promptForSelect(player, {
+                    source: 'Triggered Abilities',
+                    activePromptTitle: 'Choose a card',
+                    waitingPromptTitle: 'Waiting for opponent',
+                    cardCondition: card => eventCards.includes(card),
+                    onSelect: (player, card) => {
+                        choices = _.filter(choices, context => context.event.card === card);
+                        if(choices.length === 1) {
+                            this.resolveAbility(choices[0]);
+                            return true;
+                        }
+                        // Differentiate between events by Event.name
+                        this.promptBetweenChoices(choices);
+                        return true;
+                    }
+                });
+                return true;
+            }
+        }
+    }
+
+    promptBetweenChoices(choices) {
+        this.game.promptWithHandlerMenu(this.currentPlayer, {
+            source: 'Triggered Abilities',
+            activePromptTitle: 'Which event do you want to respond to?',
+            waitingPromptTitle: 'Waiting for opponent',
+            choices: _.map(choices, context => TriggeredAbilityWindowTitles.getAction(context.event)),
+            handlers: _.map(choices, context => {
+                return () => {
+                    this.resolveAbility(context);
+                };
             })
-            .sortBy('text')
-            .value();
-
-        this.game.promptWithMenu(this.game.getFirstPlayer(), this, {
-            activePrompt: {
-                menuTitle: TriggeredAbilityWindowTitles.getTitle(this.abilityType, this.events[0]),
-                buttons: buttons
-            },
-            waitingPromptTitle: 'Waiting for opponents to resolve forced abilities'
         });
     }
 
-    chooseAbility(player, id) {
-        let choice = _.find(this.abilityChoices, ability => ability.id === id);
+    resolveAbility(context) {
+        this.game.resolveAbility(context);
+        this.abilitiesTriggered.push(context.ability);
+    }
 
-        if(!choice) {
-            return false;
-        }
-        if(this.abilityType === 'whenrevealed') {
-            this.game.addMessage('{0} has chosen to resolve first the when revealed ability of {1}\'s {2}',
-                player, choice.player.name, choice.card.name);
-        }
-
-        this.game.resolveAbility(choice.context);
-        this.abilityChoices = _.reject(this.abilityChoices, ability => ability.card === choice.card);
-
-        return true;
+    emitEvents() {
+        this.choices = [];
+        _.each(this.events, event => {
+            this.game.emit(event.name + ':' + this.abilityType, event, this);
+        });
     }
 }
 

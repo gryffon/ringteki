@@ -35,6 +35,10 @@ class StrongholdCard extends BaseCard {
         this.facedown = false;
     }
 
+    getDefaultLocation() {
+        return ['stronghold province'];
+    }
+
     getSummary(activePlayer, hideWhenFaceup) {
         let baseSummary = super.getSummary(activePlayer, hideWhenFaceup);
 

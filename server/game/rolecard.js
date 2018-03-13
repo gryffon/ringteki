@@ -19,6 +19,10 @@ class RoleCard extends BaseCard {
         this.facedown = false;
     }
 
+    getDefaultLocation() {
+        return ['role'];
+    }
+
     getSummary(activePlayer, hideWhenFaceup) {
         let baseSummary = super.getSummary(activePlayer, hideWhenFaceup);
 

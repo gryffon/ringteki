@@ -19,26 +19,22 @@ class TriggeredAbility extends CardAbility {
         }
     }
 
-    eventHandler(event) {
-        if(!this.isTriggeredByEvent(event)) {
-            return;
-        }
+    eventHandler(event, window) {
+        let context = this.createContext(event);
 
-        this.game.registerAbility(this, event);
+        if(this.isTriggeredByEvent(event, context) && this.meetsRequirements(context)) {
+            window.addChoice(context);
+        }
     }
 
     createContext(event) {
         return new TriggeredAbilityContext({ event: event, game: this.game, source: this.card, player: this.card.controller, ability: this });
     }
 
-    isTriggeredByEvent(event) {
+    isTriggeredByEvent(event, context) {
         let listener = this.when[event.name];
 
-        if(!listener) {
-            return false;
-        }
-
-        return listener(event);
+        return listener && listener(event, context);
     }
 
     meetsRequirements(context) {
@@ -71,7 +67,7 @@ class TriggeredAbility extends CardAbility {
         _.each(eventNames, eventName => {
             var event = {
                 name: eventName + ':' + this.abilityType,
-                handler: event => this.eventHandler(event)
+                handler: (event, window) => this.eventHandler(event, window)
             };
             this.game.on(event.name, event.handler);
             this.events.push(event);

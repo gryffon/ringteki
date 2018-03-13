@@ -47,6 +47,10 @@ class ProvinceCard extends BaseCard {
         this.facedown = false;
     }
 
+    getDefaultLocation(location) {
+        return super.getDefaultLocation(location.concat(['province']));
+    }
+
     allowGameAction(actiontype, context) {
         if(actiontype === 'break' && this.isBroken) {
             return false;

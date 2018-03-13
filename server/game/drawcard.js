@@ -6,6 +6,10 @@ const PlayCardAction = require('./playcardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
+const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
+const PersonalHonorAbility = require('./KeywordAbilities/PersonalHonorAbility');
+const PrideAbility = require('./KeywordAbilities/PrideAbility');
+const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 
 const StandardPlayActions = [
     new DynastyCardAction(),
@@ -74,6 +78,10 @@ class DrawCard extends BaseCard {
             if(cardData.political === undefined || cardData.political === null) {
                 this.conflictOptions.cannotParticipateIn.political = true;
             }
+            this.abilities.reactions.push(new CourtesyAbility(this.game, this));
+            this.abilities.reactions.push(new PersonalHonorAbility(this.game, this));
+            this.abilities.reactions.push(new PrideAbility(this.game, this));
+            this.abilities.reactions.push(new SincerityAbility(this.game, this));
         }
     }
 
@@ -541,19 +549,13 @@ class DrawCard extends BaseCard {
         return true;
     }
 
-    canTriggerAbilities(location) {
-        if(this.type === 'character' || this.type === 'attachment') {
-            if(!location.includes(this.location) && this.location !== 'play area') {
-                return false;
-            }
-        } else if(this.type === 'event') {
-            if(!location.includes(this.location) && !this.controller.isCardInPlayableLocation(this, 'play')) {
-                return false;
-            }
-        } else if(!this.location.includes('province')) {
-            return false;
+    getDefaultLocation(location) {
+        if(this.type === 'event') {
+            return super.getDefaultLocation(location.concat(['hand']));
+        } else if(this.type === 'holding') {
+            return super.getDefaultLocation(location.concat(['province']));
         }
-        return super.canTriggerAbilities();
+        return super.getDefaultLocation(location.concat(['play area']));
     }
 
     /**
@@ -616,31 +618,6 @@ class DrawCard extends BaseCard {
      */
     removeAttachment(attachment) {
         this.attachments = _(this.attachments.reject(card => card.uuid === attachment.uuid));
-    }
-
-    /**
-     * Applies all the game effects of leaving play: honor gain/loss due to personal honor,
-     * Courtesy and Sincerity.  These are effects which trigger based on the state of the card,
-     * but don't change it.
-     */
-    leavesPlayEffects() {
-        if(this.allowGameAction('affectedByHonor')) {
-            if(this.isHonored) {
-                this.game.addMessage('{0} gains 1 honor due to {1}\'s personal honor', this.controller, this);
-                this.game.addHonor(this.controller, 1);
-            } else if(this.isDishonored) {
-                this.game.addMessage('{0} loses 1 honor due to {1}\'s personal honor', this.controller, this);
-                this.game.addHonor(this.controller, -1);
-            }
-        }
-        if(this.hasSincerity()) {
-            this.game.addMessage('{0} draws a card due to {1}\'s Sincerity', this.controller, this);
-            this.controller.drawCardsToHand(1);
-        }
-        if(this.hasCourtesy()) {
-            this.game.addMessage('{0} gains a fate due to {1}\'s Courtesy', this.controller, this);
-            this.game.addFate(this.controller, 1);
-        }
     }
 
     /**
