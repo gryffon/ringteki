@@ -10,16 +10,16 @@ class Fushicho extends DrawCard {
             target: {
                 activePrompt: 'Choose a character',
                 cardType: 'character',
-                cardCondition: card => card.location === 'dynasty discard pile' && this.controller.canPutIntoPlay(card) &&
-                                   card.controller === this.controller && card.isFaction('phoenix')
+                gameAction; 'putIntoPlay', 
+                cardCondition: card => card.location === 'dynasty discard pile' &&
+                                       card.controller === this.controller && card.isFaction('phoenix')
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to resurrect {2}', this.controller, this, context.target);
-                this.controller.putIntoPlay(context.target);
-                context.target.fate = 1;
+                let event = this.game.applyGameAction(context, { putIntoPlay: context.target })[0];
+                event.fate = 1;
             }
-        }
-        );
+        });
     }
 }
 
