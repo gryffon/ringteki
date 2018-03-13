@@ -2,14 +2,17 @@ const _ = require('underscore');
 
 const ForcedTriggeredAbilityWindow = require('./forcedtriggeredabilitywindow.js');
 
-class DelayedAbilityWindow extends ForcedTriggeredAbilityWindow {
+class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
     constructor(game) {
-        super(game, { event: [] });
+        super(game, 'delayedeffects', []);
     }
     // Special window: Ring Effects (has a context), Delayed Effects
 
-    continue() {
-        return this.filterChoices();
+    addChoice(choice) {
+        if(!choice.condition) {
+            choice.condition = () => true;
+        }
+        this.choices.push(choice);
     }
 
     filterChoices() {
@@ -34,7 +37,6 @@ class DelayedAbilityWindow extends ForcedTriggeredAbilityWindow {
             handlers: _.map(choices, choice => choice.handler)
         });
     }
-
 }
 
-module.exports = ForcedTriggeredAbilityWindow;
+module.exports = SimultaneousEffectWindow;

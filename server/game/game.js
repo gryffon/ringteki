@@ -29,7 +29,7 @@ const InitiateAbilityEventWindow = require('./Events/InitiateAbilityEventWindow.
 const AbilityResolver = require('./gamesteps/abilityresolver.js');
 const ForcedTriggeredAbilityWindow = require('./gamesteps/forcedtriggeredabilitywindow.js');
 const TriggeredAbilityWindow = require('./gamesteps/triggeredabilitywindow.js');
-const DelayedAbilityWindow = require('./gamesteps/DelayedAbilityWindow');
+const SimultaneousEffectWindow = require('./gamesteps/SimultaneousEffectWindow');
 const AbilityContext = require('./AbilityContext.js');
 const Ring = require('./ring.js');
 const Conflict = require('./conflict.js');
@@ -1193,8 +1193,8 @@ class Game extends EventEmitter {
         }
     }
 
-    openDelayedAbilityWindow(choices) {
-        let window = new DelayedAbilityWindow(this);
+    openSimultaneousEffectWindow(choices) {
+        let window = new SimultaneousEffectWindow(this);
         _.each(choices, choice => window.addChoice(choice));
         this.queueStep(window);
     }
