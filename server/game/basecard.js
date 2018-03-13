@@ -458,6 +458,7 @@ class BaseCard extends EffectSource {
         let state = {
             id: this.cardData.id,
             controlled: this.owner !== this.controller,
+            hasAction: this.abilities.actions.length > 0,
             inConflict: this.inConflict,
             facedown: this.facedown,
             menu: this.getMenu(),
@@ -466,6 +467,7 @@ class BaseCard extends EffectSource {
             showPopup: this.showPopup,
             tokens: this.tokens,
             type: this.getType(),
+            // usedAbility: _.all(this.abilities.actions, action => action.limit.isAtMax(this.controller)),
             uuid: this.uuid
         };
 
