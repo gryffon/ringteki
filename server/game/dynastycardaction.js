@@ -26,17 +26,20 @@ class DynastyCardAction extends BaseAbility {
             !source.facedown &&
             source.getType() === 'character' &&
             player.isCardInPlayableLocation(source, 'dynasty') &&
-            player.canPutIntoPlay(source) &&
-            source.canPlay() &&
-            source.allowGameAction('play', context) &&
+            source.allowGameAction('putIntoPlay', context) &&
+            source.canPlay(context) &&
+            player.canInitiateAction &&
             this.canPayCosts(context)
         );
     }
 
     executeHandler(context) {
         context.game.addMessage('{0} plays {1} with {2} additional fate', context.player, context.source, context.chooseFate);
-        context.source.fate = context.chooseFate;
-        context.player.putIntoPlay(context.source, false, true);
+        let events = context.game.applyGameAction(context, { putIntoPlay: context.source }, [{
+            name: 'onCardPlayed',
+            params: { player: context.player, card: context.source, originalLocation: context.source.location }
+        }]);
+        events[0].fate = context.chooseFate;
     }
 
     isCardPlayed() {

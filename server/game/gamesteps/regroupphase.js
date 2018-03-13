@@ -30,12 +30,8 @@ class RegroupPhase extends Phase {
     }
 
     readyCards() {
-        this.game.raiseEvent('onReadyAllCards', {}, () => {
-            _.each(this.game.getPlayers(), player => {
-                player.readyCards();
-            });
-            return { resolved: true, success: true };
-        });
+        let cardsToReady = this.game.allCards.filter(card => card.location === 'play area' && card.bowed && card.readiesDuringReadying); 
+        this.game.applyGameAction(null, { ready: cardsToReady }, [{ name: 'onReadyAllCards', params: { cards: cardsToReady } }]);
     }
     
     discardFromProvinces() {
@@ -65,6 +61,7 @@ class RegroupPhase extends Phase {
                 source: 'Discard Dynasty Cards',
                 numCards: 0,
                 multiSelect: true,
+                optional: true,
                 activePromptTitle: 'Select dynasty cards to discard',
                 waitingPromptTitle: 'Waiting for opponent to discard dynasty cards',
                 cardCondition: card => cardsOnUnbrokenProvinces.includes(card),
@@ -93,20 +90,14 @@ class RegroupPhase extends Phase {
     }
     
     returnRings() {
-        this.game.raiseEvent('onReturnRings', {}, () => {
-            this.game.returnRings();
-            return { resolved: true, success: true };
-        });
+        this.game.raiseEvent('onReturnRings', {}, () => this.game.returnRings());
     }
 
     passFirstPlayer() {
         let firstPlayer = this.game.getFirstPlayer();
         let otherPlayer = this.game.getOtherPlayer(firstPlayer);
         if(otherPlayer) {
-            this.game.raiseEvent('onPassFirstPlayer', { player: otherPlayer }, () => {
-                this.game.setFirstPlayer(otherPlayer);
-                return { resolved: true, success: true };
-            });
+            this.game.raiseEvent('onPassFirstPlayer', { player: otherPlayer }, () => this.game.setFirstPlayer(otherPlayer));
         }
     }
 

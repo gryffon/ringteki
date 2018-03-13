@@ -26,28 +26,17 @@ class FatePhase extends Phase {
 
     discardCharactersWithNoFate() {
         _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
-            let cardsToDiscard = player.filterCardsInPlay(card => card.fate === 0 && card.type === 'character' && card.allowGameAction('discardCardFromPlay'));
+            let cardsToDiscard = player.filterCardsInPlay(card => card.fate === 0 && card.type === 'character' && card.allowGameAction('discardFromPlay'));
             this.game.queueSimpleStep(() => player.discardCharactersWithNoFate(cardsToDiscard));
         });
     }
     
     removeFateFromCharacters() {
-        let cards = this.game.findAnyCardsInPlay(card => {
-            return (card.type === 'character' &&
-                    card.allowGameAction('removeFate') &&
-                    card.fate > 0);
-        });
-        this.game.raiseMultipleEvents(_.map(cards, card => ({
-            name: 'onCardRemoveFate',
-            params: { card: card, fate: 1 }
-        })));
+        this.game.applyGameAction(null, { removeFate: this.game.findAnyCardsInPlay(card => card.allowGameAction('removeFate')) });
     }
     
     placeFateOnUnclaimedRings() {
-        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', {}, () => {
-            this.game.placeFateOnUnclaimedRings();
-            return { resolved: true, success: true };
-        });
+        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', {}, () => this.game.placeFateOnUnclaimedRings());
     }
 }
 

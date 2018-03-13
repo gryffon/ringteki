@@ -221,13 +221,13 @@ const Effects = {
         apply: function(card, context) {
             context.discardEvent = context.discardEvent || {};
             if(card.getPoliticalSkill() <= 0) {
-                context.discardEvent[card.uuid] = card.controller.discardCardFromPlay(card);
+                context.discardEvent[card.uuid] = context.game.applyGameAction(null, { discardFromPlay: card })[0];
                 context.game.addMessage('{0} is killed as their political skill is 0', card);
             }
         },
         reapply: function(card, context) {
             if(card.getPoliticalSkill() <= 0 && (!context.discardEvent[card.uuid] || context.discardEvent[card.uuid].cancelled)) {
-                context.discardEvent[card.uuid] = card.controller.discardCardFromPlay(card);
+                context.discardEvent[card.uuid] = context.game.applyGameAction(null, { discardFromPlay: card })[0];
                 context.game.addMessage('{0} is killed as their political skill is 0', card);
             }
         },
@@ -238,10 +238,10 @@ const Effects = {
         },
         isStateDependent: true
     },
-    discardCardFromPlayEffect: function() {
+    discardFromPlayEffect: function() {
         return {
             apply: function(card, context) {
-                card.controller.discardCardFromPlay(card);
+                context.game.applyGameAction(null, { discardFromPlay: card });
                 context.game.addMessage('{0} is discarded from play', card);
             },
             unapply: function() {
@@ -350,7 +350,7 @@ const Effects = {
             unapply: function(card, context) {
                 if(card.location === 'play area' && context.discardIfStillInPlay.includes(card) && condition()) {
                     context.discardIfStillInPlay = _.reject(context.discardIfStillInPlay, c => c === card);
-                    card.controller.discardCardFromPlay(card);
+                    context.game.applyGameAction(null, { discardFromPlay: card });
                     context.game.addMessage('{0} discards {1} at the end of the phase because of {2}', context.source.controller, card, context.source);
                 }
             }
@@ -365,7 +365,7 @@ const Effects = {
             unapply: function(card, context) {
                 if(card.location === 'play area' && context.returnToHandIfStillInPlay.includes(card)) {
                     context.returnToHandIfStillInPlay = _.reject(context.returnToHandIfStillInPlay, c => c === card);
-                    card.controller.returnCardToHand(card);
+                    context.game.applyGameAction(null, { returnToHand: card });
                     context.game.addMessage('{0} returns {1} to hand at the end of the phase because of {2}', context.source.controller, card, context.source);
                 }
             }
@@ -380,8 +380,9 @@ const Effects = {
             unapply: function(card, context) {
                 if(card.location === 'play area' && context.moveToBottomOfDeckIfStillInPlay.includes(card)) {
                     context.moveToBottomOfDeckIfStillInPlay = _.reject(context.moveToBottomOfDeckIfStillInPlay, c => c === card);
-                    card.owner.moveCardToBottomOfDeck(card);
                     context.game.addMessage('{0} moves {1} to the bottom of their deck as {2}\'s effect ends', context.source.controller, card, context.source);
+                    let events = context.game.applyGameAction(null, { returnToDeck: card });
+                    events[0].options.bottom = true; 
                 }
             }
         };
@@ -411,16 +412,16 @@ const Effects = {
             }
         };
     },
-    cannotBeDiscarded: cardCannotEffect('discardCardFromPlay'),
+    cannotBeDiscarded: cardCannotEffect('discardFromPlay'),
     cannotRemoveFate: cardCannotEffect('removeFate'),
     cannotPlay: playerCannotEffect('play'),
     cardCannotTriggerAbilities: cardCannotEffect('triggerAbilities'),
     cannotBeTargeted: cardCannotEffect('target'),
-    cannotBeDishonored: cardCannotEffect('dishonor'),
     cannotBeBowed: cardCannotEffect('bow'),
     cannotBeBroken: cardCannotEffect('break'),
     cannotBeMovedIntoConflict: cardCannotEffect('moveToConflict'),
     cannotBeSentHome: cardCannotEffect('sendHome'),
+    cannotBeDishonored: cardCannotEffect('dishonor'),
     cannotMoveCharactersIntoConflict: playerCannotEffect('moveToConflict'),
     cannotCountForResolution: cardCannotEffect('countForResolution'),
     cannotBeAffectedByHonor: cardCannotEffect('affectedByHonor'),
@@ -432,7 +433,7 @@ const Effects = {
     playerCannotPlaceFate: playerCannotEffect('placeFate'),
     playerCannotSpendFate: playerCannotEffect('spendFate'),
     playerCannotTakeFirstAction: playerCannotEffect('takeFirstAction'),
-    playerCannotTakeFateFromRings: playerCannotEffect('takeFatefromRings'),
+    playerCannotTakeFateFromRings: playerCannotEffect('takeFateFromRings'),
     changePlayerGloryModifier: function(amount) {
         return {
             apply: function(player) {
@@ -485,13 +486,20 @@ const Effects = {
             }
         };
     },
-    revealTopCardOfConflictDeck: function() {
+    makeTopCardOfConflictDeckPlayable: function() {
         return {
-            apply: function(player) {
+            apply: function(player, context) {
                 player.conflictDeckTopCardHidden = false;
+                context.newPlayableLocation = player.addPlayableLocation('play', 'conflict deck');
+                let topCard = player.conflictDeck.first();
+                if(topCard && topCard.type === 'event') {
+                    _.each(topCard.abilities.reactions, reaction => reaction.registerEvents());
+                }
             },
-            unapply: function(player) {
+            unapply: function(player, context) {
                 player.conflictDeckTopCardHidden = true;
+                player.playableLocations = _.reject(player.playableLocations, location => location === context.newPlayableLocation);
+                delete context.newPlayableLocation;
             }
         };
     },
@@ -505,7 +513,7 @@ const Effects = {
                 }
             },
             unapply: function(card, context) {
-                if(context.restrictNumberOfDefenders && context.restrictNumberOfDefenders[card.uuid]) {
+                if(context.restrictNumberOfDefenders && context.restrictNumberOfDefenders[card.uuid] !== undefined) {
                     if(context.game.currentConflict) {
                         context.game.currentConflict.maxAllowedDefenders = context.restrictNumberOfDefenders[card.uuid];
                     }

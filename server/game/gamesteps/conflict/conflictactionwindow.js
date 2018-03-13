@@ -40,7 +40,7 @@ class ConflictActionWindow extends ActionWindow {
     
     activePrompt() {
         let props = super.activePrompt();
-
+        
         this.conflict.calculateSkill();
         let conflictText = capitalize[this.conflict.conflictType] + ' ' + capitalize[this.conflict.conflictRing] + ' conflict';
         let skillText = 'Attacker: ' + this.conflict.attackerSkill + ' Defender: ' + this.conflict.defenderSkill;

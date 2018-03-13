@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 class SacrificeCost {
     constructor() {
         this.name = 'sacrifice';
@@ -10,7 +8,7 @@ class SacrificeCost {
     }
 
     pay(cards, context) {
-        return _.map(cards, card => context.player.sacrificeCard(card));
+        context.game.applyGameAction(context, { sacrifice: cards });
     }
 }
 

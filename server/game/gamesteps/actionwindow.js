@@ -26,7 +26,7 @@ class ActionWindow extends UiPrompt {
         if(!this.currentPlayer.promptedActionWindows[this.windowName]) {
             this.pass();
         }
-
+        
         let completed = super.continue();
 
         if(!completed) {

@@ -40,6 +40,7 @@ class Effect {
         this.source = source;
         this.match = properties.match || (() => true);
         this.duration = properties.duration;
+        this.until = properties.until || {};
         this.condition = properties.condition || (() => true);
         this.location = properties.location || 'play area';
         this.targetController = properties.targetController || 'current';
@@ -64,6 +65,20 @@ class Effect {
 
     isInActiveLocation() {
         return ['any', this.source.location].includes(this.location);
+    }
+
+    getTargets() {
+        if(!this.active || !this.condition()) {
+            return;
+        }
+
+        if(!_.isFunction(this.match)) {
+            this.addTargets([this.match]);
+        } else if(this.targetType === 'player') {
+            this.addTargets(_.values(this.game.getPlayers()));
+        } else {
+            this.addTargets(this.game.getTargetsForEffect(this.match));
+        }
     }
 
     addTargets(targets) {
@@ -147,7 +162,7 @@ class Effect {
         return this.targets.includes(card);
     }
 
-    setActive(newActive, newTargets) {
+    setActive(newActive) {
         let oldActive = this.active;
 
         this.active = newActive;
@@ -157,7 +172,7 @@ class Effect {
         }
 
         if(!oldActive && newActive) {
-            this.addTargets(newTargets);
+            this.getTargets();
         }
     }
 
@@ -166,7 +181,7 @@ class Effect {
         this.targets = [];
     }
 
-    reapply(newTargets) {
+    reapply() {
         if(!this.active) {
             return;
         }
@@ -184,7 +199,7 @@ class Effect {
                 _.each(invalidTargets, target => {
                     this.removeTarget(target);
                 });
-                this.addTargets(newTargets);
+                this.getTargets();
             }
         }
 

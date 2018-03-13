@@ -16,22 +16,22 @@ class ProvinceCard extends BaseCard {
         return this.cardData.strength + this.strengthModifier + this.getDynastyOrStrongholdCardModifier();
     }
 
-    getBaseStrength() {
-        return this.cardData.strength;  
-    }
-
     getDynastyOrStrongholdCardModifier() {
         let province = this.controller.getSourceList(this.location);
         return province.reduce((bonus, card) => {
             if(card !== this) {
                 return bonus + card.getProvinceStrengthBonus();
             }
-            return bonus;
+            return bonus; 
         }, 0);
     }
 
     getElement() {
         return this.cardData.element;
+    }
+
+    getBaseStrength() {
+        return this.cardData.strength;  
     }
 
     modifyProvinceStrength(amount, applying = true) {
@@ -47,8 +47,39 @@ class ProvinceCard extends BaseCard {
         this.facedown = false;
     }
 
+    allowGameAction(actiontype, context) {
+        if(actiontype === 'break' && this.isBroken) {
+            return false;
+        }
+        return super.allowGameAction(actiontype, context);
+    }
+
     breakProvince() {
         this.isBroken = true;
+        this.game.reapplyStateDependentEffects();
+        if(this.controller.opponent) {
+            this.game.addMessage('{0} has broken {1}!', this.controller.opponent, this);
+            if(this.location === 'stronghold province') {
+                this.game.recordWinner(this.controller.opponent, 'conquest');
+            } else {
+                let dynastyCard = this.controller.getDynastyCardInProvince(this.location);
+                if(dynastyCard) {
+                    let promptTitle = 'Do you wish to discard ' + (dynastyCard.facedown ? 'the facedown card' : dynastyCard.name) + '?';
+                    this.game.promptWithHandlerMenu(this.controller.opponent, {
+                        activePromptTitle: promptTitle,
+                        source: 'Break ' + this.name,
+                        choices: ['Yes', 'No'],
+                        handlers: [
+                            () => {
+                                this.game.addMessage('{0} chooses to discard {1}', this.controller.opponent, dynastyCard.facedown ? 'the facedown card' : dynastyCard);
+                                this.controller.moveCard(dynastyCard, 'dynasty discard pile');
+                            },
+                            () => this.game.addMessage('{0} chooses not to discard {1}', this.controller.opponent, dynastyCard.facedown ? 'the facedown card' : dynastyCard)
+                        ]
+                    });
+                }
+            }
+        }
     }
 
     canTriggerAbilities() {

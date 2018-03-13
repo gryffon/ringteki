@@ -14,9 +14,9 @@ describe('the SelectCardPrompt', function() {
         this.game = jasmine.createSpyObj('game', ['getPlayers', 'getCurrentAbilityContext']);
         this.game.getCurrentAbilityContext.and.returnValue({ source: 'framework', card: null, stage: 'framework' });
 
-        this.player = jasmine.createSpyObj('player1', ['setPrompt', 'cancelPrompt', 'clearSelectableCards', 'clearSelectedCards', 'setSelectableCards', 'setSelectedCards', 'clearSelectableRings']);
+        this.player = jasmine.createSpyObj('player1', ['setPrompt', 'cancelPrompt', 'clearSelectableCards', 'clearSelectedCards', 'setSelectableCards', 'setSelectedCards', 'clearSelectableRings', 'startClock', 'stopClock']);
         this.player.cardsInPlay = _([]);
-        this.otherPlayer = jasmine.createSpyObj('player2', ['setPrompt', 'cancelPrompt', 'clearSelectableCards', 'clearSelectedCards', 'setSelectableCards', 'setSelectedCards']);
+        this.otherPlayer = jasmine.createSpyObj('player2', ['setPrompt', 'cancelPrompt', 'clearSelectableCards', 'clearSelectedCards', 'setSelectableCards', 'setSelectedCards', 'startClock', 'stopClock']);
         this.card = createCardSpy({ controller: this.player });
 
 
@@ -144,14 +144,14 @@ describe('the SelectCardPrompt', function() {
             });
 
             describe('when the player is the prompted player', function() {
-                describe('when the done button is clicked', function() {
+                describe('when the cancel button is clicked', function() {
                     it('should call the onCancel event', function() {
-                        this.prompt.onMenuCommand(this.player, 'done', this.prompt.uuid);
+                        this.prompt.onMenuCommand(this.player, 'cancel', this.prompt.uuid);
                         expect(this.properties.onCancel).toHaveBeenCalled();
                     });
 
                     it('should complete the prompt', function() {
-                        this.prompt.onMenuCommand(this.player, 'done', this.prompt.uuid);
+                        this.prompt.onMenuCommand(this.player, 'cancel', this.prompt.uuid);
                         expect(this.prompt.isComplete()).toBe(true);
                     });
                 });
@@ -325,23 +325,23 @@ describe('the SelectCardPrompt', function() {
         describe('the onMenuCommand() function', function() {
             describe('when the player is not the prompted player', function() {
                 it('should return false', function() {
-                    expect(this.prompt.onMenuCommand(this.otherPlayer, 'done', this.prompt.uuid)).toBe(false);
+                    expect(this.prompt.onMenuCommand(this.otherPlayer, 'cancel', this.prompt.uuid)).toBe(false);
                 });
             });
 
             describe('when no cards have been selected', function() {
                 it('should not call onSelect', function() {
-                    this.prompt.onMenuCommand(this.player, 'done', this.prompt.uuid);
+                    this.prompt.onMenuCommand(this.player, 'cancel', this.prompt.uuid);
                     expect(this.properties.onSelect).not.toHaveBeenCalled();
                 });
 
                 it('should call the onCancel event', function() {
-                    this.prompt.onMenuCommand(this.player, 'done', this.prompt.uuid);
+                    this.prompt.onMenuCommand(this.player, 'cancel', this.prompt.uuid);
                     expect(this.properties.onCancel).toHaveBeenCalled();
                 });
 
                 it('should complete the prompt', function() {
-                    this.prompt.onMenuCommand(this.player, 'done', this.prompt.uuid);
+                    this.prompt.onMenuCommand(this.player, 'cancel', this.prompt.uuid);
                     expect(this.prompt.isComplete()).toBe(true);
                 });
             });

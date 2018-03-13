@@ -2,27 +2,25 @@ const Event = require('./Event.js');
 const RemoveFateEvent = require('./RemoveFateEvent.js');
 
 class LeavesPlayEvent extends Event {
-    constructor(params) {
+    constructor(params, card) {
         super('onCardLeavesPlay', params);
         this.handler = this.leavesPlay;
-        if(!this.condition) {
-            this.condition = () => this.card.location === 'play area' || (this.card.type === 'holding' && 
-                                   ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(this.card.location));
-        }
+        this.card = card;
+        this.options = params.options || {};
 
         if(!this.destination) {
             this.destination = this.card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
         }
 
-        if(this.isSacrifice) {
+        if(params.isSacrifice) {
             this.gameAction = 'sacrifice';
         } else if(this.destination.includes('discard pile')) {
-            this.gameAction = 'discardCardFromPlay';
+            this.gameAction = 'discardFromPlay';
         } else if(this.destination === 'hand') {
             this.gameAction = 'returnToHand';
         }
     }
-    
+
     createContingentEvents() {
         let contingentEvents = [];
         // Add an imminent triggering condition for all attachments leaving play
@@ -32,7 +30,7 @@ class LeavesPlayEvent extends Event {
                 if(attachment.location === 'play area') {
                     let destination = attachment.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
                     destination = attachment.isAncestral() ? 'hand' : destination;
-                    let event = new LeavesPlayEvent({ card: attachment, destination: destination });
+                    let event = new LeavesPlayEvent({ destination: destination }, attachment);
                     event.order = this.order - 1;
                     contingentEvents.push(event);
                 }
@@ -54,8 +52,7 @@ class LeavesPlayEvent extends Event {
     }
 
     leavesPlay() {
-        this.card.owner.moveCard(this.card, this.destination);
-        return { resolved: true, success: true };
+        this.card.owner.moveCard(this.card, this.destination, this.options);
     }
 }
 

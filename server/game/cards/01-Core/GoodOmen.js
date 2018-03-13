@@ -4,16 +4,23 @@ class GoodOmen extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Add a fate to a character',
-            condition: () => this.controller.opponent && this.controller.showBid < this.controller.opponent.showBid,
             target: {
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area' && card.getCost() >= 3
+                gameAction: 'placeFate',
+                cardCondition: card => card.getCost() >= 3
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to add 1 fate to {2}', this.controller, this, context.target);
-                context.target.modifyFate(1);
+                this.game.applyGameAction(context, { placeFate: context.target });
             }
         });
+    }
+
+    canPlay(context) {
+        if(this.controller.opponent && this.controller.showBid < this.controller.opponent.showBid) {
+            return super.canPlay(context);
+        }
+        return false;
     }
 }
 

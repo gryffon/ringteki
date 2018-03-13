@@ -38,19 +38,18 @@ class TriggeredAbility extends CardAbility {
             return false;
         }
 
-        return listener(...event.params);
+        return listener(event);
     }
 
     meetsRequirements(context) {
-        if(!this.card.canTriggerAbilities(this.location)) {
+        if(!super.meetsRequirements()) {
             return false;
         }
 
         if(!this.isTriggeredByEvent(context.event)) {
             return false;
         }
-
-        return super.meetsRequirements(context);
+        return this.canResolveTargets(context);
     }
 
     isAction() {

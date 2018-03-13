@@ -263,6 +263,9 @@ class BaseCard extends EffectSource {
         }
 
         if(originalLocation !== targetLocation) {
+            if(targetLocation === 'play area') {
+                this.applyPersistentEffects();
+            }
             this.game.raiseEvent('onCardMoved', { card: this, originalLocation: originalLocation, newLocation: targetLocation });
         }
     }
@@ -271,10 +274,6 @@ class BaseCard extends EffectSource {
         return glory;
     }
 
-    canPlay() {
-        return true;
-    }
-    
     canTriggerAbilities(context) {
         return !this.facedown && this.allowGameAction('triggerAbilities', context);
     }
@@ -322,7 +321,7 @@ class BaseCard extends EffectSource {
 
     allowGameAction(actionType, context = null) {
         return (!_.any(this.abilityRestrictions, restriction => restriction.isMatch(actionType, context)) &&
-                this.controller.allowGameAction(actionType, context));
+            this.controller.allowGameAction(actionType, context));
     }
 
     allowEffectFrom(source) {
