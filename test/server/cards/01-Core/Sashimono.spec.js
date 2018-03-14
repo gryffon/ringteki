@@ -1,4 +1,4 @@
-fdescribe('Sashimono', function() {
+describe('Sashimono', function() {
     integration(function() {
         describe('Sashimono\'s persistent ability', function() {
             beforeEach(function() {
