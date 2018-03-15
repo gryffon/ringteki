@@ -385,14 +385,6 @@ class Game extends EventEmitter {
     }
 
     /*
-     * Resets all the rings to unclaimed
-     * @returns {undefined}
-     */
-    returnRings() {
-        _.each(this.rings, ring => ring.resetRing());
-    }
-
-    /*
      * @deprecated
      * @param {type} card
      * @param {type} menuItem
