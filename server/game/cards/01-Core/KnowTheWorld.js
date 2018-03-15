@@ -22,8 +22,8 @@ class KnowTheWorld extends DrawCard {
                                     this.game.addFate(player, ring.fate);
                                     ring.removeFate();
                                 }
-                                ring.claimRing(player);
-                                ringToReturn.resetRing();
+                                let event = this.game.raiseEvent('onReturnRing', { ring: ringToReturn }, () => ringToReturn.resetRing());
+                                event.addThenEvent(this.game.getEvent('unnamedEvent', {}, () => ring.claimRing(player)));
                                 return true;
                             }
                         });
