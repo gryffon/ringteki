@@ -4,9 +4,9 @@ class AirSpell extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             location: 'any',
-            condition: () => this.controller.cardsInPlay.any(card => card.hasTrait('shugenja')),
             targetType: 'player',
             targetController: 'any',
+            match: player => player.cardsInPlay.any(card => card.hasTrait('shugenja')),
             effect: ability.effects.reduceCost({ playingTypes: 'play', match: card => card === this })
         });
         this.action({
@@ -24,10 +24,10 @@ class AirSpell extends DrawCard {
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} plays {1} and discards {2}, replacing it with {3}', player, context.source, card, cardFromDeck);
                         player.moveCard(cardFromDeck, card.location);
-                        cardFromDeck.facedown = false;                        
+                        cardFromDeck.facedown = false;
                         player.moveCard(card, 'dynasty discard pile');
                         player.shuffleDynastyDeck();
-                    }    
+                    }
                 })
             })
         });
