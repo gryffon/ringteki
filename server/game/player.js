@@ -878,7 +878,7 @@ class Player extends Spectator {
             return false;
         }
 
-        let contexts = _.map(card.getActions, action => new AbilityContext({
+        let contexts = _.map(card.getActions(), action => new AbilityContext({
             game: this.game,
             player: this,
             source: card,
@@ -896,10 +896,10 @@ class Player extends Spectator {
             this.game.resolveAbility(contexts[0]);
         } else {
             this.game.promptWithHandlerMenu(this, {
-                activePromptTitle: card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':',
+                activePromptTitle: (card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':'),
                 source: card,
                 choices: _.map(contexts, context => context.ability.title).concat('Cancel'),
-                handlers: _.map(contexts, context => this.game.resolveAbility(context)).concat(() => true)
+                handlers: _.map(contexts, context => (() => this.game.resolveAbility(context))).concat(() => true)
             });
         }
 

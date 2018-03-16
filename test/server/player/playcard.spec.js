@@ -4,9 +4,10 @@ const PlayActionPrompt = require('../../../server/game/gamesteps/playactionpromp
 
 describe('Player', function() {
     beforeEach(function() {
-        this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'getOtherPlayer', 'playerDecked', 'resolveAbility', 'queueStep', 'raiseEvent']);
+        this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'getOtherPlayer', 'playerDecked', 'resolveAbility', 'queueStep', 'raiseEvent', 'promptWithHandlerMenu']);
         this.player = new Player('1', {username: 'Player 1', settings: {}}, true, this.gameSpy);
         this.player.initialise();
+        this.player.canInitiateAction = true;
     });
 
     describe('findAndUseAction', function() {
