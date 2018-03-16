@@ -893,6 +893,7 @@ class Player extends Spectator {
             return false;
         }
 
+        this.canInitiateAction = false;
         if(actions.length === 1) {
             context.ability = actions[0];
             this.game.resolveAbility(context);

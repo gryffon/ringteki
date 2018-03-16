@@ -16,9 +16,14 @@ class PlayActionPrompt extends BaseStep {
             return button;
         });
 
+        let menuTitle = 'Play ' + this.context.source.name + ':';
+        if(this.context.source.location === 'play area') {
+            menuTitle = 'Choose an ability:';
+        }
+
         this.game.promptWithMenu(this.player, this, {
             activePrompt: {
-                menuTitle: 'Play ' + this.context.source.name + ':',
+                menuTitle: menuTitle,
                 buttons: buttons
             },
             source: this.context.source
