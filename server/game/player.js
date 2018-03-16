@@ -7,7 +7,6 @@ const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
 const ConflictTracker = require('./conflicttracker.js');
 const RingEffects = require('./RingEffects.js');
 const PlayableLocation = require('./playablelocation.js');
-const PlayActionPrompt = require('./gamesteps/playactionprompt.js');
 const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');

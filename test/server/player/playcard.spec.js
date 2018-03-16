@@ -17,6 +17,7 @@ describe('Player', function() {
 
             this.player.hand.push(this.cardSpy);
             this.cardSpy.location = 'hand';
+            this.cardSpy.name = 'Card';
             this.cardSpy.controller = this.player;
         });
 
@@ -123,7 +124,7 @@ describe('Player', function() {
 
             it('should prompt the player to choose a play action', function() {
                 this.player.findAndUseAction(this.cardSpy);
-                expect(this.gameSpy.queueStep).toHaveBeenCalledWith(jasmine.any(PlayActionPrompt));
+                expect(this.gameSpy.promptWithHandlerMenu).toHaveBeenCalledWith(this.player, jasmine.objectContaining({ activePromptTitle: 'Play Card:' }));
             });
 
             it('should return true', function() {
