@@ -8,7 +8,8 @@ class VanguardWarrior extends DrawCard {
             target: {
                 activePromptTitle: 'Choose a character',
                 cardType: 'character',
-                gameAction: 'placeFate'
+                gameAction: 'placeFate',
+                cardCondition: card => card.location === 'play area'
             },
             handler: context => {
                 this.game.addMessage('{0} sacrifices {1} to put one fate on {2}', context.player, this, context.target);

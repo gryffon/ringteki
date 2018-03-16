@@ -7,7 +7,7 @@ class GoodOmen extends DrawCard {
             target: {
                 cardType: 'character',
                 gameAction: 'placeFate',
-                cardCondition: card => card.getCost() >= 3
+                cardCondition: card => card.getCost() >= 3 && card.location === 'play area'
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to add 1 fate to {2}', this.controller, this, context.target);
