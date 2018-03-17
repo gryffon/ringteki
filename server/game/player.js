@@ -587,7 +587,7 @@ class Player extends Spectator {
      * Discards the passed number of randomly chosen cards from this players hand, and displays a message in chat will all discarded cards
      * @param {Int} number
      */
-    discardAtRandom(number) {
+    discardAtRandom(number, source = 'Framework Effect') {
         var toDiscard = Math.min(number, this.hand.size());
         var cards = [];
 
@@ -607,6 +607,7 @@ class Player extends Spectator {
                 numCards: toDiscard,
                 multiselect: true,
                 ordered: true,
+                source: source,
                 cardCondition: card => cards.includes(card),
                 onSelect: (player, cards) => {
                     this.discardCardsFromHand(cards, true);
@@ -990,7 +991,7 @@ class Player extends Spectator {
             }
         });
 
-        _.each(cards, card => card.applyPersistentEffects());
+        //_.each(cards, card => card.applyPersistentEffects());
 
         //this.game.raiseMultipleEvents(events);
     }
@@ -1112,6 +1113,7 @@ class Player extends Spectator {
             }
         });
 
+        this.game.queueSimpleStep(() => this.game.checkGameState(true));
 
         let events = [{
             name: 'onCardAttached',
