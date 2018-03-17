@@ -1091,9 +1091,9 @@ class Player extends Spectator {
         if(originalParent) {
             originalParent.removeAttachment(attachment);
         }
-        attachment.moveTo('play area');
         card.attachments.push(attachment);
         attachment.parent = card;
+        attachment.moveTo('play area');
 
         this.game.queueSimpleStep(() => {
             if(_.size(card.attachments.filter(c => c.isRestricted())) > 2) {
