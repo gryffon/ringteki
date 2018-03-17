@@ -51,6 +51,8 @@ class Player extends Spectator {
         this.totalGloryForFavor = 0;
         this.gloryModifier = 0;
 
+        this.chessClockLeft = -1; // time left on clock in seconds
+        this.timerStart = 0;
 
         this.deck = {};
         this.conflicts = new ConflictTracker();
@@ -82,6 +84,27 @@ class Player extends Spectator {
         this.createAdditionalPile('out of game', { title: 'Out of Game', area: 'player row' });
 
         this.promptState = new PlayerPromptState(this);
+    }
+
+    startClock() {
+        if(this.chessClockLeft > -1 && this.timerStart === 0) {
+            this.timerStart = Date.now();
+        }
+    }
+
+    stopClock() {
+        if(this.timerStart > 0 && this.chessClockLeft > 0) {
+            this.chessClockLeft -= Math.floor(((Date.now() - this.timerStart) / 1000) - 0.5);
+            this.timerStart = 0;
+            if(this.chessClockLeft < 0 && this.opponent) {
+                this.game.addMessage('{0}\'s clock has run out', this);
+                this.game.recordWinner(this.opponent, 'chessClock');
+                this.chessClockLeft = 0;
+                if(this.opponent) {
+                    this.opponent.chessClockLeft = 0;
+                }
+            }
+        }
     }
 
     /**
@@ -564,7 +587,7 @@ class Player extends Spectator {
      * Discards the passed number of randomly chosen cards from this players hand, and displays a message in chat will all discarded cards
      * @param {Int} number
      */
-    discardAtRandom(number) {
+    discardAtRandom(number, source = 'Framework Effect') {
         var toDiscard = Math.min(number, this.hand.size());
         var cards = [];
 
@@ -584,6 +607,7 @@ class Player extends Spectator {
                 numCards: toDiscard,
                 multiselect: true,
                 ordered: true,
+                source: source,
                 cardCondition: card => cards.includes(card),
                 onSelect: (player, cards) => {
                     this.discardCardsFromHand(cards, true);
@@ -1891,6 +1915,8 @@ class Player extends Spectator {
         return {
             fate: this.fate,
             honor: this.getTotalHonor(),
+            chessClockLeft: this.chessClockLeft,
+            chessClockActive: this.timerStart > 0,
             conflictsRemaining: this.conflicts.conflictOpportunities,
             militaryRemaining: !this.conflicts.isAtMax('military'),
             politicalRemaining: !this.conflicts.isAtMax('political')

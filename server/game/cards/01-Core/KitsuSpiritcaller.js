@@ -14,8 +14,8 @@ class KitsuSpiritcaller extends DrawCard {
             },
             handler: context => {
                 this.game.addMessage('{0} bows {1} to call {2} back from the dead until the end of the conflict', this.controller, this, context.target);
-                this.game.applyGameAction(context, { putIntoConflict: context.target });
-                this.delayedEffect({
+                let event = this.game.applyGameAction(context, { putIntoConflict: context.target })[0];
+                let delayedEffect = this.game.getEvent('delayedEvent', {}, () => this.delayedEffect(({
                     match: context.target,
                     trigger: 'onConflictFinished',
                     context: context,
@@ -26,6 +26,7 @@ class KitsuSpiritcaller extends DrawCard {
                         return events;
                     }
                 });
+                event.addThenEvent(delayedEffect);
             }
         });
     }
