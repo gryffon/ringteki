@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class UnicordCard extends DrawCard {
+class MotoNergui extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Move highest glory character home',
@@ -21,6 +21,6 @@ class UnicordCard extends DrawCard {
     }
 }
 
-UnicordCard.id = 'unicord-card'; // This is a guess at what the id might be - please check it!!!
+MotoNergui.id = 'moto-nergui';
 
-module.exports = UnicordCard;
+module.exports = MotoNergui;
