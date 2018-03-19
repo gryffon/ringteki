@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class NeutralKeeper extends DrawCard {
+class GuardianKami extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Resolve ring effect',
@@ -14,6 +14,6 @@ class NeutralKeeper extends DrawCard {
     }
 }
 
-NeutralKeeper.id = 'neutral-keeper'; // This is a guess at what the id might be - please check it!!!
+GuardianKami.id = 'guardian-kami';
 
-module.exports = NeutralKeeper;
+module.exports = GuardianKami;
