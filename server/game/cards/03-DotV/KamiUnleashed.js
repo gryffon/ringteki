@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class NeutralSeeker extends DrawCard {
+class KamiUnleashed extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Resolve ring effect',
@@ -14,6 +14,6 @@ class NeutralSeeker extends DrawCard {
     }
 }
 
-NeutralSeeker.id = 'neutral-seeker'; // This is a guess at what the id might be - please check it!!!
+KamiUnleashed.id = 'kami-unleashed';
 
-module.exports = NeutralSeeker;
+module.exports = KamiUnleashed;
