@@ -5,7 +5,7 @@ class GuardianKami extends DrawCard {
         this.action({
             title: 'Resolve ring effect',
             cost: ability.costs.sacrificeSelf(),
-            max: ability.limits.perConflict(1),
+            max: ability.limit.perConflict(1),
             condition: context => context.source.isDefending(),
             handler: context => {
                 this.game.addMessage('{0} sacrifices {1} to resolve the ring effect', context.player, context.source);
