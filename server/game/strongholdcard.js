@@ -12,6 +12,7 @@ class StrongholdCard extends BaseCard {
         this.influenceModifier = 0;
         this.menu = _([{ command: 'bow', text: 'Bow/Ready' }]);
         this.bowed = false;
+        this.readysDuringReadying = true;
 
         this.isStronghold = true;
     }
@@ -44,6 +45,18 @@ class StrongholdCard extends BaseCard {
         this.facedown = false;
     }
 
+    allowGameAction(actionType, context = null) {
+        let illegalActions = [
+            'dishonor', 'honor', 'sacrifice', 
+            'discardFromPlay', 'moveToConflict', 'sendHome', 'putIntoPlay', 'putIntoConflict', 
+            'break', 'returnToHand', 'takeControl', 'placeFate', 'removeFate'
+        ];
+        if(illegalActions.includes(actionType)) {
+            return false;
+        }
+        return super.allowGameAction(actionType, context);
+    }
+
     getSummary(activePlayer, hideWhenFaceup) {
         let baseSummary = super.getSummary(activePlayer, hideWhenFaceup);
 
@@ -53,8 +66,6 @@ class StrongholdCard extends BaseCard {
             bowed: this.bowed
         });
     }
-
-
 }
 
 module.exports = StrongholdCard;

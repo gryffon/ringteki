@@ -99,6 +99,10 @@ class Player extends Spectator {
             if(this.chessClockLeft < 0 && this.opponent) {
                 this.game.addMessage('{0}\'s clock has run out', this);
                 this.game.recordWinner(this.opponent, 'chessClock');
+                this.chessClockLeft = 0;
+                if(this.opponent) {
+                    this.opponent.chessClockLeft = 0;
+                }
             }
         }
     }
@@ -986,7 +990,7 @@ class Player extends Spectator {
             }
         });
 
-        _.each(cards, card => card.applyPersistentEffects());
+        //_.each(cards, card => card.applyPersistentEffects());
 
         //this.game.raiseMultipleEvents(events);
     }
@@ -1108,6 +1112,7 @@ class Player extends Spectator {
             }
         });
 
+        this.game.queueSimpleStep(() => this.game.checkGameState(true));
 
         let events = [{
             name: 'onCardAttached',
