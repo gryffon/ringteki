@@ -1,14 +1,15 @@
+const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 const EventRegistrar = require('../../eventregistrar.js');
 
 class FireElementalGuard extends DrawCard {
     setupCardAbilities() {
-        this.spellsPlayedThisConflict = 0;
+        this.spellsPlayedThisConflict = {};
         this.eventRegistrar = new EventRegistrar(this.game, this);
         this.eventRegistrar.register(['onConflictFinished', 'onCardPlayed']);
         this.action({
             title: 'Discard an attachment',
-            condition: () => this.spellsPlayedThisConflict > 2,
+            condition: context => this.spellsPlayedThisConflict[context.player.name] > 2,
             methods: ['onConflictFinished', 'onCardPlayed'],
             target: {
                 cardType: 'attachment',
@@ -22,12 +23,16 @@ class FireElementalGuard extends DrawCard {
     }
 
     onConflictFinished() {
-        this.spellsPlayedThisConflict = 0;
+        this.spellsPlayedThisConflict = {};
     }
 
     onCardPlayed(event) {
         if(this.game.currentConflict && event.card.hasTrait('spell')) {
-            this.spellsPlayedThisConflict += 1;
+            if(this.spellsPlayedThisConflict[event.player.name]) {
+                this.spellsPlayedThisConflict[event.player.name] += 1;
+            } else {
+                this.spellsPlayedThisConflict[event.player.name] = 1;
+            }
         }
     }
 }
