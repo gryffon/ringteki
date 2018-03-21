@@ -11,6 +11,8 @@ class StrongholdCard extends BaseCard {
         this.honorModifier = 0;
         this.influenceModifier = 0;
         this.menu = _([{ command: 'bow', text: 'Bow/Ready' }]);
+        this.bowed = false;
+        this.readysDuringReadying = true;
 
         this.isStronghold = true;
     }
@@ -31,12 +33,32 @@ class StrongholdCard extends BaseCard {
         return parseInt(this.cardData.strength_bonus) + this.strengthModifier;
     }
 
+    bow() {
+        this.bowed = true;
+    }
+
+    ready() {
+        this.bowed = false;
+    }
+
     flipFaceup() {
         this.facedown = false;
     }
 
     getDefaultLocation() {
         return ['stronghold province'];
+    }
+
+    allowGameAction(actionType, context = null) {
+        let illegalActions = [
+            'dishonor', 'honor', 'sacrifice', 
+            'discardFromPlay', 'moveToConflict', 'sendHome', 'putIntoPlay', 'putIntoConflict', 
+            'break', 'returnToHand', 'takeControl', 'placeFate', 'removeFate'
+        ];
+        if(illegalActions.includes(actionType)) {
+            return false;
+        }
+        return super.allowGameAction(actionType, context);
     }
 
     getSummary(activePlayer, hideWhenFaceup) {
@@ -48,8 +70,6 @@ class StrongholdCard extends BaseCard {
             bowed: this.bowed
         });
     }
-
-
 }
 
 module.exports = StrongholdCard;

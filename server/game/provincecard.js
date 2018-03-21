@@ -51,16 +51,25 @@ class ProvinceCard extends BaseCard {
         return super.getDefaultLocation(location.concat(['province']));
     }
 
-    allowGameAction(actiontype, context) {
-        if(actiontype === 'break' && this.isBroken) {
+    allowGameAction(actionType, context) {
+        let illegalActions = [
+            'bow', 'ready', 'dishonor', 'honor', 'sacrifice', 
+            'discardFromPlay', 'moveToConflict', 'sendHome', 'putIntoPlay', 'putIntoConflict', 
+            'returnToHand', 'takeControl', 'placeFate', 'removeFate'
+        ];
+
+        if(illegalActions.includes(actionType)) {
             return false;
         }
-        return super.allowGameAction(actiontype, context);
+    
+        if(actionType === 'break' && this.isBroken) {
+            return false;
+        }
+        return super.allowGameAction(actionType, context);
     }
 
     breakProvince() {
         this.isBroken = true;
-        this.game.reapplyStateDependentEffects();
         if(this.controller.opponent) {
             this.game.addMessage('{0} has broken {1}!', this.controller.opponent, this);
             if(this.location === 'stronghold province') {
