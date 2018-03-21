@@ -109,6 +109,8 @@ class GameServer {
             debugData.messages = game.messages;
             debugData.game.messages = undefined;
 
+            debugData.pipeline = game.pipeline.getDebugInfo();
+
             _.each(game.getPlayers(), player => {
                 debugData[player.name] = player.getState(player);
             });
