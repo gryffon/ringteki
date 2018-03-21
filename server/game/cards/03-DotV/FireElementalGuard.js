@@ -9,7 +9,6 @@ class FireElementalGuard extends DrawCard {
         this.action({
             title: 'Discard an attachment',
             condition: context => this.spellsPlayedThisConflict[context.player.name] > 2,
-            methods: ['onConflictFinished', 'onCardPlayed'],
             target: {
                 cardType: 'attachment',
                 gameAction: 'discardFromPlay',
