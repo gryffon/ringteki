@@ -13,7 +13,7 @@ class ClarityOfPurpose extends DrawCard {
             handler: context => {
                 let msg = '{0} uses {1} on {2} to prevent opponents\' actions from bowing it';
                 if (this.game.currentConflict.conflictType === 'political') {
-                    msg += ' and to prevent it bowing as a result of the political conflict\'s resolution';
+                    msg += ' and to prevent it bowing as a result of the conflict\'s resolution';
                 }
 
                 this.game.addMessage(msg, this.controller, this, context.target);
