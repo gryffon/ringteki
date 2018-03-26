@@ -2,6 +2,11 @@ const DrawCard = require('../../drawcard.js');
 
 class FavorOfTheKami extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+        this.whileAttached({
+            effect: [
+                ability.effects.modifyGlory(1)
+            ]
+        });
     }
 }
 
