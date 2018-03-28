@@ -4,7 +4,7 @@ class ClarityOfPurpose extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Opponent\'s cards cannot bow the target character and it does not bow as a result of political conflicts',
-            condition: () => this.game.currentConflict && this.controller.opponent,
+            condition: () => this.game.currentConflict,
             target: {
                 activePromptTitle: 'Choose a character',
                 cardType: 'character',
@@ -22,20 +22,19 @@ class ClarityOfPurpose extends DrawCard {
                         ability.effects.cannotBeBowed(context => context && context.source.type !== 'ring' && context.source.controller === this.controller.opponent)
                     ]
                 }));
-                if(this.game.currentConflict.conflictType === 'political') {
-                    this.untilEndOfConflict(ability => ({
-                        match: context.target,
-                        effect: [
-                            ability.effects.doesNotBowAsAttacker(),
-                            ability.effects.doesNotBowAsDefender()
-                        ]
-                    }));
-                }
+                this.untilEndOfConflict(ability => ({
+                    match: context.target,
+                    condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'political',
+                    effect: [
+                        ability.effects.doesNotBowAsAttacker(),
+                        ability.effects.doesNotBowAsDefender()
+                    ]
+                }));
             }
         });
     }
 }
 
-ClarityOfPurpose.id = 'clarity-of-purpose'; // This is a guess at what the id might be - please check it!!!
+ClarityOfPurpose.id = 'clarity-of-purpose';
 
 module.exports = ClarityOfPurpose;
