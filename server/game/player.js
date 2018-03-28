@@ -1848,7 +1848,8 @@ class Player extends Spectator {
      * @param {Array} elements - Array of String, alternatively can be passed a String for convenience
      * @param {Boolean} optional - Indicates that the player can choose which effects to resolve.  This parameter only effects resolution of a single effect
      */
-    resolveRingEffects(elements, optional = false) {
+    resolveRingEffects(elements, optional = true) {
+        optional = optional && elements.length === 1;
         this.game.openSimultaneousEffectWindow(_.map(_.flatten([elements]), element => {
             let context = RingEffects.contextFor(this, element, optional);
             return {
