@@ -14,8 +14,21 @@
 }
 
 .hand {
+    margin-left: 50px;
+    position: relative;
+    width: 160px;
+
     .card-wrapper {
+        position: absolute;
+
         margin: 0 5px 0 0;
+
+        left: 50px;
+
+        z-index: @layer-cards;
+
+        transform-origin: 50% 100%;
+        transition: transform 0.3s ease-in-out;
     }
 
     &.small {

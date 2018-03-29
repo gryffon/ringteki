@@ -7,6 +7,12 @@ import Card from './Card.jsx';
 import { tryParseJSON } from '../util.js';
 
 class PlayerHand extends React.Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {};
+    }
+
     onDragOver(event) {
         $(event.target).addClass('highlight-panel');
         event.preventDefault();
@@ -38,28 +44,62 @@ class PlayerHand extends React.Component {
         }
     }
 
-    getCards(needsSquish) {
+    disableMouseOver(revealWhenHiddenTo) {
+        if(this.props.spectating && this.props.showHand) {
+            return false;
+        }
+
+        if(revealWhenHiddenTo === this.props.username) {
+            return false;
+        }
+
+        return !this.props.isMe;
+    }
+
+    onCardMouseOver(cardIndex, card) {
+        this.timeout = setTimeout(() => {
+            this.setState({ currentMouseOver: cardIndex });
+        }, 300);
+
+        if(this.props.onMouseOver) {
+            this.props.onMouseOver(card);
+        }
+    }
+
+    onCardMouseOut(cardIndex, card) {
+        clearTimeout(this.timeout);
+
+        if(this.state.currentMouseOver === cardIndex) {
+            this.setState({ currentMouseOver: undefined });
+        }
+
+        if(this.props.onMouseOut) {
+            this.props.onMouseOut(card);
+        }
+    }
+
+    getCards() {
+        let cards = this.props.cards;
         let cardIndex = 0;
-        let handLength = this.props.cards ? this.props.cards.length : 0;
-        let cardWidth = this.getCardWidth();
 
-        let requiredWidth = handLength * cardWidth;
-        let overflow = requiredWidth - 480;
-        let offset = overflow / (handLength - 1);
+        if(!this.props.isMe) {
+            cards = _.sortBy(this.props.cards, card => card.revealWhenHiddenTo);
+        }
 
-        let hand = _.map(this.props.cards, card => {
-            let left = (cardWidth - offset) * cardIndex++;
-
+        let hand = _.map(cards, card => {
             let style = {};
-            if(needsSquish) {
-                style = {
-                    left: left + 'px'
-                };
+            let rotation = ((90 / _.size(cards)) * (cardIndex++ - 1)) - 25;
+
+            let transform = `rotate(${rotation}deg)`;
+            if(this.state.currentMouseOver === cardIndex) {
+                transform = ' translate(0, -100px) scale(3)';
             }
 
-            return (<Card key={ card.uuid } card={ card } style={ style } disableMouseOver={ !this.props.isMe } source='hand'
-                onMouseOver={ this.props.onMouseOver }
-                onMouseOut={ this.props.onMouseOut }
+            style.transform = transform;
+
+            return (<Card key={ card.uuid } card={ card } style={ style } disableMouseOver={ this.disableMouseOver(card.revealWhenHiddenTo) } source='hand'
+                onMouseOver={ this.onCardMouseOver.bind(this, cardIndex, card) }
+                onMouseOut={ this.onCardMouseOut.bind(this, cardIndex, card) }
                 onClick={ this.props.onCardClick }
                 onDragDrop={ this.props.onDragDrop }
                 size={ this.props.cardSize } />);
@@ -68,48 +108,26 @@ class PlayerHand extends React.Component {
         return hand;
     }
 
-    getCardWidth() {
-        switch(this.props.cardSize) {
-            case 'small':
-                return 65 * 0.8;
-            case 'large':
-                return 65 * 1.4;
-            case 'x-large':
-                return 65 * 2;
-            case 'normal':
-            default:
-                return 65;
-        }
-    }
-
     render() {
-        let className = 'panel hand';
+        let className = 'hand';
 
         if(this.props.cardSize !== 'normal') {
             className += ' ' + this.props.cardSize;
         }
 
-        let cardWidth = this.getCardWidth();
+        let cards = this.getCards();
 
-        let needsSquish = this.props.cards && this.props.cards.length * cardWidth > 480;
-
-        if(needsSquish) {
-            className += ' squish';
-        }
-
-        let cards = this.getCards(needsSquish);
-
-        return (<div>
-            <div className={ 'hand-title-bar ' } >
-                { 'Hand (' + cards.length + ')' } 
-            </div>
+        return (
             <div className={ className }
                 onDragLeave={ this.onDragLeave }
                 onDragOver={ this.onDragOver }
                 onDrop={ event => this.onDragDrop(event, 'hand') }>
+                <div className='panel-header'>
+                    { 'Hand (' + cards.length + ')' }
+                </div>
                 { cards }
             </div>
-        </div>);
+        );
     }
 }
 
@@ -121,7 +139,10 @@ PlayerHand.propTypes = {
     onCardClick: PropTypes.func,
     onDragDrop: PropTypes.func,
     onMouseOut: PropTypes.func,
-    onMouseOver: PropTypes.func
+    onMouseOver: PropTypes.func,
+    showHand: PropTypes.bool,
+    spectating: PropTypes.bool,
+    username: PropTypes.string
 };
 
 export default PlayerHand;
