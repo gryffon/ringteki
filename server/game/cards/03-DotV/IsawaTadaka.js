@@ -4,13 +4,16 @@ class IsawaTadaka extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetType: 'player',
-            targetController: 'any',
+            targetController: 'opponent',
             match: player => !this.game.rings.earth.isConsideredClaimed(player),
-            effect: ability.effects.cannotPlay(context => context && context.source.type === 'event' && context.player.conflictDiscardPile.any(card => card.name === context.source.name))
+            effect: ability.effects.cannotPlay(context => (
+                context && context.source.type === 'event' && 
+                context.player.conflictDiscardPile.any(card => card.name === context.source.name && card !== context.source))
+            )
         });
     }
 }
 
-IsawaTadaka.id = 'isawa-tadaka'; // This is a guess at what the id might be - please check it!!!
+IsawaTadaka.id = 'isawa-tadaka';
 
 module.exports = IsawaTadaka;
