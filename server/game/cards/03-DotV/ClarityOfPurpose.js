@@ -11,16 +11,10 @@ class ClarityOfPurpose extends DrawCard {
                 cardCondition: card => card.controller === this.controller && card.location === 'play area'
             },
             handler: context => {
-                let msg = '{0} uses {1} on {2} to prevent opponents\' actions from bowing it';
-                if(this.game.currentConflict.conflictType === 'political') {
-                    msg += ' and to prevent it bowing as a result of the conflict\'s resolution';
-                }
-                this.game.addMessage(msg, this.controller, this, context.target);
+                this.game.addMessage('{0} plays {1} on {2} to prevent opponents\' actions from bowing it and stop it bowing at the end of a political conflict', this.controller, this, context.target);
                 this.untilEndOfConflict(ability => ({
                     match: context.target,
-                    effect: [
-                        ability.effects.cannotBeBowed(context => context && context.source.type !== 'ring' && context.source.controller === this.controller.opponent)
-                    ]
+                    effect: ability.effects.cannotBeBowed(context => context && context.source.type !== 'ring' && context.source.controller === this.controller.opponent)
                 }));
                 this.untilEndOfConflict(ability => ({
                     match: context.target,
