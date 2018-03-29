@@ -10,6 +10,9 @@ class PlayerHand extends React.Component {
     constructor(props) {
         super(props);
 
+        this.onMouseOver = this.onMouseOver.bind(this);
+        this.onMouseOut = this.onMouseOut.bind(this);
+
         this.state = {};
     }
 
@@ -44,6 +47,17 @@ class PlayerHand extends React.Component {
         }
     }
 
+    onMouseOver(card) {
+        clearTimeout(this.timeout2);
+        this.setState({ mouseOver: true });
+    }
+
+    onMouseOut() {
+        this.timeout2 = setTimeout(() => {
+            this.setState({ currentMouseOver: undefined, mouseOver: false });
+        }, 500)
+    }
+
     disableMouseOver(revealWhenHiddenTo) {
         if(this.props.spectating && this.props.showHand) {
             return false;
@@ -58,8 +72,8 @@ class PlayerHand extends React.Component {
 
     onCardMouseOver(cardIndex, card) {
         this.timeout = setTimeout(() => {
-            this.setState({ currentMouseOver: cardIndex });
-        }, 300);
+            this.setState({ currentMouseOver: cardIndex, mouseOver: true });
+        }, 100);
 
         if(this.props.onMouseOver) {
             this.props.onMouseOver(card);
@@ -68,10 +82,6 @@ class PlayerHand extends React.Component {
 
     onCardMouseOut(cardIndex, card) {
         clearTimeout(this.timeout);
-
-        if(this.state.currentMouseOver === cardIndex) {
-            this.setState({ currentMouseOver: undefined });
-        }
 
         if(this.props.onMouseOut) {
             this.props.onMouseOut(card);
@@ -88,11 +98,11 @@ class PlayerHand extends React.Component {
 
         let hand = _.map(cards, card => {
             let style = {};
-            let rotation = ((90 / _.size(cards)) * (cardIndex++ - 1)) - 25;
+            let rotation = ((120 / _.size(cards)) * (cardIndex++ - 1)) - 25;
 
             let transform = `rotate(${rotation}deg)`;
-            if(this.state.currentMouseOver === cardIndex) {
-                transform = ' translate(0, -100px) scale(3)';
+            if(this.state.currentMouseOver < cardIndex) {
+                transform = 'translate(20px) ' + transform + 'translate(20px)';
             }
 
             style.transform = transform;
@@ -115,13 +125,21 @@ class PlayerHand extends React.Component {
             className += ' ' + this.props.cardSize;
         }
 
+        let style = {};
+        if(this.state.mouseOver) {
+            style.transform = 'scale(2.5)';
+        }
+
         let cards = this.getCards();
 
         return (
             <div className={ className }
+                style={ style }
                 onDragLeave={ this.onDragLeave }
                 onDragOver={ this.onDragOver }
-                onDrop={ event => this.onDragDrop(event, 'hand') }>
+                onDrop={ event => this.onDragDrop(event, 'hand') }
+                onMouseOver={ this.onMouseOver }
+                onMouseOut={ this.onMouseOut }>
                 <div className='panel-header'>
                     { 'Hand (' + cards.length + ')' }
                 </div>
