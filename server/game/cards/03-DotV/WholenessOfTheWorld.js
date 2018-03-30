@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class EarthSpell extends DrawCard {
+class WholenessOfTheWorld extends DrawCard {
     setupCardAbilities() {
         this.interrupt({
             title: 'Keep a claimed ring',
@@ -16,6 +16,6 @@ class EarthSpell extends DrawCard {
     }
 }
 
-EarthSpell.id = 'against-the-waves';
+WholenessOfTheWorld.id = 'wholeness-of-the-world';
 
-module.exports = EarthSpell;
+module.exports = WholenessOfTheWorld;
