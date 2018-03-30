@@ -159,7 +159,6 @@ class ConflictFlow extends BaseStepWithPipeline {
             }
         }
 
-        this.game.reapplyStateDependentEffects();
         this.game.raiseMultipleEvents(events);
     }
 
@@ -169,7 +168,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         // Explicitly recalculate strength in case an effect has modified character strength.
-        this.conflict.calculateSkill();
+        //this.conflict.calculateSkill();
         this.game.addMessage('{0} has initiated a {1} conflict with skill {2}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.attackerSkill);
     }
 
@@ -189,7 +188,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         // Explicitly recalculate strength in case an effect has modified character strength.
         _.each(this.conflict.defenders, card => card.inConflict = true);
         this.conflict.defendingPlayer.cardsInPlay.each(card => card.covert = false);
-        this.conflict.calculateSkill();
+        //this.conflict.calculateSkill();
         if(this.conflict.defenders.length > 0) {
             this.game.addMessage('{0} has defended with skill {1}', this.conflict.defendingPlayer, this.conflict.defenderSkill);
         } else {
@@ -304,8 +303,6 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        this.game.reapplyStateDependentEffects();
-
         if(this.conflict.isAttackerTheWinner()) {
             this.conflict.chooseWhetherToResolveRingEffect();
         }       
@@ -364,7 +361,6 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
-        this.game.raiseEvent('onAtEndOfConflict');
 
         this.resetCards();
         if(!this.game.militaryConflictCompleted && (this.conflict.conflictType === 'military' || this.conflict.conflictTypeSwitched)) {
