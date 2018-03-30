@@ -23,7 +23,6 @@ class PlayCharacterAction extends BaseAbility {
             context.player.isCardInPlayableLocation(context.source, 'play') &&
             context.source.allowGameAction('putIntoPlay', context) &&
             context.source.canPlay(context) &&
-            context.player.canInitiateAction &&
             this.canPayCosts(context)
         );
     }
@@ -35,7 +34,7 @@ class PlayCharacterAction extends BaseAbility {
             params: { player: context.player, card: context.source, originalLocation: context.source.location }
         };
         let putIntoPlayHandler = () => {
-            context.game.addMessage('{0} plays {1} at home with {2} additional fate', context.player, context.source, context.source.fate);
+            context.game.addMessage('{0} plays {1} at home with {2} additional fate', context.player, context.source, context.chooseFate);
             let event = context.game.applyGameAction(context, { putIntoPlay: context.source }, [cardPlayedEvent])[0];
             event.fate = context.chooseFate;
         };
@@ -46,7 +45,7 @@ class PlayCharacterAction extends BaseAbility {
                 choices: ['Conflict', 'Home'],
                 handlers: [
                     () => {
-                        context.game.addMessage('{0} plays {1} into the conflict with {2} additional fate', context.player, context.source, context.source.fate);
+                        context.game.addMessage('{0} plays {1} into the conflict with {2} additional fate', context.player, context.source, context.chooseFate);
                         let event = context.game.applyGameAction(context, { putIntoConflict: context.source }, [cardPlayedEvent])[0];
                         event.fate = context.chooseFate;
                     },
