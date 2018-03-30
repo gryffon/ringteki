@@ -509,15 +509,6 @@ class DrawCard extends BaseCard {
         return true;
     }
 
-    getDefaultLocation(location) {
-        if(this.type === 'event') {
-            return super.getDefaultLocation(location.concat(['hand']));
-        } else if(this.type === 'holding') {
-            return super.getDefaultLocation(location.concat(['province']));
-        }
-        return super.getDefaultLocation(location.concat(['play area']));
-    }
-
     /**
      * When this card is about to leave play, gets events required to pass
      * to a CardLeavesPlayEventWindow

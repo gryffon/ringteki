@@ -47,10 +47,6 @@ class ProvinceCard extends BaseCard {
         this.facedown = false;
     }
 
-    getDefaultLocation(location) {
-        return super.getDefaultLocation(location.concat(['province']));
-    }
-
     allowGameAction(actionType, context) {
         let illegalActions = [
             'bow', 'ready', 'dishonor', 'honor', 'sacrifice', 

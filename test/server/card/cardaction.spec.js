@@ -5,9 +5,8 @@ describe('CardAction', function () {
         this.gameSpy = jasmine.createSpyObj('game', ['on', 'removeListener', 'raiseEvent', 'resolveAbility']);
         this.gameSpy.currentPhase = 'dynasty';
 
-        this.cardSpy = jasmine.createSpyObj('card', ['getType', 'isBlank', 'canTriggerAbilities', 'getDefaultLocation']);
+        this.cardSpy = jasmine.createSpyObj('card', ['getType', 'isBlank', 'canTriggerAbilities']);
         this.cardSpy.canTriggerAbilities.and.returnValue(true);
-        this.cardSpy.getDefaultLocation.and.callFake(location => location);
         this.cardSpy.handler = function() {};
         this.cardSpy.abilities = { actions: [] };
         spyOn(this.cardSpy, 'handler').and.returnValue(true);

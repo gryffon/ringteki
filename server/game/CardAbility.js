@@ -14,7 +14,7 @@ class CardAbility extends BaseAbility {
         this.title = properties.title;
         this.limit = properties.limit || AbilityLimit.perRound(1);
         this.max = properties.max;
-        this.location = card.getDefaultLocation(_.compact(_.flatten([properties.location])));
+        this.location = this.buildLocation(card, properties.location);
         this.printedAbility = properties.printedAbility === false ? false : true;
         this.cannotBeCopied = properties.cannotBeCopied;
         this.cannotBeCancelled = properties.cannotBeCancelled;
@@ -23,14 +23,6 @@ class CardAbility extends BaseAbility {
         this.methods = properties.methods || [];
         this.handler = properties.handler;
 
-        if(!_.isArray(this.location)) {
-            if(this.location === 'province') {
-                this.location = ['province 1', 'province 2', 'province 3', 'province 4'];
-            } else {
-                this.location = [properties.location];
-            }
-        }
-
         if(card.getType() === 'event') {
             this.cost.push(Costs.playEvent());
         }
@@ -38,6 +30,29 @@ class CardAbility extends BaseAbility {
         this.cost.push(Costs.useLimit());
 
         this.limit.registerEvents(game);
+    }
+
+    buildLocation(card, location) {
+        const DefaultLocationForType = {
+            event: 'hand',
+            holding: 'province',
+            province: 'province',
+            role: 'role',
+            stronghold: 'stronghold province'
+        };
+
+        let defaultedLocation = location || DefaultLocationForType[card.getType()] || 'play area';
+
+        if(!Array.isArray(defaultedLocation)) {
+            defaultedLocation = [defaultedLocation];
+        }
+
+        let index = defaultedLocation.indexOf('province');
+
+        if(index === -1) {
+            return defaultedLocation;
+        }
+        return defaultedLocation.splice(index, 1).concat(['province 1', 'province 2', 'province 3', 'province 4']);
     }
 
     createContext(player) {

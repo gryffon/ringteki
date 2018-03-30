@@ -230,13 +230,6 @@ class BaseCard extends EffectSource {
         this.inConflict = false;
     }
 
-    getDefaultLocation(location) {
-        if(location.includes('province')) {
-            return location.concat('province 1', 'province 2', 'province 3', 'province 4', 'stronghold province');
-        }
-        return location;
-    }
-
     updateAbilityEvents(from, to) {
         _.each(this.abilities.reactions, reaction => {
             if(reaction.location.includes(to) && !reaction.location.includes(from)) {

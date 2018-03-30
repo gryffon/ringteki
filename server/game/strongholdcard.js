@@ -45,10 +45,6 @@ class StrongholdCard extends BaseCard {
         this.facedown = false;
     }
 
-    getDefaultLocation() {
-        return ['stronghold province'];
-    }
-
     allowGameAction(actionType, context = null) {
         let illegalActions = [
             'dishonor', 'honor', 'sacrifice', 
