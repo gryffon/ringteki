@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class LionCard extends DrawCard {
+class IkomaTsanuri extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Give your characters +1/+1',
@@ -23,6 +23,6 @@ class LionCard extends DrawCard {
     }
 }
 
-LionCard.id = 'lion-card'; // This is a guess at what the id might be - please check it!!!
+IkomaTsanuri.id = 'ikoma-tsanuri';
 
-module.exports = LionCard;
+module.exports = IkomaTsanuri;
