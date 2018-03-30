@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class AirSpell extends DrawCard {
+class WalkingTheWay extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             location: 'any',
@@ -34,6 +34,6 @@ class AirSpell extends DrawCard {
     }
 }
 
-AirSpell.id = 'air-spell'; // This is a guess at what the id might be - please check it!!!
+WalkingTheWay.id = 'walking-the-way';
 
-module.exports = AirSpell;
+module.exports = WalkingTheWay;
