@@ -11,17 +11,19 @@ class BaseCardSelector {
     }
 
     canTarget(card, context, pretarget = false) {
+        if(!card) {
+            return false;
+        }
         if(pretarget && context.ability && !context.ability.canPayCosts(context, card)) {
             return false;
         }
         if(context.stage === 'target' && !card.allowGameAction('target', context)) {
             return false;
         }
-        return (
-            this.cardType.includes(card.getType()) &&
-            this.cardCondition(card, context) &&
-            card.allowGameAction(this.gameAction, context)
-        );
+        if(this.gameAction && !card.allowGameAction(this.gameAction, context)) {
+            return false;
+        }
+        return this.cardType.includes(card.getType()) && this.cardCondition(card, context);
     }
 
     getAllLegalTargets(context, pretarget) {
