@@ -55,7 +55,7 @@ class EffectEngine {
         });
         returnValue = returnValue || this.newEffect;
         this.reapplyOtherEffects();
-        if(loops = 10) {
+        if(loops === 10) {
             throw new Error('EffectEngine.checkEffects looped 10 times');
         } else {
             this.checkEffects(false, loops + 1);
