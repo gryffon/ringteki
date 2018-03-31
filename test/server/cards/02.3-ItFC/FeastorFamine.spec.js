@@ -47,7 +47,7 @@ describe('Feast of Famine', function() {
                 this.nitenAdept = this.player2.clickCard('niten-adept');
                 expect(this.nitenAdept.location).toBe('play area');
                 expect(this.nitenAdept.inConflict).toBe(true);
-                this.player1.pass()
+                this.player1.pass();
                 this.player2.playAttachment('fine-katana', this.nitenAdept);
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Resolve Ring Effects');

@@ -6,7 +6,7 @@ describe('For Greater Glory', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['shinjo-altansarnai', 'moto-juro'],
-                        hand: ['for-greater-glory', 'captive-audience'],
+                        hand: ['for-greater-glory', 'captive-audience']
                     },
                     player2: {
                         inPlay: ['adept-of-the-waves'],
@@ -55,7 +55,7 @@ describe('For Greater Glory', function() {
                 this.initiateConflict({
                     type: 'military',
                     province: this.endlessPlains,
-                    attackers: [this.shinjoAltansarnai],
+                    attackers: [this.shinjoAltansarnai]
                 });
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.endlessPlains);
@@ -104,12 +104,12 @@ describe('For Greater Glory', function() {
                 this.noMoreActions();
                 this.player2.clickPrompt('Pass Conflict');
                 this.player2.clickPrompt('Yes');
-                this.noMoreActions()
+                this.noMoreActions();
                 this.initiateConflict({
                     ring: 'fire',
                     province: this.publicForum,
                     attackers: [this.motoJuro],
-                    defenders: [],
+                    defenders: []
                 });
                 this.player2.pass();
                 this.player1.clickCard('captive-audience');

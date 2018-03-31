@@ -27,7 +27,7 @@ describe('Kitsu Spiritcaller', function() {
                 this.player2.pass();
                 this.player1.clickCard('kitsu-spiritcaller');
                 expect(this.player1).toHavePrompt('Kitsu Spiritcaller');
-            })
+            });
 
             describe('during a conflict', function() {
                 beforeEach(function() {

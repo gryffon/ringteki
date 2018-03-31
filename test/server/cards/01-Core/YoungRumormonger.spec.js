@@ -57,7 +57,7 @@ describe('Young Rumormonger', function() {
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.youngRumormonger],
-                    defenders: [],
+                    defenders: []
                 });
                 this.player2.clickCard('mirumoto-s-fury');
                 this.player2.clickCard(this.youngRumormonger);

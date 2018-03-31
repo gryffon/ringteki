@@ -83,7 +83,7 @@ describe('Duelist Training', function() {
                 this.shinjoOutrider = this.player1.clickCard('shinjo-outrider');
                 expect(this.giverOfGifts1.attachments.toArray()).not.toContain(this.duelistTraining1);
                 expect(this.shinjoOutrider.attachments.toArray()).toContain(this.duelistTraining1);
-                this.player2.pass()
+                this.player2.pass();
                 this.player1.clickCard(this.giverOfGifts1);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
