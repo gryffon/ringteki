@@ -11,8 +11,8 @@ class WaterRingEffect extends BaseAbility {
                 cardCondition: (card, context) => card.location === 'play area' && ((card.fate === 0 && card.allowGameAction('bow', context)) || card.bowed)
             }
         });
-        this.title = 'Resolve the Water Ring';
         this.cannotTargetFirst = true;
+        this.title = 'Water Ring Effect';
     }
 
     meetsRequirements(context) {
