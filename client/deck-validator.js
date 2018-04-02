@@ -72,7 +72,7 @@ function rulesForKeeperRole(element) {
 
 function rulesForSeekerRole(element) {
     return {
-        additionalProvince: {[element]: 2},
+        provinceMax: {[element]: 1},
         roleRestrictions: ['seeker', element]
     };
 }
@@ -83,7 +83,7 @@ function rulesForSupportRole(faction) {
         roleRestrictions: ['support'],
         rules: [
             {
-                message: 'Support roles can only be used with their respective factio',
+                message: 'Support roles can only be used with the match alliance clan',
                 condition: deck => deck.alliance.value === faction
             }
         ]
