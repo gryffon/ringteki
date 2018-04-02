@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
 
