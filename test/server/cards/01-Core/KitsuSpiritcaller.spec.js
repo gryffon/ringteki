@@ -72,13 +72,11 @@ describe('Kitsu Spiritcaller', function() {
                 });
 
                 it('should return the target to the bottom of the deck at the end of the conflict', function() {
-                    this.spy = spyOn(this.game, 'reportError');
                     this.honoredGeneral = this.player1.clickCard('honored-general');
                     this.player1.clickCard(this.honoredGeneral);
                     this.noMoreActions();
                     this.player1.clickPrompt('No');
                     this.player1.clickPrompt('Gain 2 honor');
-                    expect(this.spy).toHaveBeenCalledWith(null);
                     expect(this.honoredGeneral.location).toBe('dynasty deck');
                     expect(this.player1.player.dynastyDeck.last()).toBe(this.honoredGeneral);
                 });

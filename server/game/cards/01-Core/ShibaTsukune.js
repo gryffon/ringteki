@@ -8,7 +8,7 @@ class ShibaTsukune extends DrawCard {
             when : {
                 onPhaseEnded: event => event.phase === 'conflict'
             },
-            handler: context  => this.game.promptForRingSelect(context.player, {
+            handler: context => this.game.promptForRingSelect(context.player, {
                 activePromptTitle: 'Choose a ring to resolve',
                 source: context.source,
                 ringCondition: ring => !ring.claimed,

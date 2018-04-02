@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 const AbilityContext = require('./AbilityContext.js');
 const AbilityLimit = require('./abilitylimit.js');
 const BaseAbility = require('./baseability.js');
@@ -52,7 +50,7 @@ class CardAbility extends BaseAbility {
         if(index === -1) {
             return defaultedLocation;
         }
-        return defaultedLocation.splice(index, 1).concat(['province 1', 'province 2', 'province 3', 'province 4']);
+        return defaultedLocation.splice(index, 1).concat(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']);
     }
 
     createContext(player) {

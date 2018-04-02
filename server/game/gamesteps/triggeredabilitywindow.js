@@ -16,7 +16,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         }
         return _.any(this.events, event => (
             event.name === 'onCardAbilityInitiated' && 
-            (event.card.type === 'event' ? player.timerSettings.events : player.timerSettings.abilities ) && 
+            (event.card.type === 'event' ? player.timerSettings.events : player.timerSettings.abilities) && 
             event.context.player !== player
         ));
     }

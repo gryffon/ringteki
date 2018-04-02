@@ -2,7 +2,7 @@ const ProvinceCard = require('../../../server/game/provincecard.js');
 
 describe('ProvinceCard', function () {
     beforeEach(function () {
-        this.testCard = { code: '111', label: 'test 1(some pack)', name: 'test 1' };
+        this.testCard = { code: '111', label: 'test 1(some pack)', name: 'test 1', type: 'province' };
         this.gameSpy = jasmine.createSpyObj('game', ['raiseEvent', 'on']);
         this.card = new ProvinceCard({ game: this.gameSpy }, this.testCard);
     });
@@ -36,7 +36,7 @@ describe('ProvinceCard', function () {
                     when: {
                         onProvinceRevealed: event => event.province === this && this.controller.opponent.hand.size() > 0
                     },
-                    handler: context => {
+                    handler: () => {
                         this.game.doSomething();
                     }
                 });

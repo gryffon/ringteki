@@ -42,7 +42,7 @@ class TriggeredAbility extends CardAbility {
             return false;
         }
 
-        if(!this.isTriggeredByEvent(context.event)) {
+        if(!this.isTriggeredByEvent(context.event, context)) {
             return false;
         }
         return this.canResolveTargets(context);
@@ -72,10 +72,6 @@ class TriggeredAbility extends CardAbility {
             this.game.on(event.name, event.handler);
             this.events.push(event);
         });
-
-        if(this.limit) {
-            this.limit.registerEvents(this.game);
-        }
     }
 
     unregisterEvents() {
@@ -83,9 +79,6 @@ class TriggeredAbility extends CardAbility {
             _.each(this.events, event => {
                 this.game.removeListener(event.name, event.handler);
             });
-            if(this.limit) {
-                this.limit.unregisterEvents(this.game);
-            }
             this.events = null;
         }
     }

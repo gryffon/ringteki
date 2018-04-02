@@ -86,7 +86,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
                 });
                 return true;
             }
-        }
+        };
     }
 
     promptBetweenChoices(choices) {

@@ -9,7 +9,6 @@ const CardInterrupt = require('./cardinterrupt.js');
 const CardReaction = require('./cardreaction.js');
 const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
-const EventRegistrar = require('./eventregistrar.js');
 
 const ValidKeywords = [
     'ancestral',
@@ -20,7 +19,6 @@ const ValidKeywords = [
     'pride',
     'covert'
 ];
-const LocationsWithEventHandling = ['play area', 'province'];
 
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {

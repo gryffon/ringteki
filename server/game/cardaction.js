@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 const CardAbility = require('./CardAbility.js');
 const Costs = require('./costs.js');
 
