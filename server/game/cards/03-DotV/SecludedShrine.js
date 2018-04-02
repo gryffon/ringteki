@@ -16,7 +16,7 @@ class SecludedShrine extends DrawCard {
                 this.untilEndOfPhase(ability => ({
                     match: context.ring,
                     targetType: 'ring',
-                    effect: ability.addRingEffect('considerAsClaimed', player => player === context.player)
+                    effect: ability.effects.addRingEffect('considerAsClaimed', player => player === context.player)
                 }));
             }
         });
