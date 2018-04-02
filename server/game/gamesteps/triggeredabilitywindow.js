@@ -56,20 +56,16 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
             return true;
         }
 
-        this.choices = _.filter(this.choices, context => context.player === this.currentPlayer);
-
-        if(this.choices.length === 0) {
-            if(this.prevPlayerPassed) {
-                return true;
-            }
+        if(!_.any(this.choices, context => context.player === this.currentPlayer)) {
             if(this.showCancelPrompt(this.currentPlayer)) {
                 this.promptWithCancelPrompt(this.currentPlayer);
-            } else {
-                this.pass();
+                return false;
             }
-            return false;
+            this.pass();
+            return this.filterChoices();
         }
 
+        this.choices = _.filter(this.choices, context => context.player === this.currentPlayer);
         this.game.promptForSelect(this.currentPlayer, this.getPromptForSelectProperties());
         return false;
     }

@@ -15,7 +15,9 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
 
     continue() {
         this.game.currentAbilityWindow = this;
-        this.emitEvents();
+        if(this.events.length > 0) {
+            this.emitEvents();
+        }
 
         if(this.filterChoices()) {
             this.game.currentAbilityWindow = null;
@@ -45,6 +47,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
         } else {
             this.game.promptForSelect(this.currentPlayer, this.getPromptForSelectProperties());
         }
+        return false;
     }
 
     getPromptForSelectProperties() {

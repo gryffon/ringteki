@@ -21,7 +21,7 @@ class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
             return true;
         }
         if(choices.length === 1) {
-            choices[0].handler();
+            this.resolveEffect(choices[0]);
         } else {
             this.promptBetweenChoices(choices);
         }
@@ -34,8 +34,13 @@ class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
             activePromptTitle: 'Choose an effect to be resolved',
             waitingPromptTitle: 'Waiting for opponent',
             choices: _.map(choices, choice => choice.title),
-            handlers: _.map(choices, choice => choice.handler)
+            handlers: _.map(choices, choice => this.resolveEffect(choice))
         });
+    }
+
+    resolveEffect(choice) {
+        this.choices = this.choices.filter(c => c !== choice);
+        choice.handler();
     }
 }
 
