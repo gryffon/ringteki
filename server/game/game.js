@@ -367,7 +367,7 @@ class Game extends EventEmitter {
         if(this.pipeline.handleCardClicked(player, card)) {
             return;
         }
-   }
+    }
 
     /*
      * Resets all the rings to unclaimed
