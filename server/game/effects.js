@@ -461,17 +461,22 @@ const Effects = {
                             conflict.modifyDefenderSkill(-context.defendingModifier[card.uuid]);
                             delete context.defendingModifier[card.uuid];
                         }
-                        conflict.modifyAttackerSkill(skill - (context.attackingModifier[card.uuid] || 0));
+                        let skillDifference = skill - (context.attackingModifier[card.uuid] || 0);
+                        conflict.modifyAttackerSkill(skillDifference);
                         context.attackingModifier[card.uuid] = skill;
+                        return skillDifference !== 0;
                     } else {
                         if(context.attackingModifier[card.uuid]) {
                             conflict.modifyAttackerSkill(-context.attackingModifier[card.uuid]);
                             delete context.attackingModifier[card.uuid];
                         }
-                        conflict.modifyDefenderSkill(skill - (context.defendingModifier[card.uuid] || 0));
+                        let skillDifference = skill - (context.defendingModifier[card.uuid] || 0);
+                        conflict.modifyDefenderSkill(skillDifference);
                         context.defendingModifier[card.uuid] = skill;
+                        return skillDifference !== 0;
                     }
                 }
+                return false;
             },
             unapply: function(card, context) {
                 if(context.attackingModifier[card.uuid]) {
@@ -485,8 +490,7 @@ const Effects = {
                     }
                     delete context.defendingModifier[card.uuid];
                 }
-            },
-            isStateDependent: true
+            }
         };
     },
     restrictNumberOfDefenders: function(amount) {
