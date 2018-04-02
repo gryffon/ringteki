@@ -17,9 +17,8 @@ class PlayTattooedWandererAsAttachment extends PlayAttachmentAction {
         return (
             context.game.currentPhase !== 'dynasty' &&
             context.player.isCardInPlayableLocation(this.originalCard, 'play') &&
-            context.player.canPutIntoPlay(this.originalCard) &&
-            this.originalCard.canPlay() &&
-            this.originalCard.allowGameAction('play', clonedContext) &&
+            context.source.allowGameAction('putIntoPlay', context) &&
+            this.originalCard.canPlay(clonedContext) &&
             this.canResolveTargets(clonedContext)
         );
     }

@@ -5,6 +5,7 @@ const ChatCommands = require('./chatcommands.js');
 const GameChat = require('./gamechat.js');
 const EffectEngine = require('./effectengine.js');
 const Effect = require('./effect.js');
+const DelayedEffect = require('./DelayedEffect.js');
 const Player = require('./player.js');
 const Spectator = require('./spectator.js');
 const AnonymousSpectator = require('./anonymousspectator.js');
@@ -21,13 +22,15 @@ const MenuPrompt = require('./gamesteps/menuprompt.js');
 const HandlerMenuPrompt = require('./gamesteps/handlermenuprompt.js');
 const SelectCardPrompt = require('./gamesteps/selectcardprompt.js');
 const SelectRingPrompt = require('./gamesteps/selectringprompt.js');
+const GameWonPrompt = require('./gamesteps/GameWonPrompt');
 const EventBuilder = require('./Events/EventBuilder.js');
-const EventWindow = require('./gamesteps/EventWindow.js');
-const ThenEventWindow = require('./gamesteps/ThenEventWindow.js');
-const InitiateAbilityEventWindow = require('./gamesteps/InitiateAbilityEventWindow.js');
+const EventWindow = require('./Events/EventWindow.js');
+const ThenEventWindow = require('./Events/ThenEventWindow.js');
+const InitiateAbilityEventWindow = require('./Events/InitiateAbilityEventWindow.js');
 const AbilityResolver = require('./gamesteps/abilityresolver.js');
 const ForcedTriggeredAbilityWindow = require('./gamesteps/forcedtriggeredabilitywindow.js');
 const TriggeredAbilityWindow = require('./gamesteps/triggeredabilitywindow.js');
+const AbilityContext = require('./AbilityContext.js');
 const Ring = require('./ring.js');
 const Conflict = require('./conflict.js');
 const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
@@ -47,6 +50,7 @@ class Game extends EventEmitter {
         this.id = details.id;
         this.name = details.name;
         this.allowSpectators = details.allowSpectators;
+        this.spectatorSquelch = details.spectatorSquelch;
         this.owner = details.owner;
         this.started = false;
         this.playStarted = false;
@@ -54,6 +58,7 @@ class Game extends EventEmitter {
         this.savedGameId = details.savedGameId;
         this.gameType = details.gameType;
         this.currentActionWindow = null;
+        this.currentEventWindow = null;
         this.currentConflict = null;
         this.currentDuel = null;
         this.manualMode = false;
@@ -244,6 +249,10 @@ class Game extends EventEmitter {
         return foundCards;
     }
 
+    getTargetsForEffect(match) {
+        return this.findAnyCardsInPlay(match).concat(this.provinceCards);
+    }
+
     /*
      * Adds a persistent/lasting/delayed effect to the effect engine
      * @param {BaseCard} source - card generating the effect
@@ -252,6 +261,12 @@ class Game extends EventEmitter {
      */
     addEffect(source, properties) {
         this.effectEngine.add(new Effect(this, source, properties));
+    }
+
+    addDelayedEffect(source, properties) {
+        let effect = new DelayedEffect(this, source, properties);
+        this.effectEngine.addDelayedEffect(effect);
+        return effect;
     }
 
     /*
@@ -322,7 +337,7 @@ class Game extends EventEmitter {
                 card.facedown = false;
                 this.addMessage('{0} reveals {1}', player, card);
             }
-        }*/        
+        }*/
     }
 
     /*
@@ -440,19 +455,19 @@ class Game extends EventEmitter {
             case 'bow':
                 if(card.bowed) {
                     this.addMessage('{0} readies {1}', player, card);
-                    player.readyCard(card);
+                    card.ready();
                 } else {
                     this.addMessage('{0} bows {1}', player, card);
-                    player.bowCard(card);
+                    card.bow();
                 }
                 break;
             case 'honor':
                 this.addMessage('{0} honors {1}', player, card);
-                player.honorCard(card);
+                card.honor();
                 break;
             case 'dishonor':
                 this.addMessage('{0} dishonors {1}', player, card);
-                player.dishonorCard(card);
+                card.dishonor();
                 break;
             case 'addfate':
                 this.addMessage('{0} adds a fate to {1}', player, card);
@@ -466,10 +481,14 @@ class Game extends EventEmitter {
                 if(this.currentConflict) {
                     if(card.isParticipating()) {
                         this.addMessage('{0} moves {1} out of the conflict', player, card);
-                        this.currentConflict.sendHome(card);
+                        this.currentConflict.removeFromConflict(card);
                     } else {
                         this.addMessage('{0} moves {1} into the conflict', player, card);
-                        this.currentConflict.moveToConflict(card);
+                        if(card.controller.isAttackingPlayer()) {
+                            this.currentConflict.addAttacker(card);
+                        } else if(card.controller.isDefendingPlayer()) {
+                            this.currentConflict.addDefender(card);
+                        }
                     }
                 }
                 break;
@@ -495,6 +514,7 @@ class Game extends EventEmitter {
                 }
                 break;
         }
+        this.checkGameState(true);
 
         /* deprecated code
         switch(card.location) {
@@ -587,6 +607,7 @@ class Game extends EventEmitter {
                 }
                 break;
         }
+        this.checkGameState(true);
     }
 
     /*
@@ -744,7 +765,9 @@ class Game extends EventEmitter {
             this.recordWinner(player, 'honor');
         } else if(player.getTotalHonor() === 0) {
             var opponent = this.getOtherPlayer(player);
-            this.recordWinner(opponent, 'dishonor');
+            if(opponent) {
+                this.recordWinner(opponent, 'dishonor');
+            }
         }
 
     }
@@ -768,6 +791,8 @@ class Game extends EventEmitter {
         this.winReason = reason;
 
         this.router.gameWon(this, reason, winner);
+
+        this.queueStep(new GameWonPrompt(this, winner));
     }
 
     /*
@@ -826,6 +851,7 @@ class Game extends EventEmitter {
 
         if(!this.isSpectator(player)) {
             if(this.chatCommands.executeCommand(player, args[0], args)) {
+                this.checkGameState(true);
                 return;
             }
 
@@ -840,7 +866,9 @@ class Game extends EventEmitter {
             }
         }
 
-        this.gameChat.addChatMessage('{0} {1}', player, message);
+        if(!this.isSpectator(player) || !this.spectatorSquelch) {
+            this.gameChat.addChatMessage('{0} {1}', player, message);
+        }
     }
 
     /*
@@ -1063,6 +1091,7 @@ class Game extends EventEmitter {
         this.allCards = _(_.reduce(this.getPlayers(), (cards, player) => {
             return cards.concat(player.preparedDeck.allCards);
         }, []));
+        this.provinceCards = this.allCards.filter(card => card.isProvince);
 
         if(playerWithNoStronghold) {
             this.addMessage('{0} does not have a stronghold in their decklist', playerWithNoStronghold);
@@ -1201,6 +1230,10 @@ class Game extends EventEmitter {
         }
     }
 
+    getEvent(eventName, params, handler) {
+        return EventBuilder.for(eventName, params, handler);
+    }
+
     /*
      * Creates a game Event, and opens a window for it.
      * @param {String} eventName
@@ -1210,9 +1243,14 @@ class Game extends EventEmitter {
      * tell whether or not the handler resolved successfully
      */
     raiseEvent(eventName, params = {}, handler) {
-        let event = EventBuilder.for(eventName, params, handler);
+        let event = this.getEvent(eventName, params, handler);
         this.openEventWindow([event]);
         return event;
+    }
+
+    emitEvent(eventName, params = {}) {
+        let event = this.getEvent(eventName, params);
+        this.emit(event.name, event);
     }
 
     /* Creates an EventWindow which will open windows for each kind of triggered
@@ -1294,6 +1332,35 @@ class Game extends EventEmitter {
         return events;
     }
 
+    getEventsForGameAction(action, cards, context) {
+        if(!context) {
+            context = new AbilityContext({ game: this });
+        }
+        return EventBuilder.getEventsForAction(action, cards, context);
+    }
+
+    /*
+     * Checks whether a game action can be performed on a card or an array of
+     * cards, and performs it on all legal targets.
+     * @param {String} actionType
+     * @param {Array or BaseCard} cards - Array of BaseCard
+     * @param {Function} func - (Array or BaseCard) => undefined
+     * @returns {undefined}
+     */
+    applyGameAction(context, actions, additionalEventProps = []) {
+        if(!context) {
+            context = new AbilityContext({ game: this });
+        }
+        let events = additionalEventProps.map(event => EventBuilder.for(event.name || 'unnamedEvent', event.params || {}, event.handler));
+        _.each(actions, (cards, action) => {
+            events = this.getEventsForGameAction(action, cards, context).concat(events);
+        });
+        if(events.length > 0) {
+            this.openEventWindow(events);
+        }
+        return events;
+    }
+
     /*
      * Flips a ring to show the opposite side (military or political)
      * @param {Player} player
@@ -1355,15 +1422,10 @@ class Game extends EventEmitter {
             return;
         }
 
-        if(card.location !== 'play area') {
-            player.putIntoPlay(card);
-            return;
-        }
-
         card.controller.removeCardFromPile(card);
         player.cardsInPlay.push(card);
         card.controller = player;
-        card.checkForIllegalAttachments();
+        //card.checkForIllegalAttachments();
         if(card.isDefending()) {
             this.currentConflict.defenders = _.reject(this.currentConflict.defenders, c => c === card);
             if(card.canParticipateAsAttacker(this.currentConflict.conflictType)) {
@@ -1371,10 +1433,8 @@ class Game extends EventEmitter {
             } else {
                 this.addMessage('{0} cannot participate in the conflict any more and is sent home bowed', card);
                 card.inConflict = false;
-                player.bowCard(card);
+                this.applyGameAction(null, { bow: card });
             }
-            card.applyPersistentEffects();
-            this.currentConflict.calculateSkill();
         } else if(card.isAttacking()) {
             this.currentConflict.attackers = _.reject(this.currentConflict.attackers, c => c === card);
             if(card.canParticipateAsDefender(this.currentConflict.conflictType)) {
@@ -1382,12 +1442,8 @@ class Game extends EventEmitter {
             } else {
                 this.addMessage('{0} cannot participate in the conflict any more and is sent home bowed', card);
                 card.inConflict = false;
-                player.bowCard(card);
+                this.applyGameAction(null, { bow: card });
             }
-            card.applyPersistentEffects();
-            this.currentConflict.calculateSkill();
-        } else {
-            card.applyPersistentEffects();
         }
         this.raiseEvent('onCardTakenControl', { card: card });
     }
@@ -1411,37 +1467,6 @@ class Game extends EventEmitter {
         }
         this.currentDuel = new Duel(this, challenger, target, type);
         this.queueStep(new DuelFlow(this, this.currentDuel, costHandler, resolutionHandler));
-    }
-
-    /*
-     * Checks whether a game action can be performed on a card or an array of
-     * cards, and performs it on all legal targets.
-     * @deprecated
-     * @param {String} actionType
-     * @param {Array or BaseCard} cards - Array of BaseCard
-     * @param {Function} func - (Array or BaseCard) => undefined
-     * @returns {undefined}
-     */
-    applyGameAction(actionType, cards, func) {
-        let wasArray = _.isArray(cards);
-        if(!wasArray) {
-            cards = [cards];
-        }
-        let [allowed, disallowed] = _.partition(cards, card => card.allowGameAction(actionType));
-
-        if(!_.isEmpty(disallowed)) {
-            // TODO: add a cannot / immunity message.
-        }
-
-        if(_.isEmpty(allowed)) {
-            return;
-        }
-
-        if(wasArray) {
-            func(allowed);
-        } else {
-            func(allowed[0]);
-        }
     }
 
     watch(socketId, user) {
@@ -1540,15 +1565,17 @@ class Game extends EventEmitter {
         this.addMessage('{0} has reconnected', player);
     }
 
-    reapplyStateDependentEffects() {
-        this.effectEngine.reapplyStateDependentEffects();
+    checkGameState(hasChanged = false, events = []) {
+        if(
+            (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) ||
+            this.effectEngine.checkEffects(hasChanged) || hasChanged
+        ) {
+            _.each(this.getPlayers(), player => player.cardsInPlay.each(card => card.checkForIllegalAttachments()));
+        }
+        this.effectEngine.checkDelayedEffects(events.concat([this.getEvent('onCheckGameState', {})]));
     }
 
     continue() {
-        this.effectEngine.reapplyStateDependentEffects();
-        this.pipeline.continue();
-        this.effectEngine.reapplyStateDependentEffects();
-        // Ensure any events generated by the effects engine are resolved.
         this.pipeline.continue();
     }
 

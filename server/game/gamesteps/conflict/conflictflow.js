@@ -1,9 +1,9 @@
 const _ = require('underscore');
 const AbilityContext = require('../../AbilityContext');
 const BaseStepWithPipeline = require('../basestepwithpipeline.js');
-const CovertAbility = require('./CovertAbility');
+const CovertAbility = require('../../KeywordAbilities/CovertAbility');
 const SimpleStep = require('../simplestep.js');
-const ConflictActionWindow = require('../conflictactionwindow.js');
+const ConflictActionWindow = require('./conflictactionwindow.js');
 const InitiateConflictPrompt = require('./initiateconflictprompt.js');
 const SelectDefendersPrompt = require('./selectdefendersprompt.js');
 
@@ -130,7 +130,6 @@ class ConflictFlow extends BaseStepWithPipeline {
             }
         }
 
-        this.game.reapplyStateDependentEffects();
         this.game.raiseMultipleEvents(events);
     }
 
@@ -157,7 +156,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         // Explicitly recalculate strength in case an effect has modified character strength.
-        this.conflict.calculateSkill();
+        //this.conflict.calculateSkill();
         this.game.addMessage('{0} has initiated a {1} conflict with skill {2}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.attackerSkill);
     }
 
@@ -177,7 +176,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         // Explicitly recalculate strength in case an effect has modified character strength.
         _.each(this.conflict.defenders, card => card.inConflict = true);
         this.conflict.defendingPlayer.cardsInPlay.each(card => card.covert = false);
-        this.conflict.calculateSkill();
+        //this.conflict.calculateSkill();
         if(this.conflict.defenders.length > 0) {
             this.game.addMessage('{0} has defended with skill {1}', this.conflict.defendingPlayer, this.conflict.defenderSkill);
         } else {
@@ -251,26 +250,14 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
                 
         if(this.conflict.isAttackerTheWinner()) {
-            _.each(this.conflict.attackers, card => {
-                if(card.hasPride()) {
-                    this.conflict.attackingPlayer.honorCard(card);
-                }
-            });
-            _.each(this.conflict.defenders, card => {
-                if(card.hasPride()) {
-                    this.conflict.defendingPlayer.dishonorCard(card);
-                }
+            this.game.applyGameAction(null, { 
+                honor: _.filter(this.conflict.attackers, card => card.hasPride()),
+                dishonor: _.filter(this.conflict.defenders, card => card.hasPride())
             });
         } else if(this.conflict.winner === this.conflict.defendingPlayer) {
-            _.each(this.conflict.attackers, card => {
-                if(card.hasPride()) {
-                    this.conflict.attackingPlayer.dishonorCard(card);
-                }
-            });
-            _.each(this.conflict.defenders, card => {
-                if(card.hasPride()) {
-                    this.conflict.defendingPlayer.honorCard(card);
-                }
+            this.game.applyGameAction(null, { 
+                dishonor: _.filter(this.conflict.attackers, card => card.hasPride()),
+                honor: _.filter(this.conflict.defenders, card => card.hasPride())
             });
         }
         
@@ -295,8 +282,7 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         let province = this.conflict.conflictProvince;
         if(this.conflict.isAttackerTheWinner() && this.conflict.skillDifference >= province.getStrength() && !province.isBroken) {
-            this.conflict.defendingPlayer.breakProvince(province);
-            
+            this.game.applyGameAction(null, { break: province });
         }
     }
     
@@ -304,8 +290,6 @@ class ConflictFlow extends BaseStepWithPipeline {
         if(this.conflict.cancelled) {
             return;
         }
-
-        this.game.reapplyStateDependentEffects();
 
         if(this.conflict.isAttackerTheWinner()) {
             this.conflict.chooseWhetherToResolveRingEffect();
@@ -322,14 +306,13 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
         if(this.conflict.winner) {
-            this.game.raiseEvent('onClaimRing', { player: this.conflict.winner, conflict: this.conflict }, () => {
-                ring.claimRing(this.conflict.winner);
-                return { resolved: true, success: true };
-            });
-
+            this.game.raiseEvent('onClaimRing', { player: this.conflict.winner, conflict: this.conflict }, () => ring.claimRing(this.conflict.winner));
         }
         //Do this lazily for now
-        ring.contested = false;
+        this.game.queueSimpleStep(() => {
+            ring.contested = false;
+            return true;
+        });
     }
 
     returnHome() {
@@ -337,26 +320,27 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        let cards = this.conflict.attackers.concat(this.conflict.defenders);
-        
-        let events = _.map(cards, card => {
-            return {
-                name: 'onReturnHome',
-                params: {
-                    card: card,
-                    conflict: this.conflict,
-                    bowedPreReturn: card.bowed
-                },
-                handler: () => card.returnHomeFromConflict()
-            };
-        });
-        this.game.raiseMultipleEvents(events, {
-            name: 'onParticipantsReturnHome', 
-            params: { 
-                cards: cards, 
-                conflict: this.conflict
-            }
-        });
+        // Create bow events for attackers
+        let attackerBowEvents = this.game.getEventsForGameAction('bow', this.conflict.attackers);
+        // Cancel any events where attacker shouldn't bow
+        _.each(attackerBowEvents, event => event.cancelled = event.card.conflictOptions.doesNotBowAs['attacker']);
+
+        // Create bow events for defenders
+        let defenderBowEvents = this.game.getEventsForGameAction('bow', this.conflict.defenders);
+        // Cancel any events where defender shouldn't bow
+        _.each(defenderBowEvents, event => event.cancelled = event.card.conflictOptions.doesNotBowAs['defender']);
+
+        let bowEvents = attackerBowEvents.concat(defenderBowEvents);
+
+        // Create a return home event for every bow event
+        let returnHomeEvents = _.map(bowEvents, event => this.game.getEvent(
+            'onReturnHome', 
+            { conflict: this.conflict, bowEvent: event, card: event.card }, 
+            () => this.conflict.removeFromConflict(event.card)
+        ));
+        let events = bowEvents.concat(returnHomeEvents);
+        events.push(this.game.getEvent('onParticipantsReturnHome', { returnHomeEvents: returnHomeEvents, conflict: this.conflict }));
+        this.game.openEventWindow(events);
     }
     
     completeConflict() {
@@ -365,7 +349,6 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
-        this.game.raiseEvent('onAtEndOfConflict');
 
         this.resetCards();
         if(!this.game.militaryConflictCompleted && (this.conflict.conflictType === 'military' || this.conflict.conflictTypeSwitched)) {

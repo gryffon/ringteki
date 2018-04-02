@@ -11,8 +11,15 @@ const Costs = {
             canPay: function(context) {
                 return _.all(costs, cost => cost.canPay(context));
             },
-            pay: function(context) {
-                _.each(costs, cost => cost.pay(context));
+            payEvent: function(context) {
+                return _.map(costs, cost => {
+                    if(cost.payEvent) {
+                        return cost.payEvent(context);
+                    }
+                    if(cost.pay) {
+                        return context.game.getEvent('payCost', {}, () => cost.pay(context));
+                    }
+                });
             },
             canIgnoreForTargeting: _.all(costs, cost => cost.canIgnoreForTargeting)
         };
@@ -113,20 +120,17 @@ const Costs = {
     playEvent: function() {
         return Costs.all(
             Costs.payReduceableFateCost('play'),
-            Costs.expendEvent(),
+            Costs.canPlayEvent(),
             Costs.playLimited()
         );
     },
     /**
      * Cost which moves the event to the discard pile
      */
-    expendEvent: function() {
+    canPlayEvent: function() {
         return {
             canPay: function(context) {
-                return context.source.allowGameAction('play');
-            },
-            pay: function(context) {
-                context.source.controller.moveCard(context.source, 'conflict discard pile');
+                return context.source.canPlay(context);
             },
             canIgnoreForTargeting: true
         };
@@ -157,9 +161,6 @@ const Costs = {
             canPay: function(context) {
                 return !context.player.isAbilityAtMax(context.ability.maxIdentifier);
             },
-            pay: function(context) {
-                context.player.incrementAbilityMax(context.ability.maxIdentifier);
-            },
             canIgnoreForTargeting: true
         };
     },
@@ -169,10 +170,7 @@ const Costs = {
     useLimit: function() {
         return {
             canPay: function(context) {
-                return !context.ability.limit.isAtMax();
-            },
-            pay: function(context) {
-                context.ability.limit.increment();
+                return !context.ability.limit.isAtMax(context.player);
             },
             canIgnoreForTargeting: true
         };
@@ -298,13 +296,11 @@ const Costs = {
     giveFateToOpponent: function(amount) {
         return {
             canPay: function(context) {
-                return context.player.fate >= amount && (context.source.allowGameAction('giveFate', context) || amount === 0);
+                return amount === 0 || (context.player.fate >= amount && context.player.opponent && context.source.allowGameAction('giveFate', context));
             },
             pay: function(context) {
-                context.game.addFate(context.player, -amount);
-                let otherPlayer = context.game.getOtherPlayer(context.player);
-                if(otherPlayer) {
-                    context.game.addFate(otherPlayer, amount);
+                if(amount > 0) {
+                    context.game.transferFate(context.player.opponent, context.player, amount);
                 }
             }
         };
@@ -316,7 +312,7 @@ const Costs = {
             },
             resolve: function(context, result = { resolved: false }) {
                 let extrafate = context.player.fate - context.player.getReducedCost('play', context.source);
-                if(!context.source.allowGameAction('placeFate', context) || !context.source.allowGameAction('spendFate', context)) {
+                if(!context.player.allowGameAction('placeFateWhenPlayingCharacter', context) || !context.player.allowGameAction('spendFate', context)) {
                     extrafate = 0;
                 }
                 let choices = [];
@@ -358,7 +354,7 @@ const Costs = {
                         context.game.promptWithHandlerMenu(context.player, {
                             activePromptTitle: 'Choose additional fate',
                             source: context.source,
-                            choices: choices,
+                            choices: _.map(choices, choice => _.isString(choice) ? choice : choice.toString()),
                             handlers: handlers
                         });
                     };
@@ -373,7 +369,7 @@ const Costs = {
                 context.game.promptWithHandlerMenu(context.player, {
                     activePromptTitle: 'Choose additional fate',
                     source: context.source,
-                    choices: choices,
+                    choices: _.map(choices, choice => _.isString(choice) ? choice : choice.toString()),
                     handlers: handlers
                 });
                 return result;

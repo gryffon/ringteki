@@ -7,10 +7,10 @@ class FireRingEffect extends BaseAbility {
                 activePromptTitle: 'Choose character to honor or dishonor',
                 source: 'Fire Ring',
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area'
+                cardCondition: card => card.location === 'play area' && (card.allowGameAction('honor') || card.allowGameAction('dishonor'))
             }
         });
-        this.title = 'Resolve the Fire Ring';
+        this.title = 'Fire Ring Effect';
         this.optional = optional;
         this.cannotTargetFirst = !optional;
     }
@@ -22,18 +22,18 @@ class FireRingEffect extends BaseAbility {
     executeHandler(context) {
         let choices = [];
         let handlers = [];
-        if(!context.target.isHonored) {
+        if(context.target.allowGameAction('honor', context)) {
             choices.push('Honor ' + context.target.name);
             handlers.push(() => {
                 context.game.addMessage('{0} resolves the {1} ring, honoring {2}', context.player, 'fire', context.target);
-                context.player.honorCard(context.target, context.source);
+                context.game.applyGameAction(context, { honor: context.target });
             });
         }
         if(context.target.allowGameAction('dishonor', context)) {
             choices.push('Dishonor ' + context.target.name);
             handlers.push(() => {
                 context.game.addMessage('{0} resolves the {1} ring, dishonoring {2}', context.player, 'fire', context.target);
-                context.player.dishonorCard(context.target, context.source);
+                context.game.applyGameAction(context, { dishonor: context.target });
             });
         }
         choices.push('Back');

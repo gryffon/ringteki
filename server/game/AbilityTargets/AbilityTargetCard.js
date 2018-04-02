@@ -21,6 +21,10 @@ class AbilityTargetCard {
         let otherProperties = _.omit(this.properties, 'cardCondition');
         let result = { resolved: false, name: this.name, value: null, costsFirst: false, mode: this.properties.mode };
         let player = context.player;
+        if(_.size(this.getAllLegalTargets(context, pretarget)) === 0) {
+            result.resolved = true;
+            return result;
+        }
         if(this.properties.player && this.properties.player === 'opponent') {
             if(pretarget) {
                 result.costsFirst = true;
@@ -33,15 +37,10 @@ class AbilityTargetCard {
             buttons.push({ text: 'No more targets', arg: 'noMoreTargets' });
         }
         if(pretarget) {
-            if(!this.selector.automaticFireOnSelect()) {
-                buttons.push({ text: 'Done', arg: 'done' });
-            }
             if(!noCostsFirstButton) {
                 buttons.push({ text: 'Pay costs first', arg: 'costsFirst' });
             }
             buttons.push({ text: 'Cancel', arg: 'cancel' });
-        } else {
-            buttons.push({ text: 'Done', arg: 'done' });
         }
         let waitingPromptTitle = '';
         if(pretarget) {
@@ -88,6 +87,8 @@ class AbilityTargetCard {
     checkTarget(context) {
         if(this.properties.optional || context.targets[this.name] === 'noMoreTargets') {
             return true;
+        } else if(!context.targets[this.name]) {
+            return false;
         }
         let cards = context.targets[this.name];
         if(!_.isArray(cards)) {

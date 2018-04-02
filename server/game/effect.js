@@ -52,7 +52,6 @@ class Effect {
         this.active = true;
         this.recalculateWhen = properties.recalculateWhen || [];
         this.isConditional = !!properties.condition;
-        this.isStateDependent = properties.condition || this.effect.isStateDependent;
     }
 
     buildEffect(effect) {
@@ -67,9 +66,23 @@ class Effect {
         return ['any', this.source.location].includes(this.location);
     }
 
-    addTargets(targets) {
+    getTargets() {
         if(!this.active || !this.condition()) {
-            return;
+            return false;
+        }
+
+        if(!_.isFunction(this.match)) {
+            return this.addTargets([this.match]);
+        } else if(this.targetType === 'player') {
+            return this.addTargets(_.values(this.game.getPlayers()));
+        }
+        return this.addTargets(this.game.getTargetsForEffect(this.match));
+    }
+
+    addTargets(targets) {
+        let stateChanged = false;
+        if(!this.active || !this.condition()) {
+            return stateChanged;
         }
 
         let newTargets = _.difference(targets, this.targets);
@@ -78,8 +91,10 @@ class Effect {
             if(this.isValidTarget(target)) {
                 this.targets.push(target);
                 this.effect.apply(target, this.context);
+                stateChanged = true;
             }
         });
+        return stateChanged;
     }
 
     isValidTarget(target) {
@@ -148,7 +163,7 @@ class Effect {
         return this.targets.includes(card);
     }
 
-    setActive(newActive, newTargets) {
+    setActive(newActive) {
         let oldActive = this.active;
 
         this.active = newActive;
@@ -158,7 +173,7 @@ class Effect {
         }
 
         if(!oldActive && newActive) {
-            this.addTargets(newTargets);
+            this.getTargets();
         }
     }
 
@@ -167,43 +182,38 @@ class Effect {
         this.targets = [];
     }
 
-    reapply(newTargets) {
+    checkCondition() {
+        let stateChanged = false;
         if(!this.active) {
-            return;
+            return stateChanged;
         }
-
-        if(this.isConditional) {
-            let newCondition = this.condition();
-
-            if(!newCondition) {
-                this.cancel();
-                return;
-            }
-
-            if(newCondition) {
-                let invalidTargets = _.filter(this.targets, target => !this.isValidTarget(target));
-                _.each(invalidTargets, target => {
-                    this.removeTarget(target);
-                });
-                this.addTargets(newTargets);
-            }
+        if(!this.condition()) {
+            stateChanged = this.targets.length > 0;
+            this.cancel();
+        } else {
+            let invalidTargets = _.filter(this.targets, target => !this.isValidTarget(target));
+            stateChanged = invalidTargets.length > 0;
+            _.each(invalidTargets, target => {
+                this.removeTarget(target);
+            });
+            stateChanged = this.getTargets() || stateChanged;
         }
-
-        if(this.effect.isStateDependent) {
-            let reapplyFunc = this.createReapplyFunc();
-            _.each(this.targets, target => reapplyFunc(target));
-        }
+        return stateChanged;
     }
 
-    createReapplyFunc() {
-        if(this.effect.reapply) {
-            return target => this.effect.reapply(target, this.context);
+    reapply() {
+        let stateChanged = false;
+        if(this.active && this.effect.reapply) {
+            _.each(this.targets, target => stateChanged = this.effect.reapply(target, this.context) || stateChanged);
         }
+        return stateChanged;
+    }
 
-        return target => {
+    unapplyThenApply() {
+        _.each(this.targets, target => {
             this.effect.unapply(target, this.context);
             this.effect.apply(target, this.context);
-        };
+        });
     }
 }
 

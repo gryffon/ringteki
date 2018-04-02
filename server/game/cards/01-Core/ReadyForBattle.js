@@ -5,12 +5,12 @@ class ReadyForBattle extends DrawCard {
         this.reaction({
             title: 'Ready a character',
             when: {
-                onCardBowed: event => (event.card.bowed && event.card.controller === this.controller && event.source && 
-                        (event.source.type === 'ring' || event.source.controller !== this.controller))
+                onCardBowed: event => (event.card.bowed && event.card.controller === this.controller && event.context && 
+                        (event.context.source.type === 'ring' || event.context.source.controller === this.controller.opponent))
             },
             handler: context => {
                 this.game.addMessage('{0} plays {1} to ready {2}', this.controller, this, context.event.card);
-                this.controller.readyCard(context.event.card);
+                this.game.applyGameAction(context, { ready: context.event.card });
             }
         });
     }

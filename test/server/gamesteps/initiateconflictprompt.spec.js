@@ -54,10 +54,6 @@ describe('InitateConflictPrompt: ', function() {
                     this.promptProperties = this.prompt.activePrompt();
                 });
 
-                it('should check skill totals', function() {
-                    expect(this.conflictSpy.calculateSkill).toHaveBeenCalled();
-                });
-
                 it('should display total Skill selected', function() {
                     expect(this.promptProperties.menuTitle).toContain('skill: 4');
                 });
@@ -234,6 +230,9 @@ describe('InitateConflictPrompt: ', function() {
                     describe('and it\'s currently participating,', function() {
                         beforeEach(function() {
                             this.conflictSpy.attackers.push(this.cardSpy);
+                            this.defenderSpy = jasmine.createSpyObj('defender', ['allowGameAction', 'canBeBypassedByCovert']);
+                            this.defenderSpy.covert = true;
+                            this.prompt.selectedDefenders = [this.defenderSpy];
                             this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy); 
                         });
 
@@ -256,8 +255,17 @@ describe('InitateConflictPrompt: ', function() {
                             });
 
                             describe('and no covert is remaining', function() {
-                                it('should return false', function() {
-                                    expect(this.returnValue).toBe(false);
+                                it('should return true', function() {
+                                    expect(this.returnValue).toBe(true);
+                                });
+        
+                                it('should call removeFromConflict', function() {
+                                    expect(this.conflictSpy.removeFromConflict).toHaveBeenCalledWith(this.cardSpy);
+                                });
+
+                                it('should remove the selected defender and set covert to false', function() {
+                                    expect(this.prompt.selectedDefenders).not.toContain(this.defenderSoy);
+                                    expect(this.defenderSpy.covert).toBe(false);
                                 });
                             });
 
@@ -368,6 +376,8 @@ describe('InitateConflictPrompt: ', function() {
             this.conflictSpy.conflictType = 'military';
             this.cardSpy = jasmine.createSpyObj('card', ['allowGameAction']);
             this.conflictSpy.conflictProvince = this.cardSpy;
+            this.attackerSpy = jasmine.createSpyObj('attacker', ['allowGameAction']);
+            this.conflictSpy.attackers = [this.attackerSpy];
             this.prompt.menuCommand(this.playerSpy, 'done');
         });
 
@@ -400,6 +410,18 @@ describe('InitateConflictPrompt: ', function() {
                 beforeEach(function() {
                     this.prompt.completed = false;
                     this.conflictSpy.conflictProvince = null;
+                    this.prompt.menuCommand(this.playerSpy, 'done');
+                });
+
+                it('should not set complete to true', function() {
+                    expect(this.prompt.completed).toBe(false);
+                });
+            });
+
+            describe('if no attackers have been declared', function() {
+                beforeEach(function() {
+                    this.prompt.completed = false;
+                    this.conflictSpy.attackers = [];
                     this.prompt.menuCommand(this.playerSpy, 'done');
                 });
 

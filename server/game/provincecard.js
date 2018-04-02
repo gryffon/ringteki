@@ -47,8 +47,48 @@ class ProvinceCard extends BaseCard {
         this.facedown = false;
     }
 
+    allowGameAction(actionType, context) {
+        let illegalActions = [
+            'bow', 'ready', 'dishonor', 'honor', 'sacrifice', 
+            'discardFromPlay', 'moveToConflict', 'sendHome', 'putIntoPlay', 'putIntoConflict', 
+            'returnToHand', 'takeControl', 'placeFate', 'removeFate'
+        ];
+
+        if(illegalActions.includes(actionType)) {
+            return false;
+        }
+    
+        if(actionType === 'break' && this.isBroken) {
+            return false;
+        }
+        return super.allowGameAction(actionType, context);
+    }
+
     breakProvince() {
         this.isBroken = true;
+        if(this.controller.opponent) {
+            this.game.addMessage('{0} has broken {1}!', this.controller.opponent, this);
+            if(this.location === 'stronghold province') {
+                this.game.recordWinner(this.controller.opponent, 'conquest');
+            } else {
+                let dynastyCard = this.controller.getDynastyCardInProvince(this.location);
+                if(dynastyCard) {
+                    let promptTitle = 'Do you wish to discard ' + (dynastyCard.facedown ? 'the facedown card' : dynastyCard.name) + '?';
+                    this.game.promptWithHandlerMenu(this.controller.opponent, {
+                        activePromptTitle: promptTitle,
+                        source: 'Break ' + this.name,
+                        choices: ['Yes', 'No'],
+                        handlers: [
+                            () => {
+                                this.game.addMessage('{0} chooses to discard {1}', this.controller.opponent, dynastyCard.facedown ? 'the facedown card' : dynastyCard);
+                                this.controller.moveCard(dynastyCard, 'dynasty discard pile');
+                            },
+                            () => this.game.addMessage('{0} chooses not to discard {1}', this.controller.opponent, dynastyCard.facedown ? 'the facedown card' : dynastyCard)
+                        ]
+                    });
+                }
+            }
+        }
     }
 
     canTriggerAbilities() {

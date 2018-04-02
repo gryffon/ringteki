@@ -76,6 +76,11 @@ class Province extends React.Component {
             cardClassName = 'province-attachment';
         }
 
+        if(this.props.size !== 'normal') {
+            cardClassName += ' ' + this.props.size;
+        }
+
+
         if(this.props.orientation === 'horizontal' || this.props.orientation === 'bowed') {
             className += ' horizontal';
         } else {
@@ -99,6 +104,7 @@ class Province extends React.Component {
                     return (<Card className={ cardClassName } card={ card } source={ this.props.source }
                         popupLocation={ this.props.popupLocation }
                         isMe={ this.props.isMe }
+                        key={ card.uuid }
                         onMouseOver={ this.props.onMouseOver }
                         onMouseOut={ this.props.onMouseOut }
                         disableMouseOver={ card.facedown }

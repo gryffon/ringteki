@@ -24,9 +24,8 @@ class PlayAttachmentAction extends BaseAbility {
             context.game.currentPhase !== 'dynasty' &&
             context.source.getType() === 'attachment' &&
             context.player.isCardInPlayableLocation(context.source, 'play') &&
-            context.player.canPutIntoPlay(context.source) &&
-            context.source.canPlay() &&
-            context.source.allowGameAction('play', context) &&
+            context.source.allowGameAction('putIntoPlay', context) &&
+            context.source.canPlay(context) &&
             this.canResolveTargets(context)
         );
     }

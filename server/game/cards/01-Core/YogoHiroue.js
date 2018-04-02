@@ -7,34 +7,32 @@ class YogoHiroue extends DrawCard {
             condition: () => this.isParticipating(),
             target: {
                 cardType: 'character',
-                gameAction: 'moveToConflict',
-                cardCondition: card => card.location === 'play area' && !card.isParticipating()
+                gameAction: 'moveToConflict'
             },
-            methods: ['yogoHiroueDelayedEffect'],
             handler: context => {
                 this.game.addMessage('{0} uses {1} to move {2} into the conflict', this.controller, this, context.target);
-                this.events.register([{ afterConflict: 'yogoHiroueDelayedEffect' }]);
-                this.delayedEffectTarget = context.target;
-                this.game.currentConflict.moveToConflict(context.target);
+                let event = this.game.applyGameAction(context, { moveToConflict: context.target })[0];
+                event.addThenEvent(this.game.getEvent('unnamedEvent', {}, () => context.source.delayedEffect({
+                    target: context.target,
+                    when: {
+                        afterConflict: event => event.conflict.winner === context.player && context.target.allowGameAction('dishonor')
+                    },
+                    context: context,
+                    handler: () => this.game.promptWithHandlerMenu(context.player, {
+                        activePromptTitle: 'Dishonor ' + context.target.name + '?',
+                        choices: ['Yes', 'No'],
+                        handlers: [
+                            () => {
+                                this.game.addMessage('{0} chooses to dishonor {1} due to {2}\'s delayed effect', context.player, context.target, context.source);
+                                this.game.applyGameAction(context, { dishonor: context.target });
+                            },
+                            () => true
+                        ],
+                        source: context.source
+                    })
+                })));
             }
         });
-    }
-    
-    yogoHiroueDelayedEffect(event) {
-        this.events.unregisterAll();
-        if(event.conflict.winner === this.controller && this.delayedEffectTarget.location === 'play area' && this.delayedEffectTarget.allowGameAction('dishonor')) {
-            this.game.promptWithHandlerMenu(this.controller, {
-                activePromptTitle: 'Dishonor ' + this.delayedEffectTarget.name + '?',
-                choices: ['Yes', 'No'],
-                handlers: [
-                    () => {
-                        this.controller.dishonorCard(this.delayedEffectTarget, this);
-                        this.game.addMessage('{0} chooses to dishonor {1} due to {2}\'s delayed effect', this.controller, this.delayedEffectTarget, this);
-                    }, () => true
-                ],
-                source: this
-            });
-        }
     }
 }
 

@@ -17,21 +17,22 @@ class ShosuroMiyako extends DrawCard {
                 player: 'opponent',
                 choices: {
                     'Discard at random': () => this.controller.opponent.hand.size() > 0,
-                    'Dishonor a character': context => this.controller.opponent.anyCardsInPlay(card => card.allowGameAction('dishonor', context))
+                    'Dishonor a character': context => this.controller.opponent.cardsInPlay.any(card => card.allowGameAction('dishonor', context))
                 }
             },
             handler: context => {
                 if(context.select === 'Discard at random') {
-                    this.game.addMessage('{0} uses {1} - {2} chose to discard a card at random', this.controller, this, this.controller.opponent);
-                    this.controller.opponent.discardAtRandom(1);
+                    this.game.addMessage('{0} uses {1} - {2} chooses to discard a card at random', this.controller, this, this.controller.opponent);
+                    this.controller.opponent.discardAtRandom(1, context.source);
                 } else {
                     this.game.promptForSelect(this.controller.opponent, {
                         source: this,
                         cardType: 'character',
-                        cardCondition: card => card.controller === this.controller.opponent && card.location === 'play area' && card.allowGameAction('dishonor', context),
+                        gameAction: 'dishonor',
+                        cardCondition: card => card.controller === this.controller.opponent,
                         onSelect: (player, card) => {
-                            this.game.addMessage('{0} uses {1} - {2} chose to dishonor {3}', this.controller, this, player, card);
-                            player.dishonorCard(card, context.source);
+                            this.game.addMessage('{0} uses {1} - {2} chooses to dishonor {3}', this.controller, this, player, card);
+                            this.game.applyGameAction(context, { dishonor: card });
                             return true;
                         }
                     });

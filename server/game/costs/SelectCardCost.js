@@ -3,6 +3,7 @@ const CardSelector = require('../CardSelector.js');
 class SelectCardCost {
     constructor(action, promptProperties) {
         this.action = action;
+        promptProperties.gameAction = action.gameAction;
         this.selector = this.createSelector(action, promptProperties);
         this.activePromptTitle = promptProperties.activePromptTitle;
     }
@@ -27,6 +28,7 @@ class SelectCardCost {
             context: context,
             selector: this.selector,
             source: context.source,
+            buttons: [{ text: 'Cancel', arg: 'cancel' }],
             onSelect: (player, cards) => {
                 context.costs[this.action.name] = cards;
                 result.value = true;
@@ -43,10 +45,10 @@ class SelectCardCost {
         return result;
     }
 
-    pay(context) {
+    payEvent(context) {
         let selected = context.costs[this.action.name];
         let selectedAsArray = Array.isArray(selected) ? selected : [selected];
-        this.action.pay(selectedAsArray, context);
+        return this.action.payEvent(selectedAsArray, context);
     }
 }
 
