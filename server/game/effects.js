@@ -215,7 +215,7 @@ const Effects = {
     delayedEffect: function(properties) {
         return {
             apply: function(card, context) {
-                properties.match = card;
+                properties.target = card;
                 properties.context = properties.context || context;
                 context.delayedEffect = context.delayedEffect || {};
                 context.delayedEffect[card.uuid] = context.source.delayedEffect(properties);
@@ -372,7 +372,7 @@ const Effects = {
     playerCannotInitiateConflict: playerCannotEffect('initiateConflict'),
     cardCannotInitiateConflict: cardCannotEffect('initiateConflict'),
     cardCannotPlaceFate: cardCannotEffect('placeFate'),
-    playerCannotPlaceFate: playerCannotEffect('placeFate'),
+    cannotPlaceFateWhenPlayingCharacter: playerCannotEffect('placeFateWhenPlayingCharacter'),
     playerCannotSpendFate: playerCannotEffect('spendFate'),
     playerCannotTakeFirstAction: playerCannotEffect('takeFirstAction'),
     playerCannotTakeFateFromRings: playerCannotEffect('takeFateFromRings'),
