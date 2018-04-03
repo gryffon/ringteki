@@ -2,6 +2,19 @@ const $ = require('jquery'); // eslint-disable-line no-unused-vars
 const _ = require('underscore');
 const moment = require('moment');
 
+const worldsRole = {
+    crab: 'keeper-of-earth',
+    crane: 'seeker-of-air',
+    dragon: 'seeker-of-fire',
+    lion: 'keeper-of-fire',
+    phoenix: 'keeper-of-water',
+    scorpion: 'seeker-of-void',
+    unicorn: 'keeper-of-void'
+};
+
+const openRoles = [
+    'support-of-the-phoenix'
+];
 
 function getDeckCount(deck) {
     let count = 0;
@@ -124,7 +137,7 @@ class DeckValidator {
         let unreleasedCards = [];
         let rules = this.getRules(deck);
         let stronghold = getStronghold(deck);
-        let role = getRole(deck);
+        let role = deck.role ? deck.role.card : null;
         let provinceCount = getDeckCount(deck.provinceCards)
         let dynastyCount = getDeckCount(deck.dynastyCards);
         let conflictCount = getDeckCount(deck.conflictCards);
@@ -198,6 +211,7 @@ class DeckValidator {
             }
             return total;
         }, 0);
+
         if(totalInfluence > rules.influence) {
             errors.push('Total influence (' + totalInfluence.toString() + ') is higher than max allowed influence(' + rules.influence.toString() + ')');
         }
@@ -205,6 +219,7 @@ class DeckValidator {
         return {
             basicRules: errors.length === 0,
             noUnreleasedCards: unreleasedCards.length === 0,
+            officialRole: !role || role.id === worldsRole[deck.faction.value] || openRoles.includes(role.id),
             provinceCount: provinceCount,
             dynastyCount: dynastyCount,
             conflictCount: conflictCount,
