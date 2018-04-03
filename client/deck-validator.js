@@ -26,54 +26,22 @@ function getDeckCount(deck) {
     return count;
 }
 
-function getStronghold(deck) {
-    var stronghold;
-    _.each(deck, card => {
-        if(card.card.type === 'stronghold') {
-            stronghold = card;
-        }
-    });
+function isCardInReleasedPack(packs, card) {
+    let packsWithCard = _.compact(_.map(card.pack_cards, pack => _.find(packs, p => p.id === pack.pack.id)));
 
-    return stronghold;
-}
-
-function getRole(deck) {
-    let role;
-    _.each(deck, card => {
-        if(card.card.type === 'role') {
-            role = card;
-        }
-    });
-
-    return role;
-}
-
-function isCardInReleasedPack(packs, card) { // eslint-disable-line no-unused-vars
-    let cardPack = '';
-    let pack = false;
-
-    if(card.pack_cards.length > 0) {
-        cardPack = card.pack_cards[0].pack.id;
-        pack = _.find(packs, pack => {
-            return cardPack === pack.id;
-        });
-    }
-
-
-    if(!pack) {
+    if(packsWithCard.length === 0) {
         return false;
     }
 
-    let releaseDate = pack.available || pack.released_at;
+    let releaseDates = _.compact(_.map(packsWithCard, pack => pack.available || pack.released_at));
 
-    if(!releaseDate) {
+    if(releaseDates.length === 0) {
         return false;
     }
 
-    releaseDate = moment(releaseDate, 'YYYY-MM-DD');
     let now = moment();
 
-    return releaseDate <= now;
+    return _.any(releaseDates, date => moment(date, 'YYYY-MM-DD') <= now);
 }
 
 function rulesForKeeperRole(element) {
@@ -136,12 +104,12 @@ class DeckValidator {
         let errors = [];
         let unreleasedCards = [];
         let rules = this.getRules(deck);
-        let stronghold = getStronghold(deck);
-        let role = deck.role ? deck.role.card : null;
+        let stronghold = deck.stronghold.length > 0 ? deck.stronghold[0].card : null;
+        let role = deck.role.length > 0 ? deck.role[0].card : null;
         let provinceCount = getDeckCount(deck.provinceCards)
         let dynastyCount = getDeckCount(deck.dynastyCards);
         let conflictCount = getDeckCount(deck.conflictCards);
-
+        
         if(provinceCount < rules.requiredProvinces) {
             errors.push('Too few province cards');
         } else if(provinceCount > rules.requiredProvinces) {
@@ -159,13 +127,13 @@ class DeckValidator {
         } else if(conflictCount > rules.maximumConflict) { 
             errors.push('Too many conflict cards');
         }
-
+        
         _.each(rules.rules, rule => {
             if(!rule.condition(deck)) {
                 errors.push(rule.message);
             }
         });
-
+        
         let allCards = deck.provinceCards.concat(deck.dynastyCards).concat(deck.conflictCards);
         let cardCountByName = {};
 
@@ -173,7 +141,7 @@ class DeckValidator {
             cardCountByName[cardQuantity.card.name] = cardCountByName[cardQuantity.card.name] || { name: cardQuantity.card.name, faction: cardQuantity.card.clan, influence: cardQuantity.card.influence_cost, limit: cardQuantity.card.deck_limit, count: 0 };
             cardCountByName[cardQuantity.card.name].count += cardQuantity.count;
 
-            if(!rules.mayInclude(cardQuantity.card) || rules.cannotInclude(cardQuantity.card) || !rules.roleRestrictions.includes(cardQuantity.card.role_restriction)) {
+            if(!rules.mayInclude(cardQuantity.card) || rules.cannotInclude(cardQuantity.card) || (cardQuantity.card.role_restriction && !rules.roleRestrictions.includes(cardQuantity.card.role_restriction))) {
                 errors.push(cardQuantity.card.name + ' is not allowed by clan, alliance or role');
             }
 
@@ -215,7 +183,7 @@ class DeckValidator {
         if(totalInfluence > rules.influence) {
             errors.push('Total influence (' + totalInfluence.toString() + ') is higher than max allowed influence(' + rules.influence.toString() + ')');
         }
-
+        
         return {
             basicRules: errors.length === 0,
             noUnreleasedCards: unreleasedCards.length === 0,
@@ -244,23 +212,14 @@ class DeckValidator {
         };
         let factionRules = this.getFactionRules(deck.faction.value.toLowerCase());
         let allianceRules = this.getAllianceRules(deck.alliance.value.toLowerCase());
-        let roleRules = this.getRoleRules(getRole(deck));
-        let strongholdRules = this.getStrongholdRules(getStronghold(deck));
+        let roleRules = this.getRoleRules(deck.role.length > 0 ? deck.role[0].card : null);
+        let strongholdRules = this.getStrongholdRules(deck.stronghold.length > 0 ? deck.stronghold[0].card : null);
         return this.combineValidationRules([standardRules, factionRules, allianceRules, roleRules, strongholdRules]);
     }
 
     getFactionRules(faction) {
         return {
-            mayInclude: card => card.clan === faction || card.faction === 'neutral',
-            rules: [
-                {
-                    message: 'Your stronghold must match your clan',
-                    condition: deck => {
-                        let stronghold = getStronghold(deck);
-                        return stronghold && stronghold.clan === faction;
-                    }
-                }
-            ]
+            mayInclude: card => card.clan === faction || card.clan === 'neutral'
         };
     }
 
@@ -271,13 +230,23 @@ class DeckValidator {
     }
 
     getStrongholdRules(stronghold) {
+        if(!stronghold) {
+            return {};
+        }
         return {
-            influence: stronghold.influence_pool
+            influence: stronghold.influence_pool,
+            rules: [
+                {
+                    message: 'Your stronghold must match your clan',
+                    condition: deck => stronghold.clan === deck.faction.value
+                }
+            ]
+
         };
     }
 
     getRoleRules(role) {
-        if(!role && !roleRules[role.id]) {
+        if(!role || !roleRules[role.id]) {
             return {};
         }
         return roleRules[role.id];
