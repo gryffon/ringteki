@@ -96,7 +96,7 @@ const roleRules = {
 };
 
 class DeckValidator {
-    constructor(packs, restrictedListRules) {
+    constructor(packs) {
         this.packs = packs;
     }
 
@@ -106,7 +106,7 @@ class DeckValidator {
         let rules = this.getRules(deck);
         let stronghold = deck.stronghold.length > 0 ? deck.stronghold[0].card : null;
         let role = deck.role.length > 0 ? deck.role[0].card : null;
-        let provinceCount = getDeckCount(deck.provinceCards)
+        let provinceCount = getDeckCount(deck.provinceCards);
         let dynastyCount = getDeckCount(deck.dynastyCards);
         let conflictCount = getDeckCount(deck.conflictCards);
         
@@ -152,7 +152,7 @@ class DeckValidator {
 
         if(!stronghold) {
             errors.push('No stronghold');
-        } else if (!isCardInReleasedPack(this.packs, stronghold)) {
+        } else if(!isCardInReleasedPack(this.packs, stronghold)) {
             unreleasedCards.push(stronghold.name + ' is not yet released');
         }
 

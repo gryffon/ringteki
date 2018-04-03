@@ -6,7 +6,7 @@ class DeckStatusSummary extends React.Component {
         let { basicRules, officialRole, noUnreleasedCards } = this.props.status;
         const items = [
             { title: 'Basic deckbuilding rules', value: basicRules },
-            { title: `Official FFG OP role`, value: officialRole },
+            { title: 'Official FFG OP role', value: officialRole },
             { title: 'Only released cards', value: noUnreleasedCards }
         ];
 
