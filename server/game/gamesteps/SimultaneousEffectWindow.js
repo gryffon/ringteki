@@ -16,7 +16,8 @@ class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
     }
 
     filterChoices() {
-        let choices = this.choices.filter(choice => choice.condition());
+        let choices = _.uniq(this.choices, choice => choice.title);
+        choices = choices.filter(choice => choice.condition());
         if(choices.length === 0) {
             return true;
         }

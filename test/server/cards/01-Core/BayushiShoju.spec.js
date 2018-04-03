@@ -1,4 +1,4 @@
-describe('Bayushi Shoju', function() {
+fdescribe('Bayushi Shoju', function() {
     integration(function() {
         beforeEach(function() {
             this.messageSpy = spyOn(this.game, 'addMessage');
@@ -59,6 +59,7 @@ describe('Bayushi Shoju', function() {
                 this.player1.clickCard(this.yogoOutcast);
                 this.player2.pass();
                 this.player1.playAttachment('fiery-madness', this.yogoOutcast);
+                console.log(this.player1.formatPrompt())
                 expect(this.watchCommander.location).toBe('conflict discard pile');
                 expect(this.player2).not.toBeAbleToSelect(this.watchCommander);
                 expect(this.player2).toHavePrompt('Conflict Action Window');

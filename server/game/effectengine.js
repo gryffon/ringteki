@@ -36,11 +36,13 @@ class EffectEngine {
     }
 
     checkDelayedEffects(events) {
-        _.each(this.delayedEffects, effect => {
-            if(effect.checkEffect(events)) {
-                effect.executeHandler();
-            }
-        });
+        let effectsToTrigger = _.filter(this.delayedEffects, effect => effect.checkEffect(events));
+        if(effectsToTrigger.length > 0) {
+            this.game.openSimultaneousEffectWindow(_.map(effectsToTrigger, effect => ({
+                title: effect.source.name + '\'s effect on ' + effect.target.name,
+                handler: () => effect.executeHandler()
+            })));
+        }
     }
 
     checkEffects(hasChanged = false, loops = 0) {
