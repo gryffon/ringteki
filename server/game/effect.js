@@ -220,7 +220,7 @@ class Effect {
             targets: _.map(this.targets, target => target.name),
             active: this.active,
             condition: this.condition()
-        }
+        };
     }
 }
 
