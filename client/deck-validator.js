@@ -181,7 +181,7 @@ class DeckValidator {
         }, 0);
 
         if(totalInfluence > rules.influence) {
-            errors.push('Total influence (' + totalInfluence.toString() + ') is higher than max allowed influence(' + rules.influence.toString() + ')');
+            errors.push('Total influence (' + totalInfluence.toString() + ') is higher than max allowed influence (' + rules.influence.toString() + ')');
         }
         
         return {
