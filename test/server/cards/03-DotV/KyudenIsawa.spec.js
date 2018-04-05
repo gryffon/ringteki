@@ -1,4 +1,4 @@
-fdescribe('Kyuden Isawa', function() {
+describe('Kyuden Isawa', function() {
     integration(function() {
         describe('Kyuden Isawa\'s ability', function() {
             beforeEach(function() {
@@ -24,7 +24,12 @@ fdescribe('Kyuden Isawa', function() {
                 expect(this.adeptOfTheWaves.bowed).toBe(true);
                 this.player2.pass();
                 this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
-                expect(this.player1).toHavePrompt('Kyuden Isawa');
+                expect(this.player1).toHavePrompt('Choose a spell event');
+                this.player1.clickCard(this.againstTheWaves);
+                expect(this.player1).toHavePrompt('Against the Waves');
+                this.player1.clickCard(this.adeptOfTheWaves);
+                expect(this.adeptOfTheWaves.bowed).toBe(false);
+                expect(this.againstTheWaves.location).toBe('removed from game');
             });
         });
     });
