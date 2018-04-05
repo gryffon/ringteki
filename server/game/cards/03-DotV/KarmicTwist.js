@@ -5,16 +5,16 @@ class KarmicTwist extends DrawCard {
         this.action({
             title: 'Move fate from a non-unique character',
             condition: () =>
-                this.controller.cardsInPlay.any(card => !card.isUnique() && card.getFate() === 0) &&
+                this.controller.cardsInPlay.any(card => !card.isUnique() && card.getFate() === 0 && card.allowGameAction('placeFate')) &&
                 this.controller.cardsInPlay.any(card => !card.isUnique() && card.allowGameAction('removeFate')) || 
                 this.controller.opponent &&
-                this.controller.opponent.cardsInPlay.some(card => !card.isUnique() && card.getFate() === 0) &&
-                this.controller.opponent.cardsInPlay.some(card => !card.isUnique() && card.allowGameAction('removeFate'))/**/,
+                this.controller.opponent.cardsInPlay.some(card => !card.isUnique() && card.getFate() === 0 && card.allowGameAction('placeFate')) &&
+                this.controller.opponent.cardsInPlay.some(card => !card.isUnique() && card.allowGameAction('removeFate')),
             target: {
                 activePromptTitle: 'Choose a donor character',
                 cardType: 'character',
                 gameAction: 'removeFate',
-                cardCondition: card => !card.isUnique() && card.getFate() > 0 && card.allowGameAction('removeFate') && card.location === 'play area'
+                cardCondition: card => !card.isUnique()
             },
             handler: context => this.game.promptForSelect(this.controller, {
                 activePromptTitle: 'Choose a recipient character',
@@ -24,8 +24,7 @@ class KarmicTwist extends DrawCard {
                     !card.isUnique() && 
                     card.getFate() === 0 && 
                     card.controller === context.target.controller && 
-                    card.allowGameAction('placeFate', context) &&
-                    card.location === 'play area',
+                    card.allowGameAction('placeFate', context),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} uses {1} to move {2} fate from {3} to {4}', player, this, context.target.fate, context.target, card);
                     let event = this.game.applyGameAction(context, { removeFate: context.target })[0];
