@@ -15,17 +15,10 @@ class DojiShigeru extends DrawCard {
 
             handler: () => {
                 this.game.addMessage('{0} uses {1} to force {2} to choose and discard a card', this.controller, this, this.controller.opponent);
-                //Text for discarding a chosen card from hand (see: night raid, resoration)
-                let num = 1;
-                let prompt = 'Choose a card to discard';
                 this.game.promptForSelect(this.controller.opponent, {
-                    activePromptTitle: prompt,
+                    activePromptTitle: 'Choose a card to discard',
                     source: this,
                     cardCondition: card => card.location === 'hand',
-                    numCards: num,
-                    mode: 'exactly',
-                    ordered: true,
-                    multiSelect: false,
                     onSelect: (player, card) => {
                         player.discardCardsFromHand(card);
                         return true;
