@@ -10,9 +10,10 @@ class ShibaTetsu extends DrawCard {
                     event.player === this.controller && event.card.hasTrait('spell') && this.game.currentConflict
                 )
             },
-            handler: () => {
-                this.untilEndOfConflict(ability => ({
-                    match: this,
+            handler: context => {
+                this.game.addMessage('{0} uses {1}, giving him +1{2}/+1{3}', context.player, context.source, 'military', 'political'); 
+                context.source.untilEndOfConflict(ability => ({
+                    match: context.source,
                     effect: [
                         ability.effects.modifyMilitarySkill(1),
                         ability.effects.modifyPoliticalSkill(1)
