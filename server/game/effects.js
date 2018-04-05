@@ -465,16 +465,15 @@ const Effects = {
                         conflict.modifyAttackerSkill(skillDifference);
                         context.attackingModifier[card.uuid] = skill;
                         return skillDifference !== 0;
-                    } else {
-                        if(context.attackingModifier[card.uuid]) {
-                            conflict.modifyAttackerSkill(-context.attackingModifier[card.uuid]);
-                            delete context.attackingModifier[card.uuid];
-                        }
-                        let skillDifference = skill - (context.defendingModifier[card.uuid] || 0);
-                        conflict.modifyDefenderSkill(skillDifference);
-                        context.defendingModifier[card.uuid] = skill;
-                        return skillDifference !== 0;
                     }
+                    if(context.attackingModifier[card.uuid]) {
+                        conflict.modifyAttackerSkill(-context.attackingModifier[card.uuid]);
+                        delete context.attackingModifier[card.uuid];
+                    }
+                    let skillDifference = skill - (context.defendingModifier[card.uuid] || 0);
+                    conflict.modifyDefenderSkill(skillDifference);
+                    context.defendingModifier[card.uuid] = skill;
+                    return skillDifference !== 0;
                 }
                 return false;
             },
