@@ -20,7 +20,7 @@ describe('Moto Nergui', function() {
                     attackers: ['moto-nergui'],
                     defenders: []
                 });
-                this.player2.pass()
+                this.player2.pass();
                 this.motoNergui = this.player1.findCardByName('moto-nergui');
                 this.player1.clickCard(this.motoNergui);
                 expect(this.player1).toHavePrompt('Moto Nergüi');
@@ -34,7 +34,7 @@ describe('Moto Nergui', function() {
                     attackers: ['moto-nergui', 'utaku-yumino'],
                     defenders: []
                 });
-                this.player2.pass()
+                this.player2.pass();
                 this.motoNergui = this.player1.findCardByName('moto-nergui');
                 this.player1.clickCard(this.motoNergui);
                 expect(this.player1).toHavePrompt('Moto Nergüi');
@@ -49,7 +49,7 @@ describe('Moto Nergui', function() {
                     attackers: ['moto-nergui'],
                     defenders: ['shiba-tsukune']
                 });
-                this.player2.pass()
+                this.player2.pass();
                 this.motoNergui = this.player1.findCardByName('moto-nergui');
                 this.player1.clickCard(this.motoNergui);
                 expect(this.player1).toHavePrompt('Moto Nergüi');

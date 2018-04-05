@@ -8,7 +8,7 @@ describe('Kyuden Isawa', function() {
                         stronghold: 'kyuden-isawa',
                         inPlay: ['adept-of-the-waves'],
                         hand: ['against-the-waves']
-                    },
+                    }
                 });
                 this.noMoreActions();
                 this.initiateConflict({
