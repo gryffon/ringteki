@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 
 class MotoNergui extends DrawCard {
@@ -11,7 +10,7 @@ class MotoNergui extends DrawCard {
                 gameAction: 'sendHome',
                 cardCondition: (card, context) => {
                     let participants = context.game.currentConflict.attacker.concat(context.game.currenctConflict.defenders);
-                    return participants.includes(card) && card.getGlory() === Math.max(_.map(participants, c => c.getGlory()));
+                    return participants.includes(card) && card.getGlory() === Math.max(participants.map(c => c.getGlory()));
                 }
             },
             handler: context => {
