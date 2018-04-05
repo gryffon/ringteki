@@ -140,13 +140,7 @@ class InitiateConflictPrompt extends UiPrompt {
         if(!this.attackerChoosesRing && ring.element !== this.conflict.conflictRing) {
             return false;
         }
-        let player = this.choosingPlayer;
-        if(ring.claimed || !player.allowGameAction('initiateConflict', { source: { type: 'ring', element: ring.element } })) {
-            return false;
-        }
-
-        return true;
-
+        return ring.canDeclare(this.choosingPlayer);
     }
 
     checkCardCondition(card) {

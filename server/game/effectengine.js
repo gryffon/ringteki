@@ -35,36 +35,35 @@ class EffectEngine {
         this.delayedEffects = _.reject(this.delayedEffects, e => e === effect);
     }
 
-    checkDelayedEffects(eventNames) {
+    checkDelayedEffects(events) {
         _.each(this.delayedEffects, effect => {
-            if(effect.trigger.length === 0 || _.any(effect.trigger, name => eventNames.includes(name))) {
-                effect.getTargets();
+            if(effect.checkEffect(events)) {
+                effect.executeHandler();
             }
         });
     }
 
-    checkEffects(hasChanged = false) {
-        if(!hasChanged && !this.newEffect) {
+    checkEffects(stateChanged = false, loops = 0) {
+        if(!stateChanged && !this.newEffect) {
             return false;
         }
-        let returnValue = this.newEffect;
+        stateChanged = false;
+        this.newEffect = false;
         _.each(this.effects, effect => {
             // Check each effect's condition and find new targets
             // Reapply all effects which have reapply function
-            this.newEffect = effect.checkCondition() || effect.reapply();
-        });
-        returnValue = returnValue || this.newEffect;
-        this.reapplyOtherEffects();
-        this.checkEffects();
-        return returnValue;
-    }
-
-    reapplyOtherEffects() {
-        _.each(this.effects, effect => {
+            stateChanged = effect.checkCondition(stateChanged);
+            stateChanged = effect.reapply(stateChanged);
             if(effect.reapplyOnCheckState) {
                 effect.unapplyThenApply();
             }
         });
+        if(loops === 10) {
+            throw new Error('EffectEngine.checkEffects looped 10 times');
+        } else {
+            this.checkEffects(stateChanged, loops + 1);
+        }
+        return stateChanged;
     }
 
     onCardMoved(event) {
@@ -73,7 +72,7 @@ class EffectEngine {
         this.unapplyAndRemove(effect => effect.duration === 'persistent' && effect.source === event.card && (effect.location === event.originalLocation || event.parentChanged));
         // Any lasting or delayed effects on this card should be removed when it leaves play
         this.unapplyAndRemove(effect => effect.match === event.card && effect.location !== 'any' && effect.duration !== 'persistent');
-        this.delayedEffects = _.reject(this.delayedEffects, effect => effect.match === event.card);
+        this.delayedEffects = _.reject(this.delayedEffects, effect => effect.target === event.card);
         this.addTargetForPersistentEffects(event.card, newArea);
     }
 
@@ -206,6 +205,13 @@ class EffectEngine {
         });
         this.effects = remainingEffects;
         return matchingEffects.length > 0;
+    }
+
+    getDebugInfo() {
+        return {
+            effects: _.map(this.effects, effect => effect.getDebugInfo()),
+            delayedEffects: _.map(this.delayedEffects, effect => effect.getDebugInfo())
+        };
     }
 }
 

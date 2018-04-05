@@ -210,7 +210,6 @@ class Conflict {
         ring.flipConflictType();
         this.conflictType = ring.conflictType;
         this.conflictTypeSwitched = true;
-        this.checkForIllegalParticipants();
     }
     
     switchElement(element) {
@@ -294,6 +293,7 @@ class Conflict {
         }
 
         stateChanged = this.game.effectEngine.checkEffects(stateChanged);
+        this.checkForIllegalParticipants();
 
         this.attackerSkill = this.calculateSkillFor(this.attackers) + this.attackerSkillModifier;
         this.defenderSkill = this.calculateSkillFor(this.defenders) + this.defenderSkillModifier;
@@ -353,6 +353,7 @@ class Conflict {
         this.winner.winConflict(this.conflictType, this.attackingPlayer === this.winner);
         this.loser.loseConflict(this.conflictType, this.attackingPlayer === this.loser);
         this.skillDifference = this.winnerSkill - this.loserSkill;
+        this.game.effectEngine.checkEffects(true);
     }
 
     checkNoWinnerOrLoser() {

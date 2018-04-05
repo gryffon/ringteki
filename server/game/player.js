@@ -66,7 +66,6 @@ class Player extends Spectator {
         this.cannotGainConflictBonus = false; // I have no idea what this is for
         this.abilityRestrictions = []; // This stores player restrictions from e.g. Guest of Honor
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
-        this.canInitiateAction = false; // This flag determines whether this player has priority in an action window
         this.conflictDeckTopCardHidden = true;
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings
             dynasty: true,
@@ -586,7 +585,7 @@ class Player extends Spectator {
      * Discards the passed number of randomly chosen cards from this players hand, and displays a message in chat will all discarded cards
      * @param {Int} number
      */
-    discardAtRandom(number) {
+    discardAtRandom(number, source = 'Framework Effect') {
         var toDiscard = Math.min(number, this.hand.size());
         var cards = [];
 
@@ -606,6 +605,7 @@ class Player extends Spectator {
                 numCards: toDiscard,
                 multiselect: true,
                 ordered: true,
+                source: source,
                 cardCondition: card => cards.includes(card),
                 onSelect: (player, cards) => {
                     this.discardCardsFromHand(cards, true);
@@ -872,8 +872,8 @@ class Player extends Spectator {
      * their requirements.  If only one does, calls that ability, if more than one do, prompts the player to pick one
      * @param {BaseCard} card
      */
-    findAndUseAction(card) {
-        if(!card || !this.canInitiateAction) {
+    initiateCardAction(card) {
+        if(!card) {
             return false;
         }
 
@@ -890,7 +890,6 @@ class Player extends Spectator {
             return false;
         }
 
-        this.canInitiateAction = false;
         if(contexts.length === 1) {
             this.game.resolveAbility(contexts[0]);
         } else {
@@ -1520,7 +1519,7 @@ class Player extends Spectator {
      * Returns an Array of Rings of all rings claimed by this player
      */
     getClaimedRings() {
-        return _.filter(this.game.rings, ring => ring.claimedBy === this.name);
+        return _.filter(this.game.rings, ring => ring.isConsideredClaimed(this));
     }
 
     /**
@@ -1945,13 +1944,13 @@ class Player extends Spectator {
             firstPlayer: this.firstPlayer,
             hideProvinceDeck: this.hideProvinceDeck,
             id: this.id,
-            optionSettings: this.optionSettings,
             imperialFavor: this.imperialFavor,
             left: this.left,
             name: this.name,
             numConflictCards: this.conflictDeck.size(),
             numDynastyCards: this.dynastyDeck.size(),
             numProvinceCards: this.provinceDeck.size(),
+            optionSettings: this.optionSettings,
             phase: this.game.currentPhase,
             promptedActionWindows: this.promptedActionWindows,
             provinces: {
@@ -1962,17 +1961,17 @@ class Player extends Spectator {
             },
             showBid: this.showBid,
             stats: this.getStats(),
-            strongholdProvince: this.getSummaryForCardList(this.strongholdProvince, activePlayer),
             timerSettings: this.timerSettings,
+            strongholdProvince: this.getSummaryForCardList(this.strongholdProvince, activePlayer),
             user: _.omit(this.user, ['password', 'email'])
         };
 
-        if(this.showConflictDeck) {
+        if(this.showConflict) {
             state.showConflictDeck = true;
             state.cardPiles.conflictDeck = this.getSummaryForCardList(this.conflictDeck, activePlayer);
         }
 
-        if(this.showDynastyDeck) {
+        if(this.showDynasty) {
             state.showDynastyDeck = true;
             state.cardPiles.dynastyDeck = this.getSummaryForCardList(this.dynastyDeck, activePlayer);
         }
