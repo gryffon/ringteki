@@ -10,7 +10,7 @@ class Fushicho extends DrawCard {
             target: {
                 activePrompt: 'Choose a character',
                 cardType: 'character',
-                gameAction; 'putIntoPlay', 
+                gameAction: 'putIntoPlay', 
                 cardCondition: card => card.location === 'dynasty discard pile' &&
                                        card.controller === this.controller && card.isFaction('phoenix')
             },
