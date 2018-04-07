@@ -5,7 +5,7 @@ describe('Karada District', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        fate:2,
+                        fate:3,
                         inPlay: ['adept-of-the-waves', 'seppun-guardsman'],
                         dynastyDeck: ['karada-district'],
                         hand: ['fine-katana', 'watch-commander', 'favored-mount', 'born-in-war', 'oni-mask']
@@ -43,7 +43,7 @@ describe('Karada District', function() {
                     
                     it('should transfer fate to the target\'s controller', function() {
                         expect(this.player2.fate).toBe(1);
-                        expect(this.player1.fate).toBe(3);
+                        expect(this.player1.fate).toBe(4);
                     });
                     describe ('and there is a valid target to attach to', function() {
                         it('should prompt the player to choose a character to give the attachment to', function() {
