@@ -45,32 +45,22 @@ class EffectEngine {
         }
     }
 
-    checkEffects(hasChanged = false, loops = 0) {
-        if(!hasChanged && !this.newEffect) {
+    checkEffects(stateChanged = false, loops = 0) {
+        if(!stateChanged && !this.newEffect) {
             return false;
         }
-        let returnValue = this.newEffect;
+        stateChanged = false;
+        this.newEffect = false;
         _.each(this.effects, effect => {
             // Check each effect's condition and find new targets
-            // Reapply all effects which have reapply function
-            this.newEffect = effect.checkCondition() || effect.reapply();
+            stateChanged = effect.checkCondition(stateChanged);
         });
-        returnValue = returnValue || this.newEffect;
-        this.reapplyOtherEffects();
         if(loops === 10) {
             throw new Error('EffectEngine.checkEffects looped 10 times');
         } else {
-            this.checkEffects(false, loops + 1);
+            this.checkEffects(stateChanged, loops + 1);
         }
-        return returnValue;
-    }
-
-    reapplyOtherEffects() {
-        _.each(this.effects, effect => {
-            if(effect.reapplyOnCheckState) {
-                effect.unapplyThenApply();
-            }
-        });
+        return stateChanged;
     }
 
     onCardMoved(event) {
@@ -78,7 +68,7 @@ class EffectEngine {
         this.removeTargetFromEffects(event.card, event.originalLocation);
         this.unapplyAndRemove(effect => effect.duration === 'persistent' && effect.source === event.card && (effect.location === event.originalLocation || event.parentChanged));
         // Any lasting or delayed effects on this card should be removed when it leaves play
-        this.unapplyAndRemove(effect => effect.match === event.card && effect.location !== 'any' && effect.duration !== 'persistent');
+        this.unapplyAndRemove(effect => effect.match === event.card && effect.targetLocation !== 'any' && effect.duration !== 'persistent');
         this.delayedEffects = _.reject(this.delayedEffects, effect => effect.target === event.card);
         this.addTargetForPersistentEffects(event.card, newArea);
     }
@@ -212,6 +202,13 @@ class EffectEngine {
         });
         this.effects = remainingEffects;
         return matchingEffects.length > 0;
+    }
+
+    getDebugInfo() {
+        return {
+            effects: _.map(this.effects, effect => effect.getDebugInfo()),
+            delayedEffects: _.map(this.delayedEffects, effect => effect.getDebugInfo())
+        };
     }
 }
 

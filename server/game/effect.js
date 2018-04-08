@@ -75,6 +75,8 @@ class Effect {
             return this.addTargets([this.match]);
         } else if(this.targetType === 'player') {
             return this.addTargets(_.values(this.game.getPlayers()));
+        } else if(this.targetType === 'ring') {
+            return this.addTargets(_.values(this.game.rings));
         }
         return this.addTargets(this.game.getTargetsForEffect(this.match));
     }
@@ -86,7 +88,16 @@ class Effect {
         }
 
         let newTargets = _.difference(targets, this.targets);
-
+        if(this.effect.reapply) {
+            _.each(this.targets, target => {
+                stateChanged = this.effect.reapply(target, this.context) || stateChanged;
+            });
+        } else if(this.effect.reapplyOnCheckState) {
+            _.each(this.targets, target => {
+                this.effect.unapply(target, this.context);
+                this.effect.apply(target, this.context);
+            });
+        }
         _.each(newTargets, target => {
             if(this.isValidTarget(target)) {
                 this.targets.push(target);
@@ -182,8 +193,7 @@ class Effect {
         this.targets = [];
     }
 
-    checkCondition() {
-        let stateChanged = false;
+    checkCondition(stateChanged) {
         if(!this.active) {
             return stateChanged;
         }
@@ -201,19 +211,13 @@ class Effect {
         return stateChanged;
     }
 
-    reapply() {
-        let stateChanged = false;
-        if(this.active && this.effect.reapply) {
-            _.each(this.targets, target => stateChanged = this.effect.reapply(target, this.context) || stateChanged);
-        }
-        return stateChanged;
-    }
-
-    unapplyThenApply() {
-        _.each(this.targets, target => {
-            this.effect.unapply(target, this.context);
-            this.effect.apply(target, this.context);
-        });
+    getDebugInfo() {
+        return {
+            source: this.source.name,
+            targets: _.map(this.targets, target => target.name),
+            active: this.active,
+            condition: this.condition()
+        };
     }
 }
 

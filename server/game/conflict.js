@@ -339,6 +339,7 @@ class Conflict {
         this.winner.winConflict(this.conflictType, this.attackingPlayer === this.winner);
         this.loser.loseConflict(this.conflictType, this.attackingPlayer === this.loser);
         this.skillDifference = this.winnerSkill - this.loserSkill;
+        this.game.effectEngine.checkEffects(true);
     }
 
     checkNoWinnerOrLoser() {
@@ -399,12 +400,14 @@ class Conflict {
         _.each(this.defenders, card => card.inConflict = false);
     }
 
-    cancelConflict() {
-        this.cancelled = true;
+    passConflict(message = '{0} has chosen to pass their conflict opportunity') {
+        this.game.addMessage(message, this.attackingPlayer);
+        this.conflictPassed = true;
+        this.attackingPlayer.conflicts.usedConflictOpportunity();
+        this.game.raiseEvent('onConflictPass', { conflict: this });
 
         this.resetCards();
 
-        this.game.addMessage('{0} has chosen to pass their conflict opportunity', this.attackingPlayer);
     }
 }
 
