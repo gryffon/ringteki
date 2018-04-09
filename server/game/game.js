@@ -6,6 +6,7 @@ const GameChat = require('./gamechat.js');
 const EffectEngine = require('./effectengine.js');
 const Effect = require('./effect.js');
 const DelayedEffect = require('./DelayedEffect.js');
+const TerminalCondition = require('./TerminalCondition.js');
 const Player = require('./player.js');
 const Spectator = require('./spectator.js');
 const AnonymousSpectator = require('./anonymousspectator.js');
@@ -267,6 +268,12 @@ class Game extends EventEmitter {
     addDelayedEffect(source, properties) {
         let effect = new DelayedEffect(this, source, properties);
         this.effectEngine.addDelayedEffect(effect);
+        return effect;
+    }
+
+    addTerminalCondition(source, properties) {
+        let effect = new TerminalCondition(this, source, properties);
+        this.effectEngine.addTerminalCondition(effect);
         return effect;
     }
 
@@ -1548,8 +1555,11 @@ class Game extends EventEmitter {
             this.effectEngine.checkEffects(hasChanged) || hasChanged
         ) {
             _.each(this.getPlayers(), player => player.cardsInPlay.each(card => card.checkForIllegalAttachments()));
+            this.effectEngine.checkTerminalConditions();
         }
-        this.effectEngine.checkDelayedEffects(events.concat([this.getEvent('onCheckGameState', {})]));
+        if(events.length > 0) {
+            this.effectEngine.checkDelayedEffects(events);
+        }
     }
 
     continue() {

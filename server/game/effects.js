@@ -226,6 +226,20 @@ const Effects = {
             }
         };
     },
+    terminalCondition: function(properties) {
+        return {
+            apply: function(card, context) {
+                properties.target = card;
+                properties.context = properties.context || context;
+                context.terminalCondition = context.terminalCondition || {};
+                context.terminalCondition[card.uuid] = context.source.terminalCondition(properties);                
+            },
+            unapply: function(card, context) {
+                context.game.effectEngine.removeTerminalCondition(context.terminalCondition[card.uuid]);
+                delete context.terminalCondition[card.uuid];
+            }
+        }
+    },
     addKeyword: function(keyword) {
         return {
             apply: function(card) {
