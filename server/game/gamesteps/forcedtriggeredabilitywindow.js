@@ -10,7 +10,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
         this.events = events;
         this.abilityType = abilityType;        
         this.currentPlayer = this.game.getFirstPlayer();
-        this.abilitiesTriggered = [];
+        this.resolvedAbilities = [];
     }
 
     continue() {
@@ -28,7 +28,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     }
 
     addChoice(context) {
-        if(!this.abilitiesTriggered.includes(context.ability)) {
+        if(!this.resolvedAbilities.some(resolved => resolved.ability === context.ability && resolved.event === context.event)) {
             this.choices.push(context);
         }
     }
@@ -105,7 +105,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
 
     resolveAbility(context) {
         this.game.resolveAbility(context);
-        this.abilitiesTriggered.push(context.ability);
+        this.resolvedAbilities.push({ ability: context.ability, event: context.event });
     }
 
     emitEvents() {
