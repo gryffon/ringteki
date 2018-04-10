@@ -254,7 +254,7 @@ class BaseCard extends EffectSource {
                 this.applyPersistentEffects();
             }
 
-            this.game.emitEvent('onCardMoved', { card: this, originalLocation: originalLocation, newLocation: targetLocation });
+            this.game.raiseEvent('onCardMoved', { card: this, originalLocation: originalLocation, newLocation: targetLocation });
         }
     }
 
