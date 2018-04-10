@@ -238,7 +238,7 @@ const Effects = {
                 context.game.effectEngine.removeTerminalCondition(context.terminalCondition[card.uuid]);
                 delete context.terminalCondition[card.uuid];
             }
-        }
+        };
     },
     addKeyword: function(keyword) {
         return {

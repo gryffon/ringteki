@@ -173,6 +173,7 @@ class Conflict {
         this.game.promptForRingSelect(player, {
             activePromptTitle: activePromptTitle,
             buttons: buttons,
+            source: 'Resolve Ring Effect',
             ringCondition: ring => elements.includes(ring.element),
             onSelect: (player, ring) => {
                 elementsToResolve--;

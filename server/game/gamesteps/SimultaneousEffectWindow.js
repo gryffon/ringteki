@@ -16,8 +16,7 @@ class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
     }
 
     filterChoices() {
-        let choices = _.uniq(this.choices, choice => choice.title);
-        choices = choices.filter(choice => choice.condition());
+        let choices = this.choices.filter(choice => choice.condition());
         if(choices.length === 0) {
             return true;
         }
@@ -35,7 +34,7 @@ class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
             activePromptTitle: 'Choose an effect to be resolved',
             waitingPromptTitle: 'Waiting for opponent',
             choices: _.map(choices, choice => choice.title),
-            handlers: _.map(choices, choice => this.resolveEffect(choice))
+            handlers: _.map(choices, choice => (() => this.resolveEffect(choice)))
         });
     }
 
