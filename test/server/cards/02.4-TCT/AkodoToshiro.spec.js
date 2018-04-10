@@ -38,13 +38,13 @@ describe('Akodo Toshiro', function() {
 
             it('should prompt the player which effect to resolve at the end of the conflict', function() {
                 this.noMoreActions();
-                this.player1.clickPrompt('Don\'t resolve the Air Ring');
+                this.player1.clickPrompt('Don\'t resolve');
                 expect(this.player1).toHavePrompt('Order Simultaneous effects');
             });
 
             it('should send the character to the discard pile if Toshiro\'s effect is resolved first', function() {
                 this.noMoreActions();
-                this.player1.clickPrompt('Don\'t resolve the Air Ring');
+                this.player1.clickPrompt('Don\'t resolve');
                 this.player1.clickPrompt('Akodo Toshiro\'s effect on Akodo Toshiro');
                 expect(this.akodoToshiro.location).toBe('dynasty discard pile');
                 expect(this.player1).toHavePrompt('Action Window');                
@@ -52,7 +52,7 @@ describe('Akodo Toshiro', function() {
 
             it('should send the character to the bottom of the dynasty deck if Toshiro\'s effect is resolved first', function() {
                 this.noMoreActions();
-                this.player1.clickPrompt('Don\'t resolve the Air Ring');
+                this.player1.clickPrompt('Don\'t resolve');
                 this.player1.clickPrompt('Kitsu Spiritcaller\'s effect on Akodo Toshiro');
                 expect(this.player1.player.dynastyDeck.last()).toBe(this.akodoToshiro);
                 expect(this.player1).toHavePrompt('Action Window');                
