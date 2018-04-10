@@ -66,7 +66,7 @@ class Duel {
             // Challenger alive, target dead
             if(this.challengerTotal > 0) {
                 this.winner =  this.challenger;
-                
+            }
         } else if(challengerTotal > targetTotal) {
             // Both alive, challenger wins
             this.winner = this.challenger;
