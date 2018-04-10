@@ -8,8 +8,8 @@ class EarthRingEffect extends BaseAbility {
                 activePromptTitle: 'Choose an effect to resolve',
                 source: 'Earth Ring',
                 choices: {
-                    'Draw a card and force your opponent to discard one at random': () => true,
-                    'Don\'t resolve the Earth Ring': () => optional
+                    'Draw a card and opponent discards': () => true,
+                    'Don\'t resolve': () => optional
                 }
             }
         });

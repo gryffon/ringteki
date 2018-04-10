@@ -9,8 +9,8 @@ class AirRingEffect extends BaseAbility {
                 source: 'Air Ring',
                 choices: {
                     'Gain 2 Honor': () => true,
-                    'Take 1 Honor from Opponent': context => context.player.opponent,
-                    'Don\'t resolve the Air Ring': () => optional
+                    'Take 1 Honor from opponent': context => context.player.opponent,
+                    'Don\'t resolve': () => optional
                 }
             }
         });

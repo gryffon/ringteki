@@ -6,7 +6,7 @@ class VoidRingEffect extends BaseAbility {
             target: {
                 activePromptTitle: 'Choose character to remove fate from',
                 source: 'Void Ring',
-                buttons: optional ? [{ text: 'Don\'t resolve the Void Ring', arg: 'dontResolve' }] : [],
+                buttons: optional ? [{ text: 'Don\'t resolve', arg: 'dontResolve' }] : [],
                 cardType: 'character',
                 gameAction: 'removeFate'
             }

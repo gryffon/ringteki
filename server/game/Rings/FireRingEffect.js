@@ -7,7 +7,7 @@ class FireRingEffect extends BaseAbility {
                 activePromptTitle: 'Choose character to honor or dishonor',
                 source: 'Fire Ring',
                 cardType: 'character',
-                buttons: optional ? [{ text: 'Don\'t resolve the Fire Ring', arg: 'dontResolve' }] : [],
+                buttons: optional ? [{ text: 'Don\'t resolve', arg: 'dontResolve' }] : [],
                 cardCondition: card => card.location === 'play area' && (card.allowGameAction('honor') || card.allowGameAction('dishonor'))
             }
         });
