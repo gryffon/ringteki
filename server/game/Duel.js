@@ -56,15 +56,17 @@ class Duel {
     determineResult() {
         let challengerTotal = this.getSkillTotal(this.challenger);
         let targetTotal = this.getSkillTotal(this.target);
-        if(this.challenger.location !== 'play area') {
-            if(this.target.location === 'play area') {
+        if(this.challengerTotal !== '-') {
+            if(this.targetTotal !== '-' && this.targetTotal > 0) {
                 // Challenger dead, target alive
                 this.winner = this.target;
             }
             // Both dead
-        } else if(this.target.location !== 'play area') {
+        } else if(this.targetTotal === '-') {
             // Challenger alive, target dead
-            this.winner = this.challenger;
+            if(this.challengerTotal > 0) {
+                this.winner =  this.challenger;
+                
         } else if(challengerTotal > targetTotal) {
             // Both alive, challenger wins
             this.winner = this.challenger;
