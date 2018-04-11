@@ -6,7 +6,6 @@ class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
     constructor(game) {
         super(game, 'delayedeffects', []);
     }
-    // Special window: Ring Effects (has a context), Delayed Effects
 
     addChoice(choice) {
         if(!choice.condition) {
@@ -20,7 +19,7 @@ class SimultaneousEffectWindow extends ForcedTriggeredAbilityWindow {
         if(choices.length === 0) {
             return true;
         }
-        if(choices.length === 1) {
+        if(choices.length === 1 || !this.currentPlayer.optionSettings.orderForcedAbilities) {
             this.resolveEffect(choices[0]);
         } else {
             this.promptBetweenChoices(choices);

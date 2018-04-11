@@ -16,6 +16,7 @@ describe('Akodo Toshiro', function() {
                     attackers: ['kitsu-spiritcaller'],
                     defenders: []
                 });
+                this.player1.player.optionSettings.orderForcedAbilities = true;
                 this.player2.pass();
                 this.kitsuSpiritcaller = this.player1.clickCard('kitsu-spiritcaller');
                 this.akodoToshiro = this.player1.clickCard('akodo-toshiro');
