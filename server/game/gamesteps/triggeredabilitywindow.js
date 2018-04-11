@@ -66,7 +66,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         }
 
         this.choices = _.filter(this.choices, context => context.player === this.currentPlayer);
-        this.game.promptForSelect(this.currentPlayer, this.getPromptForSelectProperties());
+        this.promptBetweenSources(this.choices);
         return false;
     }
 
@@ -79,6 +79,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
     getPromptForSelectProperties() {
         return _.extend(super.getPromptForSelectProperties(), {
             controls: this.getAdditionalPromptControls(),
+            selectCard: this.currentPlayer.optionSettings.markCardsUnselectable,
             buttons: [{ text: 'Pass', arg: 'pass' }],
             onMenuCommand: (player, arg) => {
                 this.pass(player, arg);

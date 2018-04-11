@@ -37,70 +37,105 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
         if(this.choices.length === 0) {
             return true;
         }
+        if(!this.currentPlayer.optionSettings.orderForcedTriggeredAbilities) {
+            this.choices.forEach(context => this.resolveAbility(context));
+            return false;
+        }
         if(this.choices.length === 1) {
             this.resolveAbility(this.choices[0]);
             return false;
         }
-        let cards = _.uniq(this.choices, context => context.source);
-        if(cards.length === 1) {
-            this.promptBetweenChoices(this.choices);
+        if(_.uniq(this.choices, context => context.source).length === 1) {
+            // All choices share a source
+            this.promptBetweenAbilities(this.choices);
         } else {
-            this.game.promptForSelect(this.currentPlayer, this.getPromptForSelectProperties());
+            // Choose an card to trigger
+            this.promptBetweenSources(this.choices);
         }
         return false;
     }
 
+    promptBetweenSources(choices) {
+        this.game.promptForSelect(this.currentPlayer, _.extend(this.getPromptForSelectProperties(), {
+            cardCondition: card => _.any(choices, context => context.source === card),
+            onSelect: (player, card) =>  {
+                this.promptBetweenAbilities(choices.filter(context => context.source === card));
+                return true;
+            }
+        }));
+    }
+
     getPromptForSelectProperties() {
-        let cards = _.pluck(this.choices, 'source');
+        return this.getPromptProperties();
+    }
+
+    getPromptProperties() {
         return {
             source: 'Triggered Abilities',
             activePromptTitle: TriggeredAbilityWindowTitles.getTitle(this.abilityType, this.events),
             waitingPromptTitle: 'Waiting for opponent',
-            cardCondition: card => cards.includes(card),
-            onSelect: (player, card) => {
-                let choices = _.filter(this.choices, context => context.source === card);
-                // The card chosen corresponds to a single event/ability combination
-                if(choices.length === 1) {
-                    this.resolveAbility(choices[0]);
-                    return true;
-                }
-                // The card chosen has multiple abilities which can be used in this window - no cards can have multiple reaction abilities at the moment
-                // The card chosen has a single ability which can be used with multiple events in this window
-                // Differentiate between events by Event.card
-                let eventCards = _.map(choices, context => context.event.card);
-                this.game.promptForSelect(player, {
-                    source: 'Triggered Abilities',
-                    activePromptTitle: 'Choose a card',
-                    waitingPromptTitle: 'Waiting for opponent',
-                    cardCondition: card => eventCards.includes(card),
-                    onSelect: (player, card) => {
-                        choices = _.filter(choices, context => context.event.card === card);
-                        if(choices.length === 1) {
-                            this.resolveAbility(choices[0]);
-                            return true;
-                        }
-                        // Differentiate between events by Event.name
-                        this.promptBetweenChoices(choices);
-                        return true;
-                    }
-                });
-                return true;
-            }
         };
     }
 
-    promptBetweenChoices(choices) {
-        this.game.promptWithHandlerMenu(this.currentPlayer, {
-            source: 'Triggered Abilities',
-            activePromptTitle: 'Which event do you want to respond to?',
-            waitingPromptTitle: 'Waiting for opponent',
-            choices: _.map(choices, context => TriggeredAbilityWindowTitles.getAction(context.event)),
-            handlers: _.map(choices, context => {
-                return () => {
-                    this.resolveAbility(context);
-                };
-            })
-        });
+    promptBetweenAbilities(choices) {
+        let menuChoices = _.uniq(choices.map(context => context.ability.title));
+        if(menuChoices.length === 1) {
+            // this card has only one ability which can be triggered
+            this.promptBetweenEventCards(choices);
+            return;
+        }
+        // This card has multiple abilities which can be used in this window - prompt the player to pick one
+        let handlers = menuChoices.map(title => (() => this.promptBetweenEventCards(choices.filter(context => context.ability.title === title))));
+        menuChoices.push('Back');
+        handlers.push(() => this.promptBetweenSources(this.choices));
+        this.game.promptWithHandlerMenu(this.currentPlayer, _.extend(this.getPromptProperties(), {
+            activePromptTitle: 'Which ability would you like to use?',
+            choices: menuChoices,
+            handlers: handlers
+        }));
+    }
+
+    promptBetweenEventCards(choices) {
+        if(_.uniq(choices, context => context.event.card).length === 1) {
+            // The events which this ability can respond to only affect a single card
+            this.promptBetweenEvents(choices);
+            return;
+        }
+        // Several cards could be affected by this ability - prompt the player to choose which they want to affect
+        this.game.promptForSelect(this.currentPlayer, _.extend(this.getPromptForSelectProperties(), {
+            activePromptTitle: 'Select a card to affect',
+            cardCondition: card => _.any(choices, context => context.event.card === card),
+            buttons: [{ text: 'Back', arg: 'back' }],
+            onSelect: (player, card) => {
+                this.promptBetweenEvents(choices.filter(context => context.event.card === card));
+                return true;
+            },
+            onMenuCommand: (player, arg) => {
+                if(arg === 'back') {
+                    this.promptBetweenSources(this.choices);
+                    return true;
+                }
+            }
+        }));
+    }
+
+    promptBetweenEvents(choices) {
+        choices = _.uniq(choices, context => context.event);
+        if(choices.length === 1) {
+            // This card is only being affected by a single event which the chosen ability can respond to
+            this.resolveAbility(choices[0]);
+            return;
+        }
+        // Several events affect this card and the chosen ability can respond to more than one of them - prompt player to pick one
+        let menuChoices = choices.map(context => TriggeredAbilityWindowTitles.getAction(context.event));
+        let handlers = choices.map(context => (() => this.resolveAbility(context)));
+        menuChoices.push('Back');
+        handlers.push(() => this.promptBetweenSources(this.choices));
+        this.game.promptWithHandlerMenu(this.currentPlayer, _.extend(this.getPromptProperties(), {
+            activePromptTitle: 'Choose an event to respond to',
+            choices: menuChoices,
+            handlers: handlers
+        }));
     }
 
     resolveAbility(context) {

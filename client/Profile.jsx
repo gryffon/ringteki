@@ -295,6 +295,14 @@ class InnerProfile extends React.Component {
                                         onChange={ this.onOptionSettingToggle.bind(this, 'cancelOwnAbilities') }
                                         checked={ this.state.optionSettings.cancelOwnAbilities } />
                                     <Checkbox
+                                        name='optionSettings.orderForcedTriggeredAbilities'
+                                        noGroup
+                                        label={ 'Prompt to order forced triggered abilities' }
+                                        fieldClass='col-sm-6'
+                                        onChange={ this.onOptionSettingToggle.bind(this, 'orderForcedTriggeredAbilities') }
+                                        checked={ this.state.optionSettings.orderForcedTriggeredAbilities }
+                                    />
+                                    <Checkbox
                                         name='optionSettings.showStatusInSidebar'
                                         noGroup
                                         label={

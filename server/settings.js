@@ -10,6 +10,7 @@ const defaultWindows = {
 const defaultOptionSettings = {
     markCardsUnselectable: true,
     cancelOwnAbilities: false,
+    orderForcedTriggeredAbilities: false,
     showStatusInSidebar: false
 };
 
