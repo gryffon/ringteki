@@ -161,7 +161,7 @@ class DrawCard extends BaseCard {
             // card cannot participate in this conflict type
             if(this.conflictOptions.cannotParticipateIn[this.game.currentConflict.conflictType]) {
                 return false;
-            }            
+            }
         } else if(actionType === 'putIntoPlay') {
             if(this.location === 'play area' || this.facedown || !['character', 'attachment'].includes(this.type)) {
                 return false;
@@ -509,23 +509,19 @@ class DrawCard extends BaseCard {
         return true;
     }
 
-    /**
-     * When this card is about to leave play, gets events required to pass
-     * to a CardLeavesPlayEventWindow
-     */
-    getEventsForDiscardingAttachments() {
-        if(this.attachments.size() > 0) {
-            return this.attachments.map(attachment => {
-                let destination = attachment.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
-                destination = attachment.isAncestral() ? 'hand' : destination;
-                return {
-                    name: 'onCardLeavesPlay',
-                    params: { card: attachment, destination: destination },
-                    handler: () => attachment.owner.moveCard(attachment, destination)
-                };
-            });
+    canTriggerAbilities(location) {
+        if(this.type === 'character' || this.type === 'attachment') {
+            if(!location.includes(this.location) && this.location !== 'play area') {
+                return false;
+            }
+        } else if(this.type === 'event') {
+            if(!location.includes(this.location) && !this.controller.isCardInPlayableLocation(this, 'play')) {
+                return false;
+            }
+        } else if(!this.location.includes('province')) {
+            return false;
         }
-        return [];
+        return super.canTriggerAbilities();
     }
 
     checkForIllegalAttachments() {
@@ -540,20 +536,6 @@ class DrawCard extends BaseCard {
         return StandardPlayActions
             .concat(this.abilities.playActions)
             .concat(super.getActions());
-    }
-
-    /**
-     * Removes all attachments from this card. Note that this function (different from remove Attachment)
-     * opens windows for interrupts/reactions
-     */
-    removeAllAttachments() {
-        let events = this.attachments.map(attachment => {
-            return {
-                name: 'onCardLeavesPlay',
-                params: { card: attachment }
-            };
-        });
-        this.game.raiseMultipleEvents(events);
     }
 
     /**
@@ -628,14 +610,6 @@ class DrawCard extends BaseCard {
 
     canParticipateAsDefender(conflictType = this.game.currentConflict.conflictType) {
         return this.allowGameAction('participateAsDefender') && this.canParticipateInConflict(conflictType);
-    }
-
-    returnHomeFromConflict() {
-        let side = this.game.currentConflict.isAttacking(this) ? 'attacker' : 'defender';
-        if(!this.conflictOptions.doesNotBowAs[side] && !this.bowed) {
-            this.controller.bowCard(this);
-        }
-        this.game.currentConflict.removeFromConflict(this);
     }
 
     play() {
