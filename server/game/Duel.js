@@ -65,7 +65,7 @@ class Duel {
         } else if(this.targetTotal === '-') {
             // Challenger alive, target dead
             if(this.challengerTotal > 0) {
-                this.winner =  this.challenger;
+                this.winner = this.challenger;
             }
         } else if(challengerTotal > targetTotal) {
             // Both alive, challenger wins
