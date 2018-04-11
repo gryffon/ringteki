@@ -4,12 +4,12 @@ const EffectSource = require('./EffectSource.js');
 class Duel {
     constructor(game, challenger, target, type) {
         this.game = game;
+        this.type = type;
         this.source = new EffectSource(game);
         this.challenger = challenger;
         this.challengerTotal = this.getSkillTotal(challenger);
         this.target = target;
         this.targetTotal = this.getSkillTotal(target);
-        this.type = type;
         this.bidFinished = false;
     }
 
@@ -56,7 +56,7 @@ class Duel {
     determineResult() {
         let challengerTotal = this.getSkillTotal(this.challenger);
         let targetTotal = this.getSkillTotal(this.target);
-        if(this.challengerTotal !== '-') {
+        if(this.challengerTotal === '-') {
             if(this.targetTotal !== '-' && this.targetTotal > 0) {
                 // Challenger dead, target alive
                 this.winner = this.target;
