@@ -6,7 +6,7 @@ class ShibaPeacemaker extends DrawCard {
             location: 'any',
             targetLocation: 'any',
             match: this,
-            effect: ability.effects.cannotParticipateAsAttacker()
+            effect: ability.effects.cardCannot('participateAsAttacker')
         });
     }
 }

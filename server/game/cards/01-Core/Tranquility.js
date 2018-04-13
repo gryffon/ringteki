@@ -11,7 +11,7 @@ class Tranquility extends DrawCard {
                     if(card.type === 'character' && !card.isParticipating()) {
                         card.untilEndOfConflict(ability => ({
                             match: card,
-                            effect: ability.effects.cardCannotTriggerAbilities()
+                            effect: ability.effects.cardCannot('triggerAbilities')
                         }));
                     }
                 });

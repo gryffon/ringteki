@@ -5,7 +5,7 @@ class MantraOfWater extends DrawCard {
         this.reaction({
             title: 'Ready a monk and draw a card',
             when: {
-                onConflictDeclared: event => event.conflictRing === 'water' && event.conflict.attackingPlayer !== this.controller
+                onConflictDeclared: event => event.ring.hasElement('water') && event.conflict.attackingPlayer !== this.controller
             },
             target: {
                 cardType: 'character',

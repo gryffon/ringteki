@@ -4,7 +4,7 @@ class ALegionOfOne extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Give a solitary character +3/+0',
-            condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'military',
+            condition: () => this.game.currentConflict && this.game.currentConflict.type === 'military',
             target: {
                 cardType: 'character',
                 cardCondition: card => card.controller === this.controller &&

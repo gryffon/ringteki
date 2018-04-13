@@ -8,7 +8,7 @@ class AgashaSumiko extends DrawCard {
                 this.controller.imperialFavor !== '' &&
                 this.isAttacking()
             ),
-            effect: ability.effects.doesNotBowOnReturnHome()
+            effect: ability.effects.doesNotBow
         });
     }
 }

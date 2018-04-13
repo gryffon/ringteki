@@ -9,7 +9,7 @@ class RallyToTheCause extends ProvinceCard {
             },
             handler: context => {
                 context.event.conflict.switchType();
-                this.game.addMessage('{0} uses {1} to change the conflict to {2}', this.controller, this, context.event.conflict.conflictType);
+                this.game.addMessage('{0} uses {1} to change the conflict to {2}', this.controller, this, context.event.conflict.type);
             }
         });
     }

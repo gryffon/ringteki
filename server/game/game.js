@@ -262,7 +262,12 @@ class Game extends EventEmitter {
      * @returns {undefined}
      */
     addEffect(source, properties) {
-        this.effectEngine.add(new Effect(this, source, properties));
+        let effectFactory = properties.effect;
+        properties = _.omit(properties, 'effect');
+        if(!Array.isArray(effectFactory)) {
+            effectFactory = [effectFactory];
+        }
+        effectFactory.forEach(factory => this.effectEngine.add(factory(this, source, properties)));
     }
 
     addDelayedEffect(source, properties) {
@@ -1396,10 +1401,9 @@ class Game extends EventEmitter {
         card.controller.removeCardFromPile(card);
         player.cardsInPlay.push(card);
         card.controller = player;
-        //card.checkForIllegalAttachments();
         if(card.isDefending()) {
             this.currentConflict.defenders = _.reject(this.currentConflict.defenders, c => c === card);
-            if(card.canParticipateAsAttacker(this.currentConflict.conflictType)) {
+            if(card.canParticipateAsAttacker(this.currentConflict.type)) {
                 this.currentConflict.attackers.push(card);
             } else {
                 this.addMessage('{0} cannot participate in the conflict any more and is sent home bowed', card);
@@ -1408,7 +1412,7 @@ class Game extends EventEmitter {
             }
         } else if(card.isAttacking()) {
             this.currentConflict.attackers = _.reject(this.currentConflict.attackers, c => c === card);
-            if(card.canParticipateAsDefender(this.currentConflict.conflictType)) {
+            if(card.canParticipateAsDefender(this.currentConflict.type)) {
                 this.currentConflict.defenders.push(card);
             } else {
                 this.addMessage('{0} cannot participate in the conflict any more and is sent home bowed', card);
@@ -1538,10 +1542,15 @@ class Game extends EventEmitter {
 
     checkGameState(hasChanged = false, events = []) {
         if(
-            (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) ||
-            this.effectEngine.checkEffects(hasChanged) || hasChanged
+            (!this.currentConflict && this.effectEngine.checkEffects(hasChanged)) ||
+            (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) || hasChanged
         ) {
-            _.each(this.getPlayers(), player => player.cardsInPlay.each(card => card.checkForIllegalAttachments()));
+            _.each(this.getPlayers(), player => player.cardsInPlay.each(card => {
+                if(card.getModifiedController() !== player) {
+                    this.takeControl(player.opponent, card);
+                }
+                card.checkForIllegalAttachments()
+            }));
             this.effectEngine.checkTerminalConditions();
         }
         if(events.length > 0) {

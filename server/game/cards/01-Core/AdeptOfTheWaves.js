@@ -12,7 +12,7 @@ class AdeptOfTheWaves extends DrawCard {
                 this.game.addMessage('{0} uses {1} to grant Covert during Water conflicts to {2}', this.controller, this, context.target);
                 this.untilEndOfPhase(ability => ({
                     match: context.target,
-                    condition: () => this.game.currentConflict && this.game.currentConflict.conflictRing === 'water',
+                    condition: () => this.game.currentConflict && this.game.currentConflict.hasElement('water'),
                     effect: ability.effects.addKeyword('covert')
                 }));
             }

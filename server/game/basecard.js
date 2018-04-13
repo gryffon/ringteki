@@ -10,16 +10,6 @@ const CardReaction = require('./cardreaction.js');
 const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 
-const ValidKeywords = [
-    'ancestral',
-    'restricted',
-    'limited',
-    'sincerity',
-    'courtesy',
-    'pride',
-    'covert'
-];
-
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
         super(owner.game);
@@ -30,42 +20,22 @@ class BaseCard extends EffectSource {
         this.uuid = uuid.v1();
         this.id = cardData.id;
         this.name = cardData.name;
-        this.blankCount = 0;
         this.inConflict = false;
 
         this.type = cardData.type;
 
         this.tokens = {};
-        this.strongholdModifierValues = {
-            honor: 0,
-            fate: 0,
-            influence: 0,
-            strength: 0
-        };
-        this.canProvideStrongholdModifier = {
-            honor: true,
-            fate: true,
-            influence: true,
-            strength: true
-        };
-        this.provinceModifierValues = {
-            strength: 0
-        };
-        this.canProvideProvinceModifier = {
-            strength: true
-        };
-        this.abilityRestrictions = [];
+        this.effects = [];
         this.menu = _([]);
 
         this.showPopup = false;
         this.popupMenuText = '';
 
         this.abilities = { actions: [], reactions: [], persistentEffects: [], playActions: [] };
-        this.parseKeywords(cardData.text_canonical || '');
-        this.parseTraits(cardData.traits || '');
+        this.traits = cardData.traits || [];
         this.setupCardAbilities(AbilityDsl);
 
-        this.addFaction(cardData.clan);
+        this.printedFaction = cardData.clan;
 
         this.isProvince = false;
         this.isConflict = false;
@@ -73,69 +43,24 @@ class BaseCard extends EffectSource {
         this.isStronghold = false;
     }
 
-    parseKeywords(text) {
-        var lines = text.split('\n');
-        var potentialKeywords = [];
-        _.each(lines, line => {
-            line = line.slice(0, -1);
-            _.each(line.split('. '), k => potentialKeywords.push(k));
-        });
-
-        this.keywords = {};
-        this.printedKeywords = [];
-        this.allowedAttachmentTraits = [];
-
-        _.each(potentialKeywords, keyword => {
-            if(_.contains(ValidKeywords, keyword)) {
-                this.printedKeywords.push(keyword);
-            } else if(keyword.startsWith('no attachments except')) {
-                var traits = keyword.replace('no attachments except ', '');
-                this.allowedAttachmentTraits = traits.split(' or ');
-            } else if(keyword.startsWith('no attachments')) {
-                this.allowedAttachmentTraits = ['none'];
-            }
-        });
-
-        if(this.printedKeywords.length > 0) {
-            this.persistentEffect({
-                match: this,
-                effect: AbilityDsl.effects.addMultipleKeywords(this.printedKeywords)
-            });
-        }
+    addEffect(type, effect) {
+        this.effects.push({ type: type, effect: effect });
     }
 
-    parseTraits(traits) {
-        this.traits = {};
-
-        _.each(traits, trait => this.addTrait(trait));
+    removeEffect(effect) {
+        this.effects = this.effects.filter(e => e.effect !== effect);
     }
 
-    registerEvents(events) {
-        this.eventsForRegistration = events;
+    getEffects(type) {
+        let filteredEffects = this.effects.filter(effect => effect.type === type);
+        return filteredEffects.map(effect => effect.effect.getValue(this));
     }
 
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }
 
-    provinceModifiers(modifiers) {
-        this.provincetModifierValues = _.extend(this.provinceModifierValues, modifiers);
-        if(modifiers.strength) {
-            this.persistentEffect({
-                condition: () => this.canProvideProvinceModifier['strength'],
-                match: card => card.controller.activeProvince === card,
-                targetController: 'current',
-                effect: AbilityDsl.effects.modifyStrength(modifiers.strength)
-            });
-        }
-    }
-
     action(properties) {
         var action = new CardAction(this.game, this, properties);
-        /*
-        if(!action.isClickToActivate() && action.allowMenu()) {
-            var index = this.abilities.actions.length;
-            this.menu.push(action.getMenuItem(index));
-        }*/
         this.abilities.actions.push(action);
     }
 
@@ -185,19 +110,19 @@ class BaseCard extends EffectSource {
         this.abilities.persistentEffects.push(_.extend({ duration: 'persistent', location: location }, properties));
     }
 
-    doAction(player, arg) {
-        var action = this.abilities.actions[arg];
-
-        if(!action) {
-            return;
-        }
-
-        action.execute(player, arg);
+    hasTrait(trait) {
+        trait = trait.toLowerCase();
+        return this.traits.includes(trait) || this.getEffects('addTrait').includes(trait);
     }
 
-    hasKeyword(keyword) {
-        var keywordCount = this.keywords[keyword.toLowerCase()] || 0;
-        return keywordCount > 0;
+    getTraits() {
+        let traits = this.traits.concat(this.getEffects('addTrait'));
+        return _.uniq(traits);
+    }
+
+    isFaction(faction) {
+        faction = faction.toLowerCase();
+        return this.printedFaction === faction || this.getEffects('addFaction').includes(faction);
     }
 
     hasPrintedKeyword(keyword) {
@@ -290,93 +215,21 @@ class BaseCard extends EffectSource {
     }
 
     isBlank() {
-        return this.blankCount > 0;
+        return this.getEffects('blank').length > 0;
     }
 
     getPrintedFaction() {
         return this.cardData.clan;
     }
 
-    setBlank() {
-        var before = this.isBlank();
-        this.blankCount++;
-        var after = this.isBlank();
-        if(!before && after) {
-            this.game.emitEvent('onCardBlankToggled', { card: this, isBlank: after });
-        }
-    }
-
     allowGameAction(actionType, context = null) {
-        return (!_.any(this.abilityRestrictions, restriction => restriction.isMatch(actionType, context)) &&
+        return (!_.any(this.getEffects('abilityRestrictions'), restriction => restriction.isMatch(actionType, context)) &&
             this.controller.allowGameAction(actionType, context));
     }
 
     allowEffectFrom(source) {
         let context = { game: this.game, player: source.controller, source: source, stage: 'effect' };
         return !_.any(this.abilityRestrictions, restriction => restriction.isMatch('applyEffect', context));
-    }
-
-    addAbilityRestriction(restriction) {
-        this.abilityRestrictions.push(restriction);
-    }
-
-    removeAbilityRestriction(restriction) {
-        this.abilityRestrictions = _.reject(this.abilityRestrictions, r => r === restriction);
-    }
-
-    addKeyword(keyword) {
-        var lowerCaseKeyword = keyword.toLowerCase();
-        this.keywords[lowerCaseKeyword] = this.keywords[lowerCaseKeyword] || 0;
-        this.keywords[lowerCaseKeyword]++;
-    }
-
-    addTrait(trait) {
-        let lowerCaseTrait = trait.toLowerCase();
-
-        if(!lowerCaseTrait || lowerCaseTrait === '') {
-            return;
-        }
-
-        if(!this.traits[lowerCaseTrait]) {
-            this.traits[lowerCaseTrait] = 1;
-        } else {
-            this.traits[lowerCaseTrait]++;
-        }
-    }
-
-    addFaction(faction) {
-        if(!faction) {
-            return;
-        }
-
-        var lowerCaseFaction = faction.toLowerCase();
-        this.factions[lowerCaseFaction] = this.factions[lowerCaseFaction] || 0;
-        this.factions[lowerCaseFaction]++;
-    }
-
-    removeKeyword(keyword) {
-        var lowerCaseKeyword = keyword.toLowerCase();
-        this.keywords[lowerCaseKeyword] = this.keywords[lowerCaseKeyword] || 0;
-        this.keywords[lowerCaseKeyword]--;
-    }
-
-    removeTrait(trait) {
-        let lowerCaseTrait = trait.toLowerCase();
-        this.traits[lowerCaseTrait] = this.traits[lowerCaseTrait] || 0;
-        this.traits[lowerCaseTrait]--;
-    }
-
-    removeFaction(faction) {
-        this.factions[faction.toLowerCase()]--;
-    }
-
-    clearBlank() {
-        var before = this.isBlank();
-        this.blankCount--;
-        var after = this.isBlank();
-        if(before && !after) {
-            this.game.emitEvent('onCardBlankToggled', { card: this, isBlank: after });
-        }
     }
 
     addToken(type, number = 1) {

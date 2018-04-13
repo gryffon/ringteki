@@ -12,8 +12,8 @@ class SteadfastSamurai extends DrawCard {
                 this.untilEndOfPhase(ability => ({
                     match: this,
                     effect: [
-                        ability.effects.cannotRemoveFate(),
-                        ability.effects.cannotBeDiscarded()
+                        ability.effects.cardCannot('removeFate'),
+                        ability.effects.cardCannot('discardFromPlay')
                     ]
                 }));
             }

@@ -6,7 +6,7 @@ class TimeForWar extends DrawCard {
         this.reaction({
             title: 'Put a weapon into play',
             when: {
-                afterConflict: event => event.conflict.loser === this.controller && event.conflict.conflictType === 'political'
+                afterConflict: event => event.conflict.loser === this.controller && event.conflict.type === 'political'
             },
             target: {
                 cardType: 'character',

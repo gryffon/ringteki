@@ -5,7 +5,7 @@ class EntrenchedPosition extends ProvinceCard {
         this.persistentEffect({
             match: this,
             targetLocation: 'province',
-            condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'military',
+            condition: () => this.game.currentConflict && this.game.currentConflict.type === 'military',
             effect: ability.effects.modifyProvinceStrength(5)
         });
     }

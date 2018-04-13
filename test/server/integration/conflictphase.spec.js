@@ -17,6 +17,7 @@ describe('conflict phase', function() {
             });
 
             it('should begin by prompting first player', function() {
+                
                 expect(this.player1).toHavePrompt('Initiate an action');
             });
 
@@ -58,7 +59,6 @@ describe('conflict phase', function() {
                 this.player2.clickPrompt('Pass');
                 this.player1.clickCard('adept-of-the-waves');
                 this.player1.clickCard('adept-of-the-waves');
-
                 expect(this.player2).toHavePrompt('Initiate an action');
             });
 
@@ -129,7 +129,7 @@ describe('conflict phase', function() {
                 it('should select a ring when clicked', function() {
                     this.player1.clickRing('air');
                     expect(this.player1).toHavePrompt('Choose province to attack');
-                    expect(this.game.currentConflict.conflictRing).toBe('air');
+                    expect(this.game.currentConflict.element).toBe('air');
                 });
     
                 it('should select a province when clicked', function() {
@@ -163,7 +163,7 @@ describe('conflict phase', function() {
         // check reacting to conflict declaration works correctly
         describe('reactions to declaring a conflict', function() {
             beforeEach(function() {
-                this.setupTest({
+               this.setupTest({
                     phase: 'conflict',
                     player1: {
                         inPlay: ['child-of-the-plains'],
@@ -301,7 +301,7 @@ describe('conflict phase', function() {
                 });
 
                 it('the ring should have the void element', function() {
-                    expect(this.game.currentConflict.hasElement('void')).toBe(true);
+                   expect(this.game.currentConflict.hasElement('void')).toBe(true);
                 });
 
                 it('Kaede should be bowed', function() {

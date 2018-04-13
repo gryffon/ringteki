@@ -14,16 +14,15 @@ class GraspOfEarth extends DrawCard {
                     if(card.type === 'character') {
                         card.untilEndOfConflict(ability => ({
                             match: card,
-                            effect: ability.effects.cannotBeMovedIntoConflict()
+                            effect: ability.effects.cardCannot('moveToConflict')
                         }));
                     }
                 });
 
                 //Cannot play characters
                 this.untilEndOfConflict(ability => ({
-                    targetType: 'player',
                     targetController: 'opponent',
-                    effect: ability.effects.cannotPlay(context => context && context.source.type === 'character')                    
+                    effect: ability.effects.playerCannot('play', context => context.source.type === 'character')                    
                 }));
             }
         });      

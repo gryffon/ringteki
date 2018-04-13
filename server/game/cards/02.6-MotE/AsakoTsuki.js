@@ -5,7 +5,7 @@ class AsakoTsuki extends DrawCard {
         this.reaction({
             title: 'Honor a scholar character',
             when: {
-                onClaimRing: event => event.conflict && event.conflict.conflictRing === 'water'
+                onClaimRing: event => event.conflict && event.conflict.ring.element === 'water'
             },
             target: {
                 cardType: 'character',

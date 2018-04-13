@@ -5,7 +5,7 @@ class RaiseTheAlarm extends DrawCard {
         this.action({
             title: 'Flip a dynasty card',
             condition: () => {
-                if(!this.controller.isDefendingPlayer() || !this.game.currentConflict.conflictProvince || this.game.currentConflict.conflictType !== 'military') {
+                if(!this.controller.isDefendingPlayer() || !this.game.currentConflict.conflictProvince || this.game.currentConflict.type !== 'military') {
                     return false;
                 }
                 let dynastyCard = this.controller.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location);

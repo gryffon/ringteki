@@ -15,8 +15,7 @@ class SecludedShrine extends DrawCard {
                 this.game.addMessage('{0} uses {1} - the {2} ring is considered to be claimed by {0} until the end of the phase', context.player, context.source, context.ring.element);
                 this.untilEndOfPhase(ability => ({
                     match: context.ring,
-                    targetType: 'ring',
-                    effect: ability.effects.addRingEffect('considerAsClaimed', player => player === context.player)
+                    effect: ability.effects.considerRingAsClaimed(player => player === context.player)
                 }));
             }
         });

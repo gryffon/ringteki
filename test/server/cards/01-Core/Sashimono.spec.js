@@ -42,7 +42,7 @@ describe('Sashimono', function() {
                     defenders: [],
                     jumpTo: 'resolve'
                 });
-                expect(this.game.currentConflict.conflictType).toBe('political');
+                expect(this.game.currentConflict.type).toBe('political');
                 expect(this.lPB.bowsOnReturnHome).toBe(true);
                 this.player1.clickPrompt('No');
                 this.player1.clickPrompt('Gain 2 honor');

@@ -15,7 +15,7 @@ class HirumaAmbusher extends DrawCard {
                 this.game.addMessage('{0} uses {1}\'s ability to prevent {2} from using any abilities', this.controller, this, context.target);
                 this.untilEndOfConflict(ability => ({
                     match: context.target,
-                    effect: ability.effects.cardCannotTriggerAbilities()
+                    effect: ability.effects.cardCannot('triggerAbilities')
                 }));
             }
         });

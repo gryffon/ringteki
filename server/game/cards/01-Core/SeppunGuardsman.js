@@ -7,7 +7,7 @@ class SeppunGuardsman extends DrawCard {
             targetLocation: 'any',
             condition: () => this.controller.opponent && this.controller.opponent.imperialFavor !== '',
             match: this,
-            effect: ability.effects.cannotParticipateAsAttacker()
+            effect: ability.effects.cardCannot('participateAsAttacker')
         });
     }
 }

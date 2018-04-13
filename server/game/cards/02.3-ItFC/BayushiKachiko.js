@@ -4,7 +4,7 @@ class BayushiKachiko extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Send a character home',
-            condition: () => this.isParticipating() && this.game.currentConflict.conflictType === 'political',
+            condition: () => this.isParticipating() && this.game.currentConflict.type === 'political',
             target: {
                 cardType: 'character',
                 gameAction: 'sendHome',

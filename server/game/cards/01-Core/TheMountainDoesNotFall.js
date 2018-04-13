@@ -15,7 +15,7 @@ class TheMountainDoesNotFall extends DrawCard {
                 this.untilEndOfPhase(ability => ({
                     match: context.target,
                     condition: () => context.target.isDefending(),
-                    effect: ability.effects.doesNotBowOnReturnHome()
+                    effect: ability.effects.doesNotBow
                 }));
             }
         });

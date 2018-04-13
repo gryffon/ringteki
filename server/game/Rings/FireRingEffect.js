@@ -22,7 +22,7 @@ class FireRingEffect extends BaseAbility {
 
     executeHandler(context) {
         if(!context.target) {
-            context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, context.game.currentConflict ? context.game.currentConflict.conflictRing : 'fire');
+            context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'fire');
             return;
         }
         let choices = [];
@@ -45,7 +45,7 @@ class FireRingEffect extends BaseAbility {
         handlers.push(() => context.game.resolveAbility(context));
         if(this.optional) {
             choices.push('Don\'t resolve the fire ring');
-            handlers.push(() => context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, context.game.currentConflict ? context.game.currentConflict.conflictRing : 'fire'));
+            handlers.push(() => context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'fire'));
         }
         context.game.promptWithHandlerMenu(context.player, {
             choices: choices,

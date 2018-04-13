@@ -5,7 +5,7 @@ class MantraOfFire extends DrawCard {
         this.reaction({
             title: 'Add 1 fate to a monk and draw a card',
             when: {
-                onConflictDeclared: event => event.conflictRing === 'fire' && event.conflict.attackingPlayer !== this.controller
+                onConflictDeclared: event => event.ring.hasElement('fire') && event.conflict.attackingPlayer !== this.controller
             },
             target: {
                 cardType: 'character',

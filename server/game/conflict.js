@@ -14,25 +14,39 @@ class Conflict {
         this.conflictTypeSwitched = false;
         this.conflictUnopposed = false;
         this.winnerGoesStraightToNextConflict = false;
-        this.elementsToResolve = 1;
         this.attackers = [];
         this.attackerSkill = 0;
-        this.attackerSkillModifier = 0;
         this.defenders = [];
         this.defenderSkill = 0;
-        this.maxAllowedDefenders = -1;
-        this.defenderSkillModifier = 0;
-        this.skillFunction = card => card.getSkill(this.type);
+        this.effects = [];
+    }
+
+    addEffect(type, effect) {
+        this.effects.push({ type: type, effect: effect });
+    }
+
+    removeEffect(effect) {
+        this.effects = this.effects.filter(e => e.effect !== effect);
+    }
+
+    getEffects(type) {
+        let filteredEffects = this.effects.filter(effect => effect.type === type);
+        return filteredEffects.map(effect => effect.effect.getValue(this));
     }
 
     get type() {
         return this.ring ? this.ring.conflictType : '';
     }
-        
-    resetSkillFunction () {
-        this.skillFunction = card => card.getSkill(this.type);
+
+    get element() {
+        return this.ring ? this.ring.element : '';
     }
 
+    get maxAllowedDefenders() {
+        let effects = this.getEffects('restrictNumberOfDefenders');
+        return effects.length === 0 ? -1 : Math.min(...effects);
+    }
+        
     singlePlayerDefender() {
         let dummyPlayer = new Player('', Settings.getUserWithDefaultsSet({ username: 'Dummy Player' }), false, this.game);
         dummyPlayer.initialise();
@@ -86,52 +100,18 @@ class Conflict {
         this.defenders.push(defender);
         this.markAsParticipating([defender]);
     }
-    
-    moveToConflict(cards) {
-        if(!_.isArray(cards)) {
-            cards = [cards];
-        }
-        let events = _.map(cards, card => {
-            return {
-                name: 'onMoveToConflict',
-                params: { conflict: this, card: card },
-                handler: card.controller.isAttackingPlayer() ? () => this.addAttacker(card) : () => this.addDefender(card)
-            };
-        });
-        this.game.raiseMultipleEvents(events, {
-            name: 'onMoveCharactersToConflict',
-            params: { conflict: this, cards: cards }
-        });
-    }
-
-    sendHome(cards) {
-        if(!_.isArray(cards)) {
-            cards = [cards];
-        }
-        let events = _.map(cards, card => {
-            return {
-                name: 'onSendHome',
-                params: { conflict: this, card: card },
-                handler: () => this.removeFromConflict(card)
-            };
-        });
-        this.game.raiseMultipleEvents(events, {
-            name: 'onSendCharactersHome',
-            params: { conflict: this, cards: cards }
-        });
-    }
-
-    modifyElementsToResolve(amount) {
-        this.elementsToResolve += amount;
-    }
-        
+            
     
     hasElement(element) {
-        return this.elements.contains(element);
+        return this.elements.includes(element);
     }
     
     get elements() {
-        return this.ring.getElements();
+        return this.ring ? this.ring.getElements() : [];
+    }
+
+    get elementsToResolve() {
+        return this.getEffects('modifyConflictElementsToResolve').reduce((total, value) => total + value, 1);
     }
     
     resolveRing(player = this.attackingPlayer, optional = true) {
@@ -208,19 +188,22 @@ class Conflict {
         this.ring = newRing;
     }
     
-    checkForIllegalParticipants() {
+    checkForIllegalParticipants(stateChanged = false) {
         _.each(this.attackers, card => {
             if(!card.canParticipateAsAttacker(this.type)) {
                 this.removeFromConflict(card);
                 card.bowed = true;
+                stateChanged = true
             }
         });
         _.each(this.defenders, card => {
             if(!card.canParticipateAsDefender(this.type)) {
                 this.removeFromConflict(card);
                 card.bowed = true;
+                stateChanged = true;
             }
         });
+        return stateChanged;
     }
 
     removeFromConflict(card) {
@@ -270,10 +253,13 @@ class Conflict {
         }
 
         stateChanged = this.game.effectEngine.checkEffects(stateChanged);
-        this.checkForIllegalParticipants();
+        stateChanged = this.checkForIllegalParticipants(stateChanged);
 
-        this.attackerSkill = this.calculateSkillFor(this.attackers) + this.attackerSkillModifier;
-        this.defenderSkill = this.calculateSkillFor(this.defenders) + this.defenderSkillModifier;
+        let additionalCharacters = this.getEffects('contributeToConflict');
+        let additionalAttackers = additionalCharacters.filter(card => card.controller === this.attackingPlayer);
+        let additionalDefenders = additionalCharacters.filter(card => card.controller === this.defendingPlayer);
+        this.attackerSkill = this.calculateSkillFor(this.attackers.concat(additionalAttackers));
+        this.defenderSkill = this.calculateSkillFor(this.defenders.concat(additionalDefenders));
         
         if(this.attackingPlayer.imperialFavor === this.type && this.attackers.length > 0) {
             this.attackerSkill++;
@@ -284,20 +270,13 @@ class Conflict {
     }
 
     calculateSkillFor(cards) {
+        let skillFunction = _.last(this.getEffects('changeConflictSkillFunction')) || (card => card.getSkill(this.type));
         return _.reduce(cards, (sum, card) => {
             if(card.bowed || !card.allowGameAction('countForResolution')) {
                 return sum;
             }
-            return sum + this.skillFunction(card);
+            return sum + skillFunction(card);
         }, 0);
-    }
-
-    modifyAttackerSkill(value) {
-        this.attackerSkillModifier += value;
-    }
-
-    modifyDefenderSkill(value) {
-        this.defenderSkillModifier += value;
     }
 
     determineWinner() {
@@ -309,7 +288,6 @@ class Conflict {
             this.winner = undefined;
             this.loserSkill = this.winnerSkill = 0;
             this.skillDifference = 0;
-            this.game.effectEngine.checkEffects(true);
             return;
         }
         if(this.attackerSkill >= this.defenderSkill) {

@@ -5,6 +5,7 @@ const Deck = require('./deck.js');
 const AbilityContext = require('./AbilityContext.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
 const ConflictTracker = require('./conflicttracker.js');
+const CostReducer = require('./costreducer.js');
 const RingEffects = require('./RingEffects.js');
 const PlayableLocation = require('./playablelocation.js');
 const PlayerPromptState = require('./playerpromptstate.js');
@@ -49,7 +50,6 @@ class Player extends Spectator {
         this.showBid = 0; // amount shown on the dial
         this.imperialFavor = '';
         this.totalGloryForFavor = 0;
-        this.gloryModifier = 0;
 
         this.chessClockLeft = -1; // time left on clock in seconds
         this.timerStart = 0;
@@ -64,10 +64,8 @@ class Player extends Spectator {
             new PlayableLocation('dynasty', this, 'province 3'),
             new PlayableLocation('dynasty', this, 'province 4')
         ];
-        this.cannotGainConflictBonus = false; // I have no idea what this is for
-        this.abilityRestrictions = []; // This stores player restrictions from e.g. Guest of Honor
+        this.effects = []; // This stores player effects from e.g. Guest of Honor
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
-        this.conflictDeckTopCardHidden = true;
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings
             dynasty: true,
             draw: true,
@@ -102,6 +100,19 @@ class Player extends Spectator {
                 }
             }
         }
+    }
+
+    addEffect(type, effect) {
+        this.effects.push({ type: type, effect: effect });
+    }
+
+    removeEffect(effect) {
+        this.effects = this.effects.filter(e => e.effect !== effect);
+    }
+
+    getEffects(type) {
+        let filteredEffects = this.effects.filter(effect => effect.type === type);
+        return filteredEffects.map(effect => effect.effect.getValue(this));
     }
 
     /**
@@ -922,6 +933,7 @@ class Player extends Spectator {
         card.attachments.push(attachment);
         attachment.parent = card;
         attachment.moveTo('play area');
+        attachment.setDefaultController(this);
 
         this.game.queueSimpleStep(() => {
             if(_.size(card.attachments.filter(c => c.isRestricted())) > 2) {
@@ -1337,7 +1349,7 @@ class Player extends Spectator {
             card.leavesPlay();
             card.controller = this;
         } else if(targetLocation === 'play area') {
-            card.controller = this;
+            card.setDefaultController(this);
             // This should only be called when an attachment is dragged into play
             if(card.type === 'attachment') {
                 this.promptForAttachment(card);

@@ -15,7 +15,7 @@ class AkodoToshiro extends DrawCard {
                     match: card => card.isProvince,
                     targetLocation: 'province',
                     targetController: 'any',
-                    effect: ability.effects.cannotBeBroken()
+                    effect: ability.effects.cardCannot('break')
                 }));
                 this.delayedEffect({
                     target: context.source,
