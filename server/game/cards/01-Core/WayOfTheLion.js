@@ -7,7 +7,7 @@ class WayOfTheLion extends DrawCard {
             condition: () => this.game.currentConflict,
             target: {
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area' && card.isFaction('lion')
+                cardCondition: card => card.location === 'play area' && card.isFaction('lion') && !card.hasDash('military') && card.baseMilitarySkill > 0
             },
             handler: context => {
                 let baseSkill = context.target.baseMilitarySkill;

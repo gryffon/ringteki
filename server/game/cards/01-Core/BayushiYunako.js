@@ -7,7 +7,7 @@ class BayushiYunako extends DrawCard {
             condition: () => this.game.currentConflict && this.game.currentConflict.isParticipating(this),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area' && card.cardData.military !== undefined && card.cardData.political !== undefined
+                cardCondition: card => card.location === 'play area' && !card.hasDash()
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to switch {2}\'s military and political skill', this.controller, this, context.target);

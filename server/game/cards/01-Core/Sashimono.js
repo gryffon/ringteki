@@ -7,10 +7,7 @@ class Sashimono extends DrawCard {
                 this.game.currentConflict &&
                 this.game.currentConflict.conflictType === 'military'
             ),
-            effect: [
-                ability.effects.doesNotBowAsAttacker(),
-                ability.effects.doesNotBowAsDefender()
-            ]
+            effect: ability.effects.doesNotBowOnReturnHome()
         });
     }
 

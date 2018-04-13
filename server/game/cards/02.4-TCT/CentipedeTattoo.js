@@ -8,14 +8,9 @@ class CentipedeTattoo extends DrawCard {
         this.whileAttached({
             condition: () => (
                 this.game.currentConflict &&
-                this.game.currentConflict.loser &&
-                this.game.currentConflict.isParticipating(this.parent) &&
                 this.game.currentConflict.loser === this.parent.controller
             ),
-            effect: [
-                ability.effects.doesNotBowAsAttacker(),
-                ability.effects.doesNotBowAsDefender()
-            ]
+            effect: ability.effects.doesNotBowOnReturnHome()
         });
     }
 

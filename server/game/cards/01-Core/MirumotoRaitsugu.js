@@ -7,7 +7,7 @@ class MirumotoRaitsugu extends DrawCard {
             condition: () => this.isParticipating(),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.controller !== this.controller && card.isParticipating() && card.getMilitarySkill(true) !== undefined
+                cardCondition: card => card.controller !== this.controller && card.isParticipating() && !card.hasDash('military')
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to challenge {2} to a duel', this.controller, this, context.target);

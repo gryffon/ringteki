@@ -708,7 +708,7 @@ class PlayerInteractionWrapper {
             if(!card) {
                 return false;
             }
-            return !card.conflictOptions.cannotParticipateIn[type];
+            return !card.hasDash(type);
         });
     }
 }

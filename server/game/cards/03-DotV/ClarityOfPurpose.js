@@ -19,10 +19,7 @@ class ClarityOfPurpose extends DrawCard {
                 this.untilEndOfConflict(ability => ({
                     match: context.target,
                     condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'political',
-                    effect: [
-                        ability.effects.doesNotBowAsAttacker(),
-                        ability.effects.doesNotBowAsDefender()
-                    ]
+                    effect: ability.effects.doesNotBowOnReturnHome()
                 }));
             }
         });

@@ -7,11 +7,11 @@ class PolicyDebate extends DrawCard {
             targets: {
                 challenger: {
                     cardType: 'character',
-                    cardCondition: card => card.isParticipating() && card.controller === this.controller && card.getPoliticalSkill(true) !== undefined
+                    cardCondition: card => card.isParticipating() && card.controller === this.controller && !card.hasDash('political')
                 },
                 duelTarget: {
                     cardType: 'character',
-                    cardCondition: card => card.isParticipating() && card.controller !== this.controller && card.getPoliticalSkill(true) !== undefined
+                    cardCondition: card => card.isParticipating() && card.controller !== this.controller && !card.hasDash('political')
                 }
             },
             handler: context => {

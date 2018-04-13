@@ -14,7 +14,8 @@ class TheMountainDoesNotFall extends DrawCard {
                 this.game.addMessage('{0} uses {1} to make {2} not bow as a defender', this.controller, this, context.target);
                 this.untilEndOfPhase(ability => ({
                     match: context.target,
-                    effect: ability.effects.doesNotBowAsDefender()
+                    condition: () => context.target.isDefending(),
+                    effect: ability.effects.doesNotBowOnReturnHome()
                 }));
             }
         });

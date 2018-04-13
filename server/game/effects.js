@@ -59,24 +59,13 @@ const Effects = {
     cannotBeDeclaredAsDefender: cardCannotEffect('declareAsDefender'),
     cannotParticipateAsAttacker: cardCannotEffect('participateAsAttacker'),
     cannotParticipateAsDefender: cardCannotEffect('participateAsDefender'),
-    doesNotBowAsAttacker: function () {
+    doesNotBowOnReturnHome: function () {
         return {
             apply: function(card) {
-                card.conflictOptions.doesNotBowAs.attacker = true;
+                card.bowsOnReturnHome = false;
             },
             unapply: function(card) {
-                card.conflictOptions.doesNotBowAs.attacker = false;
-            },
-            reapplyOnCheckState: true
-        };
-    },
-    doesNotBowAsDefender: function () {
-        return {
-            apply: function(card) {
-                card.conflictOptions.doesNotBowAs.defender = true;
-            },
-            unapply: function(card) {
-                card.conflictOptions.doesNotBowAs.defender = false;
+                card.bowsOnReturnHome = true;
             },
             reapplyOnCheckState: true
         };

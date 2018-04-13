@@ -7,7 +7,7 @@ class AlongTheRiverOfGold extends ProvinceCard {
             condition: () => this.game.currentConflict && this.game.currentConflict.conflictProvince.getElement() === 'water',
             target: {
                 cardType: 'character',
-                cardCondition: card => card.isParticipating() && card.cardData.military !== undefined && card.cardData.political !== undefined
+                cardCondition: card => card.isParticipating() && !card.hasDash()
             },
             handler: context => {
                 this.game.addMessage('{0} uses {1} to switch {2}\'s military and political skill', this.controller, this, context.target);

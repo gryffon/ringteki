@@ -345,12 +345,12 @@ class ConflictFlow extends BaseStepWithPipeline {
         // Create bow events for attackers
         let attackerBowEvents = this.game.getEventsForGameAction('bow', this.conflict.attackers);
         // Cancel any events where attacker shouldn't bow
-        _.each(attackerBowEvents, event => event.cancelled = event.card.conflictOptions.doesNotBowAs['attacker']);
+        _.each(attackerBowEvents, event => event.cancelled = event.card.doesNotBowOnReturnHome);
 
         // Create bow events for defenders
         let defenderBowEvents = this.game.getEventsForGameAction('bow', this.conflict.defenders);
         // Cancel any events where defender shouldn't bow
-        _.each(defenderBowEvents, event => event.cancelled = event.card.conflictOptions.doesNotBowAs['defender']);
+        _.each(defenderBowEvents, event => event.cancelled = event.card.doesNotBowOnReturnHome);
 
         let bowEvents = attackerBowEvents.concat(defenderBowEvents);
 

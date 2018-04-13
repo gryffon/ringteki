@@ -30,6 +30,6 @@ class KaitoTempleProtector extends DrawCard {
     }
 }
 
-KaitoTempleProtector.id = 'kaito-temple-protector'; // This is a guess at what the id might be - please check it!!!
+KaitoTempleProtector.id = 'kaito-temple-protector';
 
 module.exports = KaitoTempleProtector;
