@@ -22,8 +22,10 @@ class EarthRingEffect extends BaseAbility {
     }
 
     executeHandler(context) {
-        if(context.select === 'Don\'t resolve the Earth Ring') {
+        if(context.select === 'Don\'t resolve') {
             context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'earth');
+
+          
             return;
         }
         if(context.player.opponent) {
