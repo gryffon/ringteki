@@ -439,7 +439,7 @@ class BaseCard extends EffectSource {
             showPopup: this.showPopup,
             tokens: this.tokens,
             type: this.getType(),
-            // usedAbility: _.all(this.abilities.actions, action => action.limit.isAtMax(this.controller)),
+            usedAbility: _.all(this.abilities.actions, action => action.limit.isAtMax(this.controller)),
             uuid: this.uuid
         };
 
