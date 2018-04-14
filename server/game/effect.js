@@ -52,7 +52,6 @@ class Effect {
         this.active = true;
         this.recalculateWhen = properties.recalculateWhen || [];
         this.isConditional = !!properties.condition;
-        this.isStateDependent = properties.condition || this.effect.isStateDependent;
     }
 
     buildEffect(effect) {
@@ -69,31 +68,44 @@ class Effect {
 
     getTargets() {
         if(!this.active || !this.condition()) {
-            return;
+            return false;
         }
 
         if(!_.isFunction(this.match)) {
-            this.addTargets([this.match]);
+            return this.addTargets([this.match]);
         } else if(this.targetType === 'player') {
-            this.addTargets(_.values(this.game.getPlayers()));
-        } else {
-            this.addTargets(this.game.getTargetsForEffect(this.match));
+            return this.addTargets(_.values(this.game.getPlayers()));
+        } else if(this.targetType === 'ring') {
+            return this.addTargets(_.values(this.game.rings));
         }
+        return this.addTargets(this.game.getTargetsForEffect(this.match));
     }
 
     addTargets(targets) {
+        let stateChanged = false;
         if(!this.active || !this.condition()) {
-            return;
+            return stateChanged;
         }
 
         let newTargets = _.difference(targets, this.targets);
-
+        if(this.effect.reapply) {
+            _.each(this.targets, target => {
+                stateChanged = this.effect.reapply(target, this.context) || stateChanged;
+            });
+        } else if(this.effect.reapplyOnCheckState) {
+            _.each(this.targets, target => {
+                this.effect.unapply(target, this.context);
+                this.effect.apply(target, this.context);
+            });
+        }
         _.each(newTargets, target => {
             if(this.isValidTarget(target)) {
                 this.targets.push(target);
                 this.effect.apply(target, this.context);
+                stateChanged = true;
             }
         });
+        return stateChanged;
     }
 
     isValidTarget(target) {
@@ -181,42 +193,30 @@ class Effect {
         this.targets = [];
     }
 
-    reapply() {
+    checkCondition(stateChanged) {
         if(!this.active) {
-            return;
+            return stateChanged;
         }
-
-        if(this.isConditional) {
-            let newCondition = this.condition();
-
-            if(!newCondition) {
-                this.cancel();
-                return;
-            }
-
-            if(newCondition) {
-                let invalidTargets = _.filter(this.targets, target => !this.isValidTarget(target));
-                _.each(invalidTargets, target => {
-                    this.removeTarget(target);
-                });
-                this.getTargets();
-            }
+        if(!this.condition()) {
+            stateChanged = this.targets.length > 0;
+            this.cancel();
+        } else {
+            let invalidTargets = _.filter(this.targets, target => !this.isValidTarget(target));
+            stateChanged = invalidTargets.length > 0;
+            _.each(invalidTargets, target => {
+                this.removeTarget(target);
+            });
+            stateChanged = this.getTargets() || stateChanged;
         }
-
-        if(this.effect.isStateDependent) {
-            let reapplyFunc = this.createReapplyFunc();
-            _.each(this.targets, target => reapplyFunc(target));
-        }
+        return stateChanged;
     }
 
-    createReapplyFunc() {
-        if(this.effect.reapply) {
-            return target => this.effect.reapply(target, this.context);
-        }
-
-        return target => {
-            this.effect.unapply(target, this.context);
-            this.effect.apply(target, this.context);
+    getDebugInfo() {
+        return {
+            source: this.source.name,
+            targets: _.map(this.targets, target => target.name),
+            active: this.active,
+            condition: this.condition()
         };
     }
 }

@@ -8,6 +8,8 @@ describe('Conflict', function() {
         this.gameSpy.applyGameAction.and.callFake((type, card, handler) => {
             handler(card);
         });
+        this.effectEngineSpy = jasmine.createSpyObj('effectEngine', ['checkEffects']);
+        this.gameSpy.effectEngine = this.effectEngineSpy;
 
         this.attackingPlayer = new Player('1', { username: 'Player 1', settings: {} }, true, this.gameSpy);
         spyOn(this.attackingPlayer, 'winConflict');
@@ -18,6 +20,9 @@ describe('Conflict', function() {
 
         this.attackerCard = new DrawCard(this.attackingPlayer, {});
         this.defenderCard = new DrawCard(this.defendingPlayer, {});
+        spyOn(this.attackerCard, 'canParticipateAsAttacker').and.returnValue(true);
+        spyOn(this.defenderCard, 'canParticipateAsDefender').and.returnValue(true);
+
 
         this.conflict = new Conflict(this.gameSpy, this.attackingPlayer, this.defendingPlayer, 'military');
     });

@@ -11,10 +11,13 @@ const Costs = {
             canPay: function(context) {
                 return _.all(costs, cost => cost.canPay(context));
             },
-            pay: function(context) {
-                _.each(costs, cost => {
+            payEvent: function(context) {
+                return _.map(costs, cost => {
+                    if(cost.payEvent) {
+                        return cost.payEvent(context);
+                    }
                     if(cost.pay) {
-                        cost.pay(context);
+                        return context.game.getEvent('payCost', {}, () => cost.pay(context));
                     }
                 });
             },
@@ -97,6 +100,10 @@ const Costs = {
      * Cost that will break the province that initiated the ability.
      */    
     breakSelf: () => CostBuilders.break.self(),
+    /**
+     * Cost that will put into play the card that initiated the ability.
+     */
+    putSelfIntoPlay: () => CostBuilders.putIntoPlay.self(),
     /**
      * Cost that discards the Imperial Favor
      */
@@ -181,7 +188,6 @@ const Costs = {
                 return true; // We have to check this condition in Ability.meetsRequirements(), or we risk players starting another ability while costs are resolving
             },
             pay: function(context) {
-                context.player.canInitiateAction = false;
                 context.game.markActionAsTaken();
             },
             canIgnoreForTargeting: true
@@ -268,7 +274,7 @@ const Costs = {
             },
             resolve: function(context, result = { resolved: false }) {
                 context.game.promptForRingSelect(context.player, {
-                    ringCondition: ring => !ring.claimed && !ring.contested,
+                    ringCondition: ring => ring.isUnclaimed(),
                     activePromptTitle: 'Choose a ring to place fate on',
                     source: context.source,
                     onSelect: (player, ring) => {
@@ -293,13 +299,11 @@ const Costs = {
     giveFateToOpponent: function(amount) {
         return {
             canPay: function(context) {
-                return context.player.fate >= amount && (context.source.allowGameAction('giveFate', context) || amount === 0);
+                return amount === 0 || (context.player.fate >= amount && context.player.opponent && context.source.allowGameAction('giveFate', context));
             },
             pay: function(context) {
-                context.game.addFate(context.player, -amount);
-                let otherPlayer = context.game.getOtherPlayer(context.player);
-                if(otherPlayer) {
-                    context.game.addFate(otherPlayer, amount);
+                if(amount > 0) {
+                    context.game.transferFate(context.player.opponent, context.player, amount);
                 }
             }
         };
@@ -311,7 +315,7 @@ const Costs = {
             },
             resolve: function(context, result = { resolved: false }) {
                 let extrafate = context.player.fate - context.player.getReducedCost('play', context.source);
-                if(!context.source.allowGameAction('placeFate', context) || !context.source.allowGameAction('spendFate', context)) {
+                if(!context.player.allowGameAction('placeFateWhenPlayingCharacter', context) || !context.player.allowGameAction('spendFate', context)) {
                     extrafate = 0;
                 }
                 let choices = [];

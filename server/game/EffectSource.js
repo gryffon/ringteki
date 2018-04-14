@@ -111,6 +111,20 @@ class EffectSource {
         this.game.addEffect(this, _.extend({ duration: 'custom', location: 'any' }, properties));
     }
 
+    /**
+     * Applies a delayed effect
+     */
+    delayedEffect(properties) {
+        return this.game.addDelayedEffect(this, properties);
+    }
+
+    /**
+     * Applies a terminal condition
+     */
+    terminalCondition(properties) {
+        return this.game.addTerminalCondition(this, properties);
+    }
+
     getShortSummary() {
         return {
             id: this.id,

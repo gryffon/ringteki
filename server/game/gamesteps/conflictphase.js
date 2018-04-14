@@ -54,10 +54,7 @@ class ConflictPhase extends Phase {
             if(this.currentPlayer.cardsInPlay.any(card => _.any(availableConflictTypes, type => card.canDeclareAsAttacker(type)))) {
                 this.game.queueStep(new ConflictFlow(this.game, conflict));
             } else {
-                this.game.addMessage('{0} passes their conflict opportunity as none of their characters can be declared as an attacker', this.currentPlayer);
-                conflict.passed = true;
-                this.currentPlayer.conflicts.usedConflictOpportunity();
-                this.game.queueSimpleStep(() => this.game.raiseEvent('onConflictPass', { conflict: conflict }));
+                conflict.passConflict('{0} passes their conflict opportunity as none of their characters can be declared as an attacker');
             }
             this.game.queueStep(new SimpleStep(this.game, () => this.cleanupConflict()));
         } else {
@@ -95,12 +92,12 @@ class ConflictPhase extends Phase {
         if(!this.game.currentConflict.isSinglePlayer && !this.game.currentConflict.winnerGoesStraightToNextConflict) {
             this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
         }
-        if(!this.game.currentConflict.winnerGoesStraightToNextConflict) {
-            this.game.currentConflict = null;
+        let skipActionWindow = this.game.currentConflict.winnerGoesStraightToNextConflict;
+        this.game.currentConflict = null;
+        this.game.checkGameState(true);
+        if(!skipActionWindow) {
             this.game.queueStep(new ActionWindow(this.game, 'Action Window', 'preConflict'));            
-        } else {
-            this.game.currentConflict = null;
-        }
+        } 
         this.game.queueStep(new SimpleStep(this.game, () => this.startConflictChoice(this.currentPlayer)));
     }
 
