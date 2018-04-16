@@ -405,7 +405,6 @@ DynastyRow.propTypes = {
     onCardClick: PropTypes.func,
     onConflictClick: PropTypes.func,
     onConflictShuffleClick: PropTypes.func,
-    onConflictTopCardClick: PropTypes.func,
     onDiscardedCardClick: PropTypes.func,
     onDragDrop: PropTypes.func,
     onDynastyClick: PropTypes.func,

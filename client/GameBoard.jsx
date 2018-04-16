@@ -36,7 +36,6 @@ export class InnerGameBoard extends React.Component {
         this.onCardClick = this.onCardClick.bind(this);
         this.onConflictClick = this.onConflictClick.bind(this);
         this.onDynastyClick = this.onDynastyClick.bind(this);
-        this.onConflictTopCardClick = this.onConflictTopCardClick.bind(this);
         this.onDragDrop = this.onDragDrop.bind(this);
         this.onCommand = this.onCommand.bind(this);
         this.onConcedeClick = this.onConcedeClick.bind(this);
@@ -218,10 +217,6 @@ export class InnerGameBoard extends React.Component {
         this.props.sendGameMessage('showDynastyDeck');
 
         this.setState({ showDynastyDeck: !this.state.showDynastyDeck });
-    }
-
-    onConflictTopCardClick() {
-        this.props.sendGameMessage('conflictTopCardClicked');
     }
 
     sendMessage(message) {
@@ -599,7 +594,6 @@ export class InnerGameBoard extends React.Component {
                                 onCardClick={ this.onCardClick }
                                 onConflictClick={ this.onConflictClick }
                                 onDynastyClick={ this.onDynastyClick }
-                                onConflictTopCardClick={ this.onConflictTopCardClick }
                                 onMouseOver={ this.onMouseOver }
                                 onMouseOut={ this.onMouseOut }
                                 manualMode={ manualMode }
