@@ -5,6 +5,8 @@ const ChatCommands = require('./chatcommands.js');
 const GameChat = require('./gamechat.js');
 const EffectEngine = require('./effectengine.js');
 const Effect = require('./effect.js');
+const DelayedEffect = require('./DelayedEffect.js');
+const TerminalCondition = require('./TerminalCondition.js');
 const Player = require('./player.js');
 const Spectator = require('./spectator.js');
 const AnonymousSpectator = require('./anonymousspectator.js');
@@ -27,8 +29,7 @@ const EventWindow = require('./Events/EventWindow.js');
 const ThenEventWindow = require('./Events/ThenEventWindow.js');
 const InitiateAbilityEventWindow = require('./Events/InitiateAbilityEventWindow.js');
 const AbilityResolver = require('./gamesteps/abilityresolver.js');
-const ForcedTriggeredAbilityWindow = require('./gamesteps/forcedtriggeredabilitywindow.js');
-const TriggeredAbilityWindow = require('./gamesteps/triggeredabilitywindow.js');
+const SimultaneousEffectWindow = require('./gamesteps/SimultaneousEffectWindow');
 const AbilityContext = require('./AbilityContext.js');
 const Ring = require('./ring.js');
 const Conflict = require('./conflict.js');
@@ -262,6 +263,18 @@ class Game extends EventEmitter {
         this.effectEngine.add(new Effect(this, source, properties));
     }
 
+    addDelayedEffect(source, properties) {
+        let effect = new DelayedEffect(this, source, properties);
+        this.effectEngine.addDelayedEffect(effect);
+        return effect;
+    }
+
+    addTerminalCondition(source, properties) {
+        let effect = new TerminalCondition(this, source, properties);
+        this.effectEngine.addTerminalCondition(effect);
+        return effect;
+    }
+
     /*
      * Marks a province as selected for choosing a stronghold provice at the
      * start of the game
@@ -312,25 +325,6 @@ class Game extends EventEmitter {
             this.selectProvince(player, cardId);
             return;
         }
-
-        // Check if the card itself is waiting for a click
-        if(card.onClick(player)) {
-            return;
-        }
-
-        // Look for actions or play actions for this card
-        if(player.findAndUseAction(card)) {
-            return;
-        }
-
-        /* This doesn't really work with cards which trigger from being flipped
-        // If it's the Dynasty phase, and this is a Dynasty card in a province, flip it face up
-        if(['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && card.controller === player && card.isDynasty) {
-            if(card.facedown && this.currentPhase === 'dynasty') {
-                card.facedown = false;
-                this.addMessage('{0} reveals {1}', player, card);
-            }
-        }*/
     }
 
     /*
@@ -379,17 +373,6 @@ class Game extends EventEmitter {
         if(this.pipeline.handleCardClicked(player, card)) {
             return;
         }
-
-        // Look for actions or play actions for this card
-        player.findAndUseAction(card);
-    }
-
-    /*
-     * Resets all the rings to unclaimed
-     * @returns {undefined}
-     */
-    returnRings() {
-        _.each(this.rings, ring => ring.resetRing());
     }
 
     /*
@@ -507,6 +490,7 @@ class Game extends EventEmitter {
                 }
                 break;
         }
+        this.checkGameState(true);
 
         /* deprecated code
         switch(card.location) {
@@ -599,6 +583,7 @@ class Game extends EventEmitter {
                 }
                 break;
         }
+        this.checkGameState(true);
     }
 
     /*
@@ -665,20 +650,7 @@ class Game extends EventEmitter {
             return;
         }
 
-        if(player.drop(cardId, source, target)) {
-            var movedCard = 'a card';
-            if(!_.isEmpty(_.intersection(['conflict discard pile', 'dynasty discard pile', 'out of game', 'play area', 'stronghold province', 'province 1', 'province 2', 'province 3', 'province 4'],
-                [source, target]))) {
-                // log the moved card only if it moved from/to a public place
-                var card = this.findAnyCardInAnyList(cardId);
-                if(card && !(['dynasty deck', 'province deck'].includes(source) && ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(target))) {
-                    movedCard = card;
-                }
-            }
-
-            this.addMessage('{0} has moved {1} from their {2} to their {3}',
-                player, movedCard, source, target);
-        }
+        player.drop(cardId, source, target);
     }
 
     /*
@@ -842,6 +814,7 @@ class Game extends EventEmitter {
 
         if(!this.isSpectator(player)) {
             if(this.chatCommands.executeCommand(player, args[0], args)) {
+                this.checkGameState(true);
                 return;
             }
 
@@ -1182,19 +1155,10 @@ class Game extends EventEmitter {
         this.queueStep(new AbilityResolver(this, context));
     }
 
-    /*
-     * Opens a window for triggered card abilities to respond to an Event and
-     * adds it to the window stack
-     * @param {Object} properties - { abilityType: String, event: Event or Array of Event }
-     * @returns {undefined}
-     */
-    openAbilityWindow(properties) {
-        let windowClass = ['forcedreaction', 'forcedinterrupt', 'whenrevealed'].includes(properties.abilityType) ? ForcedTriggeredAbilityWindow : TriggeredAbilityWindow;
-        let window = new windowClass(this, { abilityType: properties.abilityType, event: properties.event });
-        this.abilityWindowStack.push(window);
-        window.emitEvents();
+    openSimultaneousEffectWindow(choices) {
+        let window = new SimultaneousEffectWindow(this);
+        _.each(choices, choice => window.addChoice(choice));
         this.queueStep(window);
-        this.queueSimpleStep(() => this.abilityWindowStack.pop());
     }
 
     /*
@@ -1236,6 +1200,11 @@ class Game extends EventEmitter {
         let event = this.getEvent(eventName, params, handler);
         this.openEventWindow([event]);
         return event;
+    }
+
+    emitEvent(eventName, params = {}) {
+        let event = this.getEvent(eventName, params);
+        this.emit(event.name, event);
     }
 
     /* Creates an EventWindow which will open windows for each kind of triggered
@@ -1410,7 +1379,7 @@ class Game extends EventEmitter {
         card.controller.removeCardFromPile(card);
         player.cardsInPlay.push(card);
         card.controller = player;
-        card.checkForIllegalAttachments();
+        //card.checkForIllegalAttachments();
         if(card.isDefending()) {
             this.currentConflict.defenders = _.reject(this.currentConflict.defenders, c => c === card);
             if(card.canParticipateAsAttacker(this.currentConflict.conflictType)) {
@@ -1430,7 +1399,6 @@ class Game extends EventEmitter {
                 this.applyGameAction(null, { bow: card });
             }
         }
-        this.reapplyStateDependentEffects();
         this.raiseEvent('onCardTakenControl', { card: card });
     }
 
@@ -1551,15 +1519,20 @@ class Game extends EventEmitter {
         this.addMessage('{0} has reconnected', player);
     }
 
-    reapplyStateDependentEffects() {
-        this.effectEngine.reapplyStateDependentEffects();
+    checkGameState(hasChanged = false, events = []) {
+        if(
+            (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) ||
+            this.effectEngine.checkEffects(hasChanged) || hasChanged
+        ) {
+            _.each(this.getPlayers(), player => player.cardsInPlay.each(card => card.checkForIllegalAttachments()));
+            this.effectEngine.checkTerminalConditions();
+        }
+        if(events.length > 0) {
+            this.effectEngine.checkDelayedEffects(events);
+        }
     }
 
     continue() {
-        this.effectEngine.reapplyStateDependentEffects();
-        this.pipeline.continue();
-        this.effectEngine.reapplyStateDependentEffects();
-        // Ensure any events generated by the effects engine are resolved.
         this.pipeline.continue();
     }
 
@@ -1668,7 +1641,7 @@ class Game extends EventEmitter {
             manualMode: this.manualMode,
             messages: this.gameChat.messages,
             name: this.name,
-            owner: this.owner,
+            owner: _.omit(this.owner, ['blocklist', 'email', 'emailHash', 'promptedActionWindows', 'settings']),
             players: playerSummaries,
             rings: {
                 air: this.rings.air.getState(activePlayer),

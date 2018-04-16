@@ -9,7 +9,6 @@ class AbilityResolver extends BaseStepWithPipeline {
 
         this.context = context;
         this.pipeline.initialise([
-            new SimpleStep(game, () => this.setNoNewActions()),
             new SimpleStep(game, () => this.createSnapshot()),
             new SimpleStep(game, () => this.resolveEarlyTargets()),
             new SimpleStep(game, () => this.waitForTargetResolution(true)),
@@ -21,10 +20,6 @@ class AbilityResolver extends BaseStepWithPipeline {
             new SimpleStep(game, () => this.waitForTargetResolution()),
             new SimpleStep(game, () => this.initiateAbility())
         ]);
-    }
-
-    setNoNewActions() {
-        _.each(this.game.getPlayers(), player => player.canInitiateAction = false);
     }
 
     createSnapshot() {
@@ -57,7 +52,9 @@ class AbilityResolver extends BaseStepWithPipeline {
             return;
         }
         this.costEvents = this.context.ability.payCosts(this.context);
-        this.game.openEventWindow(this.costEvents);
+        if(this.costEvents.length > 0) {
+            this.game.openEventWindow(this.costEvents);
+        }
     }
 
     checkCostsWerePaid() {
@@ -114,11 +111,11 @@ class AbilityResolver extends BaseStepWithPipeline {
         _.each(this.targetResults, result => {
             if(result.name === 'target') {
                 if(result.mode === 'ring') {
-                    this.context.ring = result.value;
-                } else if(result.mode === 'select') {
-                    this.context.select = result.value;
+                    this.context.ring = this.context.rings.target;
+                } else if(result.mode === 'select' && this.context.selects.target) {
+                    this.context.select = this.context.selects.target.choice;
                 } else {
-                    this.context.target = result.value;
+                    this.context.target = this.context.targets.target;
                 }
             }
         });

@@ -3,7 +3,7 @@ const _ = require('underscore');
 const EventToTitleFunc = {
     onCardAbilityInitiated: event => 'the effects of ' + event.card.name,
     onCardBowed: event => event.card.name + ' being bowed',
-    onClaimApplied: () => 'to claim effects being applied',
+    onClaimRing: event => 'to the ' + event.conflict.conflictRing + 'ring being claimed',
     onCardLeavesPlay: event => event.card.name + ' leaving play',
     onCardEntersPlay: event => event.card.name + ' entering play',
     onCardPlayed: event => event.card.name + ' being played',
@@ -12,6 +12,7 @@ const EventToTitleFunc = {
     onMoveCharactersToConflict: () => 'characters moving to the conflict',
     onPhaseEnded: event => event.phase + ' phase ending',
     onPhaseStarted: event => event.phase + ' phase starting',
+    onReturnRing: event => 'returning the ' + event.ring.element + ' ring',
     onSacrificed: event => event.card.name + ' being sacrificed',
     onRemovedFromChallenge: event => event.card.name + ' being removed from the challenge'
 };

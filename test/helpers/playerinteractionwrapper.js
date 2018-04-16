@@ -22,7 +22,7 @@ class PlayerInteractionWrapper {
     }
 
     set fate(newFate) {
-        if(newFate > 0) {
+        if(newFate >= 0) {
             this.player.fate = newFate;
         }
     }
@@ -332,12 +332,13 @@ class PlayerInteractionWrapper {
 
     formatPrompt() {
         var prompt = this.currentPrompt();
+        var selectableCards = this.currentActionTargets;
 
         if(!prompt) {
             return 'no prompt active';
         }
 
-        return prompt.menuTitle + '\n' + _.map(prompt.buttons, button => '[ ' + button.text + ' ]').join('\n');
+        return prompt.menuTitle + '\n' + _.map(prompt.buttons, button => '[ ' + button.text + ' ]').join('\n') + '\n' + _.pluck(selectableCards, 'name').join('\n');
     }
 
     findCardByName(name, locations = 'any', side) {
@@ -392,7 +393,7 @@ class PlayerInteractionWrapper {
         return cards;
     }
 
-    placeCardInProvince(card, location) {
+    placeCardInProvince(card, location = 'province 1') {
         if(_.isString(card)) {
             card = this.findCardByName(card);
         }

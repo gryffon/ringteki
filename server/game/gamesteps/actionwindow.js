@@ -15,27 +15,36 @@ class ActionWindow extends UiPrompt {
             this.currentPlayer = this.currentPlayer.opponent;
         }
         this.prevPlayerPassed = false;
-        this.game.currentActionWindow = this;
+        this.priorityPassed = false;
     }
     
     activeCondition(player) {
         return player === this.currentPlayer;
     }
 
+    onCardClicked(player, card) {
+        if(player !== this.currentPlayer) {
+            return false;
+        }
+        player.initiateCardAction(card);
+    }
+
     continue() {
         if(!this.currentPlayer.promptedActionWindows[this.windowName]) {
             this.pass();
+            if(!this.currentPlayer.promptedActionWindows[this.windowName]) {
+                this.pass();
+            }
         }
         
         let completed = super.continue();
 
         if(!completed) {
             this.game.currentActionWindow = this;
-            this.currentPlayer.canInitiateAction = true;
+            this.priorityPassed = false;
         } else {
             this.game.currentActionWindow = null;
         }
-
         return completed;
     }
 
@@ -58,8 +67,6 @@ class ActionWindow extends UiPrompt {
     }
 
     menuCommand(player, choice) {
-        player.canInitiateAction = false;
-
         if(choice === 'manual') {
             this.game.promptForSelect(this.currentPlayer, {
                 source: 'Manual Action',
@@ -100,8 +107,11 @@ class ActionWindow extends UiPrompt {
     }
 
     markActionAsTaken() {
-        this.prevPlayerPassed = false;
-        this.nextPlayer();
+        if(!this.priorityPassed) {
+            this.prevPlayerPassed = false;
+            this.nextPlayer();
+            this.priorityPassed = true;
+        }
     }
 }
 

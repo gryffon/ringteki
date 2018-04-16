@@ -258,6 +258,7 @@ class Lobby {
         _.each(emptyGames, game => {
             logger.info('closed started game', game.id, 'due to no active players');
             delete this.games[game.id];
+            this.router.closeGame(game);
         });
 
         if(emptyGames.length > 0 || stalePendingGames.length > 0) {
@@ -532,9 +533,7 @@ class Lobby {
                     dynasty.card = cards[dynasty.card.id];
                 });
 
-                let validation = validateDeck(deck, packs);
-                deck.status = validation.status;
-
+                deck.status = validateDeck(deck, { packs: packs, includeExtendedStatus: false });
                 game.selectDeck(socket.user.username, deck);
 
                 this.sendGameState(game);

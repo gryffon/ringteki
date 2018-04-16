@@ -45,14 +45,16 @@ describe('the DrawCard', function() {
         beforeEach(function() {
             this.gameService = jasmine.createSpyObj('gameService', ['save']);
             this.game = new Game({}, { gameService: this.gameService });
+            this.spy = spyOn(this.game, 'reportError');
 
-            this.player = new Player(1, { username: 'foo', settings: {} }, false, this.game);
+            this.player = new Player(1, { username: 'foo', settings: { optionSettings: {} } }, false, this.game);
             this.player.noTimer = true;
-            this.player2 = new Player(2, { username: 'bar', settings: {} }, false, this.game);
+            this.player2 = new Player(2, { username: 'bar', settings: { optionSettings: {} } }, false, this.game);
 
             this.game.playersAndSpectators['foo'] = this.player;
             this.game.playersAndSpectators['bar'] = this.player2;
             this.game.initialise();
+            this.game.setFirstPlayer(this.player);
 
             this.game.currentPhase = 'dynasty';
             this.player.phase = 'dynasty';
@@ -64,7 +66,7 @@ describe('the DrawCard', function() {
                     this.card = new DrawCard(this.player, { text: 'Each <i>Covert</i> character you control cannot be bypassed by covert.' });
                     this.card.location = 'hand';
                     this.player.hand = _([this.card]);
-                    this.player.findAndUseAction(this.card);
+                    this.player.initiateCardAction(this.card);
                     // Resolve events in pipeline.
                     this.game.continue();
                 });

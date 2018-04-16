@@ -132,7 +132,12 @@ class PlayerHand extends React.Component {
 
         let cards = this.getCards();
 
-        return (
+        return (<div>
+            <grip>
+                <div className={ 'hand-title-bar no-highlight ' } >
+                    { 'Hand (' + cards.length + ')' } 
+                </div>
+            </grip>
             <div className={ className }
                 style={ style }
                 onDragLeave={ this.onDragLeave }
@@ -140,9 +145,6 @@ class PlayerHand extends React.Component {
                 onDrop={ event => this.onDragDrop(event, 'hand') }
                 onMouseOver={ this.onMouseOver }
                 onMouseOut={ this.onMouseOut }>
-                <div className='panel-header'>
-                    { 'Hand (' + cards.length + ')' }
-                </div>
                 { cards }
             </div>
         );

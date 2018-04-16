@@ -6,6 +6,10 @@ const PlayCardAction = require('./playcardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
+const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
+const PersonalHonorAbility = require('./KeywordAbilities/PersonalHonorAbility');
+const PrideAbility = require('./KeywordAbilities/PrideAbility');
+const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 
 const StandardPlayActions = [
     new DynastyCardAction(),
@@ -74,6 +78,10 @@ class DrawCard extends BaseCard {
             if(cardData.political === undefined || cardData.political === null) {
                 this.conflictOptions.cannotParticipateIn.political = true;
             }
+            this.abilities.reactions.push(new CourtesyAbility(this.game, this));
+            this.abilities.reactions.push(new PersonalHonorAbility(this.game, this));
+            this.abilities.reactions.push(new PrideAbility(this.game, this));
+            this.abilities.reactions.push(new SincerityAbility(this.game, this));
         }
     }
 
@@ -153,7 +161,7 @@ class DrawCard extends BaseCard {
             // card cannot participate in this conflict type
             if(this.conflictOptions.cannotParticipateIn[this.game.currentConflict.conflictType]) {
                 return false;
-            }            
+            }
         } else if(actionType === 'putIntoPlay') {
             if(this.location === 'play area' || this.facedown || !['character', 'attachment'].includes(this.type)) {
                 return false;
@@ -170,7 +178,7 @@ class DrawCard extends BaseCard {
             return false;
         } else if(actionType === 'sacrifice' && ((['character', 'attachment'].includes(this.type) && this.location !== 'play area') || this.facedown)) {
             return false;
-        } else if(['discardFromPlay', 'returnToHand', 'returnToDeck', 'takeControl'].includes(actionType) && this.location !== 'play area') {
+        } else if(['discardFromPlay', 'returnToHand', 'returnToDeck', 'takeControl', 'placeFate'].includes(actionType) && this.location !== 'play area') {
             return false;
         }
         return super.allowGameAction(actionType, context);
@@ -202,54 +210,33 @@ class DrawCard extends BaseCard {
         return clone;
     }
 
-    modifySkill(amount, type, applying = true) {
+    modifySkill(amount, type) {
         /**
          * Direct the skill modification to the correct sub function.
          * @param  {integer} amount - The amount to modify the skill by.
          * @param  {string}   type - The type of the skill; military or political
-         * @param  {boolean}  applying -  [description]
          */
         if(type === 'military') {
-            this.modifyMilitarySkill(amount, applying);
+            this.modifyMilitarySkill(amount);
         } else if(type === 'political') {
-            this.modifyPoliticalSkill(amount, applying);
+            this.modifyPoliticalSkill(amount);
         }
     }
 
-    modifyGlory(amount, applying = true) {
+    modifyGlory(amount) {
         /**
          * Modify glory.
          * @param  {integer} amount - The amount to modify glory by.
-         * @param  {boolean}  applying -  [description]
          */
         this.gloryModifier += amount;
-        this.game.raiseEvent('onCardGloryChanged', {
-            card: this,
-            amount: amount,
-            applying: applying
-        });
     }
 
-    modifyMilitarySkillMultiplier(amount, applying = true) {
-        let militarySkillBefore = this.getMilitarySkill();
-
+    modifyMilitarySkillMultiplier(amount) {
         this.militarySkillMultiplier *= amount;
-        this.game.raiseEvent('onCardMilitarySkillChanged', {
-            card: this,
-            amount: this.getMilitarySkill() - militarySkillBefore,
-            applying: applying
-        });
     }
 
-    modifyPoliticalSkillMultiplier(amount, applying = true) {
-        let politicalSkillBefore = this.getPoliticalSkill();
-
+    modifyPoliticalSkillMultiplier(amount) {
         this.politicalSkillMultiplier *= amount;
-        this.game.raiseEvent('onCardPoliticalSkillChanged', {
-            card: this,
-            amount: this.getPoliticalSkill() - politicalSkillBefore,
-            applying: applying
-        });
     }
 
     getSkill(type, printed = false) {
@@ -291,60 +278,37 @@ class DrawCard extends BaseCard {
         return 0;
     }
 
-    modifyMilitarySkill(amount, applying = true) {
+    modifyMilitarySkill(amount) {
         /**
          * Modify the military skill.
          * @param  {integer} amount - The amount to modify the skill by.
-         * @param  {boolean}  applying -  [description]
          */
         this.militarySkillModifier += amount;
-        this.game.raiseEvent('onCardMilitarySkillChanged', {
-            card: this,
-            amount: amount,
-            applying: applying
-        });
     }
 
-    modifyPoliticalSkill(amount, applying = true) {
+    modifyPoliticalSkill(amount) {
         /**
          * Modify the political skill.
          * @param  {integer} amount - The amount to modify the skill by.
          * @param  {boolean}  applying -  [description]
          */
         this.politicalSkillModifier += amount;
-        this.game.raiseEvent('onCardPoliticalSkillChanged', {
-            card: this,
-            amount: amount,
-            applying: applying
-        });
     }
 
     modifyBaseMilitarySkill(amount) {
         /**
          * Modify the military skill.
          * @param  {integer} amount - The amount to modify the skill by.
-         * @param  {boolean}  applying -  [description]
          */
         this.baseMilitarySkill += amount;
-        this.game.raiseEvent('onCardMilitarySkillChanged', {
-            card: this,
-            amount: amount,
-            applying: false
-        });
     }
 
     modifyBasePoliticalSkill(amount) {
         /**
          * Modify the political skill.
          * @param  {integer} amount - The amount to modify the skill by.
-         * @param  {boolean}  applying -  [description]
          */
         this.basePoliticalSkill += amount;
-        this.game.raiseEvent('onCardPoliticalSkillChanged', {
-            card: this,
-            amount: amount,
-            applying: false
-        });
     }
 
     getMilitarySkill(printed = false, floor = true) {
@@ -491,7 +455,6 @@ class DrawCard extends BaseCard {
 
     clearBlank() {
         super.clearBlank();
-        this.checkForIllegalAttachments();
     }
 
     /**
@@ -546,46 +509,6 @@ class DrawCard extends BaseCard {
         return true;
     }
 
-    canTriggerAbilities(location) {
-        if(this.type === 'character' || this.type === 'attachment') {
-            if(!location.includes(this.location) && this.location !== 'play area') {
-                return false;
-            }
-        } else if(this.type === 'event') {
-            if(!location.includes(this.location) && !this.controller.isCardInPlayableLocation(this, 'play')) {
-                return false;
-            }
-        } else if(!this.location.includes('province')) {
-            return false;
-        }
-        return super.canTriggerAbilities();
-    }
-
-    /**
-     * When this card is about to leave play, gets events required to pass
-     * to a CardLeavesPlayEventWindow
-     */
-    getEventsForDiscardingAttachments() {
-        if(this.attachments.size() > 0) {
-            return this.attachments.map(attachment => {
-                let destination = attachment.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
-                destination = attachment.isAncestral() ? 'hand' : destination;
-                return {
-                    name: 'onCardLeavesPlay',
-                    params: { card: attachment, destination: destination },
-                    handler: () => attachment.owner.moveCard(attachment, destination)
-                };
-            });
-        }
-        return [];
-    }
-
-    removeTrait(trait) {
-        super.removeTrait(trait);
-        // Check to see if losing the trait has meant any of this cards attachments are illegal
-        this.checkForIllegalAttachments();
-    }
-    
     checkForIllegalAttachments() {
         let illegalAttachments = this.attachments.reject(attachment => this.allowAttachment(attachment) && attachment.canAttach(this));
         if(illegalAttachments.length > 0) {
@@ -601,51 +524,12 @@ class DrawCard extends BaseCard {
     }
 
     /**
-     * Removes all attachments from this card. Note that this function (different from remove Attachment)
-     * opens windows for interrupts/reactions
-     */
-    removeAllAttachments() {
-        let events = this.attachments.map(attachment => {
-            return {
-                name: 'onCardLeavesPlay',
-                params: { card: attachment }
-            };
-        });
-        this.game.raiseMultipleEvents(events);
-    }
-
-    /**
      * This removes an attachment from this card's attachment Array.  It doesn't open any windows for
      * game effects to respond to.
      * @param {DrawCard} attachment 
      */
     removeAttachment(attachment) {
         this.attachments = _(this.attachments.reject(card => card.uuid === attachment.uuid));
-    }
-
-    /**
-     * Applies all the game effects of leaving play: honor gain/loss due to personal honor,
-     * Courtesy and Sincerity.  These are effects which trigger based on the state of the card,
-     * but don't change it.
-     */
-    leavesPlayEffects() {
-        if(this.allowGameAction('affectedByHonor')) {
-            if(this.isHonored) {
-                this.game.addMessage('{0} gains 1 honor due to {1}\'s personal honor', this.controller, this);
-                this.game.addHonor(this.controller, 1);
-            } else if(this.isDishonored) {
-                this.game.addMessage('{0} loses 1 honor due to {1}\'s personal honor', this.controller, this);
-                this.game.addHonor(this.controller, -1);
-            }
-        }
-        if(this.hasSincerity()) {
-            this.game.addMessage('{0} draws a card due to {1}\'s Sincerity', this.controller, this);
-            this.controller.drawCardsToHand(1);
-        }
-        if(this.hasCourtesy()) {
-            this.game.addMessage('{0} gains a fate due to {1}\'s Courtesy', this.controller, this);
-            this.game.addFate(this.controller, 1);
-        }
     }
 
     /**
@@ -713,14 +597,6 @@ class DrawCard extends BaseCard {
         return this.allowGameAction('participateAsDefender') && this.canParticipateInConflict(conflictType);
     }
 
-    returnHomeFromConflict() {
-        let side = this.game.currentConflict.isAttacking(this) ? 'attacker' : 'defender';
-        if(!this.conflictOptions.doesNotBowAs[side] && !this.bowed) {
-            this.controller.bowCard(this);
-        }
-        this.game.currentConflict.removeFromConflict(this);
-    }
-
     play() {
     //empty function so playcardaction doesn't crash the game
     }
@@ -739,12 +615,9 @@ class DrawCard extends BaseCard {
             isDishonored: this.isDishonored,
             isHonored: this.isHonored,
             bowed: this.bowed,
-            saved: this.saved,
             fate: this.fate,
             new: this.new,
-            covert: this.covert,
-            militaryskill: this.getMilitarySkill(),
-            politicalskill: this.getPoliticalSkill()
+            covert: this.covert
         });
     }
 }

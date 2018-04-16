@@ -1,7 +1,9 @@
 const _ = require('underscore');
 
 const BaseStepWithPipeline = require('../gamesteps/basestepwithpipeline.js');
+const ForcedTriggeredAbilityWindow = require('../gamesteps/forcedtriggeredabilitywindow.js');
 const SimpleStep = require('../gamesteps/simplestep.js');
+const TriggeredAbilityWindow = require('../gamesteps/triggeredabilitywindow.js');
 
 class EventWindow extends BaseStepWithPipeline {
     constructor(game, events) {
@@ -57,10 +59,11 @@ class EventWindow extends BaseStepWithPipeline {
             return;
         }
 
-        this.game.openAbilityWindow({
-            abilityType: abilityType,
-            event: this.events
-        });
+        if(['forcedreaction', 'forcedinterrupt'].includes(abilityType)) {
+            this.queueStep(new ForcedTriggeredAbilityWindow(this.game, abilityType, this));
+        } else {
+            this.queueStep(new TriggeredAbilityWindow(this.game, abilityType, this));
+        }
     }
 
     // This is primarily for LeavesPlayEvents
@@ -70,11 +73,9 @@ class EventWindow extends BaseStepWithPipeline {
             contingentEvents = contingentEvents.concat(event.createContingentEvents());
         });
         if(contingentEvents.length > 0) {
+            // Exclude current events from the new window, we just want to give players opportunities to respond to the contingent events
+            this.queueStep(new TriggeredAbilityWindow(this.game, 'cancelinterrupt', this, this.events.slice(0)));
             _.each(contingentEvents, event => this.addEvent(event));
-            this.game.openAbilityWindow({
-                abilityType: 'cancelinterrupt',
-                event: contingentEvents
-            });
         }
     }
     
@@ -102,16 +103,21 @@ class EventWindow extends BaseStepWithPipeline {
             }
         });
 
-        //TODO: need to reapply state dependent effects here
+        this.game.queueSimpleStep(() => this.game.checkGameState(_.any(this.events, event => event.handler), this.events));
 
         if(thenEvents.length > 0) {
-            let thenEventWindow = this.game.openThenEventWindow(thenEvents);
-            this.game.queueSimpleStep(() => {
-                _.each(thenEventWindow.events, event => {
-                    this.addEvent(event);
-                });
-            });
+            this.openThenEventWindow(thenEvents);
         }
+    }
+
+    openThenEventWindow(events) {
+        let window = this.game.openThenEventWindow(events);
+        this.game.queueSimpleStep(() => {
+            _.each(window.events, event => {
+                this.addEvent(event);
+            });
+        });
+
     }
 
     resetCurrentEventWindow() {
