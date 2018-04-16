@@ -23,14 +23,16 @@ class CardPile extends React.Component {
     onCollectionClick(event) {
         event.preventDefault();
 
+        if(this.props.disableMenu) {
+            return;
+        }
+
         if(this.props.menu) {
             this.setState({ showMenu: !this.state.showMenu });
             return;
         }
 
-        if(!this.props.disablePopup) {
-            this.setState({ showPopup: !this.state.showPopup });
-        }
+        this.setState({ showPopup: !this.state.showPopup });
     }
 
     onMenuItemClick(menuItem) {
@@ -59,12 +61,12 @@ class CardPile extends React.Component {
     }
 
     onTopCardClick() {
-        if(this.props.menu && !this.props.disablePopup) {
+        if(this.props.menu && !this.props.disableMenu) {
             this.setState({ showMenu: !this.state.showMenu });
             return;
         }
 
-        if(this.props.disablePopup) {
+        if(this.props.disableMenu) {
             if(this.props.onConflictTopCardClick) {
                 this.props.onConflictTopCardClick();
                 return;
@@ -246,7 +248,7 @@ CardPile.propTypes = {
     className: PropTypes.string,
     closeOnClick: PropTypes.bool,
     disableMouseOver: PropTypes.bool,
-    disablePopup: PropTypes.bool,
+    disableMenu: PropTypes.bool,
     hiddenTopCard: PropTypes.bool,
     menu: PropTypes.array,
     onCardClick: PropTypes.func,

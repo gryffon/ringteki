@@ -537,7 +537,7 @@ export class InnerGameBoard extends React.Component {
                             <DynastyRow
                                 conflictDiscardPile={ otherPlayer ? otherPlayer.cardPiles.conflictDiscardPile : [] }
                                 conflictDeck={ otherPlayer ? otherPlayer.cardPiles.conflictDeck : [] }
-                                conflictDeckTopCardHidden={ otherPlayer ? otherPlayer.conflictDeckTopCardHidden : true }
+                                conflictDeckTopCard={ otherPlayer ? otherPlayer.conflictDeckTopCard : null }
                                 dynastyDiscardPile={ otherPlayer ? otherPlayer.cardPiles.dynastyDiscardPile : [] }
                                 dynastyDeck={ otherPlayer ? otherPlayer.cardPiles.dynastyDeck : [] }
                                 removedFromGame={ otherPlayer ? otherPlayer.cardPiles.removedFromGame : [] }
@@ -548,7 +548,6 @@ export class InnerGameBoard extends React.Component {
                                 province3Cards={ otherPlayer ? otherPlayer.provinces.three : [] }
                                 province4Cards={ otherPlayer ? otherPlayer.provinces.four : [] }
                                 onCardClick={ this.onCardClick }
-                                onConflictTopCardClick={ this.onConflictTopCardClick }
                                 onMouseOver={ this.onMouseOver }
                                 onMouseOut={ this.onMouseOut }
                                 otherPlayer= { otherPlayer }
@@ -593,7 +592,7 @@ export class InnerGameBoard extends React.Component {
                             <DynastyRow isMe={ !this.state.spectating }
                                 conflictDiscardPile={ thisPlayer.cardPiles.conflictDiscardPile }
                                 conflictDeck={ thisPlayer.cardPiles.conflictDeck }
-                                conflictDeckTopCardHidden={ thisPlayer.conflictDeckTopCardHidden }
+                                conflictDeckTopCard={ thisPlayer.conflictDeckTopCard }
                                 dynastyDiscardPile={ thisPlayer.cardPiles.dynastyDiscardPile }
                                 dynastyDeck={ thisPlayer.cardPiles.dynastyDeck }
                                 removedFromGame={ thisPlayer.cardPiles.removedFromGame }
