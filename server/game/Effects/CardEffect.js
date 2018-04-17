@@ -10,8 +10,10 @@ class CardEffect extends Effect {
     }
 
     isValidTarget(target) {
+        if(target === this.match) {
+            return true;
+        }
         return (
-            this.targetLocation.includes(target.location) &&
             target.allowGameAction('applyEffect', this.context) &&
             (this.targetController !== 'current' || target.controller === this.source.controller) &&
             (this.targetController !== 'opponent' || target.controller !== this.source.controller)
@@ -19,7 +21,15 @@ class CardEffect extends Effect {
     }
 
     getTargets() {
-        return this.game.getTargetsForEffect(this.match);
+        let provinces = ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'];
+        if(this.targetLocation === 'any') {
+            return this.game.allCards.filter(card => this.match(card));
+        } else if(this.targetLocation === 'province') {
+            return this.game.allCards.filter(card => this.match(card) && provinces.includes(card.location));
+        } else if(this.targetLocation === 'play area') {
+            return this.game.findAnyCardsInPlay(this.match);
+        }
+        return this.game.allCards.filter(card => this.match(card) && card.location === this.targetLocation);
     }
     
 }

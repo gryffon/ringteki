@@ -248,14 +248,15 @@ class Conflict {
     }
 
     calculateSkill(stateChanged = false) {
+        stateChanged = this.game.effectEngine.checkEffects(stateChanged);
+
         if(this.winnerDetermined) {
-            return false;
+            return stateChanged;
         }
 
-        stateChanged = this.game.effectEngine.checkEffects(stateChanged);
         stateChanged = this.checkForIllegalParticipants(stateChanged);
 
-        let additionalCharacters = this.getEffects('contributeToConflict');
+        let additionalCharacters = this.getEffects('contribute');
         let additionalAttackers = additionalCharacters.filter(card => card.controller === this.attackingPlayer);
         let additionalDefenders = additionalCharacters.filter(card => card.controller === this.defendingPlayer);
         this.attackerSkill = this.calculateSkillFor(this.attackers.concat(additionalAttackers));
@@ -270,7 +271,7 @@ class Conflict {
     }
 
     calculateSkillFor(cards) {
-        let skillFunction = _.last(this.getEffects('changeConflictSkillFunction')) || (card => card.getSkill(this.type));
+        let skillFunction = _.last(this.getEffects('skillFunction')) || (card => card.getSkill(this.type));
         return _.reduce(cards, (sum, card) => {
             if(card.bowed || !card.allowGameAction('countForResolution')) {
                 return sum;

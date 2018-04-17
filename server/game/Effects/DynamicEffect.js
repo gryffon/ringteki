@@ -15,7 +15,7 @@ class DynamicEffect extends StaticEffect {
 
     recalculate(target) {
         let oldValue = this.getValue(target);
-        return oldValue === this.setValue(target, this.calculate(target, this.context));
+        return oldValue !== this.setValue(target, this.calculate(target, this.context));
     }
 
     getKey(target) {

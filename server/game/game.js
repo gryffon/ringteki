@@ -251,10 +251,6 @@ class Game extends EventEmitter {
         return foundCards;
     }
 
-    getTargetsForEffect(match) {
-        return this.findAnyCardsInPlay(match).concat(this.provinceCards);
-    }
-
     /*
      * Adds a persistent/lasting/delayed effect to the effect engine
      * @param {BaseCard} source - card generating the effect

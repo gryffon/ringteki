@@ -452,7 +452,6 @@ class DrawCard extends BaseCard {
             match: (card, context) => card === this.parent && (!properties.match || properties.match(card, context)),
             targetController: 'any',
             effect: properties.effect,
-            recalculateWhen: properties.recalculateWhen
         });
     }
 
