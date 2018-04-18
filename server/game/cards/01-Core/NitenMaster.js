@@ -5,7 +5,13 @@ class NitenMaster extends DrawCard {
         this.reaction({
             title: 'Ready this character',
             when: {
-                onCardAttached: event => this.bowed && event.parent === this && event.card.hasTrait('weapon') && event.card.controller === this.controller
+                onCardAttached: (event, context) => (
+                    context.source.bowed && 
+                    event.parent === context.source && 
+                    event.card.hasTrait('weapon') && 
+                    event.card.controller === context.player &&
+                    context.source.allowGameAction('ready', context)
+                )
             },
             limit: ability.limit.perRound(2),
             handler: context => {
