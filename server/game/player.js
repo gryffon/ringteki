@@ -1496,14 +1496,13 @@ class Player extends Spectator {
      * @param {Boolean} optional - Indicates that the player can choose which effects to resolve.  This parameter only effects resolution of a single effect
      */
     resolveRingEffects(elements, optional = true) {
+        if(!Array.isArray(elements)) {
+            elements = [elements];
+        }
         optional = optional && elements.length === 1;
-        this.game.openSimultaneousEffectWindow(_.map(_.flatten([elements]), element => {
-            let context = RingEffects.contextFor(this, element, optional);
-            return {
-                title: context.ability.title,
-                handler: () => this.game.resolveAbility(context)
-            };
-        }));
+        let effects = elements.map(element => RingEffects.contextFor(this, element, optional));
+        effects = _.sortBy(effects, context => this.firstPlayer ? context.ability.defaultPriority : -context.ability.defaultPriority);
+        this.game.openSimultaneousEffectWindow(effects.map(context => ({ title: context.ability.title, handler: () => this.game.resolveAbility(context) })));
     }
 
     /**
@@ -1563,7 +1562,6 @@ class Player extends Spectator {
                 removedFromGame: this.getSummaryForCardList(this.removedFromGame, activePlayer),
                 provinceDeck: this.getSummaryForCardList(this.provinceDeck, activePlayer, true)
             },
-            conflictDeckTopCardHidden: this.conflictDeckTopCardHidden,
             disconnected: this.disconnected,
             faction: this.faction,
             firstPlayer: this.firstPlayer,
@@ -1607,6 +1605,10 @@ class Player extends Spectator {
 
         if(this.stronghold) {
             state.stronghold = this.stronghold.getSummary(activePlayer);
+        }
+
+        if(!this.conflictDeckTopCardHidden) {
+            state.conflictDeckTopCard = this.conflictDeck.first().getSummary(activePlayer); 
         }
 
         return _.extend(state, promptState);

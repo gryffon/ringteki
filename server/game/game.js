@@ -29,8 +29,6 @@ const EventWindow = require('./Events/EventWindow.js');
 const ThenEventWindow = require('./Events/ThenEventWindow.js');
 const InitiateAbilityEventWindow = require('./Events/InitiateAbilityEventWindow.js');
 const AbilityResolver = require('./gamesteps/abilityresolver.js');
-const ForcedTriggeredAbilityWindow = require('./gamesteps/forcedtriggeredabilitywindow.js');
-const TriggeredAbilityWindow = require('./gamesteps/triggeredabilitywindow.js');
 const SimultaneousEffectWindow = require('./gamesteps/SimultaneousEffectWindow');
 const AbilityContext = require('./AbilityContext.js');
 const Ring = require('./ring.js');
@@ -352,29 +350,6 @@ class Game extends EventEmitter {
         // If it's not the conflict phase and the ring hasn't been claimed, flip it
         if(this.currentPhase !== 'conflict' && !ring.claimed) {
             this.flipRing(player, ring);
-        }
-    }
-
-    /*
-     * This function is called from the client whenever the conflict deck is
-     * clicked. It's primary purpose is to support implementation of Arisan
-     * Academy
-     * @param {String} sourcePlayer - name of the clicking player
-     * @returns {undefined}
-     */
-    conflictTopCardClicked(sourcePlayer) {
-        let player = this.getPlayerByName(sourcePlayer);
-
-        // If the top card of the conflict deck is hidden, don't do anything
-        if(!player || player.conflictDeckTopCardHidden) {
-            return;
-        }
-
-        let card = player.conflictDeck.first();
-
-        // Check to see if the current step in the pipeline is waiting for input
-        if(this.pipeline.handleCardClicked(player, card)) {
-            return;
         }
     }
 
@@ -1158,21 +1133,6 @@ class Game extends EventEmitter {
         this.queueStep(new AbilityResolver(this, context));
     }
 
-    /*
-     * Opens a window for triggered card abilities to respond to an Event and
-     * adds it to the window stack
-     * @param {String} abilityType
-     * @param {Array} events
-     * @returns {undefined}
-     */
-    openAbilityWindow(abilityType, events) {
-        if(['forcedreaction', 'forcedinterrupt'].includes(abilityType)) {
-            this.queueStep(new ForcedTriggeredAbilityWindow(this, abilityType, events));
-        } else {
-            this.queueStep(new TriggeredAbilityWindow(this, abilityType, events));
-        }
-    }
-
     openSimultaneousEffectWindow(choices) {
         let window = new SimultaneousEffectWindow(this);
         _.each(choices, choice => window.addChoice(choice));
@@ -1369,14 +1329,20 @@ class Game extends EventEmitter {
             var otherPlayer = remainingPlayers.shift();
             if(currentPlayer.honorBid > otherPlayer.honorBid) {
                 honorDifference = currentPlayer.honorBid - otherPlayer.honorBid;
-                this.transferHonor(currentPlayer, otherPlayer, honorDifference);
                 this.addMessage('{0} gives {1} {2} honor', currentPlayer, otherPlayer, honorDifference);
-                this.raiseEvent('onHonorTradedAfterBid', { giver: currentPlayer, receiver: otherPlayer, amount: honorDifference });
+                this.raiseEvent('onHonorTradedAfterBid', { 
+                    giver: currentPlayer, 
+                    receiver: otherPlayer, 
+                    amount: honorDifference 
+                }, () => this.transferHonor(currentPlayer, otherPlayer, honorDifference));
             } else if(otherPlayer.honorBid > currentPlayer.honorBid) {
                 honorDifference = otherPlayer.honorBid - currentPlayer.honorBid;
-                this.transferHonor(otherPlayer, currentPlayer, honorDifference);
                 this.addMessage('{0} gives {1} {2} honor', otherPlayer, currentPlayer, honorDifference);
-                this.raiseEvent('onHonorTradedAfterBid', { giver: otherPlayer, receiver: currentPlayer, amount: honorDifference });
+                this.raiseEvent('onHonorTradedAfterBid', { 
+                    giver: otherPlayer, 
+                    receiver: currentPlayer, 
+                    amount: honorDifference 
+                }, () => this.transferHonor(currentPlayer, otherPlayer, honorDifference));
             }
         }
     }
