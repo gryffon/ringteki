@@ -102,17 +102,17 @@ class Player extends Spectator {
         }
     }
 
-    addEffect(type, effect) {
-        this.effects.push({ type: type, effect: effect });
+    addEffect(effect) {
+        this.effects.push(effect);
     }
 
     removeEffect(effect) {
-        this.effects = this.effects.filter(e => e.effect !== effect);
+        this.effects = this.effects.filter(e => e !== effect);
     }
 
     getEffects(type) {
         let filteredEffects = this.effects.filter(effect => effect.type === type);
-        return filteredEffects.map(effect => effect.effect.getValue(this));
+        return filteredEffects.map(effect => effect.getValue(this));
     }
 
     /**

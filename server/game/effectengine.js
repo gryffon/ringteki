@@ -6,7 +6,7 @@ class EffectEngine {
     constructor(game) {
         this.game = game;
         this.events = new EventRegistrar(game, this);
-        this.events.register(['onCardMoved', 'onCardTakenControl', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
+        this.events.register(['onCardMoved', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
         this.effects = [];
         this.delayedEffects = [];
         this.terminalConditions = [];
@@ -96,7 +96,6 @@ class EffectEngine {
                 // effect for existing targets and then recalculate effects for
                 // the new controller from scratch.
                 effect.cancel();
-                effect.getTargets();
             } else if(effect.duration === 'persistent' && effect.hasTarget(card) && !effect.isValidTarget(card)) {
                 // Evict the card from any effects applied on it that are no
                 // longer valid under the new controller.

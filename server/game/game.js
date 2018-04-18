@@ -474,7 +474,7 @@ class Game extends EventEmitter {
             case 'control':
                 if(player.opponent) {
                     this.addMessage('{0} gives {1} control of {2}', player, player.opponent, card);
-                    this.takeControl(player.opponent, card);
+                    card.setDefaultController(player.opponent);
                 }
                 break;
             case 'reveal':
@@ -1416,6 +1416,7 @@ class Game extends EventEmitter {
                 this.applyGameAction(null, { bow: card });
             }
         }
+        this.checkGameState(true);
         this.raiseEvent('onCardTakenControl', { card: card });
     }
 

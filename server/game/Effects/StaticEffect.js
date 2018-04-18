@@ -6,7 +6,7 @@ class StaticEffect {
     }
 
     apply(target) {
-        target.addEffect(this.type, this);
+        target.addEffect(this);
     }
 
     unapply(target) {
@@ -19,6 +19,13 @@ class StaticEffect {
 
     recalculate(target) {
         return false;
+    }
+
+    getDebugInfo() {
+        return {
+            type: this.type,
+            value: this.value
+        };
     }
 }
 

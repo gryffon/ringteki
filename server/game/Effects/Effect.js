@@ -108,7 +108,8 @@ class Effect {
             source: this.source.name,
             targets: _.map(this.targets, target => target.name),
             active: this.duration !== 'persistent' || !this.source.isBlank(),
-            condition: this.condition()
+            condition: this.condition(),
+            effect: this.effect.getDebugInfo()
         };
     }
 }
