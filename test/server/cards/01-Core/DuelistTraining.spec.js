@@ -178,7 +178,9 @@ describe('Duelist Training', function() {
                 this.player2.clickCard('let-go');
                 this.player2.clickCard(this.duelistTraining1);
                 expect(this.duelistTraining1.location).toBe('conflict discard pile');
-                this.player1.player.attach(this.duelistTraining1, this.giverOfGifts1);
+                this.player1.moveCard(this.duelistTraining1, 'hand');
+                this.player1.playAttachment(this.duelistTraining1, this.giverOfGifts1);
+                this.player2.pass();
                 expect(this.duelistTraining1.location).toBe('play area');
                 expect(this.giverOfGifts1.attachments.toArray()).toContain(this.duelistTraining1);
                 this.player1.clickCard(this.giverOfGifts1);

@@ -31,7 +31,8 @@ describe('InitateConflictPrompt: ', function() {
 
         describe('when a military fire ring has been chosen', function() {
             beforeEach(function() {
-                this.conflictSpy.ring = 'fire';
+                this.conflictSpy.element = 'fire';
+                this.conflictSpy.ring = { element: 'fire' };
                 this.conflictSpy.type = 'military';
                 this.promptProperties = this.prompt.activePrompt();
             });
@@ -370,7 +371,8 @@ describe('InitateConflictPrompt: ', function() {
 
     describe('the menuCommand function:', function() {
         beforeEach(function() {
-            this.conflictSpy.conflictRing = 'fire';
+            this.conflictSpy.element = 'fire';
+            this.conflictSpy.ring = { element: 'fire' };
             this.conflictSpy.type = 'military';
             this.cardSpy = jasmine.createSpyObj('card', ['allowGameAction']);
             this.conflictSpy.conflictProvince = this.cardSpy;
@@ -395,6 +397,8 @@ describe('InitateConflictPrompt: ', function() {
             describe('if the conflict ring is undefined', function() {
                 beforeEach(function() {
                     this.prompt.completed = false;
+                    this.conflictSpy.ring = undefined;
+                    this.conflictSpy.element = undefined;
                     this.prompt.menuCommand(this.playerSpy, 'done');
                 });
 

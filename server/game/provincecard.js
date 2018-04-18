@@ -6,24 +6,19 @@ class ProvinceCard extends BaseCard {
     constructor(owner, cardData) {
         super(owner, cardData);
 
-        this.strengthModifier = 0;
         this.isProvince = true;
         this.isBroken = false;
         this.menu = _([{ command: 'break', text: 'Break/unbreak this province' }, { command: 'hide', text: 'Flip face down' }]);
     }
 
     getStrength() {
-        return this.cardData.strength + this.strengthModifier + this.getDynastyOrStrongholdCardModifier();
+        let strengthModifier = this.getEffects('modifyProvinceStrength').reduce((total, value) => total + value, 0);
+        return this.cardData.strength + strengthModifier + this.getDynastyOrStrongholdCardModifier();
     }
 
     getDynastyOrStrongholdCardModifier() {
         let province = this.controller.getSourceList(this.location);
-        return province.reduce((bonus, card) => {
-            if(card !== this) {
-                return bonus + card.getProvinceStrengthBonus();
-            }
-            return bonus; 
-        }, 0);
+        return province.reduce((bonus, card) => bonus + card.getProvinceStrengthBonus(), 0);
     }
 
     getElement() {
@@ -32,15 +27,6 @@ class ProvinceCard extends BaseCard {
 
     getBaseStrength() {
         return this.cardData.strength;  
-    }
-
-    modifyProvinceStrength(amount, applying = true) {
-        this.strengthModifier += amount;
-        this.game.raiseEvent('onProvinceStrengthChanged', {
-            card: this,
-            amount: amount,
-            applying: applying
-        });
     }
 
     flipFaceup() {
@@ -89,13 +75,6 @@ class ProvinceCard extends BaseCard {
                 }
             }
         }
-    }
-
-    canTriggerAbilities() {
-        if(!this.location.includes('province') || this.facedown) {
-            return false;
-        }
-        return super.canTriggerAbilities();
     }
 
     cannotBeStrongholdProvince() {

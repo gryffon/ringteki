@@ -1,10 +1,8 @@
-const _ = require('underscore');
-
 const Effect = require('./Effect.js');
 
 class CardEffect extends Effect {
     constructor(game, source, properties, effect) {
-        super(game, source, properties, effect)
+        super(game, source, properties, effect);
         this.targetController = properties.targetController || 'current';
         this.targetLocation = properties.targetLocation || 'play area';
     }

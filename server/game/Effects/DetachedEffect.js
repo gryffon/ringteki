@@ -18,4 +18,3 @@ class DetachedEffect extends StaticEffect {
 }
 
 module.exports = DetachedEffect;
- 

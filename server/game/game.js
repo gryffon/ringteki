@@ -4,7 +4,6 @@ const EventEmitter = require('events');
 const ChatCommands = require('./chatcommands.js');
 const GameChat = require('./gamechat.js');
 const EffectEngine = require('./effectengine.js');
-const Effect = require('./effect.js');
 const DelayedEffect = require('./DelayedEffect.js');
 const TerminalCondition = require('./TerminalCondition.js');
 const Player = require('./player.js');
@@ -1359,31 +1358,17 @@ class Game extends EventEmitter {
         if(card.controller === player || !card.allowGameAction('takeControl')) {
             return;
         }
-
         card.controller.removeCardFromPile(card);
         player.cardsInPlay.push(card);
         card.controller = player;
-        if(card.isDefending()) {
-            this.currentConflict.defenders = _.reject(this.currentConflict.defenders, c => c === card);
-            if(card.canParticipateAsAttacker(this.currentConflict.type)) {
-                this.currentConflict.attackers.push(card);
+        if(card.isParticipating()) {
+            this.currentConflict.removeFromConflict(card);
+            if(player.isAttackingPlayer()) {
+                this.currentConflict.addAttacker(card);
             } else {
-                this.addMessage('{0} cannot participate in the conflict any more and is sent home bowed', card);
-                card.inConflict = false;
-                this.applyGameAction(null, { bow: card });
-            }
-        } else if(card.isAttacking()) {
-            this.currentConflict.attackers = _.reject(this.currentConflict.attackers, c => c === card);
-            if(card.canParticipateAsDefender(this.currentConflict.type)) {
-                this.currentConflict.defenders.push(card);
-            } else {
-                this.addMessage('{0} cannot participate in the conflict any more and is sent home bowed', card);
-                card.inConflict = false;
-                this.applyGameAction(null, { bow: card });
+                this.currentConflict.addDefender(card);
             }
         }
-        this.checkGameState(true);
-        this.raiseEvent('onCardTakenControl', { card: card });
     }
 
     /*
@@ -1504,19 +1489,30 @@ class Game extends EventEmitter {
     }
 
     checkGameState(hasChanged = false, events = []) {
+        // check for a game state change (recalculating conflict skill if necessary)
         if(
             (!this.currentConflict && this.effectEngine.checkEffects(hasChanged)) ||
             (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) || hasChanged
         ) {
+            // if the state has changed, check for:
             _.each(this.getPlayers(), player => player.cardsInPlay.each(card => {
                 if(card.getModifiedController() !== player) {
-                    this.takeControl(player.opponent, card);
+                    // any card being controlled by the wrong player
+                    let event = this.applyGameAction(null, { takeControl: card })[0];
+                    event.player = player.opponent;
                 }
-                card.checkForIllegalAttachments()
+                // any attachments which are illegally attached
+                card.checkForIllegalAttachments();
             }));
+            if(this.currentConflict) {
+                // conflicts with illegal participants
+                this.currentConflict.checkForIllegalParticipants();
+            }
+            // any terminal conditions which have met their condition
             this.effectEngine.checkTerminalConditions();
         }
         if(events.length > 0) {
+            // check for any delayed effects which need to fire
             this.effectEngine.checkDelayedEffects(events);
         }
     }

@@ -189,22 +189,13 @@ class Conflict {
         this.ring = newRing;
     }
     
-    checkForIllegalParticipants(stateChanged = false) {
-        _.each(this.attackers, card => {
-            if(!card.canParticipateAsAttacker(this.type)) {
-                this.removeFromConflict(card);
-                card.bowed = true;
-                stateChanged = true
-            }
-        });
-        _.each(this.defenders, card => {
-            if(!card.canParticipateAsDefender(this.type)) {
-                this.removeFromConflict(card);
-                card.bowed = true;
-                stateChanged = true;
-            }
-        });
-        return stateChanged;
+    checkForIllegalParticipants() {
+        let illegal = this.attackers.filter(card => !card.canParticipateAsAttacker(this.type));
+        illegal = illegal.concat(this.defenders.filter(card => !card.canParticipateAsDefender(this.type)));
+        if(illegal.length > 0) {
+            this.game.addMessage('{0} cannot participate in the conflict any more and {1} sent home bowed', illegal, illegal.length > 1 ? 'are' : 'is');
+            this.game.applyGameAction(null, { sendHome: illegal, bow: illegal });
+        }
     }
 
     removeFromConflict(card) {
@@ -254,8 +245,6 @@ class Conflict {
         if(this.winnerDetermined) {
             return stateChanged;
         }
-
-        stateChanged = this.checkForIllegalParticipants(stateChanged);
 
         let additionalCharacters = this.getEffects('contribute');
         let additionalAttackers = additionalCharacters.filter(card => card.controller === this.attackingPlayer);

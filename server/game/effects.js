@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const AbilityLimit = require('./abilitylimit.js');
 const CannotRestriction = require('./cannotrestriction.js');
+const CostReducer = require('./costreducer')
 const EffectBuilder = require('./Effects/EffectBuilder');
 const ImmunityRestriction = require('./immunityrestriction.js');
 const PlayableLocation = require('./playablelocation.js');
@@ -20,7 +21,7 @@ const Effects = {
     blank: EffectBuilder.card.static('blank'), 
     cannotDeclareRing: (match) => EffectBuilder.ring.static('cannotDeclare', match),
     canPlayFromOwn: (location) => EffectBuilder.player.detached('canPlayFromOwn', {
-        apply: (player, context) => {
+        apply: (player) => {
             let playableLocation = new PlayableLocation('play', player, location);
             player.playableLocations.push(playableLocation);
             return playableLocation;
@@ -81,7 +82,7 @@ const Effects = {
     modifyProvinceStrength: (value) => EffectBuilder.card.flexible('modifyProvinceStrength', value),
     playerCannot: (type, predicate) => EffectBuilder.player.static('restriction', new CannotRestriction(type, predicate)),
     reduceCost: (properties) => EffectBuilder.player.detached('costReducer', {
-        apply: (player) => player.addNewCostReducer(properties),
+        apply: (player, context) => player.addCostReducer(new CostReducer(context.game, context.source, properties)),
         unapply: (player, context, state) => player.removeCostReducer(state)
     }),
     reduceNextPlayedCardCost: (amount, match) => Effects.reduceCost({ amount: amount, match: match, limit: AbilityLimit.fixed(1) }),
@@ -100,7 +101,7 @@ const Effects = {
         apply: (card, context) => {
             properties.target = card;
             properties.context = properties.context || context;
-            return context.source.terminalCondition(properties);                
+            return context.source.terminalCondition(properties);    
         },
         unapply: (card, context, state) => context.game.effectEngine.removeTerminalCondition(state)
     })

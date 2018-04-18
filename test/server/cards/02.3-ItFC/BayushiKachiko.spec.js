@@ -110,6 +110,7 @@ describe('Bayushi Kachiko', function() {
                     effect: AbilityDsl.effects.cardCannot('bow')
                 });
                 this.game.addEffect(this.shrewdYasuki, this.shrewdYasuki.abilities.persistentEffects[0]);
+                this.game.checkGameState(true);
                 expect(this.shrewdYasuki.allowGameAction('bow')).toBe(false);
 
                 this.player2.clickPrompt('Pass');

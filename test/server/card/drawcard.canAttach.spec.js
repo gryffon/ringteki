@@ -2,6 +2,9 @@ const DrawCard = require('../../../server/game/drawcard.js');
 
 describe('DrawCard', function() {
     beforeEach(function() {
+        this.blankEffect = jasmine.createSpyObj('blankEffect', ['getValue']);
+        this.blankEffect.getValue.and.returnValue(true);
+        this.blankEffect.type = 'blank';
         this.game = jasmine.createSpyObj('game', ['emitEvent', 'on']);
         this.owner = {
             game: this.game
@@ -45,7 +48,7 @@ describe('DrawCard', function() {
 
             describe('but the target card is blank', function() {
                 beforeEach(function() {
-                    this.targetCard.setBlank();
+                    this.targetCard.addEffect(this.blankEffect);
                 });
 
                 it('should return true', function() {
@@ -96,7 +99,7 @@ describe('DrawCard', function() {
 
                 describe('but the target card is blank', function() {
                     beforeEach(function() {
-                        this.targetCard.setBlank();
+                        this.targetCard.addEffect(this.blankEffect);
                     });
 
                     it('should return true', function() {
@@ -152,7 +155,7 @@ describe('DrawCard', function() {
 
                 describe('but the target card is blank', function() {
                     beforeEach(function() {
-                        this.targetCard.setBlank();
+                        this.targetCard.addEffect(this.blankEffect);
                     });
 
                     it('should return true', function() {

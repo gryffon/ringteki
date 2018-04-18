@@ -5,7 +5,6 @@ const Deck = require('./deck.js');
 const AbilityContext = require('./AbilityContext.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
 const ConflictTracker = require('./conflicttracker.js');
-const CostReducer = require('./costreducer.js');
 const RingEffects = require('./RingEffects.js');
 const PlayableLocation = require('./playablelocation.js');
 const PlayerPromptState = require('./playerpromptstate.js');
@@ -704,7 +703,7 @@ class Player extends Spectator {
      * Adds the passed Cost Reducer to this Player
      * @param {CostReducer} reducer
      */
-    addCostReducer(reducer) {
+    addNewCostReducer(properties) {
         this.costReducers.push(reducer);
     }
 
@@ -1252,8 +1251,8 @@ class Player extends Spectator {
         return this.totalGloryForFavor;
     }
 
-    changeGloryModifier(amount) {
-        this.gloryModifier += amount;
+    get gloryModifier() {
+        return this.getEffects('gloryModifier').reduce((total, value) => total + value, 0);
     }
 
     modifyFate(amount) {
@@ -1490,6 +1489,10 @@ class Player extends Spectator {
         this.game.addMessage('{0} reveals a bid of {1}', this, this.showBid);
     }
 
+    isTopConflictCardShown() {
+        return this.getEffects('showTopConflictCard').length > 0;
+    }
+
     /**
      * Resolves any number of ring effects.  If there are more than one, then it will prompt the first player to choose what order those effects should be applied in
      * @param {Array} elements - Array of String, alternatively can be passed a String for convenience
@@ -1607,7 +1610,7 @@ class Player extends Spectator {
             state.stronghold = this.stronghold.getSummary(activePlayer);
         }
 
-        if(!this.conflictDeckTopCardHidden) {
+        if(this.isTopConflictCardShown()) {
             state.conflictDeckTopCard = this.conflictDeck.first().getSummary(activePlayer); 
         }
 

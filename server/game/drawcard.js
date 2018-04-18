@@ -258,7 +258,7 @@ class DrawCard extends BaseCard {
          * Get this card's glory.
          * @return {integer} The military skill value
          */
-        let gloryEffects = this.getEffects('modifyGlory')
+        let gloryEffects = this.getEffects('modifyGlory');
         if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
             return Math.max(0, gloryEffects.reduce((total, value) => total + value, this.cardData.glory));
         }
@@ -451,7 +451,7 @@ class DrawCard extends BaseCard {
             condition: properties.condition || (() => true),
             match: (card, context) => card === this.parent && (!properties.match || properties.match(card, context)),
             targetController: 'any',
-            effect: properties.effect,
+            effect: properties.effect
         });
     }
 
@@ -480,7 +480,9 @@ class DrawCard extends BaseCard {
         if(illegalAttachments.length > 0) {
             this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
             this.game.applyGameAction(null, { discardFromPlay: illegalAttachments });
+            return true;
         }
+        return false;
     }
 
     getActions() {

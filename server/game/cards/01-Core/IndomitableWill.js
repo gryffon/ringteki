@@ -10,9 +10,9 @@ class IndomitableWill extends DrawCard {
                         (event.conflict.defendingPlayer === this.controller && event.conflict.defenders.length === 1)))
             },
             handler: context => {
-                let character = this.controller.cardsInPlay.find(card => card.isParicipating());
-                this.game.addMessage('{0} uses {1} to prevent {2} from bowing as a result of the conflict\'s resolution', this.controller, this, character);
-                this.untilEndOfConflict(ability => ({
+                let character = context.player.cardsInPlay.find(card => card.isParicipating());
+                this.game.addMessage('{0} uses {1} to prevent {2} from bowing as a result of the conflict\'s resolution', context.player, context.source, character);
+                context.source.untilEndOfConflict(ability => ({
                     match: character,
                     effect: ability.effects.doesNotBow
                 }));

@@ -44,7 +44,7 @@ class Effect {
         return ['any', this.source.location].includes(this.location);
     }
 
-    isValidTarget(target) {
+    isValidTarget(target) { // eslint-disable-line no-unused-vars
         return true;
     }
 

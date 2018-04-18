@@ -31,15 +31,15 @@ class EffectSource {
         return false;
     }
 
-    hasTrait(trait) {
-        return false
+    hasTrait() {
+        return false;
     }
 
     getTraits() {
         return [];
     }
             
-    isFaction(faction) {
+    isFaction() {
         return false;
     }
             

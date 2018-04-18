@@ -13,11 +13,11 @@ class StaticEffect {
         target.removeEffect(this);
     }
 
-    getValue(target) {
+    getValue() {
         return this.value;
     }
 
-    recalculate(target) {
+    recalculate() {
         return false;
     }
 

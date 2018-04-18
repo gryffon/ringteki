@@ -364,7 +364,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         if(!this.game.politicalConflictCompleted && (this.conflict.type === 'political' || this.conflict.conflictTypeSwitched)) {
             this.game.politicalConflictCompleted = true;
         }
-   }
+    }
 }
 
 module.exports = ConflictFlow;

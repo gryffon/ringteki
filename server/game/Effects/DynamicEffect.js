@@ -5,7 +5,7 @@ class DynamicEffect extends StaticEffect {
         super(type);
         this.values = {};
         this.calculate = calculate;
-        this.key = 'uuid'
+        this.key = 'uuid';
     }
 
     apply(target) {

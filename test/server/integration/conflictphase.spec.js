@@ -163,7 +163,7 @@ describe('conflict phase', function() {
         // check reacting to conflict declaration works correctly
         describe('reactions to declaring a conflict', function() {
             beforeEach(function() {
-               this.setupTest({
+                this.setupTest({
                     phase: 'conflict',
                     player1: {
                         inPlay: ['child-of-the-plains'],
@@ -301,7 +301,7 @@ describe('conflict phase', function() {
                 });
 
                 it('the ring should have the void element', function() {
-                   expect(this.game.currentConflict.hasElement('void')).toBe(true);
+                    expect(this.game.currentConflict.hasElement('void')).toBe(true);
                 });
 
                 it('Kaede should be bowed', function() {
