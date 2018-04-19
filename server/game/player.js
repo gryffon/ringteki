@@ -223,7 +223,7 @@ class Player extends Spectator {
         return cardsToReturn;
     }
 
-    /**
+    /** TODO: Move this to setup?
      * Moves provinces from the province deck to provinces. The card marked as selected will be moved to the stronghold province.
      */
     placeProvinces() {
@@ -258,7 +258,7 @@ class Player extends Spectator {
         }
     }
 
-    /**
+    /** TODO: Remove this? Move it somewhere else?
      * Fills all empty provinces, and flips non empty provinces faceup
      */
     fillProvinces() {
@@ -359,7 +359,7 @@ class Player extends Spectator {
         return _.any(this.playableLocations, location => location.playingType === playingType && location.contains(card));
     }
 
-    /**
+    /** TODO: Remove this?
      * Adds a new PlayableLocation of the specified type, and returns it
      * @param {String} playingType
      * @param {String} location
@@ -384,7 +384,7 @@ class Player extends Spectator {
         });
     }
 
-    /**
+    /** TODO: Remove this.conflicts
      * Returns the number of conflicts won by this player of the passed type
      * @param {String} conflictType - one of 'military', 'political'
      */
@@ -416,7 +416,8 @@ class Player extends Spectator {
     }
 
     allowGameAction(actionType, context = null) {
-        return !_.any(this.abilityRestrictions, restriction => restriction.isMatch(actionType, context));
+        let abilityRestrictions = this.getEffects('abilityRestrictions');
+        return !_.any(abilityRestrictions, restriction => restriction.isMatch(actionType, context));
     }
 
     /**
@@ -537,7 +538,7 @@ class Player extends Spectator {
         }
     }
 
-    /**
+    /** TODO: Remove this.conflicts
      * Checks whether this player can initiate a conflict of the passed type
      * @param {String} conflictType - one of 'military', 'political'
      */
@@ -567,6 +568,7 @@ class Player extends Spectator {
         this.conflicts.setCannotInitiateForType(type, value);
     }
 
+    // TODO: Remove these
     initConflictDeck() {
         this.shuffleConflictDeck();
     }
@@ -613,7 +615,7 @@ class Player extends Spectator {
         this.maxLimited = 1;
     }
 
-    /**
+    /** TODO: Move this to setup
      * Sets honor to the correct starting value
      */
     startGame() {
@@ -625,7 +627,7 @@ class Player extends Spectator {
         //this.game.raiseEvent('onStatChanged', this, 'honor');
     }
 
-    /**
+    /** TODO: Move these to setup
      * Replaces the cards passed one for one in this players provinces, then shuffles the passed cards back into the deck,
      * and put a message in chat saying how many cards were replaced
      */
@@ -832,7 +834,7 @@ class Player extends Spectator {
         this.opponent = this.game.getOtherPlayer(this);
     }
 
-    /**
+    /** TODO: Move to draw phase
      * Called after bids are finished in the draw phase.  Draws cards for this player equal to their modified bid
      */
     drawPhase() {
@@ -1228,7 +1230,7 @@ class Player extends Spectator {
         this.discardCardsFromHand([card]);
     }
 
-    /**
+    /** TODO: Move this to conflictphase.js
      * Returns the total glory of all ready characters, and adds an amount equal to the number of claimed rings
      */
     getFavor() {
@@ -1508,7 +1510,7 @@ class Player extends Spectator {
         this.game.openSimultaneousEffectWindow(effects.map(context => ({ title: context.ability.title, handler: () => this.game.resolveAbility(context) })));
     }
 
-    /**
+    /** TODO: Move this to fate phase?
      * Prompts the player to choose a character with no fate until all such characters have been discarded (or the discard prevented)
      * @param {Array} cardsToDiscard - Array of DrawCard
      */

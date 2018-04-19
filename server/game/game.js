@@ -248,7 +248,7 @@ class Game extends EventEmitter {
         return foundCards;
     }
 
-    /*
+    /* TODO: Move these 3 to EffectSource?
      * Adds a persistent/lasting/delayed effect to the effect engine
      * @param {BaseCard} source - card generating the effect
      * @param {Object} properties - properties for the effect - see effect.js
@@ -275,7 +275,7 @@ class Game extends EventEmitter {
         return effect;
     }
 
-    /*
+    /* TODO: Add this to Choose Province Dialog?
      * Marks a province as selected for choosing a stronghold provice at the
      * start of the game
      * @param {Player} player
@@ -1179,6 +1179,7 @@ class Game extends EventEmitter {
         return event;
     }
 
+    // Remove this?
     emitEvent(eventName, params = {}) {
         let event = this.getEvent(eventName, params);
         this.emit(event.name, event);
@@ -1196,6 +1197,7 @@ class Game extends EventEmitter {
         this.queueStep(new EventWindow(this, events));
     }
 
+    // Move this to EventWindow
     openThenEventWindow(events) {
         if(!_.isArray(events)) {
             events = [events];
@@ -1205,7 +1207,7 @@ class Game extends EventEmitter {
         return window;
     }
 
-    /**
+    /** Remove this
      * Adds an event to an open EventWindow
      * @param {EventWindow} window - window to add an event to
      * @param {String} eventName
@@ -1240,7 +1242,7 @@ class Game extends EventEmitter {
         this.queueStep(new InitiateAbilityEventWindow(this, events));
     }
 
-    /**
+    /** TODO: Remove this
      * Raises multiple events whose resolution is performed atomically. Any
      * abilities triggered by these events will appear within the same prompt
      * for the player. Allows each event to take its own handler which will
@@ -1270,7 +1272,7 @@ class Game extends EventEmitter {
         return EventBuilder.getEventsForAction(action, cards, context);
     }
 
-    /*
+    /* TODO: Add an applySingleGameAction function?
      * Checks whether a game action can be performed on a card or an array of
      * cards, and performs it on all legal targets.
      * @param {String} actionType
@@ -1292,7 +1294,7 @@ class Game extends EventEmitter {
         return events;
     }
 
-    /*
+    /* Remove this
      * Flips a ring to show the opposite side (military or political)
      * @param {Player} player
      * @param {Ring} ring
@@ -1302,7 +1304,7 @@ class Game extends EventEmitter {
         ring.flipConflictType();
     }
 
-    /*
+    /* Move this to regroupphase.js
      * Puts 1 fate on all unclaimed rings
      * @returns {undefined}
      */
@@ -1348,8 +1350,7 @@ class Game extends EventEmitter {
 
     /*
      * Changes the controller of a card in play to the passed player, and cleans
-     * all the related stuff up (swapping sides in a conflict, checking for
-     * illegal attachments, etc)
+     * all the related stuff up (swapping sides in a conflic)
      * @param {Player} player
      * @param {DrawCard} card
      * @returns {undefined}
