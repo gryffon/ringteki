@@ -9,7 +9,7 @@ class Ring {
         this.contested = false;
         this.element = element;
         this.fate = 0;
-        this.effects = {};
+        this.effects = [];
         
         this.menu = _([
             { command: 'flip', text: 'Flip' },
@@ -22,20 +22,22 @@ class Ring {
             { command: 'conflict', text: 'Initiate Conflict' }
         ]);
     }
-
-    addEffect(effectType, effectFunc) {
-        if(!this.effects[effectType]) {
-            this.effects[effectType] = [];
-        }
-        this.effects[effectType].push(effectFunc);
+    
+    addEffect(effect) {
+        this.effects.push(effect);
     }
 
-    removeEffect(effectType, effectFunc) {
-        this.effects[effectType] = _.reject(this.effects[effectType], effect => effect === effectFunc);
+    removeEffect(effect) {
+        this.effects = this.effects.filter(e => e !== effect);
+    }
+
+    getEffects(type) {
+        let filteredEffects = this.effects.filter(effect => effect.type === type);
+        return filteredEffects.map(effect => effect.getValue(this));
     }
 
     isConsideredClaimed(player = null) {
-        let check = player => (_.any(this.effects.considerAsClaimed, func => func(player)) || this.claimedBy === player.name);
+        let check = player => (_.any(this.getEffects('considerAsClaimed'), match => match(player)) || this.claimedBy === player.name);
         if(player) {
             return check(player);
         }
@@ -43,7 +45,7 @@ class Ring {
     }
 
     canDeclare(player) {
-        return !_.any(this.effects.cannotDeclare, func => func(player)) && !this.claimed;
+        return !_.any(this.getEffects('cannotDeclare'), match => match(player)) && !this.claimed;
     }
 
     isUnclaimed() {
@@ -59,10 +61,11 @@ class Ring {
     }
 
     getElements() {
-        if(this.game.currentConflict && this.game.currentConflict.conflictRing === this.element) {
-            return this.game.currentConflict.getElements();
-        }
-        return [this.element];
+        return this.getEffects('addElement').concat([this.element]);
+    }
+
+    hasElement(element) {
+        return this.getElements().includes(element);
     }
 
     getFate() {

@@ -6,7 +6,7 @@ class SeekerInitiate extends DrawCard {
         this.reaction({
             title: 'Look at top 5 cards',
             when: {
-                onClaimRing: event => this.controller.role && _.any(event.conflict.getElements(), element => this.controller.role.hasTrait(element)) && 
+                onClaimRing: event => this.controller.role && _.any(event.conflict.elements, element => this.controller.role.hasTrait(element)) && 
                                       event.player === this.controller && this.controller.conflictDeck.size() > 0
             },
             handler: () => {

@@ -1,5 +1,6 @@
 const _ = require('underscore');
 
+const AbilityDsl = require('./abilitydsl.js');
 const BaseCard = require('./basecard.js');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayCardAction = require('./playcardaction.js');
@@ -19,41 +20,35 @@ const StandardPlayActions = [
     new PlayCardAction()
 ];
 
+const ValidKeywords = [
+    'ancestral',
+    'restricted',
+    'limited',
+    'sincerity',
+    'courtesy',
+    'pride',
+    'covert'
+];
+
 class DrawCard extends BaseCard {
     constructor(owner, cardData) {
         super(owner, cardData);
 
+        this.defaultController = owner;
         this.attachments = _([]);
         this.parent = null;
 
-        this.militarySkillModifier = 0;
-        this.politicalSkillModifier = 0;
-        this.baseMilitarySkill = cardData.military;
-        this.basePoliticalSkill = cardData.political;
-        this.militarySkillMultiplier = 1;
-        this.politicalSkillMultiplier = 1;
-        this.gloryModifier = 0;
+        this.printedMilitarySkill = cardData.military;
+        this.printedPoliticalSkill = cardData.political;
         this.fate = 0;
-        this.contributesToFavor = true;
         this.bowed = false;
         this.covert = false;
-        this.inConflict = false;
-        this.isConflict = false;
-        this.isDynasty = false;
+        this.isConflict = cardData.side === 'conflict';
+        this.isDynasty = cardData.side === 'dynasty';
         this.isHonored = false;
         this.isDishonored = false;
-        this.readysDuringReadying = true;
-        this.conflictOptions = {
-            doesNotBowAs: {
-                attacker: false,
-                defender: false
-            },
-            cannotParticipateIn: {
-                military: false,
-                political: false
-            }
-        };
-        this.covertLimit = 1;
+
+        this.parseKeywords(cardData.text_canonical || '');
 
         this.menu = _([
             { command: 'bow', text: 'Bow/Ready' },
@@ -65,19 +60,7 @@ class DrawCard extends BaseCard {
             { command: 'control', text: 'Give control' }
         ]);
 
-        if(cardData.side === 'conflict') {
-            this.isConflict = true;
-        } else if(cardData.side === 'dynasty') {
-            this.isDynasty = true;
-        }
-
         if(cardData.type === 'character') {
-            if(cardData.military === undefined || cardData.military === null) {
-                this.conflictOptions.cannotParticipateIn.military = true;
-            }
-            if(cardData.political === undefined || cardData.political === null) {
-                this.conflictOptions.cannotParticipateIn.political = true;
-            }
             this.abilities.reactions.push(new CourtesyAbility(this.game, this));
             this.abilities.reactions.push(new PersonalHonorAbility(this.game, this));
             this.abilities.reactions.push(new PrideAbility(this.game, this));
@@ -85,6 +68,41 @@ class DrawCard extends BaseCard {
         }
     }
 
+    parseKeywords(text) {
+        var lines = text.split('\n');
+        var potentialKeywords = [];
+        _.each(lines, line => {
+            line = line.slice(0, -1);
+            _.each(line.split('. '), k => potentialKeywords.push(k));
+        });
+
+        this.printedKeywords = [];
+        this.allowedAttachmentTraits = [];
+
+        _.each(potentialKeywords, keyword => {
+            if(_.contains(ValidKeywords, keyword)) {
+                this.printedKeywords.push(keyword);
+            } else if(keyword.startsWith('no attachments except')) {
+                var traits = keyword.replace('no attachments except ', '');
+                this.allowedAttachmentTraits = traits.split(' or ');
+            } else if(keyword.startsWith('no attachments')) {
+                this.allowedAttachmentTraits = ['none'];
+            }
+        });
+
+        this.printedKeywords.forEach(keyword => {
+            this.persistentEffect({
+                match: this,
+                effect: AbilityDsl.effects.addKeyword(keyword)
+            });
+        });
+    }
+
+
+    hasKeyword(keyword) {
+        return this.getEffects('addKeyword').includes(keyword.toLowerCase());
+    }
+    
     isLimited() {
         return this.hasKeyword('Limited') || this.hasPrintedKeyword('Limited');
     }
@@ -159,7 +177,7 @@ class DrawCard extends BaseCard {
                 return false;
             }
             // card cannot participate in this conflict type
-            if(this.conflictOptions.cannotParticipateIn[this.game.currentConflict.conflictType]) {
+            if(this.hasDash(this.game.currentConflict.type)) {
                 return false;
             }
         } else if(actionType === 'putIntoPlay') {
@@ -188,55 +206,26 @@ class DrawCard extends BaseCard {
         let clone = new DrawCard(this.owner, this.cardData);
 
         clone.attachments = _(this.attachments.map(attachment => attachment.createSnapshot()));
-        clone.blankCount = this.blankCount;
+        clone.effects = _.clone(this.effects);
         clone.controller = this.controller;
-        clone.factions = Object.assign({}, this.factions);
-        clone.keywords = Object.assign({}, this.keywords);
         clone.bowed = this.bowed;
         clone.isHonored = this.isHonored;
         clone.isDishonored = this.isDishonored;
         clone.location = this.location;
         clone.parent = this.parent;
         clone.fate = this.fate;
-        clone.traits = Object.assign({}, this.traits);
-        clone.militarySkillModifier = this.militarySkillModifier;
-        clone.politicalSkillModifier = this.politicalSkillModifier;
-        clone.baseMilitarySkill = this.baseMilitarySkill;
-        clone.basePoliticalSkill = this.basePoliticalSkill;
-        clone.militarySkillMultiplier = this.militarySkillMultiplier;
-        clone.politicalSkillMultiplier = this.politicalSkillMultiplier;
-        clone.gloryModifier = this.gloryModifier;
         clone.inConflict = this.inConflict;
         return clone;
     }
 
-    modifySkill(amount, type) {
-        /**
-         * Direct the skill modification to the correct sub function.
-         * @param  {integer} amount - The amount to modify the skill by.
-         * @param  {string}   type - The type of the skill; military or political
-         */
+    hasDash(type = '') {
+        let dashEffects = this.getEffects('setDash');
         if(type === 'military') {
-            this.modifyMilitarySkill(amount);
+            return this.printedMilitarySkill === null || dashEffects.includes(type);
         } else if(type === 'political') {
-            this.modifyPoliticalSkill(amount);
+            return this.printedPoliticalSkill === null || dashEffects.includes(type);            
         }
-    }
-
-    modifyGlory(amount) {
-        /**
-         * Modify glory.
-         * @param  {integer} amount - The amount to modify glory by.
-         */
-        this.gloryModifier += amount;
-    }
-
-    modifyMilitarySkillMultiplier(amount) {
-        this.militarySkillMultiplier *= amount;
-    }
-
-    modifyPoliticalSkillMultiplier(amount) {
-        this.politicalSkillMultiplier *= amount;
+        return this.printedMilitarySkill === null || this.printedPoliticalSkill === null || dashEffects.length > 0;
     }
 
     getSkill(type, printed = false) {
@@ -253,22 +242,15 @@ class DrawCard extends BaseCard {
         }
     }
 
-    getGlory(printed = false) {
+    getGlory() {
         /**
          * Get this card's glory.
-         * @param  {boolean} printed - Use the printed value of the skill; default false
          * @return {integer} The military skill value
          */
-        if(printed) {
-            return this.cardData.glory;
-        }
-
+        let gloryEffects = this.getEffects('modifyGlory');
         if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
-            return Math.max(0, this.cardData.glory + this.gloryModifier);
+            return Math.max(0, gloryEffects.reduce((total, value) => total + value, this.cardData.glory));
         }
-
-        return null;
-
     }
     
     getProvinceStrengthBonus() {
@@ -278,98 +260,76 @@ class DrawCard extends BaseCard {
         return 0;
     }
 
-    modifyMilitarySkill(amount) {
-        /**
-         * Modify the military skill.
-         * @param  {integer} amount - The amount to modify the skill by.
-         */
-        this.militarySkillModifier += amount;
+    get militarySkill() {
+        return this.getMilitarySkill();
     }
 
-    modifyPoliticalSkill(amount) {
-        /**
-         * Modify the political skill.
-         * @param  {integer} amount - The amount to modify the skill by.
-         * @param  {boolean}  applying -  [description]
-         */
-        this.politicalSkillModifier += amount;
-    }
-
-    modifyBaseMilitarySkill(amount) {
-        /**
-         * Modify the military skill.
-         * @param  {integer} amount - The amount to modify the skill by.
-         */
-        this.baseMilitarySkill += amount;
-    }
-
-    modifyBasePoliticalSkill(amount) {
-        /**
-         * Modify the political skill.
-         * @param  {integer} amount - The amount to modify the skill by.
-         */
-        this.basePoliticalSkill += amount;
-    }
-
-    getMilitarySkill(printed = false, floor = true) {
+    getMilitarySkill(floor = true) {
         /**
          * Get the military skill.
-         * @param  {boolean} printed - Use the printed value of the skill; default false
          * @param  {boolean} floor - Return the value after flooring it at 0; default false
          * @return {integer} The military skill value
          */
-        if(printed) {
-            return this.cardData.military;
+
+        if(this.hasDash('military')) {
+            return 0;
         }
 
-        if(this.cardData.military !== null && this.cardData.military !== undefined) {
-            let skillFromAttachments = _.reduce(this.attachments._wrapped, (skill, card) => {
-                if(parseInt(card.cardData.military_bonus)) {
-                    return skill + parseInt(card.cardData.military_bonus);
-                }
-                return skill;
-            }, 0);
-            
-            let modifiedMilitarySkill = this.baseMilitarySkill + this.militarySkillModifier + skillFromAttachments + this.getSkillFromGlory();
-            let multipliedMilitarySkill = Math.round(modifiedMilitarySkill * this.militarySkillMultiplier);
-            if(!floor) {
-                return multipliedMilitarySkill;
-            }
-            return Math.max(0, multipliedMilitarySkill);
-        }
-
-        return null;
+        // get base mill skill + effect modifiers
+        let skill = this.getEffects('modifyMilitarySkill').reduce((total, value) => total + value, this.getBaseMilitarySkill());
+        // add attachment bonuses and skill from glory
+        skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
+            let bonus = parseInt(card.cardData.military_bonus);
+            return bonus ? total + bonus : total;
+        }, skill);
+        // multiply total
+        skill = this.getEffects('modifyMilitarySkillMultiplier').reduce((total, effect) => total * effect.value, skill);
+        return floor ? Math.max(0, skill) : skill;
     }
 
-    getPoliticalSkill(printed = false, floor = true) {
+    get politicalSkill() {
+        return this.getPoliticalSkill();
+    }
+
+    getPoliticalSkill(floor = true) {
         /**
          * Get the political skill.
          * @param  {boolean} printed - Use the printed value of the skill; default false
          * @param  {boolean} floor - Return the value after flooring it at 0; default false
          * @return {integer} The political skill value
          */
-        if(printed) {
-            return this.cardData.political;
+        if(this.hasDash('political')) {
+            return 0;
         }
 
-        if(this.cardData.political !== null && this.cardData.political !== undefined) {
-            let skillFromAttachments = _.reduce(this.attachments._wrapped, (skill, card) => {
-                if(parseInt(card.cardData.political_bonus)) {
-                    return skill + parseInt(card.cardData.political_bonus);
-                }
-                return skill;
-            }, 0);
-            let modifiedPoliticalSkill = this.basePoliticalSkill + this.politicalSkillModifier + skillFromAttachments + this.getSkillFromGlory();
-            let multipliedPoliticalSkill = Math.round(modifiedPoliticalSkill * this.politicalSkillMultiplier);
-            if(!floor) {
-                return multipliedPoliticalSkill;
-            }
-            return Math.max(0, multipliedPoliticalSkill);
+        // get base mill skill + effect modifiers
+        let skill = this.getEffects('modifyPoliticalSkill').reduce((total, value) => total + value, this.getBasePoliticalSkill());
+        // add attachment bonuses and skill from glory
+        skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
+            let bonus = parseInt(card.cardData.political_bonus);
+            return bonus ? total + bonus : total;
+        }, skill);
+        // multiply total
+        skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, effect) => total * effect.value, skill);
+        return floor ? Math.max(0, skill) : skill;
+    }
+
+    getBaseMilitarySkill() {
+        if(this.hasDash('military')) {
+            return 0;
         }
 
-        return null;
+        return this.getEffects('modifyBaseMilitarySkill').reduce((total, value) => total + value, this.printedMilitarySkill);
     }
     
+    getBasePoliticalSkill() {
+        if(this.hasDash('political')) {
+            return 0;
+        }
+
+        return this.getEffects('modifyBasePoliticalSkill').reduce((total, value) => total + value, this.printedPoliticalSkill);
+    }
+
     getSkillFromGlory() {
         if(!this.allowGameAction('affectedByHonor')) {
             return 0;
@@ -453,10 +413,6 @@ class DrawCard extends BaseCard {
         return true;
     }
 
-    clearBlank() {
-        super.clearBlank();
-    }
-
     /**
      * Checks 'no attachment' restrictions for this card when attempting to
      * attach the passed attachment card.
@@ -484,8 +440,7 @@ class DrawCard extends BaseCard {
             condition: properties.condition || (() => true),
             match: (card, context) => card === this.parent && (!properties.match || properties.match(card, context)),
             targetController: 'any',
-            effect: properties.effect,
-            recalculateWhen: properties.recalculateWhen
+            effect: properties.effect
         });
     }
 
@@ -514,7 +469,9 @@ class DrawCard extends BaseCard {
         if(illegalAttachments.length > 0) {
             this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
             this.game.applyGameAction(null, { discardFromPlay: illegalAttachments });
+            return true;
         }
+        return false;
     }
 
     getActions() {
@@ -559,7 +516,6 @@ class DrawCard extends BaseCard {
 
     resetForConflict() {
         this.covert = false;
-        //this.covertTarget = undefined;
         this.inConflict = false;
     }
     
@@ -575,26 +531,49 @@ class DrawCard extends BaseCard {
         return this.game.currentConflict && this.game.currentConflict.isParticipating(this);
     }
 
-    canDeclareAsAttacker(conflictType = this.game.currentConflict.conflictType) {
-        return (this.allowGameAction('declareAsAttacker') && this.canParticipateAsAttacker(conflictType) &&
-                (!this.bowed || this.conflictOptions.canBeDeclaredWhileBowed));
+    canDeclareAsAttacker(conflictType = this.game.currentConflict.type) {
+        return (this.allowGameAction('declareAsAttacker') && !this.bowed && 
+                this.canParticipateAsAttacker(conflictType));
     }
 
-    canDeclareAsDefender(conflictType = this.game.currentConflict.conflictType) {
+    canDeclareAsDefender(conflictType = this.game.currentConflict.type) {
         return (this.allowGameAction('declareAsDefender') && this.canParticipateAsDefender(conflictType) && 
-                (!this.bowed || this.conflictOptions.canBeDeclaredWhileBowed) && !this.covert);
+                !this.bowed && !this.covert);
     }
 
-    canParticipateInConflict(conflictType = this.game.currentConflict.conflictType) {
-        return this.location === 'play area' && !this.conflictOptions.cannotParticipateIn[conflictType];
+    canParticipateInConflict(conflictType = this.game.currentConflict.type) {
+        return this.location === 'play area' && !this.hasDash(conflictType);
     }
 
-    canParticipateAsAttacker(conflictType = this.game.currentConflict.conflictType) {
+    canParticipateAsAttacker(conflictType = this.game.currentConflict.type) {
         return this.allowGameAction('participateAsAttacker') && this.canParticipateInConflict(conflictType);
     }
 
-    canParticipateAsDefender(conflictType = this.game.currentConflict.conflictType) {
+    canParticipateAsDefender(conflictType = this.game.currentConflict.type) {
         return this.allowGameAction('participateAsDefender') && this.canParticipateInConflict(conflictType);
+    }
+
+    bowsOnReturnHome() {
+        return this.getEffects('doesNotBow').length === 0;
+    }
+
+    readiesDuringReadyPhase() {
+        return this.getEffects('doesNotReady').length > 0;
+    }
+
+    getModifiedLimitMax(max) {
+        return this.getEffects('increaseLimitOnAbilities').reduce((total, value) => total + value, max);
+    }
+
+    setDefaultController(player) {
+        this.defaultController = player;
+    }
+
+    getModifiedController() {
+        if(this.location === 'play area') {
+            return _.last(this.getEffects('takeControl')) || this.defaultController;
+        }
+        return this.owner;
     }
 
     play() {

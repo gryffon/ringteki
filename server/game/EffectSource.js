@@ -7,8 +7,6 @@ class EffectSource {
         this.game = game;
         this.name = name;
         this.id = this.name;
-        this.factions = {};
-        this.traits = {};
         this.type = '';
         this.facedown = false;
     }
@@ -33,17 +31,16 @@ class EffectSource {
         return false;
     }
 
-    hasTrait(trait) {
-        let traitCount = this.traits[trait.toLowerCase()] || 0;
-        return traitCount > 0;
+    hasTrait() {
+        return false;
     }
 
     getTraits() {
-        return _.keys(_.omit(this.traits, trait => trait < 1));
+        return [];
     }
             
-    isFaction(faction) {
-        return !!this.factions[faction.toLowerCase()];
+    isFaction() {
+        return false;
     }
             
     hasToken() {

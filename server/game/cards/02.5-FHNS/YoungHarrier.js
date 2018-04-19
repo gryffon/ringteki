@@ -11,7 +11,7 @@ class YoungHarrier extends DrawCard {
                     if(card.isFaction('crane')) {
                         this.untilEndOfPhase(ability => ({
                             match: card,
-                            effect: ability.effects.cannotBeDishonored()
+                            effect: ability.effects.cardCannot('dishonor')
                         }));
                     }
                 });

@@ -29,7 +29,7 @@ class DisplayOfPower extends DrawCard {
             }
             event.cancel();
             this.game.addMessage('{0} cancels the ring effect and {1} may resolve it and then claims it', this, this.controller);
-            let ring = this.game.rings[event.conflict.conflictRing];
+            let ring = this.game.currentConflict.ring;
             this.game.raiseMultipleEvents([
                 {
                     name: 'onResolveRingEffect',

@@ -6,7 +6,7 @@ class EffectEngine {
     constructor(game) {
         this.game = game;
         this.events = new EventRegistrar(game, this);
-        this.events.register(['onCardMoved', 'onCardBlankToggled', 'onCardTakenControl', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
+        this.events.register(['onCardMoved', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
         this.effects = [];
         this.delayedEffects = [];
         this.terminalConditions = [];
@@ -15,13 +15,7 @@ class EffectEngine {
     }
 
     add(effect) {
-        if(!effect.isInActiveLocation()) {
-            return;
-        }
-
         this.effects.push(effect);
-        this.effects = _.sortBy(this.effects, effect => effect.order);
-        effect.getTargets();
         if(effect.duration === 'custom') {
             this.registerCustomDurationEvents(effect);
         }
@@ -80,78 +74,12 @@ class EffectEngine {
     }
 
     onCardMoved(event) {
-        let newArea = event.newLocation === 'hand' ? 'hand' : 'play area';
-        this.removeTargetFromEffects(event.card, event.originalLocation);
+        // remove any effects which this card is emmiting which it shouldn't be
         this.unapplyAndRemove(effect => effect.duration === 'persistent' && effect.source === event.card && (effect.location === event.originalLocation || event.parentChanged));
         // Any lasting or delayed effects on this card should be removed when it leaves play
         this.unapplyAndRemove(effect => effect.match === event.card && effect.targetLocation !== 'any' && effect.duration !== 'persistent');
         this.delayedEffects = _.reject(this.delayedEffects, effect => effect.target === event.card);
         this.terminalConditions = _.reject(this.terminalConditions, effect => effect.target === event.card);
-        this.addTargetForPersistentEffects(event.card, newArea);
-    }
-
-    onCardTakenControl(event) {
-        let card = event.card;
-        _.each(this.effects, effect => {
-            if(effect.duration === 'persistent' && effect.source === card) {
-                // Since the controllers have changed, explicitly cancel the
-                // effect for existing targets and then recalculate effects for
-                // the new controller from scratch.
-                effect.cancel();
-                effect.getTargets();
-            } else if(effect.duration === 'persistent' && effect.hasTarget(card) && !effect.isValidTarget(card)) {
-                // Evict the card from any effects applied on it that are no
-                // longer valid under the new controller.
-                effect.removeTarget(card);
-            }
-        });
-
-        // Reapply all relevant persistent effects given the card's new
-        // controller.
-        this.addTargetForPersistentEffects(card, 'play area');
-    }
-
-    onCardTraitChanged(event) {
-        this.recalculateTargetingChange(event.card);
-    }
-
-    onCardFactionChanged(event) {
-        this.recalculateTargetingChange(event.card);
-    }
-
-    recalculateTargetingChange(card) {
-        _.each(this.effects, effect => {
-            if(effect.duration === 'persistent' && effect.hasTarget(card) && !effect.isValidTarget(card)) {
-                effect.removeTarget(card);
-            }
-        });
-
-        this.addTargetForPersistentEffects(card, 'play area');
-    }
-
-    addTargetForPersistentEffects(card, targetLocation) {
-        _.each(this.effects, effect => {
-            if(effect.duration === 'persistent' && effect.targetLocation === targetLocation && (_.isFunction(effect.match) || effect.match === card)) {
-                effect.addTargets([card]);
-            }
-        });
-    }
-
-    removeTargetFromEffects(card, location) {
-        let area = location === 'hand' ? 'hand' : 'play area';
-        _.each(this.effects, effect => {
-            if(effect.targetLocation === area && effect.location !== 'any' || location === 'play area' && effect.duration !== 'persistent') {
-                effect.removeTarget(card);
-            }
-        });
-    }
-
-    onCardBlankToggled(event) {
-        let {card, isBlank} = event;
-        let matchingEffects = _.filter(this.effects, effect => effect.duration === 'persistent' && effect.source === card);
-        _.each(matchingEffects, effect => {
-            effect.setActive(!isBlank);
-        });
     }
 
     onConflictFinished() {

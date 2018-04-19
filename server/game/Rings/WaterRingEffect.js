@@ -22,7 +22,7 @@ class WaterRingEffect extends BaseAbility {
 
     executeHandler(context) {
         if(!context.target) {
-            context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, context.game.currentConflict ? context.game.currentConflict.conflictRing : 'water');
+            context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'water');
             return;
         }
         if(context.target.bowed) {

@@ -12,7 +12,7 @@ class ChildOfThePlains extends DrawCard {
                 this.untilEndOfConflict(ability => ({
                     targetType: 'player',
                     targetController: 'opponent',
-                    effect: ability.effects.playerCannotTakeFirstAction()
+                    effect: ability.effects.playerCannot('takeFirstAction')
                 }));
             }
         });

@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const EffectSource = require('./EffectSource');
+const Ring = require('./ring.js');
 const Spectator = require('./spectator.js');
 
 class GameChat {
@@ -60,8 +61,10 @@ class GameChat {
                 if(!_.isUndefined(arg) && !_.isNull(arg)) {
                     if(_.isArray(arg)) {
                         return this.formatArray(arg);
+                    } else if(arg instanceof Ring) {
+                        return { message: this.formatMessage('the {0} ring', [arg.element]) };
                     } else if(arg instanceof EffectSource) {
-                        return { id: arg.id, label: arg.name, type: arg.getType() };
+                        return { id: arg.id, name: arg.name, type: arg.type };
                     } else if(arg instanceof Spectator) {
                         return { name: arg.user.username, emailHash: arg.user.emailHash, noAvatar: arg.user.settings.disableGravatar };
                     }

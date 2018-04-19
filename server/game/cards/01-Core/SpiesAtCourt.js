@@ -5,7 +5,7 @@ class SpiesAtCourt extends DrawCard {
         this.reaction({
             title: 'Force opponent to discard 2 cards',
             when: {
-                afterConflict: event => event.conflict.winner === this.controller && event.conflict.conflictType === 'political' && this.controller.opponent
+                afterConflict: event => event.conflict.winner === this.controller && event.conflict.type === 'political' && this.controller.opponent
             },
             cost: ability.costs.dishonor(card => card.isParticipating()),
             max: ability.limit.perConflict(1),

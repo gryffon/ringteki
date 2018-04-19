@@ -19,7 +19,6 @@ class RingSource extends EffectSource {
         this.conflictType = ring.conflictType;
         this.name = capitalize[ring.element] + ' Ring';
         this.id = this.name;
-        this.factions = {};
         this.type = 'ring';
     }
 }

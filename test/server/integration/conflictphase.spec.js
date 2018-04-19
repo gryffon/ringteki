@@ -17,6 +17,7 @@ describe('conflict phase', function() {
             });
 
             it('should begin by prompting first player', function() {
+                
                 expect(this.player1).toHavePrompt('Initiate an action');
             });
 
@@ -58,7 +59,6 @@ describe('conflict phase', function() {
                 this.player2.clickPrompt('Pass');
                 this.player1.clickCard('adept-of-the-waves');
                 this.player1.clickCard('adept-of-the-waves');
-
                 expect(this.player2).toHavePrompt('Initiate an action');
             });
 
@@ -129,7 +129,7 @@ describe('conflict phase', function() {
                 it('should select a ring when clicked', function() {
                     this.player1.clickRing('air');
                     expect(this.player1).toHavePrompt('Choose province to attack');
-                    expect(this.game.currentConflict.conflictRing).toBe('air');
+                    expect(this.game.currentConflict.element).toBe('air');
                 });
     
                 it('should select a province when clicked', function() {

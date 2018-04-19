@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 
 class IsawaKaede extends DrawCard {
@@ -8,13 +7,12 @@ class IsawaKaede extends DrawCard {
             effect: ability.effects.immuneTo(context => context.source && context.source.type === 'ring' && context.source.controller === this.controller.opponent)
         });
         this.persistentEffect({
-            condition: () => this.isAttacking() && _.any(this.game.rings, ring => ring.contested),
-            match: this,
-            effect: ability.effects.addConflictElement('void')
+            condition: () => this.isAttacking(),
+            match: ring => ring.contested,
+            effect: ability.effects.addElement('void')
         });
         this.persistentEffect({
             condition: () => this.isAttacking() && this.game.currentConflict.winner === this.controller,
-            match: this,
             effect: ability.effects.modifyConflictElementsToResolve(5)
         });
     }

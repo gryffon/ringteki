@@ -107,9 +107,10 @@ describe('Bayushi Kachiko', function() {
                 // Give Yasuki a hypothetical ability so it cannot be bowed
                 this.shrewdYasuki.persistentEffect({
                     match: this.shrewdYasuki,
-                    effect: AbilityDsl.effects.cannotBeBowed()
+                    effect: AbilityDsl.effects.cardCannot('bow')
                 });
                 this.game.addEffect(this.shrewdYasuki, this.shrewdYasuki.abilities.persistentEffects[0]);
+                this.game.checkGameState(true);
                 expect(this.shrewdYasuki.allowGameAction('bow')).toBe(false);
 
                 this.player2.clickPrompt('Pass');

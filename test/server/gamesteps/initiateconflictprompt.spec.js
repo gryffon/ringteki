@@ -5,8 +5,6 @@ describe('InitateConflictPrompt: ', function() {
         this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'raiseEvent', 'promptWithHandlerMenu']);
         this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan']);
         this.conflictSpy = jasmine.createSpyObj('conflict', ['calculateSkill', 'removeFromConflict', 'addAttacker']);
-        this.conflictSpy.conflictRing = '';
-        this.conflictSpy.conflictType = '';
         this.conflictSpy.attackers = [];
         this.conflictSpy.conflictProvince = null;
         this.prompt = new InitateConflictPrompt(this.gameSpy, this.conflictSpy, this.playerSpy);
@@ -33,8 +31,9 @@ describe('InitateConflictPrompt: ', function() {
 
         describe('when a military fire ring has been chosen', function() {
             beforeEach(function() {
-                this.conflictSpy.conflictRing = 'fire';
-                this.conflictSpy.conflictType = 'military';
+                this.conflictSpy.element = 'fire';
+                this.conflictSpy.ring = { element: 'fire' };
+                this.conflictSpy.type = 'military';
                 this.promptProperties = this.prompt.activePrompt();
             });
 
@@ -372,8 +371,9 @@ describe('InitateConflictPrompt: ', function() {
 
     describe('the menuCommand function:', function() {
         beforeEach(function() {
-            this.conflictSpy.conflictRing = 'fire';
-            this.conflictSpy.conflictType = 'military';
+            this.conflictSpy.element = 'fire';
+            this.conflictSpy.ring = { element: 'fire' };
+            this.conflictSpy.type = 'military';
             this.cardSpy = jasmine.createSpyObj('card', ['allowGameAction']);
             this.conflictSpy.conflictProvince = this.cardSpy;
             this.attackerSpy = jasmine.createSpyObj('attacker', ['allowGameAction']);
@@ -385,7 +385,7 @@ describe('InitateConflictPrompt: ', function() {
             describe('if the conflict type is undefined', function() {
                 beforeEach(function() {
                     this.prompt.completed = false;
-                    this.conflictSpy.conflictType = '';
+                    this.conflictSpy.type = '';
                     this.prompt.menuCommand(this.playerSpy, 'done');
                 });
 
@@ -397,7 +397,8 @@ describe('InitateConflictPrompt: ', function() {
             describe('if the conflict ring is undefined', function() {
                 beforeEach(function() {
                     this.prompt.completed = false;
-                    this.conflictSpy.conflictRing = '';
+                    this.conflictSpy.ring = undefined;
+                    this.conflictSpy.element = undefined;
                     this.prompt.menuCommand(this.playerSpy, 'done');
                 });
 
