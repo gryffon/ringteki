@@ -61,7 +61,7 @@ class Ring {
     }
 
     getElements() {
-        return this.getEffects('addElement').concat([this.element]);
+        return _.uniq(this.getEffects('addElement').concat([this.element]));
     }
 
     hasElement(element) {
@@ -103,7 +103,6 @@ class Ring {
     claimRing(player) {
         this.claimed = true;
         this.claimedBy = player.name;
-        //this.contested = false;  Ruling change means that the ring stays contested until the reaction window closes
     }
 
     resetRing() {
