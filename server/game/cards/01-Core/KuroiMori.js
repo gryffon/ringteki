@@ -27,7 +27,7 @@ class KuroiMori extends ProvinceCard {
                     });
                 } else {
                     this.game.currentConflict.switchType();
-                    this.game.addMessage('{0} uses {1} to switch the conflict type to {2}', this.controller, this, this.game.currentConflict.type);
+                    this.game.addMessage('{0} uses {1} to switch the conflict type to {2}', this.controller, this, this.game.currentConflict.conflictType);
                 }
             }
         });

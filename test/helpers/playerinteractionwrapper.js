@@ -637,7 +637,7 @@ class PlayerInteractionWrapper {
         attackers = this.filterUnableToParticipate(attackers, conflictType);
 
         this.clickRing(ring);
-        if(this.game.currentConflict.type !== conflictType) {
+        if(this.game.currentConflict.conflictType !== conflictType) {
             this.clickRing(ring);
         }
         this.clickCard(province);
@@ -657,7 +657,7 @@ class PlayerInteractionWrapper {
      */
     assignDefenders(defenders = []) {
         if(defenders.length !== 0) {
-            var conflictType = this.game.currentConflict.type;
+            var conflictType = this.game.currentConflict.conflictType;
             // Turn to list of card objects
             defenders = this.mixedListToCardList(defenders, 'play area');
             // Filter out those that can't participate
