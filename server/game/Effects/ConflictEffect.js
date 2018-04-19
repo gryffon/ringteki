@@ -5,6 +5,7 @@ class ConflictEffect extends Effect {
         super(game, source, properties, effect);
         // Overide any erroneous match passed through properties
         this.match = () => true;
+        this.effect.key = 'conflict';
     }
 
     getTargets() {

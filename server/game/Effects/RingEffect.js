@@ -6,6 +6,7 @@ class RingEffect extends Effect {
     constructor(game, source, properties, effect) {
         super(game, source, properties, effect);
         this.targetController = properties.targetController || 'current';
+        this.effect.key = 'element';
     }
 
     getTargets() {

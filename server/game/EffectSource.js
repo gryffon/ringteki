@@ -65,11 +65,29 @@ class EffectSource extends GameObject {
     }
 
     /**
+     * Applies an immediate effect which expires at the end of the current 
+     * conflict. Per game rules this duration is outside of the phase.
+     */
+    atEndOfConflict(propertyFactory) {
+        var properties = propertyFactory(AbilityDsl);
+        this.game.addEffect(this, _.extend({ duration: 'atEndOfConflict', location: 'any' }, properties));
+    }
+
+    /**
      * Applies an immediate effect which lasts until the end of the phase.
      */
     untilEndOfPhase(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
         this.game.addEffect(this, _.extend({ duration: 'untilEndOfPhase', location: 'any' }, properties));
+    }
+
+    /**
+     * Applies an immediate effect which expires at the end of the phase. Per
+     * game rules this duration is outside of the phase.
+     */
+    atEndOfPhase(propertyFactory) {
+        var properties = propertyFactory(AbilityDsl);
+        this.game.addEffect(this, _.extend({ duration: 'atEndOfPhase', location: 'any' }, properties));
     }
 
     /**

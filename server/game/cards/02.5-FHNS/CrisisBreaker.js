@@ -5,7 +5,7 @@ class CrisisBreaker extends DrawCard {
         this.action({
             title: 'Ready and bring into play',
             condition: () => {
-                if(!this.game.currentConflict || this.game.currentConflict.conflictType !== 'military') {
+                if(!this.game.currentConflict || this.game.currentConflict.type !== 'military') {
                     return false;
                 }
 

@@ -4,7 +4,7 @@ class HighKick extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Bow and Disable a character',
-            condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'military',
+            condition: () => this.game.currentConflict && this.game.currentConflict.type === 'military',
             cost: ability.costs.bow(card => card.hasTrait('monk') && card.isParticipating()),
             target: {
                 cardType: 'character',

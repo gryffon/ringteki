@@ -177,7 +177,7 @@ class DrawCard extends BaseCard {
                 return false;
             }
             // card cannot participate in this conflict type
-            if(this.hasDash(this.game.currentConflict.conflictType)) {
+            if(this.hasDash(this.game.currentConflict.type)) {
                 return false;
             }
         } else if(actionType === 'putIntoPlay') {
@@ -247,8 +247,9 @@ class DrawCard extends BaseCard {
          * Get this card's glory.
          * @return {integer} The military skill value
          */
+        let gloryEffects = this.getEffects('modifyGlory');
         if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
-            return Math.max(0, this.sumEffects('modifyGlory') + this.cardData.glory);
+            return Math.max(0, gloryEffects.reduce((total, value) => total + value, this.cardData.glory));
         }
     }
     
@@ -275,7 +276,7 @@ class DrawCard extends BaseCard {
         }
 
         // get base mill skill + effect modifiers
-        let skill = this.getBaseMilitarySkill() + this.sumEffects('modifyMilitarySkill');
+        let skill = this.getEffects('modifyMilitarySkill').reduce((total, value) => total + value, this.getBaseMilitarySkill());
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.military_bonus);
@@ -302,7 +303,7 @@ class DrawCard extends BaseCard {
         }
 
         // get base mill skill + effect modifiers
-        let skill = this.getBasePoliticalSkill() + this.sumEffects('modifyPoliticalSkill');
+        let skill = this.getEffects('modifyPoliticalSkill').reduce((total, value) => total + value, this.getBasePoliticalSkill());
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.political_bonus);
@@ -318,7 +319,7 @@ class DrawCard extends BaseCard {
             return 0;
         }
 
-        return this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
+        return this.getEffects('modifyBaseMilitarySkill').reduce((total, value) => total + value, this.printedMilitarySkill);
     }
     
     getBasePoliticalSkill() {
@@ -326,7 +327,7 @@ class DrawCard extends BaseCard {
             return 0;
         }
 
-        return this.sumEffects('modifyBasePoliticalSkill') + this.printedPoliticalSkill;
+        return this.getEffects('modifyBasePoliticalSkill').reduce((total, value) => total + value, this.printedPoliticalSkill);
     }
 
     getSkillFromGlory() {
@@ -530,38 +531,38 @@ class DrawCard extends BaseCard {
         return this.game.currentConflict && this.game.currentConflict.isParticipating(this);
     }
 
-    canDeclareAsAttacker(conflictType = this.game.currentConflict.conflictType) {
+    canDeclareAsAttacker(conflictType = this.game.currentConflict.type) {
         return (this.allowGameAction('declareAsAttacker') && !this.bowed && 
                 this.canParticipateAsAttacker(conflictType));
     }
 
-    canDeclareAsDefender(conflictType = this.game.currentConflict.conflictType) {
+    canDeclareAsDefender(conflictType = this.game.currentConflict.type) {
         return (this.allowGameAction('declareAsDefender') && this.canParticipateAsDefender(conflictType) && 
                 !this.bowed && !this.covert);
     }
 
-    canParticipateInConflict(conflictType = this.game.currentConflict.conflictType) {
+    canParticipateInConflict(conflictType = this.game.currentConflict.type) {
         return this.location === 'play area' && !this.hasDash(conflictType);
     }
 
-    canParticipateAsAttacker(conflictType = this.game.currentConflict.conflictType) {
+    canParticipateAsAttacker(conflictType = this.game.currentConflict.type) {
         return this.allowGameAction('participateAsAttacker') && this.canParticipateInConflict(conflictType);
     }
 
-    canParticipateAsDefender(conflictType = this.game.currentConflict.conflictType) {
+    canParticipateAsDefender(conflictType = this.game.currentConflict.type) {
         return this.allowGameAction('participateAsDefender') && this.canParticipateInConflict(conflictType);
     }
 
     bowsOnReturnHome() {
-        return this.anyEffect('doesNotBow');
+        return this.getEffects('doesNotBow').length === 0;
     }
 
     readiesDuringReadyPhase() {
-        return this.anyEffect('doesNotReady');
+        return this.getEffects('doesNotReady').length > 0;
     }
 
     getModifiedLimitMax(max) {
-        return this.sumEffects('increaseLimitOnAbilities') + max;
+        return this.getEffects('increaseLimitOnAbilities').reduce((total, value) => total + value, max);
     }
 
     setDefaultController(player) {
@@ -570,7 +571,7 @@ class DrawCard extends BaseCard {
 
     getModifiedController() {
         if(this.location === 'play area') {
-            return this.mostRecentEffect('takeControl') || this.defaultController;
+            return _.last(this.getEffects('takeControl')) || this.defaultController;
         }
         return this.owner;
     }

@@ -5,7 +5,7 @@ class IkomaEiji extends DrawCard {
         this.reaction({
             title: 'Put a character into play',
             when: {
-                afterConflict: event => event.conflict.loser === this.controller && event.conflict.conflictType === 'political'
+                afterConflict: event => event.conflict.loser === this.controller && event.conflict.type === 'political'
             },
             handler: context => this.game.promptForSelect(this.controller, {
                 source: this,

@@ -1242,7 +1242,7 @@ class Player extends GameObject {
     }
 
     get gloryModifier() {
-        return this.sumEffects('gloryModifier');
+        return this.getEffects('gloryModifier').reduce((total, value) => total + value, 0);
     }
 
     modifyFate(amount) {
@@ -1480,7 +1480,7 @@ class Player extends GameObject {
     }
 
     isTopConflictCardShown() {
-        return this.anyEffect('showTopConflictCard');
+        return this.getEffects('showTopConflictCard').length > 0;
     }
 
     /**

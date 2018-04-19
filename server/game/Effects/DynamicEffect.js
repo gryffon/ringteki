@@ -5,6 +5,7 @@ class DynamicEffect extends StaticEffect {
         super(type);
         this.values = {};
         this.calculate = calculate;
+        this.key = 'uuid';
     }
 
     apply(target) {
@@ -17,12 +18,16 @@ class DynamicEffect extends StaticEffect {
         return oldValue !== this.setValue(target, this.calculate(target, this.context));
     }
 
+    getKey(target) {
+        return target[this.key];
+    }
+
     getValue(target) {
-        return this.values[target.uuid];
+        return this.values[this.getKey(target)];
     }
 
     setValue(target, value) {
-        this.values[target.uuid] = value;
+        this.values[this.getKey(target)] = value;
         return value;
     }
 }

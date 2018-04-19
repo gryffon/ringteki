@@ -5,7 +5,7 @@ class KakitaAsami extends DrawCard {
         this.action ({
             title: 'Take one honor from your opponent',
             condition: () => {
-                if(!this.isParticipating() || this.game.currentConflict.conflictType !== 'political' || !this.controller.opponent) {
+                if(!this.isParticipating() || this.game.currentConflict.type !== 'political' || !this.controller.opponent) {
                     return false;
                 }
 
