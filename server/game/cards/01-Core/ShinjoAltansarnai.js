@@ -5,7 +5,7 @@ class ShinjoAltansarnai extends DrawCard {
         this.reaction({
             title: 'Discard a character',
             when: {
-                onBreakProvince: event => event.conflict.type === 'military' && this.isAttacking()
+                onBreakProvince: event => event.conflict.conflictType === 'military' && this.isAttacking()
             },
             target: {
                 activePromptTitle: 'Choose a character to discard',

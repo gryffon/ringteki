@@ -12,8 +12,7 @@ class ProvinceCard extends BaseCard {
     }
 
     getStrength() {
-        let strengthModifier = this.getEffects('modifyProvinceStrength').reduce((total, value) => total + value, 0);
-        return this.cardData.strength + strengthModifier + this.getDynastyOrStrongholdCardModifier();
+        return this.cardData.strength + this.sumEffects('modifyProvinceStrength') + this.getDynastyOrStrongholdCardModifier();
     }
 
     getDynastyOrStrongholdCardModifier() {

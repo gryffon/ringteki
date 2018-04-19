@@ -5,7 +5,7 @@ class BayushiShoju extends DrawCard {
         this.action({
             title: 'Give a character -1P',
             limit: ability.limit.perRound(2),
-            condition: () => this.game.currentConflict && this.game.currentConflict.type === 'political' && this.game.currentConflict.isParticipating(this),
+            condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'political' && this.game.currentConflict.isParticipating(this),
             target: {
                 source: this,
                 cardType: 'character',

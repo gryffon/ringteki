@@ -4,7 +4,7 @@ class CavalryReserves extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Put Cavalry into play from your discard',
-            condition: () => this.game.currentConflict && this.game.currentConflict.type === 'military',
+            condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'military',
             target: {
                 mode: 'maxStat',
                 activePromptTitle: 'Choose characters',

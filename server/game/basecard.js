@@ -1,4 +1,3 @@
-const uuid = require('uuid');
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
@@ -17,7 +16,6 @@ class BaseCard extends EffectSource {
         this.controller = owner;
         this.cardData = cardData;
 
-        this.uuid = uuid.v1();
         this.id = cardData.id;
         this.name = cardData.name;
         this.inConflict = false;
@@ -215,7 +213,7 @@ class BaseCard extends EffectSource {
     }
 
     isBlank() {
-        return this.getEffects('blank').length > 0;
+        return this.anyEffect('blank');
     }
 
     getPrintedFaction() {
@@ -229,7 +227,8 @@ class BaseCard extends EffectSource {
 
     allowEffectFrom(source) {
         let context = { game: this.game, player: source.controller, source: source, stage: 'effect' };
-        return !_.any(this.abilityRestrictions, restriction => restriction.isMatch('applyEffect', context));
+        let abilityRestrictions = this.getEffects('abilityRestrictions');
+        return !_.any(abilityRestrictions, restriction => restriction.isMatch('applyEffect', context));
     }
 
     addToken(type, number = 1) {

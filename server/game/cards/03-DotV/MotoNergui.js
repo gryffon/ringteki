@@ -4,7 +4,7 @@ class MotoNergui extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Move highest glory character home',
-            condition: context => context.source.isParticipating() && context.game.currentConflict.type === 'military',
+            condition: context => context.source.isParticipating() && context.game.currentConflict.conflictType === 'military',
             target: {
                 cardType: 'character',
                 gameAction: 'sendHome',

@@ -21,7 +21,7 @@ class Conflict extends GameObject {
         this.defenderSkill = 0;
     }
 
-    get type() {
+    get conflictType() {
         return this.ring ? this.ring.conflictType : '';
     }
 
@@ -53,7 +53,7 @@ class Conflict extends GameObject {
     }
 
     initiateConflict() {
-        this.attackingPlayer.initiateConflict(this.type);
+        this.attackingPlayer.initiateConflict(this.conflictType);
     }
 
     addAttackers(attackers) {
@@ -98,7 +98,7 @@ class Conflict extends GameObject {
     }
 
     get elementsToResolve() {
-        return this.getEffects('modifyConflictElementsToResolve').reduce((total, value) => total + value, 1);
+        return this.sumEffects('modifyConflictElementsToResolve');
     }
     
     resolveRing(player = this.attackingPlayer, optional = true) {
@@ -168,7 +168,7 @@ class Conflict extends GameObject {
             this.game.addFate(this.attackingPlayer, newRing.fate);
             newRing.fate = 0;
         }
-        if(newRing.conflictType !== this.type) {
+        if(newRing.conflictType !== this.conflictType) {
             newRing.flipConflictType();
         }
         this.ring.resetRing();
@@ -177,8 +177,8 @@ class Conflict extends GameObject {
     }
     
     checkForIllegalParticipants() {
-        let illegal = this.attackers.filter(card => !card.canParticipateAsAttacker(this.type));
-        illegal = illegal.concat(this.defenders.filter(card => !card.canParticipateAsDefender(this.type)));
+        let illegal = this.attackers.filter(card => !card.canParticipateAsAttacker(this.conflictType));
+        illegal = illegal.concat(this.defenders.filter(card => !card.canParticipateAsDefender(this.conflictType)));
         if(illegal.length > 0) {
             this.game.addMessage('{0} cannot participate in the conflict any more and {1} sent home bowed', illegal, illegal.length > 1 ? 'are' : 'is');
             this.game.applyGameAction(null, { sendHome: illegal, bow: illegal });
@@ -239,16 +239,16 @@ class Conflict extends GameObject {
         this.attackerSkill = this.calculateSkillFor(this.attackers.concat(additionalAttackers));
         this.defenderSkill = this.calculateSkillFor(this.defenders.concat(additionalDefenders));
         
-        if(this.attackingPlayer.imperialFavor === this.type && this.attackers.length > 0) {
+        if(this.attackingPlayer.imperialFavor === this.conflictType && this.attackers.length > 0) {
             this.attackerSkill++;
-        } else if(this.defendingPlayer.imperialFavor === this.type && this.defenders.length > 0) {
+        } else if(this.defendingPlayer.imperialFavor === this.conflictType && this.defenders.length > 0) {
             this.defenderSkill++;
         }
         return stateChanged;
     }
 
     calculateSkillFor(cards) {
-        let skillFunction = _.last(this.getEffects('skillFunction')) || (card => card.getSkill(this.type));
+        let skillFunction = this.mostRecentEffect('skillFunction') || (card => card.getSkill(this.conflictType));
         return _.reduce(cards, (sum, card) => {
             if(card.bowed || !card.allowGameAction('countForResolution')) {
                 return sum;
@@ -280,8 +280,8 @@ class Conflict extends GameObject {
             this.winnerSkill = this.defenderSkill;
         }
 
-        this.winner.winConflict(this.type, this.attackingPlayer === this.winner);
-        this.loser.loseConflict(this.type, this.attackingPlayer === this.loser);
+        this.winner.winConflict(this.conflictType, this.attackingPlayer === this.winner);
+        this.loser.loseConflict(this.conflictType, this.attackingPlayer === this.loser);
         this.skillDifference = this.winnerSkill - this.loserSkill;
     }
 
