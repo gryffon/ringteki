@@ -1,10 +1,8 @@
 const _ = require('underscore');
-const EffectSource = require('./EffectSource');
 
-class Ring extends EffectSource {
+class Ring {
     constructor(game, element, type) {
-        super(game, element.replace(/\b\w/g, l => l.toUpperCase()) + ' Ring');
-        this.type = 'ring';
+        this.game = game;
         this.claimed = false;
         this.claimedBy = '';
         this.conflictType = type;
@@ -25,7 +23,20 @@ class Ring extends EffectSource {
         ]);
     }
     
-   isConsideredClaimed(player = null) {
+    addEffect(effect) {
+        this.effects.push(effect);
+    }
+
+    removeEffect(effect) {
+        this.effects = this.effects.filter(e => e !== effect);
+    }
+
+    getEffects(type) {
+        let filteredEffects = this.effects.filter(effect => effect.type === type);
+        return filteredEffects.map(effect => effect.getValue(this));
+    }
+
+    isConsideredClaimed(player = null) {
         let check = player => (_.any(this.getEffects('considerAsClaimed'), match => match(player)) || this.claimedBy === player.name);
         if(player) {
             return check(player);
@@ -100,6 +111,17 @@ class Ring extends EffectSource {
         this.contested = false;
     }
     
+    getShortSummary() {
+        return {
+            id: this.element,
+            label: this.element,
+            name: this.element,
+            type: 'ring',
+            element: this.element,
+            conflictType: this.conflictType
+        };
+    }
+
     getState(activePlayer) {
 
         let selectionState = {};

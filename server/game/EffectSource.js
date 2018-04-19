@@ -1,13 +1,14 @@
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
-const GameObject = require('./GameObject');
 
-// This class is inherited by Ring and BaseCard and also represents Framework effects
-
-class EffectSource extends GameObject {
+class EffectSource {
     constructor(game, name = 'Framework effect') {
-        super(game, name);
+        this.game = game;
+        this.name = name;
+        this.id = this.name;
+        this.type = '';
+        this.facedown = false;
     }
 
     isUnique() {

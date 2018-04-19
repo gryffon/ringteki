@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-const GameObject = require('./GameObject');
+const Spectator = require('./spectator.js');
 const Deck = require('./deck.js');
 const AbilityContext = require('./AbilityContext.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
@@ -14,14 +14,9 @@ const StrongholdCard = require('./strongholdcard.js');
 const StartingHandSize = 4;
 const DrawPhaseCards = 1;
 
-class Player extends GameObject {
+class Player extends Spectator {
     constructor(id, user, owner, game) {
-        super(game, user.username);
-
-        this.user = user;
-        this.emailHash = user.emailHash;
-        this.id = id;
-        this.owner = owner;
+        super(id, user);
 
         this.dynastyDeck = _([]);
         this.conflictDeck = _([]);
@@ -41,6 +36,9 @@ class Player extends GameObject {
         this.faction = {};
         this.stronghold = null;
         this.role = null;
+
+        this.owner = owner;
+        this.game = game;
 
         //Phase Values
         this.hideProvinceDeck = false;
@@ -65,6 +63,7 @@ class Player extends GameObject {
             new PlayableLocation('dynasty', this, 'province 3'),
             new PlayableLocation('dynasty', this, 'province 4')
         ];
+        this.effects = []; // This stores player effects from e.g. Guest of Honor
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings
             dynasty: true,
@@ -100,6 +99,19 @@ class Player extends GameObject {
                 }
             }
         }
+    }
+
+    addEffect(effect) {
+        this.effects.push(effect);
+    }
+
+    removeEffect(effect) {
+        this.effects = this.effects.filter(e => e !== effect);
+    }
+
+    getEffects(type) {
+        let filteredEffects = this.effects.filter(effect => effect.type === type);
+        return filteredEffects.map(effect => effect.getValue(this));
     }
 
     /**
