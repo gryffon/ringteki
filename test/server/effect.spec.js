@@ -25,7 +25,7 @@ xdescribe('Effect', function() {
 
         this.properties.match.and.returnValue(true);
 
-        this.effect = new Effect(this.gameSpy, this.sourceSpy, this.properties);
+        //this.effect = new Effect(this.gameSpy, this.sourceSpy, this.properties);
     });
 
     describe('addTargets()', function() {
@@ -40,7 +40,7 @@ xdescribe('Effect', function() {
             beforeEach(function() {
                 this.effect.active = true;
                 this.properties.condition = jasmine.createSpy('condition');
-                this.effect = new Effect(this.gameSpy, this.sourceSpy, this.properties);
+                //this.effect = new Effect(this.gameSpy, this.sourceSpy, this.properties);
             });
 
             describe('and the condition returns true', function() {

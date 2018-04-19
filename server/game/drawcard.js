@@ -206,25 +206,14 @@ class DrawCard extends BaseCard {
         let clone = new DrawCard(this.owner, this.cardData);
 
         clone.attachments = _(this.attachments.map(attachment => attachment.createSnapshot()));
-        clone.blankCount = this.blankCount;
+        clone.effects = _.clone(this.effects);
         clone.controller = this.controller;
-        // TODO: fix this
-        clone.factions = Object.assign({}, this.factions);
-        clone.keywords = Object.assign({}, this.keywords);
         clone.bowed = this.bowed;
         clone.isHonored = this.isHonored;
         clone.isDishonored = this.isDishonored;
         clone.location = this.location;
         clone.parent = this.parent;
         clone.fate = this.fate;
-        clone.traits = Object.assign({}, this.traits);
-        clone.militarySkillModifier = this.militarySkillModifier;
-        clone.politicalSkillModifier = this.politicalSkillModifier;
-        clone.baseMilitarySkill = this.baseMilitarySkill;
-        clone.basePoliticalSkill = this.basePoliticalSkill;
-        clone.militarySkillMultiplier = this.militarySkillMultiplier;
-        clone.politicalSkillMultiplier = this.politicalSkillMultiplier;
-        clone.gloryModifier = this.gloryModifier;
         clone.inConflict = this.inConflict;
         return clone;
     }

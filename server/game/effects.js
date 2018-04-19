@@ -2,7 +2,7 @@ const _ = require('underscore');
 
 const AbilityLimit = require('./abilitylimit.js');
 const CannotRestriction = require('./cannotrestriction.js');
-const CostReducer = require('./costreducer')
+const CostReducer = require('./costreducer');
 const EffectBuilder = require('./Effects/EffectBuilder');
 const ImmunityRestriction = require('./immunityrestriction.js');
 const PlayableLocation = require('./playablelocation.js');
@@ -95,6 +95,7 @@ const Effects = {
         unapply: (card) => card.abilities.reactions = _.reject(card.reabilities.actions, ability => ability === reaction)
     }),
     restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static('restrictNumberOfDefenders', value),
+    setDash: (type) => EffectBuilder.card.static('setDash', type),
     showTopConflictCard: EffectBuilder.player.static('showTopConflictCard'),
     takeControl: (player) => EffectBuilder.card.static('takeControl', player),
     terminalCondition: (properties) => EffectBuilder.card.detached('terminalCondition', {

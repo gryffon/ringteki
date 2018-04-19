@@ -703,7 +703,7 @@ class Player extends Spectator {
      * Adds the passed Cost Reducer to this Player
      * @param {CostReducer} reducer
      */
-    addNewCostReducer(properties) {
+    addCostReducer(reducer) {
         this.costReducers.push(reducer);
     }
 
