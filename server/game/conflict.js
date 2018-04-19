@@ -1,10 +1,11 @@
 const _ = require('underscore');
+const GameObject = require('./GameObject');
 const Player = require('./player.js');
 const Settings = require('../settings.js');
 
-class Conflict {
+class Conflict extends GameObject {
     constructor(game, attackingPlayer, defendingPlayer, ring = null, conflictProvince = null) {
-        this.game = game;
+        super(game, 'Conflict');
         this.attackingPlayer = attackingPlayer;
         this.isSinglePlayer = !defendingPlayer;
         this.defendingPlayer = defendingPlayer || this.singlePlayerDefender();
@@ -18,20 +19,6 @@ class Conflict {
         this.attackerSkill = 0;
         this.defenders = [];
         this.defenderSkill = 0;
-        this.effects = [];
-    }
-
-    addEffect(effect) {
-        this.effects.push(effect);
-    }
-
-    removeEffect(effect) {
-        this.effects = this.effects.filter(e => e !== effect);
-    }
-
-    getEffects(type) {
-        let filteredEffects = this.effects.filter(effect => effect.type === type);
-        return filteredEffects.map(effect => effect.getValue(this));
     }
 
     get type() {
