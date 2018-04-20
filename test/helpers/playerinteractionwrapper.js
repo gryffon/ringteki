@@ -546,7 +546,7 @@ class PlayerInteractionWrapper {
         }
         card = this.findCardByName(card, 'province deck');
         this.clickCard(card);
-        this.clickPrompt('Done');
+        //this.clickPrompt('Done');
     }
 
     /**

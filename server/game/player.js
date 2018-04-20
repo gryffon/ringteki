@@ -11,7 +11,6 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const StartingHandSize = 4;
 const DrawPhaseCards = 1;
 
 class Player extends GameObject {
@@ -21,6 +20,7 @@ class Player extends GameObject {
         this.emailHash = this.user.emailHash;
         this.id = id;
         this.owner = owner;
+        this.type = 'player';
 
         this.dynastyDeck = _([]);
         this.conflictDeck = _([]);
@@ -555,19 +555,6 @@ class Player extends GameObject {
         this.conflicts.setCannotInitiateForType(type, value);
     }
 
-    // TODO: Remove these
-    initConflictDeck() {
-        this.shuffleConflictDeck();
-    }
-
-    drawStartingHand() {
-        this.drawCardsToHand(StartingHandSize);
-    }
-
-    initDynastyDeck() {
-        this.shuffleDynastyDeck();
-    }
-
     /**
      * Takes a decklist passed from the lobby, creates all the cards in it, and puts references to them in the relevant lists
      */
@@ -592,8 +579,8 @@ class Player extends GameObject {
      */
     initialise() {
         this.prepareDecks();
-        this.initConflictDeck();
-        this.initDynastyDeck();
+        this.shuffleConflictDeck();
+        this.shuffleDynastyDeck();
 
         this.fate = 0;
         this.honor = 0;
@@ -612,80 +599,6 @@ class Player extends GameObject {
 
         this.honor = this.stronghold.cardData.honor;
         //this.game.raiseEvent('onStatChanged', this, 'honor');
-    }
-
-    /** TODO: Move these to setup
-     * Replaces the cards passed one for one in this players provinces, then shuffles the passed cards back into the deck,
-     * and put a message in chat saying how many cards were replaced
-     */
-    dynastyMulligan(cards) {
-        if(this.takenDynastyMulligan) {
-            return false;
-        }
-
-        _.each(cards, card => this.moveCard(card, 'dynasty deck bottom'));
-        this.takenDynastyMulligan = true;
-        this.fillProvinces();
-        this.shuffleDynastyDeck();
-        this.game.addMessage('{0} has mulliganed {1} cards from the dynasty deck', this.name, cards.length);
-    }
-
-    /**
-     * Display a message saying that this player has decided not to change any cards
-     */
-    dynastyKeep() {
-        this.game.addMessage('{0} has kept all dynasty cards', this.name);
-        this.takenDynastyMulligan = true;
-    }
-
-    /**
-     * Draws one card for each card passed, then shuffles the passed cards back into the deck,
-     * and put a message in chat saying how many cards were replaced
-     */
-    conflictMulligan(cards) {
-        if(this.takenConflictMulligan) {
-            return false;
-        }
-
-        _.each(['province 1', 'province 2', 'province 3', 'province 4'], location => {
-            let card = this.getDynastyCardInProvince(location);
-            if(card) {
-                card.facedown = true;
-            }
-        });
-
-        _.each(cards, card => {
-            this.removeCardFromPile(card);
-        });
-
-        this.drawCardsToHand(cards.length);
-
-        _.each(cards, card => {
-            card.moveTo('conflict deck');
-            this.conflictDeck.push(card);
-        });
-
-        this.shuffleConflictDeck();
-
-        this.game.addMessage('{0} has mulliganed {1} cards from the conflict deck', this.name, cards.length);
-        this.takenConflictMulligan = true;
-        this.readyToStart = true;
-    }
-
-    /**
-     * Display a message saying that this player has decided not to change any cards
-     */
-    conflictKeep() {
-        _.each(['province 1', 'province 2', 'province 3', 'province 4'], location => {
-            let card = this.getDynastyCardInProvince(location);
-            if(card) {
-                card.facedown = true;
-            }
-        });
-
-        this.game.addMessage('{0} has kept all conflict cards', this.name);
-        this.takenConflictMulligan = true;
-        this.readyToStart = true;
     }
 
     /**

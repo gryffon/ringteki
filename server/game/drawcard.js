@@ -103,6 +103,10 @@ class DrawCard extends BaseCard {
         return this.getEffects('addKeyword').includes(keyword.toLowerCase());
     }
     
+    hasPrintedKeyword(keyword) {
+        return this.printedKeywords.includes(keyword.toLowerCase());
+    }
+
     isLimited() {
         return this.hasKeyword('Limited') || this.hasPrintedKeyword('Limited');
     }

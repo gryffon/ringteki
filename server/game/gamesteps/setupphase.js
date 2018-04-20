@@ -15,8 +15,9 @@ class SetupPhase extends Phase {
             new SetupProvincesPrompt(game),
             new SimpleStep(game, () => this.placeProvinces()),
             new SimpleStep(game, () => this.fillProvinces()),
-            new SimpleStep(game, () => this.doDynastyMulligan()),
-            new SimpleStep(game, () => this.doConflictMulligan()),
+            new MulliganDynastyPrompt(game),
+            new SimpleStep(game, () => this.drawStartingHands()),
+            new MulliganConflictPrompt(game),
             new SimpleStep(game, () => this.startGame())
         ]);
     }
@@ -80,17 +81,8 @@ class SetupPhase extends Phase {
         this.game.raiseEvent('onDecksPrepared');
     }
 
-    doDynastyMulligan() {
-        _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
-            this.game.queueStep(new MulliganDynastyPrompt(this.game, player));
-        });
-    }
-
-    doConflictMulligan() {
-        _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
-            player.drawStartingHand();
-            this.game.queueStep(new MulliganConflictPrompt(this.game, player));
-        });
+    drawStartingHands() {
+        _.each(this.game.getPlayers(), player => player.drawCardsToHand(4));
     }
 
     startGame() {

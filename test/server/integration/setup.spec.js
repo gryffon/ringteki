@@ -62,8 +62,7 @@ describe('setup phase', function() {
 
             it('should allow proceeding once all provinces have been set up', function() {
                 let strongholdProvince = this.player1.player.provinceDeck.value()[0];
-                strongholdProvince.selected = true;
-                this.player1.clickPrompt('Done');
+                this.player1.clickCard(strongholdProvince);
                 expect(this.player1.currentPrompt().menuTitle).toBe('Waiting for opponent to finish selecting a stronghold province');
             });
         });

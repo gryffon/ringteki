@@ -17,9 +17,11 @@ class BaseAbility {
      * Creates an ability.
      *
      * @param {Object} properties - An object with ability related properties.
-     * @param {Object|Array} properties.cost - optional property that specifies
+     * @param {Object|Array} [properties.cost] - optional property that specifies
      * the cost for the ability. Can either be a cost object or an array of cost
      * objects.
+     * @param {Object} [properties.target] - optional property that specifies
+     * the target of the ability.
      */
     constructor(properties) {
         this.cost = this.buildCost(properties.cost);
@@ -66,10 +68,10 @@ class BaseAbility {
      * @returns {Boolean}
      */
     canPayCosts(context, targets = []) {
-        if(!_.isArray(targets)) {
+        if(!Array.isArray(targets)) {
             targets = [targets];
         }
-        return _.all(this.cost, cost => cost.canPay(context, targets));
+        return this.cost.every(cost => cost.canPay(context, targets));
     }
 
     /**
@@ -81,7 +83,7 @@ class BaseAbility {
      * @returns {Array} An array of cost resolution results.
      */
     resolveCosts(context) {
-        return _.map(this.cost, cost => {
+        return this.cost.map(cost => {
             if(cost.resolve) {
                 return cost.resolve(context);
             }
@@ -94,32 +96,13 @@ class BaseAbility {
      * Pays all costs for the ability simultaneously.
      */
     payCosts(context) {
-        return _.compact(_.flatten(_.map(this.cost, cost => {
+        return _.compact(_.flatten(this.cost.map(cost => {
             if(cost.payEvent) {
                 return cost.payEvent(context);
             } else if(cost.pay) {
                 return context.game.getEvent('payCost', {}, () => cost.pay(context));
             }
         }))); 
-    }
-
-    /**
-     * Return whether when unpay is implemented for the ability cost and the
-     * cost can be unpaid.
-     *
-     * @returns {boolean}
-     */
-    canUnpayCosts(context) {
-        return _.all(this.cost, cost => cost.unpay && cost.canUnpay(context));
-    }
-
-    /**
-     * Unpays each cost associated with the ability.
-     */
-    unpayCosts(context) {
-        _.each(this.cost, cost => {
-            cost.unpay(context);
-        });
     }
 
     /**
@@ -134,8 +117,8 @@ class BaseAbility {
                 if(!dependsOn) {
                     return target.canResolve(context);
                 }
-                let dependsOnTarget = _.find(this.targets, t => t.name === dependsOn);
-                return _.any(dependsOnTarget.getAllLegalTargets(context), t => {
+                let dependsOnTarget = this.targets.find(t => t.name === dependsOn);
+                return dependsOnTarget.getAllLegalTargets(context).some(t => {
                     if(dependsOnTarget.mode === 'select') {
                         context.selects[dependsOn] = t;
                         return target.canResolve(context);
@@ -159,10 +142,10 @@ class BaseAbility {
      */
     resolveTargets(context, results = []) {
         if(results.length === 0) {
-            let canIgnoreAllCosts = _.all(this.cost, cost => cost.canIgnoreForTargeting);
+            let canIgnoreAllCosts = this.cost.every(cost => cost.canIgnoreForTargeting);
             return this.targets.map(target => target.resolve(context, true, canIgnoreAllCosts));
         }
-        return _.map(_.zip(this.targets, results), array => {
+        return _.zip(this.targets, results).map(array => {
             let [target, result] = array;
             if(!result.resolved || !target.checkTarget(context)) {
                 return target.resolve(context);

@@ -4,8 +4,6 @@ const EventEmitter = require('events');
 const ChatCommands = require('./chatcommands.js');
 const GameChat = require('./gamechat.js');
 const EffectEngine = require('./effectengine.js');
-const DelayedEffect = require('./DelayedEffect.js');
-const TerminalCondition = require('./TerminalCondition.js');
 const Player = require('./player.js');
 const Spectator = require('./spectator.js');
 const AnonymousSpectator = require('./anonymousspectator.js');
@@ -248,54 +246,6 @@ class Game extends EventEmitter {
         return foundCards;
     }
 
-    /* TODO: Move these 3 to EffectSource?
-     * Adds a persistent/lasting/delayed effect to the effect engine
-     * @param {BaseCard} source - card generating the effect
-     * @param {Object} properties - properties for the effect - see effect.js
-     * @returns {undefined}
-     */
-    addEffect(source, properties) {
-        let effectFactory = properties.effect;
-        properties = _.omit(properties, 'effect');
-        if(!Array.isArray(effectFactory)) {
-            effectFactory = [effectFactory];
-        }
-        effectFactory.forEach(factory => this.effectEngine.add(factory(this, source, properties)));
-    }
-
-    addDelayedEffect(source, properties) {
-        let effect = new DelayedEffect(this, source, properties);
-        this.effectEngine.addDelayedEffect(effect);
-        return effect;
-    }
-
-    addTerminalCondition(source, properties) {
-        let effect = new TerminalCondition(this, source, properties);
-        this.effectEngine.addTerminalCondition(effect);
-        return effect;
-    }
-
-    /* TODO: Add this to Choose Province Dialog?
-     * Marks a province as selected for choosing a stronghold provice at the
-     * start of the game
-     * @param {Player} player
-     * @param {String} provinceId - uuid of the selected province
-     * @returns {undefined}
-     */
-    selectProvince(player, provinceId) {
-        var province = player.findCardByUuid(player.provinceDeck, provinceId);
-
-        if(!province || province.cannotBeStrongholdProvince()) {
-            return;
-        }
-
-        player.provinceDeck.each(p => {
-            p.selected = false;
-        });
-
-        province.selected = true;
-    }
-
     /*
      * This function is called from the client whenever a card is clicked
      * @param {String} sourcePlayer - name of the clicking player
@@ -316,15 +266,7 @@ class Game extends EventEmitter {
         }
 
         // Check to see if the current step in the pipeline is waiting for input
-        if(this.pipeline.handleCardClicked(player, card)) {
-            return;
-        }
-
-        // If the card is in the province deck, select it
-        if(card.location === 'province deck') {
-            this.selectProvince(player, cardId);
-            return;
-        }
+        this.pipeline.handleCardClicked(player, card);
     }
 
     /*
@@ -796,7 +738,7 @@ class Game extends EventEmitter {
             }
 
             let card = _.find(this.shortCardData, c => {
-                return c.name.toLowerCase() === message.toLowerCase() || c.name.toLowerCase() === message.toLowerCase();
+                return c.name.toLowerCase() === message.toLowerCase() || c.id.toLowerCase() === message.toLowerCase();
             });
 
             if(card) {
@@ -943,9 +885,7 @@ class Game extends EventEmitter {
         }
 
         // check to see if the current step in the pipeline is waiting for input
-        if(this.pipeline.handleMenuCommand(player, arg, uuid, method)) {
-            return true;
-        }
+        return this.pipeline.handleMenuCommand(player, arg, uuid, method);
     }
 
     /*

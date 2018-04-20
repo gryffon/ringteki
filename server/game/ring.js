@@ -119,6 +119,10 @@ class Ring extends EffectSource {
         
         return Object.assign(state, selectionState);
     }
+
+    getShortSummary() {
+        return Object.assign(super.getShortSummary(), { element: this.element });
+    }
 }
 
 module.exports = Ring;

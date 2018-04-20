@@ -109,14 +109,10 @@ class BaseCard extends EffectSource {
         return this.printedFaction === faction || this.getEffects('addFaction').includes(faction);
     }
 
-    hasPrintedKeyword(keyword) {
-        return this.printedKeywords.includes(keyword.toLowerCase());
-    }
-
     applyAnyLocationPersistentEffects() {
         _.each(this.abilities.persistentEffects, effect => {
             if(effect.location === 'any') {
-                this.game.addEffect(this, effect);
+                this.addEffectToEngine(effect);
             }
         });
     }
@@ -124,7 +120,7 @@ class BaseCard extends EffectSource {
     applyPersistentEffects() {
         _.each(this.abilities.persistentEffects, effect => {
             if(effect.location !== 'any') {
-                this.game.addEffect(this, effect);
+                this.addEffectToEngine(effect);
             }
         });
     }
