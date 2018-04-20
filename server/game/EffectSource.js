@@ -1,59 +1,20 @@
-const _ = require('underscore');
-
 const AbilityDsl = require('./abilitydsl.js');
+const GameObject = require('./GameObject');
 
-class EffectSource {
+// This class is inherited by Ring and BaseCard and also represents Framework effects
+
+class EffectSource extends GameObject {
     constructor(game, name = 'Framework effect') {
-        this.game = game;
-        this.name = name;
-        this.id = this.name;
-        this.type = '';
-        this.facedown = false;
+        super(game, name);
     }
 
-    isUnique() {
-        return false;
-    }
-
-    isBlank() {
-        return false;
-    }
-
-    getType() {
-        return this.type;
-    }
-
-    getPrintedFaction() {
-        return null;
-    }
-
-    hasKeyword() {
-        return false;
-    }
-
-    hasTrait() {
-        return false;
-    }
-
-    getTraits() {
-        return [];
-    }
-            
-    isFaction() {
-        return false;
-    }
-            
-    hasToken() {
-        return false;
-    }
-            
     /**
      * Applies an immediate effect which lasts until the end of the current
      * duel.
      */
     untilEndOfDuel(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.game.addEffect(this, _.extend({ duration: 'untilEndOfDuel', location: 'any' }, properties));
+        this.game.addEffect(this, Object.assign({ duration: 'untilEndOfDuel', location: 'any' }, properties));
     }
 
     /**
@@ -62,16 +23,7 @@ class EffectSource {
      */
     untilEndOfConflict(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.game.addEffect(this, _.extend({ duration: 'untilEndOfConflict', location: 'any' }, properties));
-    }
-
-    /**
-     * Applies an immediate effect which expires at the end of the current 
-     * conflict. Per game rules this duration is outside of the phase.
-     */
-    atEndOfConflict(propertyFactory) {
-        var properties = propertyFactory(AbilityDsl);
-        this.game.addEffect(this, _.extend({ duration: 'atEndOfConflict', location: 'any' }, properties));
+        this.game.addEffect(this, Object.assign({ duration: 'untilEndOfConflict', location: 'any' }, properties));
     }
 
     /**
@@ -79,16 +31,7 @@ class EffectSource {
      */
     untilEndOfPhase(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.game.addEffect(this, _.extend({ duration: 'untilEndOfPhase', location: 'any' }, properties));
-    }
-
-    /**
-     * Applies an immediate effect which expires at the end of the phase. Per
-     * game rules this duration is outside of the phase.
-     */
-    atEndOfPhase(propertyFactory) {
-        var properties = propertyFactory(AbilityDsl);
-        this.game.addEffect(this, _.extend({ duration: 'atEndOfPhase', location: 'any' }, properties));
+        this.game.addEffect(this, Object.assign({ duration: 'untilEndOfPhase', location: 'any' }, properties));
     }
 
     /**
@@ -96,7 +39,7 @@ class EffectSource {
      */
     untilEndOfRound(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.game.addEffect(this, _.extend({ duration: 'untilEndOfRound', location: 'any' }, properties));
+        this.game.addEffect(this, Object.assign({ duration: 'untilEndOfRound', location: 'any' }, properties));
     }
 
     /**
@@ -105,7 +48,7 @@ class EffectSource {
      */
     lastingEffect(propertyFactory) {
         let properties = propertyFactory(AbilityDsl);
-        this.game.addEffect(this, _.extend({ duration: 'custom', location: 'any' }, properties));
+        this.game.addEffect(this, Object.assign({ duration: 'custom', location: 'any' }, properties));
     }
 
     /**
@@ -121,17 +64,6 @@ class EffectSource {
     terminalCondition(properties) {
         return this.game.addTerminalCondition(this, properties);
     }
-
-    getShortSummary() {
-        return {
-            id: this.id,
-            label: this.name,
-            name: this.name,
-            facedown: this.facedown,
-            type: this.getType()
-        };
-    }
-
 }
 
 module.exports = EffectSource;

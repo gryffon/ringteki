@@ -247,10 +247,10 @@ class DrawCard extends BaseCard {
          * Get this card's glory.
          * @return {integer} The military skill value
          */
-        let gloryEffects = this.getEffects('modifyGlory');
         if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
-            return Math.max(0, gloryEffects.reduce((total, value) => total + value, this.cardData.glory));
+            return Math.max(0, this.sumEffects('modifyGlory') + this.cardData.glory);
         }
+        return 0;
     }
     
     getProvinceStrengthBonus() {
@@ -276,7 +276,7 @@ class DrawCard extends BaseCard {
         }
 
         // get base mill skill + effect modifiers
-        let skill = this.getEffects('modifyMilitarySkill').reduce((total, value) => total + value, this.getBaseMilitarySkill());
+        let skill = this.sumEffects('modifyMilitarySkill') + this.getBaseMilitarySkill();
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.military_bonus);
@@ -303,7 +303,7 @@ class DrawCard extends BaseCard {
         }
 
         // get base mill skill + effect modifiers
-        let skill = this.getEffects('modifyPoliticalSkill').reduce((total, value) => total + value, this.getBasePoliticalSkill());
+        let skill = this.sumEffects('modifyPoliticalSkill') + this.getBasePoliticalSkill();
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.political_bonus);
@@ -319,7 +319,7 @@ class DrawCard extends BaseCard {
             return 0;
         }
 
-        return this.getEffects('modifyBaseMilitarySkill').reduce((total, value) => total + value, this.printedMilitarySkill);
+        return this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
     }
     
     getBasePoliticalSkill() {
@@ -327,7 +327,7 @@ class DrawCard extends BaseCard {
             return 0;
         }
 
-        return this.getEffects('modifyBasePoliticalSkill').reduce((total, value) => total + value, this.printedPoliticalSkill);
+        return this.sumEffects('modifyBasePoliticalSkill') + this.printedPoliticalSkill;
     }
 
     getSkillFromGlory() {
@@ -352,65 +352,25 @@ class DrawCard extends BaseCard {
     honor() {
         if(this.isDishonored) {
             this.isDishonored = false;
-            return true;
-        } else if(!this.isHonored) {
+        } else {
             this.isHonored = true;
-            return true;
         }
-        return false;
     }
 
     dishonor() {
-        if(!this.allowGameAction('dishonor')) {
-            return false;
-        }
         if(this.isHonored) {
             this.isHonored = false;
-            return true;
-        } else if(!this.isDishonored) {
+        } else {
             this.isDishonored = true;
-            return true;
         }
-        return false;
     }
 
     bow() {
-        if(this.allowGameAction('bow')) {
-            this.bowed = true;
-            return true;
-        }
-        return false;
+        this.bowed = true;
     }
 
     ready() {
-        if(this.allowGameAction('ready')) {
-            this.bowed = false;
-            return true;
-        }
-        return false;
-    }
-
-    needsCovertTarget() {
-        return this.isCovert() && !this.covertTarget;
-    }
-
-    canUseCovertToBypass(targetCard) {
-        return this.isCovert() && targetCard.canBeBypassedByCovert();
-    }
-
-    canBeBypassedByCovert() {
-        return !this.isCovert() && this.type === 'character' && this.location === 'play area';
-    }
-
-    useCovertToBypass(targetCard) {
-        if(!this.canUseCovertToBypass(targetCard)) {
-            return false;
-        }
-
-        targetCard.covert = true;
-        this.covertTarget = targetCard;
-
-        return true;
+        this.bowed = false;
     }
 
     /**
@@ -554,15 +514,15 @@ class DrawCard extends BaseCard {
     }
 
     bowsOnReturnHome() {
-        return this.getEffects('doesNotBow').length === 0;
+        return !this.anyEffect('doesNotBow');
     }
 
     readiesDuringReadyPhase() {
-        return this.getEffects('doesNotReady').length > 0;
+        return this.anyEffect('doesNotReady');
     }
 
     getModifiedLimitMax(max) {
-        return this.getEffects('increaseLimitOnAbilities').reduce((total, value) => total + value, max);
+        return this.sumEffects('increaseLimitOnAbilities') + max;
     }
 
     setDefaultController(player) {
@@ -571,7 +531,7 @@ class DrawCard extends BaseCard {
 
     getModifiedController() {
         if(this.location === 'play area') {
-            return _.last(this.getEffects('takeControl')) || this.defaultController;
+            return this.mostRecentEffect('takeControl') || this.defaultController;
         }
         return this.owner;
     }

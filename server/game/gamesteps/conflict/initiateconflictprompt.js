@@ -160,7 +160,7 @@ class InitiateConflictPrompt extends UiPrompt {
                 if(card.canDeclareAsAttacker(this.conflict.conflictType)) {
                     return true;
                 }
-            } else if(this.selectedDefenders.includes(card) || (card.canBeBypassedByCovert() && this.covertRemaining)) {
+            } else if(this.selectedDefenders.includes(card) || (!card.isCovert() && this.covertRemaining)) {
                 return true;
             }
         }
@@ -220,7 +220,7 @@ class InitiateConflictPrompt extends UiPrompt {
                 return;
             }
             if(this.covertRemaining && this.conflict.defendingPlayer.anyCardsInPlay(card => {
-                return card.canBeBypassedByCovert() && !card.covert && !card.bowed;
+                return !card.isCovert() && !card.covert && !card.bowed;
             })) {
                 this.game.promptWithHandlerMenu(this.choosingPlayer, {
                     activePromptTitle: 'You still have unused Covert - are you sure?',

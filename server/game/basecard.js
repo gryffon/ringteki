@@ -1,4 +1,3 @@
-const uuid = require('uuid');
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
@@ -17,7 +16,6 @@ class BaseCard extends EffectSource {
         this.controller = owner;
         this.cardData = cardData;
 
-        this.uuid = uuid.v1();
         this.id = cardData.id;
         this.name = cardData.name;
         this.inConflict = false;
@@ -25,7 +23,6 @@ class BaseCard extends EffectSource {
         this.type = cardData.type;
 
         this.tokens = {};
-        this.effects = [];
         this.menu = _([]);
 
         this.showPopup = false;
@@ -41,19 +38,6 @@ class BaseCard extends EffectSource {
         this.isConflict = false;
         this.isDynasty = false;
         this.isStronghold = false;
-    }
-
-    addEffect(effect) {
-        this.effects.push(effect);
-    }
-
-    removeEffect(effect) {
-        this.effects = this.effects.filter(e => e !== effect);
-    }
-
-    getEffects(type) {
-        let filteredEffects = this.effects.filter(effect => effect.type === type);
-        return filteredEffects.map(effect => effect.getValue(this));
     }
 
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -215,7 +199,7 @@ class BaseCard extends EffectSource {
     }
 
     isBlank() {
-        return this.getEffects('blank').length > 0;
+        return this.anyEffect('blank');
     }
 
     getPrintedFaction() {
@@ -223,13 +207,14 @@ class BaseCard extends EffectSource {
     }
 
     allowGameAction(actionType, context = null) {
-        return (!_.any(this.getEffects('abilityRestrictions'), restriction => restriction.isMatch(actionType, context)) &&
+        return (!this.getEffects('abilityRestrictions').some(restriction => restriction.isMatch(actionType, context)) &&
             this.controller.allowGameAction(actionType, context));
     }
 
     allowEffectFrom(source) {
+        let abilityRestrictions = this.getEffects('abilityRestrictions');
         let context = { game: this.game, player: source.controller, source: source, stage: 'effect' };
-        return !_.any(this.abilityRestrictions, restriction => restriction.isMatch('applyEffect', context));
+        return !abilityRestrictions.some(restriction => restriction.isMatch('applyEffect', context));
     }
 
     addToken(type, number = 1) {
@@ -294,7 +279,7 @@ class BaseCard extends EffectSource {
             uuid: this.uuid
         };
 
-        return _.extend(state, selectionState);
+        return Object.assign(state, selectionState);
     }
 }
 

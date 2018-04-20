@@ -1,15 +1,16 @@
 const _ = require('underscore');
+const EffectSource = require('./EffectSource');
 
-class Ring {
+class Ring extends EffectSource {
     constructor(game, element, type) {
-        this.game = game;
+        super(game, element.replace(/\b\w/g, l => l.toUpperCase()) + ' Ring');
+        this.type = 'ring';
         this.claimed = false;
         this.claimedBy = '';
         this.conflictType = type;
         this.contested = false;
         this.element = element;
         this.fate = 0;
-        this.effects = [];
         
         this.menu = _([
             { command: 'flip', text: 'Flip' },
@@ -23,29 +24,16 @@ class Ring {
         ]);
     }
     
-    addEffect(effect) {
-        this.effects.push(effect);
-    }
-
-    removeEffect(effect) {
-        this.effects = this.effects.filter(e => e !== effect);
-    }
-
-    getEffects(type) {
-        let filteredEffects = this.effects.filter(effect => effect.type === type);
-        return filteredEffects.map(effect => effect.getValue(this));
-    }
-
     isConsideredClaimed(player = null) {
-        let check = player => (_.any(this.getEffects('considerAsClaimed'), match => match(player)) || this.claimedBy === player.name);
+        let check = player => (this.getEffects('considerAsClaimed').some(match => match(player)) || this.claimedBy === player.name);
         if(player) {
             return check(player);
         }
-        return _.any(this.game.getPlayers(), player => check(player));
+        return this.game.getPlayers().some(player => check(player));
     }
 
     canDeclare(player) {
-        return !_.any(this.getEffects('cannotDeclare'), match => match(player)) && !this.claimed;
+        return !this.getEffects('cannotDeclare').some(match => match(player)) && !this.claimed;
     }
 
     isUnclaimed() {
@@ -111,17 +99,6 @@ class Ring {
         this.contested = false;
     }
     
-    getShortSummary() {
-        return {
-            id: this.element,
-            label: this.element,
-            name: this.element,
-            type: 'ring',
-            element: this.element,
-            conflictType: this.conflictType
-        };
-    }
-
     getState(activePlayer) {
 
         let selectionState = {};
@@ -140,7 +117,7 @@ class Ring {
             menu: this.getMenu()
         };
         
-        return _.extend(state, selectionState);
+        return Object.assign(state, selectionState);
     }
 }
 

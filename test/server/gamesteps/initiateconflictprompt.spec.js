@@ -33,7 +33,7 @@ describe('InitateConflictPrompt: ', function() {
             beforeEach(function() {
                 this.conflictSpy.element = 'fire';
                 this.conflictSpy.ring = { element: 'fire' };
-                this.conflictSpy.type = 'military';
+                this.conflictSpy.conflictType = 'military';
                 this.promptProperties = this.prompt.activePrompt();
             });
 
@@ -373,7 +373,7 @@ describe('InitateConflictPrompt: ', function() {
         beforeEach(function() {
             this.conflictSpy.element = 'fire';
             this.conflictSpy.ring = { element: 'fire' };
-            this.conflictSpy.type = 'military';
+            this.conflictSpy.conflictType = 'military';
             this.cardSpy = jasmine.createSpyObj('card', ['allowGameAction']);
             this.conflictSpy.conflictProvince = this.cardSpy;
             this.attackerSpy = jasmine.createSpyObj('attacker', ['allowGameAction']);
@@ -385,7 +385,7 @@ describe('InitateConflictPrompt: ', function() {
             describe('if the conflict type is undefined', function() {
                 beforeEach(function() {
                     this.prompt.completed = false;
-                    this.conflictSpy.type = '';
+                    this.conflictSpy.conflictType = '';
                     this.prompt.menuCommand(this.playerSpy, 'done');
                 });
 
