@@ -13,7 +13,7 @@ class BayushiKachiko extends DrawCard {
             handler: context => {
                 this.game.addMessage('{0} uses {1} to send {2} home', this.controller, this, context.target);
                 let sendHomeEvent = this.game.applyGameAction(context, { sendHome: context.target })[0];
-                let menuEvent = this.game.addEventToWindow(sendHomeEvent.window, 'menuEvent', { order: sendHomeEvent.order + 1 }, event => {
+                let menuEvent = this.game.getEvent('menuEvent', { order: sendHomeEvent.order + 1 }, event => {
                     if(!context.target.allowGameAction('bow', context) || sendHomeEvent.cancelled) {
                         event.cancelThenEvents();
                         return;
@@ -29,6 +29,7 @@ class BayushiKachiko extends DrawCard {
                     });
                 });
                 menuEvent.addThenGameAction(context, { bow: context.target });
+                sendHomeEvent.window.addEvent(menuEvent);
             }
         });
     }

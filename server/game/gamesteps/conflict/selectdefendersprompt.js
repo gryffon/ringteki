@@ -78,6 +78,7 @@ class SelectDefendersPrompt extends UiPrompt {
     menuCommand() {
         _.each(this.conflict.defenders, card => card.covert = false);
         this.complete();
+        return true;
     }
 }
 

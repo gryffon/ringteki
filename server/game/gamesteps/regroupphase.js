@@ -91,11 +91,9 @@ class RegroupPhase extends Phase {
     
     returnRings() {
         let ringsToReturn = _.filter(this.game.rings, ring => ring.claimed);
-        this.game.raiseMultipleEvents(_.map(ringsToReturn, ring => ({
-            name: 'onReturnRing',
-            params: { ring: ring },
-            handler: () => ring.resetRing()
-        })));
+        this.game.openEventWindow(ringsToReturn.map(ring => {
+            return this.game.getEvent('onReturnRing', { ring: ring }, () => ring.resetRing());
+        }));
     }
 
     passFirstPlayer() {

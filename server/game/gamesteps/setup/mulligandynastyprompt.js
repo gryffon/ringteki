@@ -56,7 +56,7 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
     }
 
     cardCondition(card) {
-        return card.isDynasty && ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location)
+        return card.isDynasty && ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location);
     }
 
     waitingPrompt() {

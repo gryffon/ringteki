@@ -589,18 +589,6 @@ class Player extends GameObject {
         this.maxLimited = 1;
     }
 
-    /** TODO: Move this to setup
-     * Sets honor to the correct starting value
-     */
-    startGame() {
-        if(!this.readyToStart) {
-            return;
-        }
-
-        this.honor = this.stronghold.cardData.honor;
-        //this.game.raiseEvent('onStatChanged', this, 'honor');
-    }
-
     /**
      * Adds the passed Cost Reducer to this Player
      * @param {CostReducer} reducer
@@ -854,10 +842,7 @@ class Player extends GameObject {
 
         this.game.queueSimpleStep(() => this.game.checkGameState(true));
 
-        let events = [{
-            name: 'onCardAttached',
-            params: { card: attachment, parent: card }
-        }];
+        let events = [this.game.getEvent('onCardAttached', { card: attachment, parent: card })];
         /* TODO: onCardAttached really needs its own Event code, but nothing triggers from attachments entering play at the moment
         if(originalLocation !== 'play area') {
             events.push({
@@ -867,13 +852,10 @@ class Player extends GameObject {
         }
         */
         if(raiseCardPlayed) {
-            events.push({
-                name: 'onCardPlayed',
-                params: { player: this, card: attachment, originalLocation: originalLocation }
-            });
+            events.push(this.game.getEvent('onCardPlayed', { player: this, card: attachment, originalLocation: originalLocation }));
         }
 
-        this.game.raiseMultipleEvents(events);
+        this.game.openEventWindow(events);
     }
 
     showConflictDeck() {
@@ -1102,28 +1084,21 @@ class Player extends GameObject {
 
     /**
      * Moves the passed cards from this players hand to the relevant discard pile, raising the appropriate events
-     * @param {Array of DrawCard} cards
+     * @param {DrawCard[]} cards
      * @param {Boolean} atRandom
      */
     discardCardsFromHand(cards, atRandom = false) {
-        let events = _.map(cards, card => {
-            return {
-                name: 'onDiscardFromHand',
-                params: {
-                    card: card,
-                    player: this
-                },
-                handler: () => this.moveCard(card, card.isConflict ? 'conflict discard pile' : 'dynasty discard pile')
-            };
-        });
-        this.game.raiseMultipleEvents(events, {
-            name: 'onCardsDiscardedFromHand',
-            params: {
-                cards: cards,
-                player: this
-            },
-            handler: () => this.game.addMessage('{0} discards {1}{2}', this, cards, atRandom ? ' at random' : '')
-        });
+        let events = cards.map(card => this.game.getEvent(
+            'onDiscardFromHand',
+            { card: card, player: this }, 
+            () => this.moveCard(card, card.isConflict ? 'conflict discard pile' : 'dynasty discard pile')
+        ));
+        events.push(this.game.getEvent(
+            'onCardsDiscardedFromHand', 
+            { cards: cards, player: this },
+            () => this.game.addMessage('{0} discards {1}{2}', this, cards, atRandom ? ' at random' : '')
+        ));
+        this.game.openEventWindow(events);
     }
 
     discardCardFromHand(card) {

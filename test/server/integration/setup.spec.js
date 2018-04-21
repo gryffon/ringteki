@@ -74,12 +74,12 @@ describe('setup phase', function() {
                 this.spy = spyOn(this.player1.player, 'shuffleDynastyDeck');
             });
 
-            it('should present first player with a dynasty mulligan prompt', function() {
+            it('should present both players with a dynasty mulligan prompt', function() {
                 expect(this.player1).toHavePrompt('Select dynasty cards to mulligan');
-                expect(this.player2).toHavePrompt('Waiting for opponent to mulligan dynasty cards');
+                expect(this.player1).toHavePrompt('Select dynasty cards to mulligan');
             });
 
-            describe('if the player clicks Done', function() {
+            describe('if a player clicks Done', function() {
                 beforeEach(function() {
                     this.player1.clickPrompt('Done');
                 });
@@ -124,9 +124,9 @@ describe('setup phase', function() {
                 this.spy = spyOn(this.player1.player, 'shuffleConflictDeck');
             });
 
-            it('should present first player with a conflict mulligan prompt', function() {
+            it('should present both players with a conflict mulligan prompt', function() {
                 expect(this.player1).toHavePrompt('Select conflict cards to mulligan');
-                expect(this.player2).toHavePrompt('Waiting for opponent to mulligan conflict cards');
+                expect(this.player2).toHavePrompt('Select conflict cards to mulligan');
             });
 
             describe('if the player clicks Done', function() {

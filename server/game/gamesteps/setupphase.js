@@ -77,17 +77,13 @@ class SetupPhase extends Phase {
         });
     }
 
-    prepareDecks() {
-        this.game.raiseEvent('onDecksPrepared');
-    }
-
     drawStartingHands() {
         _.each(this.game.getPlayers(), player => player.drawCardsToHand(4));
     }
 
     startGame() {
         _.each(this.game.getPlayers(), player => {
-            player.startGame();
+            player.honor = player.stronghold.cardData.honor;
         });
     }
 }

@@ -128,22 +128,20 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        let events = [{
-            name: 'onConflictDeclared',
-            params: { conflict: this.conflict, type: this.conflict.conflictType, ring: this.conflict.ring }
-        }];
+        let events = [this.game.getEvent('onConflictDeclared', { 
+            conflict: this.conflict, 
+            type: this.conflict.conflictType, 
+            ring: this.conflict.ring
+        })];
 
         let ring = this.conflict.ring;
         if(ring.fate > 0) {
-            events.push({
-                name: 'onSelectRingWithFate',
-                params: {
-                    player: this.conflict.attackingPlayer,
-                    conflict: this.conflict,
-                    ring: ring,
-                    fate: ring.fate
-                }
-            });
+            events.push(this.game.getEvent('onSelectRingWithFate', {
+                player: this.conflict.attackingPlayer,
+                conflict: this.conflict,
+                ring: ring,
+                fate: ring.fate
+            }));
             if(this.conflict.attackingPlayer.allowGameAction('takeFateFromRings')) {
                 this.game.addMessage('{0} takes {1} fate from {2}', this.conflict.attackingPlayer, ring.fate, ring);
                 this.game.addFate(this.conflict.attackingPlayer, ring.fate);
@@ -154,18 +152,14 @@ class ConflictFlow extends BaseStepWithPipeline {
         if(!this.conflict.isSinglePlayer) {
             this.conflict.conflictProvince.inConflict = true;
             if(this.conflict.conflictProvince.facedown) {
-                events.push({
-                    name: 'onProvinceRevealed',
-                    params: {
-                        conflict: this.conflict,
-                        province: this.conflict.conflictProvince
-                    },
-                    handler: () => this.conflict.conflictProvince.facedown = false
-                });
+                events.push(this.game.getEvent('onProvinceRevealed', {
+                    conflict: this.conflict,
+                    province: this.conflict.conflictProvince
+                }, () => this.conflict.conflictProvince.facedown = false));
             }
         }
 
-        this.game.raiseMultipleEvents(events);
+        this.game.openEventWindow(events);
     }
 
     announceAttackerSkill() {

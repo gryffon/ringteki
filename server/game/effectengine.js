@@ -51,7 +51,7 @@ class EffectEngine {
     checkTerminalConditions() {
         let effectsToTrigger = _.filter(this.terminalConditions, effect => effect.condition());
         if(effectsToTrigger.length > 0) {
-            this.game.openEventWindow(_.flatten(_.map(effectsToTrigger, effect => effect.getEvents())));
+            this.game.openThenEventWindow(_.flatten(_.map(effectsToTrigger, effect => effect.getEvents())));
         }
     }
 

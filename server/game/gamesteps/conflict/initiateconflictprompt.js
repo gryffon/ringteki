@@ -116,9 +116,9 @@ class InitiateConflictPrompt extends UiPrompt {
             if(!canInitiateOtherConflictType) {
                 return false;
             }
-            this.game.flipRing(player, ring);
+            ring.flipConflictType();
         } else if(!canInitiateThisConflictType) {
-            this.game.flipRing(player, ring);
+            ring.flipConflictType();
         }
 
         _.each(this.conflict.attackers, card => {
@@ -217,7 +217,7 @@ class InitiateConflictPrompt extends UiPrompt {
             let keys = _.keys(capitalize);
             if(!keys.includes(this.conflict.conflictType) || !keys.includes(this.conflict.element) || 
                                 (!this.conflict.isSinglePlayer && !this.conflict.conflictProvince) || this.conflict.attackers.length === 0) {
-                return;
+                return false;
             }
             if(this.covertRemaining && this.conflict.defendingPlayer.anyCardsInPlay(card => {
                 return !card.isCovert() && !card.covert && !card.bowed;
@@ -238,6 +238,7 @@ class InitiateConflictPrompt extends UiPrompt {
                 this.complete();
                 this.conflict.conflictDeclared = true;
             }
+            return true;
         } else if(arg === 'pass') {
             this.game.promptWithHandlerMenu(this.choosingPlayer, {
                 activePromptTitle: 'Are you sure you want to pass your conflict opportunity?',
@@ -251,7 +252,9 @@ class InitiateConflictPrompt extends UiPrompt {
                     () => true
                 ]
             });
+            return true;
         }
+        return false;
     }
 }
 

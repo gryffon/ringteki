@@ -23,6 +23,13 @@ class ThenEventWindow extends EventWindow {
     filterUnsuccessfulEvents() {
         this.events = _.reject(this.events, event => event.cancelled || (event.parentEvent && event.parentEvent.cancelled));
     }
+
+    resetCurrentEventWindow() {
+        _.each(this.events, event => {
+            this.previousEventWindow.addEvent(event);
+        });
+        this.game.currentEventWindow = this.previousEventWindow;
+    }
 }
 
 module.exports = ThenEventWindow;
