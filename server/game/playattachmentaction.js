@@ -1,33 +1,25 @@
-const BaseAbility = require('./baseability.js');
+const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 
-class PlayAttachmentAction extends BaseAbility {
-    constructor() {
-        super({
-            cost: [
-                Costs.payReduceableFateCost('play'),
-                Costs.playLimited(),
-                Costs.useInitiateAction()
-            ],
-            target: { 
-                cardCondition: (card, context) => context.player.canAttach(context.source, card) && context.source.canPlayOn(card)
-            }
+class PlayAttachmentAction extends BaseAction {
+    constructor(card) {
+        super(card, [Costs.payReduceableFateCost('play'), Costs.playLimited()], { 
+            cardCondition: (card, context) => context.player.canAttach(context.source, card) && context.source.canPlayOn(card)
         });
         this.title = 'Play this attachment';
-        this.cannotTargetFirst = false;
-        this.abilityType = 'action';
-        this.cannotBeCancelled = true;
     }
     
-    meetsRequirements(context) {
-        return (
-            context.game.currentPhase !== 'dynasty' &&
-            context.source.getType() === 'attachment' &&
-            context.player.isCardInPlayableLocation(context.source, 'play') &&
-            context.source.allowGameAction('putIntoPlay', context) &&
-            context.source.canPlay(context) &&
-            this.canResolveTargets(context)
-        );
+    meetsRequirements(context = this.createContext()) {
+        if(context.game.currentPhase === 'dynasty') {
+            return 'phase';
+        }
+        if(!context.player.isCardInPlayableLocation(context.source, 'play')) {
+            return 'location';
+        }
+        if(!context.source.canPlay(context)) {
+            return 'cannotTrigger';
+        }
+        return super.meetsRequirements(context);
     }
 
     executeHandler(context) {

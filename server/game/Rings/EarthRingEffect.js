@@ -18,10 +18,6 @@ class EarthRingEffect extends BaseAbility {
         this.defaultPriority = 1; // Default resolution priority when players have ordering switched off
     }
 
-    meetsRequirements() {
-        return true;
-    }
-
     executeHandler(context) {
         if(context.select === 'Don\'t resolve') {
             context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'earth');

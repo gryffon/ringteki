@@ -310,7 +310,7 @@ class Game extends EventEmitter {
 
         MenuCommands.cardMenuClick(menuItem, this, player, card);
         this.checkGameState(true);
-                }
+    }
 
     /*
      * This function is called by the client when a ring menu item is clicked
@@ -1131,8 +1131,7 @@ class Game extends EventEmitter {
             _.each(this.getPlayers(), player => player.cardsInPlay.each(card => {
                 if(card.getModifiedController() !== player) {
                     // any card being controlled by the wrong player
-                    let event = this.applyGameAction(null, { takeControl: card })[0];
-                    event.player = player.opponent;
+                    this.applyGameAction(null, { takeControl: card });
                 }
                 // any attachments which are illegally attached
                 card.checkForIllegalAttachments();

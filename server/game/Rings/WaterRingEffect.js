@@ -16,10 +16,6 @@ class WaterRingEffect extends BaseAbility {
         this.defaultPriority = 3; // Default resolution priority when players have ordering switched off
     }
 
-    meetsRequirements(context) {
-        return this.canResolveTargets(context);
-    }
-
     executeHandler(context) {
         if(!context.target) {
             context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'water');

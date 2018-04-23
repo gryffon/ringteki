@@ -1,24 +1,20 @@
-const BaseAbility = require('./baseability.js');
-const Costs = require('./costs.js');
+const BaseAction = require('./BaseAction');
 
-class DuplicateUniqueAction extends BaseAbility {
-    constructor() {
-        super({ cost: Costs.useInitiateAction() });
-        this.title = 'DuplicateUniqueAction';
-        this.abilityType = 'action';
-        this.cannotBeCancelled = true;
+class DuplicateUniqueAction extends BaseAction {
+    constructor(card) {
+        super(card);
+        this.title = 'Add fate to a duplicate';
     }
 
-    meetsRequirements(context) {
-        var {game, player, source} = context;
-
-        return (
-            game.currentPhase === 'dynasty' &&
-            !source.facedown &&
-            source.getType() === 'character' &&
-            (player.isCardInPlayableLocation(context.source, 'dynasty') || player.isCardInPlayableLocation(context.source, 'play')) &&
-            player.getDuplicateInPlay(context.source)
-        );
+    meetsRequirements(context = this.createContext()) {
+        if(this.card.game.currentPhase !== 'dynasty') {
+            return 'phase';
+        }
+        
+        if(!this.card.controller.isCardInPlayableLocation(this.card, 'dynasty') && !this.card.controller.isCardInPlayableLocation(this.card, 'play')) {
+            return 'location';
+        }
+        return super.meetsRequirements(context);
     }
     
     executeHandler(context) {

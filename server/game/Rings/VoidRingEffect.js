@@ -17,10 +17,6 @@ class VoidRingEffect extends BaseAbility {
         this.defaultPriority = 2; // Default resolution priority when players have ordering switched off
     }
 
-    meetsRequirements(context) {
-        return this.canResolveTargets(context);
-    }
-
     executeHandler(context) {
         if(context.target) {
             context.game.addMessage('{0} resolves the {1} ring, removing a fate from {2}', context.player, 'void', context.target);

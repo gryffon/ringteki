@@ -683,31 +683,24 @@ class Player extends GameObject {
      * @param {BaseCard} card
      */
     initiateCardAction(card) {
-        if(!card) {
+        if(!card || card.facedown) {
             return false;
         }
 
-        let contexts = _.map(card.getActions(), action => new AbilityContext({
-            game: this.game,
-            player: this,
-            source: card,
-            ability: action
-        }));
+        let legalActions = card.getActions(this).filter(action => action.meetsRequirements() === '');
 
-        contexts = _.filter(contexts, context => context.ability.meetsRequirements(context));
-
-        if(contexts.length === 0) {
+        if(legalActions.length === 0) {
             return false;
         }
 
-        if(contexts.length === 1) {
-            this.game.resolveAbility(contexts[0]);
+        if(legalActions.length === 1) {
+            this.game.resolveAbility(legalActions[0].createContext());
         } else {
             this.game.promptWithHandlerMenu(this, {
                 activePromptTitle: (card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':'),
                 source: card,
-                choices: _.map(contexts, context => context.ability.title).concat('Cancel'),
-                handlers: _.map(contexts, context => (() => this.game.resolveAbility(context))).concat(() => true)
+                choices: legalActions.map(action => action.title).concat('Cancel'),
+                handlers: legalActions.map(action => (() => this.game.resolveAbility(action.createContext()))).concat(() => true)
             });
         }
 
@@ -721,6 +714,7 @@ class Player extends GameObject {
         this.firstPlayer = false;
         this.opponent = this.game.getOtherPlayer(this);
     }
+
 
     /** TODO: Move to draw phase
      * Called after bids are finished in the draw phase.  Draws cards for this player equal to their modified bid

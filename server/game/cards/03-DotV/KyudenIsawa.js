@@ -17,16 +17,8 @@ class KyudenIsawa extends StrongholdCard {
                         return false;
                     }
                     return _.any(card.abilities.actions, action => {
-                        let spellContext = new AbilityContext({
-                            game: context.game,
-                            player: context.player,
-                            source: card,
-                            ability: action
-                        });
-    
-                        return (action.phase === 'any' || action.phase === this.game.currentPhase) &&
-                            (!action.condition || action.condition(spellContext)) &&
-                            action.canResolveTargets(spellContext);
+                        let reason = action.meetsRequirements();
+                        return reason === '' || reason === 'location';
                     });
                 }
             },

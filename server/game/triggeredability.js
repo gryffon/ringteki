@@ -22,8 +22,10 @@ class TriggeredAbility extends CardAbility {
     eventHandler(event, window) {
         let context = this.createContext(event);
 
-        if(this.isTriggeredByEvent(event, context) && this.meetsRequirements(context)) {
-            window.addChoice(context);
+        if(this.isTriggeredByEvent(event, context) && this.meetsRequirements(context) === '') {
+            if(this.isInValidLocation(context)) {
+                window.addChoice(context);
+            }
         }
     }
 
@@ -35,17 +37,6 @@ class TriggeredAbility extends CardAbility {
         let listener = this.when[event.name];
 
         return listener && listener(event, context);
-    }
-
-    meetsRequirements(context) {
-        if(!super.meetsRequirements(context)) {
-            return false;
-        }
-
-        if(!this.isTriggeredByEvent(context.event, context)) {
-            return false;
-        }
-        return this.canResolveTargets(context);
     }
 
     isAction() {

@@ -63,6 +63,17 @@ class BaseAbility {
     }
 
     /**
+     * @param {*} context
+     * @returns {String} 
+     */
+    meetsRequirements(context) {
+        if(this.targets.length === 0) {
+            return this.canPayCosts(context) ? '' : 'cost';
+        }
+        return this.canResolveTargets(context) ? '' : (this.canPayCosts(context) ? 'target' : 'cost');
+    }
+
+    /**
      * Return whether all costs are capable of being paid for the ability.
      *
      * @returns {Boolean}
@@ -111,28 +122,25 @@ class BaseAbility {
      * @returns {Boolean}
      */
     canResolveTargets(context) {
-        if(this.targets.length > 0) {
-            return this.targets.every(target => {
-                let dependsOn = target.properties.dependsOn;
-                if(!dependsOn) {
+        return this.targets.every(target => {
+            let dependsOn = target.properties.dependsOn;
+            if(!dependsOn) {
+                return target.canResolve(context);
+            }
+            let dependsOnTarget = this.targets.find(t => t.name === dependsOn);
+            return dependsOnTarget.getAllLegalTargets(context).some(t => {
+                if(dependsOnTarget.mode === 'select') {
+                    context.selects[dependsOn] = t;
                     return target.canResolve(context);
                 }
-                let dependsOnTarget = this.targets.find(t => t.name === dependsOn);
-                return dependsOnTarget.getAllLegalTargets(context).some(t => {
-                    if(dependsOnTarget.mode === 'select') {
-                        context.selects[dependsOn] = t;
-                        return target.canResolve(context);
-                    }
-                    if(dependsOnTarget.mode === 'ring') {
-                        context.rings[dependsOn] = t;
-                        return target.canResolve(context);
-                    }
-                    context.targets[dependsOn] = t;
+                if(dependsOnTarget.mode === 'ring') {
+                    context.rings[dependsOn] = t;
                     return target.canResolve(context);
-                });
+                }
+                context.targets[dependsOn] = t;
+                return target.canResolve(context);
             });
-        }
-        return this.canPayCosts(context);
+        });
     }
 
     /**

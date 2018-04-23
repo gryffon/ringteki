@@ -47,24 +47,24 @@ class CardAction extends CardAbility {
         }
     }
 
-    meetsRequirements(context) {
-        if(!super.meetsRequirements(context)) {
-            return false;
+    meetsRequirements(context = this.createContext()) {
+        if(!this.isInValidLocation(context)) {
+            return 'location';
         }
-
+        
         if(this.phase !== 'any' && this.phase !== this.game.currentPhase) {
-            return false;
+            return 'phase';
         }
 
         if(context.player !== this.card.controller && !this.anyPlayer) {
-            return false;
+            return 'player';
         }
 
         if(this.condition && !this.condition(context)) {
-            return false;
+            return 'condition';
         }
 
-        return this.canResolveTargets(context);
+        return super.meetsRequirements(context);
     }
 }
 

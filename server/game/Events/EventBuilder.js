@@ -33,7 +33,7 @@ const ActionToEvent = {
     returnToHand: card => new LeavesPlayEvent({ destination: 'hand' }, card),
     returnToDeck: card => new LeavesPlayEvent({ destination: card.isDynasty ? 'dynasty deck' : 'conflict deck' }, card),
     sacrifice: card => new LeavesPlayEvent({ isSacrifice: true }, card),
-    takeControl: (card, context) => new Event('onCardTakenControl', { player : context.player }, event => context.game.takeControl(event.player, card)),
+    takeControl: (card, context) => new Event('onCardTakenControl', { player : context.player || card.controller.opponent }, event => context.game.takeControl(event.player, card)),
     placeFate: card => new Event('onCardAddFate', { fate: 1 }, event => card.modifyFate(event.fate)),
     putIntoPlay: card => new EntersPlayEvent({}, card),
     putIntoConflict: card => new EntersPlayEvent({ intoConflict: true }, card)

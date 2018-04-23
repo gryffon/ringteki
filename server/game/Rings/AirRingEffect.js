@@ -19,10 +19,6 @@ class AirRingEffect extends BaseAbility {
         this.defaultPriority = 5; // Default resolution priority when players have ordering switched off
     }
 
-    meetsRequirements(context) {
-        return this.canResolveTargets(context);
-    }
-
     executeHandler(context) {
         if(context.select === 'Gain 2 Honor') {
             context.game.addMessage('{0} resolves the {1} ring, gaining 2 honor', context.player, 'air');

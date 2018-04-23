@@ -438,10 +438,24 @@ class DrawCard extends BaseCard {
         return false;
     }
 
-    getActions() {
-        return StandardPlayActions
-            .concat(this.abilities.playActions)
-            .concat(super.getActions());
+    getActions(player) {
+        let actions = [];
+        if(this.type === 'character') {
+            if(this.location !== 'play area') {
+                if(player.getDuplicateInPlay(this)) {
+                    actions.push(new DuplicateUniqueAction(this));
+                } else if(this.isDynasty && this.location !== 'hand') {
+                    actions.push(new DynastyCardAction(this));
+                } else {
+                    actions.push(new PlayCharacterAction(this));
+                }
+            }
+        } else if(this.type === 'attachment') {
+            if(this.location !== 'play area') {
+                actions.push(new PlayAttachmentAction(this));
+            }
+        }
+        return actions.concat(this.abilities.playActions, super.getActions());
     }
 
     /**

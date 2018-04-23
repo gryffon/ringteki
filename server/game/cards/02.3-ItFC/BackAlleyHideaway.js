@@ -36,23 +36,25 @@ const backAlleyPersistentEffect = function() {
 };
 
 class BackAlleyPlayCharacterAction extends DynastyCardAction {
-    constructor(backAlleyCard) {
-        super();
+    constructor(backAlleyCard, card) {
+        super(card);
         this.title = 'Play this character from Back-Alley Hideaway';
         this.limit = backAlleyCard.backAlleyActionLimit;
         this.backAlleyCard = backAlleyCard;
         this.cost.push(Costs.useLimit());
-        this.cannotBeCancelled = false;
     }
 
-    meetsRequirements(context) {
-        return (
-            context.source.location === 'backalley hideaway' &&
-            context.source.allowGameAction('putIntoPlay', context) &&
-            context.source.canPlay(context) &&
-            context.source.parent.canTriggerAbilities() &&
-            this.canPayCosts(context)
-        );
+    meetsRequirements(context = this.createContext()) {
+        if(context.source.location !== 'backalley hideaway') {
+            return 'location';
+        }
+        if(!context.source.canPlay(context) || !context.source.parent.canTriggerAbilities()) {
+            return 'cannotTrigger';
+        }
+        if(!this.canPayCosts(context)) {
+            return 'cost';
+        }
+        return '';
     }
 
     executeHandler(context) {
@@ -98,7 +100,7 @@ class BackAlleyHideaway extends DrawCard {
                     event.card.moveTo('backalley hideaway');
                     this.attachments.push(event.card);
                     event.card.parent = this;
-                    event.card.abilities.playActions.push(new BackAlleyPlayCharacterAction(this));
+                    event.card.abilities.playActions.push(new BackAlleyPlayCharacterAction(this, event.card));
                 });
             }
         });

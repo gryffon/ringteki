@@ -1,26 +1,21 @@
-const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
 
 class PlayTogashiKazueAsAttachment extends PlayAttachmentAction {
-    constructor(originalCard, owner, cardData) {
-        super();
+    constructor(card, owner, cardData) {
+        super(card);
         this.clone = new DrawCard(owner, cardData);
         this.clone.type = 'attachment';
-        this.originalCard = originalCard;
         this.title = 'Play Togashi Kazue as an attachment';
     }
 
-    meetsRequirements(context) {
-        let clonedContext = _.clone(context);
-        clonedContext.source = this.clone;
-        return (
-            context.game.currentPhase !== 'dynasty' &&
-            context.player.isCardInPlayableLocation(this.originalCard, 'play') &&
-            context.source.allowGameAction('putIntoPlay', context) &&
-            this.originalCard.canPlay(clonedContext) &&
-            this.canResolveTargets(clonedContext)
-        );
+    meetsRequirements(context = this.createContext()) {
+        context.source = this.clone;
+        let error = super.meetsRequirements(context);
+        if(error === 'location' && context.player.isCardInPlayableLocation(this.card, 'play')) {
+            return '';
+        }
+        return error;
     }
     
     resolveTargets(context, results = []) {
@@ -29,7 +24,7 @@ class PlayTogashiKazueAsAttachment extends PlayAttachmentAction {
     }
     
     executeHandler(context) {
-        context.source = this.originalCard;
+        context.source = this.card;
         context.source.type = 'attachment';
         super.executeHandler(context);
     }

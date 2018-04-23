@@ -1,28 +1,24 @@
-const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
 
 class PlayTattooedWandererAsAttachment extends PlayAttachmentAction {
     constructor(originalCard, owner, cardData) {
-        super();
+        super(originalCard);
         this.clone = new DrawCard(owner, cardData);
         this.clone.type = 'attachment';
         this.originalCard = originalCard;
         this.title = 'Play Tattooed Wanderer as an attachment';
     }
 
-    meetsRequirements(context) {
-        let clonedContext = _.clone(context);
-        clonedContext.source = this.clone;
-        return (
-            context.game.currentPhase !== 'dynasty' &&
-            context.player.isCardInPlayableLocation(this.originalCard, 'play') &&
-            context.source.allowGameAction('putIntoPlay', context) &&
-            this.originalCard.canPlay(clonedContext) &&
-            this.canResolveTargets(clonedContext)
-        );
+    meetsRequirements(context = this.createContext()) {
+        context.source = this.clone;
+        let error = super.meetsRequirements(context);
+        if(error === 'location' && context.player.isCardInPlayableLocation(this.originalCard, 'play')) {
+            return '';
+        }
+        return error;
     }
-        
+
     resolveTargets(context, results = []) {
         context.source = this.clone;
         return super.resolveTargets(context, results);

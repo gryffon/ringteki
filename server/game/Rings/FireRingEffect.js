@@ -17,10 +17,6 @@ class FireRingEffect extends BaseAbility {
         this.defaultPriority = 4; // Default resolution priority when players have ordering switched off
     }
 
-    meetsRequirements(context) {
-        return this.canResolveTargets(context);
-    }
-
     executeHandler(context) {
         if(!context.target) {
             context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'fire');

@@ -1,35 +1,28 @@
-const BaseAbility = require('./baseability.js');
+const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 
-class DynastyCardAction extends BaseAbility {
-    constructor() {
-        super({
-            cost: [
-                Costs.chooseFate(),
-                Costs.payReduceableFateCost('play'),
-                Costs.playLimited(),
-                Costs.useInitiateAction()
-            ]
-        });
+class DynastyCardAction extends BaseAction {
+    constructor(card) {
+        super(card, [
+            Costs.chooseFate(),
+            Costs.payReduceableFateCost('play'),
+            Costs.playLimited()
+        ]);
         this.title = 'Play this character';
-        this.abilityType = 'action';
-        this.cannotBeCancelled = true;
     }
 
-    meetsRequirements(context) {
-        var {game, player, source} = context;
-
-        this.originalLocation = source.location;
-        return (
-            game.currentPhase === 'dynasty' &&
-            source.isDynasty &&
-            !source.facedown &&
-            source.getType() === 'character' &&
-            player.isCardInPlayableLocation(source, 'dynasty') &&
-            source.allowGameAction('putIntoPlay', context) &&
-            source.canPlay(context) &&
-            this.canPayCosts(context)
-        );
+    meetsRequirements(context = this.createContext()) {
+        this.originalLocation = this.card.location;
+        if(context.game.currentPhase !== 'dynasty') {
+            return 'phase';
+        }
+        if(!context.player.isCardInPlayableLocation(this.card, 'dynasty')) {
+            return 'location';
+        }
+        if(!this.card.canPlay(context)) {
+            return 'cannotTrigger';
+        }
+        return super.meetsRequirements(context);
     }
 
     executeHandler(context) {

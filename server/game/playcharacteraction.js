@@ -1,34 +1,30 @@
-const BaseAbility = require('./baseability.js');
+const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 
-class PlayCharacterAction extends BaseAbility {
-    constructor() {
-        super({
-            cost: [
-                Costs.chooseFate(),
-                Costs.payReduceableFateCost('play'),
-                Costs.playLimited(),
-                Costs.useInitiateAction()                
-            ]
-        });
+class PlayCharacterAction extends BaseAction {
+    constructor(card) {
+        super(card, [
+            Costs.chooseFate(),
+            Costs.payReduceableFateCost('play'),
+            Costs.playLimited()
+        ]);
         this.title = 'Play this character';
-        this.abilityType = 'action';
-        this.cannotBeCancelled = true;
     }
 
-    meetsRequirements(context) {
-        return (
-            context.game.currentPhase !== 'dynasty' &&
-            context.source.getType() === 'character' &&
-            context.player.isCardInPlayableLocation(context.source, 'play') &&
-            context.source.allowGameAction('putIntoPlay', context) &&
-            context.source.canPlay(context) &&
-            this.canPayCosts(context)
-        );
+    meetsRequirements(context = this.createContext()) {
+        if(context.game.currentPhase === 'dynasty') {
+            return 'phase';
+        }
+        if(!context.player.isCardInPlayableLocation(context.source, 'play')) {
+            return 'location';
+        }
+        if(!context.source.canPlay(context)) {
+            return 'triggerAbility';
+        } 
+        return super.meetsRequirements(context);
     }
 
     executeHandler(context) {
-        
         let cardPlayedEvent = {
             name: 'onCardPlayed',
             params: { player: context.player, card: context.source, originalLocation: context.source.location }

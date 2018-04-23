@@ -185,7 +185,7 @@ const Costs = {
     useInitiateAction: function() {
         return {
             canPay: function() {
-                return true; // We have to check this condition in Ability.meetsRequirements(), or we risk players starting another ability while costs are resolving
+                return true;
             },
             pay: function(context) {
                 context.game.markActionAsTaken();
