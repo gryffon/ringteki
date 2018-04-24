@@ -4,27 +4,6 @@ const CostBuilders = require('./costs/CostBuilders.js');
 
 const Costs = {
     /**
-     * Cost that aggregates a list of other costs.
-     */
-    all: function(...costs) {
-        return {
-            canPay: function(context) {
-                return _.all(costs, cost => cost.canPay(context));
-            },
-            payEvent: function(context) {
-                return _.map(costs, cost => {
-                    if(cost.payEvent) {
-                        return cost.payEvent(context);
-                    }
-                    if(cost.pay) {
-                        return context.game.getEvent('payCost', {}, () => cost.pay(context));
-                    }
-                });
-            },
-            canIgnoreForTargeting: _.all(costs, cost => cost.canIgnoreForTargeting)
-        };
-    },
-    /**
      * Cost that allows the player to choose between multiple costs. The
      * `choices` object should have string keys representing the button text
      * that will be used to prompt the player, with the values being the cost
@@ -118,17 +97,6 @@ const Costs = {
         };
     },
     /**
-     * Cost that will pay the reduceable fate cost associated with an event card
-     * and place it in discard.
-     */
-    playEvent: function() {
-        return Costs.all(
-            Costs.payReduceableFateCost('play'),
-            Costs.canPlayEvent(),
-            Costs.playLimited()
-        );
-    },
-    /**
      * Cost which moves the event to the discard pile
      */
     canPlayEvent: function() {
@@ -156,29 +124,7 @@ const Costs = {
             canIgnoreForTargeting: true
         };
     },
-    /**
-     * Cost that ensures that the player has not exceeded the maximum usage for
-     * an ability.
-     */
-    playMax: function() {
-        return {
-            canPay: function(context) {
-                return !context.player.isAbilityAtMax(context.ability.maxIdentifier);
-            },
-            canIgnoreForTargeting: true
-        };
-    },
-    /**
-     * Cost that represents using an ability's limit
-     */
-    useLimit: function() {
-        return {
-            canPay: function(context) {
-                return !context.ability.limit.isAtMax(context.player);
-            },
-            canIgnoreForTargeting: true
-        };
-    },
+
     /**
      * Cost that represents using your action in an ActionWindow
      */
@@ -222,7 +168,7 @@ const Costs = {
                 } else if(context.target) {
                     reducedCost = context.player.getReducedCost(playingType, context.source, context.target);
                 }
-                return context.player.fate >= reducedCost && (context.source.allowGameAction('spendFate', context) || reducedCost === 0);
+                return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.allowGameAction('spendFate', context));
             },
             pay: function(context) {
                 if(context.target) {

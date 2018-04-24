@@ -1,6 +1,5 @@
 const _ = require('underscore');
 
-const Costs = require('../../costs.js');
 const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
 
@@ -41,7 +40,6 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
         this.title = 'Play this character from Back-Alley Hideaway';
         this.limit = backAlleyCard.backAlleyActionLimit;
         this.backAlleyCard = backAlleyCard;
-        this.cost.push(Costs.useLimit());
     }
 
     meetsRequirements(context = this.createContext()) {

@@ -10,11 +10,10 @@ class PlayTogashiKazueAsAttachment extends PlayAttachmentAction {
     }
 
     meetsRequirements(context = this.createContext()) {
-        context.source = this.clone;
+        let type = this.card.type;
+        this.card.type = 'attachment';
         let error = super.meetsRequirements(context);
-        if(error === 'location' && context.player.isCardInPlayableLocation(this.card, 'play')) {
-            return '';
-        }
+        this.card.type = type;
         return error;
     }
     

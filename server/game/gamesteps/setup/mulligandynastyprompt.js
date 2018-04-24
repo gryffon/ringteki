@@ -35,7 +35,7 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
             selectRing: true,
             menuTitle: 'Select dynasty cards to mulligan',
             buttons: [{ text: 'Done', arg: 'done' }],
-            promptTitle: 'Dynasty Mulligan',
+            promptTitle: 'Dynasty Mulligan'
         };
     }
 
@@ -61,7 +61,7 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
 
     waitingPrompt() {
         return {
-            menuTitle: 'Waiting for opponent to mulligan dynasty cards',
+            menuTitle: 'Waiting for opponent to mulligan dynasty cards'
         };
     }
 

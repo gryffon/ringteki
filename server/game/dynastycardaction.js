@@ -22,6 +22,9 @@ class DynastyCardAction extends BaseAction {
         if(!this.card.canPlay(context)) {
             return 'cannotTrigger';
         }
+        if(this.card.anotherUniqueInPlay(context)) {
+            return 'unique';
+        }
         return super.meetsRequirements(context);
     }
 

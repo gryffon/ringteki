@@ -19,6 +19,9 @@ class PlayAttachmentAction extends BaseAction {
         if(!context.source.canPlay(context)) {
             return 'cannotTrigger';
         }
+        if(context.source.anotherUniqueInPlay(context)) {
+            return 'unique';
+        }
         return super.meetsRequirements(context);
     }
 

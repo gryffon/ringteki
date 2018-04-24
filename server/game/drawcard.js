@@ -3,7 +3,6 @@ const _ = require('underscore');
 const AbilityDsl = require('./abilitydsl.js');
 const BaseCard = require('./basecard.js');
 const DynastyCardAction = require('./dynastycardaction.js');
-const PlayCardAction = require('./playcardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
@@ -11,14 +10,6 @@ const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PersonalHonorAbility = require('./KeywordAbilities/PersonalHonorAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
-
-const StandardPlayActions = [
-    new DynastyCardAction(),
-    new PlayAttachmentAction(),
-    new PlayCharacterAction(),
-    new DuplicateUniqueAction(),
-    new PlayCardAction()
-];
 
 const ValidKeywords = [
     'ancestral',
@@ -143,7 +134,7 @@ class DrawCard extends BaseCard {
         return this.fate;
     }
     
-    allowGameAction(actionType, context = null) {
+    allowGameAction(actionType, context) {
         if(actionType === 'break') {
             return false;
         } else if(actionType === 'dishonor') {
@@ -185,15 +176,7 @@ class DrawCard extends BaseCard {
                 return false;
             }
         } else if(actionType === 'putIntoPlay') {
-            if(this.location === 'play area' || this.facedown || !['character', 'attachment'].includes(this.type)) {
-                return false;
-            }
-            if(this.isUnique() && this.game.allCards.any(card => (
-                card.location === 'play area' &&
-                card.name === this.name &&
-                ((card.owner === context.player || card.controller === context.player) || (card.owner === this.owner)) &&
-                card !== this
-            ))) {
+            if(this.location === 'play area' || this.facedown || this.anotherUniqueInPlay(context) || !['character', 'attachment'].includes(this.type)) {
                 return false;
             }
         } else if(actionType === 'removeFate' && (this.location !== 'play area' || this.fate === 0 || this.type !== 'character')) {
@@ -204,6 +187,15 @@ class DrawCard extends BaseCard {
             return false;
         }
         return super.allowGameAction(actionType, context);
+    }
+
+    anotherUniqueInPlay(context) {
+        return this.isUnique() && this.game.allCards.any(card => (
+            card.location === 'play area' &&
+            card.name === this.name &&
+            ((card.owner === context.player || card.controller === context.player) || (card.owner === this.owner)) &&
+            card !== this
+        ));
     }
 
     createSnapshot() {
@@ -439,21 +431,20 @@ class DrawCard extends BaseCard {
     }
 
     getActions(player) {
+        if(this.location === 'play area') {
+            return super.getActions();
+        }
         let actions = [];
         if(this.type === 'character') {
-            if(this.location !== 'play area') {
-                if(player.getDuplicateInPlay(this)) {
-                    actions.push(new DuplicateUniqueAction(this));
-                } else if(this.isDynasty && this.location !== 'hand') {
-                    actions.push(new DynastyCardAction(this));
-                } else {
-                    actions.push(new PlayCharacterAction(this));
-                }
+            if(player.getDuplicateInPlay(this)) {
+                actions.push(new DuplicateUniqueAction(this));
+            } else if(this.isDynasty && this.location !== 'hand') {
+                actions.push(new DynastyCardAction(this));
+            } else {
+                actions.push(new PlayCharacterAction(this));
             }
         } else if(this.type === 'attachment') {
-            if(this.location !== 'play area') {
-                actions.push(new PlayAttachmentAction(this));
-            }
+            actions.push(new PlayAttachmentAction(this));
         }
         return actions.concat(this.abilities.playActions, super.getActions());
     }

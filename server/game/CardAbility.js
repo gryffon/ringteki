@@ -11,7 +11,7 @@ class CardAbility extends BaseAbility {
         this.card = card;
         this.title = properties.title;
         this.limit = properties.limit || AbilityLimit.perRound(1);
-        this.max = properties.max;
+        this.limit.registerEvents(game);
         this.location = this.buildLocation(card, properties.location);
         this.printedAbility = properties.printedAbility === false ? false : true;
         this.cannotBeCopied = properties.cannotBeCopied;
@@ -20,14 +20,21 @@ class CardAbility extends BaseAbility {
         this.doesNotTarget = properties.doesNotTarget;
         this.methods = properties.methods || [];
         this.handler = properties.handler;
+        this.max = properties.max;
+        this.abilityIdentifier = properties.abilityIdentifier;
+        if(!this.abilityIdentifier) {
+            this.abilityIdentifier = this.printedAbility ? this.card.id + '1' : '';
+        }
+        this.maxIdentifier = this.card.name + this.abilityIdentifier;
 
-        if(card.getType() === 'event') {
-            this.cost.push(Costs.playEvent());
+        if(this.max) {
+            this.card.owner.registerAbilityMax(this.maxIdentifier, this.max);
         }
 
-        this.cost.push(Costs.useLimit());
+        if(card.getType() === 'event') {
+            this.cost = this.cost.concat(Costs.payReduceableFateCost('play'), Costs.canPlayEvent(), Costs.playLimited());
+        }
 
-        this.limit.registerEvents(game);
     }
 
     buildLocation(card, location) {
@@ -69,6 +76,14 @@ class CardAbility extends BaseAbility {
 
         if(!this.card.canTriggerAbilities()) {
             return 'cannotTrigger';
+        }
+
+        if(this.limit.isAtMax(context.player)) {
+            return 'limit';
+        }
+
+        if(this.max && context.player.isAbilityAtMax(this.maxIdentifier)) {
+            return 'max';
         }
 
         return super.meetsRequirements(context);

@@ -2,7 +2,6 @@ const _ = require('underscore');
 
 const GameObject = require('./GameObject');
 const Deck = require('./deck.js');
-const AbilityContext = require('./AbilityContext.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
 const ConflictTracker = require('./conflicttracker.js');
 const RingEffects = require('./RingEffects.js');
@@ -687,7 +686,9 @@ class Player extends GameObject {
             return false;
         }
 
-        let legalActions = card.getActions(this).filter(action => action.meetsRequirements() === '');
+        let actions = card.getActions(this);
+
+        let legalActions = actions.filter(action => action.meetsRequirements() === '');
 
         if(legalActions.length === 0) {
             return false;

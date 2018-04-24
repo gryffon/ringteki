@@ -22,13 +22,13 @@ class SetupProvincesPrompt extends AllPlayerPrompt {
 
     activePrompt() {
         return {
-            menuTitle: 'Select stronghold province',
+            menuTitle: 'Select stronghold province'
         };
     }
 
     waitingPrompt() {
         return {
-            menuTitle: 'Waiting for opponent to finish selecting a stronghold province',
+            menuTitle: 'Waiting for opponent to finish selecting a stronghold province'
         };
     }
 }

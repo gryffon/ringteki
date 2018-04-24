@@ -5,7 +5,7 @@ class PlayCardAction extends BaseAbility {
     constructor() {
         super({
             cost: [
-                Costs.playEvent(),
+                Costs.canPlayEvent(),
                 Costs.useInitiateAction()
             ]         
         });
