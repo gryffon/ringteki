@@ -104,6 +104,10 @@ class CardAbility extends BaseAbility {
     isCardAbility() {
         return true;
     }
+
+    isTriggeredAbility() {
+        return true;
+    }
 }
 
 module.exports = CardAbility;

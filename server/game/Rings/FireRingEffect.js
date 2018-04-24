@@ -50,14 +50,6 @@ class FireRingEffect extends BaseAbility {
             source: 'Fire Ring'
         });
     }
-
-    isAction() {
-        return false;
-    }
-
-    isCardAbility() {
-        return false;
-    }
 }
 
 module.exports = FireRingEffect;

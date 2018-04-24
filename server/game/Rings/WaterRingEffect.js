@@ -29,14 +29,6 @@ class WaterRingEffect extends BaseAbility {
             context.game.applyGameAction(context, { bow: context.target });
         }
     }
-
-    isAction() {
-        return false;
-    }
-
-    isCardAbility() {
-        return false;
-    }
 }
 
 module.exports = WaterRingEffect;

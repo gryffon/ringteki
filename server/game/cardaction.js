@@ -60,6 +60,10 @@ class CardAction extends CardAbility {
 
         return super.meetsRequirements(context);
     }
+
+    isAction() {
+        return true;
+    }
 }
 
 module.exports = CardAction;

@@ -171,7 +171,7 @@ class BaseAbility {
     }
 
     isAction() {
-        return true;
+        return false;
     }
 
     isCardPlayed() {
@@ -183,7 +183,7 @@ class BaseAbility {
     }
 
     isTriggeredAbility() {
-        return true;
+        return false;
     }
 }
 

@@ -25,14 +25,6 @@ class VoidRingEffect extends BaseAbility {
             context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'void');
         }
     }
-
-    isAction() {
-        return false;
-    }
-
-    isCardAbility() {
-        return false;
-    }
 }
 
 module.exports = VoidRingEffect;

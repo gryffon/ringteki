@@ -23,6 +23,10 @@ class BaseAction extends BaseAbility {
             source: this.card
         });
     }
+
+    isAction() {
+        return true;
+    }
 }
 
 module.exports = BaseAction;

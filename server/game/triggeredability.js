@@ -30,14 +30,6 @@ class TriggeredAbility extends CardAbility {
         return listener && listener(event, context);
     }
 
-    isAction() {
-        return false;
-    }
-
-    isForcedAbility() {
-        return false;
-    }
-
     registerEvents() {
         if(this.events) {
             return;

@@ -33,14 +33,6 @@ class EarthRingEffect extends BaseAbility {
         }
         context.player.drawCardsToHand(1);
     }
-
-    isAction() {
-        return false;
-    }
-
-    isCardAbility() {
-        return false;
-    }
 }
 
 module.exports = EarthRingEffect;

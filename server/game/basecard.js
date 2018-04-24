@@ -2,12 +2,9 @@ const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
 const CardAction = require('./cardaction.js');
-const CardForcedInterrupt = require('./cardforcedinterrupt.js');
-const CardForcedReaction = require('./cardforcedreaction.js');
-const CardInterrupt = require('./cardinterrupt.js');
-const CardReaction = require('./cardreaction.js');
 const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
+const TriggeredAbility = require('./triggeredability');
 
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
@@ -49,22 +46,22 @@ class BaseCard extends EffectSource {
     }
 
     reaction(properties) {
-        var reaction = new CardReaction(this.game, this, properties);
+        var reaction = new TriggeredAbility(this.game, this, 'reaction', properties);
         this.abilities.reactions.push(reaction);
     }
 
     forcedReaction(properties) {
-        var reaction = new CardForcedReaction(this.game, this, properties);
+        var reaction = new TriggeredAbility(this.game, this, 'forcedreaction', properties);
         this.abilities.reactions.push(reaction);
     }
 
     interrupt(properties) {
-        var reaction = new CardInterrupt(this.game, this, properties);
+        var reaction = new TriggeredAbility(this.game, this, properties.canCancel ? 'cancelinterrupt' : 'interrupt', properties);
         this.abilities.reactions.push(reaction);
     }
 
     forcedInterrupt(properties) {
-        var reaction = new CardForcedInterrupt(this.game, this, properties);
+        var reaction = new TriggeredAbility(this.game, this, 'forcedinterrupt', properties);
         this.abilities.reactions.push(reaction);
     }
 
