@@ -219,25 +219,8 @@ class InitiateConflictPrompt extends UiPrompt {
                                 (!this.conflict.isSinglePlayer && !this.conflict.conflictProvince) || this.conflict.attackers.length === 0) {
                 return false;
             }
-            if(this.covertRemaining && this.conflict.defendingPlayer.anyCardsInPlay(card => {
-                return !card.isCovert() && !card.covert && !card.bowed;
-            })) {
-                this.game.promptWithHandlerMenu(this.choosingPlayer, {
-                    activePromptTitle: 'You still have unused Covert - are you sure?',
-                    source: 'Declare Conflict',
-                    choices: ['Yes', 'No'],
-                    handlers: [
-                        () => {
-                            this.complete();
-                            this.conflict.conflictDeclared = true;
-                        },
-                        () => true
-                    ]
-                });
-            } else {
-                this.complete();
-                this.conflict.conflictDeclared = true;
-            }
+            this.complete();
+            this.conflict.conflictDeclared = true;
             return true;
         } else if(arg === 'pass') {
             this.game.promptWithHandlerMenu(this.choosingPlayer, {

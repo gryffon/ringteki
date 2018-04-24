@@ -12,7 +12,7 @@ const phaseValue = {
     conflict: 2,
     fate: 3,
     regroup: 4
-}
+};
 const numPhases = 5;
 
 class GameFlowWrapper {

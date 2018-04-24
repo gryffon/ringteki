@@ -29,6 +29,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.resetCards()),
             new SimpleStep(this.game, () => this.promptForNewConflict()),
             new SimpleStep(this.game, () => this.initiateConflict()),
+            new SimpleStep(this.game, () => this.promptForCovert()),
             new SimpleStep(this.game, () => this.resolveCovert()),
             new SimpleStep(this.game, () => this.raiseDeclarationEvents()),
             new SimpleStep(this.game, () => this.announceAttackerSkill()),
@@ -89,7 +90,8 @@ class ConflictFlow extends BaseStepWithPipeline {
         this.game.addMessage('{0} is initiating a {1} conflict at {2}, contesting {3}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictProvince, this.conflict.ring);
     }
 
-    resolveCovert() {
+    promptForCovert() {
+        this.covert = [];
         if(this.conflict.conflictPassed || this.conflict.isSinglePlayer) {
             return;
         }
@@ -97,30 +99,54 @@ class ConflictFlow extends BaseStepWithPipeline {
         let targets = this.conflict.defendingPlayer.cardsInPlay.filter(card => card.covert);
         let sources = _.filter(this.conflict.attackers, card => card.isCovert());
 
-        if(targets.length === 0 || sources.length === 0) {
+        if(sources.length === 0) {
             return;
         }
 
-        _.each(targets, card => card.covert = false);
-        if(sources.length > targets.length) {
-            sources = _.first(sources, targets.length);
+        // Need to have:
+        // - a legal combination of covert targets and covert attackers
+        // - no remaining covert
+
+        if(targets.length === sources.length) {
+            for(let i = 0; i < targets.length; i++) {
+                let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: sources[i], ability: new CovertAbility() });
+                context.targets.target = targets[i];
+                this.covert.push(context);
+            }
+            if(this.covert.every(context => context.targets.target.canBeCovertedBy(context.source))) {
+                return;
+            }
+            this.covert = [];
         }
 
-        if(sources.length < targets.length) {
-            targets = _.first(targets, sources.length);
+        for(const source of sources) {
+            this.game.promptForSelect(this.conflict.attackingPlayer, {
+                activePromptTitle: 'Choose covert target for ' + source.name,
+                buttons: [{ text: 'No target', arg: 'cancel' }],
+                cardType: 'character',
+                cardCondition: card => (
+                    card.controller === this.conflict.defendingPlayer && card.canBeCovertedBy(source) && 
+                    card.canBeDeclaredAsDefender()
+                ),
+                onSelect: (player, card) => {
+                    let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility() });
+                    context['target'] = context.targets.target = card;
+                    this.covert.push(context);
+                    return true;                        
+                }
+            });
+        }
+    }
+
+    resolveCovert() {
+        if(this.covert.length === 0) {
+            return;
         }
 
-        let events = _.map(_.zip(sources, targets), array => {
-            let [source, target] = array;
-            let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility({}) });
-            context.targets.target = target;
-            return {
-                params: { card: source, context: context },
-                handler: () => target.covert = true
-            };
-        });
-
-        this.game.raiseMultipleInitiateAbilityEvents(events);
+        this.game.raiseMultipleInitiateAbilityEvents(this.covert.map(context => ({
+            params: { card: context.source, context: context },
+            handler: () => context.target = true
+        })));
     }
 
     raiseDeclarationEvents() {
@@ -167,8 +193,6 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        // Explicitly recalculate strength in case an effect has modified character strength.
-        //this.conflict.calculateSkill();
         this.game.addMessage('{0} has initiated a {1} conflict with skill {2}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.attackerSkill);
     }
 

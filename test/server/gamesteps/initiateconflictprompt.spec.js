@@ -431,25 +431,6 @@ describe('InitateConflictPrompt: ', function() {
                 });
             });
 
-            describe('if covert is remaining and there is a legal target', function() {
-                beforeEach(function() {
-                    this.prompt.completed = false;
-                    this.prompt.covertRemaining = true;
-                    this.opponentSpy = jasmine.createSpyObj('opponent', ['anyCardsInPlay']); 
-                    this.opponentSpy.anyCardsInPlay.and.returnValue(true);
-                    this.conflictSpy.defendingPlayer = this.opponentSpy;
-                    this.prompt.menuCommand(this.playerSpy, 'done');
-                });
-
-                it('should not set complete to true', function() {
-                    expect(this.prompt.completed).toBe(false);
-                });
-
-                it('should prompt the player with a handler menu', function() {
-                    expect(this.gameSpy.promptWithHandlerMenu).toHaveBeenCalledWith(this.playerSpy, jasmine.objectContaining({ activePromptTitle: 'You still have unused Covert - are you sure?' }));
-                });
-            });
-
             it('should set completed to true', function() {
                 expect(this.prompt.completed).toBe(true);
             });
