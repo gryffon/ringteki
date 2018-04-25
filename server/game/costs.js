@@ -146,7 +146,7 @@ const Costs = {
         return {
             canPay: function(context) {
                 let amount = context.source.getCost();
-                return context.player.fate >= amount && (context.source.allowGameAction('spendFate', context) || amount === 0);
+                return context.player.fate >= amount && (amount === 0 || context.source.allowGameAction('spendFate', context) || );
             },
             pay: function(context) {
                 context.player.fate -= context.source.getCost();
@@ -168,7 +168,7 @@ const Costs = {
                 } else if(context.target) {
                     reducedCost = context.player.getReducedCost(playingType, context.source, context.target);
                 }
-                return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.allowGameAction('spendFate', context));
+                return context.player.fate >= reducedCost && (reducedCost === 0 || context.source.allowGameAction('spendFate', context));
             },
             pay: function(context) {
                 if(context.target) {

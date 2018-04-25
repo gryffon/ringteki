@@ -3,6 +3,15 @@ const AbilityLimit = require('./abilitylimit.js');
 const BaseAbility = require('./baseability.js');
 const Costs = require('./costs.js');
 
+const actionToMessage = {
+
+    moveToConflict: '{0} uses {1} to move {2} into the conflict',
+    placeFate: '{0} uses {1} to place a fate on {2}',
+    putIntoConflict: '{0} uses {1}, putting {2} into the conflict',
+    ready: '{0} uses {1} to ready {2}'
+
+};
+
 class CardAbility extends BaseAbility {
     constructor(game, card, properties) {
         super(properties);
