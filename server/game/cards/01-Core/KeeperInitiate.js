@@ -11,10 +11,11 @@ class KeeperInitiate extends DrawCard {
                         this.location !== 'play area') // TODO: this needs allowGameAction when a context reference is available
             },
             location: ['province 1', 'province 2', 'province 3', 'province 4', 'dynasty discard pile'],
+            message: '{0} puts {1} into play from their {2}',
+            messageItems: context => [context.source.location === 'dynasty discard pile' ? 'discard pile' : 'province'],
             handler: context => {
-                this.game.addMessage('{0} puts {1} into play from their {2}', this.controller, this, this.location === 'dynasty discard pile' ? 'discard pile' : 'province');
-                let event = this.game.applyGameAction(context, { putIntoPlay: this })[0];
-                event.addThenGameAction(context, { placeFate: this });
+                let event = this.game.applyGameAction(context, { putIntoPlay: context.source })[0];
+                event.addThenGameAction(context, { placeFate: context.source });
             }
         });
     }
