@@ -5,17 +5,15 @@ class Breakthrough extends DrawCard {
         this.reaction({
             title: 'Declare a new conflict',
             when: {
-                onConflictFinished: event => {
+                onConflictFinished: (event, context) => {
                     return (event.conflict.conflictProvince &&
                             event.conflict.conflictProvince.isBroken && 
-                            event.conflict.winner === this.controller &&
-                            this.controller.conflicts.conflictOpportunities > 0);
+                            event.conflict.winner === context.player &&
+                            context.player.conflicts.conflictOpportunities > 0);
                 }
             },
-            handler: context => {
-                this.game.addMessage('{0} plays {1} to move straight to their next conflict!', this.controller, this);
-                context.event.conflict.winnerGoesStraightToNextConflict = true;
-            } 
+            effect: 'move straight to their next conflict!',
+            handler: context => context.event.conflict.winnerGoesStraightToNextConflict = true
         });
     }
 }

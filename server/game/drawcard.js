@@ -144,7 +144,7 @@ class DrawCard extends BaseCard {
             }
         } else if(actionType === 'honor' && (this.location !== 'play area' || this.type !== 'character' || this.isHonored)) {
             return false;
-        } else if(actionType === 'bow' && (['event', 'holding'].includes(this.type) || this.location !== 'play area' || this.bowed)) {
+        } else if(actionType === 'bow' && () {
             return false;
         } else if(actionType === 'ready' && (['event', 'holding'].includes(this.type) || this.location !== 'play area' || !this.bowed)) {
             return false;

@@ -5,13 +5,16 @@ class AkodoGunso extends DrawCard {
         this.reaction({
             title: 'Refill province faceup',
             when: {
-                onCardEntersPlay: event => event.card === this && ['province 1', 'province 2', 'province 3', 'province 4'].includes(event.originalLocation)
+                onCardEntersPlay: (event, context) => event.card === context.source && 
+                                                      ['province 1', 'province 2', 'province 3', 'province 4'].includes(event.originalLocation)
             },
+            message: 'refill the province face up',
             handler: context => {
-                this.game.addMessage('{0} uses {1}\'s ability to refill the province face up', this.controller, this);
-                let province = this.controller.getSourceList(context.event.originalLocation);
+                let province = context.player.getSourceList(context.event.originalLocation);
                 let card = province.find(card => card.isDynasty);
-                card.facedown = false;
+                if(card) {
+                    card.facedown = false;
+                }
             }
         });
     }

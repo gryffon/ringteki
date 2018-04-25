@@ -5,13 +5,9 @@ class EnlightenedWarrior extends DrawCard {
         this.reaction({
             title: 'Gain 1 fate',
             when: {
-                onSelectRingWithFate: (event, context) => event.player !== context.source && 
-                                                          context.source.allowGameAction('placeFate', context)
+                onSelectRingWithFate: event => event.player !== this.controller 
             },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to place a fate on him', this.controller, this);
-                this.game.applyGameAction(context, { placeFate: context.source });
-            }
+            gameAction: 'placeFate'
         });
     }
 }

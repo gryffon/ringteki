@@ -9,18 +9,17 @@ class FearsomeMystic extends DrawCard {
         });
         this.action({
             title: 'Remove fate from characters',
-            condition: context => this.isParticipating() && this.controller.opponent && 
-                                  this.controller.opponent.cardsInPlay.any(card => card.isParticipating() && card.fate > 0 && 
-                                                                                   card.getGlory() < this.getGlory() && card.allowGameAction('removeFate', context)),
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to remove 1 fate from all opposing characters with lower glory than her', this.controller, this);
-                this.game.applyGameAction(context, { removeFate: this.game.findAnyCardsInPlay(card => (card.isParticipating() && 
-                            card.controller !== this.controller && 
-                            card.getGlory() < this.getGlory() && 
-                            card.fate > 0 &&
-                            card.allowGameAction('removeFate', context))
-                )});
-            }
+            condition: context => context.source.isParticipating() && context.player.opponent && 
+                                  context.player.opponent.cardsInPlay.any(card => (
+                                      card.isParticipating() && card.fate > 0 && 
+                                      card.getGlory() < context.source.getGlory() && card.allowGameAction('removeFate', context)
+                                  )),
+            message: '{0} uses {1} to remove 1 fate from all opposing characters with lower glory than her',
+            handler: context => this.game.applyGameAction(context, { removeFate: this.game.findAnyCardsInPlay(card => (
+                card.isParticipating() && card.controller !== context.player && 
+                card.getGlory() < context.source.getGlory() && 
+                card.allowGameAction('removeFate', context)
+            ))})
         });
     }
 }

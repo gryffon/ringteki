@@ -4,11 +4,9 @@ class FertileFields extends ProvinceCard {
     setupCardAbilities() {
         this.action({
             title: 'Draw a card',
-            condition: () => this.game.currentConflict && this.game.currentConflict.conflictProvince === this,
-            handler: () => {
-                this.game.addMessage('{0} uses {1} to draw a card', this.controller, this);
-                this.controller.drawCardsToHand(1);
-            }
+            condition: context => this.game.currentConflict && this.game.currentConflict.conflictProvince === context.source,
+            message: '{0} uses {1} to draw a card',
+            handler: context => context.player.drawCardsToHand(1)
         });
     }
 }

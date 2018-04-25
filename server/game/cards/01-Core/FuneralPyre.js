@@ -6,8 +6,8 @@ class FuneralPyre extends DrawCard {
             title: 'Sacrifice a character to draw',
             cost: ability.costs.sacrifice(card => card.type === 'character'),
             handler: context => {
-                this.game.addMessage('{0} sacrifices {1} using {2} to draw a card', this.controller, context.costs.sacrifice, this);
-                this.controller.drawCardsToHand(1);
+                this.game.addMessage('{0} uses {1}, sacrificing {2} to draw a card', context.player, context.source, context.costs.sacrifice);
+                context.player.drawCardsToHand(1);
             }
         });
     }

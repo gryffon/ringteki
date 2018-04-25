@@ -5,12 +5,10 @@ class HonoredBlade extends DrawCard {
         this.reaction({
             title: 'Gain 1 honor',
             when: {
-                afterConflict: event => event.conflict.isParticipating(this.parent) && event.conflict.winner === this.parent.controller
+                afterConflict: (event, context) => context.source.parent.isParticipating() && event.conflict.winner === context.player
             },
-            handler: () => {
-                this.game.addMessage('{0} uses {1} to gain 1 honor', this.controller, this);
-                this.game.addHonor(this.controller, 1);
-            }
+            message: '{0} uses {1} to gain 1 honor',
+            handler: context => this.game.addHonor(context.player, 1)
         });
     }
 }

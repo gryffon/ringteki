@@ -12,10 +12,7 @@ class IsawaMasahiro extends DrawCard {
                 gameAction: 'discardFromPlay',
                 cardCondition: card => card.getCost() <= 2 && this.game.currentConflict.isParticipating(card)
             },
-            handler: context => {
-                this.game.addMessage('{0} bows {1} to discard {2}', this.controller, this, context.target);
-                this.game.applyGameAction(context, { discardFromPlay: context.target });
-            }
+            message: '{0} bows {1} to discard {2}'
         });
     }
 }

@@ -5,7 +5,7 @@ class Deathseeker extends DrawCard {
         this.reaction({
             title: 'Remove fate/discard character',
             when: {
-                afterConflict: event => event.conflict.loser === this.controller && event.conflict.isAttacking(this)
+                afterConflict: (event, context) => event.conflict.loser === context.player && context.source.isAttacking()
             },
             cost: ability.costs.sacrificeSelf(),
             target: {
@@ -15,10 +15,10 @@ class Deathseeker extends DrawCard {
             },
             handler: context => {
                 if(context.target.fate === 0) {
-                    this.game.addMessage('{0} sacrifices {1} to discard {2}', context.player, this, context.target);
+                    this.game.addMessage('{0} sacrifices {1} to discard {2}', context.player, context.source, context.target);
                     this.game.applyGameAction(context, { discardFromPlay: context.target });
                 } else {
-                    this.game.addMessage('{0} sacrifices {1} to remove 1 fate from {2}', context.player, this, context.target);
+                    this.game.addMessage('{0} sacrifices {1} to remove 1 fate from {2}', context.player, context.source, context.target);
                     this.game.applyGameAction(context, { removeFate: context.target });                 
                 }
             }

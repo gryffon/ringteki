@@ -4,18 +4,17 @@ class KakitaAsami extends DrawCard {
     setupCardAbilities() {
         this.action ({
             title: 'Take one honor from your opponent',
-            condition: () => {
-                if(!this.isParticipating() || this.game.currentConflict.conflictType !== 'political' || !this.controller.opponent) {
+            condition: context => {
+                if(!context.source.isParticipating() || this.game.currentConflict.conflictType !== 'political' || !context.player.opponent) {
                     return false;
                 }
 
                 let diff = this.game.currentConflict.attackerSkill - this.game.currentConflict.defenderSkill;
-                return (diff > 0 && this.controller.isAttackingPlayer()) || (diff < 0 && this.controller.isDefendingPlayer());
+                return context.player.isAttackingPlayer() ? diff > 0 : diff < 0;
             },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to take 1 honor from {2}', context.player, context.source, context.player.opponent);
-                this.game.transferHonor(context.player.opponent, context.player, 1);
-            }
+            message: '{0} uses {1} to take 1 honor from {2}',
+            messageItems: context => [context.player.opponent],
+            handler: context => this.game.transferHonor(context.player.opponent, context.player, 1)
         });
     }
 }

@@ -5,10 +5,11 @@ class ArtisanAcademy extends DrawCard {
         this.action({
             title: 'Make top card of conflict deck playable',
             phase: 'conflict',
-            condition: () => this.controller.conflictDeck.size() > 0,
-            handler: () => {
-                let topCard = this.controller.conflictDeck.first();
-                this.game.addMessage('{0} uses {1} to reveal the top card of their conflict deck: {2}', this.controller, this, topCard);
+            condition: context => context.player.conflictDeck.size() > 0,
+            effect: 'reveal the top card of their conflict deck: {1}',
+            messageItems: context => context.player.conflictDeck.first(),
+            handler: context => {
+                let topCard = context.player.conflictDeck.first();
                 if(topCard.type === 'event') {
                     topCard.abilities.reactions.forEach(reaction => reaction.registerEvents());
                 }
@@ -16,7 +17,7 @@ class ArtisanAcademy extends DrawCard {
                     until: {
                         onCardMoved: event => event.card === topCard && event.originalLocation === 'conflict deck',
                         onPhaseEnded: event => event.phase === 'conflict',
-                        onDeckShuffled: event => event.player === this.controller && event.deck === 'conflict deck'
+                        onDeckShuffled: event => event.player === context.player && event.deck === 'conflict deck'
                     },
                     effect: [
                         ability.effects.showTopConflictCard,

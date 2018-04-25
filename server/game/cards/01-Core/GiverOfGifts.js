@@ -6,14 +6,14 @@ class GiverOfGifts extends DrawCard {
             title: 'Move an attachment',
             target: {
                 cardType: 'attachment',
-                cardCondition: card => card.controller === this.controller && card.location === 'play area'
+                cardCondition: (card, context) => card.controller === context.player && card.location === 'play area'
             },
-            handler: context => this.game.promptForSelect(this.controller, {
-                source: this,
+            handler: context => this.game.promptForSelect(context.player, {
+                source: context.source,
                 cardType: 'character',
-                cardCondition: card => this.controller.canAttach(context.target, card) && card.controller === this.controller && card !== context.target.parent,
+                cardCondition: card => context.player.canAttach(context.target, card) && card.controller === context.player && card !== context.target.parent,
                 onSelect: (player, card) => {
-                    this.game.addMessage('{0} uses {1} to move {2} from {3} to {4}', player, this, context.target, context.target.parent, card);
+                    this.game.addMessage('{0} uses {1} to move {2} from {3} to {4}', player, context.source, context.target, context.target.parent, card);
                     player.attach(context.target, card);
                     return true;
                 }

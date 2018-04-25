@@ -30,23 +30,20 @@ class PlayTogashiKazueAsAttachment extends PlayAttachmentAction {
 }
 
 class TogashiKazue extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.abilities.playActions.push(new PlayTogashiKazueAsAttachment(this, this.owner, this.cardData));
         this.action({
             title: 'Steal a fate',
-            condition: () => this.type === 'attachment' && this.parent.isParticipating(),
+            condition: context => context.source.type === 'attachment' && context.source.parent.isParticipating(),
             printedAbility: false,
             target: {
                 activePromptTitle: 'Choose a character',
                 cardType: 'character',
-                gameAction: 'removeFate',
-                cardCondition: card => card.isParticipating() && card !== this.parent
+                gameAction: context => ability.actions.moveFate(context.source),
+                cardCondition: (card, context) => card.isParticipating() && card !== context.source.parent
             },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to steal a fate from {2} and place it on {3}', this.controller, this, context.target, this.parent);
-                let event = this.game.applyGameAction(context, { removeFate: context.target })[0];
-                event.recipient = context.source.parent;
-            }
+            effect: 'steal a fate from {0} and place it on {1}',
+            effectItems: context => context.source.parent
         });
     }
 

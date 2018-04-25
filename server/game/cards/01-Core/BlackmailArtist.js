@@ -5,15 +5,12 @@ class BlackmailArtist extends DrawCard {
         this.reaction({
             title: 'Take 1 honor',
             when: {
-                afterConflict: event => (event.conflict.isParticipating(this) && 
-                        event.conflict.winner === this.controller && 
-                        this.controller.opponent &&
-                        event.conflict.conflictType === 'political')
+                afterConflict: (event, context) => context.source.isParticipating() && event.conflict.winner === context.player && 
+                                                   context.player.opponent && event.conflict.conflictType === 'political'
             },
-            handler: () => {
-                this.game.addMessage('{0} uses {1} to take 1 honor from {2}', this.controller, this, this.controller.opponent);
-                this.game.transferHonor(this.controller.opponent, this.controller, 1);
-            }
+            effect: 'take 1 honor from {0}',
+            effectItems: context => context.player.opponent,
+            handler: context => this.game.transferHonor(context.player.opponent, context.player, 1)
         });
     }
 }

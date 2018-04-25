@@ -1,16 +1,15 @@
 const DrawCard = require('../../drawcard.js');
 
 class CourtMask extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.action({
             title: 'Return court mask to hand',
-            handler: context => {
-                this.game.addMessage('{0} returns {1} to their hand, dishonoring {2}', this.controller, this, this.parent);
-                this.game.applyGameAction(context, {
-                    returnToHand: this,
-                    dishonor: this.parent
-                });
-            }
+            message: '{0} returns {1} to their hand, dishonoring {2}',
+            messageItems: context => [context.source.parent],
+            handler: context => this.game.openEventWindow([
+                GameActions.eventTo.returnToHand(context.source, context),
+                GameActions.eventTo.dishonor(context.source.parent, context)
+            ])
         });
     }
     

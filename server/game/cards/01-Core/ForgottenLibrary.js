@@ -7,10 +7,8 @@ class ForgottenLibrary extends DrawCard {
             when: {
                 onPhaseStarted: event => event.phase === 'draw'
             },
-            handler: () => {
-                this.game.addMessage('{0} uses {1} to draw a card', this.controller, this);
-                this.controller.drawCardsToHand(1);
-            }
+            message: '{0} uses {1} to draw a card',
+            handler: context => context.player.drawCardsToHand(1)
         });
     }
 }

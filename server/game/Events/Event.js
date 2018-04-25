@@ -1,11 +1,12 @@
 const _ = require('underscore');
 
 class Event {
-    constructor(name, params, handler) {
+    constructor(name, params, handler, gameAction) {
         this.name = name;
         this.cancelled = false;
         this.resolved = false;
         this.handler = handler;
+        this.gameAction = gameAction;
         this.window = null;
         this.thenEvents = [];
         this.getResult = () => {
@@ -46,7 +47,7 @@ class Event {
             return;
         }
         if(this.gameAction) {
-            if(!this.card || !this.card.allowGameAction(this.gameAction, this.context)) {
+            if(!this.card || !this.gameAction.canAffect(this.card)) {
                 this.cancel();
                 return;
             }

@@ -7,16 +7,17 @@ class CallingInFavors extends DrawCard {
             cost: ability.costs.dishonor(() => true),
             target: {
                 cardType: 'attachment',
-                cardCondition: card => card.controller !== this.controller && card.location === 'play area'
+                cardCondition: (card, context) => card.controller !== context.player && card.location === 'play area'
             },
+            effect: 'take control of {0} and attach it to {1}',
+            effectItems: context => context.costs.dishonor,
             handler: context => {
-                context.target.controller = this.controller;
-                if(this.controller.canAttach(context.target, context.costs.dishonor)) {
-                    this.game.addMessage('{0} plays {1}, dishonoring {2} in order to take control of {3} and attach it to {2}', this.controller, this, context.costs.dishonor, context.target);
-                    this.controller.attach(context.target, context.costs.dishonor);
+                context.target.controller = context.player;
+                if(context.player.canAttach(context.target, context.costs.dishonor)) {
+                    context.player.attach(context.target, context.costs.dishonor);
                 } else {
-                    this.game.addMessage('{0} plays {1}, dishonoring {2} but {3} cannot attach to them so it is discarded', this.controller, this, context.costs.dishonor, context.target);
-                    this.game.applyGameAction(context, { discardFromPlay: context.target });
+                    this.game.addMessage('{0} cannot be attached to {1} so it is discarded', context.target, context.costs.dishonor);
+                    this.game.openEventWindow(GameActions.eventTo.discardFromPlay(context.target, context));
                 }
             }
         });

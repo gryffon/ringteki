@@ -4,16 +4,15 @@ class HidaGuardian extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Give a character a bonus for each holding',
-            condition: () => this.isParticipating(),
+            condition: context => context.source.isParticipating(),
             target: {
-                source: this,
                 cardType: 'character',
-                cardCondition: card => card.isParticipating() && card !== this
+                cardCondition: (card, context) => card.isParticipating() && card !== context.source
             },
             handler: context => {
-                let bonus = 2 * this.controller.getNumberOfHoldingsInPlay();
-                this.game.addMessage('{0} uses {1} to give {2} +{3}/+{3}', this.controller, this, context.target, bonus);
-                this.untilEndOfConflict(ability => ({
+                let bonus = 2 * context.player.getNumberOfHoldingsInPlay();
+                this.game.addMessage('{0} uses {1} to give {2} +{3}/+{3}', context.player, context.source, context.target, bonus);
+                context.source.untilEndOfConflict(ability => ({
                     match: context.target,
                     effect: [
                         ability.effects.modifyMilitarySkill(bonus),

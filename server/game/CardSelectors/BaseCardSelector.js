@@ -20,7 +20,7 @@ class BaseCardSelector {
         if(context.stage === 'target' && !card.allowGameAction('target', context)) {
             return false;
         }
-        if(this.gameAction && !card.allowGameAction(this.gameAction, context)) {
+        if(this.gameAction && !this.gameAction.canAffect(card)) {
             return false;
         }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);

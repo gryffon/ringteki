@@ -6,9 +6,10 @@ class DisplayOfPower extends DrawCard {
         this.reaction({
             title: 'Cancel opponent\'s ring effect and claim and resolve the ring',
             when: {
-                afterConflict: event => event.conflict.loser === this.controller && event.conflict.conflictUnopposed
+                afterConflict: (event, context) => event.conflict.loser === context.player && event.conflict.conflictUnopposed
             },
             handler: () => {
+                // TODO: Fix this so it can be copied if they ever print a card which can copy it...
                 this.eventRegistrar = new EventRegistrar(this.game, this);
                 this.eventRegistrar.register([{ 'onResolveRingEffect:cancelinterrupt': 'displayOfPowerOnResolveRingEffect' }]);
                 this.game.addMessage('{0} uses {1} at {2}', this.controller, this, this.game.currentConflict.conflictProvince);

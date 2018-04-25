@@ -5,11 +5,11 @@ class IntimidatingHida extends DrawCard {
         this.reaction({
             title: 'Make opponent lose honor',
             when: {
-                onConflictPass: event => event.conflict.attackingPlayer !== this.controller
+                onConflictPass: (event, context) => event.conflict.attackingPlayer !== context.player.opponent
             },
-            handler: () => {
-                let otherPlayer = this.game.getOtherPlayer(this.controller);
-                this.game.addMessage('{0} uses {1} to make {2} lose an honor', this.controller, this, otherPlayer);
+            handler: context => {
+                let otherPlayer = this.game.getOtherPlayer(context.player);
+                this.game.addMessage('{0} uses {1} to make {2} lose an honor', context.player, this, otherPlayer);
                 this.game.addHonor(otherPlayer, -1);
             }
         });

@@ -77,7 +77,7 @@ const Costs = {
     dishonor: condition => CostBuilders.dishonor.select(condition),
     /**
      * Cost that will break the province that initiated the ability.
-     */    
+     */
     breakSelf: () => CostBuilders.break.self(),
     /**
      * Cost that will put into play the card that initiated the ability.

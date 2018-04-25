@@ -4,32 +4,29 @@ class GraspOfEarth extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Opponent\'s cards cannot join this conflict',
-            condition: () => this.game.currentConflict,
+            condition: context => this.game.currentConflict && context.player.opponent,
             cost: ability.costs.bowSelf(),
-            handler: () => {
-                this.game.addMessage('{0} bows {1} to prevent the opponent from bringing characters to the conflict',this.controller,this);
-
+            message: '{0} bows {1} to prevent the opponent from bringing characters to the conflict',
+            handler: context => {
                 //Cannot move characters into the conflict
-                this.controller.opponent.cardsInPlay.each(card => {
-                    if(card.type === 'character') {
-                        card.untilEndOfConflict(ability => ({
-                            match: card,
-                            effect: ability.effects.cardCannot('moveToConflict')
-                        }));
-                    }
+                context.player.opponent.cardsInPlay.each(card => {
+                    context.source.untilEndOfConflict(ability => ({
+                        match: card,
+                        effect: ability.effects.cardCannot('moveToConflict')
+                    }));
                 });
 
                 //Cannot play characters
-                this.untilEndOfConflict(ability => ({
+                context.source.untilEndOfConflict(ability => ({
                     targetController: 'opponent',
-                    effect: ability.effects.playerCannot('play', context => context.source.type === 'character')                    
+                    effect: ability.effects.playerCannot('play', context => context.source.type === 'character' && context.source.location === 'hand')                    
                 }));
             }
         });      
     }
 
     canAttach(card) {
-        if(card.hasTrait('shugenja') === false || card.controller !== this.controller) {
+        if(card.hasTrait('shugenja') === false || card.controller !== context.player) {
             return false;
         }
 

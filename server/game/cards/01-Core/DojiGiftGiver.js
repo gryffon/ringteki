@@ -5,17 +5,15 @@ class DojiGiftGiver extends DrawCard {
         this.action({
             title: 'Bow a character',
             cost: ability.costs.giveFateToOpponent(1),
-            condition: () => this.isParticipating() && this.controller.opponent,
+            condition: context => context.source.isParticipating() && context.player.opponent,
             target: {
                 player: 'opponent',
                 cardType: 'character',
                 gameAction: 'bow',
-                cardCondition: card => card.isParticipating() && card.controller !== this.controller
+                cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player
             },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to give 1 fate to {2}, forcing them to bow {3}', context.player, this, context.player.opponent, context.target);
-                this.game.applyGameAction(context, { bow: context.target });
-            }
+            message: '{0} uses {1} to give 1 fate to {3}, forcing them to bow {2}',
+            messageItems: context => context.player.opponent
         });
     }
 }

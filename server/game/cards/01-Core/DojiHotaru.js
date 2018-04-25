@@ -5,13 +5,11 @@ class DojiHotaru extends DrawCard {
         this.reaction({
             title: 'Resolve ring effect',
             when: {
-                onClaimRing: event => (event.conflict && event.conflict.isParticipating(this) && 
-                        event.conflict.conflictType === 'political' && event.player === this.controller)
+                onClaimRing: (event, context) => event.conflict && context.source.isParticipating() && 
+                                                 event.conflict.conflictType === 'political' && event.player === context.player
             },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to resolve the ring\'s effect again', this.controller, this);
-                context.event.conflict.resolveRing(context.event.conflict.attackingPlayer, false);
-            }
+            message: '{0} uses {1} to resolve the ring\'s effect again',
+            handler: context => context.event.conflict.resolveRing(context.event.conflict.attackingPlayer, false)
         });
     }
 }

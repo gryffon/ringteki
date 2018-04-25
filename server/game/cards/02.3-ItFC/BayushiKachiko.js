@@ -7,14 +7,13 @@ class BayushiKachiko extends DrawCard {
             condition: () => this.isParticipating() && this.game.currentConflict.conflictType === 'political',
             target: {
                 cardType: 'character',
-                gameAction: 'sendHome',
+                gameAction: ability.actions.sendHome(),
                 cardCondition: card => card.getPoliticalSkill() < this.getPoliticalSkill()
             },
             handler: context => {
-                this.game.addMessage('{0} uses {1} to send {2} home', this.controller, this, context.target);
-                let sendHomeEvent = this.game.applyGameAction(context, { sendHome: context.target })[0];
+                let sendHomeEvent = GameActions.eventTo.sendHome(context.target, context);
                 let menuEvent = this.game.getEvent('menuEvent', { order: sendHomeEvent.order + 1 }, event => {
-                    if(!context.target.allowGameAction('bow', context) || sendHomeEvent.cancelled) {
+                    if(!GameActions.canBeAffectedBy.bow(context.target, context) || sendHomeEvent.cancelled) {
                         event.cancelThenEvents();
                         return;
                     }
@@ -28,8 +27,8 @@ class BayushiKachiko extends DrawCard {
                         ]
                     });
                 });
-                menuEvent.addThenGameAction(context, { bow: context.target });
-                sendHomeEvent.window.addEvent(menuEvent);
+                menuEvent.addThenEvent(GameActions.eventTo.bow(context.target, context));
+                this.game.openEventWindow(;
             }
         });
     }

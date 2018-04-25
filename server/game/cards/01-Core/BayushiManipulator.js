@@ -7,10 +7,8 @@ class BayushiManipulator extends DrawCard {
             when: {
                 onHonorDialsRevealed: () => true
             },
-            handler: () => {
-                this.game.addMessage('{0} uses {1} to increase their bid by 1', this.controller, this);
-                this.controller.honorBid++;
-            }
+            effect: 'increase their bid by 1',
+            handler: context => context.player.honorBid++
         });
     }
 }

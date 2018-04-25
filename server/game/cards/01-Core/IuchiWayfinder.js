@@ -5,8 +5,7 @@ class IuchiWayfinder extends DrawCard {
         this.reaction({
             title: 'Reveal a province',
             when: {
-                onCardEntersPlay: (event, context) => event.card === context.source && 
-                                                      this.game.allCards.any(card => card.isProvince && card.controller === context.player.opponent)
+                onCardEntersPlay: event => event.card === this
             },
             handler: () => this.game.promptForSelect(this.controller, {
                 source: this,

@@ -5,15 +5,15 @@ class DaimyosFavor extends DrawCard {
         this.action({
             title: 'Bow to reduce attachment cost',
             cost: ability.costs.bowSelf(),
-            handler: () => {
-                this.game.addMessage('{0} bows {1} to reduce the cost of the next attachment they play on {2} by 1', this.controller, this, this.parent);
-                this.untilEndOfPhase(ability => ({
+            handler: context => {
+                this.game.addMessage('{0} bows {1} to reduce the cost of the next attachment they play on {2} by 1', context.player, context.source, context.source.parent);
+                context.source.untilEndOfPhase(ability => ({
                     targetType: 'player',
                     effect: ability.effects.reduceCost({
                         playingTypes: 'play',
                         amount: 1,
                         match: card => card.type === 'attachment',
-                        targetCondition: target => target === this.parent,
+                        targetCondition: target => target === context.source.parent,
                         limit: ability.limit.fixed(1)
                     })
                 }));
