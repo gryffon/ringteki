@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class Ambush extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.action({
             title: 'Put characters from you hand or provinces into play',
             condition: () => this.game.currentConflict,
@@ -13,11 +13,10 @@ class Ambush extends DrawCard {
                 numCards: 2,
                 multiSelect: true,
                 cardType: 'character',
-                gameAction: 'putIntoConflict',
-                cardCondition: card => (
-                    card.isFaction('scorpion') && !card.facedown &&
-                    ['hand', 'province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && 
-                    card.controller === this.controller
+                gameAction: ability.actions.putIntoConflict(),
+                cardCondition: (card, context) => (
+                    card.isFaction('scorpion') && card.controller === context.player &&
+                    ['hand', 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location)   
                 )
             }
         });

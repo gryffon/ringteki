@@ -5,6 +5,7 @@ class WarDogMaster extends DrawCard {
     setupCardAbilities() {
         this.reaction({
             title: 'Gain a +X/+0 bonus',
+            // TODO: make discard a cost here
             when: {
                 onConflictDeclared: event => event.conflict.attackers.includes(this) && this.controller.dynastyDeck.size() > 0
             },

@@ -10,7 +10,13 @@ class AbilityTargetCard {
     }
 
     canResolve(context) {
+        this.selector.setGameAction(this.properties.gameAction, context);
         return this.selector.hasEnoughTargets(context, true);
+    }
+
+    getGameAction(context) {
+        this.selector.setGameAction(this.properties.gameAction, context);
+        return this.selector.gameAction.filter(this.selector.gameAction.setTarget(context.targets[this.name]));
     }
 
     getAllLegalTargets(context, pretarget = true) {
@@ -94,6 +100,7 @@ class AbilityTargetCard {
         if(!_.isArray(cards)) {
             cards = [cards];
         }
+        this.selector.setGameAction(this.properties.gameAction, context);
         return (_.all(cards, card => this.selector.canTarget(card, context)) &&
                 this.selector.hasEnoughSelected(cards) &&
                 !this.selector.hasExceededLimit(cards));

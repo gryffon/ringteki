@@ -7,11 +7,10 @@ class BayushiShoju extends DrawCard {
             limit: ability.limit.perRound(2),
             condition: context => context.source.isParticipating() && this.game.currentConflict.conflictType === 'political',
             target: {
-                source: this,
                 cardType: 'character',
-                cardCondition: card => card.isParticipating() && card.controller !== this.controller
+                cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player
             },
-            effect: 'reduce {0}\'s political skill by 1.  They will die if they reach 0',
+            effect: 'reduce {0}\'s political skill by 1 - they will die if they reach 0',
             handler: context => context.source.untilEndOfConflict(ability => ({
                 match: context.target,
                 effect: [

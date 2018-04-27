@@ -3,21 +3,13 @@ const AbilityLimit = require('./abilitylimit.js');
 const BaseAbility = require('./baseability.js');
 const Costs = require('./costs.js');
 
-const actionToMessage = {
-
-    moveToConflict: '{0} uses {1} to move {2} into the conflict',
-    placeFate: '{0} uses {1} to place a fate on {2}',
-    putIntoConflict: '{0} uses {1}, putting {2} into the conflict',
-    ready: '{0} uses {1} to ready {2}'
-
-};
-
 class CardAbility extends BaseAbility {
     constructor(game, card, properties) {
         super(properties);
 
         this.game = game;
         this.card = card;
+        this.properties = properties;
         this.title = properties.title;
         this.limit = properties.limit || AbilityLimit.perRound(1);
         this.limit.registerEvents(game);
@@ -28,7 +20,6 @@ class CardAbility extends BaseAbility {
         this.cannotTargetFirst = !!properties.cannotTargetFirst;
         this.doesNotTarget = properties.doesNotTarget;
         this.methods = properties.methods || [];
-        this.handler = properties.handler;
         this.max = properties.max;
         this.abilityIdentifier = properties.abilityIdentifier;
         if(!this.abilityIdentifier) {
@@ -102,8 +93,90 @@ class CardAbility extends BaseAbility {
         return this.card.type === 'event' ? context.player.isCardInPlayableLocation(context.source, 'play') : this.location.includes(this.card.location);
     }
 
+    displayMessage(context) {
+        let messageArgs = [];
+        // Player1 plays Assassination
+        messageArgs.push(this.game.gameChat.formatMessage('{0} {1} {2}', context.player, context.source.type === 'event' ? 'plays' : 'uses', context.source));
+        let costMessages = this.cost.map(cost => {
+            if(cost.action && cost.action.cost) {
+                return this.game.gameChat.formatMessage(cost.action.cost, context.cost[cost.action.name]);
+            }
+        }).filter(obj => obj);
+        if(costMessages.length > 0) {
+            // , 
+            messageArgs.push(', ');
+            // paying 3 honor
+            messageArgs.push(costMessages);
+        } else {
+            messageArgs = messageArgs.concat('','');
+        }
+        let effectMessage = this.properties.effect;
+        let effectArgs = [this.getDefaultTargetForGameAction(context)];
+        if(!effectMessage) {
+            let gameActions = this.getGameActions(context);
+            if(gameActions.length > 0) {
+                // effects with multiple game messages really need their own effect message
+                effectMessage = gameActions[0].effect;
+                if(gameActions[0].effectItems) {
+                    effectArgs.concat(gameActions[0].effectItems(context));
+                }
+            }
+        } else if(this.properties.effectItems) {
+            effectArgs = effectArgs.concat(this.properties.effectItems(context));
+        }
+
+        if(effectMessage) {
+            // to 
+            messageArgs.push(' to ');
+            // discard Stoic Gunso
+            messageArgs.push(this.game.gameChat.formatMessage(effectMessage, effectArgs));
+        }
+        this.game.addMessage('{0}{1}{2}{3}{4}', messageArgs);
+    }
+
+    getGameActions(context) {
+        if(this.targets.length > 0) {
+            // if there are any targets, look for gameActions attached to them
+            return this.targets.reduce((array, target) => array.concat(target.getGameAction(context)), []);
+        } else if(this.properties.gameAction) {
+            // look for a gameAction on the ability itself, on an attachment execute that action on its parent, otherwise on the card itself
+            let gameAction = this.properties.gameAction;
+            if(typeof gameAction === 'function') {
+                gameAction = gameAction(context);
+            }
+            if(gameAction.setTarget(this.getDefaultTargetForGameAction(context))) {
+                return [gameAction];
+            }
+        }
+        return [];
+    }
+
+    getDefaultTargetForGameAction(context) {
+        if(context.target) {
+            return context.target;
+        } else if(context.ring) {
+            return context.ring;
+        } else if(context.source.parent) {
+            return context.source.parent;
+        }
+        return context.source;
+    }
+
     executeHandler(context) {
-        this.handler(context);
+        for(const effectType of ['untilEndOfConflict', 'untilEndOfPhase', 'untilEndOfTurn']) {
+            if(this.properties[effectType]) {
+                let properties = Object.assign({}, { match: this.getDefaultTargetForGameAction(context) }, this.properties[effectType]);
+                context.source[effectType](properties);
+            }
+        }
+
+        if(this.properties.handler) {
+            // if there's a handler, execute that
+            this.properties.handler(context);
+        } else {
+            // Otherwise get any gameActions for this ability, get their events, and execute simultaneously
+            this.game.openEventWindow(this.getGameActions().reduce((array, action) => array.concat(action.getEventArray()), []));
+        } 
     }
 
     isCardPlayed() {

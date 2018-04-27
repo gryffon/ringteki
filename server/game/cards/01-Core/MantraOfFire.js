@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class MantraOfFire extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Add 1 fate to a monk and draw a card',
             when: {
@@ -9,11 +9,12 @@ class MantraOfFire extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                gameAction: 'placeFate',
+                gameAction: ability.actions.placeFate(),
                 cardCondition: card => card.hasTrait('monk') || card.attachments.any(card => card.hasTrait('monk'))
             },
+            effect: 'add fate to {2} and draw a card',
             handler: context => {
-                this.game.addMessage('{0} plays {1} to add fate to {2} and draw a card', this.controller, this, context.target);
+                this.game.addMessage('{0} plays {1} to ', this.controller, this, context.target);
                 this.game.applyGameAction(context, { placeFate: context.target }, [{
                     handler: () => this.controller.drawCardsToHand(1)
                 }]);

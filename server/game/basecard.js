@@ -4,6 +4,7 @@ const AbilityDsl = require('./abilitydsl.js');
 const CardAction = require('./cardaction.js');
 const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
+const GameActions = require('./GameActions/GameActions.js');
 const TriggeredAbility = require('./triggeredability');
 
 class BaseCard extends EffectSource {
@@ -55,8 +56,13 @@ class BaseCard extends EffectSource {
         this.abilities.reactions.push(reaction);
     }
 
+    wouldInterrupt(properties) {
+        var reaction = new TriggeredAbility(this.game, this, 'cancelinterrupt', properties);
+        this.abilities.reactions.push(reaction);        
+    }
+
     interrupt(properties) {
-        var reaction = new TriggeredAbility(this.game, this, properties.canCancel ? 'cancelinterrupt' : 'interrupt', properties);
+        var reaction = new TriggeredAbility(this.game, this, 'interrupt', properties);
         this.abilities.reactions.push(reaction);
     }
 
@@ -164,7 +170,7 @@ class BaseCard extends EffectSource {
     }
 
     canTriggerAbilities(context) {
-        return !this.facedown && this.allowGameAction('triggerAbilities', context);
+        return !this.facedown && this.checkRestrictions('triggerAbilities', context);
     }
     
     getMenu() {
@@ -200,15 +206,17 @@ class BaseCard extends EffectSource {
     }
 
     allowGameAction(actionType, context = null) {
-        return (!this.getEffects('abilityRestrictions').some(restriction => restriction.isMatch(actionType, context)) &&
-            this.controller.allowGameAction(actionType, context));
+        if(GameActions.canBeAffectedBy[actionType]) {
+            return GameActions.canBeAffectedBy[actionType](this, context);
+        }
+        return this.checkRestrictions(actionType, context);
     }
 
-    allowEffectFrom(source) {
-        let abilityRestrictions = this.getEffects('abilityRestrictions');
-        let context = { game: this.game, player: source.controller, source: source, stage: 'effect' };
-        return !abilityRestrictions.some(restriction => restriction.isMatch('applyEffect', context));
+    checkRestrictions(actionType, context = null) {
+        return !this.getEffects('abilityRestrictions').some(restriction => restriction.isMatch(actionType, context) &&
+            this.controller.checkRestrictions(actionType, context));
     }
+
 
     addToken(type, number = 1) {
         if(_.isUndefined(this.tokens[type])) {

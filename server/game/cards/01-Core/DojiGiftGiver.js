@@ -9,11 +9,9 @@ class DojiGiftGiver extends DrawCard {
             target: {
                 player: 'opponent',
                 cardType: 'character',
-                gameAction: 'bow',
+                gameAction: ability.actions.bow(),
                 cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player
-            },
-            message: '{0} uses {1} to give 1 fate to {3}, forcing them to bow {2}',
-            messageItems: context => context.player.opponent
+            }
         });
     }
 }

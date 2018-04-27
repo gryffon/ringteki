@@ -8,7 +8,7 @@ class AdeptOfTheWaves extends DrawCard {
                 cardType: 'character',
                 cardCondition: card => card.location === 'play area'
             },
-            effect: 'grant Covert during Water conflicts to {2}',
+            effect: 'grant Covert during Water conflicts to {0}',
             untilEndOfPhase: {
                 condition: () => this.game.currentConflict && this.game.currentConflict.hasElement('water'),
                 effect: ability.effects.addKeyword('covert')

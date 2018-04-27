@@ -135,6 +135,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             this.context.player.incrementAbilityMax(this.context.ability.maxIdentifier);
         }
 
+        this.context.ability.displayMessage(this.context);
 
         // If this is a card ability, raise an initiateAbilityEvent
         if(this.context.ability.isCardAbility()) {

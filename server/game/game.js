@@ -20,6 +20,7 @@ const HandlerMenuPrompt = require('./gamesteps/handlermenuprompt.js');
 const SelectCardPrompt = require('./gamesteps/selectcardprompt.js');
 const SelectRingPrompt = require('./gamesteps/selectringprompt.js');
 const GameWonPrompt = require('./gamesteps/GameWonPrompt');
+const GameActions = require('./GameActions/GameActions');
 const EventBuilder = require('./Events/EventBuilder.js');
 const EventWindow = require('./Events/EventWindow.js');
 const ThenEventWindow = require('./Events/ThenEventWindow');
@@ -934,14 +935,12 @@ class Game extends EventEmitter {
      * @param {Function} func - (Array or BaseCard) => undefined
      * @returns {undefined}
      */
-    applyGameAction(context, actions, additionalEventProps = []) {
+    applyGameAction(context, actions) {
         if(!context) {
             context = new AbilityContext({ game: this });
         }
-        let events = additionalEventProps.map(event => EventBuilder.for(event.name || 'unnamedEvent', event.params || {}, event.handler));
-        _.each(actions, (cards, action) => {
-            events = this.getEventsForGameAction(action, cards, context).concat(events);
-        });
+        let actionPairs = Object.entries(actions);
+        let events = actionPairs.reduce((array, [action, cards]) => array.concat(GameActions.eventArrayTo[action](cards, context)), []);
         if(events.length > 0) {
             this.openEventWindow(events);
         }

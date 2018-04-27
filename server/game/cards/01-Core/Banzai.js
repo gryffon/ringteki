@@ -31,7 +31,7 @@ class Banzai extends DrawCard {
                                 context.target = card;
                                 context.dontRaiseCardPlayed = true;
                                 this.game.raiseInitiateAbilityEvent({ card: context.source, context: context }, () => {
-                                    this.untilEndOfConflict(ability => ({
+                                    context.source.untilEndOfConflict(ability => ({
                                         match: card,
                                         effect: ability.effects.modifyMilitarySkill(2)
                                     }));

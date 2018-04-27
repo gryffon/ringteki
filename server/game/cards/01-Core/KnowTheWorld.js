@@ -5,24 +5,25 @@ class KnowTheWorld extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Switch a claimed ring with an unclaimed one',
-            condition: () => _.any(this.game.rings, ring => ring.claimedBy === this.controller.name) && _.any(this.game.rings, ring => ring.isUnclaimed()),
-            handler: () => {
-                this.game.promptForRingSelect(this.controller, {
-                    source: this,
+            condition: context => _.any(this.game.rings, ring => ring.claimedBy === context.player) && _.any(this.game.rings, ring => ring.isUnclaimed()),
+            handler: context => {
+                // TODO: Does this need a condition?
+                this.game.promptForRingSelect(context.player, {
+                    source: context.source,
                     activePromptTitle: 'Choose a ring to return',
-                    ringCondition: ring => ring.claimedBy === this.controller.name,
+                    ringCondition: ring => ring.claimedBy === context.player.name,
                     onSelect: (player, ringToReturn) => {
                         this.game.promptForRingSelect(player, {
-                            source: this,
+                            source: context.source,
                             activePromptTitle: 'Choose a ring to take',
                             ringCondition: ring => ring.isUnclaimed(),
                             onSelect: (player, ring) => {
-                                this.game.addMessage('{0} plays {1}, returning the {2} ring and taking the {3} ring', player, this, ringToReturn.element, ring.element);
+                                this.game.addMessage('{0} returns {1} and takes {2}', player, ringToReturn, ring);
                                 let events = [];
                                 events.push(this.game.getEvent('onReturnRing', { ring: ringToReturn }, () => ringToReturn.resetRing()));
                                 events.push(this.game.getEvent('unnamedEvent', {}, () => {
                                     ring.claimRing(player);
-                                    if(this.controller.allowGameAction('takeFateFromRings')) {
+                                    if(player.allowGameAction('takeFateFromRings')) {
                                         this.game.addFate(player, ring.fate);
                                         ring.removeFate();
                                     }

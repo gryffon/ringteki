@@ -25,10 +25,13 @@ class PlayAttachmentAction extends BaseAction {
         return super.meetsRequirements(context);
     }
 
+    displayMessage(context) {
+        context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target);
+    }
+
     executeHandler(context) {
         this.originalLocation = context.source.location;
         context.player.attach(context.source, context.target, true);
-        context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target);
     }
     
     isCardPlayed() {

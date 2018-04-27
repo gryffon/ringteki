@@ -1,18 +1,22 @@
-const GameAction = require('./GameAction');
+const CardGameAction = require('./CardGameAction');
 
-class BowAction extends GameAction {
+class BowAction extends CardGameAction {
     constructor() {
         super('bow');
+        this.effect = 'bow {0}';
+        this.cost = 'bowing {0}';
     }
 
     canAffect(card) {
         if(card.location !== 'play area' || card.bowed) {
             return false;
         }
-        return card.allowGameAction(this.action, this.context);
+        return super.canAffect(card);
     }
 
     getEvent(card) {
-        let event = this.context.game.getEvent('onCardBowed',);
+        return super.createEvent('onCardBowed', { card: card, context: this.context }, () => card.bow());
     }
 }
+
+module.exports = BowAction;

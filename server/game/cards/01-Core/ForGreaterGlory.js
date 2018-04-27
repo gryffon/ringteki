@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 
 class ForGreaterGlory extends DrawCard {
@@ -11,8 +10,11 @@ class ForGreaterGlory extends DrawCard {
                 ))
             },
             max: ability.limit.perConflict(1),
-            message: '{0} uses {1} to add fate to each of their participating Bushi',
-            handler: context => this.game.applyGameAction(context, { placeFate: context.event.conflict.attackers.fliter(card => card.hasTrait('bushi')) })
+            effect: 'add a fate to each of their participating Bushi',
+            handler: context => {
+                let cards = context.event.conflict.attackers.filter(card => card.hasTrait('bushi'));
+                this.game.applyGameAction(context, { placeFate: cards });
+            }
         });
     }
 }

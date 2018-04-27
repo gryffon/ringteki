@@ -11,7 +11,7 @@ class FallenInBattle extends DrawCard {
             max: ability.limit.perConflict(1),
             target: {
                 cardType: 'character',
-                gameAction: 'discardFromPlay',
+                gameAction: ability.actions.discardFromPlay(),
                 cardCondition: card => card.isParticipating()
             }
         });

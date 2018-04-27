@@ -10,7 +10,8 @@ class AsahinaArtisan extends DrawCard {
                 cardCondition: (card, context) => this.game.currentConflict && card !== context.source && 
                                                   card.isFaction('crane') && card.location === 'play area'
             },
-            effect: 'give {0} 3 additional political skill',
+            effect: 'give {0} +3 {1} skill',
+            effectItems: () => 'political',
             untilEndOfConflict: {
                 effect: ability.effects.modifyPoliticalSkill(3)
             }

@@ -3,8 +3,7 @@ const _ = require('underscore');
 const cards = require('../../../server/game/cards');
 const AbilityDsl = require('../../../server/game/abilitydsl');
 const eventNames = [
-    'onCardAddFate',
-    'onCardRemoveFate',
+    'onCardMoveFate',
     'onFateTransfered',
     'onBeginRound',
     'onCardEntersPlay',

@@ -8,7 +8,7 @@ class AkodoGunso extends DrawCard {
                 onCardEntersPlay: (event, context) => event.card === context.source && 
                                                       ['province 1', 'province 2', 'province 3', 'province 4'].includes(event.originalLocation)
             },
-            message: 'refill the province face up',
+            effect: 'refill the province face up',
             handler: context => {
                 let province = context.player.getSourceList(context.event.originalLocation);
                 let card = province.find(card => card.isDynasty);

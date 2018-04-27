@@ -2,22 +2,15 @@ const Event = require('./Event.js');
 const RemoveFateEvent = require('./RemoveFateEvent.js');
 
 class LeavesPlayEvent extends Event {
-    constructor(params, card) {
+    constructor(params, card, gameAction) {
         super('onCardLeavesPlay', params);
         this.handler = this.leavesPlay;
+        this.gameAction = gameAction;
         this.card = card;
         this.options = params.options || {};
 
         if(!this.destination) {
             this.destination = this.card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
-        }
-
-        if(params.isSacrifice) {
-            this.gameAction = 'sacrifice';
-        } else if(this.destination.includes('discard pile')) {
-            this.gameAction = 'discardFromPlay';
-        } else if(this.destination === 'hand') {
-            this.gameAction = 'returnToHand';
         }
     }
 
@@ -30,7 +23,7 @@ class LeavesPlayEvent extends Event {
                 if(attachment.location === 'play area') {
                     let destination = attachment.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
                     destination = attachment.isAncestral() ? 'hand' : destination;
-                    let event = new LeavesPlayEvent({ destination: destination }, attachment);
+                    let event = new LeavesPlayEvent({ destination: destination, isContingent: true }, attachment);
                     event.order = this.order - 1;
                     contingentEvents.push(event);
                 }

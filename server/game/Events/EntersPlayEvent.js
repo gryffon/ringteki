@@ -1,10 +1,12 @@
 const Event = require('./Event.js');
 
 class EntersPlayEvent extends Event {
-    constructor(params, card) {
+    constructor(params, card, fate, gameAction) {
         super('onCardEntersPlay', params);
         this.handler = this.entersPlay;
         this.card = card;
+        this.fate = fate;
+        this.gameAction = gameAction;
         this.originalLocation = card.location;
     }
     

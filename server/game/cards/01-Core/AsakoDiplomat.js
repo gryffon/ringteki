@@ -2,6 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class AsakoDiplomat extends DrawCard {
     setupCardAbilities() {
+        // TODO: add a dedicated game action here?
         this.reaction({
             title: 'Honor or dishonor a character',
             when: {
@@ -16,7 +17,7 @@ class AsakoDiplomat extends DrawCard {
             handler: context => {
                 if(!context.target.allowGameAction('dishonor', context)) {
                     this.game.addMessage('{0} uses {1} to honor {2}', context.player, context.source, context.target);
-                    this.game.openEventWindow(GameActions.eventTo.honor(context.target, context));
+                    this.game.applyGameAction(context, { honor: context.target });
                 } else if(!context.target.allowGameAction('honor', context)) {
                     this.game.addMessage('{0} uses {1} to dishonor {2}', context.player, context.source, context.target);
                     this.game.applyGameAction(context, { dishonor: context.target });

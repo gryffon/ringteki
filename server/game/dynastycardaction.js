@@ -28,8 +28,11 @@ class DynastyCardAction extends BaseAction {
         return super.meetsRequirements(context);
     }
 
-    executeHandler(context) {
+    displayMessage(context) {
         context.game.addMessage('{0} plays {1} with {2} additional fate', context.player, context.source, context.chooseFate);
+    }
+
+    executeHandler(context) {
         let events = context.game.applyGameAction(context, { putIntoPlay: context.source }, [{
             name: 'onCardPlayed',
             params: { player: context.player, card: context.source, originalLocation: context.source.location }

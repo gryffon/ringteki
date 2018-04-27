@@ -16,10 +16,13 @@ class DuplicateUniqueAction extends BaseAction {
         }
         return super.meetsRequirements(context);
     }
+
+    displayMessage(context) {
+        context.game.addMessage('{0} discards a duplicate to add 1 fate to {1}', context.player, context.source);        
+    }
     
     executeHandler(context) {
         let duplicate = context.player.getDuplicateInPlay(context.source);        
-        context.game.addMessage('{0} discards a duplicate to add 1 fate to {1}', context.player, context.source.name);
         context.player.moveCard(context.source, context.source.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
         context.game.applyGameAction(context, { placeFate: duplicate });
     }

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const GameActions = require('../../GameActions/GameActions');
 
 class KitsuSpiritcaller extends DrawCard {
     setupCardAbilities(ability) {

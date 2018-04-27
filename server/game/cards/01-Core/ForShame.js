@@ -6,10 +6,22 @@ class ForShame extends DrawCard {
         this.action({
             title: 'Dishonor or bow a character',
             condition: context => context.player.anyCardsInPlay(card => card.isParticipating() && card.hasTrait('courtier')),
-            target: {
-                cardType: 'character',
-                cardCondition: (card, context) => card.controller !== context.player && card.isParticipating() && 
-                                                  (card.allowGameAction('bow', context) || card.allowGameAction('dishonor', context))
+            targets: {
+                character: {
+                    cardType: 'character',
+                    cardCondition: (card, context) => card.controller !== context.player && card.isParticipating() && 
+                                                      (card.allowGameAction('bow', context) || card.allowGameAction('dishonor', context))    
+                },
+                select: {
+                    mode: 'select',
+                    dependsOn: 'character',
+                    player: 'opponent',
+                    // controls: { type: 'targeting', targets: [context.target] },
+                    choices: {
+                        'Dishonor this character': context => context.targets.character.allowGameAction('dishonor', context),
+                        'Bow this character': context => context.targets.character.allowGameAction('bow', context)
+                    }
+                }
             },
             handler: context => {
                 if(!context.target.allowGameAction('bow', context)) {
@@ -22,7 +34,7 @@ class ForShame extends DrawCard {
                     this.game.promptWithHandlerMenu(context.target.controller, {
                         source: context.source,
                         choices: ['Dishonor this character', 'Bow this character'],
-                        controls: { type: 'targeting', targets: [context.target] },
+                        
                         handlers: [
                             () => {
                                 this.game.addMessage('{0} uses {1} to dishonor {2}', context.player, context.source, context.target);

@@ -113,7 +113,7 @@ class BaseAbility {
             } else if(cost.pay) {
                 return context.game.getEvent('payCost', {}, () => cost.pay(context));
             }
-        }))); 
+        })));
     }
 
     /**
@@ -160,6 +160,9 @@ class BaseAbility {
             }
             return result;
         });
+    }
+
+    displayMessage(context) { // eslint-disable-line no-unused-vars
     }
 
     /**

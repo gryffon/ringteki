@@ -1,21 +1,30 @@
 const Event = require('../Events/Event.js');
 
 class GameAction {
-    constructor(action, context) {
-        this.action = action;
+    constructor(name, context) {
+        this.name = name;
+        this.cards = [];
         this.context = context;
+        this.effect = '';
+        this.cost = '';
     }
 
-    canAffect(card) {
+    checkEventCondition(event) { // eslint-disable-line no-unused-vars
+        return true;
     }
 
-    condition()
+    getEventArray() {
+        return [];
+    }
 
-    getEvent(card, name, params, handler) {
-        let event = new Event(name, params, handler);
-        event.card = card;
+    getEvent() {
+        return this.createEvent('unnamedEvent', {});
+    }
+
+    createEvent(name, params, handler) {
+        let event = new Event(name, params, handler, this);
         event.context = this.context;
-        event.gameAction = this;
+        return event;
     }
 }
 

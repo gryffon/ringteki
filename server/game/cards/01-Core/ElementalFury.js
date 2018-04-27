@@ -11,7 +11,7 @@ class ElementalFury extends ProvinceCard {
                 ringCondition: ring => ring.isUnclaimed(),
                 mode: 'ring'
             },
-            message: '{0} uses {1} to change the ring to {2}',
+            effect: 'change the conflict ring to {0}',
             handler: context => this.game.currentConflict.switchElement(context.ring.element)
         });
     }

@@ -7,6 +7,7 @@ class Event {
         this.resolved = false;
         this.handler = handler;
         this.gameAction = gameAction;
+        this.context = null;
         this.window = null;
         this.thenEvents = [];
         this.getResult = () => {
@@ -46,11 +47,9 @@ class Event {
         if(this.cancelled || this.resolved) {
             return;
         }
-        if(this.gameAction) {
-            if(!this.card || !this.gameAction.canAffect(this.card)) {
-                this.cancel();
-                return;
-            }
+        if(this.gameAction && !this.gameAction.checkEventCondition(this)) {
+            this.cancel();
+            return;
         }
         if(!this.condition(this)) {
             this.cancel();

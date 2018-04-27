@@ -19,7 +19,7 @@ class CourtGames extends DrawCard {
                 }
             },
             effect: '{0}',
-            effectItems: context => context.select === 'Honor a character you control', 'honor a friendly character', 'dishonor an opposing character',
+            effectItems: context => context.select === 'Honor a character you control' ? 'honor a friendly character' : 'dishonor an opposing character',
             handler: context => {
                 if(context.select === 'Honor a character you control') {
                     this.game.promptForSelect(context.player, {
@@ -29,7 +29,7 @@ class CourtGames extends DrawCard {
                         source: context.source,
                         onSelect: (player, card) => {
                             this.game.addMessage('{0} chooses to honor {1}', player, card);
-                            this.game.openEventWindow(GameActions.eventTo.honor(card, context));
+                            this.game.applyGameAction('honor', card, context);
                             return true;
                         }
                     });
@@ -42,7 +42,7 @@ class CourtGames extends DrawCard {
                         source: context.source,
                         onSelect: (player, card) => {
                             this.game.addMessage('{0} chooses to dishonor {1}', player, card);
-                            this.game.openEventWindow(GameActions.eventTo.dishonor(card, context));
+                            this.game.applyGameAction('dishonor', card, context);
                             return true;
                         }
                     });

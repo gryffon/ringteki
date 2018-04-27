@@ -8,7 +8,7 @@ class DefendTheWall extends ProvinceCard {
                 afterConflict: (event, context) => event.conflict.conflictProvince === context.source && 
                                                    event.conflict.winner === context.player
             },
-            message: '{0} uses {1} to resolve the ring effect',
+            effect: 'resolve the ring effect',
             handler: context => context.event.conflict.resolveRing(context.player)
         });
     }

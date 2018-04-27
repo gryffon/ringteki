@@ -13,13 +13,13 @@ class Deathseeker extends DrawCard {
                 cardCondition: (card, context) => card.controller !== context.player && 
                                                   (card.fate > 0 ? card.allowGameAction('removeFate', context) : card.allowGameAction('discardFromPlay', context))
             },
+            effect: '{1} {0}',
+            effectItems: context => context.target.fate > 0 ? 'remove 1 fate from' : 'discard',
             handler: context => {
                 if(context.target.fate === 0) {
-                    this.game.addMessage('{0} sacrifices {1} to discard {2}', context.player, context.source, context.target);
                     this.game.applyGameAction(context, { discardFromPlay: context.target });
                 } else {
-                    this.game.addMessage('{0} sacrifices {1} to remove 1 fate from {2}', context.player, context.source, context.target);
-                    this.game.applyGameAction(context, { removeFate: context.target });                 
+                    this.game.applyGameAction(context, { removeFate: context.target });
                 }
             }
         });

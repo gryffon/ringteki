@@ -17,7 +17,7 @@ class CallingInFavors extends DrawCard {
                     context.player.attach(context.target, context.costs.dishonor);
                 } else {
                     this.game.addMessage('{0} cannot be attached to {1} so it is discarded', context.target, context.costs.dishonor);
-                    this.game.openEventWindow(GameActions.eventTo.discardFromPlay(context.target, context));
+                    this.game.applyGameAction(context, { discardFromPlay: context.target });
                 }
             }
         });

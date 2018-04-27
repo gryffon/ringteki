@@ -2,12 +2,25 @@ class BaseCardSelector {
     constructor(properties) {
         this.cardCondition = properties.cardCondition;
         this.cardType = properties.cardType;
-        this.gameAction = properties.gameAction;
         this.optional = properties.optional;
+        this.gameAction = [];
 
         if(!Array.isArray(properties.cardType)) {
             this.cardType = [properties.cardType];
         }
+    }
+
+    setGameAction(gameAction = [], context) {
+        if(typeof gameAction === 'function') {
+            gameAction = gameAction(context);
+        }
+        if(!Array.isArray(gameAction)) {
+            gameAction = [gameAction];
+        }
+        for(let action of gameAction) {
+            action.context = context;
+        }
+        this.gameAction = gameAction;
     }
 
     canTarget(card, context, pretarget = false) {
@@ -20,7 +33,7 @@ class BaseCardSelector {
         if(context.stage === 'target' && !card.allowGameAction('target', context)) {
             return false;
         }
-        if(this.gameAction && !this.gameAction.canAffect(card)) {
+        if(this.gameAction.length > 0 && this.gameAction.every(action => !action.canAffect(card))) {
             return false;
         }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);
