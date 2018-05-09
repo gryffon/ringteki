@@ -116,7 +116,7 @@ describe('conflict phase', function() {
                 expect(this.player1).toHavePrompt('Initiate an action');
             });
 
-            fdescribe('when first player has an unbowed attacker who is able to be declared', function() {
+            describe('when first player has an unbowed attacker who is able to be declared', function() {
                 beforeEach(function() {
                     this.nightRaid = this.player2.findCardByName('night-raid');
                     this.tattooedWanderer = this.player1.playCharacterFromHand('tattooed-wanderer');
