@@ -1,6 +1,6 @@
 describe('Isawa Kaede', function() {
     integration(function() {
-        fdescribe('Isawa Kaede\'s ability', function() {
+        describe('Isawa Kaede\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
