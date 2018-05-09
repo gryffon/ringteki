@@ -156,7 +156,7 @@ class Conflict {
             player.resolveRingEffects(chosenElements, optional);
             return;
         }
-        let activePromptTitle = 'Click a ring to chose which element to resolve';
+        let activePromptTitle = 'Click a ring to choose which element to resolve';
         if(chosenElements.length > 0) {
             activePromptTitle = _.reduce(chosenElements, (string, element) => string + ' ' + element, activePromptTitle + '\nChosen elements:');
         }
