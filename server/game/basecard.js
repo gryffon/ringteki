@@ -4,7 +4,6 @@ const AbilityDsl = require('./abilitydsl.js');
 const CardAction = require('./cardaction.js');
 const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
-const GameActions = require('./GameActions/GameActions.js');
 const TriggeredAbility = require('./triggeredability');
 
 class BaseCard extends EffectSource {
@@ -38,6 +37,10 @@ class BaseCard extends EffectSource {
         this.isStronghold = false;
     }
 
+    /**
+     * Create card abilities by calling subsequent methods with appropriate properties
+     * @param {AbilityDsl} ability - object containing limits, costs, effects, and game actions
+     */
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }
 
@@ -193,6 +196,10 @@ class BaseCard extends EffectSource {
         return menu;
     }
 
+    isConflictProvince() {
+        return false;
+    }
+
     isUnique() {
         return this.cardData.unicity;
     }
@@ -204,17 +211,9 @@ class BaseCard extends EffectSource {
     getPrintedFaction() {
         return this.cardData.clan;
     }
-
-    allowGameAction(actionType, context = null) {
-        if(GameActions.canBeAffectedBy[actionType]) {
-            return GameActions.canBeAffectedBy[actionType](this, context);
-        }
-        return this.checkRestrictions(actionType, context);
-    }
-
+    
     checkRestrictions(actionType, context = null) {
-        return !this.getEffects('abilityRestrictions').some(restriction => restriction.isMatch(actionType, context) &&
-            this.controller.checkRestrictions(actionType, context));
+        return super.checkRestrictions(actionType, context) && this.controller.checkRestrictions(actionType, context);
     }
 
 

@@ -4,23 +4,22 @@ class WayOfThePhoenix extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Prevent an opponent contesting a ring',
-            max: ability.limit.perPhase(1),
-            condition: () => this.controller.opponent,
+            condition: context => context.player.opponent,
             target: {
                 mode: 'ring',
                 ringCondition: () => true
             },
+            effect: 'prevent {1} from delcaring a conflict with {0}',
+            effectArgs: context => context.player.opponent,
             handler: context => {
-                let elements = context.ring.getElements();
-                let otherPlayer = context.player.opponent;
-                this.game.addMessage('{0} plays {1} to prevent {2} from delcaring a conflict with the {3} ring{4}', context.player, context.source, otherPlayer, elements, elements.length > 1 ? 's' : '');
-                elements.forEach(element => {
+                for(const element of context.ring.getElements()) {
                     context.source.untilEndOfPhase(ability => ({
                         match: this.game.rings[element],
-                        effect: ability.effects.cannotDeclareRing(player => player === otherPlayer)                    
+                        effect: ability.effects.cannotDeclareRing(player => player === context.player.opponent)                    
                     }));    
-                });
-            }
+                }
+            },
+            max: ability.limit.perPhase(1)
         });
     }
 }

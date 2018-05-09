@@ -10,10 +10,8 @@ class TheArtOfPeace extends ProvinceCard {
                     event.conflict.defenders.some(card => card.allowGameAction('dishonor', context))
                 )
             },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to dishonor all attackers and honor all defenders in this conflict', this.controller, this);
-                this.game.applyGameAction(context, { honor: context.event.conflict.defenders, dishonor: context.event.conflict.attackers });
-            }
+            effect: 'dishonor all attackers and honor all defenders in this conflict',
+            handler: context => this.game.applyGameAction(context, { honor: context.event.conflict.defenders, dishonor: context.event.conflict.attackers })
         });
     }
 }

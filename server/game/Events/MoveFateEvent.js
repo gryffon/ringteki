@@ -2,7 +2,7 @@ const Event = require('./Event.js');
 
 class MoveFateEvent extends Event {
     constructor(params, fate, origin, recipient, gameAction) {
-        super('onCardMoveFate', params);
+        super('onMoveFate', params);
         this.handler = this.moveFate;
         this.origin = origin;
         this.recipient = recipient;

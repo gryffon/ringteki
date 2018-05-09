@@ -3,12 +3,11 @@ const CardGameAction = require('./CardGameAction');
 class MoveToConflictAction extends CardGameAction {
     constructor() {
         super('moveToConflict');
-        this.effect = 'move {0} into the conflict',
-        this.cost = '';
+        this.effect = 'move {0} into the conflict';
     }
 
-    canAffect(card) {
-        if(!this.context.game.currentConflict || card.isParticipating() || card.type !== 'character') {
+    canAffect(card, context = this.context) {
+        if(!context.game.currentConflict || card.isParticipating() || card.type !== 'character') {
             return false;
         }
         if(card.controller.isAttackingPlayer()) {
@@ -18,19 +17,25 @@ class MoveToConflictAction extends CardGameAction {
         } else if(!card.canParticipateAsDefender()) {
             return false;
         }
-        return super.canAffect(card);
+        return super.canAffect(card, context);
     }
 
     getEventArray() {
-        if(this.cards.length === 0) {
+        if(this.targets.length === 0) {
             return [];
         }
-        let events = this.cards.map(card => this.getEvent(card));
+        let events = this.targets.map(card => this.getEvent(card));
         return events.concat(this.createEvent('onMoveCharactersToConflict', { moveToConflictEvents: events }));
     }
 
-    getEvent(card) {
-        return super.createEvent('onCardHonored', { card: card, context: this.context }, () => card.honor());
+    getEvent(card, context = this.context) {
+        return super.createEvent('onMoveToConflict', { card: card, context: context }, () => {
+            if(card.controller.isAttackingPlayer()) {
+                context.game.currentConflict.addAttacker(card);
+            } else {
+                context.game.currentConflict.addDefender(card);
+            }
+        });
     }
 }
 

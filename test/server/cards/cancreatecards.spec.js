@@ -3,10 +3,9 @@ const _ = require('underscore');
 const cards = require('../../../server/game/cards');
 const AbilityDsl = require('../../../server/game/abilitydsl');
 const eventNames = [
-    'onCardMoveFate',
-    'onFateTransfered',
+    'onMoveFate',
     'onBeginRound',
-    'onCardEntersPlay',
+    'onCharacterEntersPlay',
     'onCardTakenControl',
     'onCardAbilityInitiated',
     'onCardAbilityTriggered',

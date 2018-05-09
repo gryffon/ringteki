@@ -1,20 +1,20 @@
 const DrawCard = require('../../drawcard.js');
 
 class Blackmail extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.action({
             title: 'Take control of a character',
-            condition: () => this.game.currentConflict,
+            condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.controller !== context.player && card.getCost() < 3 && 
-                                                  card.location === 'play area' && card.allowGameAction('takeControl', context)
+                cardCondition: (card, context) => !card.anotherUniqueInPlay(context.player) && card.getCost() < 3 && 
+                                                  card.controller !== context.player && card.location === 'play area'
             },
             effect: 'take control of {0}',
-            handler: context => context.source.untilEndOfConflict(ability => ({
+            untilEndOfConflict: context => ({
                 match: context.target,
                 effect: ability.effects.takeControl(context.player)
-            }))
+            })
         });
     }
 

@@ -1,7 +1,7 @@
 const ProvinceCard = require('../../provincecard.js');
 
 class FeastOrFamine extends ProvinceCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.interrupt({
             title: 'Move fate from an opposing character',
             when: {
@@ -11,19 +11,18 @@ class FeastOrFamine extends ProvinceCard {
             },
             target: {
                 cardType: 'character',
-                gameAction: 'removeFate',
-                cardCondition: card => card.controller !== this.controller
+                cardCondition: (card, context) => card.controller === context.player.opponent,
+                gameAction: ability.actions.removeFate()
             },
-            handler: context => this.game.promptForSelect(this.controller, {
+            effect: 'move all fate from {0} to a character they control',
+            handler: context => this.game.promptForSelect(context.player, {
                 activePromptTitle: 'Choose a character',
-                source: this,
+                source: context.source,
                 cardType: 'character',
-                cardCondition: card => card.controller === this.controller && card.allowGameAction('placeFate', context) && card.fate === 0,
+                cardCondition: card => card.controller === context.player && card.allowGameAction('placeFate', context) && card.fate === 0,
                 onSelect: (player, card) => {
-                    this.game.addMessage('{0} uses {1} to move {2} fate from {3} to {4}', player, this, context.target.fate, context.target, card);
-                    let event = this.game.applyGameAction(context, { removeFate: context.target })[0];
-                    event.fate = context.target.getFate();
-                    event.recipient = card;
+                    this.game.addMessage('{0} moves {1} fate from {2} to {3}', player, context.target.fate, context.target, card);
+                    this.game.openEventWindow(ability.actions.removeFate(context.target.fate, card).getEvent(context.target, context));
                     return true;
                 }
             })

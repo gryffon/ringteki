@@ -3,7 +3,6 @@ const _ = require('underscore');
 const GameObject = require('./GameObject');
 const Deck = require('./deck.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
-const ConflictTracker = require('./conflicttracker.js');
 const RingEffects = require('./RingEffects.js');
 const PlayableLocation = require('./playablelocation.js');
 const PlayerPromptState = require('./playerpromptstate.js');
@@ -47,6 +46,7 @@ class Player extends GameObject {
         this.passedDynasty = false;
         this.honorBid = 0; // amount from the most recent bid after modifiers
         this.showBid = 0; // amount shown on the dial
+        this.conflictOpportunities = 0;
         this.imperialFavor = '';
         this.totalGloryForFavor = 0;
 
@@ -54,7 +54,6 @@ class Player extends GameObject {
         this.timerStart = 0;
 
         this.deck = {};
-        this.conflicts = new ConflictTracker();
         this.costReducers = [];
         this.playableLocations = [
             new PlayableLocation('play', this, 'hand'),
@@ -209,76 +208,6 @@ class Player extends GameObject {
         return cardsToReturn;
     }
 
-    /** TODO: Move this to setup?
-     * Moves provinces from the province deck to provinces. The card marked as selected will be moved to the stronghold province.
-     */
-    placeProvinces() {
-        let provinceId = ['1', '2', '3', '4'];
-        // Fisher-Yates shuffle the array
-        var i = provinceId.length, t, j;
-        provinceId = provinceId.slice();
-        while (--i) t = provinceId[i], provinceId[i] = provinceId[j = ~~(Math.random() * (i+1))], provinceId[j] = t; //eslint-disable-line
-
-        let provinceIterator = 0;
-        this.provinceDeck.each(card => {
-            if(card.selected) {
-                card.selected = false;
-                this.moveCard(card, 'stronghold province');
-            } else {
-                var province = 'province ' + provinceId[provinceIterator];
-                this.moveCard(card, province);
-                provinceIterator = provinceIterator + 1;
-            }
-
-        });
-        this.hideProvinceDeck = true;
-    }
-
-    /**
-     * Moves the stronghold and the role card from an out-of-game state to their normal positions
-     */
-    attachStronghold() {
-        this.moveCard(this.stronghold, 'stronghold province');
-        if(this.role) {
-            this.role.moveTo('role');
-        }
-    }
-
-    /** TODO: Remove this? Move it somewhere else?
-     * Fills all empty provinces, and flips non empty provinces faceup
-     */
-    fillProvinces() {
-        var provinces = ['province 1', 'province 2', 'province 3', 'province 4'];
-
-        _.each(provinces, province => {
-            let card = this.getDynastyCardInProvince(province);
-            if(card) {
-                card.facedown = false;
-            } else if(this.dynastyDeck.size() > 0) {
-                card = this.dynastyDeck.first();
-                this.moveCard(card, province);
-                card.facedown = false;
-            }
-        });
-    }
-
-    /**
-     * Flips all province cards face up, and sends a message saying what has been revealed
-     */
-    flipDynastyCards() {
-        let revealedCards = [];
-        _.each(['province 1', 'province 2', 'province 3', 'province 4'], province => {
-            let card = this.getDynastyCardInProvince(province);
-            if(card && card.facedown) {
-                this.game.raiseEvent('onDynastyCardTurnedFaceup', { player: this, card: card }, () => card.facedown = false);
-                revealedCards.push(card);
-            }
-        });
-        if(revealedCards.length > 0) {
-            this.game.queueSimpleStep(() => this.game.addMessage('{0} reveals {1}', this, revealedCards));
-        }
-    }
-
     /**
      * Returns the dynasty card from the passed province name
      * @param {String} location - one of 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'
@@ -345,17 +274,6 @@ class Player extends GameObject {
         return _.any(this.playableLocations, location => location.playingType === playingType && location.contains(card));
     }
 
-    /** TODO: Remove this?
-     * Adds a new PlayableLocation of the specified type, and returns it
-     * @param {String} playingType
-     * @param {String} location
-     */
-    addPlayableLocation(playingType, location) {
-        let newPlayableLocation = new PlayableLocation(playingType, this, location);
-        this.playableLocations.push(newPlayableLocation);
-        return newPlayableLocation;
-    }
-
     /**
      * Returns a card in play under this player's control which matches (for uniqueness) the passed card.
      * @param {DrawCard} card
@@ -368,42 +286,6 @@ class Player extends GameObject {
         return this.findCard(this.cardsInPlay, playCard => {
             return playCard !== card && (playCard.id === card.id || playCard.name === card.name);
         });
-    }
-
-    /** TODO: Remove this.conflicts
-     * Returns the number of conflicts won by this player of the passed type
-     * @param {String} conflictType - one of 'military', 'political'
-     */
-    getNumberOfConflictsWon(conflictType) {
-        return this.conflicts.getWon(conflictType);
-    }
-
-    /**
-     * Returns the number of conflicts lost by this player of the passed type
-     * @param {String} conflictType - one of 'military', 'political'
-     */
-    getNumberOfConflictsLost(conflictType) {
-        return this.conflicts.getLost(conflictType);
-    }
-
-    /**
-     * Returns the number of conflicts initiated by this player of the passed type
-     * @param {String} conflictType - one of 'military', 'political'
-     */
-    getNumberOfConflictsInitiatedByType(conflictType) {
-        return this.conflicts.getPerformed(conflictType);
-    }
-
-    /**
-     * Returns the number of conflicts initiated by this player
-     */
-    getNumberOfConflictsInitiated() {
-        return this.conflicts.complete;
-    }
-
-    allowGameAction(actionType, context = null) {
-        let abilityRestrictions = this.getEffects('abilityRestrictions');
-        return !_.any(abilityRestrictions, restriction => restriction.isMatch(actionType, context));
     }
 
     /**
@@ -422,10 +304,6 @@ class Player extends GameObject {
         _.each(cards, card => {
             this.moveCard(card, 'hand');
         });
-
-        if(this.game.currentPhase !== 'setup') {
-            this.game.raiseEvent('onCardsDrawn', { cards: cards, player: this });
-        }
 
         if(remainingCards > 0) {
             this.deckRanOutOfCards('conflict');
@@ -488,70 +366,15 @@ class Player extends GameObject {
         this.dynastyDeck = _(this.dynastyDeck.shuffle());
     }
 
-    /**
-     * Discards the passed number of randomly chosen cards from this players hand, and displays a message in chat will all discarded cards
-     * @param {Int} number
-     */
-    discardAtRandom(number, source = 'Framework Effect') {
-        var toDiscard = Math.min(number, this.hand.size());
-        var cards = [];
-
-        while(cards.length < toDiscard) {
-            var cardIndex = _.random(0, this.hand.size() - 1);
-
-            var card = this.hand.value()[cardIndex];
-            if(!cards.includes(card)) {
-                cards.push(card);
-            }
-        }
-
-        if(toDiscard > 1) {
-            this.game.promptForSelect(this, {
-                activePromptTitle: 'Choose order for random discard',
-                mode: 'exactly',
-                numCards: toDiscard,
-                multiselect: true,
-                ordered: true,
-                source: source,
-                cardCondition: card => cards.includes(card),
-                onSelect: (player, cards) => {
-                    this.discardCardsFromHand(cards, true);
-                    return true;
-                }
-            });
-        } else {
-            this.discardCardsFromHand(cards, true);
-        }
-    }
-
-    /** TODO: Remove this.conflicts
+    /** 
      * Checks whether this player can initiate a conflict of the passed type
      * @param {String} conflictType - one of 'military', 'political'
      */
     canInitiateConflict(conflictType = '') {
-        return ((conflictType === '' ? true : !this.conflicts.isAtMax(conflictType)) &&
-                this.conflicts.conflictOpportunities > 0);
-    }
-
-    /**
-     * Increases the number of conflicts of the passed type that a player can initiate
-     * @param {String} type - one of 'military', 'political'
-     * @param {Int} number
-     */
-    addConflict(type, number) {
-        this.conflicts.modifyMaxForType(type, number);
-    }
-
-    setMaxConflict(number) {
-        this.conflicts.setMax(number);
-    }
-
-    clearMaxConflict() {
-        this.conflicts.clearMax();
-    }
-
-    setCannotInitiateConflictForType(type, value) {
-        this.conflicts.setCannotInitiateForType(type, value);
+        if(this.conflictOpportunities === 0) {
+            return false;
+        }
+        return this.game.completedConflicts.some(conflict => conflict.attackingPlayer === this && conflict.declaredType === conflictType);
     }
 
     /**
@@ -586,6 +409,8 @@ class Player extends GameObject {
         this.readyToStart = false;
         this.limitedPlayed = 0;
         this.maxLimited = 1;
+        this.firstPlayer = false;
+        this.opponent = this.game.getOtherPlayer(this);
     }
 
     /**
@@ -677,56 +502,6 @@ class Player extends GameObject {
     }
 
     /**
-     * Called when a card is clicked.  Gets all actions for that card (including standard actions), checks to see how many of them meet
-     * their requirements.  If only one does, calls that ability, if more than one do, prompts the player to pick one
-     * @param {BaseCard} card
-     */
-    initiateCardAction(card) {
-        if(!card || card.facedown) {
-            return false;
-        }
-
-        let actions = card.getActions(this);
-
-        let legalActions = actions.filter(action => action.meetsRequirements() === '');
-
-        if(legalActions.length === 0) {
-            return false;
-        }
-
-        if(legalActions.length === 1) {
-            this.game.resolveAbility(legalActions[0].createContext());
-        } else {
-            this.game.promptWithHandlerMenu(this, {
-                activePromptTitle: (card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':'),
-                source: card,
-                choices: legalActions.map(action => action.title).concat('Cancel'),
-                handlers: legalActions.map(action => (() => this.game.resolveAbility(action.createContext()))).concat(() => true)
-            });
-        }
-
-        return true;
-    }
-
-    /**
-     * Called at the start of the setup phase
-     */
-    setupBegin() {
-        this.firstPlayer = false;
-        this.opponent = this.game.getOtherPlayer(this);
-    }
-
-
-    /** TODO: Move to draw phase
-     * Called after bids are finished in the draw phase.  Draws cards for this player equal to their modified bid
-     */
-    drawPhase() {
-        this.drawPhaseCards = this.honorBid;
-        this.game.addMessage('{0} draws {1} cards for the draw phase', this, this.drawPhaseCards);
-        this.drawCardsToHand(this.drawPhaseCards);
-    }
-
-    /**
      * Called at the start of the Dynasty Phase.  Resets a lot of the single round parameters
      */
     beginDynasty() {
@@ -736,7 +511,7 @@ class Player extends GameObject {
             this.noTimer = false;
         }
 
-        this.conflicts.reset();
+        this.conflictsOpportunities = 2;
 
         this.conflictLimit = 0;
         this.drawPhaseCards = DrawPhaseCards;
@@ -751,106 +526,6 @@ class Player extends GameObject {
 
         this.passedDynasty = false;
         this.limitedPlayed = 0;
-    }
-
-    /**
-     * Checks whether attaching passed attachment to passed card is legal
-     * @param {DrawCard} attachment
-     * @param {DrawCard} card
-     */
-    canAttach(attachment, card) {
-        if(!attachment || !card) {
-            return false;
-        }
-
-        return (
-            card.location === 'play area' &&
-            card !== attachment &&
-            card.allowAttachment(attachment) &&
-            attachment.canAttach(card)
-        );
-    }
-
-    /**
-     * Checks for any other unique cards with the same title
-     * @param {DrawCard} card
-     * @param {Boolean} inConflict
-     */
-    canPutIntoPlay(card) {
-        if(!card.isUnique()) {
-            return true;
-        }
-
-        return !_.any(this.game.getPlayers(), player => {
-            return player.anyCardsInPlay(c => (
-                c.name === card.name
-                && ((c.owner === this || c.controller === this) || (c.owner === card.owner))
-                && c !== card
-            ));
-        });
-    }
-
-    /**
-     * Attaches passed attachment to passed card, transfering control if necessary, and raising relevant events
-     * @param {DrawCard} attachment
-     * @param {DrawCard} card
-     * @param {Boolean} raiseCardPlayed
-     */
-    attach(attachment, card, raiseCardPlayed = false) {
-        if(!card || !attachment || !this.canPutIntoPlay(attachment)) {
-            return;
-        }
-
-        let originalController = attachment.controller;
-        attachment.controller = this;
-        if(!this.canAttach(attachment, card)) {
-            attachment.controller = originalController;
-            return;
-        }
-        let originalLocation = attachment.location;
-        let originalParent = attachment.parent;
-
-        attachment.owner.removeCardFromPile(attachment);
-        if(originalParent) {
-            originalParent.removeAttachment(attachment);
-        }
-        card.attachments.push(attachment);
-        attachment.parent = card;
-        attachment.moveTo('play area');
-        attachment.setDefaultController(this);
-
-        this.game.queueSimpleStep(() => {
-            if(_.size(card.attachments.filter(c => c.isRestricted())) > 2) {
-                this.game.promptForSelect(this, {
-                    activePromptTitle: 'Choose a card to discard',
-                    waitingPromptTitle: 'Waiting for opponent to choose a card to discard',
-                    cardCondition: c => c.parent === card && c.isRestricted(),
-                    onSelect: (player, card) => {
-                        this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
-                        this.game.applyGameAction(null, { discardFromPlay: card });
-                        return true;
-                    },
-                    source: 'Too many Restricted attachments'
-                });
-            }
-        });
-
-        this.game.queueSimpleStep(() => this.game.checkGameState(true));
-
-        let events = [this.game.getEvent('onCardAttached', { card: attachment, parent: card })];
-        /* TODO: onCardAttached really needs its own Event code, but nothing triggers from attachments entering play at the moment
-        if(originalLocation !== 'play area') {
-            events.push({
-                name: 'onCardEntersPlay',
-                params: { card: attachment, originalLocation: originalLocation }
-            });
-        }
-        */
-        if(raiseCardPlayed) {
-            events.push(this.game.getEvent('onCardPlayed', { player: this, card: attachment, originalLocation: originalLocation }));
-        }
-
-        this.game.openEventWindow(events);
     }
 
     showConflictDeck() {
@@ -1023,23 +698,6 @@ class Player extends GameObject {
     }
 
     /**
-     * Called a the start of a conflict
-     */
-    beginConflict() {
-        this.cardsInPlay.each(card => {
-            card.resetForConflict();
-        });
-    }
-
-    /**
-     * I don't think this is used currently.  Tracks that a conflict of the passed type has been initiated
-     * @param {String} conflictType - one of 'military', 'political'
-     */
-    initiateConflict(conflictType) {
-        this.conflicts.perform(conflictType);
-    }
-
-    /**
      * Returns true if there is a conflict underway and this player is attacking
      */
     isAttackingPlayer() {
@@ -1053,51 +711,10 @@ class Player extends GameObject {
         return this.game.currentConflict && this.game.currentConflict.defendingPlayer === this;
     }
 
-    /**
-     * Tracks that this player won a conflict of the passed type
-     * @param {String} conflictType - one of 'military', 'political'
-     * @param {Boolean} wasAttacker
-     */
-    winConflict(conflictType, wasAttacker) {
-        this.conflicts.won(conflictType, wasAttacker);
-    }
-
-    /**
-     * Tracks that this player lost a conflict of the passed type
-     * @param {String} conflictType - one of 'military', 'political'
-     * @param {Boolean} wasAttacker
-     */
-    loseConflict(conflictType, wasAttacker) {
-        this.conflicts.lost(conflictType, wasAttacker);
-    }
-
     resetForConflict() {
         this.cardsInPlay.each(card => {
             card.resetForConflict();
         });
-    }
-
-    /**
-     * Moves the passed cards from this players hand to the relevant discard pile, raising the appropriate events
-     * @param {DrawCard[]} cards
-     * @param {Boolean} atRandom
-     */
-    discardCardsFromHand(cards, atRandom = false) {
-        let events = cards.map(card => this.game.getEvent(
-            'onDiscardFromHand',
-            { card: card, player: this }, 
-            () => this.moveCard(card, card.isConflict ? 'conflict discard pile' : 'dynasty discard pile')
-        ));
-        events.push(this.game.getEvent(
-            'onCardsDiscardedFromHand', 
-            { cards: cards, player: this },
-            () => this.game.addMessage('{0} discards {1}{2}', this, cards, atRandom ? ' at random' : '')
-        ));
-        this.game.openEventWindow(events);
-    }
-
-    discardCardFromHand(card) {
-        this.discardCardsFromHand([card]);
     }
 
     /** TODO: Move this to conflictphase.js
@@ -1140,7 +757,6 @@ class Player extends GameObject {
 
     /**
      * Marks that this player controls the favor for the relevant conflict type
-     * @param {String} conflictType
      */
     claimImperialFavor() {
         if(this.opponent) {
@@ -1294,7 +910,7 @@ class Player extends GameObject {
 
     /**
      * Sets the passed cards as selected
-     * @param {Array of BaseCard} cards
+     * @param {BaseCard[]} cards
      */
     setSelectedCards(cards) {
         this.promptState.setSelectedCards(cards);
@@ -1362,10 +978,10 @@ class Player extends GameObject {
     }
 
     isTopConflictCardShown() {
-        return this.getEffects('showTopConflictCard').length > 0;
+        return this.anyEffect('showTopConflictCard');
     }
 
-    /**
+    /** TODO: Turn this into a PlayerAction
      * Resolves any number of ring effects.  If there are more than one, then it will prompt the first player to choose what order those effects should be applied in
      * @param {Array} elements - Array of String, alternatively can be passed a String for convenience
      * @param {Boolean} optional - Indicates that the player can choose which effects to resolve.  This parameter only effects resolution of a single effect
@@ -1415,9 +1031,9 @@ class Player extends GameObject {
             honor: this.getTotalHonor(),
             chessClockLeft: this.chessClockLeft,
             chessClockActive: this.timerStart > 0,
-            conflictsRemaining: this.conflicts.conflictOpportunities,
-            militaryRemaining: !this.conflicts.isAtMax('military'),
-            politicalRemaining: !this.conflicts.isAtMax('political')
+            conflictsRemaining: this.conflictOpportunities,
+            militaryRemaining: this.canInitiateConflict('military'),
+            politicalRemaining: this.canInitiateConflict('political')
         };
     }
 

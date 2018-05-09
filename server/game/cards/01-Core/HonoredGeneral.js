@@ -10,9 +10,9 @@ class HonoredGeneral extends DrawCard {
         this.reaction({
             title: 'Honor this character',
             when: {
-                onCardEntersPlay: (event, context) => event.card === context.source
+                onCharacterEntersPlay: (event, context) => event.card === context.source
             },
-            gameAction: 'honor'
+            gameAction: ability.actions.honor()
         });
     }
 }

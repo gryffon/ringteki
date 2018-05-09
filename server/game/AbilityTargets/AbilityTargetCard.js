@@ -10,13 +10,11 @@ class AbilityTargetCard {
     }
 
     canResolve(context) {
-        this.selector.setGameAction(this.properties.gameAction, context);
         return this.selector.hasEnoughTargets(context, true);
     }
 
     getGameAction(context) {
-        this.selector.setGameAction(this.properties.gameAction, context);
-        return this.selector.gameAction.filter(this.selector.gameAction.setTarget(context.targets[this.name]));
+        return this.properties.gameAction.filter(gameAction => gameAction.setTarget(context.targets[this.name], context));
     }
 
     getAllLegalTargets(context, pretarget = true) {
@@ -27,7 +25,7 @@ class AbilityTargetCard {
         let otherProperties = _.omit(this.properties, 'cardCondition');
         let result = { resolved: false, name: this.name, value: null, costsFirst: false, mode: this.properties.mode };
         let player = context.player;
-        if(_.size(this.getAllLegalTargets(context, pretarget)) === 0) {
+        if(this.getAllLegalTargets(context, pretarget).length === 0) {
             result.resolved = true;
             return result;
         }
@@ -86,7 +84,7 @@ class AbilityTargetCard {
                 return true;
             }
         };
-        context.game.promptForSelect(player, _.extend(promptProperties, otherProperties));
+        context.game.promptForSelect(player, Object.assign(promptProperties, otherProperties));
         return result;
     }
     
@@ -97,11 +95,11 @@ class AbilityTargetCard {
             return false;
         }
         let cards = context.targets[this.name];
-        if(!_.isArray(cards)) {
+        if(!Array.isArray(cards)) {
             cards = [cards];
         }
         this.selector.setGameAction(this.properties.gameAction, context);
-        return (_.all(cards, card => this.selector.canTarget(card, context)) &&
+        return (cards.every(card => this.selector.canTarget(card, context)) &&
                 this.selector.hasEnoughSelected(cards) &&
                 !this.selector.hasExceededLimit(cards));
     }

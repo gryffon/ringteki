@@ -8,7 +8,6 @@ class CourtesyAbility extends TriggeredAbility {
                                                       context.source.hasCourtesy()
             },
             title: card.name + '\'s Courtesy',
-            cannotBeCopied: true,
             printedAbility: false,
             handler: context => {
                 this.game.addMessage('{0} gains a fate due to {1}\'s Courtesy', context.player, context.source);

@@ -11,9 +11,8 @@ class EndlessPlains extends ProvinceCard {
             target: {
                 player: 'opponent',
                 activePromptTitle: 'Choose a character to discard',
-                cardType: 'character',
-                gameAction: ability.actions.discardFromPlay(),
-                cardCondition: card => card.isAttacking()
+                cardCondition: card => card.isAttacking(),
+                gameAction: ability.actions.discardFromPlay()
             }
         });
     }

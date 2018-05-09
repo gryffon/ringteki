@@ -3,21 +3,24 @@ const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
 
 class DiscardFromPlayAction extends CardGameAction {
     constructor(isSacrifice = false) {
-        let action = isSacrifice ? 'sacrifice' : 'discardFromPlay';
-        super(action);
+        super(isSacrifice ? 'sacrifice' : 'discardFromPlay');
         this.effect = isSacrifice ? 'sacrifice {0}' : 'discard {0}';
-        this.cost = isSacrifice ? 'sacrificing {0}' : '';
+        this.cost = 'sacrificing {0}';
     }
 
-    canAffect(card) {
-        if(card.location !== 'play area') {
+    canAffect(card, context = this.context) {
+        if(card.type === 'holding') {
+            if(!card.location.includes('province')) {
+                return false;
+            }
+        } else if(card.location !== 'play area') {
             return false;
         }
-        return super.canAffect(card);
+        return super.canAffect(card, context);
     }
 
-    getEvent(card) {
-        return new LeavesPlayEvent({ context: this.context }, card, this);
+    getEvent(card, context = this.context) {
+        return new LeavesPlayEvent({ context: context }, card, this);
     }
 }
 

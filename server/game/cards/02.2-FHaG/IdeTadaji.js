@@ -1,25 +1,21 @@
 const DrawCard = require('../../drawcard.js');
 
 class IdeTadaji extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.action({
             title: 'Move characters into conflict',
-            condition: () => this.isParticipating() && this.controller.opponent,
+            condition: context => context.source.isParticipating(),
             targets: {
                 myChar: {
                     cardType: 'character',
-                    gameAction: 'moveToConflict',
-                    cardCondition: card => !card.bowed && card.controller === this.controller && card.getCost() < 3
+                    cardCondition: (card, context) => !card.bowed && card.controller === context.player && card.getCost() <= 2,
+                    gameAction: ability.actions.moveToConflict()
                 },
                 oppChar: {
                     cardType: 'character',
-                    gameAction: 'moveToConflict',
-                    cardCondition: card => !card.bowed && card.controller !== this.controller && card.getCost() < 3                    
+                    cardCondition: (card, context) => !card.bowed && card.controller === context.player.opponent && card.getCost() <= 2,
+                    gameAction: ability.actions.moveToConflict()                    
                 }                
-            },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to move {2} and {3} into the conflict', this.controller, this, context.targets.myChar, context.targets.oppChar);
-                this.game.applyGameAction(context, { moveToConflict: [context.targets.myChar, context.targets.oppChar] });
             }
         });
     }

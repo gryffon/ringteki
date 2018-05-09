@@ -1,18 +1,16 @@
 const DrawCard = require('../../drawcard.js');
 
 class YogoHiroue extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.action({
             title: 'Move a character into the conflict',
-            condition: () => this.isParticipating(),
+            condition: context => context.source.isParticipating(),
             target: {
                 cardType: 'character',
-                gameAction: 'moveToConflict'
+                gameAction: ability.actions.moveToConflict()
             },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to move {2} into the conflict', this.controller, this, context.target);
-                let event = this.game.applyGameAction(context, { moveToConflict: context.target })[0];
-                event.addThenEvent(this.game.getEvent('unnamedEvent', {}, () => context.source.delayedEffect({
+            then: context => ({
+                delayedEffect: {
                     target: context.target,
                     when: {
                         afterConflict: event => event.conflict.winner === context.player && context.target.allowGameAction('dishonor')
@@ -30,8 +28,9 @@ class YogoHiroue extends DrawCard {
                         ],
                         source: context.source
                     })
-                })));
-            }
+
+                }
+            })
         });
     }
 }

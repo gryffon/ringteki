@@ -31,8 +31,16 @@ class TerminalCondition {
         if(this.getEventsFunc) {
             return this.getEventsFunc();
         } else if(this.gameAction) {
-            return this.game.getEventsForGameAction(this.gameAction, this.target, this.context)[0];
+            let gameAction = this.gameAction;
+            if(typeof gameAction === 'function') {
+                gameAction = gameAction(this.context);
+            }
+            if(!Array.isArray(gameAction)) {
+                gameAction = [gameAction];
+            }
+            return gameAction.reduce((array, action) => array.concat(action.getEventArray()), []);
         }
+        return [];
     }
 
     getDebugInfo() {

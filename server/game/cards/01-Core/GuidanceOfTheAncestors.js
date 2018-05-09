@@ -8,6 +8,7 @@ class GuidanceOfTheAncestors extends DrawCard {
             title: 'Play this from the discard pile',
             condition: context => context.player.fate >= context.player.getReducedCost('play', context.source),
             location: 'conflict discard pile',
+            effect: 'play {0} from the discard pile',
             handler: context => this.game.resolveAbility(new AbilityContext({
                 game: this.game,
                 player: context.player,

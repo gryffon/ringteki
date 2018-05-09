@@ -14,7 +14,7 @@ class Deathseeker extends DrawCard {
                                                   (card.fate > 0 ? card.allowGameAction('removeFate', context) : card.allowGameAction('discardFromPlay', context))
             },
             effect: '{1} {0}',
-            effectItems: context => context.target.fate > 0 ? 'remove 1 fate from' : 'discard',
+            effectArgs: context => context.target.fate > 0 ? 'remove 1 fate from' : 'discard',
             handler: context => {
                 if(context.target.fate === 0) {
                     this.game.applyGameAction(context, { discardFromPlay: context.target });

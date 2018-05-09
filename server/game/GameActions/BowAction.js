@@ -7,15 +7,15 @@ class BowAction extends CardGameAction {
         this.cost = 'bowing {0}';
     }
 
-    canAffect(card) {
+    canAffect(card, context = this.context) {
         if(card.location !== 'play area' || card.bowed) {
             return false;
         }
-        return super.canAffect(card);
+        return super.canAffect(card, context);
     }
 
-    getEvent(card) {
-        return super.createEvent('onCardBowed', { card: card, context: this.context }, () => card.bow());
+    getEvent(card, context = this.context) {
+        return super.createEvent('onCardBowed', { card: card, context: context }, () => card.bow());
     }
 }
 

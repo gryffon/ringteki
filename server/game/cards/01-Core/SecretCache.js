@@ -5,25 +5,25 @@ class SecretCache extends ProvinceCard {
         this.reaction({
             title: 'Look at top 5 cards',
             when: {
-                onConflictDeclared: event => event.conflict.conflictProvince === this
+                onConflictDeclared: (event, context) => event.conflict.conflictProvince === context.source
             },
-            handler: () => {
-                let myTopFive = this.controller.conflictDeck.first(5);
+            effect: 'look at the top 5 cards of their conflict deck',
+            handler: context => {
+                let myTopFive = context.player.conflictDeck.first(5);
                 if(myTopFive.length > 1) {
-                    this.game.addMessage('{0} uses {1} to look at the top {2} cards of their conflict deck', this.controller, this, myTopFive.length);
-                    this.game.promptWithHandlerMenu(this.controller, {
-                        source: this,
+                    this.game.promptWithHandlerMenu(context.player, {
+                        source: context.source,
                         activePromptTitle: 'Choose a card',
                         cards: myTopFive,
                         cardHandler: card => {
-                            this.game.addMessage('{0} takes a card into their hand', this.controller);
-                            this.controller.moveCard(card, 'hand');
-                            this.controller.shuffleConflictDeck();                    
+                            this.game.addMessage('{0} takes a card into their hand', context.player);
+                            context.player.moveCard(card, 'hand');
+                            context.player.shuffleConflictDeck();                    
                         }
                     });
                 } else {
-                    this.game.addMessage('{0} uses {1} to take the last card from their conflict deck into their hand', this.controller, this);
-                    this.controller.drawCardsToHand(1);
+                    this.game.addMessage('{0} takes the last card from their conflict deck into their hand', context.player);
+                    context.player.moveCard(myTopFive[0], 'hand');
                 }
             }
         });

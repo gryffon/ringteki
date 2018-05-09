@@ -5,11 +5,10 @@ class GoldenPlainsOutpost extends StrongholdCard {
         this.action({
             title: 'Move a cavalry character to the conflict',
             cost: ability.costs.bowSelf(),
-            condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'military',
+            condition: () => this.game.isDuringConflict('military'),
             target: {
-                cardType: 'character',
-                gameAction: 'moveToConflict',
-                cardCondition: (card, context) => card.hasTrait('cavalry') && card.controller === context.player
+                cardCondition: (card, context) => card.hasTrait('cavalry') && card.controller === context.player,
+                gameAction: ability.actions.moveToConflict()
             }
         });
     }

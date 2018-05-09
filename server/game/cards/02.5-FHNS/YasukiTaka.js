@@ -9,10 +9,7 @@ class YasukiTaka extends DrawCard {
                                            event.cardStateWhenLeftPlay.type === 'character'
             },
             limit: ability.limit.perPhase(Infinity),
-            handler: () => {
-                this.game.addMessage('{0} uses {1} to gain 1 fate', this.controller, this);
-                this.game.addFate(this.controller, 1);
-            }
+            gameAction: ability.actions.gainFate()
         });
     }
 }

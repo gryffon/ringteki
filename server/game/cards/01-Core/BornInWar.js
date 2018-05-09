@@ -8,9 +8,9 @@ class BornInWar extends DrawCard {
         });
     }
     
-    canAttach(card) {
+    canAttach(card, context) {
         if(card.hasTrait('cavalry')) {
-            return super.canAttach(card);
+            return super.canAttach(card, context);
         }
         return false;
     }

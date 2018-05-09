@@ -21,17 +21,15 @@ class EarthRingEffect extends BaseAbility {
     executeHandler(context) {
         if(context.select === 'Don\'t resolve') {
             context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'earth');
-
-          
             return;
         }
         if(context.player.opponent) {
             context.game.addMessage('{0} resolves the {1} ring, drawing a card and forcing {2} to discard a card at random', context.player, 'earth', context.player.opponent);
-            context.player.opponent.discardAtRandom(1, 'Earth Ring');
+            context.game.applyGameAction(context, { draw: context.player, discardAtRandom: context.player.opponent });
         } else {
             context.game.addMessage('{0} resolves the {1} ring, drawing a card', context.player, 'earth');
+            context.game.applyGameAction(context, { draw: context.player });
         }
-        context.player.drawCardsToHand(1);
     }
 }
 

@@ -9,7 +9,7 @@ class Breakthrough extends DrawCard {
                     return (event.conflict.conflictProvince &&
                             event.conflict.conflictProvince.isBroken && 
                             event.conflict.winner === context.player &&
-                            context.player.conflicts.conflictOpportunities > 0);
+                            context.player.canInitiateConflict());
                 }
             },
             effect: 'move straight to their next conflict!',

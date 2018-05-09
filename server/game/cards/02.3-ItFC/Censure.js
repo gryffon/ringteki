@@ -2,16 +2,14 @@ const DrawCard = require('../../drawcard.js');
 
 class Censure extends DrawCard {
     setupCardAbilities() {        
-        this.interrupt({
+        this.wouldInterrupt({
             title: 'Cancel an event',
             when: {
                 onCardAbilityInitiated: event => event.card.type === 'event'
             },
-            canCancel: true,
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to cancel {2}', this.controller, this, context.event.card);
-                context.cancel();
-            }
+            effect: 'cancel {0}\'s effects',
+            effectArgs: context => context.event.card,
+            handler: context => context.cancel()
         });
     }
 

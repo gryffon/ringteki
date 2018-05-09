@@ -10,6 +10,7 @@ class Conflict extends GameObject {
         this.isSinglePlayer = !defendingPlayer;
         this.defendingPlayer = defendingPlayer || this.singlePlayerDefender();
         this.declaredRing = this.ring = ring;
+        this.declaredType = null;
         this.conflictProvince = conflictProvince;
         this.conflictPassed = false;
         this.conflictTypeSwitched = false;
@@ -50,10 +51,6 @@ class Conflict extends GameObject {
         if(this.conflictProvince) {
             this.conflictProvince.inConflict = false;
         }
-    }
-
-    initiateConflict() {
-        this.attackingPlayer.initiateConflict(this.conflictType);
     }
 
     addAttackers(attackers) {
@@ -279,8 +276,6 @@ class Conflict extends GameObject {
             this.winnerSkill = this.defenderSkill;
         }
 
-        this.winner.winConflict(this.conflictType, this.attackingPlayer === this.winner);
-        this.loser.loseConflict(this.conflictType, this.attackingPlayer === this.loser);
         this.skillDifference = this.winnerSkill - this.loserSkill;
     }
 
@@ -295,7 +290,7 @@ class Conflict extends GameObject {
     passConflict(message = '{0} has chosen to pass their conflict opportunity') {
         this.game.addMessage(message, this.attackingPlayer);
         this.conflictPassed = true;
-        this.attackingPlayer.conflicts.usedConflictOpportunity();
+        this.attackingPlayer.conflictOpportunities--;
         this.game.raiseEvent('onConflictPass', { conflict: this });
 
         this.resetCards();

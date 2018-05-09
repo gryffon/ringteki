@@ -32,21 +32,8 @@ class ProvinceCard extends BaseCard {
         this.facedown = false;
     }
 
-    allowGameAction(actionType, context) {
-        let illegalActions = [
-            'bow', 'ready', 'dishonor', 'honor', 'sacrifice', 
-            'discardFromPlay', 'moveToConflict', 'sendHome', 'putIntoPlay', 'putIntoConflict', 
-            'returnToHand', 'takeControl', 'placeFate', 'removeFate'
-        ];
-
-        if(illegalActions.includes(actionType)) {
-            return false;
-        }
-    
-        if(actionType === 'break' && this.isBroken) {
-            return false;
-        }
-        return super.allowGameAction(actionType, context);
+    isConflictProvince() {
+        return this.game.currentConflict && this.game.currentConflict.conflictProvince === this;
     }
 
     breakProvince() {

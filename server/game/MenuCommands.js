@@ -71,7 +71,7 @@ class MenuCommands {
     static ringMenuClick(menuItem, game, player, ring) {
         switch(menuItem.command) {
             case 'flip':
-                if(game.currentConflict) {
+                if(game.currentConflict && game.currentConflict.ring) {
                     game.addMessage('{0} switches the conflict type', player);
                     game.currentConflict.switchType();
                 } else {

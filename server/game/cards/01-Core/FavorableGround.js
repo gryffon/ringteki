@@ -6,9 +6,8 @@ class FavorableGround extends DrawCard {
             title: 'Move a character into or out of the conflict',
             cost: ability.costs.sacrificeSelf(),
             target: {
-                cardType: 'character',
-                gameAction: [ability.actions.sendHome(), ability.actions.moveToConflict()],
-                cardCondition: (card, context) => card.controller === context.player
+                cardCondition: (card, context) => card.controller === context.player,
+                gameAction: [ability.actions.sendHome(), ability.actions.moveToConflict()]
             }
         });
     }

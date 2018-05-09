@@ -7,8 +7,8 @@ class AdmitDefeat extends DrawCard {
             condition: () => this.game.currentConflict && this.game.currentConflict.defenders.length === 1,
             target: {
                 cardType: 'character',
-                gameAction: ability.actions.bow(),
-                cardCondition: card => this.game.currentConflict.isDefending(card)
+                cardCondition: card => this.game.currentConflict.isDefending(card),
+                gameAction: ability.actions.bow()
             }
         });
     }

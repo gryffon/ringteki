@@ -11,7 +11,7 @@ const NameToEvent = {
     onCardAbilityInitiated: (name, params, handler) => new InitiateCardAbilityEvent(params, handler),
     onCardLeavesPlay: (name, params) => new LeavesPlayEvent(params, params.card),
     onCardRemoveFate: (name, params) => new RemoveFateEvent(params),
-    onCardEntersPlay: (name, params) => new EntersPlayEvent(params, params.card)
+    onCharacterEntersPlay: (name, params) => new EntersPlayEvent(params, params.card)
 };
 
 const ActionToEvent = {

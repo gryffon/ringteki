@@ -5,20 +5,15 @@ class MantraOfFire extends DrawCard {
         this.reaction({
             title: 'Add 1 fate to a monk and draw a card',
             when: {
-                onConflictDeclared: event => event.ring.hasElement('fire') && event.conflict.attackingPlayer !== this.controller
+                onConflictDeclared: (event, context) => event.ring.hasElement('fire') && event.conflict.attackingPlayer === context.player.opponent
             },
             target: {
                 cardType: 'character',
-                gameAction: ability.actions.placeFate(),
-                cardCondition: card => card.hasTrait('monk') || card.attachments.any(card => card.hasTrait('monk'))
+                cardCondition: card => card.hasTrait('monk') || card.attachments.any(card => card.hasTrait('monk')),
+                gameAction: ability.actions.placeFate()
             },
-            effect: 'add fate to {2} and draw a card',
-            handler: context => {
-                this.game.addMessage('{0} plays {1} to ', this.controller, this, context.target);
-                this.game.applyGameAction(context, { placeFate: context.target }, [{
-                    handler: () => this.controller.drawCardsToHand(1)
-                }]);
-            }
+            effect: 'add a fate to {0} and draw a card',
+            gameAction: ability.actions.draw()
         });
     }
 }

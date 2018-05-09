@@ -4,14 +4,14 @@ class Assassination extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Discard a character',
-            cost: ability.costs.payHonor(3),
             condition: () => this.game.currentConflict,
-            max: ability.limit.perRound(1),
+            cost: ability.costs.payHonor(3),
             target: {
                 cardType: 'character',
-                gameAction: ability.actions.discardFromPlay(),
-                cardCondition: card => card.getCost() < 3
-            }
+                cardCondition: card => card.getCost() <= 2,
+                gameAction: ability.actions.discardFromPlay()
+            },
+            max: ability.limit.perRound(1)
         });
     }
 }

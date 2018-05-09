@@ -6,7 +6,7 @@ class GraspOfEarth extends DrawCard {
             title: 'Opponent\'s cards cannot join this conflict',
             condition: context => this.game.currentConflict && context.player.opponent,
             cost: ability.costs.bowSelf(),
-            message: '{0} bows {1} to prevent the opponent from bringing characters to the conflict',
+            effect: 'prevent the opponent from bringing characters to the conflict',
             handler: context => {
                 //Cannot move characters into the conflict
                 context.player.opponent.cardsInPlay.each(card => {
@@ -25,12 +25,12 @@ class GraspOfEarth extends DrawCard {
         });      
     }
 
-    canAttach(card) {
+    canAttach(card, context) {
         if(card.hasTrait('shugenja') === false || card.controller !== context.player) {
             return false;
         }
 
-        return super.canAttach(card);
+        return super.canAttach(card, context);
     }
 }
 

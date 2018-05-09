@@ -1,35 +1,30 @@
 const DrawCard = require('../../drawcard.js');
 
 class KarmicTwist extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
         this.action({
             title: 'Move fate from a non-unique character',
-            condition: () =>
-                this.controller.cardsInPlay.any(card => !card.isUnique() && card.getFate() === 0 && card.allowGameAction('placeFate')) &&
-                this.controller.cardsInPlay.any(card => !card.isUnique() && card.allowGameAction('removeFate')) || 
-                this.controller.opponent &&
-                this.controller.opponent.cardsInPlay.some(card => !card.isUnique() && card.getFate() === 0 && card.allowGameAction('placeFate')) &&
-                this.controller.opponent.cardsInPlay.some(card => !card.isUnique() && card.allowGameAction('removeFate')),
             target: {
                 activePromptTitle: 'Choose a donor character',
                 cardType: 'character',
-                gameAction: 'removeFate',
-                cardCondition: card => !card.isUnique()
+                gameAction: ability.actions.removeFate(),
+                cardCondition: (card, context) => !card.isUnique() && card.controller.cardsInPlay.any(c => (
+                    !c.isUnique() && c.fate === 0 && c.allowGameAction('placeFate', context)
+                ))
             },
-            handler: context => this.game.promptForSelect(this.controller, {
+            effect: 'move fate from {0} to another non-unique character',
+            handler: context => this.game.promptForSelect(context.player, {
                 activePromptTitle: 'Choose a recipient character',
                 cardType: 'character',
-                source: this,
+                source: context.source,
                 cardCondition: card => 
                     !card.isUnique() && 
                     card.getFate() === 0 && 
                     card.controller === context.target.controller && 
                     card.allowGameAction('placeFate', context),
                 onSelect: (player, card) => {
-                    this.game.addMessage('{0} uses {1} to move {2} fate from {3} to {4}', player, this, context.target.fate, context.target, card);
-                    let event = this.game.applyGameAction(context, { removeFate: context.target })[0];
-                    event.fate = context.target.getFate();
-                    event.recipient = card;
+                    this.game.addMessage('{0} moves {1} fate from {2} to {3}', player, context.target.fate, context.target, card);
+                    ability.actions.removeFate(context.target.fate, card).resolve(context.target, context);
                     return true;
                 }
             })
@@ -37,6 +32,6 @@ class KarmicTwist extends DrawCard {
     }
 }
 
-KarmicTwist.id = 'karmic-twist'; // This is a guess at what the id might be - please check it!!!
+KarmicTwist.id = 'karmic-twist';
 
 module.exports = KarmicTwist;

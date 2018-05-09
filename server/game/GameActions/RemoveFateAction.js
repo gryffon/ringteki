@@ -9,30 +9,28 @@ class RemoveFateAction extends CardGameAction {
         this.recipient = recipient;
         this.recipientGameAction = new PlaceFateAction(amount);
         this.effect = 'remove {1} fate from {0}';
-        this.cost = 'removing ' + amount + ' fate from {0}';
-        this.effectItems = () => {
+        this.effectArgs = () => {
             return this.amount;
         };
+        this.cost = 'removing ' + amount + ' fate from {0}';
     }
 
-    checkRecipient() {
+    checkRecipient(context = this.context) {
         if(!this.recipient || ['player, ring'].includes(this.recipient.type)) {
             return true;
         }
-        this.recipient.gameAction.card = this.recipient;
-        this.recipient.gameAction.context = this.context;
-        return this.recipientGameAction.canAffect(this.recipient);
+        return this.recipientGameAction.canAffect(this.recipient, context);
     }
 
-    canAffect(card) {
+    canAffect(card, context = this.context) {
         if(card.location !== 'play area' || card.fate === 0 || card.type !== 'character') {
             return false;
         }
-        return super.canAffect(card) && this.checkRecipient();
+        return super.canAffect(card, context) && this.checkRecipient(context);
     }
 
-    getEvent(card, amount = this.amount, recipient = this.recipient) {
-        return new MoveFateEvent({ context: this.context }, amount, card, recipient, this);
+    getEvent(card, context = this.context) {
+        return new MoveFateEvent({ context: context }, this.amount, card, this.recipient, this);
     }
 }
 

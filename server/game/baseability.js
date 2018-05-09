@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const AbilityTargetAbility = require('./AbilityTargets/AbilityTargetAbility.js');
 const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
@@ -22,8 +23,13 @@ class BaseAbility {
      * objects.
      * @param {Object} [properties.target] - optional property that specifies
      * the target of the ability.
+     * @param {GameAction[]} [properties.gameAction] - optional array of game actions
      */
     constructor(properties) {
+        this.gameAction = properties.gameAction || [];
+        if(!Array.isArray(this.gameAction)) {
+            this.gameAction = [this.gameAction];
+        }
         this.cost = this.buildCost(properties.cost);
         this.targets = this.buildTargets(properties);
     }
@@ -33,7 +39,7 @@ class BaseAbility {
             return [];
         }
 
-        if(!_.isArray(cost)) {
+        if(!Array.isArray(cost)) {
             return [cost];
         }
 
@@ -54,10 +60,19 @@ class BaseAbility {
     }
     
     getAbilityTarget(name, properties) {
+        if(properties.gameAction) {
+            if(!Array.isArray(properties.gameAction)) {
+                properties.gameAction = [properties.gameAction];
+            }
+        } else {
+            properties.gameAction = [];
+        }
         if(properties.mode === 'select') {
             return new AbilityTargetSelect(name, properties);
         } else if(properties.mode === 'ring') {
             return new AbilityTargetRing(name, properties);
+        } else if(properties.mode === 'ability') {
+            return new AbilityTargetAbility(name, properties);
         }
         return new AbilityTargetCard(name, properties);
     }
@@ -107,13 +122,14 @@ class BaseAbility {
      * Pays all costs for the ability simultaneously.
      */
     payCosts(context) {
-        return _.compact(_.flatten(this.cost.map(cost => {
+        return this.cost.reduce((array, cost) => {
             if(cost.payEvent) {
-                return cost.payEvent(context);
+                return array.concat(cost.payEvent());
             } else if(cost.pay) {
-                return context.game.getEvent('payCost', {}, () => cost.pay(context));
+                return array.concat(context.game.getEvent('payCost', {}, () => cost.pay(context)));
             }
-        })));
+            return array;
+        }, []);
     }
 
     /**

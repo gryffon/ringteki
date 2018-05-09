@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const GameActions = require('../../GameActions/GameActions');
 
 class DisplayOfPower extends DrawCard {
     setupCardAbilities() {
@@ -15,11 +16,7 @@ class DisplayOfPower extends DrawCard {
     onResolveRingEffect(event, context) {
         this.game.addMessage('{0} cancels the ring effect and {1} may resolve it and then claims it', context.source, context.player);
         let ring = this.game.currentConflict.ring;
-        event.window.addEvent(this.game.getEvent('onResolveRingEffect', { 
-            player: context.player, 
-            conflict: event.conflict, 
-            order: -1 
-        }, () => event.conflict.resolveRing(context.player)));
+        event.window.addEvent(GameActions.resolveRing().getEvent(ring, context));
         event.window.addEvent(this.game.getEvent('onClaimRing', { player: this.controller, conflict: event.conflict }, () => ring.claimRing(context.player)));
         event.cancel();
     }

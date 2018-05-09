@@ -5,8 +5,7 @@ class ImperialStorehouse extends DrawCard {
         this.action({
             title: 'Draw a card',
             cost: ability.costs.sacrificeSelf(),
-            message: '{0} sacrifices {1} to draw a conflict card',
-            handler: context => context.player.drawCardsToHand(1)
+            gameAction: ability.actions.draw()
         });
     }
 }

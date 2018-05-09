@@ -4,35 +4,35 @@ class TatteredMissive extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Search top 5 cards',
-            condition: () => this.controller.conflictDeck.size() > 0,
+            condition: context => context.player.conflictDeck.size() > 0,
             cost: ability.costs.bowParent(),
-            handler: () => {
-                let cards = this.controller.conflictDeck.first(5);
+            effect: 'look at the top 5 cards of their conflict deck',
+            handler: context => {
+                let cards = context.player.conflictDeck.first(5);
                 if(cards.length > 1) {
-                    this.game.addMessage('{0} bows {1} to use {2} to look at the top 5 cards of their conflict deck', this.controller, this.parent, this);
-                    this.game.promptWithHandlerMenu(this.controller, {
+                    this.game.promptWithHandlerMenu(context.player, {
                         activePromptTitle: 'Select a card to reveal and put in your hand',
                         cards: cards,
                         cardHandler: card => {
-                            this.game.addMessage('{0} reveals {1} and adds it to their hand', this.controller, card);
-                            this.controller.moveCard(card, 'hand');
-                            this.controller.shuffleConflictDeck();
+                            this.game.addMessage('{0} reveals {1} and adds it to their hand', context.player, card);
+                            context.player.moveCard(card, 'hand');
+                            context.player.shuffleConflictDeck();
                         },
-                        source: this
+                        source: context.source
                     });
                 } else {
-                    this.game.addMessage('{0} reveals {1} and adds it to their hand', this.controller, cards[0]);
-                    this.controller.moveCard(cards[0], 'hand');
+                    this.game.addMessage('{0} reveals {1} and adds it to their hand', context.player, cards[0]);
+                    context.player.moveCard(cards[0], 'hand');
                 }
             }
         });
     }
 
-    canAttach(card) {
-        if(!card.hasTrait('courtier') || card.controller !== this.controller) {
+    canAttach(card, context) {
+        if(!card.hasTrait('courtier') || card.controller !== context.player) {
             return false;
         }
-        return super.canAttach(card);
+        return super.canAttach(card, context);
     }
 }
 

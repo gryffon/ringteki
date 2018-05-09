@@ -1,22 +1,19 @@
 const DrawCard = require('../../drawcard.js');
 
 class WayOfTheLion extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.action({
             title: 'Double the base mil of a character',
-            condition: () => this.game.currentConflict,
+            condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area' && card.isFaction('lion') && !card.hasDash('military') && card.baseMilitarySkill > 0
+                cardCondition: card => card.location === 'play area' && card.isFaction('lion') && 
+                                       !card.hasDash('military') && card.getBaseMilitarySkill() > 0
             },
-            handler: context => {
-                let baseSkill = context.target.baseMilitarySkill;
-                this.game.addMessage('{0} uses {1} to double {2}\'s base military skill to {3}', this.controller, this, context.target, baseSkill * 2);
-                this.untilEndOfConflict(ability => ({
-                    match: context.target,
-                    effect: ability.effects.modifyBaseMilitarySkill(baseSkill)
-                }));
-            }
+            untilEndOfConflict: context => ({
+                match: context.target,
+                effect: ability.effects.modifyBaseMilitarySkill(context.target.getBaseMilitarySkill())
+            })
         });
     }
 }

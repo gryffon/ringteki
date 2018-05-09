@@ -11,22 +11,22 @@ class Banzai extends DrawCard {
                 cardCondition: card => card.isParticipating()
             },
             effect: 'grant 2 military skill to {0}',
-            untilEndOfConflict: {
+            untilEndOfConflict: context => ({
+                match: context.target,
                 effect: ability.effects.modifyMilitarySkill(2)
-            },
+            }),
             handler: context => this.game.promptWithHandlerMenu(context.player, {
                 activePromptTitle: 'Select one',
                 source: context.source,
                 choices: ['Lose 1 honor to resolve this ability again', 'Done'],
                 handlers: [
                     () => {
-                        this.game.addHonor(context.player, -1);
+                        ability.actions.loseHonor().resolve(context.player, context);
                         this.game.promptForSelect(context.player, {
                             source: context.source,
                             cardType: 'character',
                             cardCondition: card => card.isParticipating(),
                             onSelect: (player, card) => {
-                                this.game.addMessage('{0} loses 1 honor to resolve {1} again, granting 2 military skill to {2}', player, context.source, card);
                                 context.targets.target = card;
                                 context.target = card;
                                 context.dontRaiseCardPlayed = true;
@@ -40,7 +40,7 @@ class Banzai extends DrawCard {
                                         choices: ['Lose 1 honor for no effect', 'Done'],
                                         handlers: [() => {
                                             this.game.addMessage('{0} loses 1 honor for no effect', player);
-                                            this.game.addHonor(player, -1);
+                                            ability.actions.loseHonor().resolve(context.player, context);
                                         }, () => true]
                                     });
                                 });

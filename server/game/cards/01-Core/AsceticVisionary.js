@@ -8,8 +8,8 @@ class AsceticVisionary extends DrawCard {
             condition: context => context.source.isAttacking(),
             target: {
                 cardType: 'character',
-                gameAction: ability.actions.ready(),
-                cardCondition: card => card.hasTrait('monk') || card.attachments.any(card => card.hasTrait('monk'))
+                cardCondition: card => card.hasTrait('monk') || card.attachments.any(card => card.hasTrait('monk')),
+                gameAction: ability.actions.ready()
             }
         });
     }

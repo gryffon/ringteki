@@ -1,15 +1,14 @@
 const DrawCard = require('../../drawcard.js');
 
 class AkodoToturi extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Resolve ring effect',
             when: {
-                onClaimRing: (event, context) => (event.conflict && context.source.isParticipating() && 
-                                                 event.conflict.conflictType === 'military' && event.player === context.player)
+                onClaimRing: (event, context) => this.game.isDuringConflict('military') && context.source.isParticipating() && 
+                                                 event.player === context.player
             },
-            effect: 'resolve the ring\'s effect again',
-            handler: context => context.event.conflict.resolveRing(context.event.conflict.attackingPlayer, false)
+            gameAction: ability.actions.resolveRing(false)
         });
     }
 }

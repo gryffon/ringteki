@@ -67,46 +67,30 @@ const Costs = {
      */
     discardFateFromParent: () => CostBuilders.discardFate.parent(),
     /**
-     * Cost that will dishonor the character that initiated the ability.
+     * Cost that will dishonor the character that initiated the ability
      */
     dishonorSelf: () => CostBuilders.dishonor.self(),
     /**
      * Cost that requires dishonoring a card that matches the passed condition
-     * predicate function.
+     * predicate function
      */
     dishonor: condition => CostBuilders.dishonor.select(condition),
     /**
-     * Cost that will break the province that initiated the ability.
+     * Cost that will break the province that initiated the ability
      */
     breakSelf: () => CostBuilders.break.self(),
     /**
-     * Cost that will put into play the card that initiated the ability.
+     * Cost that will put into play the card that initiated the ability
      */
     putSelfIntoPlay: () => CostBuilders.putIntoPlay.self(),
     /**
+     * Cost that will reveal specific cards
+     */
+    revealCards: (cardFunc) => CostBuilders.reveal.specific(cardFunc),
+    /**
      * Cost that discards the Imperial Favor
      */
-    discardImperialFavor: function() {
-        return {
-            canPay: function(context) {
-                return context.player.imperialFavor !== '';
-            },
-            pay: function(context) {
-                context.player.loseImperialFavor();
-            }
-        };
-    },
-    /**
-     * Cost which moves the event to the discard pile
-     */
-    canPlayEvent: function() {
-        return {
-            canPay: function(context) {
-                return context.source.canPlay(context);
-            },
-            canIgnoreForTargeting: true
-        };
-    },
+    discardImperialFavor: () => CostBuilders.discardImperialFavor(),
     /**
      * Cost that ensures that the player can still play a Limited card this
      * round.
@@ -146,7 +130,7 @@ const Costs = {
         return {
             canPay: function(context) {
                 let amount = context.source.getCost();
-                return context.player.fate >= amount && (amount === 0 || context.source.allowGameAction('spendFate', context) || );
+                return context.player.fate >= amount && (amount === 0 || context.source.allowGameAction('spendFate', context));
             },
             pay: function(context) {
                 context.player.fate -= context.source.getCost();
@@ -186,74 +170,16 @@ const Costs = {
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of fate.
      */
-    payFate: function(amount) {
-        return {
-            canPay: function(context) {
-                return context.player.fate >= amount && (context.source.allowGameAction('spendFate', context) || amount === 0);
-            },
-            pay: function(context) {
-                context.game.addFate(context.player, -amount);
-            },
-            canIgnoreForTargeting: true
-        };
-    },
+    payFate: (amount) => CostBuilders.payFate(amount),
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of honor.
      */
-    payHonor: function(amount) {
-        return {
-            canPay: function(context) {
-                return context.player.honor >= amount;
-            },
-            pay: function(context) {
-                context.game.addHonor(context.player, -amount);
-            }
-        };
-    },
+    payHonor: (amount) => CostBuilders.payHonor(amount),
     /**
      * Cost where a character must spend fate to an unclaimed ring
      */
-    payFateToRing: function(amount) {
-        return {
-            canPay: function(context) {
-                return context.player.fate >= amount && (context.source.allowGameAction('spendFate', context) || amount === 0);
-            },
-            resolve: function(context, result = { resolved: false }) {
-                context.game.promptForRingSelect(context.player, {
-                    ringCondition: ring => ring.isUnclaimed(),
-                    activePromptTitle: 'Choose a ring to place fate on',
-                    source: context.source,
-                    onSelect: (player, ring) => {
-                        context.costs.payFateToRing = ring;
-                        result.value = true;
-                        result.resolved = true;
-                        return true;
-                    },
-                    onCancel: () => {
-                        result.value = false;
-                        result.resolved = true;
-                    }
-                });
-                return result;
-            },
-            pay: function(context) {
-                context.game.addFate(context.player, -amount);
-                context.costs.payFateToRing.modifyFate(amount);
-            }
-        };
-    },
-    giveFateToOpponent: function(amount) {
-        return {
-            canPay: function(context) {
-                return amount === 0 || (context.player.fate >= amount && context.player.opponent && context.source.allowGameAction('giveFate', context));
-            },
-            pay: function(context) {
-                if(amount > 0) {
-                    context.game.transferFate(context.player.opponent, context.player, amount);
-                }
-            }
-        };
-    },
+    payFateToRing: (ringCondition, amount) => CostBuilders.payFateToRing(ringCondition, amount),
+    giveFateToOpponent: (amount) => CostBuilders.giveFateToOpponent(amount),
     chooseFate: function () {
         return {
             canPay: function() {

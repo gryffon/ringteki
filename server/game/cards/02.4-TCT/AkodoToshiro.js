@@ -4,20 +4,20 @@ class AkodoToshiro extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Gain +5/+0 and provinces can\'t be broken',
-            condition: () => this.isAttacking(),
+            condition: context => context.source.isAttacking(),
+            effect: 'gain +5/+0 - provinces cannot be broken during this conflict',
             handler: context => {
-                this.game.addMessage('{0} uses {1} to gain +5/+0 - provinces cannot be broken during this conflict', this.controller, this);
-                this.untilEndOfConflict(ability => ({
-                    match: this,
+                context.source.untilEndOfConflict(ability => ({
+                    match: context.source,
                     effect: ability.effects.modifyMilitarySkill(5)
                 }));
-                this.untilEndOfConflict(ability => ({
+                context.source.untilEndOfConflict(ability => ({
                     match: card => card.isProvince,
                     targetLocation: 'province',
                     targetController: 'any',
                     effect: ability.effects.cardCannot('break')
                 }));
-                this.delayedEffect({
+                context.source.delayedEffect({
                     target: context.source,
                     context: context,
                     when: {

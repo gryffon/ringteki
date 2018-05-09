@@ -460,7 +460,7 @@ Each triggered ability has an associated triggering condition. This is done usin
 this.reaction({
 	// When this card enters play, honor it
 	when: {
-		onCardEntersPlay: (event, params) => params.card === this
+		onCharacterEntersPlay: (event, params) => params.card === this
 	},
 	handler: () => this.controller.honorCard(this)
 });

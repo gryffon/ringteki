@@ -14,6 +14,7 @@ class KaitoTempleProtector extends DrawCard {
                 cardType: 'character',
                 cardCondition: (card, context) => card.isParticipating() && card !== context.source
             },
+            effect: 'change his base skills to equal {0}\'s current skills', 
             handler: context => {
                 let newMil = context.target.getMilitarySkill();
                 if(context.target.hasDash('military')) {
@@ -23,7 +24,7 @@ class KaitoTempleProtector extends DrawCard {
                 if(context.target.hasDash('political')) {
                     newPol = '-';
                 }
-                this.game.addMessage('{0} uses {1}, targeting {2} and changing {1}\'s base {3} skill to {4} and {5} skill to {6}', context.player, context.source, context.target, 'military', newMil, 'political', newPol);
+                this.game.addMessage('{0} changes his base {1} skill to {2} and base {3} skill to {4}', context.source, 'military', newMil, 'political', newPol);
                 if(newMil === '-') {
                     context.source.untilEndOfConflict(ability => ({
                         match: context.source,

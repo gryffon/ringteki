@@ -26,7 +26,27 @@ class ActionWindow extends UiPrompt {
         if(player !== this.currentPlayer) {
             return false;
         }
-        player.initiateCardAction(card);
+
+        let actions = card.getActions(player);
+
+        let legalActions = actions.filter(action => action.meetsRequirements() === '');
+
+        if(legalActions.length === 0) {
+            return false;
+        }
+
+        if(legalActions.length === 1) {
+            this.game.resolveAbility(legalActions[0].createContext());
+        } else {
+            this.game.promptWithHandlerMenu(player, {
+                activePromptTitle: (card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':'),
+                source: card,
+                choices: legalActions.map(action => action.title).concat('Cancel'),
+                handlers: legalActions.map(action => (() => this.game.resolveAbility(action.createContext()))).concat(() => true)
+            });
+        }
+
+        return true;
     }
 
     continue() {

@@ -69,9 +69,13 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
         if(arg === 'done') {
             if(this.selectedCards[player.name].length > 0) {
                 for(const card of this.selectedCards[player.name]) {
+                    if(player.dynastyDeck.size() > 0) {
+                        player.moveCard(player.dynastyDeck.first(), card.location);
+                    }
+                }
+                for(const card of this.selectedCards[player.name]) {
                     player.moveCard(card, 'dynasty deck bottom');
                 }
-                player.fillProvinces();
                 player.shuffleDynastyDeck();
                 this.game.addMessage('{0} has mulliganed {1} cards from the dynasty deck', player, this.selectedCards[player.name].length);
             } else {

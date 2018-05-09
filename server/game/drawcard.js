@@ -174,7 +174,7 @@ class DrawCard extends BaseCard {
                 return false;
             }
         } else if(actionType === 'putIntoPlay') {
-            if(this.location === 'play area' || this.facedown || this.anotherUniqueInPlay(context) || !['character', 'attachment'].includes(this.type)) {
+            if(this.location === 'play area' || this.facedown || this.anotherUniqueInPlay(context.player) || !['character', 'attachment'].includes(this.type)) {
                 return false;
             }
         } else if(actionType === 'removeFate' && (this.location !== 'play area' || this.fate === 0 || this.type !== 'character')) {
@@ -187,11 +187,11 @@ class DrawCard extends BaseCard {
         return super.allowGameAction(actionType, context);
     }
 
-    anotherUniqueInPlay(context) {
+    anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (
             card.location === 'play area' &&
             card.name === this.name &&
-            ((card.owner === context.player || card.controller === context.player) || (card.owner === this.owner)) &&
+            ((card.owner === player || card.controller === player) || (card.owner === this.owner)) &&
             card !== this
         ));
     }
@@ -402,12 +402,12 @@ class DrawCard extends BaseCard {
      * Checks whether the passed card meets the attachment restrictions (e.g.
      * Opponent cards only, specific factions, etc) for this card.
      */
-    canAttach(card) {
+    canAttach(card, context) { // eslint-disable-line no-unused-vars
         return card && card.getType() === 'character' && this.getType() === 'attachment';
     }
 
     canPlay(context) {
-        return this.allowGameAction('play', context);
+        return this.checkRestrictions('play', context);
     }
 
     /**
@@ -419,10 +419,26 @@ class DrawCard extends BaseCard {
     }
 
     checkForIllegalAttachments() {
-        let illegalAttachments = this.attachments.reject(attachment => this.allowAttachment(attachment) && attachment.canAttach(this));
+        // TODO: Context object here?
+        let illegalAttachments = this.attachments.filter(attachment => (
+            !this.allowAttachment(attachment) || !attachment.canAttach(this, { game: this.game, player: this.controller })
+        ));
         if(illegalAttachments.length > 0) {
             this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
             this.game.applyGameAction(null, { discardFromPlay: illegalAttachments });
+            return true;
+        } else if(this.attachments.filter(card => card.isRestricted()).length > 2) {
+            this.game.promptForSelect(this.controller, {
+                activePromptTitle: 'Choose an attachment to discard',
+                waitingPromptTitle: 'Waiting for opponent to choose an attachment to discard',
+                cardCondition: card => card.parent === this && card.isRestricted(),
+                onSelect: (player, card) => {
+                    this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
+                    this.game.applyGameAction(null, { discardFromPlay: card });
+                    return true;
+                },
+                source: 'Too many Restricted attachments'
+            });
             return true;
         }
         return false;

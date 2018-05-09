@@ -6,8 +6,8 @@ class AgainstTheWaves extends DrawCard {
             title: 'Bow or ready a shugenja',
             target: {
                 cardType: 'character',
-                gameAction: [ability.actions.bow(), ability.actions.unbow()],
-                cardCondition: card => card.hasTrait('shugenja')
+                cardCondition: card => card.hasTrait('shugenja'),
+                gameAction: [ability.actions.bow(), ability.actions.unbow()]
             }
         });
     }

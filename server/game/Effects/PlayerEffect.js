@@ -6,6 +6,10 @@ class PlayerEffect extends Effect {
     constructor(game, source, properties, effect) {
         super(game, source, properties, effect);
         this.targetController = properties.targetController || 'current';
+        if(typeof this.match !== 'function') {
+            this.match = () => true;
+        }
+
     }
 
     isValidTarget(target) {

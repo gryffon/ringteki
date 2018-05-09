@@ -11,10 +11,11 @@ class AsahinaArtisan extends DrawCard {
                                                   card.isFaction('crane') && card.location === 'play area'
             },
             effect: 'give {0} +3 {1} skill',
-            effectItems: () => 'political',
-            untilEndOfConflict: {
+            effectArgs: () => 'political',
+            untilEndOfConflict: context => ({
+                match: context.target,
                 effect: ability.effects.modifyPoliticalSkill(3)
-            }
+            })
         });
     }
 }

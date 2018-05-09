@@ -29,8 +29,6 @@ const AbilityResolver = require('./gamesteps/abilityresolver.js');
 const SimultaneousEffectWindow = require('./gamesteps/SimultaneousEffectWindow');
 const AbilityContext = require('./AbilityContext.js');
 const Ring = require('./ring.js');
-const Duel = require('./Duel.js');
-const DuelFlow = require('./gamesteps/DuelFlow.js');
 const MenuCommands = require('./MenuCommands');
 
 class Game extends EventEmitter {
@@ -39,7 +37,6 @@ class Game extends EventEmitter {
 
         this.effectEngine = new EffectEngine(this);
         this.playersAndSpectators = {};
-        this.playerCards = {};
         this.gameChat = new GameChat();
         this.chatCommands = new ChatCommands(this);
         this.pipeline = new GamePipeline();
@@ -63,8 +60,7 @@ class Game extends EventEmitter {
         this.password = details.password;
         this.roundNumber = 0;
 
-        this.militaryConflictCompleted = false;
-        this.politicalConflictCompleted = false;
+        this.completedConflicts = [];
         this.rings = {
             air: new Ring(this, 'air','military'),
             earth: new Ring(this, 'earth','political'),
@@ -95,22 +91,20 @@ class Game extends EventEmitter {
         this.router.handleError(this, e);
     }
 
-    /*
+    /**
      * Adds a message to the in-game chat e.g 'Jadiel draws 1 card'
      * @param {String} message to display (can include {i} references to args)
-     * @param {} args to match the references in @string
-     * @returns {undefined}
+     * @param {Array} args to match the references in @string
      */
     addMessage() {
         this.gameChat.addMessage(...arguments);
     }
 
-    /*
+    /**
      * Adds a message to in-game chat with a graphical icon
      * @param {String} one of: 'endofround', 'success', 'info', 'danger', 'warning'
      * @param {String} message to display (can include {i} references to args)
-     * @param {} args to match the references in @string
-     * @returns {undefined}
+     * @param {Array} args to match the references in @string
      */
     addAlert() {
         this.gameChat.addAlert(...arguments);
@@ -120,7 +114,7 @@ class Game extends EventEmitter {
         return this.gameChat.messages;
     }
 
-    /*
+    /**
      * Checks if a player is a spectator
      * @param {Object} player
      * @returns {Boolean}
@@ -179,7 +173,7 @@ class Game extends EventEmitter {
         return _.pick(this.playersAndSpectators, player => this.isSpectator(player));
     }
 
-    /*
+    /**
      * Gets the current First Player
      * @returns {Player}
      */
@@ -240,6 +234,19 @@ class Game extends EventEmitter {
         });
 
         return foundCards;
+    }
+
+    isDuringConflict(type) {
+        return this.currentConflict && (!type || this.currentConflict.conflictType === type); 
+    }
+
+    conflictCompleted(conflict) {
+        this.completedConflicts.push({ 
+            attackingPlayer: conflict.attackingPlayer,
+            declaredType: conflict.declaredType,
+            winner: conflict.winner,
+            typeSwitched: conflict.conflictTypeSwitched
+        });
     }
 
     /*
@@ -402,11 +409,10 @@ class Game extends EventEmitter {
         player.drop(cardId, source, target);
     }
 
-    /*
+    /**
      * Change a players total honor
      * @param {Player} player
-     * @param {Int} honor
-     * @returns {undefined}
+     * @param {Number} honor
      */
     addHonor(player, honor) {
         player.honor += honor;
@@ -418,11 +424,10 @@ class Game extends EventEmitter {
         this.checkWinCondition(player);
     }
 
-    /*
+    /**
      * Change a players total fate
      * @param {Player} player
-     * @param {Int} fate
-     * @returns {undefined}
+     * @param {Number} fate
      */
     addFate(player, fate) {
         player.fate += fate;
@@ -432,45 +437,10 @@ class Game extends EventEmitter {
         }
     }
 
-    /*
-     * Transfer honor from one player to another (NB: parameters for honor are
-     * the opposite way round to those for fate!)
-     * @param {Player} source
-     * @param {Player} target
-     * @param {Int} honor
-     * @returns {undefined}
-     */
-    transferHonor(source, target, honor) {
-        var appliedHonor = Math.min(source.honor, honor);
-        source.honor -= appliedHonor;
-        target.honor += appliedHonor;
-
-        this.checkWinCondition(target);
-        this.checkWinCondition(source);
-    }
-
-    /*
-     * Transfer fate from one player to another (NB: parameters for honor are
-     * the opposite way round to those for fate!)
-     * @param {Player} to
-     * @param {Player} from
-     * @param {Int} fate
-     * @returns {undefined}
-     */
-    transferFate(to, from, fate) {
-        var appliedFate = Math.min(from.fate, fate);
-
-        from.fate -= appliedFate;
-        to.fate += appliedFate;
-
-        this.raiseEvent('onFateTransferred', { source: from, target: to, amount: fate });
-    }
-
-    /*
+    /** TODO: Change this to check both players in FP order?
      * Check to see if this player has won/lost the game due to honor (NB: this
      * function doesn't check to see if a conquest victory has been achieved)
      * @param {Player} player
-     * @returns {undefined}
      */
     checkWinCondition(player) {
         if(player.getTotalHonor() >= 25) {
@@ -484,12 +454,11 @@ class Game extends EventEmitter {
 
     }
 
-    /*
+    /**
      * Display message declaring victory for one player, and record stats for
      * the game
      * @param {Player} winner
      * @param {String} reason
-     * @returns {undefined}
      */
     recordWinner(winner, reason) {
         if(this.winner) {
@@ -937,46 +906,24 @@ class Game extends EventEmitter {
      */
     applyGameAction(context, actions) {
         if(!context) {
-            context = new AbilityContext({ game: this });
+            context = this.getFrameworkContext();
         }
         let actionPairs = Object.entries(actions);
-        let events = actionPairs.reduce((array, [action, cards]) => array.concat(GameActions.eventArrayTo[action](cards, context)), []);
+        let events = actionPairs.reduce((array, [action, cards]) => {
+            let gameAction = GameActions[action]();
+            if(gameAction.setTarget(cards, context)) {
+                return array.concat(gameAction.getEventArray());
+            }
+            return array;
+        }, []);
         if(events.length > 0) {
             this.openEventWindow(events);
         }
         return events;
     }
 
-    /*
-     * Transfers honor equal to the difference in bids from the high bidder to
-     * the low bidder
-     * @returns {undefined}
-     */
-    tradeHonorAfterBid() {
-        var honorDifference = 0;
-        var remainingPlayers = this.getPlayersInFirstPlayerOrder();
-        let currentPlayer = remainingPlayers.shift();
-        if(remainingPlayers.length > 0) {
-
-            var otherPlayer = remainingPlayers.shift();
-            if(currentPlayer.honorBid > otherPlayer.honorBid) {
-                honorDifference = currentPlayer.honorBid - otherPlayer.honorBid;
-                this.addMessage('{0} gives {1} {2} honor', currentPlayer, otherPlayer, honorDifference);
-                this.raiseEvent('onHonorTradedAfterBid', { 
-                    giver: currentPlayer, 
-                    receiver: otherPlayer, 
-                    amount: honorDifference 
-                }, () => this.transferHonor(currentPlayer, otherPlayer, honorDifference));
-            } else if(otherPlayer.honorBid > currentPlayer.honorBid) {
-                honorDifference = otherPlayer.honorBid - currentPlayer.honorBid;
-                this.addMessage('{0} gives {1} {2} honor', otherPlayer, currentPlayer, honorDifference);
-                this.raiseEvent('onHonorTradedAfterBid', { 
-                    giver: otherPlayer, 
-                    receiver: currentPlayer, 
-                    amount: honorDifference 
-                }, () => this.transferHonor(otherPlayer, currentPlayer, honorDifference));
-            }
-        }
+    getFrameworkContext() {
+        return new AbilityContext({ game: this });
     }
 
     /*
@@ -1001,27 +948,6 @@ class Game extends EventEmitter {
                 this.currentConflict.addDefender(card);
             }
         }
-    }
-
-    /*
-     * Starts a duel between two characters. Prompts for bids, deals with costs
-     * of bids, and then resolves the outcome
-     * @param {DrawCard} source - card which initiated the duel
-     * @param {DrawCard} target - other card partipating in duel
-     * @param {Function} getSkill = card => Int // gets the skill to add to bid
-     * @param {Function} resolutionHandler - (winner, loser) => undefined //
-     * function which deals with any effects due to winning/losing the duel
-     * @param {Function} costHandler - () => undefined // function which resolves
-     * costsas a result of bids (transfering honor is the default)
-     * @returns {undefined}
-     */
-    initiateDuel(challenger, target, type, resolutionHandler, costHandler = () => this.tradeHonorAfterBid()) {
-        if(challenger.location !== 'play area' || target.location !== 'play area') {
-            this.addMessage('The duel cannot proceed as one participant is no longer in play');
-            return;
-        }
-        this.currentDuel = new Duel(this, challenger, target, type);
-        this.queueStep(new DuelFlow(this, this.currentDuel, costHandler, resolutionHandler));
     }
 
     watch(socketId, user) {

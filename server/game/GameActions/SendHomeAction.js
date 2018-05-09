@@ -6,23 +6,23 @@ class SendHomeAction extends CardGameAction {
         this.effect = 'send {0} home';
     }
 
-    canAffect(card) {
+    canAffect(card, context) {
         if(!card.isParticipating()) {
             return false;
         }
-        return super.canAffect(card);
+        return super.canAffect(card, context);
     }
 
     getEventArray() {
-        if(this.cards.length === 0) {
+        if(this.targets.length === 0) {
             return [];
         }
-        let events = this.cards.map(card => this.getEvent(card));
+        let events = this.targets.map(card => this.getEvent(card));
         return events.concat(this.createEvent('onSendCharactersHome', { sendHomeEvents: events }));
     }
 
-    getEvent(card) {
-        return super.createEvent('onCardSentHome', { card: card, context: this.context }, () => this.context.game.currentConflict.removeFromConflict(card));
+    getEvent(card, context = this.context) {
+        return super.createEvent('onCardSentHome', { card: card, context: context }, () => this.context.game.currentConflict.removeFromConflict(card));
     }
 }
 

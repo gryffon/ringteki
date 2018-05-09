@@ -1,30 +1,24 @@
 const DrawCard = require('../../drawcard.js');
 
 class ArtisanAcademy extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.action({
             title: 'Make top card of conflict deck playable',
             phase: 'conflict',
             condition: context => context.player.conflictDeck.size() > 0,
             effect: 'reveal the top card of their conflict deck: {1}',
-            messageItems: context => context.player.conflictDeck.first(),
-            handler: context => {
-                let topCard = context.player.conflictDeck.first();
-                if(topCard.type === 'event') {
-                    topCard.abilities.reactions.forEach(reaction => reaction.registerEvents());
-                }
-                this.lastingEffect(ability => ({
-                    until: {
-                        onCardMoved: event => event.card === topCard && event.originalLocation === 'conflict deck',
-                        onPhaseEnded: event => event.phase === 'conflict',
-                        onDeckShuffled: event => event.player === context.player && event.deck === 'conflict deck'
-                    },
-                    effect: [
-                        ability.effects.showTopConflictCard,
-                        ability.effects.canPlayFromOwn('conflict deck')
-                    ]
-                }));
-            }
+            effectArgs: context => context.player.conflictDeck.first(),
+            lastingEffect: context => ({
+                until: {
+                    onCardMoved: event => event.card === context.player.conflictDeck.first() && event.originalLocation === 'conflict deck',
+                    onPhaseEnded: event => event.phase === 'conflict',
+                    onDeckShuffled: event => event.player === context.player && event.deck === 'conflict deck'
+                },
+                effect: [
+                    ability.effects.showTopConflictCard(),
+                    ability.effects.canPlayFromOwn('conflict deck')
+                ]
+            })
         });
     }
 }

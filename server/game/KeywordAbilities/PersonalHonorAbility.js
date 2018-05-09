@@ -9,7 +9,6 @@ class PersonalHonorAbility extends TriggeredAbility {
                                                       (context.source.isHonored || context.source.isDishonored)
             },
             title: card.name + '\'s Personal Honor',
-            cannotBeCopied: true,
             printedAbility: false,
             handler: context => {
                 if(context.source.isHonored) {

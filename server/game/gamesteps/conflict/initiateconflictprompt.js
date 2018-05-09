@@ -109,15 +109,12 @@ class InitiateConflictPrompt extends UiPrompt {
     selectRing(ring) {
         let player = this.choosingPlayer;
 
-        let canInitiateThisConflictType = !player.conflicts.isAtMax(ring.conflictType);        
-        let canInitiateOtherConflictType = !player.conflicts.isAtMax(ring.conflictType === 'military' ? 'political' : 'military');
-
         if(this.conflict.ring === ring) {
-            if(!canInitiateOtherConflictType) {
+            if(!player.canInitiateConflict(ring.conflictType === 'military' ? 'political' : 'military')) {
                 return false;
             }
             ring.flipConflictType();
-        } else if(!canInitiateThisConflictType) {
+        } else if(!player.canInitiateConflict(ring.conflictType)) {
             ring.flipConflictType();
         }
 
@@ -214,13 +211,13 @@ class InitiateConflictPrompt extends UiPrompt {
 
     menuCommand(player, arg) {
         if(arg === 'done') {
-            let keys = _.keys(capitalize);
-            if(!keys.includes(this.conflict.conflictType) || !keys.includes(this.conflict.element) || 
+            if(!this.conflict.ring || this.game.rings[this.conflict.element] !== this.conflict.ring || 
                                 (!this.conflict.isSinglePlayer && !this.conflict.conflictProvince) || this.conflict.attackers.length === 0) {
                 return false;
             }
             this.complete();
-            this.conflict.conflictDeclared = true;
+            this.conflict.declaredRing = this.conflict.ring;
+            this.conflict.declaredType = this.conflict.ring.conflictType;
             return true;
         } else if(arg === 'pass') {
             this.game.promptWithHandlerMenu(this.choosingPlayer, {

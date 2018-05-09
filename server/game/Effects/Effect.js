@@ -48,6 +48,10 @@ class Effect {
         return true;
     }
 
+    getDefaultTarget(context) { // eslint-disable-line no-unused-vars
+        return null;
+    }
+
     getTargets() {
         return [];
     }

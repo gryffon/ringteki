@@ -3,22 +3,24 @@ const DrawCard = require('../../drawcard.js');
 class ClarityOfPurpose extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Opponent\'s cards cannot bow the target character and it does not bow as a result of political conflicts',
-            condition: () => this.game.currentConflict,
+            title: 'Character cannot be bowed and doesn\'t bow during political conflicts',
+            condition: () => this.game.isDuringConflict(),
             target: {
-                activePromptTitle: 'Choose a character',
                 cardType: 'character',
-                cardCondition: card => card.controller === this.controller && card.location === 'play area'
+                cardCondition: (card, context) => card.controller === context.player && card.location === 'play area'
             },
+            effect: 'prevent opponents\' actions from bowing {0} and stop it bowing at the end of a political conflict',
             handler: context => {
-                this.game.addMessage('{0} plays {1} on {2} to prevent opponents\' actions from bowing it and stop it bowing at the end of a political conflict', this.controller, this, context.target);
-                this.untilEndOfConflict(ability => ({
+                let opponent = context.player.opponent;
+                context.source.untilEndOfConflict(ability => ({
                     match: context.target,
-                    effect: ability.effects.cardCannot('bow', context => context.source.type !== 'ring' && context.source.controller === this.controller.opponent)
+                    effect: ability.effects.cardCannot('bow', context => (
+                        context.source.type !== 'ring' && opponent && context.source.controller === opponent
+                    ))
                 }));
-                this.untilEndOfConflict(ability => ({
+                context.source.untilEndOfConflict(ability => ({
                     match: context.target,
-                    condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'political',
+                    condition: () => this.game.isDuringConflict('political'),
                     effect: ability.effects.doesNotBow
                 }));
             }

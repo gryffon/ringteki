@@ -58,11 +58,6 @@ class CardAction extends CardAbility {
             return 'condition';
         }
 
-        // If this ability applies a gameAction to context.source, we need to check that that is legal
-        if(this.properties.gameAction && this.getGameActions(context).length === 0) {
-            return 'condition';
-        }
-
         return super.meetsRequirements(context);
     }
 

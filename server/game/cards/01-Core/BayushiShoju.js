@@ -11,7 +11,7 @@ class BayushiShoju extends DrawCard {
                 cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player
             },
             effect: 'reduce {0}\'s political skill by 1 - they will die if they reach 0',
-            handler: context => context.source.untilEndOfConflict(ability => ({
+            untilEndOfConflict: context => ({
                 match: context.target,
                 effect: [
                     ability.effects.modifyPoliticalSkill(-1),
@@ -22,7 +22,7 @@ class BayushiShoju extends DrawCard {
                         gameAction: ability.actions.discardFromPlay()
                     })
                 ]
-            }))            
+            })
         });
     }
 }

@@ -7,11 +7,11 @@ class WaningHostilities extends DrawCard {
             when: {
                 onPhaseStarted: event => event.phase === 'conflict'
             },
-            handler: () => {
-                this.game.addMessage('{0} plays {1} - both players may only declare a single conflict this phase', this.controller, this);
-                this.controller.conflicts.conflictOpportunities = 1;
-                if(this.controller.opponent) {
-                    this.controller.opponent.conflicts.conflictOpportunities = 1;
+            effect: 'limit both players to a single conflict this turn',
+            handler: context => {
+                context.player.conflictOpportunities = 1;
+                if(context.player.opponent) {
+                    context.player.opponent.conflictOpportunities = 1;
                 }
             }
         });

@@ -4,22 +4,21 @@ class Misinformation extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Give opponent\'s participating cards -1/-1',
-            condition: () => this.controller.opponent && this.controller.showBid > this.controller.opponent.showBid + 1 && 
-                             this.controller.opponent.anyCardsInPlay(card => card.isParticipating()),
-            handler: () => {
-                this.game.addMessage('{0} plays {1}, giving all {2}\'s participating characters -1/-1', this.controller, this, this.controller.opponent);
-                this.controller.opponent.cardsInPlay.each(card => {
-                    if(card.isParticipating()) {
-                        this.untilEndOfConflict(ability => ({
-                            match: card,
-                            effect: [
-                                ability.effects.modifyMilitarySkill(-1),
-                                ability.effects.modifyPoliticalSkill(-1)
-                            ]
-                        }));
-                    }
-                });
-            }
+            condition: context => context.player.opponent && context.player.showBid > context.player.opponent.showBid + 1 && 
+                                  context.player.opponent.anyCardsInPlay(card => card.isParticipating()),
+            effect: 'give all opposing characters -1{1}/-1{2}',
+            effectArgs: () => ['military', 'political'],
+            handler: context => context.player.opponent.cardsInPlay.each(card => {
+                if(card.isParticipating()) {
+                    context.source.untilEndOfConflict(ability => ({
+                        match: card,
+                        effect: [
+                            ability.effects.modifyMilitarySkill(-1),
+                            ability.effects.modifyPoliticalSkill(-1)
+                        ]
+                    }));
+                }
+            })
         });
     }
 }

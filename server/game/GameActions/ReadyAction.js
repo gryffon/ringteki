@@ -7,15 +7,15 @@ class ReadyAction extends CardGameAction {
         this.cost = 'readying {0}';
     }
 
-    canAffect(card) {
+    canAffect(card, context = this.context) {
         if(card.location !== 'play area' || !card.bowed) {
             return false;
         }
-        return super.canAffect(card);
+        return super.canAffect(card, context);
     }
 
-    getEvent(card) {
-        return super.createEvent('onCardReadied', { card: card, context: this.context }, () => card.ready());
+    getEvent(card, context = this.context) {
+        return super.createEvent('onCardReadied', { card: card, context: context }, () => card.ready());
     }
 }
 

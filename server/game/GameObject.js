@@ -1,5 +1,6 @@
 const uuid = require('uuid');
 const _ = require('underscore');
+const GameActions = require('./GameActions/GameActions');
 
 class GameObject {
     constructor(game, name) {
@@ -36,6 +37,18 @@ class GameObject {
 
     mostRecentEffect(type) {
         return _.last(this.getEffects(type));
+    }
+
+    allowGameAction(actionType, context = null) {
+        if(GameActions.actionType) {
+            return GameActions.actionType().canAffect(this, context);
+        }
+        return this.checkRestrictions(actionType, context);
+    }
+
+
+    checkRestrictions(actionType, context) {
+        return this.getEffects('abilityRestrictions').some(restriction => restriction.isMatch(actionType, context));
     }
 
     isUnique() {

@@ -1,22 +1,72 @@
-const AbilityGameActions = require('./AbilityGameActions');
-
-class Connector {
-    constructor(method) {
-        for(const action in AbilityGameActions) {
-            this[action] = (target, context, ...args) => {
-                let gameAction = AbilityGameActions[action](...args);
-                gameAction.context = context;
-                gameAction.cards = target;
-                return gameAction[method](target);
-            };
-        }
-    }
-}
+const AttachAction = require('./AttachAction');
+const BowAction = require('./BowAction');
+const BreakAction = require('./BreakAction');
+const ChosenDiscardAction = require('./ChosenDiscardAction');
+const DiscardFavorAction = require('./DiscardFavorAction');
+const DiscardFromPlayAction = require('./DiscardFromPlayAction');
+const DiscardFromHandAction = require('./DiscardFromHandAction');
+const DiscardStatusAction = require('./DiscardStatusAction');
+const DishonorAction = require('./DishonorAction');
+const DrawAction = require('./DrawAction');
+const DuelAction = require('./DuelAction');
+const FireRingAction = require('./FireRingAction');
+const FlipDynastyAction = require('./FlipDynastyAction');
+const GainHonorAction = require('./GainHonorAction');
+const HonorAction = require('./HonorAction');
+const LoseHonorAction = require('./LoseHonorAction');
+const ModifyFateAction = require('./ModifyFateAction');
+const MoveToConflictAction = require('./MoveToConflictAction');
+const PlaceFateAction = require('./PlaceFateAction');
+const PlaceFateRingAction = require('./PlaceFateRingAction');
+const PutIntoPlayAction = require('./PutIntoPlayAction');
+const RandomDiscardAction = require('./RandomDiscardAction');
+const ReadyAction = require('./ReadyAction');
+const RemoveFateAction = require('./RemoveFateAction');
+const ResolveRingAction = require('./ResolveRingAction');
+const ReturnToDeckAction = require('./ReturnToDeckAction');
+const ReturnToHandAction = require('./ReturnToHandAction');
+const RevealAction = require('./RevealAction');
+const SendHomeAction = require('./SendHomeAction');
+const TransferFateAction = require('./TransferFateAction');
+const TransferHonorAction = require('./TransferHonorAction');
 
 const GameActions = {
-    eventTo: new Connector('getEvent'),
-    canBeAffectedBy: new Connector('canAffect'),
-    eventArrayTo: new Connector('getEventArray')
+    // card actions
+    attach: (attachment, discardOnFailure) => new AttachAction(attachment, discardOnFailure),
+    bow: () => new BowAction(),
+    break: () => new BreakAction(),
+    discardFromHand: () => new DiscardFromHandAction(),
+    discardFromPlay: () => new DiscardFromPlayAction(),
+    discardStatusToken: () => new DiscardStatusAction(),
+    dishonor: () => new DishonorAction(),
+    duel: (type, challenger, resolutionHandler, costHandler) => new DuelAction(type, challenger, resolutionHandler, costHandler),
+    fireRingEffect: () => new FireRingAction(),
+    flipDynasty: () => new FlipDynastyAction(),
+    honor: () => new HonorAction(),
+    moveToConflict: () => new MoveToConflictAction(),
+    placeFate: (amount, origin) => new PlaceFateAction(amount, origin),
+    putIntoConflict: (fate) => new PutIntoPlayAction(fate),
+    putIntoPlay: (fate) => new PutIntoPlayAction(fate, false),
+    ready: () => new ReadyAction(),
+    removeFate: (amount, recipient) => new RemoveFateAction(amount, recipient),
+    returnToDeck: (bottom) => new ReturnToDeckAction(bottom),
+    returnToHand: () => new ReturnToHandAction(),
+    reveal: () => new RevealAction(),
+    sendHome: () => new SendHomeAction(),
+    sacrifice: () => new DiscardFromPlayAction(true),
+    // player actions
+    chosenDiscard: (amount) => new ChosenDiscardAction(amount),
+    discardAtRandom: (amount) => new RandomDiscardAction(amount),
+    draw: (amount) => new DrawAction(amount),
+    gainFate: (amount) => new ModifyFateAction(amount),
+    gainHonor: (amount) => new GainHonorAction(amount),
+    loseHonor: (amount) => new LoseHonorAction(amount),
+    loseImperialFavor: () => new DiscardFavorAction(),
+    takeFate: (amount) => new TransferFateAction(amount),
+    takeHonor: (amount) => new TransferHonorAction(amount),
+    // ring actions
+    placeFateOnRing: (amount) => new PlaceFateRingAction(amount),
+    resolveRing: (optional) => new ResolveRingAction(optional)
 };
 
 module.exports = GameActions;

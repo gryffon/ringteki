@@ -6,6 +6,7 @@ class KnowTheWorld extends DrawCard {
         this.action({
             title: 'Switch a claimed ring with an unclaimed one',
             condition: context => _.any(this.game.rings, ring => ring.claimedBy === context.player) && _.any(this.game.rings, ring => ring.isUnclaimed()),
+            effect: 'switch a claimed ring with an unclaimed one',
             handler: context => {
                 // TODO: Does this need a condition?
                 this.game.promptForRingSelect(context.player, {

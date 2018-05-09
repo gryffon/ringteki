@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class PitTrap extends DrawCard {
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: ability.effects.doesNotReady
+            effect: ability.effects.doesNotReady()
         });
     }
 

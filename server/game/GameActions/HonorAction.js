@@ -7,15 +7,15 @@ class HonorAction extends CardGameAction {
         this.cost = 'honoring {0}';
     }
 
-    canAffect(card) {
+    canAffect(card, context = this.context) {
         if(card.location !== 'play area' || card.type !== 'character' || card.isHonored) {
             return false;
         }
-        return super.canAffect(card);
+        return super.canAffect(card, context);
     }
 
-    getEvent(card) {
-        return super.createEvent('onCardHonored', { card: card, context: this.context }, () => card.honor());
+    getEvent(card, context = this.context) {
+        return super.createEvent('onCardHonored', { card: card, context: context }, () => card.honor());
     }
 }
 

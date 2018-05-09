@@ -10,6 +10,7 @@ class EventWindow extends BaseStepWithPipeline {
         super(game);
 
         this.events = [];
+        this.thenAbilities = [];
         _.each(events, event => {
             if(!event.cancelled) {
                 this.addEvent(event);
@@ -30,6 +31,7 @@ class EventWindow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.checkForOtherEffects()),
             new SimpleStep(this.game, () => this.preResolutionEffects()),
             new SimpleStep(this.game, () => this.executeHandler()),
+            new SimpleStep(this.game, () => this.checkThenAbilities()),
             new SimpleStep(this.game, () => this.openWindow('forcedreaction')),
             new SimpleStep(this.game, () => this.openWindow('reaction')),
             new SimpleStep(this.game, () => this.resetCurrentEventWindow())
@@ -43,6 +45,13 @@ class EventWindow extends BaseStepWithPipeline {
     
     removeEvent(event) {
         this.events = _.reject(this.events, e => e === event);
+    }
+
+    addThenAbility(events, ability) {
+        if(!Array.isArray(events)) {
+            events = [events];
+        }
+        this.thenObjects.push({ events: events, ability: ability });
     }
 
     setCurrentEventWindow() {
@@ -107,6 +116,14 @@ class EventWindow extends BaseStepWithPipeline {
 
         if(thenEvents.length > 0) {
             this.game.openThenEventWindow(thenEvents);
+        }
+    }
+
+    checkThenAbilities() {
+        for(const thenAbility of this.thenAbilities) {
+            if(thenAbility.events.all(event => !event.cancelled)) {
+                this.game.resolveAbility(thenAbility.ability.createContext());
+            }
         }
     }
 

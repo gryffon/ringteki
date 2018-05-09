@@ -10,10 +10,9 @@ class HidaTomonatsu extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             target: {
                 cardType: 'character',
-                gameAction: 'returnToDeck',
-                cardCondition: card => card.isAttacking() && !card.isUnique()
-            },
-            message: '{0} sacrifices {1} to move {2} to the top of their owner\'s deck'
+                cardCondition: card => card.isAttacking() && !card.isUnique(),
+                gameAction: ability.actions.returnToDeck()
+            }
         });
     }
 }

@@ -4,15 +4,15 @@ class SupernaturalStorm extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Increase the skill of one character',
-            condition: () => this.game.currentConflict && this.controller.cardsInPlay.any(card => card.hasTrait('shugenja')),
+            condition: () => this.controller.cardsInPlay.any(card => card.hasTrait('shugenja')),
             target: {
-                activePromptTitle: 'Choose a character',
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area' && this.game.currentConflict.isParticipating(card)
+                cardCondition: card => card.isParticipating()
             },
+            effect: 'imbue {0} with the supernatural power of the storm!',
             handler: context => {
-                let shugenja = this.controller.filterCardsInPlay(card => card.hasTrait('shugenja') && card.getType() === 'character');
-                let numOfShugenja = shugenja.length;
+                let numOfShugenja = context.player.cardsInPlay.reduce((total, card) => total + card.hasTrait('shugenja') ? 1 : 0, 0);
+                this.game.addMessage('{0} gains +{1}{2}/+{1}{3}', context.target, numOfShugenja, 'military', 'political');
                 this.untilEndOfConflict(ability => ({
                     match: context.target,
                     effect: [
@@ -20,7 +20,6 @@ class SupernaturalStorm extends DrawCard {
                         ability.effects.modifyPoliticalSkill(numOfShugenja)
                     ]
                 }));
-                this.game.addMessage('{0} uses {1} to increase the political and military skill of {2} by {3}', this.controller, this, context.target, numOfShugenja);
             }
         });
     }

@@ -1,10 +1,12 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
+const AttachAction = require('./GameActions/AttachAction');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card) {
-        super(card, [Costs.payReduceableFateCost('play'), Costs.playLimited()], { 
-            cardCondition: (card, context) => context.player.canAttach(context.source, card) && context.source.canPlayOn(card)
+        super(card, [Costs.payReduceableFateCost('play'), Costs.playLimited()], {
+            gameAction: context => new AttachAction(context.source),
+            cardCondition: (card, context) => context.source.canPlayOn(card)
         });
         this.title = 'Play this attachment';
     }
@@ -19,7 +21,7 @@ class PlayAttachmentAction extends BaseAction {
         if(!context.source.canPlay(context)) {
             return 'cannotTrigger';
         }
-        if(context.source.anotherUniqueInPlay(context)) {
+        if(context.source.anotherUniqueInPlay(context.player)) {
             return 'unique';
         }
         return super.meetsRequirements(context);
@@ -30,8 +32,12 @@ class PlayAttachmentAction extends BaseAction {
     }
 
     executeHandler(context) {
-        this.originalLocation = context.source.location;
-        context.player.attach(context.source, context.target, true);
+        let cardPlayedEvent = context.game.getEvent('onCardPlayed', { 
+            player: context.player, 
+            card: context.source, 
+            originalLocation: context.source.location 
+        });
+        context.game.openEventWindow([new AttachAction(context.source).getEvent(context.target, context), cardPlayedEvent]);
     }
     
     isCardPlayed() {

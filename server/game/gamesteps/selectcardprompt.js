@@ -106,7 +106,9 @@ class SelectCardPrompt extends UiPrompt {
     activePrompt() {
         let buttons = this.properties.buttons;
         if(!this.selector.automaticFireOnSelect() && this.selector.hasEnoughSelected(this.selectedCards)) {
-            buttons = [{ text: 'Done', arg: 'done' }].concat(buttons);
+            if(buttons.every(button => button.text !== 'Done')) {
+                buttons = [{ text: 'Done', arg: 'done' }].concat(buttons);
+            }
         }
         if(this.game.manualMode && !_.any(buttons, button => button.arg === 'cancel')) {
             buttons = buttons.concat({ text: 'Cancel Prompt', arg: 'cancel' });

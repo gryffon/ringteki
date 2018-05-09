@@ -67,7 +67,7 @@ class ConflictFlow extends BaseStepWithPipeline {
                     waitingPromptTitle: 'Waiting for defender to choose conflict ring',
                     ringCondition: ring => ring.canDeclare(this.conflict.attackingPlayer),
                     onSelect: (player, ring) => {
-                        if(this.conflict.attackingPlayer.conflicts.isAtMax(ring.conflictType)) {
+                        if(!this.conflict.attackingPlayer.canInitiateConflict(ring.conflictType)) {
                             ring.flipConflictType();
                         }
                         this.conflict.ring = ring;
@@ -85,7 +85,6 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
         
-        this.conflict.attackingPlayer.conflicts.perform(this.conflict.conflictType);
         _.each(this.conflict.attackers, card => card.inConflict = true);
         this.game.addMessage('{0} is initiating a {1} conflict at {2}, contesting {3}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictProvince, this.conflict.ring);
     }
@@ -256,8 +255,6 @@ class ConflictFlow extends BaseStepWithPipeline {
         } else {
             this.game.addMessage('{0} won a {1} conflict {2} vs {3}',
                 this.conflict.winner, this.conflict.conflictType, this.conflict.winnerSkill, this.conflict.loserSkill);
-            this.conflict.winner.conflicts.won(this.conflict.conflictType, this.conflict.winner === this.conflict.attackingPlayer);
-            this.conflict.loser.conflicts.lost(this.conflict.conflictType, this.conflict.loser === this.conflict.attackingPlayer);
         }
     }
     
@@ -273,13 +270,12 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.game.addMessage('There is no winner or loser for this conflict because both sides have 0 skill');
         } else {
             this.game.addMessage('{0} won a {1} conflict', this.conflict.winner, this.conflict.conflictType);
-            this.conflict.winner.conflicts.won(this.conflict.conflictType, this.conflict.winner === this.conflict.attackingPlayer);
-            this.conflict.loser.conflicts.lost(this.conflict.conflictType, this.conflict.loser === this.conflict.attackingPlayer);
         }
         return true;
     }
 
     afterConflict() {
+        this.game.conflictCompleted(this.conflict);
         this.game.checkGameState(true);
         
         if(this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) {
@@ -374,14 +370,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
-
         this.resetCards();
-        if(!this.game.militaryConflictCompleted && (this.conflict.conflictType === 'military' || this.conflict.conflictTypeSwitched)) {
-            this.game.militaryConflictCompleted = true;
-        }
-        if(!this.game.politicalConflictCompleted && (this.conflict.conflictType === 'political' || this.conflict.conflictTypeSwitched)) {
-            this.game.politicalConflictCompleted = true;
-        }
     }
 }
 

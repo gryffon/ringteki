@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class AsakoTsuki extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Honor a scholar character',
             when: {
@@ -9,12 +9,8 @@ class AsakoTsuki extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                gameAction: 'honor',
-                cardCondition: card => card.hasTrait('scholar')
-            },
-            handler: context => {
-                this.game.addMessage('{0} uses {1} to honor {2}', this.controller, this, context.target);
-                this.game.applyGameAction(context, { honor: context.target });
+                cardCondition: card => card.hasTrait('scholar'),
+                gameAction: ability.actions.honor()
             }
         });
     }

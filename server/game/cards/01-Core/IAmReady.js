@@ -5,9 +5,9 @@ class IAmReady extends DrawCard {
         this.action({
             title: 'Ready a character',
             cost: ability.costs.discardFate(card => card.isFaction('unicorn') && card.bowed),
-            message: '{0} uses {1}, discarding a fate to ready {2}',
-            messageItems: context => [context.costs.discardFate],
-            handler: context => this.game.applyGameAction(context, { ready: context.costs.discardFate })
+            effect: 'ready {1}',
+            messageArgs: context => context.costs.discardFate,
+            handler: context => ability.actions.ready().resolve(context.costs.discardFate, context)
         });
     }
 }

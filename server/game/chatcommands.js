@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const SimpleStep = require('./gamesteps/simplestep.js');
+const GameActions = require('./GameActions/GameActions');
 const HonorBidPrompt = require('./gamesteps/honorbidprompt.js');
 
 class ChatCommands {
@@ -144,7 +144,6 @@ class ChatCommands {
     duel(player) {
         this.game.addMessage('{0} initiates a duel', player);
         this.game.queueStep(new HonorBidPrompt(this.game, 'Choose your bid for the duel'));
-        this.game.queueStep(new SimpleStep(this.game, () => this.game.tradeHonorAfterBid()));
     }
     
     moveToConflict(player) {
@@ -273,7 +272,7 @@ class ChatCommands {
 
         this.game.addMessage('{0} uses the /discard command to discard {1} card{2} at random', player, num, num > 1 ? 's' : '');
 
-        player.discardAtRandom(num);
+        GameActions.discardAtRandom(num).resolve(player, this.game.getFrameworkContext());
     }
 
     strength(player, args) {

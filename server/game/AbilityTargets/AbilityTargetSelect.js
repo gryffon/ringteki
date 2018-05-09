@@ -11,6 +11,17 @@ class AbilityTargetSelect {
         return _.any(this.properties.choices, condition => condition(context)) && context.ability.canPayCosts(context);
     }
 
+    getGameAction(context) {
+        let choice = this.properties.choices[context.targets[this.name]];
+        if(typeof choice !== 'function') {
+            if(!Array.isArray(choice)) {
+                choice = [choice];
+            }
+            return choice.filter(action => action.hasLegalTarget(context));
+        }
+        return [];
+    }
+
     getAllLegalTargets(context) {
         return _.filter(this.properties.choices, condition => condition(context));
     }
@@ -26,7 +37,17 @@ class AbilityTargetSelect {
             player = player.opponent;
         }
         let promptTitle = this.properties.activePromptTitle || 'Select one';
-        let choices = _.filter(_.keys(this.properties.choices), key => this.properties.choices[key](context));
+        let choices = Object.values(this.properties.choices).filter(value => {
+            if(typeof value === 'function') {
+                return value(context);
+            }
+            // value is a gameActions or an Array of game actions
+            let gameAction = value;
+            if(!Array.isArray(value)) {
+                gameAction = [value];
+            }
+            return gameAction.some(action => action.hasLegalTarget(context));
+        });
         let handlers = _.map(choices, choice => {
             return (() => {
                 result.resolved = true;
@@ -42,22 +63,26 @@ class AbilityTargetSelect {
             choices.push('Cancel');
             handlers.push(() => result.resolved = true);
         }
-        let waitingPromptTitle = '';
-        if(pretarget) {
-            if(context.ability.abilityType === 'action') {
-                waitingPromptTitle = 'Waiting for opponent to take an action or pass';
-            } else {
-                waitingPromptTitle = 'Waiting for opponent';
+        if(handlers.length === 1) {
+            handlers[0]();
+        } else if(handlers.length > 1) {
+            let waitingPromptTitle = '';
+            if(pretarget) {
+                if(context.ability.abilityType === 'action') {
+                    waitingPromptTitle = 'Waiting for opponent to take an action or pass';
+                } else {
+                    waitingPromptTitle = 'Waiting for opponent';
+                }
             }
+            context.game.promptWithHandlerMenu(player, {
+                waitingPromptTitle: waitingPromptTitle,
+                activePromptTitle: promptTitle,
+                context: context,
+                source: this.properties.source || context.source,
+                choices: choices,
+                handlers: handlers
+            });    
         }
-        context.game.promptWithHandlerMenu(player, {
-            waitingPromptTitle: waitingPromptTitle,
-            activePromptTitle: promptTitle,
-            context: context,
-            source: this.properties.source || context.source,
-            choices: choices,
-            handlers: handlers
-        });
         return result;
     }
     

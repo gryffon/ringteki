@@ -58,19 +58,40 @@ class SetupPhase extends Phase {
 
     attachStronghold() {
         _.each(this.game.getPlayers(), player => {
-            player.attachStronghold();
+            player.moveCard(player.stronghold, 'stronghold province');
+            if(player.role) {
+                player.role.moveTo('role');
+            }
         });
     }
 
     placeProvinces() {
         _.each(this.game.getPlayers(), player => {
+            let provinceIterator = 1; 
+            for(let card of player.provinceDeck.shuffle()) {
+                let destination;
+                if(card.selected) {
+                    destination = 'stronghold province';
+                } else {
+                    destination = 'province ' + provinceIterator;
+                    provinceIterator++;
+                }
+                player.moveCard(card, destination);
+            }
+            player.hideProvinceDeck = true;
             player.placeProvinces();
         });
     }
 
     fillProvinces() {
         _.each(this.game.getPlayers(), player => {
-            player.fillProvinces();
+            for(let province of ['province 1', 'province 2', 'province 3', 'province 4']) {
+                let card = player.dynastyDeck.first();
+                if(card) {
+                    player.moveCard(card, province);
+                    card.facedown = false;
+                }
+            }
         });
         this.game.allCards.each(card => {
             card.applyAnyLocationPersistentEffects();

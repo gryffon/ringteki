@@ -1,21 +1,14 @@
 const DrawCard = require('../../drawcard.js');
 
 class AkodoGunso extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Refill province faceup',
             when: {
-                onCardEntersPlay: (event, context) => event.card === context.source && 
+                onCharacterEntersPlay: (event, context) => event.card === context.source && 
                                                       ['province 1', 'province 2', 'province 3', 'province 4'].includes(event.originalLocation)
             },
-            effect: 'refill the province face up',
-            handler: context => {
-                let province = context.player.getSourceList(context.event.originalLocation);
-                let card = province.find(card => card.isDynasty);
-                if(card) {
-                    card.facedown = false;
-                }
-            }
+            gameAction: ability.actions.flipDynasty().target(context => context.player.getDynastyCardInProvince(context.event.originalLocation))
         });
     }
 }

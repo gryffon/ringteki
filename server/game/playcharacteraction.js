@@ -21,7 +21,7 @@ class PlayCharacterAction extends BaseAction {
         if(!context.source.canPlay(context)) {
             return 'triggerAbility';
         }
-        if(context.source.anotherUniqueInPlay(context)) {
+        if(context.source.anotherUniqueInPlay(context.player)) {
             return 'unique';
         }
         return super.meetsRequirements(context);

@@ -5,10 +5,10 @@ class EmbraceTheVoid extends DrawCard {
         this.wouldInterrupt({
             title: 'Take Fate',
             when: {
-                onCardMoveFate: (event, context) => event.origin === context.source.parent && event.fate > 0
+                onMoveFate: (event, context) => event.origin === context.source.parent && event.fate > 0
             },
             effect: 'take the {1} fate being removed from {0}',
-            effectItems: context => context.event.fate,
+            effectArgs: context => context.event.fate,
             handler: context => context.event.recipient = context.player
         });
     }
