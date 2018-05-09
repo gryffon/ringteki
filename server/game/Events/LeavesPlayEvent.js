@@ -1,5 +1,5 @@
 const Event = require('./Event.js');
-const RemoveFateEvent = require('./RemoveFateEvent.js');
+const MoveFateEvent = require('./MoveFateEvent.js');
 
 class LeavesPlayEvent extends Event {
     constructor(params, card, gameAction) {
@@ -31,7 +31,7 @@ class LeavesPlayEvent extends Event {
         }
         // Add an imminent triggering condition for removing fate
         if(this.card.fate > 0) {
-            let fateEvent = new RemoveFateEvent({ card: this.card, fate: this.card.fate });
+            let fateEvent = new MoveFateEvent({}, this.card.fate, this.card);
             fateEvent.order = this.order - 1;
             contingentEvents.push(fateEvent);
         }
