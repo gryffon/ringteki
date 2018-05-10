@@ -14,7 +14,7 @@ class DiscardFavorAction extends PlayerAction {
         return super.canAffect(player, context);
     }
 
-    getEvent(player, context = this.context) {
+    getEvent(player, context) {
         return super.createEvent('onDiscardFavor', { player: player, context: context }, () => player.loseImperialFavor());
     }
 }

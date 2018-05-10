@@ -28,10 +28,6 @@ class SetupPhase extends Phase {
     }
 
     setupBegin() {
-        _.each(this.game.getPlayers(), player => {
-            player.setupBegin();
-        });
-
         let allPlayersShuffled = _.shuffle(this.game.getPlayers());
 
         let firstPlayer = allPlayersShuffled.shift();
@@ -79,7 +75,6 @@ class SetupPhase extends Phase {
                 player.moveCard(card, destination);
             }
             player.hideProvinceDeck = true;
-            player.placeProvinces();
         });
     }
 

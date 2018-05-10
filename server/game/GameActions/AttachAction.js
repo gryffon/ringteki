@@ -12,7 +12,7 @@ class AttachAction extends CardGameAction {
         };
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(!context || !context.player || !this.attachment || !card || card.location !== 'play area') {
             return false;
         }
@@ -22,7 +22,7 @@ class AttachAction extends CardGameAction {
         return card.allowAttachment(this.attachment) && super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         if(this.canAffect(card, context)) {
             return super.createEvent('onCardAttached', { card: this.attachment, parent: card, context: context }, event => {
                 if(event.card.location === 'play area') {

@@ -32,13 +32,10 @@ class TerminalCondition {
             return this.getEventsFunc();
         } else if(this.gameAction) {
             let gameAction = this.gameAction;
-            if(typeof gameAction === 'function') {
-                gameAction = gameAction(this.context);
-            }
             if(!Array.isArray(gameAction)) {
                 gameAction = [gameAction];
             }
-            return gameAction.reduce((array, action) => array.concat(action.getEventArray()), []);
+            return gameAction.reduce((array, action) => array.concat(action.getEventArray(this.context)), []);
         }
         return [];
     }

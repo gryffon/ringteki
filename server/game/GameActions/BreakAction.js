@@ -7,14 +7,14 @@ class BreakAction extends CardGameAction {
         this.cost = 'breaking {0}';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(!card.isProvince || card.isBroken) {
             return false;
         }
         return super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         let params = { conflict: context.game.currentConflict, card: card, context: context };
         return super.createEvent('onBreakProvince', params, () => card.breakProvince());
     }

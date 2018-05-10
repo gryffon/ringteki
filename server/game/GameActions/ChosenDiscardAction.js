@@ -40,14 +40,14 @@ class ChosenDiscardAction extends PlayerAction {
         });
     }
 
-    getEventArray() {
+    getEventArray(context) {
         if(this.cards.length === 0) {
             return [];
         }
-        return super.getEventArray();
+        return super.getEventArray(context);
     }
 
-    getEvent(player, context = this.context) {
+    getEvent(player, context) {
         return super.createEvent('onCardsDiscardedFromHand', { player: player, cards: this.cards, context: context }, event => {
             for(const card of event.cards) {
                 player.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');

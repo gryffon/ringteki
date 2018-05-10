@@ -912,7 +912,7 @@ class Game extends EventEmitter {
         let events = actionPairs.reduce((array, [action, cards]) => {
             let gameAction = GameActions[action]();
             if(gameAction.setTarget(cards, context)) {
-                return array.concat(gameAction.getEventArray());
+                return array.concat(gameAction.getEventArray(context));
             }
             return array;
         }, []);

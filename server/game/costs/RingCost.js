@@ -29,8 +29,8 @@ class RingCost {
         return result;
     }
 
-    payEvent() {
-        return this.action.getEventArray();
+    payEvent(context) {
+        return this.action.getEventArray(context);
     }
 }
 

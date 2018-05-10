@@ -31,7 +31,7 @@ class HonorAction extends CardGameAction {
         }
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.location !== 'play area' || card.type !== 'character') {
             return false;
         } else if(this.name !== '') {
@@ -40,11 +40,11 @@ class HonorAction extends CardGameAction {
         return card.allowGameAction('honor', context) || card.allowGameAction('dishonor', context);
     }
 
-    getEventArray() {
-        return this.targets.filter(target => this.map.get(target) && this.canAffect(target)).map(target => this.getEvent(target));
+    getEventArray(context) {
+        return this.targets.filter(target => this.map.get(target) && this.canAffect(target, context)).map(target => this.getEvent(target, context));
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         let action = this.map.get(card);
         if(action === 'honor') {
             return super.createEvent('onCardHonored', { card: card, context: context }, () => card.honor());

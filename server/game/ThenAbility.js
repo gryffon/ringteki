@@ -35,7 +35,7 @@ class ThenAbility extends BaseAbility {
         // if there are any targets, look for gameActions attached to them
         let actions = this.targets.reduce((array, target) => array.concat(target.getGameAction(context)), []);
         // look for a gameAction on the ability itself, on an attachment execute that action on its parent, otherwise on the card itself
-        return actions.concat(this.properties.gameAction.filter(action => action.hasLegalTarget(context)));
+        return actions.concat(this.gameAction.filter(action => action.hasLegalTarget(context)));
     }
 
     executeHandler(context) {
@@ -60,7 +60,7 @@ class ThenAbility extends BaseAbility {
             action.preEventHandler(context);
         }
         // Get their events, and execute simultaneously
-        let events = actions.reduce((array, action) => array.concat(action.getEventArray()), []);
+        let events = actions.reduce((array, action) => array.concat(action.getEventArray(context)), []);
         let then = this.properties.then;
         if(then && typeof then === 'function') {
             then = then(context);

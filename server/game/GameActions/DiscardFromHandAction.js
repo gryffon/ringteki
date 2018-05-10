@@ -7,7 +7,7 @@ class DiscardFromHandAction extends CardGameAction {
         this.cost = 'discarding {0}';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.location !== 'hand') {
             return false;
         }
@@ -18,18 +18,18 @@ class DiscardFromHandAction extends CardGameAction {
         return true;
     }
 
-    getEventArray() {
+    getEventArray(context) {
         if(this.targets.length === 0) {
             return [];
         }
-        return [this.createEvent('onCardsDiscardedFromHand', { player: this.targets[0].controller, cards: this.targets, context: this.context }, event => {
+        return [this.createEvent('onCardsDiscardedFromHand', { player: this.targets[0].controller, cards: this.targets, context: context }, event => {
             for(const card of event.cards) {
                 card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
             }
         })];
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         let handler = () => card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
         return super.createEvent('onCardsDiscardedFromHand', { player: card.controller, cards: [card], context: context }, handler);
     }

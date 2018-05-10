@@ -5,7 +5,8 @@ class GameAction {
         this.name = name;
         this.targets = [];
         this.targetType = [];
-        this.optionsFunc = () => {};
+        this.optionsFunc = () => ({});
+        this.targetFunc = this.getDefaultTargets;
         this.effect = '';
         this.cost = '';
     }
@@ -31,9 +32,6 @@ class GameAction {
     }
 
     setTarget(targets, context) {
-        if(context) {
-            this.context = context;
-        }
         if(!targets) {
             return false;
         }
@@ -41,7 +39,7 @@ class GameAction {
             targets = [targets];
         }
         this.setOptions(this.optionsFunc(context));
-        this.targets = targets.filter(target => this.canAffect(target));
+        this.targets = targets.filter(target => this.canAffect(target, context));
         return this.targets.length > 0;
     }
 
@@ -55,10 +53,10 @@ class GameAction {
     resolve(targets, context) {
         this.setTarget(targets, context);
         this.preEventHandler(context);
-        return context.game.openEventWindow(this.getEventArray());
+        return context.game.openEventWindow(this.getEventArray(context));
     }
 
-    canAffect(target, context = this.context) {
+    canAffect(target, context) {
         return this.targetType.includes(target.type) && target.checkRestrictions(this.name, context);
     }
 
@@ -70,17 +68,16 @@ class GameAction {
         return null;
     }
 
-    getEvent(target, context = this.context) {
+    getEvent(target, context) {
         return this.createEvent('unnamedEvent', { target: target, context: context });
     }
 
-    getEventArray() {
-        return this.targets.filter(target => this.canAffect(target)).map(target => this.getEvent(target));
+    getEventArray(context) {
+        return this.targets.filter(target => this.canAffect(target, context)).map(target => this.getEvent(target, context));
     }
 
     createEvent(name, optionsFunc, handler) {
         let event = new Event(name, optionsFunc, handler, this);
-        event.context = this.context;
         return event;
     }
 }

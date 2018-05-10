@@ -124,7 +124,7 @@ class BaseAbility {
     payCosts(context) {
         return this.cost.reduce((array, cost) => {
             if(cost.payEvent) {
-                return array.concat(cost.payEvent());
+                return array.concat(cost.payEvent(context));
             } else if(cost.pay) {
                 return array.concat(context.game.getEvent('payCost', {}, () => cost.pay(context)));
             }

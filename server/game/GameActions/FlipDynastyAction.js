@@ -6,14 +6,14 @@ class FlipDynastyAction extends CardGameAction {
         this.effect = 'revealing {0}';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && card.isDynasty && card.facedown) {
-            return false;
+            return super.canAffect(card, context);
         }
-        return super.canAffect(card, context);
+        return false;
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return super.createEvent('onDynastyCardTurnedFaceup', { card: card, context: context }, () => card.facedown = false);
     }
 }

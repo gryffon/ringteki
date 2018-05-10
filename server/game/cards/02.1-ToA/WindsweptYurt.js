@@ -22,7 +22,7 @@ class WindsweptYurt extends DrawCard {
                 }
                 let gameAction = ability.actions[action](2);
                 if(gameAction.setTargets(this.game.getPlayers(), context)) {
-                    this.game.openEventWindow(gameAction.getEventArray());
+                    this.game.openEventWindow(gameAction.getEventArray(context));
                 }
                 let card = this.controller.getDynastyCardInProvince(context.cardStateWhenInitiated.location);
                 if(card) {

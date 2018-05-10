@@ -20,11 +20,11 @@ class MoveToConflictAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEventArray() {
+    getEventArray(context) {
         if(this.targets.length === 0) {
             return [];
         }
-        let events = this.targets.map(card => this.getEvent(card));
+        let events = this.targets.map(card => this.getEvent(card, context));
         return events.concat(this.createEvent('onMoveCharactersToConflict', { moveToConflictEvents: events }));
     }
 

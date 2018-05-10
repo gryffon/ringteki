@@ -10,7 +10,7 @@ class ShamefulDisplay extends ProvinceCard {
                 numCards: 2,
                 activePromptTitle: 'Select two characters',
                 cardCondition: card => card.isParticipating(),
-                gameAction: [ability.actions.honor(), ability.action.dishonor()]
+                gameAction: [ability.actions.honor(), ability.actions.dishonor()]
             },
             effect: 'change the personal honor of {0}',
             handler: context => {
