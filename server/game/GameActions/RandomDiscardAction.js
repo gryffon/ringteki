@@ -7,7 +7,7 @@ class RandomDiscardAction extends PlayerAction {
         this.effect = 'discard ' + amount + ' cards at random';
     }
 
-    getEvent(player, context = this.context) {
+    getEvent(player, context) {
         let amount = Math.min(this.amount, player.hand.size());
         let cards = player.hand.shuffle().slice(0, amount);
         return super.createEvent('onCardsDiscardedFromHand', { player: player, cards: cards, context: context }, event => {

@@ -11,6 +11,11 @@ class GameAction {
         this.cost = '';
     }
 
+    initialise(context) {
+        this.setOptions(this.optionsFunc(context));
+        this.setTarget(this.targetFunc(context), context);
+    }
+
     options(optionsFunc) {
         if(typeof optionsFunc === 'function') {
             this.optionsFunc = optionsFunc;
@@ -27,7 +32,13 @@ class GameAction {
     }
 
     target(targetFunc) {
-        this.targetFunc = targetFunc;
+        if(typeof targetFunc === 'function') {
+            this.targetFunc = targetFunc;
+        } else if(!Array.isArray(targetFunc)) {
+            this.targets = [targetFunc];
+        } else {
+            this.targets = targetFunc;
+        }
         return this;
     }
 
@@ -44,7 +55,8 @@ class GameAction {
     }
 
     hasLegalTarget(context) {
-        return this.setTarget(this.targetFunc(context), context);
+        this.targets = this.targets.filter(target => this.canAffect(target, context));
+        return this.targets.length > 0;
     }
 
     preEventHandler(context) { // eslint-disable-line no-unused-vars
@@ -68,8 +80,8 @@ class GameAction {
         return null;
     }
 
-    getEvent(target, context) {
-        return this.createEvent('unnamedEvent', { target: target, context: context });
+    getEvent(target, context) { // eslint-disable-line no-unused-vars
+        throw new Error('GameAction.getEvent called');
     }
 
     getEventArray(context) {

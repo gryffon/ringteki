@@ -2,6 +2,7 @@ const _ = require('underscore');
 const AbilityContext = require('../../AbilityContext');
 const BaseStepWithPipeline = require('../basestepwithpipeline.js');
 const CovertAbility = require('../../KeywordAbilities/CovertAbility');
+const GameActions = require('../../GameActions/GameActions');
 const SimpleStep = require('../simplestep.js');
 const ConflictActionWindow = require('./conflictactionwindow.js');
 const InitiateConflictPrompt = require('./initiateconflictprompt.js');
@@ -342,12 +343,12 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         // Create bow events for attackers
-        let attackerBowEvents = this.game.getEventsForGameAction('bow', this.conflict.attackers);
+        let attackerBowEvents = this.conflict.attackers.map(card => GameActions.bow().getEvent(card, this.game.getFrameworkContext()));
         // Cancel any events where attacker shouldn't bow
         _.each(attackerBowEvents, event => event.cancelled = !event.card.bowsOnReturnHome());
 
         // Create bow events for defenders
-        let defenderBowEvents = this.game.getEventsForGameAction('bow', this.conflict.defenders);
+        let defenderBowEvents = this.conflict.defenders.map(card => GameActions.bow().getEvent(card, this.game.getFrameworkContext()));
         // Cancel any events where defender shouldn't bow
         _.each(defenderBowEvents, event => event.cancelled = !event.card.bowsOnReturnHome());
 

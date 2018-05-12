@@ -8,7 +8,7 @@ class GiftedTactician extends DrawCard {
                 afterConflict: (event, context) => event.conflict.winner === context.player && context.source.isParticipating() && 
                                                    event.conflict.conflictType === 'military'
             },
-            gameActions: ability.actions.draw()
+            gameAction: ability.actions.draw()
         });
     }
 }

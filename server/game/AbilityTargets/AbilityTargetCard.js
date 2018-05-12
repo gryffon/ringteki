@@ -13,6 +13,13 @@ class AbilityTargetCard {
         return this.selector.hasEnoughTargets(context, true);
     }
 
+    initialiseGameActions(context) {
+        for(let action of this.properties.gameAction) {
+            action.target(context => context.targets[this.name]);
+            action.initialise(context);
+        }
+    }
+
     getGameAction(context) {
         return this.properties.gameAction.filter(gameAction => gameAction.setTarget(context.targets[this.name], context));
     }
@@ -98,7 +105,6 @@ class AbilityTargetCard {
         if(!Array.isArray(cards)) {
             cards = [cards];
         }
-        this.selector.setGameAction(this.properties.gameAction, context);
         return (cards.every(card => this.selector.canTarget(card, context)) &&
                 this.selector.hasEnoughSelected(cards) &&
                 !this.selector.hasExceededLimit(cards));

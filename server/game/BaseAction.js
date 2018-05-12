@@ -16,12 +16,14 @@ class BaseAction extends BaseAbility {
     }
 
     createContext() {
-        return new AbilityContext({
+        let context = new AbilityContext({
             ability: this,
             game: this.card.game,
             player: this.card.controller,
             source: this.card
         });
+        this.initialiseGameActions(context);
+        return context;
     }
 
     isAction() {

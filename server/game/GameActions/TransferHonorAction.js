@@ -9,7 +9,7 @@ class TransferHonorAction extends PlayerAction {
         this.cost = 'giving ' + amount + ' honor to {0}';
     }
 
-    getEvent(player, context = this.context) {
+    getEvent(player, context) {
         let params = {
             context: context, 
             player: player, 

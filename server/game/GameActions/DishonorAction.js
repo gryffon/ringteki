@@ -7,14 +7,14 @@ class DishonorAction extends CardGameAction {
         this.cost = 'dishonoring {0}';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.location !== 'play area' || card.type !== 'character' || card.isDishonored) {
             return false;
         }
         return super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return super.createEvent('onCardDishonored', { card: card, context: context }, () => card.dishonor());
     }
 }

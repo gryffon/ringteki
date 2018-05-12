@@ -9,8 +9,6 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const DrawPhaseCards = 1;
-
 class Player extends GameObject {
     constructor(id, user, owner, game) {
         super(game, user.username);
@@ -300,19 +298,16 @@ class Player extends GameObject {
             numCards = this.conflictDeck.size();
         }
 
-        var cards = this.conflictDeck.first(numCards);
-        _.each(cards, card => {
+        for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
             this.moveCard(card, 'hand');
-        });
+        }
 
         if(remainingCards > 0) {
             this.deckRanOutOfCards('conflict');
-            let moreCards = this.conflictDeck.first(remainingCards);
-            _.each(moreCards, card => this.moveCard(card, 'hand'));
-            cards = cards.concat(moreCards);
+            for(let card of this.conflictDeck.toArray().slice(0, remainingCards)) {
+                this.moveCard(card, 'hand');
+            }
         }
-
-        return (cards.length > 1) ? cards : cards[0];
     }
 
     /**
@@ -371,10 +366,11 @@ class Player extends GameObject {
      * @param {String} conflictType - one of 'military', 'political'
      */
     canInitiateConflict(conflictType = '') {
+        //console.log('canInitiatieConflict', conflictType);
         if(this.conflictOpportunities === 0) {
             return false;
         }
-        return this.game.completedConflicts.some(conflict => conflict.attackingPlayer === this && conflict.declaredType === conflictType);
+        return !this.game.completedConflicts.some(conflict => conflict.attackingPlayer === this && conflict.declaredType === conflictType);
     }
 
     /**
@@ -505,16 +501,9 @@ class Player extends GameObject {
      * Called at the start of the Dynasty Phase.  Resets a lot of the single round parameters
      */
     beginDynasty() {
-        this.roundDone = false;
-
         if(this.resetTimerAtEndOfRound) {
             this.noTimer = false;
         }
-
-        this.conflictsOpportunities = 2;
-
-        this.conflictLimit = 0;
-        this.drawPhaseCards = DrawPhaseCards;
 
         this.cardsInPlay.each(card => {
             card.new = false;
@@ -524,6 +513,7 @@ class Player extends GameObject {
 
         this.game.raiseEvent('onIncomeCollected', { player: this });
 
+        this.conflictOpportunities = 2;
         this.passedDynasty = false;
         this.limitedPlayed = 0;
     }

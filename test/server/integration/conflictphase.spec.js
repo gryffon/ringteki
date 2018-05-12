@@ -17,7 +17,6 @@ describe('conflict phase', function() {
             });
 
             it('should begin by prompting first player', function() {
-                
                 expect(this.player1).toHavePrompt('Initiate an action');
             });
 
@@ -198,6 +197,8 @@ describe('conflict phase', function() {
                     province: 'elemental-fury',
                     attackers: [this.childOfThePlains]
                 });
+
+                expect(this.spyglass.location).toBe('play area');
                 
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.spyglass);
@@ -456,7 +457,9 @@ describe('conflict phase', function() {
 
                 it('reactions should trigger correctly', function() {
                     this.noMoreActions();
+                    // End of player 1's first conflict
                     this.noMoreActions();
+                    // Player 2's first conflict passes automatically
                     this.noMoreActions();
                     this.initiateConflict({
                         attackers: ['doji-whisperer'],

@@ -11,7 +11,7 @@ class GainHonorAction extends PlayerAction {
         return context.player;
     }
 
-    getEvent(player, context = this.context) {
+    getEvent(player, context) {
         return super.createEvent('onModifyHonor', { player: player, amount: this.amount }, () => context.game.addHonor(player, this.amount));
     }
 }

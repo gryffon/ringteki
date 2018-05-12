@@ -17,7 +17,7 @@ class TimeForWar extends DrawCard {
                     dependsOn: 'weapon',
                     cardType: 'character',
                     cardCondition: (card, context) => card.controller === context.player && card.hasTrait('bushi'),
-                    gameAction: context => ability.actions.attach(context.targets.weapon)
+                    gameAction: ability.actions.attach().options(context => ({ attachment: context.targets.weapon }))
                 }
             }
         });

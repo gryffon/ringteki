@@ -13,7 +13,7 @@ class ModifyFateAction extends PlayerAction {
         return context.player;
     }
 
-    canAffect(player, context = this.context) {
+    canAffect(player, context) {
         return player.fate > -this.amount && super.canAffect(player, context);
     }
 

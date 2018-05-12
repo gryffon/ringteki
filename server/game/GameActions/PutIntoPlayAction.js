@@ -11,7 +11,7 @@ class PutIntoPlayAction extends CardGameAction {
         this.cost = 'putting {0} into play';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(!context || !context.player || card.anotherUniqueInPlay(context.player)) {
             return false;
         } else if(card.location === 'play area' || card.facedown) {
@@ -39,7 +39,7 @@ class PutIntoPlayAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return new EntersPlayEvent({ intoConflict: this.intoConflict, context: context }, card, this.fate, this);
     }
 }

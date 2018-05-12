@@ -9,11 +9,11 @@ class TransferFateAction extends PlayerAction {
         this.cost = 'giving ' + amount + ' fate to {0}';
     }
 
-    canAffect(player, context = this.context) {
+    canAffect(player, context) {
         return player.fate >= this.amount && super.canAffect(player, context);
     }
 
-    getEvent(player, context = this.context) {
+    getEvent(player, context) {
         return new MoveFateEvent({ context: context, player: player }, this.amount, player, player.opponent, this);
     }
 }

@@ -12,7 +12,6 @@ class TriggeredAbility extends CardAbility {
 
     eventHandler(event, window) {
         let context = this.createContext(event);
-
         if(this.isTriggeredByEvent(event, context) && this.meetsRequirements(context) === '') {
             if(this.isInValidLocation(context)) {
                 window.addChoice(context);
@@ -21,7 +20,15 @@ class TriggeredAbility extends CardAbility {
     }
 
     createContext(event) {
-        return new TriggeredAbilityContext({ event: event, game: this.game, source: this.card, player: this.card.controller, ability: this });
+        let context = new TriggeredAbilityContext({ 
+            event: event, 
+            game: this.game, 
+            source: this.card, 
+            player: this.card.controller, 
+            ability: this 
+        });
+        this.initialiseGameActions(context);
+        return context;
     }
 
     isTriggeredByEvent(event, context) {

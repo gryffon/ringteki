@@ -132,12 +132,12 @@ class Game extends EventEmitter {
         return this.playersAndSpectators[playerName] && !this.playersAndSpectators[playerName].left;
     }
 
-    /*
+    /**
      * Get all players (not spectators) in the game
-     * @returns {Object} {name1: Player, name2: Player}
+     * @returns {Player[]}
      */
     getPlayers() {
-        return _.omit(this.playersAndSpectators, player => this.isSpectator(player));
+        return Object.values(this.playersAndSpectators).filter(player => !this.isSpectator(player));
     }
 
     /*
@@ -146,7 +146,7 @@ class Game extends EventEmitter {
      * @returns {Player}
      */
     getPlayerByName(playerName) {
-        return this.getPlayers()[playerName];
+        return this.playersAndSpectators[playerName];
     }
 
     /*
@@ -154,7 +154,7 @@ class Game extends EventEmitter {
      * @returns {Array} Array of Player objects
      */
     getPlayersInFirstPlayerOrder() {
-        return _.sortBy(this.getPlayers(), player => !player.firstPlayer);
+        return this.getPlayers().sort((a, b) => a.firstPlayer ? -1 : 1);
     }
 
     /*
@@ -170,7 +170,7 @@ class Game extends EventEmitter {
      * @returns {Object} {name1: Spectator, name2: Spectator}
      */
     getSpectators() {
-        return _.pick(this.playersAndSpectators, player => this.isSpectator(player));
+        return Object.values(this.playersAndSpectators).filter(player => this.isSpectator(player));
     }
 
     /**
@@ -178,7 +178,7 @@ class Game extends EventEmitter {
      * @returns {Player}
      */
     getFirstPlayer() {
-        return _.find(this.getPlayers(), p => {
+        return this.getPlayers().find(p => {
             return p.firstPlayer;
         });
     }
@@ -189,7 +189,7 @@ class Game extends EventEmitter {
      * @returns {Player}
      */
     getOtherPlayer(player) {
-        var otherPlayer = _.find(this.getPlayers(), p => {
+        var otherPlayer = this.getPlayers().find(p => {
             return p.name !== player.name;
         });
 
@@ -482,13 +482,13 @@ class Game extends EventEmitter {
      * @returns {undefined}
      */
     setFirstPlayer(firstPlayer) {
-        _.each(this.getPlayers(), player => {
+        for(let player of this.getPlayers()) {
             if(player === firstPlayer) {
                 player.firstPlayer = true;
             } else {
                 player.firstPlayer = false;
             }
-        });
+        }
     }
 
     /*
@@ -739,12 +739,12 @@ class Game extends EventEmitter {
 
         let playerWithNoStronghold = null;
 
-        _.each(this.getPlayers(), player => {
+        for(let player of this.getPlayers()) {
             player.initialise();
             if(!player.stronghold) {
                 playerWithNoStronghold = player;
             }
-        });
+        }
 
         this.allCards = _(_.reduce(this.getPlayers(), (cards, player) => {
             return cards.concat(player.preparedDeck.allCards);
@@ -848,24 +848,28 @@ class Game extends EventEmitter {
         this.emit(event.name, event);
     }
 
-    /* Creates an EventWindow which will open windows for each kind of triggered
+    /**
+     * Creates an EventWindow which will open windows for each kind of triggered
      * ability which can respond any passed events, and execute their handlers.
-     * @param {type} events - Array of Event
-     * @returns {undefined}
+     * @param {Event[]} events 
+     * @returns {EventWindow}
      */
     openEventWindow(events) {
         if(!_.isArray(events)) {
             events = [events];
         }
-        this.queueStep(new EventWindow(this, events));
+        let window = new EventWindow(this, events);
+        this.queueStep(window);
+        return window;
     }
 
     openThenEventWindow(events) {
         if(this.currentEventWindow) {
-            this.queueStep(new ThenEventWindow(this, events));
-        } else {
-            this.openEventWindow(events);
+            let window = new ThenEventWindow(this, events);
+            this.queueStep(window);
+            return window;
         }
+        return this.openEventWindow(events);
     }
 
     /**
@@ -962,7 +966,7 @@ class Game extends EventEmitter {
     }
 
     join(socketId, user) {
-        if(this.started || _.values(this.getPlayers()).length === 2) {
+        if(this.started || this.getPlayers().length === 2) {
             return false;
         }
 
@@ -1053,14 +1057,16 @@ class Game extends EventEmitter {
             (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) || hasChanged
         ) {
             // if the state has changed, check for:
-            _.each(this.getPlayers(), player => player.cardsInPlay.each(card => {
-                if(card.getModifiedController() !== player) {
-                    // any card being controlled by the wrong player
-                    this.applyGameAction(null, { takeControl: card });
-                }
-                // any attachments which are illegally attached
-                card.checkForIllegalAttachments();
-            }));
+            for(const player of this.getPlayers()) {
+                player.cardsInPlay.each(card => {
+                    if(card.getModifiedController() !== player) {
+                        // any card being controlled by the wrong player
+                        this.applyGameAction(null, { takeControl: card });
+                    }
+                    // any attachments which are illegally attached
+                    card.checkForIllegalAttachments();
+                });
+            }
             if(this.currentConflict) {
                 // conflicts with illegal participants
                 this.currentConflict.checkForIllegalParticipants();
@@ -1082,7 +1088,7 @@ class Game extends EventEmitter {
      * This information is all logged when a game is won
      */
     getSaveState() {
-        var players = _.map(this.getPlayers(), player => {
+        var players = this.getPlayers().map(player => {
             return {
                 name: player.name,
                 faction: player.faction.name || player.faction.value,
@@ -1111,9 +1117,9 @@ class Game extends EventEmitter {
         let ringState = {};
 
         if(this.started) {
-            _.each(this.getPlayers(), player => {
+            for(const player of this.getPlayers()) {
                 playerState[player.name] = player.getState(activePlayer);
-            });
+            }
 
             _.each(this.rings, ring => {
                 ringState[ring.element] = ring.getState(activePlayer);
@@ -1127,7 +1133,7 @@ class Game extends EventEmitter {
                 players: playerState,
                 rings: ringState,
                 messages: this.gameChat.messages,
-                spectators: _.map(this.getSpectators(), spectator => {
+                spectators: this.getSpectators().map(spectator => {
                     return {
                         id: spectator.id,
                         name: spectator.name
@@ -1149,7 +1155,7 @@ class Game extends EventEmitter {
         var playerSummaries = {};
         let activePlayer = this.getPlayerByName(activePlayerName);
 
-        _.each(this.getPlayers(), player => {
+        for(const player of this.getPlayers()) {
             var deck = undefined;
             if(player.left) {
                 return;
@@ -1173,7 +1179,7 @@ class Game extends EventEmitter {
                 name: player.name,
                 owner: player.owner
             };
-        });
+        }
 
         return {
             allowSpectators: this.allowSpectators,
@@ -1194,7 +1200,7 @@ class Game extends EventEmitter {
             },
             started: this.started,
             startedAt: this.startedAt,
-            spectators: _.map(this.getSpectators(), spectator => {
+            spectators: this.getSpectators().map(spectator => {
                 return {
                     id: spectator.id,
                     lobbyId: spectator.lobbyId,

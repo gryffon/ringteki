@@ -8,14 +8,14 @@ class ReturnToHandAction extends CardGameAction {
         this.cost = 'returning {0} to their hand';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.location !== 'play area') {
             return false;
         }
         return super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return new LeavesPlayEvent({ context: context, destination: 'hand' }, card, this);
     }
 }

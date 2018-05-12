@@ -7,7 +7,7 @@ class AFateWorseThanDeath extends DrawCard {
             target: {
                 cardType: 'character',
                 cardCondition: card => card.isParticipating(),
-                gameActions: [ability.actions.bow(), ability.actions.dishonor(), ability.actions.removeFate(), ability.actions.sendHome()]
+                gameAction: [ability.actions.bow(), ability.actions.dishonor(), ability.actions.removeFate(), ability.actions.sendHome()]
             },
             effect: 'bow, dishonor, blank, move home, and remove a fate from {0}',
             untilEndOfPhase: context => ({

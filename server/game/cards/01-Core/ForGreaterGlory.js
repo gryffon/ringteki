@@ -7,7 +7,7 @@ class ForGreaterGlory extends DrawCard {
             when: {
                 onBreakProvince: event => event.conflict.conflictType === 'military'
             },
-            gameActions: ability.actions.placeFate().target(context => (
+            gameAction: ability.actions.placeFate().target(context => (
                 context.event.conflict.attackers.filter(card => card.hasTrait('bushi'))
             )),
             max: ability.limit.perConflict(1)

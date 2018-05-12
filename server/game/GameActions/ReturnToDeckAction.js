@@ -8,14 +8,14 @@ class ReturnToDeckAction extends CardGameAction {
         this.moveOptions = { bottom: bottom };
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.location !== 'play area') {
             return false;
         }
         return super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         let destination = card.isDynasty ? 'dynasty deck' : 'conflict deck';
         return new LeavesPlayEvent({ context: context, destination: destination, options: this.moveOptions }, card, this);
     }

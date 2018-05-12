@@ -47,6 +47,9 @@ class Event {
         if(this.cancelled || this.resolved) {
             return;
         }
+        if(this.gameAction && !this.gameAction.checkEventCondition) {
+            console.log(this.gameAction);
+        }
         if(this.gameAction && !this.gameAction.checkEventCondition(this)) {
             this.cancel();
             return;

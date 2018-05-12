@@ -8,7 +8,7 @@ class DiscardFromPlayAction extends CardGameAction {
         this.cost = 'sacrificing {0}';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.type === 'holding') {
             if(!card.location.includes('province')) {
                 return false;
@@ -19,7 +19,7 @@ class DiscardFromPlayAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return new LeavesPlayEvent({ context: context }, card, this);
     }
 }

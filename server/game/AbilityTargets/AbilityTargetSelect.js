@@ -8,22 +8,39 @@ class AbilityTargetSelect {
     }
 
     canResolve(context) {
-        return _.any(this.properties.choices, condition => condition(context)) && context.ability.canPayCosts(context);
+        return this.properties.choices.some(choice => this.isChoiceLegal(choice, context)) && context.ability.canPayCosts(context);
+    }
+
+    isChoiceLegal(choice, context) {
+        if(typeof choice === 'function') {
+            return choice(context);
+        }
+        return choice.some(action => action.setTarget(action.targetFunc(context), context));
+    }
+
+    initialiseGameActions(context) {
+        for(const key in this.properties.choices) {
+            if(typeof this.properties.choices[key] !== 'function') {
+                if(!Array.isArray(this.properties.choices[key])) {
+                    this.properties.choices[key] = [this.properties.choices[key]];
+                }
+                for(let action of this.properties.choices[key]) {
+                    action.initialise(context);
+                }
+            }
+        }
     }
 
     getGameAction(context) {
         let choice = this.properties.choices[context.targets[this.name]];
         if(typeof choice !== 'function') {
-            if(!Array.isArray(choice)) {
-                choice = [choice];
-            }
             return choice.filter(action => action.hasLegalTarget(context));
         }
         return [];
     }
 
     getAllLegalTargets(context) {
-        return _.filter(this.properties.choices, condition => condition(context));
+        return Object.keys(this.properties.choices).filter(key => this.isChoiceLegal(this.properties.choices[key], context));
     }
 
     resolve(context, pretarget = false, noCostsFirstButton = false) {
@@ -37,22 +54,14 @@ class AbilityTargetSelect {
             player = player.opponent;
         }
         let promptTitle = this.properties.activePromptTitle || 'Select one';
-        let choices = Object.values(this.properties.choices).filter(value => {
-            if(typeof value === 'function') {
-                return value(context);
-            }
-            // value is a gameActions or an Array of game actions
-            let gameAction = value;
-            if(!Array.isArray(value)) {
-                gameAction = [value];
-            }
-            return gameAction.some(action => action.hasLegalTarget(context));
-        });
+        let choices = Object.keys(this.properties.choices).filter(key => (
+            this.isChoiceLegal(this.properties.choices[key], context)
+        ));
         let handlers = _.map(choices, choice => {
             return (() => {
                 result.resolved = true;
                 result.value = choice;
-                context.selects[this.name] = new SelectChoice(result.value);
+                context.selects[this.name] = new SelectChoice(choice);
             });
         });
         if(this.properties.player !== 'opponent' && pretarget) {
@@ -87,7 +96,7 @@ class AbilityTargetSelect {
     }
     
     checkTarget(context) {
-        return this.properties.choices[context.selects[this.name].choice](context);
+        return this.isChoiceLegal(this.properties.choices[context.selects[this.name]], context);
     }
 }
 

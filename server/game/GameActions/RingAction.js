@@ -7,11 +7,13 @@ class RingAction extends GameAction {
     }
 
     getDefaultTargets(context) {
-        return context.ring;
+        if(context.game.currentConflict) {
+            return context.game.currentConflict.ring;
+        }
     }
 
     checkEventCondition(event) {
-        return this.canAffect(event.ring);
+        return this.canAffect(event.ring, event.context);
     }
 }
 

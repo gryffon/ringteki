@@ -1,5 +1,6 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
+const GameActions = require('./GameActions/GameActions');
 
 class DynastyCardAction extends BaseAction {
     constructor(card) {
@@ -33,11 +34,9 @@ class DynastyCardAction extends BaseAction {
     }
 
     executeHandler(context) {
-        let events = context.game.applyGameAction(context, { putIntoPlay: context.source }, [{
-            name: 'onCardPlayed',
-            params: { player: context.player, card: context.source, originalLocation: context.source.location }
-        }]);
-        events[0].fate = context.chooseFate;
+        let enterPlayEvent = GameActions.putIntoPlay(context.chooseFate).getEvent(context.source, context);
+        let cardPlayedEvent = context.game.getEvent('onCardPlayed', { player: context.player, card: context.source, originalLocation: context.source.location });
+        context.game.openEventWindow([enterPlayEvent, cardPlayedEvent]);
     }
 
     isCardPlayed() {

@@ -70,7 +70,7 @@ class CardGameAction extends GameAction {
     }
 
     checkEventCondition(event) {
-        return this.canAffect(event.card);
+        return this.canAffect(event.card, event.context);
     }
 }
 

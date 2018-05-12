@@ -9,10 +9,9 @@ class SincerityAbility extends TriggeredAbility {
             },
             title: card.name + '\'s Sincerity',
             printedAbility: false,
-            handler: context => {
-                this.game.addMessage('{0} draws a card due to {1}\'s Sincerity', context.player, context.source);
-                context.player.drawCardsToHand(1);
-            }
+            effect: '{0} draws a card due to {1}\'s Sincerity',
+            effectArgs: context => context.source,
+            handler: context => context.player.drawCardsToHand(1)
         });
     }
 }

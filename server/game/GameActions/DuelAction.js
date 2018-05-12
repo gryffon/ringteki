@@ -16,7 +16,7 @@ class DuelAction extends CardGameAction {
         };
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.location !== 'play area' || card.hasDash(this.type)) {
             return false;
         }
@@ -31,7 +31,8 @@ class DuelAction extends CardGameAction {
         this.costHandler(this.context, prompt);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
+        this.context = context;
         return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
             if(this.challenger.location !== 'play area' || card.location !== 'play area') {
                 context.game.addMessage('The duel cannot proceed as one participant is no longer in play');

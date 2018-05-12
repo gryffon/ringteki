@@ -13,12 +13,12 @@ class PlaceFateRingAction extends RingAction {
         this.cost = 'spending ' + amount + ' fate to {0}';
     }
 
-    canAffect(ring, context = this.context) {
+    canAffect(ring, context) {
         return this.origin && this.origin.checkRestrictions('spendFate', context) && 
                this.origin.fate >= this.amount && super.canAffect(ring, context);
     }
 
-    getEvent(ring, context = this.context) {
+    getEvent(ring, context) {
         return new MoveFateEvent({ context: context, ring: ring }, this.amount, this.origin, ring, this);
     }
 }

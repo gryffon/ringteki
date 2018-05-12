@@ -15,21 +15,21 @@ class RemoveFateAction extends CardGameAction {
         this.cost = 'removing ' + amount + ' fate from {0}';
     }
 
-    checkRecipient(context = this.context) {
+    checkRecipient(context) {
         if(!this.recipient || ['player, ring'].includes(this.recipient.type)) {
             return true;
         }
         return this.recipientGameAction.canAffect(this.recipient, context);
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(card.location !== 'play area' || card.fate === 0 || card.type !== 'character') {
             return false;
         }
         return super.canAffect(card, context) && this.checkRecipient(context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return new MoveFateEvent({ context: context }, this.amount, card, this.recipient, this);
     }
 }

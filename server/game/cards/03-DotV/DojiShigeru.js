@@ -9,7 +9,7 @@ class DojiShigeru extends DrawCard {
                 onCardPlayed: (event, context) => event.player === context.player.opponent && event.card.type === 'event' && 
                                                   context.source.isParticipating()
             },
-            gameAction: ability.actions.chooseDiscard(1)
+            gameAction: ability.actions.chosenDiscard(1)
         });
     }
 }

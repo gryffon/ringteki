@@ -6,7 +6,7 @@ class MoveToConflictAction extends CardGameAction {
         this.effect = 'move {0} into the conflict';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(!context.game.currentConflict || card.isParticipating() || card.type !== 'character') {
             return false;
         }
@@ -28,7 +28,7 @@ class MoveToConflictAction extends CardGameAction {
         return events.concat(this.createEvent('onMoveCharactersToConflict', { moveToConflictEvents: events }));
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return super.createEvent('onMoveToConflict', { card: card, context: context }, () => {
             if(card.controller.isAttackingPlayer()) {
                 context.game.currentConflict.addAttacker(card);

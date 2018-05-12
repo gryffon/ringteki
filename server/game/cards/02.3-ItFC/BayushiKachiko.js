@@ -18,7 +18,8 @@ class BayushiKachiko extends DrawCard {
                         'Yes': ability.actions.bow().target(context.target),
                         'No': () => true 
                     }
-                }
+                },
+                message: '{0} chooses to bow {2} due to {1}\'s ability'
             })
         });
     }

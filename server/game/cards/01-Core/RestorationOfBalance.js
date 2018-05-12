@@ -7,7 +7,7 @@ class RestorationOfBalance extends ProvinceCard {
             when: {
                 onProvinceRevealed: (event, context) => event.province === context.source && context.player.opponent.hand.size() > 4
             },
-            gameAction: ability.actions.chooseDiscard().options(context => ({ amount: Math.max(0, context.player.opponent.hand.size() - 4) }))
+            gameAction: ability.actions.chosenDiscard().options(context => ({ amount: Math.max(0, context.player.opponent.hand.size() - 4) }))
         });
     }
 }

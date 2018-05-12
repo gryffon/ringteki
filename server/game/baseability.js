@@ -178,6 +178,15 @@ class BaseAbility {
         });
     }
 
+    initialiseGameActions(context) {
+        for(let target of this.targets) {
+            target.initialiseGameActions(context);
+        }
+        for(let action of this.gameAction) {
+            action.initialise(context);
+        }
+    }
+
     displayMessage(context) { // eslint-disable-line no-unused-vars
     }
 

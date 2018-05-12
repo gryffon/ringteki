@@ -5,7 +5,7 @@ const AttachAction = require('./GameActions/AttachAction');
 class PlayAttachmentAction extends BaseAction {
     constructor(card) {
         super(card, [Costs.payReduceableFateCost('play'), Costs.playLimited()], {
-            gameAction: context => new AttachAction(context.source),
+            gameAction: new AttachAction().options(context =>({ attachment: context.source })),
             cardCondition: (card, context) => context.source.canPlayOn(card)
         });
         this.title = 'Play this attachment';

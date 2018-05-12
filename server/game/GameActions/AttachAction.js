@@ -22,6 +22,10 @@ class AttachAction extends CardGameAction {
         return card.allowAttachment(this.attachment) && super.canAffect(card, context);
     }
 
+    checkEventCondition(event) {
+        return this.canAffect(event.parent, event.context);
+    }
+
     getEvent(card, context) {
         if(this.canAffect(card, context)) {
             return super.createEvent('onCardAttached', { card: this.attachment, parent: card, context: context }, event => {

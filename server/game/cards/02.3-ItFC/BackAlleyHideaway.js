@@ -2,6 +2,8 @@ const _ = require('underscore');
 
 const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
+const GameActions = require('../../GameActions/GameActions');
+const ThenAbility = require('../../ThenAbility');
 
 const backAlleyPersistentEffect = {
     apply: card => {
@@ -55,12 +57,10 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
         // remove associations between this card and Back-Alley Hideaway
         this.backAlleyCard.removeAttachment(context.source);
         context.source.parent = null;
-        let event = context.game.applyGameAction(context, { putIntoPlay: context.source }, [{
-            name: 'onCardPlayed',
-            params: { player: context.player, card: context.source, originalLocation: 'backalley hideaway' }
-        }])[0];
-        event.fate = context.chooseFate;
-        event.addThenGameAction(context, { sacrifice: this.backAlleyCard });
+        let putIntoPlayEvent = GameActions.putIntoPlay(context.chooseFate).getEvent(context.source, context);
+        let cardPlayedEvent = context.game.getEvent('onCardPlayed', { player: context.player, card: context.source, originalLocation: 'backalley hideaway' });
+        let window = context.game.openEventWindow([putIntoPlayEvent, cardPlayedEvent]);
+        window.addThenAbility([putIntoPlayEvent], new ThenAbility(context.game, this.backAlleyCard, { gameAction: GameActions.sacrifice().target(this.backAlleyCard) }));
     }
 
     isCardAbility() {

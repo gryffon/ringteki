@@ -10,6 +10,13 @@ class AbilityTargetCard {
         return _.any(context.game.rings, ring => this.properties.ringCondition(ring)) && context.ability.canPayCosts(context);
     }
 
+    initialiseGameActions(context) {
+        for(let action of this.properties.gameAction) {
+            action.target(context => context.targets[this.name]);
+            action.initialise(context);
+        }
+    }
+
     getGameAction(context) {
         return this.properties.gameAction.filter(gameAction => gameAction.setTarget(context.targets[this.name], context));
     }

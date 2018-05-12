@@ -21,8 +21,8 @@ class SendHomeAction extends CardGameAction {
         return events.concat(this.createEvent('onSendCharactersHome', { sendHomeEvents: events }));
     }
 
-    getEvent(card, context = this.context) {
-        return super.createEvent('onCardSentHome', { card: card, context: context }, () => this.context.game.currentConflict.removeFromConflict(card));
+    getEvent(card, context) {
+        return super.createEvent('onCardSentHome', { card: card, context: context }, () => context.game.currentConflict.removeFromConflict(card));
     }
 }
 

@@ -1,7 +1,7 @@
 const PlayerAction = require('./PlayerAction');
 
 class DrawAction extends PlayerAction {
-    constructor(amount) {
+    constructor(amount = 1) {
         super('draw');
         this.amount = amount;
         this.effect = 'draw {1} cards';

@@ -7,15 +7,7 @@ class ResolveRingAction extends RingAction {
         this.effect = 'resolve {0}' + resolveAsAttacker ? '' : ' for the attacking player';
     }
 
-    getDefaultTargets(context) {
-        if(context.ring) {
-            return context.ring;
-        } else if(context.game.currentConflict) {
-            return context.game.currentConflict.ring;
-        }
-    }
-
-    getEvent(ring, context = this.context) {
+    getEvent(ring, context) {
         let conflict = context.game.currentConflict;
         if(!conflict && !this.resolveAsAttacker) {
             return;

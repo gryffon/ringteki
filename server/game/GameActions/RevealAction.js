@@ -7,14 +7,14 @@ class RevealAction extends CardGameAction {
         this.cost = 'revealing {0}';
     }
 
-    canAffect(card, context = this.context) {
+    canAffect(card, context) {
         if(!card.facedown) {
             return false;
         }
         return super.canAffect(card, context);
     }
 
-    getEvent(card, context = this.context) {
+    getEvent(card, context) {
         return super.createEvent('onCardRevealed', { card: card, context: context });
     }
 }

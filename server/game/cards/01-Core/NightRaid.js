@@ -7,7 +7,7 @@ class NightRaid extends ProvinceCard {
             when: {
                 onProvinceRevealed: (event, context) => event.province === context.source
             },
-            gameAction: ability.actions.chooseDiscard().options(context => ({ amount: context.event.conflict.attackers.length }))
+            gameAction: ability.actions.chosenDiscard().options(context => ({ amount: context.event.conflict.attackers.length }))
         });
     }
 }

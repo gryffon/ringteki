@@ -13,12 +13,14 @@ class ThenAbility extends BaseAbility {
     }
 
     createContext(player = this.card.controller) {
-        return new AbilityContext({
+        let context = new AbilityContext({
             ability: this,
             game: this.game,
             player: player,
             source: this.card
         });
+        this.initialiseGameActions(context);
+        return context;
     }
 
     displayMessage(context) {
@@ -55,7 +57,7 @@ class ThenAbility extends BaseAbility {
 
     executeGameActions(context) {
         // Get any gameActions for this ability
-        let actions = this.getGameActions();
+        let actions = this.getGameActions(context);
         for(const action of actions) {
             action.preEventHandler(context);
         }
@@ -66,13 +68,17 @@ class ThenAbility extends BaseAbility {
             then = then(context);
         }
         if(events.length > 0) {
-            let window = this.game.openEventWindow(events);
+            let window = this.openEventWindow(events);
             if(then) {
                 window.addThenAbility(events, new ThenAbility(this.game, this.card, then));
             }
         } else if(then) {
             this.game.resolveAbility(new ThenAbility(this.game, this.card, then).createContext(context.player));
         }
+    }
+
+    openEventWindow(events) {
+        return this.game.openThenEventWindow(events);
     }
 }
 
