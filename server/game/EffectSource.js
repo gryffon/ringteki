@@ -58,8 +58,8 @@ class EffectSource extends GameObject {
     /**
      * Applies a delayed effect
      */
-    delayedEffect(properties) {
-        let effect = new DelayedEffect(this.game, this, properties);
+    delayedEffect(propertyFactory) {
+        let effect = new DelayedEffect(this.game, this, propertyFactory(AbilityDsl));
         this.game.effectEngine.addDelayedEffect(effect);
         return effect;
     }
@@ -67,8 +67,8 @@ class EffectSource extends GameObject {
     /**
      * Applies a terminal condition
      */
-    terminalCondition(properties) {
-        let effect = new TerminalCondition(this.game, this, properties);
+    terminalCondition(propertyFactory) {
+        let effect = new TerminalCondition(this.game, this, propertyFactory(AbilityDsl));
         this.game.effectEngine.addTerminalCondition(effect);
         return effect;
     }

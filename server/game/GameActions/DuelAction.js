@@ -17,10 +17,10 @@ class DuelAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || card.hasDash(this.type)) {
+        if(!super.canAffect(card, context)) {
             return false;
         }
-        return super.canAffect(card, context);
+        return card.location === 'play area' && !card.hasDash(this.type);
     }
 
     resolveDuel(winner, loser) {

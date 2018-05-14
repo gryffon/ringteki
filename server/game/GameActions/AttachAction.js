@@ -6,6 +6,7 @@ class AttachAction extends CardGameAction {
         super('attach');
         this.attachment = attachment;
         this.discardOnFailure = discardOnFailure;
+        this.targetType = ['character'];
         this.effect = 'attach {1} to {0}';
         this.effectArgs = () => {
             return this.attachment;

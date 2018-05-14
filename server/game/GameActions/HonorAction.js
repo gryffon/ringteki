@@ -3,6 +3,7 @@ const CardGameAction = require('./CardGameAction');
 class HonorAction extends CardGameAction {
     constructor() {
         super('honor');
+        this.targetType = ['character'];
         this.effect = 'honor {0}',
         this.cost = 'honoring {0}';
     }

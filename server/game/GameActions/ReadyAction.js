@@ -3,6 +3,7 @@ const CardGameAction = require('./CardGameAction');
 class ReadyAction extends CardGameAction {
     constructor() {
         super('ready');
+        this.targetType = ['character', 'attachment', 'stronghold'];
         this.effect = 'ready {0]';
         this.cost = 'readying {0}';
     }

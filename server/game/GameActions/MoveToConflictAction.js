@@ -3,10 +3,14 @@ const CardGameAction = require('./CardGameAction');
 class MoveToConflictAction extends CardGameAction {
     constructor() {
         super('moveToConflict');
+        this.targetType = ['character'];
         this.effect = 'move {0} into the conflict';
     }
 
     canAffect(card, context) {
+        if(!super.canAffect(card, context)) {
+            return false;
+        }
         if(!context.game.currentConflict || card.isParticipating() || card.type !== 'character') {
             return false;
         }
@@ -17,7 +21,7 @@ class MoveToConflictAction extends CardGameAction {
         } else if(!card.canParticipateAsDefender()) {
             return false;
         }
-        return super.canAffect(card, context);
+        return true;
     }
     /*
     getEventArray(context) {

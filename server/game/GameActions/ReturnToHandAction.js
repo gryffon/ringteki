@@ -4,6 +4,7 @@ const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
 class ReturnToHandAction extends CardGameAction {
     constructor() {
         super('returnToHand');
+        this.targetType = ['character', 'attachment'];
         this.effect = 'return {0} to their hand';
         this.cost = 'returning {0} to their hand';
     }

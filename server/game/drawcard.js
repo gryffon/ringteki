@@ -133,59 +133,6 @@ class DrawCard extends BaseCard {
     getFate() {
         return this.fate;
     }
-    
-    allowGameAction(actionType, context) {
-        if(actionType === 'break') {
-            return false;
-        } else if(actionType === 'dishonor') {
-            if(this.location !== 'play area' || this.type !== 'character' || this.isDishonored || 
-               (!super.allowGameAction('becomeDishonored', context) && !this.isHonored)) {
-                return false;
-            }
-        } else if(actionType === 'honor' && (this.location !== 'play area' || this.type !== 'character' || this.isHonored)) {
-            return false;
-        } else if(actionType === 'ready' && (['event', 'holding'].includes(this.type) || this.location !== 'play area' || !this.bowed)) {
-            return false;
-        } else if(actionType === 'moveToConflict') {
-            if(!this.game.currentConflict || this.isParticipating() || this.type !== 'character') {
-                return false;
-            }
-            if(this.controller.isAttackingPlayer()) {
-                if(!this.canParticipateAsAttacker()) {
-                    return false;
-                }
-            } else if(!this.canParticipateAsDefender()) {
-                return false;
-            }
-        } else if(actionType === 'sendHome' && !this.isParticipating()) {
-            return false;
-        } else if(actionType === 'putIntoConflict') {
-            // There is no current conflict, or no context (cards must be put into play by a player, not a framework event)
-            if(!this.game.currentConflict || !context || !this.allowGameAction('putIntoPlay', context)) {
-                return false;
-            }
-            // controller is attacking, and character can't attack, or controller is defending, and character can't defend
-            if((context.player.isAttackingPlayer() && !this.allowGameAction('participateAsAttacker')) || 
-                (context.player.isDefendingPlayer() && !this.allowGameAction('participateAsDefender'))) {
-                return false;
-            }
-            // card cannot participate in this conflict type
-            if(this.hasDash(this.game.currentConflict.conflictType)) {
-                return false;
-            }
-        } else if(actionType === 'putIntoPlay') {
-            if(this.location === 'play area' || this.facedown || this.anotherUniqueInPlay(context.player) || !['character', 'attachment'].includes(this.type)) {
-                return false;
-            }
-        } else if(actionType === 'removeFate' && (this.location !== 'play area' || this.fate === 0 || this.type !== 'character')) {
-            return false;
-        } else if(actionType === 'sacrifice' && ((['character', 'attachment'].includes(this.type) && this.location !== 'play area') || this.facedown)) {
-            return false;
-        } else if(['discardFromPlay', 'returnToHand', 'returnToDeck', 'takeControl', 'placeFate'].includes(actionType) && this.location !== 'play area') {
-            return false;
-        }
-        return super.allowGameAction(actionType, context);
-    }
 
     anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (

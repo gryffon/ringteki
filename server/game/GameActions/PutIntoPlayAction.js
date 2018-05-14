@@ -2,17 +2,20 @@ const CardGameAction = require('./CardGameAction');
 const EntersPlayEvent = require('../Events/EntersPlayEvent');
 
 class PutIntoPlayAction extends CardGameAction {
-    constructor(fate = 0, intoConflict = false) {
+    constructor(fate = 0, intoConflict = true) {
         let name = intoConflict ? 'putIntoConflict' : 'putIntoPlay';
         super(name);
         this.intoConflict = intoConflict;
+        this.targetType = ['character'];
         this.fate = fate;
         this.effect = 'put {0} into play' + intoConflict ? ' in the conflict' : '';
         this.cost = 'putting {0} into play';
     }
 
     canAffect(card, context) {
-        if(!context || !context.player || card.anotherUniqueInPlay(context.player)) {
+        if(!context || !super.canAffect(card, context)) {
+            return false;
+        } else if(!context.player || card.anotherUniqueInPlay(context.player)) {
             return false;
         } else if(card.location === 'play area' || card.facedown) {
             return false;
@@ -33,10 +36,8 @@ class PutIntoPlayAction extends CardGameAction {
             if(!card.checkRestrictions('putIntoPlay', context)) {
                 return false;
             }
-        } else if(!['character', 'attachment'].includes(card.type)) {
-            return false;
         }
-        return super.canAffect(card, context);
+        return ['character', 'attachment'].includes(card.type);
     }
 
     getEvent(card, context) {

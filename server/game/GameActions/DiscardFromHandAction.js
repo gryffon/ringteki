@@ -3,6 +3,7 @@ const CardGameAction = require('./CardGameAction');
 class DiscardFromHandAction extends CardGameAction {
     constructor() {
         super('discardFromHand');
+        this.targetType = ['character', 'attachment', 'event'];
         this.effect = 'discard {0}';
         this.cost = 'discarding {0}';
     }

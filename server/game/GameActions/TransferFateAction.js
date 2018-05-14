@@ -10,7 +10,7 @@ class TransferFateAction extends PlayerAction {
     }
 
     canAffect(player, context) {
-        return player.fate >= this.amount && super.canAffect(player, context);
+        return player.opponent && player.fate >= this.amount && super.canAffect(player, context);
     }
 
     getEvent(player, context) {

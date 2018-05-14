@@ -13,7 +13,7 @@ class OniMask extends DrawCard {
             effect: 'blank {0} until the end of the conflict',
             untilEndOfConflict: context => ({
                 match: context.target,
-                effect: ability.effects.blank
+                effect: ability.effects.blank()
             })
         });
     }

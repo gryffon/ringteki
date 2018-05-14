@@ -32,7 +32,7 @@ class AbilityTargetSelect {
     }
 
     getGameAction(context) {
-        let choice = this.properties.choices[context.targets[this.name]];
+        let choice = this.properties.choices[context.selects[this.name].choice];
         if(typeof choice !== 'function') {
             return choice.filter(action => action.hasLegalTarget(context));
         }
@@ -90,13 +90,13 @@ class AbilityTargetSelect {
                 source: this.properties.source || context.source,
                 choices: choices,
                 handlers: handlers
-            });    
+            });
         }
         return result;
     }
     
     checkTarget(context) {
-        return this.isChoiceLegal(this.properties.choices[context.selects[this.name]], context);
+        return this.isChoiceLegal(this.properties.choices[context.selects[this.name].choice], context);
     }
 }
 

@@ -64,7 +64,7 @@ class KyudenIsawa extends StrongholdCard {
             },
             onSelect: (player, card) => {
                 // TODO: make this work for events with multiple actions
-                this.resolveSpell(context, card.ability.actions[0]);
+                this.resolveSpell(context, card.abilities.actions[0]);
                 return true;
             }
         });

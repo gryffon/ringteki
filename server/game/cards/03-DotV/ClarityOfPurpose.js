@@ -21,7 +21,7 @@ class ClarityOfPurpose extends DrawCard {
                 context.source.untilEndOfConflict(ability => ({
                     match: context.target,
                     condition: () => this.game.isDuringConflict('political'),
-                    effect: ability.effects.doesNotBow
+                    effect: ability.effects.doesNotBow()
                 }));
             }
         });

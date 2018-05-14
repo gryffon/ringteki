@@ -4,6 +4,7 @@ const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
 class ReturnToDeckAction extends CardGameAction {
     constructor(bottom = false) {
         super('returnToDeck');
+        this.targetType = ['character', 'attachment'];
         this.effect = 'return {0} to the ' + (bottom ? 'bottom' : 'top') + ' of their deck';
         this.moveOptions = { bottom: bottom };
     }

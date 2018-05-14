@@ -4,6 +4,7 @@ const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
 class DiscardFromPlayAction extends CardGameAction {
     constructor(isSacrifice = false) {
         super(isSacrifice ? 'sacrifice' : 'discardFromPlay');
+        this.targetType = ['character', 'attachment', 'holding'];
         this.effect = isSacrifice ? 'sacrifice {0}' : 'discard {0}';
         this.cost = 'sacrificing {0}';
     }

@@ -42,7 +42,7 @@ describe('Bayushi Kachiko', function() {
                 this.shrewdYasuki = this.player1.clickCard('shrewd-yasuki', 'any', 'opponent');
                 expect(this.player1).toHavePrompt('Do you want to bow Shrewd Yasuki?');
             });
-            
+
             it('should bow the target if Yes is selected', function() {
                 this.shrewdYasuki = this.player1.clickCard('shrewd-yasuki', 'any', 'opponent');
                 this.player1.clickPrompt('Yes');
@@ -72,12 +72,11 @@ describe('Bayushi Kachiko', function() {
                 });
                 this.shrewdYasuki = this.player2.findCardByName('shrewd-yasuki');
                 // Give Yasuki a hypothetical ability which cancels send homes
-                this.shrewdYasuki.interrupt({
+                this.shrewdYasuki.wouldInterrupt({
                     title: 'Cancel Send Home',
                     when: {
                         onSendHome: event => event.card === this.shrewdYasuki
                     },
-                    canCancel: true,
                     handler: context => context.cancel()
                 });
 

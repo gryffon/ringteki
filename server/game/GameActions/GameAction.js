@@ -36,8 +36,10 @@ class GameAction {
             this.targetFunc = targetFunc;
         } else if(!Array.isArray(targetFunc)) {
             this.targets = [targetFunc];
+            this.targetFunc = () => [targetFunc];
         } else {
             this.targets = targetFunc;
+            this.targetFunc = () => targetFunc;
         }
         return this;
     }

@@ -3,6 +3,7 @@ const CardGameAction = require('./CardGameAction');
 class FlipDynastyAction extends CardGameAction {
     constructor() {
         super('reveal');
+        this.targetType = ['character', 'holding'];
         this.effect = 'revealing {0}';
     }
 

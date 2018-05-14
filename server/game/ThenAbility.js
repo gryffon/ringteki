@@ -47,6 +47,7 @@ class ThenAbility extends BaseAbility {
                 if(typeof properties === 'function') {
                     properties = properties(context);
                 }
+                properties.context = context;
                 context.source[effectType](() => properties);
             }
         }

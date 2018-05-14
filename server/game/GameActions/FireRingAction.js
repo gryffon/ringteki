@@ -3,6 +3,7 @@ const CardGameAction = require('./CardGameAction');
 class FireRingAction extends CardGameAction {
     constructor() {
         super('fireRingEffect');
+        this.targetType = ['character'];
         this.effect = 'change {0}\'s personal honor';
         this.map = new Map();
     }

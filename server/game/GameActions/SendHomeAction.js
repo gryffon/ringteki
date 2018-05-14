@@ -3,14 +3,15 @@ const CardGameAction = require('./CardGameAction');
 class SendHomeAction extends CardGameAction {
     constructor() {
         super('sendHome');
+        this.targetType = ['character'];
         this.effect = 'send {0} home';
     }
 
     canAffect(card, context) {
-        if(!card.isParticipating()) {
+        if(!super.canAffect(card, context)) {
             return false;
         }
-        return super.canAffect(card, context);
+        return card.isParticipating();
     }
     /*
     getEventArray(context) {
@@ -23,7 +24,7 @@ class SendHomeAction extends CardGameAction {
     */
 
     getEvent(card, context) {
-        return super.createEvent('onCardSentHome', { card: card, context: context }, () => context.game.currentConflict.removeFromConflict(card));
+        return super.createEvent('onSendHome', { card: card, context: context }, () => context.game.currentConflict.removeFromConflict(card));
     }
 }
 

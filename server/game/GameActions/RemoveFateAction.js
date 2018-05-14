@@ -6,6 +6,7 @@ class RemoveFateAction extends CardGameAction {
     constructor(amount = 1, recipient = null) {
         super('removeFate');
         this.amount = amount;
+        this.targetType = ['character'];
         this.recipient = recipient;
         this.recipientGameAction = new PlaceFateAction(amount);
         this.effect = 'remove {1} fate from {0}';

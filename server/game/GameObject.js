@@ -39,9 +39,9 @@ class GameObject {
         return _.last(this.getEffects(type));
     }
 
-    allowGameAction(actionType, context = null) {
-        if(GameActions.actionType) {
-            return GameActions.actionType().canAffect(this, context);
+    allowGameAction(actionType, context = this.game.getFrameworkContext()) {
+        if(GameActions[actionType]) {
+            return GameActions[actionType]().canAffect(this, context);
         }
         return this.checkRestrictions(actionType, context);
     }

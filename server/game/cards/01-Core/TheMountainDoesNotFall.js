@@ -12,7 +12,7 @@ class TheMountainDoesNotFall extends DrawCard {
             untilEndOfPhase: context => ({
                 match: context.target,
                 condition: () => context.target.isDefending(),
-                effect: ability.effects.doesNotBow
+                effect: ability.effects.doesNotBow()
             }),
             max: ability.limit.perRound(1)
         });

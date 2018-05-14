@@ -41,9 +41,8 @@ class DelayedEffect {
         if(this.message) {
             this.game.addMessage(this.message, this.source, this.target);
         }
-        if(this.gameAction && this.target && (!this.event || this.event.cancelled)) {
-            this.event = this.gameAction.getEvent(this.target, this.context);
-            this.game.openEventWindow(this.event);
+        if(this.gameAction && this.target) {
+            this.gameAction.resolve(this.target, this.context);
         }
     }
 

@@ -3,6 +3,7 @@ const CardGameAction = require('./CardGameAction');
 class BreakAction extends CardGameAction {
     constructor() {
         super('break');
+        this.targetType = ['province'];
         this.effect = 'break {0}';
         this.cost = 'breaking {0}';
     }

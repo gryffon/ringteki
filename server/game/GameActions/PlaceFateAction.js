@@ -4,6 +4,7 @@ const MoveFateEvent = require('../Events/MoveFateEvent');
 class PlaceFateAction extends CardGameAction {
     constructor(amount = 1, origin) {
         super('placeFate');
+        this.targetType = ['character'];
         this.amount = amount;
         this.origin = origin;
         this.effect = 'place ' + amount + ' fate on {0}';
