@@ -1,8 +1,8 @@
 const CardGameAction = require('./CardGameAction');
 
-class HonorAction extends CardGameAction {
+class FireRingAction extends CardGameAction {
     constructor() {
-        super('');
+        super('fireRingEffect');
         this.effect = 'change {0}\'s personal honor';
         this.map = new Map();
     }
@@ -54,4 +54,4 @@ class HonorAction extends CardGameAction {
     }
 }
 
-module.exports = HonorAction;
+module.exports = FireRingAction;

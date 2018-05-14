@@ -11,8 +11,8 @@ class IdeTrader extends DrawCard {
             target: {
                 mode: 'select',
                 choices: {
-                    'Gain 1 fate': () => ability.actions.gainFate(),
-                    'Draw 1 card': () => ability.actions.draw()
+                    'Gain 1 fate': ability.actions.gainFate(),
+                    'Draw 1 card': ability.actions.draw()
                 }
             }        
         });

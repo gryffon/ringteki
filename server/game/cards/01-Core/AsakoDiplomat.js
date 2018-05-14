@@ -11,7 +11,7 @@ class AsakoDiplomat extends DrawCard {
             target: {
                 activePromptTitle: 'Choose a character to honor or dishonor',
                 cardType: 'character',
-                gameAction: ability.actions.fireRing()
+                gameAction: ability.actions.fireRingEffect()
             }
         });
     }

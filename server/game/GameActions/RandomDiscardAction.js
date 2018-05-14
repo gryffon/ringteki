@@ -2,7 +2,7 @@ const PlayerAction = require('./PlayerAction');
 
 class RandomDiscardAction extends PlayerAction {
     constructor(amount = 1) {
-        super('discardAtRandom');
+        super('discard');
         this.amount = amount;
         this.effect = 'discard ' + amount + ' cards at random';
     }

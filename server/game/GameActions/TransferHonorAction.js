@@ -2,7 +2,7 @@ const PlayerAction = require('./PlayerAction');
 
 class TransferHonorAction extends PlayerAction {
     constructor(amount = 1, afterBid = false) {
-        super('receiveHonor');
+        super('takeHonor');
         this.amount = amount;
         this.afterBid = afterBid;
         this.effect = 'take ' + amount + ' honor from {0}';

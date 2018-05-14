@@ -27,6 +27,7 @@ const ReturnToDeckAction = require('./ReturnToDeckAction');
 const ReturnToHandAction = require('./ReturnToHandAction');
 const RevealAction = require('./RevealAction');
 const SendHomeAction = require('./SendHomeAction');
+const TakeFateRingAction = require('./TakeFateRingAction');
 const TransferFateAction = require('./TransferFateAction');
 const TransferHonorAction = require('./TransferHonorAction');
 
@@ -65,8 +66,9 @@ const GameActions = {
     takeFate: (amount) => new TransferFateAction(amount),
     takeHonor: (amount) => new TransferHonorAction(amount),
     // ring actions
-    placeFateOnRing: (amount) => new PlaceFateRingAction(amount),
-    resolveRing: (optional) => new ResolveRingAction(optional)
+    placeFateOnRing: (amount, origin) => new PlaceFateRingAction(amount, origin),
+    resolveRing: (optional) => new ResolveRingAction(optional),
+    takeFateFromRing: (amount) => new TakeFateRingAction(amount)
 };
 
 module.exports = GameActions;

@@ -41,7 +41,7 @@ const CostBuilders = {
         selectMultiple: number => `Select ${number} cards to sacrifice`
     }),
     discardImperialFavor: () => new PlayerCost(GameActions.loseImperialFavor()),
-    giveFateToOpponent: (amount) => new PlayerCost(GameActions.transferFate(-amount)),
+    giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate(amount)),
     payHonor: (amount) => new PlayerCost(GameActions.gainHonor(-amount)),
     payFate: (amount) => new PlayerCost(GameActions.gainFate(-amount)),
     payFateToRing: (ringCondition, amount) => new RingCost(GameActions.placeFateOnRing(amount), ringCondition)

@@ -7,7 +7,7 @@ class TimeForWar extends DrawCard {
             when: {
                 afterConflict: event => event.conflict.loser === this.controller && event.conflict.conflictType === 'political'
             },
-            target: {
+            targets: {
                 weapon: {
                     cardType: 'attachment',
                     cardCondition: (card, context) => card.controller === context.player && card.getCost() <= 3 && card.hasTrait('weapon') &&

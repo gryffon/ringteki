@@ -2,7 +2,7 @@ const RingAction = require('./RingAction');
 const MoveFateEvent = require('../Events/MoveFateEvent');
 
 class PlaceFateRingAction extends RingAction {
-    constructor(origin, amount = 1) {
+    constructor(amount = 1, origin) {
         super('placeFate');
         this.origin = origin;
         this.amount = amount;

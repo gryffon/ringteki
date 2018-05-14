@@ -502,18 +502,6 @@ class DrawCard extends BaseCard {
         this.inConflict = false;
     }
     
-    isAttacking() {
-        return this.game.currentConflict && this.game.currentConflict.isAttacking(this);
-    }
-
-    isDefending() {
-        return this.game.currentConflict && this.game.currentConflict.isDefending(this);
-    }
-
-    isParticipating() {
-        return this.game.currentConflict && this.game.currentConflict.isParticipating(this);
-    }
-
     canDeclareAsAttacker(conflictType = this.game.currentConflict.conflictType) {
         return (this.allowGameAction('declareAsAttacker') && !this.bowed && 
                 this.canParticipateAsAttacker(conflictType));

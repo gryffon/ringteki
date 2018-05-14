@@ -17,6 +17,7 @@ const RegroupPhase = require('./gamesteps/regroupphase.js');
 const SimpleStep = require('./gamesteps/simplestep.js');
 const MenuPrompt = require('./gamesteps/menuprompt.js');
 const HandlerMenuPrompt = require('./gamesteps/handlermenuprompt.js');
+const HonorBidPrompt = require('./gamesteps/honorbidprompt.js');
 const SelectCardPrompt = require('./gamesteps/selectcardprompt.js');
 const SelectRingPrompt = require('./gamesteps/selectringprompt.js');
 const GameWonPrompt = require('./gamesteps/GameWonPrompt');
@@ -645,6 +646,10 @@ class Game extends EventEmitter {
      */
     promptForRingSelect(player, properties) {
         this.queueStep(new SelectRingPrompt(this, player, properties));
+    }
+
+    promptForHonorBid(activePromptTitle, costHandler) {
+        this.queueStep(new HonorBidPrompt(this, activePromptTitle, costHandler));
     }
 
     /*

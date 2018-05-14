@@ -12,7 +12,7 @@ class SendHomeAction extends CardGameAction {
         }
         return super.canAffect(card, context);
     }
-
+    /*
     getEventArray(context) {
         if(this.targets.length === 0) {
             return [];
@@ -20,6 +20,7 @@ class SendHomeAction extends CardGameAction {
         let events = this.targets.map(card => this.getEvent(card, context));
         return events.concat(this.createEvent('onSendCharactersHome', { sendHomeEvents: events }));
     }
+    */
 
     getEvent(card, context) {
         return super.createEvent('onCardSentHome', { card: card, context: context }, () => context.game.currentConflict.removeFromConflict(card));

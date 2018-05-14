@@ -8,7 +8,7 @@ class RevealAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(!card.facedown) {
+        if(!card.facedown && card.location !== 'hand') {
             return false;
         }
         return super.canAffect(card, context);

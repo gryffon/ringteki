@@ -2,12 +2,10 @@ const _ = require('underscore');
 
 const AbilityLimit = require('./abilitylimit.js');
 const CannotRestriction = require('./cannotrestriction.js');
-const CardAction = require('./cardaction');
 const CostReducer = require('./costreducer');
 const EffectBuilder = require('./Effects/EffectBuilder');
 const ImmunityRestriction = require('./immunityrestriction.js');
 const PlayableLocation = require('./playablelocation.js');
-const TriggeredAbility = require('./triggeredability');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -20,7 +18,7 @@ const Effects = {
     addFaction: (faction) => EffectBuilder.card.static('addFaction', faction),
     addKeyword: (keyword) => EffectBuilder.card.static('addKeyword', keyword),
     addTrait: (trait) => EffectBuilder.card.static('addTrait', trait),
-    blank: EffectBuilder.card.static('blank'), 
+    blank: () => EffectBuilder.card.static('blank'), 
     cannotDeclareRing: (match) => EffectBuilder.ring.static('cannotDeclare', match),
     canPlayFromOwn: (location) => EffectBuilder.player.detached('canPlayFromOwn', {
         apply: (player) => {
@@ -43,17 +41,15 @@ const Effects = {
         },
         unapply: (card, context, effect) => context.game.effectEngine.removeDelayedEffect(effect)
     }),
-    doesNotBow: EffectBuilder.card.static('doesNotBow'),
-    doesNotReady: EffectBuilder.card.static('doesNotReady'),
+    doesNotBow: () => EffectBuilder.card.static('doesNotBow'),
+    doesNotReady: () => EffectBuilder.card.static('doesNotReady'),
     gainAbility: (abilityType, properties) => EffectBuilder.card.detached('gainAbility', {
         apply: (card, context) => {
             let ability;
             if(abilityType === 'action') {
-                ability = new CardAction(card.game, card, properties);
-                card.abilities.actions.push(ability);
+                ability = card.action(properties);
             } else {
-                ability = new TriggeredAbility(card.game, card, abilityType, properties);
-                card.abilities.reactions.push(ability);
+                ability = card.triggeredAbility(abilityType, properties);
                 ability.registerEvents();
             }
             if(context.source.grantedAbilityLimits[card.uuid]) {
@@ -92,7 +88,7 @@ const Effects = {
     reduceNextPlayedCardCost: (amount, match) => Effects.reduceCost({ amount: amount, match: match, limit: AbilityLimit.fixed(1) }),
     restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static('restrictNumberOfDefenders', value),
     setDash: (type) => EffectBuilder.card.static('setDash', type),
-    showTopConflictCard: EffectBuilder.player.static('showTopConflictCard'),
+    showTopConflictCard: () => EffectBuilder.player.static('showTopConflictCard'),
     takeControl: (player) => EffectBuilder.card.static('takeControl', player),
     terminalCondition: (properties) => EffectBuilder.card.detached('terminalCondition', {
         apply: (card, context) => {

@@ -6,8 +6,7 @@ class ArtisanAcademy extends DrawCard {
             title: 'Make top card of conflict deck playable',
             phase: 'conflict',
             condition: context => context.player.conflictDeck.size() > 0,
-            effect: 'reveal the top card of their conflict deck: {1}',
-            effectArgs: context => context.player.conflictDeck.first(),
+            effect: 'reveal the top card of their conflict deck',
             lastingEffect: context => ({
                 until: {
                     onCardMoved: event => event.card === context.player.conflictDeck.first() && event.originalLocation === 'conflict deck',

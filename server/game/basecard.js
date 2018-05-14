@@ -47,31 +47,33 @@ class BaseCard extends EffectSource {
     action(properties) {
         var action = new CardAction(this.game, this, properties);
         this.abilities.actions.push(action);
+        return action;
+    }
+
+    triggeredAbility(abilityType, properties) {
+        let reaction = new TriggeredAbility(this.game, this, abilityType, properties);
+        this.abilities.reactions.push(reaction);
+        return reaction;
     }
 
     reaction(properties) {
-        var reaction = new TriggeredAbility(this.game, this, 'reaction', properties);
-        this.abilities.reactions.push(reaction);
+        this.triggeredAbility('reaction', properties);
     }
 
     forcedReaction(properties) {
-        var reaction = new TriggeredAbility(this.game, this, 'forcedreaction', properties);
-        this.abilities.reactions.push(reaction);
+        this.triggeredAbility('forcedreaction', properties);
     }
 
     wouldInterrupt(properties) {
-        var reaction = new TriggeredAbility(this.game, this, 'cancelinterrupt', properties);
-        this.abilities.reactions.push(reaction);        
+        this.triggeredAbility('cancelinterrupt', properties);
     }
 
     interrupt(properties) {
-        var reaction = new TriggeredAbility(this.game, this, 'interrupt', properties);
-        this.abilities.reactions.push(reaction);
+        this.triggeredAbility('interrupt', properties);
     }
 
     forcedInterrupt(properties) {
-        var reaction = new TriggeredAbility(this.game, this, 'forcedinterrupt', properties);
-        this.abilities.reactions.push(reaction);
+        this.triggeredAbility('forcedinterrupt', properties);
     }
 
     /**
@@ -198,6 +200,18 @@ class BaseCard extends EffectSource {
 
     isConflictProvince() {
         return false;
+    }
+
+    isAttacking() {
+        return this.game.currentConflict && this.game.currentConflict.isAttacking(this);
+    }
+
+    isDefending() {
+        return this.game.currentConflict && this.game.currentConflict.isDefending(this);
+    }
+
+    isParticipating() {
+        return this.game.currentConflict && this.game.currentConflict.isParticipating(this);
     }
 
     isUnique() {
