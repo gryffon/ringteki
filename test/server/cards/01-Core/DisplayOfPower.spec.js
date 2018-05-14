@@ -1,4 +1,4 @@
-fdescribe('Display of Power', function() {
+describe('Display of Power', function() {
     integration(function() {
         describe('Display of Power\'s ability', function() {
             beforeEach(function() {
