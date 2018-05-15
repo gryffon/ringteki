@@ -18,7 +18,7 @@ class ShamefulDisplay extends ProvinceCard {
                     this.game.promptForSelect(context.player, {
                         activePromptTitle: 'Choose a character to dishonor',
                         source: context.source,
-                        gameAction: ability.action.dishonor(),
+                        gameAction: ability.actions.dishonor(),
                         cardCondition: card => context.target.includes(card),
                         onSelect: (player, card) => {
                             this.resolveShamefulDisplay(context, context.target.find(c => c !== card), card);

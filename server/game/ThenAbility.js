@@ -8,7 +8,7 @@ class ThenAbility extends BaseAbility {
         this.game = game;
         this.card = card;
         this.properties = properties;
-        this.handler = properties.handler || this.executeGameActions;
+        this.handler = properties.handler || this.executeGameActionPrehandlers;
         this.cannotTargetFirst = true;
     }
 
@@ -55,14 +55,19 @@ class ThenAbility extends BaseAbility {
         this.handler(context);
     }
 
-    executeGameActions(context) {
-        // Get any gameActions for this ability
+    executeGameActionPrehandlers(context) {
         this.updateGameActions(context);
-        let actions = this.getGameActions(context);
-        for(const action of actions) {
+        for(const action of this.getGameActions(context)) {
             action.preEventHandler(context);
         }
+        this.game.queueSimpleStep(() => this.executeGameActions(context));
+
+    }
+
+    executeGameActions(context) {
+        // Get any gameActions for this ability
         // Get their events, and execute simultaneously
+        let actions = this.getGameActions(context);
         let events = actions.reduce((array, action) => array.concat(action.getEventArray(context)), []);
         let then = this.properties.then;
         if(then && typeof then === 'function') {

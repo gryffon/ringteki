@@ -56,8 +56,12 @@ describe('Yasuki Taka', function() {
             it('should trigger on opponent\'s crab characters leaving play', function() {
                 this.player1.clickCard('way-of-the-crab');
                 this.player1.clickCard('eager-scout');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect('yasuki-taka');             
                 this.player1.clickCard('yasuki-taka');
-                this.player2.clickCard('stoic-gunso');                
+                expect(this.player2).toHavePrompt('Way of the Crab');
+                expect(this.player1).toBeAbleToSelect('yasuki-taka');             
+                this.player2.clickCard('stoic-gunso');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect('yasuki-taka');             
             });
