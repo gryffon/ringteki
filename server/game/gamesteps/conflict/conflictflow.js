@@ -132,7 +132,7 @@ class ConflictFlow extends BaseStepWithPipeline {
                     let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility() });
                     context['target'] = context.targets.target = card;
                     this.covert.push(context);
-                    return true;                        
+                    return true;
                 }
             });
         }

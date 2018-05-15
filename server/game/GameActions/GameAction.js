@@ -11,7 +11,7 @@ class GameAction {
         this.cost = '';
     }
 
-    initialise(context) {
+    update(context) {
         this.setOptions(this.optionsFunc(context));
         this.setTarget(this.targetFunc(context), context);
     }
@@ -57,6 +57,10 @@ class GameAction {
     }
 
     hasLegalTarget(context) {
+        // If this game action has had a target set which doesn't exist yet (e.g. it depends on an ability cost), it needs to return true
+        if(this.targets.length === 0 && !this.targetFunc(context)) {
+            return true;
+        }
         this.targets = this.targets.filter(target => this.canAffect(target, context));
         return this.targets.length > 0;
     }

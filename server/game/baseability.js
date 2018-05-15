@@ -178,12 +178,12 @@ class BaseAbility {
         });
     }
 
-    initialiseGameActions(context) {
+    updateGameActions(context) {
         for(let target of this.targets) {
-            target.initialiseGameActions(context);
+            target.updateGameActions(context);
         }
         for(let action of this.gameAction) {
-            action.initialise(context);
+            action.update(context);
         }
     }
 

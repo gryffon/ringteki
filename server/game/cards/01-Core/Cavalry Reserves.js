@@ -11,8 +11,9 @@ class CavalryReserves extends DrawCard {
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
                 numCards: 0,
-                gameAction: ability.actions.putIntoConflict(),
-                cardCondition: (card, context) => card.hasTrait('cavalry') && card.location === 'dynasty discard pile' && card.controller === context.player
+                cardType: 'character',
+                cardCondition: (card, context) => card.hasTrait('cavalry') && card.location === 'dynasty discard pile' && card.controller === context.player,
+                gameAction: ability.actions.putIntoConflict()
             }
         });
     }

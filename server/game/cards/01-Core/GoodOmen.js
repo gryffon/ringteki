@@ -5,6 +5,7 @@ class GoodOmen extends DrawCard {
         this.action({
             title: 'Add a fate to a character',
             target: {
+                cardType: 'character', 
                 cardCondition: card => card.getCost() > 2,
                 gameAction: ability.actions.placeFate()
             }

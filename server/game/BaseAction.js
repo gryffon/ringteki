@@ -22,7 +22,7 @@ class BaseAction extends BaseAbility {
             player: this.card.controller,
             source: this.card
         });
-        this.initialiseGameActions(context);
+        this.updateGameActions(context);
         return context;
     }
 

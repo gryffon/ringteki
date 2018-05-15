@@ -11,7 +11,7 @@ class CallingInFavors extends DrawCard {
             },
             gameAction: ability.actions.attach().target(context => context.costs.dishonor).options(context => ({ 
                 attachment: context.target, 
-                discardIfUnable: true
+                discardOnFailure: true
             }))
         });
     }

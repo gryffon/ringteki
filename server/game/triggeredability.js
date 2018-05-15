@@ -27,7 +27,7 @@ class TriggeredAbility extends CardAbility {
             player: this.card.controller, 
             ability: this 
         });
-        this.initialiseGameActions(context);
+        this.updateGameActions(context);
         return context;
     }
 

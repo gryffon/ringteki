@@ -5,6 +5,7 @@ class Rout extends DrawCard {
         this.action({
             title: 'Send a character home.',
             target: {
+                cardType: 'character', 
                 cardCondition: (card, context) => card.controller !== context.player && context.player.cardsInPlay.some(myCard => (
                     myCard.hasTrait('bushi') && myCard.militarySkill > card.militarySkill
                 )),

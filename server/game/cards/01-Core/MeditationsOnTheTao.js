@@ -6,6 +6,7 @@ class MeditationsOnTheTao extends ProvinceCard {
             title: 'Remove a fate from a character',
             condition: context => context.source.isConflictProvince(),
             target: {
+                cardType: 'character', 
                 gameAction: ability.actions.removeFate(),
                 cardCondition: card => card.isAttacking()
             }

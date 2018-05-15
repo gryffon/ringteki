@@ -10,6 +10,7 @@ class Ambush extends DrawCard {
                 mode: 'maxStat',
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
+                cardType: 'character',
                 cardCondition: (card, context) => (
                     card.isFaction('scorpion') && card.controller === context.player &&
                     ['hand', 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location)   

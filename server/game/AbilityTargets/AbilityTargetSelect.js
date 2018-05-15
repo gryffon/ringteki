@@ -18,14 +18,14 @@ class AbilityTargetSelect {
         return choice.some(action => action.setTarget(action.targetFunc(context), context));
     }
 
-    initialiseGameActions(context) {
+    updateGameActions(context) {
         for(const key in this.properties.choices) {
             if(typeof this.properties.choices[key] !== 'function') {
                 if(!Array.isArray(this.properties.choices[key])) {
                     this.properties.choices[key] = [this.properties.choices[key]];
                 }
                 for(let action of this.properties.choices[key]) {
-                    action.initialise(context);
+                    action.update(context);
                 }
             }
         }

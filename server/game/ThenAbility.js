@@ -19,7 +19,7 @@ class ThenAbility extends BaseAbility {
             player: player,
             source: this.card
         });
-        this.initialiseGameActions(context);
+        this.updateGameActions(context);
         return context;
     }
 
@@ -57,6 +57,7 @@ class ThenAbility extends BaseAbility {
 
     executeGameActions(context) {
         // Get any gameActions for this ability
+        this.updateGameActions(context);
         let actions = this.getGameActions(context);
         for(const action of actions) {
             action.preEventHandler(context);

@@ -6,6 +6,7 @@ class IdeMessenger extends DrawCard {
             title: 'Move an ally to a conflict',
             cost: ability.costs.payFate(1),
             target: {
+                cardType: 'character', 
                 cardCondition: (card, context) => card.controller === context.player,
                 gameAction: ability.actions.moveToConflict()
             }

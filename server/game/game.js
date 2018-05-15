@@ -957,6 +957,7 @@ class Game extends EventEmitter {
                 this.currentConflict.addDefender(card);
             }
         }
+        this.checkGameState(true);
     }
 
     watch(socketId, user) {
@@ -1066,7 +1067,7 @@ class Game extends EventEmitter {
                 player.cardsInPlay.each(card => {
                     if(card.getModifiedController() !== player) {
                         // any card being controlled by the wrong player
-                        this.applyGameAction(null, { takeControl: card });
+                        this.takeControl(card.getModifiedController(), card);
                     }
                     // any attachments which are illegally attached
                     card.checkForIllegalAttachments();

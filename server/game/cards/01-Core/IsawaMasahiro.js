@@ -7,6 +7,7 @@ class IsawaMasahiro extends DrawCard {
             condition: () => this.game.isDuringConflict() && this.game.currentConflict.hasElement('fire'),
             cost: ability.costs.bowSelf(),
             target: {
+                cardType: 'character', 
                 cardCondition: card => card.getCost() <= 2 && card.isParticipating(),
                 gameAction: ability.actions.discardFromPlay()
             }

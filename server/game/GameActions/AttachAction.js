@@ -13,7 +13,11 @@ class AttachAction extends CardGameAction {
         };
     }
 
-    canAffect(card, context) {
+    canAffect(card, context, eventCheck = false) {
+        if(!eventCheck && this.discardOnFailure) {
+            // this should return true for discardOnFailure effects
+            return true;
+        }
         if(!context || !context.player || !this.attachment || !card || card.location !== 'play area') {
             return false;
         }
@@ -28,10 +32,10 @@ class AttachAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        if(this.canAffect(card, context)) {
+        if(this.canAffect(card, context, true)) {
             return super.createEvent('onCardAttached', { card: this.attachment, parent: card, context: context }, event => {
                 if(event.card.location === 'play area') {
-                    event.parent.removeAttachment(event.card);
+                    event.card.parent.removeAttachment(event.card);
                 } else {
                     event.card.controller.removeCardFromPile(event.card);
                     event.card.new = true;

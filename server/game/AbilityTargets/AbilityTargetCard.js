@@ -13,10 +13,10 @@ class AbilityTargetCard {
         return this.selector.hasEnoughTargets(context, true);
     }
 
-    initialiseGameActions(context) {
+    updateGameActions(context) {
         for(let action of this.properties.gameAction) {
             action.target(context => context.targets[this.name]);
-            action.initialise(context);
+            action.update(context);
         }
     }
 

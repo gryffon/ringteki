@@ -77,6 +77,7 @@ const actionNames = [
     'moveToConflict',
     'placeFate',
     'putIntoPlay',
+    'putIntoConflict',
     'ready',
     'removeFate',
     'resolveRing',
