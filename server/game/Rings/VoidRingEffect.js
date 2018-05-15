@@ -1,4 +1,5 @@
 const BaseAbility = require('../baseability.js');
+const GameActions = require('../GameActions/GameActions');
 
 class VoidRingEffect extends BaseAbility {
     constructor(optional = true) {
@@ -8,7 +9,7 @@ class VoidRingEffect extends BaseAbility {
                 source: 'Void Ring',
                 buttons: optional ? [{ text: 'Don\'t resolve', arg: 'dontResolve' }] : [],
                 cardType: 'character',
-                gameAction: 'removeFate'
+                gameAction: GameActions.removeFate()
             }
         });
 

@@ -21,12 +21,12 @@ class ChosenDiscardAction extends PlayerAction {
     preEventHandler(context) {
         super.preEventHandler(context);
         const player = this.targets[0];
-        let amount = Math.max(player.hand.size(), this.amount);
+        let amount = Math.min(player.hand.size(), this.amount);
         if(amount === 0) {
             return;
         }
         context.game.promptForSelect(player, {
-            activePromptTitle: 'Choose ' + (this.amount === 1 ? 'a card' : this.amount + ' cards') + ' to discard',
+            activePromptTitle: 'Choose ' + (amount === 1 ? 'a card' : amount + ' cards') + ' to discard',
             source: context.source,
             mode: 'exactly',
             numCards: amount,

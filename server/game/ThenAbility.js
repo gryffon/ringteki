@@ -53,6 +53,7 @@ class ThenAbility extends BaseAbility {
         }
 
         this.handler(context);
+        this.game.queueSimpleStep(() => this.game.checkGameState());
     }
 
     executeGameActionPrehandlers(context) {
@@ -80,8 +81,6 @@ class ThenAbility extends BaseAbility {
             }
         } else if(then) {
             this.game.resolveAbility(new ThenAbility(this.game, this.card, then).createContext(context.player));
-        } else {
-            this.game.checkGameState();
         }
     }
 

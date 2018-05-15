@@ -2,6 +2,11 @@ const DrawCard = require('../../drawcard.js');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
 
 class PlayTattooedWandererAsAttachment extends PlayAttachmentAction {
+    constructor(card) {
+        super(card);
+        this.title = 'Play Tattooed Wanderer as an attachment';
+    }
+
     executeHandler(context) {
         context.source.type = 'attachment';
         super.executeHandler(context);

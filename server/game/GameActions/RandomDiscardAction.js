@@ -14,12 +14,12 @@ class RandomDiscardAction extends PlayerAction {
             if(event.cards.length === 0) {
                 return;
             }
-            player.addGameMessage('{0} discards {1} at random', player, cards);
+            player.game.addMessage('{0} discards {1} at random', player, cards);
             if(event.cards.length > 1) {
                 player.game.promptForSelect(player, {
                     activePromptTitle: 'Choose order for random discard',
                     mode: 'exactly',
-                    numCards: event.card.length,
+                    numCards: event.cards.length,
                     ordered: true,
                     source: context.source,
                     buttons: [{ test: 'Done', arg: 'done' }],

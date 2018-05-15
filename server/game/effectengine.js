@@ -39,7 +39,7 @@ class EffectEngine {
     }
 
     checkDelayedEffects(events) {
-        // TODO this.delayedEffects = this.delayedEffects.filter(effect => effect.target.location !== 'play area');
+        this.delayedEffects = this.delayedEffects.filter(effect => effect.target.location === 'play area');
         let effectsToTrigger = this.delayedEffects.filter(effect => effect.checkEffect(events));
         if(effectsToTrigger.length > 0) {
             this.game.openSimultaneousEffectWindow(effectsToTrigger.map(effect => ({

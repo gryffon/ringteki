@@ -71,7 +71,14 @@ class GameAction {
     resolve(targets, context) {
         this.setTarget(targets, context);
         this.preEventHandler(context);
-        return context.game.openEventWindow(this.getEventArray(context));
+        let window = context.game.openEventWindow([], false);
+        context.game.queueSimpleStep(() => {
+            for(let event of this.getEventArray(context)) { 
+                window.addEvent(event);
+            }
+        });
+        context.game.queueStep(window);
+        return window;
     }
 
     canAffect(target, context) {

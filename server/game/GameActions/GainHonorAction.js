@@ -1,7 +1,7 @@
 const PlayerAction = require('./PlayerAction');
 
 class GainHonorAction extends PlayerAction {
-    constructor(amount) {
+    constructor(amount = 1) {
         super('gainHonor');
         this.amount = amount;
         this.effect = 'gain ' + amount + ' honor';

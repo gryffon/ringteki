@@ -38,8 +38,8 @@ class DuelAction extends CardGameAction {
                 context.game.addMessage('The duel cannot proceed as one participant is no longer in play');
                 return;
             }
-            context.game.currentDuel = new Duel(this, this.challenger, card, this.type);
-            context.game.queueStep(new DuelFlow(this, context.game.currentDuel, this.honorCosts, this.resolveDuel));                
+            context.game.currentDuel = new Duel(context.game, this.challenger, card, this.type);
+            context.game.queueStep(new DuelFlow(context.game, context.game.currentDuel, prompt => this.honorCosts(prompt), (winner, loser) => this.resolveDuel(winner, loser)));                
         });
     }
 }

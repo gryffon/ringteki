@@ -12,7 +12,12 @@ class DuelistTraining extends DrawCard {
                 target: {
                     cardType: 'character',
                     cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player,
-                    gameAction: ability.actions.duel('military', this.resolutionHandler, null, this.costHandler).options(context => ({ challenger: context.source }))
+                    gameAction: ability.actions.duel(
+                        'military', 
+                        (context, winner, loser) => this.resolutionHandler(context, winner, loser), 
+                        null, 
+                        (context, prompt) => this.costHandler(context, prompt)
+                    ).options(context => ({ challenger: context.source }))
                 }
             })
         });
@@ -40,7 +45,7 @@ class DuelistTraining extends DrawCard {
         }
         this.game.promptWithHandlerMenu(lowBidder, {
             activePromptTite: 'Difference in bids: ' + difference.toString(),
-            source: context.source,
+            source: this,
             choices: ['Pay with honor', 'Pay with cards'],
             handlers: [
                 () => prompt.transferHonorAfterBid(context), 

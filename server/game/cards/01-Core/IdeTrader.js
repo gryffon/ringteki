@@ -5,8 +5,9 @@ class IdeTrader extends DrawCard {
         this.reaction({
             title: 'Gain a fate/card',
             when: {
-                onMoveCharactersToConflict: (event, context) => context.source.isParticipating()
+                onMoveToConflict: (event, context) => context.source.isParticipating()
             },
+            multipleTrigger: false,
             limit: ability.limit.perConflict(1),
             target: {
                 mode: 'select',

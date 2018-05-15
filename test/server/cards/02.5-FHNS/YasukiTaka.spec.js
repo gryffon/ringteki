@@ -60,7 +60,7 @@ describe('Yasuki Taka', function() {
                 expect(this.player1).toBeAbleToSelect('yasuki-taka');             
                 this.player1.clickCard('yasuki-taka');
                 expect(this.player2).toHavePrompt('Way of the Crab');
-                expect(this.player1).toBeAbleToSelect('yasuki-taka');             
+                expect(this.player2).toBeAbleToSelect('stoic-gunso');             
                 this.player2.clickCard('stoic-gunso');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect('yasuki-taka');             

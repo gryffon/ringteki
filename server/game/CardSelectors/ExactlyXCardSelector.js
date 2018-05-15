@@ -32,6 +32,10 @@ class ExactlyXCardSelector extends BaseCardSelector {
     hasReachedLimit(selectedCards) {
         return selectedCards.length >= this.numCards;
     }
+
+    automaticFireOnSelect() {
+        return this.numCards === 1;
+    }
 }
 
 module.exports = ExactlyXCardSelector;

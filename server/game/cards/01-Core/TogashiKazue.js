@@ -2,6 +2,11 @@ const DrawCard = require('../../drawcard.js');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
 
 class PlayTogashiKazueAsAttachment extends PlayAttachmentAction {
+    constructor(card) {
+        super(card);
+        this.title = 'Play Togashi Kazue as an attachment';
+    }
+
     executeHandler(context) {
         context.source.type = 'attachment';
         super.executeHandler(context);
@@ -18,7 +23,7 @@ class TogashiKazue extends DrawCard {
             target: {
                 cardType: 'character',
                 cardCondition: (card, context) => card.isParticipating() && card !== context.source.parent,
-                gameAction: ability.actions.removeFate().options(context => ({ recepient: context.source.parent }))
+                gameAction: ability.actions.removeFate().options(context => ({ recipient: context.source.parent }))
             },
             effect: 'steal a fate from {0} and place it on {1}',
             effectArgs: context => context.source.parent

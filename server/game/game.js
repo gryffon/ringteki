@@ -155,7 +155,7 @@ class Game extends EventEmitter {
      * @returns {Array} Array of Player objects
      */
     getPlayersInFirstPlayerOrder() {
-        return this.getPlayers().sort((a, b) => a.firstPlayer ? -1 : 1);
+        return this.getPlayers().sort(a => a.firstPlayer ? -1 : 1);
     }
 
     /*
@@ -857,14 +857,17 @@ class Game extends EventEmitter {
      * Creates an EventWindow which will open windows for each kind of triggered
      * ability which can respond any passed events, and execute their handlers.
      * @param {Event[]} events 
+     * @param {Boolean} queueWindow - sets whether the game should queue the window or not
      * @returns {EventWindow}
      */
-    openEventWindow(events) {
+    openEventWindow(events, queueWindow = true) {
         if(!_.isArray(events)) {
             events = [events];
         }
         let window = new EventWindow(this, events);
-        this.queueStep(window);
+        if(queueWindow) {
+            this.queueStep(window);
+        }
         return window;
     }
 

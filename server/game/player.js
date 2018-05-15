@@ -827,6 +827,7 @@ class Player extends GameObject {
             card.controller = this;
         } else if(targetLocation === 'play area') {
             card.setDefaultController(this);
+            card.controller = this;
             // This should only be called when an attachment is dragged into play
             if(card.type === 'attachment') {
                 this.promptForAttachment(card);

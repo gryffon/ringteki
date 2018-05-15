@@ -8,7 +8,8 @@ class AbilityTargetSelect {
     }
 
     canResolve(context) {
-        return this.properties.choices.some(choice => this.isChoiceLegal(choice, context)) && context.ability.canPayCosts(context);
+        let choices = Object.values(this.properties.choices);
+        return choices.some(choice => this.isChoiceLegal(choice, context)) && context.ability.canPayCosts(context);
     }
 
     isChoiceLegal(choice, context) {
