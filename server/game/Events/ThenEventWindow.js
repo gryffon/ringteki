@@ -16,6 +16,7 @@ class ThenEventWindow extends EventWindow {
             new SimpleStep(this.game, () => this.checkForOtherEffects()),
             new SimpleStep(this.game, () => this.preResolutionEffects()),
             new SimpleStep(this.game, () => this.executeHandler()),
+            new SimpleStep(this.game, () => this.checkGameState()),
             new SimpleStep(this.game, () => this.resetCurrentEventWindow())
         ]);
     }

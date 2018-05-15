@@ -6,7 +6,7 @@ class EffectEngine {
     constructor(game) {
         this.game = game;
         this.events = new EventRegistrar(game, this);
-        this.events.register(['onCardMoved', 'onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
+        this.events.register(['onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
         this.effects = [];
         this.delayedEffects = [];
         this.terminalConditions = [];
@@ -39,6 +39,7 @@ class EffectEngine {
     }
 
     checkDelayedEffects(events) {
+        // TODO this.delayedEffects = this.delayedEffects.filter(effect => effect.target.location !== 'play area');
         let effectsToTrigger = this.delayedEffects.filter(effect => effect.checkEffect(events));
         if(effectsToTrigger.length > 0) {
             this.game.openSimultaneousEffectWindow(effectsToTrigger.map(effect => ({
@@ -49,6 +50,7 @@ class EffectEngine {
     }
 
     checkTerminalConditions() {
+        // TODO this.terminalConditions = this.terminalConditions.filter(effect => effect.target.location !== 'play area');
         let effectsToTrigger = this.terminalConditions.filter(effect => effect.checkCondition());
         if(effectsToTrigger.length > 0) {
             this.game.openThenEventWindow(effectsToTrigger.map(effect => effect.getEvent()));
@@ -61,6 +63,13 @@ class EffectEngine {
         }
         stateChanged = false;
         this.newEffect = false;
+        // remove any effects for cards which are no longer in the correct location
+        this.unapplyAndRemove(effect => effect.duration === 'persistent' && effect.location !== effect.source.location && effect.location !== 'any');
+        // Any lasting or delayed effects on a card which is no longer in play should be removed
+        this.unapplyAndRemove(effect => (
+            typeof effect.match !== 'function' && effect.match.location !== 'play area' && 
+            effect.targetLocation !== 'any' && effect.duration !== 'persistent'
+        ));
         for(const effect of this.effects) {
             // Check each effect's condition and find new targets
             stateChanged = effect.checkCondition(stateChanged);
@@ -71,15 +80,6 @@ class EffectEngine {
             this.checkEffects(stateChanged, loops + 1);
         }
         return stateChanged;
-    }
-
-    onCardMoved(event) {
-        // remove any effects which this card is emmiting which it shouldn't be
-        this.unapplyAndRemove(effect => effect.duration === 'persistent' && effect.source === event.card && (effect.location === event.originalLocation || event.parentChanged));
-        // Any lasting or delayed effects on this card should be removed when it leaves play
-        this.unapplyAndRemove(effect => effect.match === event.card && effect.targetLocation !== 'any' && effect.duration !== 'persistent');
-        this.delayedEffects = this.delayedEffects.filter(effect => effect.target !== event.card);
-        this.terminalConditions = this.terminalConditions.filter(effect => effect.target !== event.card);
     }
 
     onConflictFinished() {

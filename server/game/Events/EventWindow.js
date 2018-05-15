@@ -31,6 +31,7 @@ class EventWindow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.checkForOtherEffects()),
             new SimpleStep(this.game, () => this.preResolutionEffects()),
             new SimpleStep(this.game, () => this.executeHandler()),
+            new SimpleStep(this.game, () => this.checkGameState()),
             new SimpleStep(this.game, () => this.checkThenAbilities()),
             new SimpleStep(this.game, () => this.openWindow('forcedreaction')),
             new SimpleStep(this.game, () => this.openWindow('reaction')),
@@ -42,7 +43,7 @@ class EventWindow extends BaseStepWithPipeline {
         event.setWindow(this);
         this.events.push(event);
     }
-    
+
     removeEvent(event) {
         this.events = _.reject(this.events, e => e === event);
     }
@@ -100,23 +101,18 @@ class EventWindow extends BaseStepWithPipeline {
     executeHandler() {
         this.events = _.sortBy(this.events, 'order');
         
-        let thenEvents = [];
-
         _.each(this.events, event => {
             // need to checkCondition here to ensure the event won't fizzle due to another event's resolution (e.g. double honoring an ordinary character with YR etc.)
             event.checkCondition();
             if(!event.cancelled) {
                 event.executeHandler();
-                thenEvents = thenEvents.concat(_.reject(event.thenEvents, event => event.cancelled));
                 this.game.emit(event.name, event);
             }
         });
+    }
 
-        this.game.queueSimpleStep(() => this.game.checkGameState(_.any(this.events, event => event.handler), this.events));
-
-        if(thenEvents.length > 0) {
-            this.game.openThenEventWindow(thenEvents);
-        }
+    checkGameState() {
+        this.game.checkGameState(_.any(this.events, event => event.handler), this.events);
     }
 
     checkThenAbilities() {

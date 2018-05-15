@@ -75,6 +75,8 @@ class ThenAbility extends BaseAbility {
             }
         } else if(then) {
             this.game.resolveAbility(new ThenAbility(this.game, this.card, then).createContext(context.player));
+        } else {
+            this.game.checkGameState();
         }
     }
 
