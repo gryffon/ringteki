@@ -9,7 +9,7 @@ class IsawaMoriSeido extends StrongholdCard {
                 cardType: 'character',
                 cardCondition: card => card.location === 'play area'
             },
-            message: 'give +2 glory to {0} until the end of the phase',
+            effect: 'give +2 glory to {0} until the end of the phase',
             untilEndOfPhase: context => ({
                 match: context.target,
                 effect: ability.effects.modifyGlory(2)

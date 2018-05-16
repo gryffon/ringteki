@@ -10,6 +10,8 @@ class WayOfTheLion extends DrawCard {
                 cardCondition: card => card.location === 'play area' && card.isFaction('lion') && 
                                        !card.hasDash('military') && card.getBaseMilitarySkill() > 0
             },
+            effect: 'double the base {1} skill of {0}',
+            effectArgs: () => 'military',
             untilEndOfConflict: context => ({
                 match: context.target,
                 effect: ability.effects.modifyBaseMilitarySkill(context.target.getBaseMilitarySkill())

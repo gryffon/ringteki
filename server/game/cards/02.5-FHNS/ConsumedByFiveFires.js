@@ -2,6 +2,7 @@ const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 
 class ConsumedByFiveFires extends DrawCard {
+    // TODO: need refactoring
     setupCardAbilities() {
         this.action({
             title: 'Remove up to 5 fate from characters',

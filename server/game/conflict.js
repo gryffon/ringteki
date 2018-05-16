@@ -162,7 +162,7 @@ class Conflict extends GameObject {
         }
         if(this.attackingPlayer.allowGameAction('takeFateFromRings') && newRing.fate > 0) {
             this.game.addMessage('{0} takes {1} fate from {2}', this.attackingPlayer, newRing.fate, newRing);
-            this.game.addFate(this.attackingPlayer, newRing.fate);
+            this.attackingPlayer.modifyFate(newRing.fate);
             newRing.fate = 0;
         }
         if(newRing.conflictType !== this.conflictType) {

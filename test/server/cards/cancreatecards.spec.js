@@ -214,8 +214,22 @@ describe('All Cards:', function() {
                 }))).toBe(true);
             });
 
-            it('should have no effect or the effect should be a string', function() {
-                expect(_.all(this.calls, args => _.isUndefined(args.effect) || _.isString(args.effect))).toBe(true);
+            it('should have an string effect or a gameAction (either on the ability or one of its targets', function() {
+                expect(_.all(this.calls, args => {
+                    if(!_.isUndefined(args.effect)) {
+                        return _.isString(args.effect);
+                    } else if(args.gameAction) {
+                        return true;
+                    } else if(args.target) {
+                        if(args.target.gameAction) {
+                            return true;
+                        } 
+                        return args.target.mode && args.target.mode === 'select' && Object.values(args.target.choices).every(choice => !_.isFunction(choice));
+                    }
+                    return args.targets && Object.values(args.targets).some(target => target.gameAction || (
+                        target.mode && target.mode === 'select' && Object.values(target.choices).every(choice => !_.isFunction(choice))
+                    ));
+                })).toBe(true);
             });
 
             it('should have an effectArgs which matches effect', function() {
@@ -339,8 +353,22 @@ describe('All Cards:', function() {
                 }))).toBe(true);
             });
 
-            it('should have no effect or the effect should be a string', function() {
-                expect(_.all(this.calls, args => _.isUndefined(args.effect) || _.isString(args.effect))).toBe(true);
+            it('should have an string effect or a gameAction (either on the ability or one of its targets', function() {
+                expect(_.all(this.calls, args => {
+                    if(!_.isUndefined(args.effect)) {
+                        return _.isString(args.effect);
+                    } else if(args.gameAction) {
+                        return true;
+                    } else if(args.target) {
+                        if(args.target.gameAction) {
+                            return true;
+                        } 
+                        return args.target.mode && args.target.mode === 'select' && Object.values(args.target.choices).every(choice => !_.isFunction(choice));
+                    }
+                    return args.targets && Object.values(args.targets).some(target => target.gameAction || (
+                        target.mode && target.mode === 'select' && Object.values(target.choices).every(choice => !_.isFunction(choice))
+                    ));
+                })).toBe(true);
             });
 
             it('should have an effectArgs which matches effect', function() {

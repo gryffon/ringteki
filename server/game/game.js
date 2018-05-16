@@ -22,7 +22,8 @@ const SelectCardPrompt = require('./gamesteps/selectcardprompt.js');
 const SelectRingPrompt = require('./gamesteps/selectringprompt.js');
 const GameWonPrompt = require('./gamesteps/GameWonPrompt');
 const GameActions = require('./GameActions/GameActions');
-const EventBuilder = require('./Events/EventBuilder.js');
+const Event = require('./Events/Event');
+const InitiateCardAbilityEvent = require('./Events/InitiateCardAbilityEvent');
 const EventWindow = require('./Events/EventWindow.js');
 const ThenEventWindow = require('./Events/ThenEventWindow');
 const InitiateAbilityEventWindow = require('./Events/InitiateAbilityEventWindow.js');
@@ -179,9 +180,7 @@ class Game extends EventEmitter {
      * @returns {Player}
      */
     getFirstPlayer() {
-        return this.getPlayers().find(p => {
-            return p.firstPlayer;
-        });
+        return this.getPlayers().find(p => p.firstPlayer);
     }
 
     /*
@@ -411,48 +410,17 @@ class Game extends EventEmitter {
     }
 
     /**
-     * Change a players total honor
-     * @param {Player} player
-     * @param {Number} honor
-     */
-    addHonor(player, honor) {
-        player.honor += honor;
-
-        if(player.honor < 0) {
-            player.honor = 0;
-        }
-
-        this.checkWinCondition(player);
-    }
-
-    /**
-     * Change a players total fate
-     * @param {Player} player
-     * @param {Number} fate
-     */
-    addFate(player, fate) {
-        player.fate += fate;
-
-        if(player.fate < 0) {
-            player.fate = 0;
-        }
-    }
-
-    /** TODO: Change this to check both players in FP order?
      * Check to see if this player has won/lost the game due to honor (NB: this
      * function doesn't check to see if a conquest victory has been achieved)
-     * @param {Player} player
      */
-    checkWinCondition(player) {
-        if(player.getTotalHonor() >= 25) {
-            this.recordWinner(player, 'honor');
-        } else if(player.getTotalHonor() === 0) {
-            var opponent = this.getOtherPlayer(player);
-            if(opponent) {
-                this.recordWinner(opponent, 'dishonor');
+    checkWinCondition() {
+        for(const player of this.getPlayersInFirstPlayerOrder()) {
+            if(player.honor >= 25) {
+                this.recordWinner(player, 'honor');
+            } else if(player.opponent && player.opponent.honor <= 0) {
+                this.recordWinner(player, 'dishonor');
             }
         }
-
     }
 
     /**
@@ -463,6 +431,7 @@ class Game extends EventEmitter {
      */
     recordWinner(winner, reason) {
         if(this.winner) {
+
             return;
         }
 
@@ -578,7 +547,6 @@ class Game extends EventEmitter {
         if(player) {
             player.selectDeck(deck);
         }
-
     }
 
     /*
@@ -831,7 +799,7 @@ class Game extends EventEmitter {
     }
 
     getEvent(eventName, params, handler) {
-        return EventBuilder.for(eventName, params, handler);
+        return new Event(eventName, params, handler);
     }
 
     /*
@@ -897,24 +865,16 @@ class Game extends EventEmitter {
      * @param {Array} eventProps
      */
     raiseMultipleInitiateAbilityEvents(eventProps) {
-        let events = _.map(eventProps, event => EventBuilder.for('onCardAbilityInitiated', event.params, event.handler));
+        let events = _.map(eventProps, event => new InitiateCardAbilityEvent(event.params, event.handler));
         this.queueStep(new InitiateAbilityEventWindow(this, events));
     }
 
-    getEventsForGameAction(action, cards, context) {
-        if(!context) {
-            context = new AbilityContext({ game: this });
-        }
-        return EventBuilder.getEventsForAction(action, cards, context);
-    }
-
-    /* TODO: Add an applySingleGameAction function?
+    /** 
      * Checks whether a game action can be performed on a card or an array of
      * cards, and performs it on all legal targets.
-     * @param {String} actionType
-     * @param {Array or BaseCard} cards - Array of BaseCard
-     * @param {Function} func - (Array or BaseCard) => undefined
-     * @returns {undefined}
+     * @param {AbilityContext} context
+     * @param {Object} actions - Object with { actionName: targets }
+     * @returns {Event[]} - TODO: Change this?
      */
     applyGameAction(context, actions) {
         if(!context) {
@@ -1065,6 +1025,7 @@ class Game extends EventEmitter {
             (!this.currentConflict && this.effectEngine.checkEffects(hasChanged)) ||
             (this.currentConflict && this.currentConflict.calculateSkill(hasChanged)) || hasChanged
         ) {
+            this.checkWinCondition();
             // if the state has changed, check for:
             for(const player of this.getPlayers()) {
                 player.cardsInPlay.each(card => {

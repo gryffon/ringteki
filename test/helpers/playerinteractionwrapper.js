@@ -494,12 +494,6 @@ class PlayerInteractionWrapper {
         return card;
     }
 
-    // Proxied method
-    attach(attachment, target, raiseCardPlayed = false) {
-        this.player.attach(attachment, target, raiseCardPlayed);
-        this.game.continue();
-    }
-
     /**
      * Claims the specified elemental ring for the player
      * @param {String} element - a ring element

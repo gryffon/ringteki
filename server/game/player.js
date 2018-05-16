@@ -273,7 +273,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Returns a card in play under this player's control which matches (for uniqueness) the passed card.
+     * Returns a character in play under this player's control which matches (for uniqueness) the passed card.
      * @param {DrawCard} card
      */
     getDuplicateInPlay(card) {
@@ -316,7 +316,7 @@ class Player extends GameObject {
      */
     deckRanOutOfCards(deck) {
         this.game.addMessage('{0}\'s {1} deck has run out of cards and loses 5 honor', this, deck);
-        this.game.addHonor(this, -5);
+        this.modifyHonor(-5);
         this.getSourceList(deck + ' discard pile').each(card => this.moveCard(card, deck + ' deck'));
         if(deck === 'dynasty') {
             this.shuffleDynastyDeck();
@@ -509,7 +509,7 @@ class Player extends GameObject {
             card.new = false;
         });
 
-        this.game.addFate(this, this.getTotalIncome());
+        this.modifyFate(this.getTotalIncome());
 
         this.game.raiseEvent('onIncomeCollected', { player: this });
 
@@ -707,35 +707,16 @@ class Player extends GameObject {
         });
     }
 
-    /** TODO: Move this to conflictphase.js
-     * Returns the total glory of all ready characters, and adds an amount equal to the number of claimed rings
-     */
-    getFavor() {
-        var cardGlory = this.cardsInPlay.reduce((memo, card) => {
-            if(!card.bowed && card.getType() === 'character' && card.contributesToFavor) {
-                return memo + card.getGlory();
-            }
-
-            return memo;
-        }, 0);
-
-        this.cardsInPlay.each(card => {
-            cardGlory = card.modifyFavor(this, cardGlory);
-        });
-
-        let rings = this.getClaimedRings();
-
-        this.totalGloryForFavor = cardGlory + _.size(rings) + this.gloryModifier;
-
-        return this.totalGloryForFavor;
-    }
-
     get gloryModifier() {
         return this.getEffects('gloryModifier').reduce((total, value) => total + value, 0);
     }
 
     modifyFate(amount) {
         this.fate = Math.max(0, this.fate + amount);
+    }
+
+    modifyHonor(amount) {
+        this.honor = Math.max(0, this.honor + amount);
     }
 
     /**
@@ -972,7 +953,7 @@ class Player extends GameObject {
         return this.anyEffect('showTopConflictCard');
     }
 
-    /** TODO: Turn this into a PlayerAction
+    /**
      * Resolves any number of ring effects.  If there are more than one, then it will prompt the first player to choose what order those effects should be applied in
      * @param {Array} elements - Array of String, alternatively can be passed a String for convenience
      * @param {Boolean} optional - Indicates that the player can choose which effects to resolve.  This parameter only effects resolution of a single effect
@@ -985,35 +966,6 @@ class Player extends GameObject {
         let effects = elements.map(element => RingEffects.contextFor(this, element, optional));
         effects = _.sortBy(effects, context => this.firstPlayer ? context.ability.defaultPriority : -context.ability.defaultPriority);
         this.game.openSimultaneousEffectWindow(effects.map(context => ({ title: context.ability.title, handler: () => this.game.resolveAbility(context) })));
-    }
-
-    /** TODO: Move this to fate phase?
-     * Prompts the player to choose a character with no fate until all such characters have been discarded (or the discard prevented)
-     * @param {Array} cardsToDiscard - Array of DrawCard
-     */
-    discardCharactersWithNoFate(cardsToDiscard) {
-        if(cardsToDiscard.length === 0) {
-            return;
-        }
-        this.game.promptForSelect(this, {
-            source: 'Fate Phase',
-            activePromptTitle: 'Choose character to discard\n(or click Done to discard all characters with no fate)',
-            waitingPromptTitle: 'Waiting for opponent to discard characters with no fate',
-            cardCondition: card => cardsToDiscard.includes(card),
-            cardType: 'character',
-            buttons: [{ text: 'Done', arg: 'cancel' }],
-            onSelect: (player, card) => {
-                this.game.applyGameAction(null, { discardFromPlay: card });
-                this.game.queueSimpleStep(() => player.discardCharactersWithNoFate(_.reject(cardsToDiscard, c => c === card)));
-                return true;
-            },
-            onCancel: () => {
-                _.each(cardsToDiscard, character => {
-                    this.game.applyGameAction(null, { discardFromPlay: character });
-                });
-                return true;
-            }
-        });
     }
 
     getStats() {

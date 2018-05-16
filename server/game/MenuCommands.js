@@ -106,7 +106,7 @@ class MenuCommands {
                 break;
             case 'takefate':
                 game.addMessage('{0} takes all the fate from the {1} ring and adds it to their pool', player, ring.element);
-                game.addFate(player, ring.fate);
+                player.modifyFate(ring.fate);
                 ring.fate = 0;
                 break;
             case 'conflict':

@@ -183,6 +183,10 @@ class DrawCard extends BaseCard {
         }
     }
 
+    get glory() {
+        return this.getGlory();
+    }
+
     getGlory() {
         /**
          * Get this card's glory.
@@ -281,6 +285,10 @@ class DrawCard extends BaseCard {
             return 0 - this.getGlory();
         }
         return 0;
+    }
+
+    getContributionToImperialFavor() {
+        return !this.bowed ? this.glory : 0;
     }
 
     modifyFate(amount) {

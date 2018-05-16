@@ -5,6 +5,7 @@ class PillowBook extends DrawCard {
         this.action({
             title: 'Make top card of your conflict deck playable',
             condition: context => context.source.isParticipating() && context.player.conflictDeck.size() > 0,
+            effect: 'make the top card of their deck playable until the end of the conflict',
             lastingEffect: context => ({
                 until: {
                     onCardMoved: event => event.card === context.player.conflictDeck.first() && event.originalLocation === 'conflict deck',

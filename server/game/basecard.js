@@ -170,10 +170,6 @@ class BaseCard extends EffectSource {
         }
     }
 
-    modifyFavor(player, glory) {
-        return glory;
-    }
-
     canTriggerAbilities(context) {
         return !this.facedown && this.checkRestrictions('triggerAbilities', context);
     }

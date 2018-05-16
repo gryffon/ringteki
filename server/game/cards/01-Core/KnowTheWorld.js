@@ -25,7 +25,7 @@ class KnowTheWorld extends DrawCard {
                                 events.push(this.game.getEvent('unnamedEvent', {}, () => {
                                     ring.claimRing(player);
                                     if(player.allowGameAction('takeFateFromRings')) {
-                                        this.game.addFate(player, ring.fate);
+                                        player.modifyFate(ring.fate);
                                         ring.removeFate();
                                     }
                                 }));

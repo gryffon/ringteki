@@ -8,6 +8,7 @@ class ShibaTsukune extends DrawCard {
             when : {
                 onPhaseEnded: event => event.phase === 'conflict'
             },
+            effect: 'resolve up to 2 ring effects',
             handler: context => this.game.promptForRingSelect(context.player, {
                 activePromptTitle: 'Choose a ring to resolve',
                 source: context.source,
@@ -20,19 +21,19 @@ class ShibaTsukune extends DrawCard {
                             source: context.source,
                             optional: true,
                             onMenuCommand: player => {
-                                this.game.addMessage('{0} uses {1} to resolve the {2} ring', context.player, context.source, firstRing.element);
+                                this.game.addMessage('{0} resolves {1}', player, firstRing);
                                 player.resolveRingEffects(firstRing.element);
                                 return true;
                             },
                             onSelect: (player, secondRing) => {
                                 let array = [firstRing.element, secondRing.element];
-                                this.game.addMessage('{0} uses {1} to resolve the {2} rings', context.player, context.source, array);
+                                this.game.addMessage('{0} resolves {1}', player, [firstRing, secondRing]);
                                 player.resolveRingEffects(array);
                                 return true;
                             }
                         });
                     } else {
-                        this.game.addMessage('{0} uses {1} to resolve the {2} ring', context.player, context.source, firstRing.element);
+                        this.game.addMessage('{0} resolves {1}', context.player, firstRing);
                         player.resolveRingEffects(firstRing.element);
                     }
                     return true;

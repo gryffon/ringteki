@@ -170,7 +170,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             }));
             if(this.conflict.attackingPlayer.allowGameAction('takeFateFromRings')) {
                 this.game.addMessage('{0} takes {1} fate from {2}', this.conflict.attackingPlayer, ring.fate, ring);
-                this.game.addFate(this.conflict.attackingPlayer, ring.fate);
+                this.conflict.attackingPlayer.modifyFate(ring.fate);
                 ring.removeFate();
             }
         }
@@ -293,7 +293,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         
         if(this.conflict.conflictUnopposed) {
             this.game.addMessage('{0} loses 1 honor for not defending the conflict', this.conflict.loser);
-            this.game.addHonor(this.conflict.loser, -1);
+            this.conflict.loser.modifyHonor(-1);
         }
     }
     
