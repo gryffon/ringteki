@@ -45,7 +45,7 @@ describe('Steadfast Witch Hunter', function() {
                 expect(this.spy).toHaveBeenCalledWith('{0} attempted to use {1}, but targets were not successfully chosen', this.player2.player, this.steadfastWitchHunter);
             });
 
-            it('should prompt the player to select a new target if the first target is no longer in play', function() {
+            fit('should prompt the player to select a new target if the first target is no longer in play', function() {
                 this.borderlandsDefender = this.player2.putIntoPlay('borderlands-defender');
                 this.borderlandsDefender.bowed = true;
                 this.player1.clickCard('against-the-waves');
@@ -59,6 +59,7 @@ describe('Steadfast Witch Hunter', function() {
                 this.player2.clickCard(this.borderlandsDefender);
                 expect(this.borderlandsDefender.bowed).toBe(false);
                 //expect(this.spy).toHaveBeenCalledWith('{0} uses {1} and sacrifices {2} to ready {3}', this.player2.player, this.steadfastWitchHunter, this.steadfastWitchHunter, this.borderlandsDefender);
+                console.log(this.spy.calls.allArgs());
                 expect(this.player1).toHavePrompt('Action Window');
             });
         });

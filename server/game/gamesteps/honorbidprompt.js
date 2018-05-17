@@ -43,6 +43,9 @@ class HonorBidPrompt extends AllPlayerPrompt {
 
     transferHonorAfterBid(context = this.game.getFrameworkContext()) {
         let firstPlayer = this.game.getFirstPlayer();
+        if(!firstPlayer.opponent) {
+            return;
+        }
         let difference = firstPlayer.honorBid - firstPlayer.opponent.honorBid;
         if(difference > 0) {
             this.game.addMessage('{0} gives {1} {2} honor', firstPlayer, firstPlayer.opponent, difference);

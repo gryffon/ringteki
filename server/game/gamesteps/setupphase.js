@@ -68,6 +68,7 @@ class SetupPhase extends Phase {
                 let destination;
                 if(card.selected) {
                     destination = 'stronghold province';
+                    card.selected = false;
                 } else {
                     destination = 'province ' + provinceIterator;
                     provinceIterator++;

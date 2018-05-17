@@ -5,7 +5,7 @@ class CaptiveAudience extends DrawCard {
         this.action({
             title: 'Change the conflict to military',
             cost: ability.costs.payHonor(1),
-            condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'political',
+            condition: () => this.game.isDuringConflict('political'),
             effect: 'switch the conflict type to {1}',
             effectArgs: () => 'military',
             handler: () => this.game.currentConflict.switchType()

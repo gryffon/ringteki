@@ -33,7 +33,7 @@ const TransferHonorAction = require('./TransferHonorAction');
 
 const GameActions = {
     // card actions
-    attach: (attachment, discardOnFailure) => new AttachAction(attachment, discardOnFailure),
+    attach: (attachment) => new AttachAction(attachment),
     bow: () => new BowAction(),
     break: () => new BreakAction(),
     discardFromHand: () => new DiscardFromHandAction(),
@@ -45,30 +45,30 @@ const GameActions = {
     flipDynasty: () => new FlipDynastyAction(),
     honor: () => new HonorAction(),
     moveToConflict: () => new MoveToConflictAction(),
-    placeFate: (amount, origin) => new PlaceFateAction(amount, origin),
-    putIntoConflict: (fate) => new PutIntoPlayAction(fate),
-    putIntoPlay: (fate) => new PutIntoPlayAction(fate, false),
+    placeFate: (amount = 1, origin) => new PlaceFateAction(amount, origin),
+    putIntoConflict: (fate = 0) => new PutIntoPlayAction(fate),
+    putIntoPlay: (fate = 0) => new PutIntoPlayAction(fate, false),
     ready: () => new ReadyAction(),
-    removeFate: (amount, recipient) => new RemoveFateAction(amount, recipient),
-    returnToDeck: (bottom) => new ReturnToDeckAction(bottom),
+    removeFate: (amount = 1, recipient) => new RemoveFateAction(amount, recipient),
+    returnToDeck: (bottom = false) => new ReturnToDeckAction(bottom),
     returnToHand: () => new ReturnToHandAction(),
     reveal: () => new RevealAction(),
     sendHome: () => new SendHomeAction(),
     sacrifice: () => new DiscardFromPlayAction(true),
     // player actions
-    chosenDiscard: (amount) => new ChosenDiscardAction(amount),
-    discardAtRandom: (amount) => new RandomDiscardAction(amount),
-    draw: (amount) => new DrawAction(amount),
-    gainFate: (amount) => new ModifyFateAction(amount),
-    gainHonor: (amount) => new GainHonorAction(amount),
-    loseHonor: (amount) => new LoseHonorAction(amount),
+    chosenDiscard: (amount = 1) => new ChosenDiscardAction(amount),
+    discardAtRandom: (amount = 1) => new RandomDiscardAction(amount),
+    draw: (amount = 1) => new DrawAction(amount),
+    gainFate: (amount = 1) => new ModifyFateAction(amount),
+    gainHonor: (amount = 1) => new GainHonorAction(amount),
+    loseHonor: (amount = 1) => new LoseHonorAction(amount),
     loseImperialFavor: () => new DiscardFavorAction(),
-    takeFate: (amount) => new TransferFateAction(amount),
-    takeHonor: (amount) => new TransferHonorAction(amount),
+    takeFate: (amount = 1) => new TransferFateAction(amount),
+    takeHonor: (amount = 1) => new TransferHonorAction(amount),
     // ring actions
-    placeFateOnRing: (amount, origin) => new PlaceFateRingAction(amount, origin),
-    resolveRing: (optional) => new ResolveRingAction(optional),
-    takeFateFromRing: (amount) => new TakeFateRingAction(amount)
+    placeFateOnRing: (amount = 1, origin) => new PlaceFateRingAction(amount, origin),
+    resolveRing: (resolveAsAttacker = true) => new ResolveRingAction(resolveAsAttacker),
+    takeFateFromRing: (amount = 1) => new TakeFateRingAction(amount)
 };
 
 module.exports = GameActions;

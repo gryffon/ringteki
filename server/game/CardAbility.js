@@ -82,21 +82,21 @@ class CardAbility extends ThenAbility {
     }
 
     displayMessage(context) {
-        let messageArgs = [];
         // Player1 plays Assassination
-        messageArgs.push(this.game.gameChat.formatMessage('{0} {1} {2}', context.player, context.source.type === 'event' ? 'plays' : 'uses', context.source));
+        let messageArgs = [context.player, context.source.type === 'event' ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
-            if(cost.action && cost.action.costMessage) {
-                return this.game.gameChat.formatMessage(cost.action.costMessage, context.cost[cost.action.name]);
+            if(cost.action && cost.action.cost) {
+                console.log(this.game.gameChat.formatMessage(cost.action.cost, [context.costs[cost.action.name]]));
+                return { message: this.game.gameChat.formatMessage(cost.action.cost, [context.costs[cost.action.name]]) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
             // , 
             messageArgs.push(', ');
             // paying 3 honor
-            messageArgs.push(costMessages);
+            messageArgs.push(costMessages);            
         } else {
-            messageArgs = messageArgs.concat('','');
+            messageArgs = messageArgs.concat(['', '']);
         }
         let effectMessage = this.properties.effect;
         let effectArgs = [];
@@ -105,9 +105,9 @@ class CardAbility extends ThenAbility {
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
                 effectMessage = gameActions[0].effect;
-                effectArgs.push(gameActions[0].targetFunc(context));
+                effectArgs.push(gameActions[0].targets);
                 if(gameActions[0].effectArgs) {
-                    effectArgs.concat(gameActions[0].effectArgs(context));
+                    effectArgs.push(gameActions[0].effectArgs(context));
                 }
             }
         } else {
@@ -121,9 +121,10 @@ class CardAbility extends ThenAbility {
             // to 
             messageArgs.push(' to ');
             // discard Stoic Gunso
-            messageArgs.push(this.game.gameChat.formatMessage(effectMessage, ...effectArgs));
+            messageArgs.push({ message: this.game.gameChat.formatMessage(effectMessage, ...effectArgs) });
         }
-        this.game.addMessage('{0}{1}{2}{3}{4}', messageArgs);
+        this.game.addMessage('{0}{1}{2}{3}{4}{5}{6}', ...messageArgs);
+        
     }
 
     openEventWindow(events) {

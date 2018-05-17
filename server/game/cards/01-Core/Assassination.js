@@ -4,7 +4,7 @@ class Assassination extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Discard a character',
-            condition: () => this.game.currentConflict,
+            condition: () => this.game.isDuringConflict(),
             cost: ability.costs.payHonor(3),
             target: {
                 cardType: 'character',

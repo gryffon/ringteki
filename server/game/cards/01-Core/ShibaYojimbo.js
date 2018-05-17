@@ -9,7 +9,7 @@ class ShibaYojimbo extends DrawCard {
                     card.hasTrait('shugenja') && card.controller === context.player && card.location === 'play area')
                 )
             },
-            effect: 'cancel the effects of {0}',
+            effect: 'cancel the effects of {1}',
             effectArgs: context => context.event.card,
             handler: context => context.cancel()
         });

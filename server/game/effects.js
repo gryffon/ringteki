@@ -26,7 +26,7 @@ const Effects = {
             player.playableLocations.push(playableLocation);
             return playableLocation;
         },
-        unapply: (player, context, location) => player.playableLocations = _.reject(player.playableLocations, l => l === location)
+        unapply: (player, context, location) => player.playableLocations = player.playableLocations.filter(l => l !== location)
     }),
     cardCannot: (type, predicate) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(type, predicate)),
     considerRingAsClaimed: (match) => EffectBuilder.ring.static('considerAsClaimed', match),

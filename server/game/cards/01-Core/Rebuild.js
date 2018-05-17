@@ -2,7 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class Rebuild extends DrawCard {
     setupCardAbilities() {
-        // TODO: get ruling on shuffle into deck as a cost
+        // TODO: rewrite this with reshuffle into deck as a cost
         this.action({
             title: 'Put a holding into play from your discard',
             targets: {

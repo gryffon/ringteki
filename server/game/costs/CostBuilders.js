@@ -42,7 +42,7 @@ const CostBuilders = {
     }),
     discardImperialFavor: () => new PlayerCost(GameActions.loseImperialFavor()),
     giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate(amount)),
-    payHonor: (amount) => new PlayerCost(GameActions.gainHonor(-amount)),
+    payHonor: (amount) => new PlayerCost(GameActions.loseHonor(amount)),
     payFate: (amount) => new PlayerCost(GameActions.gainFate(-amount)),
     payFateToRing: (ringCondition, amount) => new RingCost(GameActions.placeFateOnRing(amount), ringCondition)
 };

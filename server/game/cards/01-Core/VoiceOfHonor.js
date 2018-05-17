@@ -9,7 +9,7 @@ class VoiceOfHonor extends DrawCard {
                                                             context.player.getNumberOfCardsInPlay(card => card.isHonored) > 
                                                             context.player.opponent.getNumberOfCardsInPlay(card => card.isHonored)
             },
-            effect: 'cancel {0}',
+            effect: 'cancel {1}',
             effectArgs: context => context.event.card,
             handler: context => context.cancel()
         });

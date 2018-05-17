@@ -7,7 +7,7 @@ class Censure extends DrawCard {
             when: {
                 onCardAbilityInitiated: event => event.card.type === 'event'
             },
-            effect: 'cancel {0}\'s effects',
+            effect: 'cancel {1}',
             effectArgs: context => context.event.card,
             handler: context => context.cancel()
         });

@@ -4,10 +4,10 @@ class AdmitDefeat extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Bow a character',
-            condition: () => this.game.currentConflict && this.game.currentConflict.defenders.length === 1,
+            condition: () => this.game.isDuringConflict() && this.game.currentConflict.defenders.length === 1,
             target: {
                 cardType: 'character',
-                cardCondition: card => this.game.currentConflict.isDefending(card),
+                cardCondition: card => card.isDefending(),
                 gameAction: ability.actions.bow()
             }
         });

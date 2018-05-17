@@ -11,9 +11,10 @@ class HighKick extends DrawCard {
                 cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent,
                 gameAction: ability.actions.bow()
             },
-            untilEndOfConflict: {
+            untilEndOfConflict: context => ({
+                match: context.target,
                 effect: ability.effects.cardCannot('triggerAbilities')
-            }
+            })
         });
     }
 }

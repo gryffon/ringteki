@@ -6,7 +6,7 @@ class KaiuInventor extends DrawCard {
             title: 'Add an additional ability use to a holding',
             target: {
                 cardType: 'holding',
-                cardCondition: card => card.controller === this.controller && !card.facedown
+                cardCondition: (card, context) => card.controller === context.player && !card.facedown
             },
             effect: 'add an additional use to each of {0}\'s abilities',
             untilEndOfRound: context => ({
