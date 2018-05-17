@@ -86,7 +86,6 @@ class CardAbility extends ThenAbility {
         let messageArgs = [context.player, context.source.type === 'event' ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
             if(cost.action && cost.action.cost) {
-                console.log(this.game.gameChat.formatMessage(cost.action.cost, [context.costs[cost.action.name]]));
                 return { message: this.game.gameChat.formatMessage(cost.action.cost, [context.costs[cost.action.name]]) };
             }
         }).filter(obj => obj);

@@ -2,7 +2,7 @@ const CardAction = require('../../../server/game/cardaction.js');
 
 describe('CardAction', function () {
     beforeEach(function () {
-        this.gameSpy = jasmine.createSpyObj('game', ['on', 'removeListener', 'raiseEvent', 'resolveAbilityForContext']);
+        this.gameSpy = jasmine.createSpyObj('game', ['on', 'removeListener', 'raiseEvent', 'queueSimpleStep']);
         this.gameSpy.currentPhase = 'dynasty';
 
         this.cardSpy = jasmine.createSpyObj('card', ['getType', 'isBlank', 'canTriggerAbilities']);
@@ -84,7 +84,7 @@ describe('CardAction', function () {
                 });
 
                 it('should add the play event cost', function() {
-                    expect(this.action.cost.length).toBe(5);
+                    expect(this.action.cost.length).toBe(4);
                 });
             });
         });

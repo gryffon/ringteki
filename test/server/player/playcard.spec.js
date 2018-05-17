@@ -7,7 +7,7 @@ describe('Player', function() {
         this.player.initialise();
     });
 
-    describe('initiateCardAction', function() {
+    xdescribe('initiateCardAction', function() {
         beforeEach(function() {
             this.playActionSpy = jasmine.createSpyObj('playAction', ['meetsRequirements', 'createContext']);
             this.cardSpy = jasmine.createSpyObj('card', ['getActions']);

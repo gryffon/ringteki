@@ -3,6 +3,8 @@ const InitateConflictPrompt = require('../../../server/game/gamesteps/conflict/i
 describe('InitateConflictPrompt: ', function() {
     beforeEach(function() {
         this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'raiseEvent', 'promptWithHandlerMenu']);
+        this.fireRing = { element: 'fire' };
+        this.gameSpy.rings = { fire: this.fireRing};
         this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan']);
         this.conflictSpy = jasmine.createSpyObj('conflict', ['calculateSkill', 'removeFromConflict', 'addAttacker']);
         this.conflictSpy.attackers = [];
@@ -372,7 +374,7 @@ describe('InitateConflictPrompt: ', function() {
     describe('the menuCommand function:', function() {
         beforeEach(function() {
             this.conflictSpy.element = 'fire';
-            this.conflictSpy.ring = { element: 'fire' };
+            this.conflictSpy.ring = this.fireRing;
             this.conflictSpy.conflictType = 'military';
             this.cardSpy = jasmine.createSpyObj('card', ['allowGameAction']);
             this.conflictSpy.conflictProvince = this.cardSpy;
@@ -382,18 +384,6 @@ describe('InitateConflictPrompt: ', function() {
         });
 
         describe('when passed "done"', function() {
-            describe('if the conflict type is undefined', function() {
-                beforeEach(function() {
-                    this.prompt.completed = false;
-                    this.conflictSpy.conflictType = '';
-                    this.prompt.menuCommand(this.playerSpy, 'done');
-                });
-
-                it('should not set complete to true', function() {
-                    expect(this.prompt.completed).toBe(false);
-                });
-            });
-
             describe('if the conflict ring is undefined', function() {
                 beforeEach(function() {
                     this.prompt.completed = false;
