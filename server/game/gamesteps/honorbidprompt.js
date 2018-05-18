@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 const AllPlayerPrompt = require('./allplayerprompt.js');
 const GameActions = require('../GameActions/GameActions');
 
