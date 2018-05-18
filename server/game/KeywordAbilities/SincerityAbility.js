@@ -9,8 +9,8 @@ class SincerityAbility extends TriggeredAbility {
             },
             title: card.name + '\'s Sincerity',
             printedAbility: false,
-            effect: '{0} draws a card due to {1}\'s Sincerity',
-            effectArgs: context => context.source,
+            effect: '{1} draws a card due to {0}\'s Sincerity',
+            effectArgs: context => context.player,
             handler: context => context.player.drawCardsToHand(1)
         });
     }
