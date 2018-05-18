@@ -114,7 +114,7 @@ class InitiateConflictPrompt extends UiPrompt {
                 return false;
             }
             ring.flipConflictType();
-        } else if(!player.canInitiateConflict(ring.conflictType)) {
+        } else if(!player.canInitiateConflict(ring.conflictType) || this.conflict.attackers.some(card => !card.canDeclareAsAttacker(ring.conflictType))) {
             ring.flipConflictType();
         }
 
@@ -130,6 +130,12 @@ class InitiateConflictPrompt extends UiPrompt {
             this.conflict.conflictProvince.inConflict = false;
             this.conflict.conflictProvince = null;
         }
+
+        _.each(this.conflict.attackers, card => {
+            if(!card.canDeclareAsAttacker(ring.conflictType)) {
+                this.removeFromConflict(card);
+            }
+        });
 
         this.conflict.calculateSkill(true);
         this.recalculateCovert();

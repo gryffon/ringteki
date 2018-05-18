@@ -6,7 +6,7 @@ class ShrineMaiden extends DrawCard {
         this.reaction({
             title: 'Reveal your top 3 conflict cards',
             when: {
-                onCharacterEntersPlay: (event, context) => event.card === context.source && context.player.conflictDeck.size() >= 3
+                onCharacterEntersPlay: (event, context) => event.card === context.source
             },
             cost: ability.costs.revealCards(context => context.player.conflictDeck.first(3)),
             effect: 'take any revealed spells into their hand', 

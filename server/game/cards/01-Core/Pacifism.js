@@ -3,13 +3,9 @@ const DrawCard = require('../../drawcard.js');
 class Pacifism extends DrawCard {
     setupCardAbilities(ability) {
         this.whileAttached({
-            condition: () => (
-                this.game.currentConflict &&
-                this.game.currentConflict.conflictType === 'military'
-            ),
             effect: [
-                ability.effects.cardCannot('participateAsAttacker'),
-                ability.effects.cardCannot('participateAsDefender')
+                ability.effects.cardCannot('participateAsAttacker', () => this.game.currentConflict.conflictType === 'military'),
+                ability.effects.cardCannot('participateAsDefender', () => this.game.currentConflict.conflictType === 'military')
             ]
         });
     }

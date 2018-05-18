@@ -1,4 +1,5 @@
 const TriggeredAbility = require('../triggeredability.js');
+const AbilityLimit = require('../abilitylimit');
 
 class PrideAbility extends TriggeredAbility {
     constructor(game, card) {
@@ -12,6 +13,7 @@ class PrideAbility extends TriggeredAbility {
             printedAbility: false,
             effect: '{0} is {1}honored due to their Pride',
             effectArgs: context => context.event.conflict.winner === context.player ? '' : 'dis',
+            limit: AbilityLimit.perConflict(1),
             handler: context => {
                 if(context.event.conflict.winner === context.player) {
                     this.game.applyGameAction(context, { honor: context.source });
