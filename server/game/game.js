@@ -894,8 +894,8 @@ class Game extends EventEmitter {
         return events;
     }
 
-    getFrameworkContext() {
-        return new AbilityContext({ game: this });
+    getFrameworkContext(player = null) {
+        return new AbilityContext({ game: this, player: player });
     }
 
     /*

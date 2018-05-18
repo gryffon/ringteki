@@ -1,7 +1,7 @@
 const RingAction = require('./RingAction');
 const MoveFateEvent = require('../Events/MoveFateEvent');
 
-class PlaceFateRingAction extends RingAction {
+class TakeFateRingAction extends RingAction {
     constructor(amount = 1) {
         super('takeFate');
         this.amount = amount;
@@ -23,4 +23,4 @@ class PlaceFateRingAction extends RingAction {
     }
 }
 
-module.exports = PlaceFateRingAction;
+module.exports = TakeFateRingAction;

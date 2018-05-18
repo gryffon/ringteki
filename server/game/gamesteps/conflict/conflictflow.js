@@ -314,7 +314,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         if(this.conflict.isAttackerTheWinner()) {
-            this.conflict.resolveRing();
+            GameActions.resolveRing().resolve(this.conflict.ring, this.game.getFrameworkContext(this.conflict.attackingPlayer));
         }       
     }
     
@@ -325,6 +325,7 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         let ring = this.conflict.ring;
         if(ring.claimed) {
+            ring.contested = false;
             return;
         }
         if(this.conflict.winner) {

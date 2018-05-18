@@ -6,7 +6,7 @@ class TransferHonorAction extends PlayerAction {
         this.amount = amount;
         this.afterBid = afterBid;
         this.effect = 'take ' + amount + ' honor from {0}';
-        this.cost = 'giving ' + amount + ' honor to {0}';
+        this.cost = 'giving ' + amount + ' honor to their opponent';
     }
 
     canAffect(player, context) {

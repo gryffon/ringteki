@@ -21,12 +21,12 @@ class PutIntoPlayAction extends CardGameAction {
             return false;
         } else if(this.intoConflict) {
             // There is no current conflict, or no context (cards must be put into play by a player, not a framework event)
-            if(!context.game.currentConflict || card.type !== 'character') {
+            if(!context.game.currentConflict) {
                 return false;
             }
             // controller is attacking, and character can't attack, or controller is defending, and character can't defend
-            if((context.player.isAttackingPlayer() && !card.allowGameAction('participateAsAttacker', context)) || 
-                (context.player.isDefendingPlayer() && !card.allowGameAction('participateAsDefender', context))) {
+            if((context.player.isAttackingPlayer() && !card.checkRestrictions('participateAsAttacker', context)) || 
+                (context.player.isDefendingPlayer() && !card.checkRestrictions('participateAsDefender', context))) {
                 return false;
             }
             // card cannot participate in this conflict type
@@ -37,7 +37,7 @@ class PutIntoPlayAction extends CardGameAction {
                 return false;
             }
         }
-        return ['character', 'attachment'].includes(card.type);
+        return true;
     }
 
     getEvent(card, context) {

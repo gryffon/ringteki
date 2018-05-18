@@ -11,7 +11,7 @@ class MoveToConflictAction extends CardGameAction {
         if(!super.canAffect(card, context)) {
             return false;
         }
-        if(!context.game.currentConflict || card.isParticipating() || card.type !== 'character') {
+        if(!context.game.currentConflict || card.isParticipating()) {
             return false;
         }
         if(card.controller.isAttackingPlayer()) {

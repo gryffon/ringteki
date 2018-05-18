@@ -6,7 +6,7 @@ class ReturnToDeckAction extends CardGameAction {
         super('returnToDeck');
         this.targetType = ['character', 'attachment'];
         this.effect = 'return {0} to the ' + (bottom ? 'bottom' : 'top') + ' of their deck';
-        this.moveOptions = { bottom: bottom };
+        this.bottom = bottom;
     }
 
     canAffect(card, context) {
@@ -18,7 +18,7 @@ class ReturnToDeckAction extends CardGameAction {
 
     getEvent(card, context) {
         let destination = card.isDynasty ? 'dynasty deck' : 'conflict deck';
-        return new LeavesPlayEvent({ context: context, destination: destination, options: this.moveOptions }, card, this);
+        return new LeavesPlayEvent({ context: context, destination: destination, options: { bottom: this.bottom } }, card, this);
     }
 }
 

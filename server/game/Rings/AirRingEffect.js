@@ -26,9 +26,9 @@ class AirRingEffect extends BaseAbility {
             GameActions.gainHonor(2).resolve(context.player, context);
         } else if(context.select === 'Take 1 Honor from opponent') {
             context.game.addMessage('{0} resolves the {1} ring, taking 1 honor from {2}', context.player, 'air', context.player.opponent);
-            GameActions.takeHonor().resolve(context.player.opponent, context);            
-        } else if(!context.game.currentConflcit || context.game.currentConflcit.element !== 'air') {
-            context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, 'air');
+            GameActions.takeHonor().resolve(context.player.opponent, context);
+        } else if(!context.game.currentConflict || context.game.currentConflict.element === 'air') {
+            context.game.addMessage('{0} chooses not to resolve the {1} ring', context.player, context.game.currentConflict ? 'air' : context.game.currentConflict.element);
         }
     }
 }

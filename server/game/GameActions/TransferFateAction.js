@@ -6,7 +6,7 @@ class TransferFateAction extends PlayerAction {
         super('takeFate');
         this.amount = amount;
         this.effect = 'take ' + amount + ' fate from {0}';
-        this.cost = 'giving ' + amount + ' fate to {0}';
+        this.cost = 'giving ' + amount + ' fate to their opponent';
     }
 
     canAffect(player, context) {
