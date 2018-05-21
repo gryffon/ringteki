@@ -44,7 +44,7 @@ const CostBuilders = {
     giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate(amount)),
     payHonor: (amount) => new PlayerCost(GameActions.loseHonor(amount)),
     payFate: (amount) => new PlayerCost(GameActions.gainFate(-amount)),
-    payFateToRing: (ringCondition, amount) => new RingCost(GameActions.placeFateOnRing(amount), ringCondition)
+    payFateToRing: (amount, ringCondition) => new RingCost(GameActions.placeFateOnRing(amount), ringCondition)
 };
 
 module.exports = CostBuilders;

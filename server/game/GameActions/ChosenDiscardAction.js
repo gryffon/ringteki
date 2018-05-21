@@ -27,7 +27,7 @@ class ChosenDiscardAction extends PlayerAction {
         }
         context.game.promptForSelect(player, {
             activePromptTitle: 'Choose ' + (amount === 1 ? 'a card' : amount + ' cards') + ' to discard',
-            source: context.source,
+            context: context,
             mode: 'exactly',
             numCards: amount,
             ordered: true,

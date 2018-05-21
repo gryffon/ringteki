@@ -16,7 +16,7 @@ class KarmicTwist extends DrawCard {
             handler: context => this.game.promptForSelect(context.player, {
                 activePromptTitle: 'Choose a recipient character',
                 cardType: 'character',
-                source: context.source,
+                context: context,
                 cardCondition: card => 
                     !card.isUnique() && 
                     card.getFate() === 0 && 

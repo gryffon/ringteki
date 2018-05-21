@@ -19,7 +19,7 @@ class WalkingTheWay extends DrawCard {
                 cards: context.player.dynastyDeck.first(3),
                 cardHandler: cardFromDeck => this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a card to replace with ' + cardFromDeck.name,
-                    source: context.source,
+                    context: context,
                     cardType: ['holding', 'character'],
                     cardCondition: card => card.location.includes('province'),
                     onSelect: (player, card) => {

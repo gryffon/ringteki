@@ -56,6 +56,7 @@ class TriggeredAbility extends CardAbility {
             player: this.card.controller, 
             ability: this 
         });
+        context.stage = 'pretarget';
         this.updateGameActions(context);
         return context;
     }

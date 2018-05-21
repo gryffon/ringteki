@@ -52,10 +52,12 @@ const Effects = {
                 ability = card.triggeredAbility(abilityType, properties);
                 ability.registerEvents();
             }
-            if(context.source.grantedAbilityLimits[card.uuid]) {
-                ability.limit = context.source.grantedAbilityLimits[card.uuid];
-            } else {
-                context.source.grantedAbilityLimits[card.uuid] = ability.limit;
+            if(context.source.grantedAbilityLimits) {
+                if(context.source.grantedAbilityLimits[card.uuid]) {
+                    ability.limit = context.source.grantedAbilityLimits[card.uuid];
+                } else {
+                    context.source.grantedAbilityLimits[card.uuid] = ability.limit;
+                }
             }
             return ability;
         },

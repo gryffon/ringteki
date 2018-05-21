@@ -10,7 +10,7 @@ class IuchiWayfinder extends DrawCard {
             },
             effect: 'reveal a province',
             handler: context => this.game.promptForSelect(context.player, {
-                source: context.source,
+                context: context,
                 activePromptTitle: 'Choose a province to reveal',
                 cardType: 'province',
                 cardCondition: card => card.facedown,

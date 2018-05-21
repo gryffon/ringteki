@@ -174,6 +174,10 @@ class BaseCard extends EffectSource {
         return !this.facedown && this.checkRestrictions('triggerAbilities', context);
     }
     
+    getModifiedLimitMax(max) {
+        return this.sumEffects('increaseLimitOnAbilities') + max;
+    }
+    
     getMenu() {
         var menu = [];
 

@@ -39,7 +39,7 @@ class DrawCard extends BaseCard {
         this.isHonored = false;
         this.isDishonored = false;
 
-        this.parseKeywords(cardData.text_canonical || '');
+        this.parseKeywords(cardData.text ? cardData.text.replace(/<[^>]*>/g, '').toLowerCase() : '');
 
         this.menu = _([
             { command: 'bow', text: 'Bow/Ready' },
@@ -485,10 +485,6 @@ class DrawCard extends BaseCard {
 
     readiesDuringReadyPhase() {
         return this.anyEffect('doesNotReady');
-    }
-
-    getModifiedLimitMax(max) {
-        return this.sumEffects('increaseLimitOnAbilities') + max;
     }
 
     setDefaultController(player) {

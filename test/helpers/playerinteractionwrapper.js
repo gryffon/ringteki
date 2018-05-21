@@ -589,6 +589,9 @@ class PlayerInteractionWrapper {
 
     playAttachment(attachment, target) {
         let card = this.clickCard(attachment, 'hand');
+        if(this.currentButtons.includes('Play ' + card.name + ' as an attachment')) {
+            this.clickPrompt('Play ' + card.name + ' as an attachment');
+        }
         this.clickCard(target, 'play area');
         return card;
     }
@@ -598,6 +601,9 @@ class PlayerInteractionWrapper {
             card = this.findCardByName(card, 'hand');
         }
         this.clickCard(card, 'hand');
+        if(this.currentButtons.includes('Play this character')) {
+            this.clickPrompt('Play this character');
+        }
         this.clickPrompt(fate.toString());
         return card;
     }

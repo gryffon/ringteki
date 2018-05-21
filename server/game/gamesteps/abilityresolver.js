@@ -11,7 +11,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.pipeline.initialise([
             new SimpleStep(game, () => this.createSnapshot()),
             new SimpleStep(game, () => this.resolveEarlyTargets()),
-            new SimpleStep(game, () => this.waitForTargetResolution(true)),
+            new SimpleStep(game, () => this.waitForTargetResolution()),
             new SimpleStep(game, () => this.resolveCosts()),
             new SimpleStep(game, () => this.waitForCostResolution()),
             new SimpleStep(game, () => this.payCosts()),
@@ -75,7 +75,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.context.stage = 'target';
+        this.context.stage = 'pretarget';
         if(this.context.ability.cannotTargetFirst) {
             this.targetResults = _.map(this.context.ability.targets, (props, name) => {
                 return { resolved: false, name: name, value: null, costsFirst: true, mode: props.mode };
@@ -93,18 +93,18 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.targetResults = this.context.ability.resolveTargets(this.context, this.targetResults);
     }
 
-    waitForTargetResolution(pretarget = false) {
+    waitForTargetResolution() {
         if(this.cancelled) {
             return;
         }
 
         this.cancelled = _.any(this.targetResults, result => result.resolved && !result.value);
-        if(this.cancelled && !pretarget) {
+        if(this.cancelled && this.context.stage !== 'pretarget') {
             this.game.addMessage('{0} attempted to use {1}, but targets were not successfully chosen', this.context.player, this.context.source);
             return;
         }
 
-        if(!_.all(this.targetResults, result => result.resolved || (pretarget && result.costsFirst))) {
+        if(!_.all(this.targetResults, result => result.resolved || (this.context.stage === 'pretarget' && result.costsFirst))) {
             return false;
         }
 

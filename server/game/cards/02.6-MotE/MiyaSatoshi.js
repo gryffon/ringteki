@@ -20,7 +20,7 @@ class MiyaSatoshi extends DrawCard {
                 _.each(discardedCards, card => context.player.moveCard(card, 'dynasty discard pile'));
                 this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a card to discard',
-                    source: context.source,
+                    context: context,
                     cardCondition: card => ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) &&
                                            card.controller === context.player && !card.isProvince,
                     onSelect: (player, card) => {

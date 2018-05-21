@@ -88,7 +88,7 @@ describe('the DrawCard', function() {
 
             describe('when the card has a keyword line', function() {
                 beforeEach(function() {
-                    this.card = new DrawCard(this.player, { type: 'character', cost: 0, side: 'dynasty', text_canonical: 'covert.\nsomestuff. restricted.\nnotarealkeyword.\nextra text because we need stuff here.' });
+                    this.card = new DrawCard(this.player, { type: 'character', cost: 0, side: 'dynasty', text: 'Covert.\nSomestuff. Restricted.\nNotarealkeyword.\nExtra text because we need stuff here.' });
                     this.card.location = 'province 1';
                     this.player.provinceOne = _([this.card]);
                     this.player.dynastyDeck = _([new DrawCard(this.player, {})]);

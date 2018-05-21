@@ -52,7 +52,7 @@ class KyudenIsawa extends StrongholdCard {
         this.game.promptForSelect(context.player, {
             activePromptTitle: 'Choose a spell event',
             cardType: 'event',
-            source: context.source,
+            context: context,
             cardCondition: card => {
                 if(card.controller !== context.player || card.location !== 'conflict discard pile' || !card.hasTrait('spell')) {
                     return false;

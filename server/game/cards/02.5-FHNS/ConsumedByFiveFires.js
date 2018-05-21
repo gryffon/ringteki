@@ -24,7 +24,7 @@ class ConsumedByFiveFires extends DrawCard {
             return;
         }
         this.game.promptForSelect(context.player, {
-            source: context.source,
+            context: context,
             cardType: 'character',
             cardCondition: card => card.location === 'play area' && card.fate > 0 && card.controller !== context.player && !_.keys(targets).includes(card.uuid),
             onSelect: (player, card) => {

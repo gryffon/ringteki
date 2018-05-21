@@ -14,7 +14,7 @@ class KaradaDistrict extends DrawCard {
                 if(context.player.cardsInPlay.any(card => card.type === 'character' && ability.actions.attach(context.target).canAffect(card, context))) {
                     this.game.promptForSelect(context.player, {
                         activePromptTitle: 'Choose a character to attach ' + context.target.name + ' to',
-                        source: context.source,
+                        context: context,
                         cardType: 'character',
                         gameAction: ability.actions.attach(context.target),
                         cardCondition: (card, context) => card.controller === context.player,

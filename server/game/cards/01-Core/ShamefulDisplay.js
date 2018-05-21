@@ -17,7 +17,7 @@ class ShamefulDisplay extends ProvinceCard {
                 if(context.target.every(card => !card.allowGameAction('honor', context))) {
                     this.game.promptForSelect(context.player, {
                         activePromptTitle: 'Choose a character to dishonor',
-                        source: context.source,
+                        context: context,
                         gameAction: ability.actions.dishonor(),
                         cardCondition: card => context.target.includes(card),
                         onSelect: (player, card) => {
@@ -28,7 +28,7 @@ class ShamefulDisplay extends ProvinceCard {
                 } else if(context.target.every(card => !card.allowGameAction('dishonor', context))) {
                     this.game.promptForSelect(context.player, {
                         activePromptTitle: 'Choose a character to honor',
-                        source: context.source,
+                        context: context,
                         gameAction: ability.actions.honor(),
                         cardCondition: card => context.target.includes(card),
                         onSelect: (player, card) => {
@@ -65,7 +65,7 @@ class ShamefulDisplay extends ProvinceCard {
         }
         this.game.promptForSelect(context.player, {
             activePromptTitle: promptTitle,
-            source: context.source,
+            context: context,
             cardCondition: condition,
             buttons: [{ text: 'Back', arg: 'back'}],
             onSelect: (player, card) => {

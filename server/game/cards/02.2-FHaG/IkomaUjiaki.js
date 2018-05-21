@@ -26,7 +26,7 @@ class IkomaUjiaki extends DrawCard {
                         numCards: 2,
                         activePrompt: 'Choose up to 2 characters',
                         cardType: 'character',
-                        source: context,
+                        context: context,
                         optional: true,
                         cardCondition: card => {
                             return (['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && 

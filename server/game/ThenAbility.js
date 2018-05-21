@@ -19,6 +19,7 @@ class ThenAbility extends BaseAbility {
             player: player,
             source: this.card
         });
+        context.stage = 'pretarget';
         this.updateGameActions(context);
         return context;
     }
@@ -29,7 +30,7 @@ class ThenAbility extends BaseAbility {
             if(this.properties.messageArgs) {
                 messageArgs = messageArgs.concat(this.properties.messageArgs);
             }
-            this.game.addMessage(this.properties.message, messageArgs);
+            this.game.addMessage(this.properties.message, ...messageArgs);
         }
     }
 

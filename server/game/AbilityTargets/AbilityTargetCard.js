@@ -24,37 +24,35 @@ class AbilityTargetCard {
         return this.properties.gameAction.filter(gameAction => gameAction.setTarget(context.targets[this.name], context));
     }
 
-    getAllLegalTargets(context, pretarget = true) {
-        return this.selector.getAllLegalTargets(context, pretarget);
+    getAllLegalTargets(context) {
+        return this.selector.getAllLegalTargets(context);
     }
 
-    resolve(context, pretarget = false, noCostsFirstButton = false) {
+    resolve(context, noCostsFirstButton = false) {
         let otherProperties = _.omit(this.properties, 'cardCondition');
         let result = { resolved: false, name: this.name, value: null, costsFirst: false, mode: this.properties.mode };
         let player = context.player;
-        if(this.getAllLegalTargets(context, pretarget).length === 0) {
+        if(this.getAllLegalTargets(context).length === 0) {
             result.resolved = true;
             return result;
         }
         if(this.properties.player && this.properties.player === 'opponent') {
-            if(pretarget) {
+            if(context.stage === 'pretarget') {
                 result.costsFirst = true;
                 return result;
             }
             player = player.opponent;
         }
         let buttons = [];
+        let waitingPromptTitle = '';
         if(this.properties.optional) {
             buttons.push({ text: 'No more targets', arg: 'noMoreTargets' });
         }
-        if(pretarget) {
+        if(context.stage === 'pretarget') {
             if(!noCostsFirstButton) {
                 buttons.push({ text: 'Pay costs first', arg: 'costsFirst' });
             }
             buttons.push({ text: 'Cancel', arg: 'cancel' });
-        }
-        let waitingPromptTitle = '';
-        if(pretarget) {
             if(context.ability.abilityType === 'action') {
                 waitingPromptTitle = 'Waiting for opponent to take an action or pass';
             } else {
@@ -64,10 +62,8 @@ class AbilityTargetCard {
         let promptProperties = {
             waitingPromptTitle: waitingPromptTitle,
             context: context,
-            source: context.source,
             selector: this.selector,
             buttons: buttons,
-            pretarget: pretarget,
             onSelect: (player, card) => {
                 result.resolved = true;
                 result.value = card;

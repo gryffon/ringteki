@@ -97,7 +97,10 @@ class BaseAbility {
         if(!Array.isArray(targets)) {
             targets = [targets];
         }
-        return this.cost.every(cost => cost.canPay(context, targets));
+        context.stage = 'costs';
+        let canPay = this.cost.every(cost => cost.canPay(context, targets));
+        context.stage = 'pretarget';
+        return canPay;
     }
 
     /**
@@ -167,7 +170,7 @@ class BaseAbility {
     resolveTargets(context, results = []) {
         if(results.length === 0) {
             let canIgnoreAllCosts = this.cost.every(cost => cost.canIgnoreForTargeting);
-            return this.targets.map(target => target.resolve(context, true, canIgnoreAllCosts));
+            return this.targets.map(target => target.resolve(context, canIgnoreAllCosts));
         }
         return _.zip(this.targets, results).map(array => {
             let [target, result] = array;

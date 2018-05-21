@@ -23,7 +23,7 @@ class Banzai extends DrawCard {
                     () => {
                         ability.actions.loseHonor().resolve(context.player, context);
                         this.game.promptForSelect(context.player, {
-                            source: context.source,
+                            context: context,
                             cardType: 'character',
                             cardCondition: card => card.isParticipating(),
                             onSelect: (player, card) => {

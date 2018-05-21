@@ -44,11 +44,11 @@ class AbilityTargetSelect {
         return Object.keys(this.properties.choices).filter(key => this.isChoiceLegal(this.properties.choices[key], context));
     }
 
-    resolve(context, pretarget = false, noCostsFirstButton = false) {
+    resolve(context, noCostsFirstButton = false) {
         let result = { resolved: false, name: this.name, value: null, costsFirst: false, mode: 'select' };
         let player = context.player;
         if(this.properties.player && this.properties.player === 'opponent') {
-            if(pretarget) {
+            if(context.stage === 'pretarget') {
                 result.costsFirst = true;
                 return result;
             }
@@ -65,7 +65,7 @@ class AbilityTargetSelect {
                 context.selects[this.name] = new SelectChoice(choice);
             });
         });
-        if(this.properties.player !== 'opponent' && pretarget) {
+        if(this.properties.player !== 'opponent' && context.stage === 'pretarget') {
             if(!noCostsFirstButton) {
                 choices.push('Pay costs first');
                 handlers.push(() => result.costsFirst = true);
@@ -77,7 +77,7 @@ class AbilityTargetSelect {
             handlers[0]();
         } else if(handlers.length > 1) {
             let waitingPromptTitle = '';
-            if(pretarget) {
+            if(context.stage === 'pretarget') {
                 if(context.ability.abilityType === 'action') {
                     waitingPromptTitle = 'Waiting for opponent to take an action or pass';
                 } else {

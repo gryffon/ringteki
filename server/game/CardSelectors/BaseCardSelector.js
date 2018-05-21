@@ -10,14 +10,14 @@ class BaseCardSelector {
         }
     }
 
-    canTarget(card, context, pretarget = false) {
+    canTarget(card, context) {
         if(!card) {
             return false;
         }
-        if(pretarget && context.ability && !context.ability.canPayCosts(context, card)) {
+        if(context.stage === 'pretarget' && context.ability && !context.ability.canPayCosts(context, card)) {
             return false;
         }
-        if(context.stage === 'target' && !card.checkRestrictions('target', context)) {
+        if(context.stage.includes('target') && !card.checkRestrictions('target', context)) {
             return false;
         }
         if(this.gameAction && this.gameAction.length > 0 && this.gameAction.every(action => !action.canAffect(card, context))) {
@@ -26,16 +26,16 @@ class BaseCardSelector {
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);
     }
 
-    getAllLegalTargets(context, pretarget) {
-        return context.game.allCards.filter(card => this.canTarget(card, context, pretarget));
+    getAllLegalTargets(context) {
+        return context.game.allCards.filter(card => this.canTarget(card, context));
     }
 
     hasEnoughSelected(selectedCards) {
         return this.optional || selectedCards.length > 0;
     }
 
-    hasEnoughTargets(context, pretarget = false) {
-        return (this.optional || context.game.allCards.any(card => this.canTarget(card, context, pretarget)));
+    hasEnoughTargets(context) {
+        return (this.optional || context.game.allCards.any(card => this.canTarget(card, context)));
     }
 
     defaultActivePromptTitle() {

@@ -38,7 +38,7 @@ class CardGameAction extends GameAction {
                 properties.player = context.player;
             }
             let defaultProperties = {
-                source: context.source,
+                context: context,
                 gameAction: this,
                 onSelect: (player, cards) => {
                     this.setTarget(cards, context);

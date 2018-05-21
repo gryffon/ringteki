@@ -22,6 +22,7 @@ class BaseAction extends BaseAbility {
             player: this.card.controller,
             source: this.card
         });
+        context.stage = 'pretarget';
         this.updateGameActions(context);
         return context;
     }

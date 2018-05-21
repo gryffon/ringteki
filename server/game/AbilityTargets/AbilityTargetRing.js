@@ -25,28 +25,26 @@ class AbilityTargetCard {
         return _.filter(context.game.rings, ring => this.properties.ringCondition(ring));
     }
 
-    resolve(context, pretarget = false, noCostsFirstButton = false) {
+    resolve(context, noCostsFirstButton = false) {
         let result = { resolved: false, name: this.name, value: null, costsFirst: false, mode: 'ring' };
         let player = context.player;
         if(this.properties.player && this.properties.player === 'opponent') {
-            if(pretarget) {
+            if(context.stage === 'pretarget') {
                 result.costsFirst = true;
                 return result;
             }
             player = player.opponent;
         }
         let buttons = [];
+        let waitingPromptTitle = '';
         if(this.properties.optional) {
             buttons.push({ text: 'No more targets', arg: 'noMoreTargets' });
         }
-        if(pretarget) {
+        if(context.stage === 'pretarget') {
             if(!noCostsFirstButton) {
                 buttons.push({ text: 'Pay costs first', arg: 'costsFirst' });
             }
             buttons.push({ text: 'Cancel', arg: 'cancel' });
-        }
-        let waitingPromptTitle = '';
-        if(pretarget) {
             if(context.ability.abilityType === 'action') {
                 waitingPromptTitle = 'Waiting for opponent to take an action or pass';
             } else {

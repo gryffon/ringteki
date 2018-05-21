@@ -9,6 +9,7 @@ class CardAbility extends ThenAbility {
         this.title = properties.title;
         this.limit = properties.limit || AbilityLimit.perRound(1);
         this.limit.registerEvents(game);
+        this.limit.card = card;
         this.location = this.buildLocation(card, properties.location);
         this.printedAbility = properties.printedAbility === false ? false : true;
         this.cannotBeCancelled = properties.cannotBeCancelled;

@@ -9,7 +9,7 @@ class TalismanOfTheSun extends DrawCard {
             cost: ability.costs.bowSelf(),
             effect: 'move the conflict to another province',
             handler: context => this.game.promptForSelect(context.player, {
-                source: this,
+                context: context,
                 cardType: 'province',
                 cardCondition: card => card.controller === context.player && card !== this.game.currentConflict.conflictProvince && !card.isBroken &&
                                        (card.location !== 'stronghold province' ||
