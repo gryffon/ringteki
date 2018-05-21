@@ -9,7 +9,6 @@ class CardService {
     }
 
     replaceCards(cards) {
-        console.log(cards);
         return this.cards.remove({})
             .then(() => this.cards.insert(cards));
     }
