@@ -42,9 +42,7 @@ class TriggeredAbility extends CardAbility {
     eventHandler(event, window) {
         let context = this.createContext(event);
         if(this.isTriggeredByEvent(event, context) && this.meetsRequirements(context) === '') {
-            if(this.isInValidLocation(context)) {
-                window.addChoice(context);
-            }
+            window.addChoice(context);
         }
     }
 

@@ -89,18 +89,18 @@ class GameConfiguration extends React.Component {
                             <Checkbox
                                 name='timerSettings.events'
                                 noGroup
-                                label={ 'Show timer for events' }
+                                label={ 'Show timer for opponent\'s events' }
                                 fieldClass='col-sm-6'
                                 onChange={ this.onTimerSettingToggle.bind(this, 'events') }
                                 checked={ this.props.timerSettings.events }
                             />
                             <Checkbox
-                                name='timerSettings.abilities'
+                                name='timerSettings.eventsInDeck'
                                 noGroup
-                                label={ 'Show timer for card abilities' }
+                                label={ 'Show timer for events in your deck' }
                                 fieldClass='col-sm-6'
-                                onChange={ this.onTimerSettingToggle.bind(this, 'abilities') }
-                                checked={ this.props.timerSettings.abilities }
+                                onChange={ this.onTimerSettingToggle.bind(this, 'eventsInDeck') }
+                                checked={ this.props.timerSettings.eventsInDeck }
                             />
                         </div>
                     </div>

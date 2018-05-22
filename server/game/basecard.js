@@ -143,7 +143,7 @@ class BaseCard extends EffectSource {
 
     updateAbilityEvents(from, to) {
         _.each(this.abilities.reactions, reaction => {
-            if(reaction.location.includes(to) && !reaction.location.includes(from)) {
+            if(reaction.location.includes(to) && !reaction.location.includes(from) || this.type === 'event' && to === 'conflict deck') {
                 reaction.registerEvents();
             } else if(!reaction.location.includes(to) && reaction.location.includes(from)) {
                 reaction.unregisterEvents();

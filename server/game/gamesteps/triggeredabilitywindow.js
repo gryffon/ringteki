@@ -10,20 +10,19 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         this.prevPlayerPassed = false;
     }
 
-    showCancelPrompt(player) {
-        // Cancel prompts are only shown in cancel windows
-        if(this.abilityType !== 'cancelinterrupt') {
-            return false;
+    showBluffPrompt(player) {
+        // Show a bluff prompt if the player has an event which could trigger (but isn't in their hand) and that setting
+        if(player.timerSettings.eventsInDeck && this.choices.some(context => context.player === player)) {
+            return true;
         }
-        // Show a cancel prompt if we're in Step 6, the player has the approriate setting, and there's an event for the other player
-        return _.any(this.events, event => (
+        // Show a bluff prompt if we're in Step 6, the player has the approriate setting, and there's an event for the other player
+        return this.abilityType === 'cancelinterrupt' && player.timerSettings.events && _.any(this.events, event => (
             event.name === 'onCardAbilityInitiated' && 
-            (event.card.type === 'event' ? player.timerSettings.events : player.timerSettings.abilities) && 
-            (event.context.player !== player)
+            event.card.type === 'event' && event.context.player !== player
         ));
     }
 
-    promptWithCancelPrompt(player) {
+    promptWithBluffPrompt(player) {
         this.game.promptWithMenu(player, this, {
             source: 'Triggered Abilities',
             waitingPromptTitle: 'Waiting for opponent',
@@ -69,10 +68,10 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
             ));
         }
 
-        // if the current player has no available choices in this window, check to see if they should get a fake cancel prompt
-        if(!_.any(this.choices, context => context.player === this.currentPlayer)) {
-            if(this.showCancelPrompt(this.currentPlayer)) {
-                this.promptWithCancelPrompt(this.currentPlayer);
+        // if the current player has no available choices in this window, check to see if they should get a bluff prompt
+        if(!_.any(this.choices, context => context.player === this.currentPlayer && context.ability.isInValidLocation(context))) {
+            if(this.showBluffPrompt(this.currentPlayer)) {
+                this.promptWithBluffPrompt(this.currentPlayer);
                 return false;
             }
             // Otherwise pass
@@ -81,7 +80,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         }
 
         // Filter choices for current player, and prompt
-        this.choices = _.filter(this.choices, context => context.player === this.currentPlayer);
+        this.choices = _.filter(this.choices, context => context.player === this.currentPlayer && context.ability.isInValidLocation(context));
         this.promptBetweenSources(this.choices);
         return false;
     }

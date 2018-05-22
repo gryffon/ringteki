@@ -22,7 +22,7 @@ const defaultSettings = {
 
 const defaultTimerSettings = {
     events: true,
-    abilities: false
+    eventsInDeck: false
 };
 
 function getUserWithDefaultsSet(user) {

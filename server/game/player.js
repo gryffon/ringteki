@@ -390,6 +390,14 @@ class Player extends GameObject {
         this.conflictDeck = _(preparedDeck.conflictCards);
         this.dynastyDeck = _(preparedDeck.dynastyCards);
         this.preparedDeck = preparedDeck;
+        this.conflictDeck.each(card => {
+            // register event reactions in case event-in-deck bluff window is enabled
+            if(card.type === 'event') {
+                for(let reaction of card.abilities.reactions) {
+                    reaction.registerEvents();
+                }
+            }
+        });
     }
 
     /**
