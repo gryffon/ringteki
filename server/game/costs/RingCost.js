@@ -3,6 +3,7 @@ class RingCost {
         this.action = action;
         this.action.costMessage = message;
         this.ringCondition = ringCondition;
+        this.promptsPlayer = true;
     }
 
     canPay(context) {

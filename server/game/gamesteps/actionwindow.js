@@ -33,19 +33,20 @@ class ActionWindow extends UiPrompt {
 
         if(legalActions.length === 0) {
             return false;
-        }
-
-        if(legalActions.length === 1) {
-            this.game.resolveAbility(legalActions[0].createContext());
-        } else {
-            this.game.promptWithHandlerMenu(player, {
-                activePromptTitle: (card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':'),
-                source: card,
-                choices: legalActions.map(action => action.title).concat('Cancel'),
-                handlers: legalActions.map(action => (() => this.game.resolveAbility(action.createContext()))).concat(() => true)
-            });
-        }
-
+        } else if(legalActions.length === 1) {
+            let action = legalActions[0];
+            let targetPrompts = action.targets.some(target => target.properties.player !== 'opponent');
+            if(!this.currentPlayer.optionSettings.confirmOneClick || action.cost.some(cost => cost.promptsPlayer) || targetPrompts) {
+                this.game.resolveAbility(action.createContext());
+                return true;
+            }
+        } 
+        this.game.promptWithHandlerMenu(player, {
+            activePromptTitle: (card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':'),
+            source: card,
+            choices: legalActions.map(action => action.title).concat('Cancel'),
+            handlers: legalActions.map(action => (() => this.game.resolveAbility(action.createContext()))).concat(() => true)
+        });
         return true;
     }
 

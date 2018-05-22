@@ -251,7 +251,8 @@ const Costs = {
             },
             pay: function(context) {
                 context.player.fate -= context.chooseFate;
-            }
+            },
+            promptsPlayer: true
         };
     }
 };

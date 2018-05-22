@@ -134,6 +134,14 @@ class GameConfiguration extends React.Component {
                                 checked={ this.props.optionSettings.orderForcedAbilities }
                             />
                             <Checkbox
+                                name='optionSettings.confirmOneClick'
+                                noGroup
+                                label={ 'Show a confirmation prompt when initating 1-click abilities' }
+                                fieldClass='col-sm-6'
+                                onChange={ this.onOptionSettingToggle.bind(this, 'confirmOneClick') }
+                                checked={ this.props.optionSettings.confirmOneClick }
+                            />
+                            <Checkbox
                                 name='optionSettings.showStatusInSidebar'
                                 noGroup
                                 label={
