@@ -142,7 +142,7 @@ class Card extends React.Component {
     getCountersForCard(card) {
         var counters = {};
 
-        counters['ability-indicator'] = card.hasAction ? { count: card.usedAction ? 2 : 1, fade: card.type === 'attachment', shortName: 'A' } : undefined;
+        counters['ability-indicator'] = card.hasAction ? { count: card.usedAbility ? 2 : 1, fade: card.type === 'attachment', shortName: 'A' } : undefined;
         counters['card-fate'] = card.fate ? { count: card.fate, fade: card.type === 'attachment', shortName: 'F' } : undefined;
         counters['card-honor'] = card.honor ? { count: card.honor, fade: card.type === 'attachment', shortName: 'H' } : undefined;
         if(card.isHonored) {
@@ -225,15 +225,16 @@ class Card extends React.Component {
     }
 
     showCounters() {
-        if(_.contains(['province 1','province 2','province 3','province 4','stronghold province'], this.props.source) && this.props.card.type === 'province') {
+        if(this.props.card.facedown) {
+            return false;
+        }
+        
+        let provinces = ['province 1','province 2','province 3','province 4','stronghold province'];
+        if(provinces.includes(this.props.source) && this.props.card.type === 'province' || this.props.card.type === 'stronghold') {
             return true;
         }
 
-        if(this.props.source !== 'play area' && this.props.source !== 'faction' && this.props.source !== 'revealed plots') {
-            return false;
-        }
-
-        if(this.props.card.facedown || this.props.card.type === 'attachment') {
+        if(this.props.source !== 'play area') {
             return false;
         }
 

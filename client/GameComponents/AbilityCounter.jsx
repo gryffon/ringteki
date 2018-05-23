@@ -20,7 +20,7 @@ class AbilityCounter extends Counter {
         }
         
         return (<div key={ this.props.name } className={ className }>
-            <span className='glyphicon glyphicon-asterisk' />
+            <span className='glyphicon glyphicon-fire' />
         </div>);
     }
 }
