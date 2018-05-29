@@ -11,7 +11,7 @@ class InitiateAbilityEventWindow extends EventWindow {
                 this.addEvent(this.game.getEvent('onCardPlayed', { player: event.context.player, card: event.card, originalLocation: 'hand' })); // TODO: this isn't true with Kyuden Isawa
             }
             if(event.context.ability.isCardAbility() && event.context.ability.isTriggeredAbility()) {
-                this.addEvent(this.game.getEvent('onCardAbilityTriggered', { player: event.context.player, card: event.card }));
+                this.addEvent(this.game.getEvent('onCardAbilityTriggered', { ability: event.context.ability, player: event.context.player, card: event.card }));
             }
         });
     }

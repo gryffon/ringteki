@@ -3,6 +3,7 @@ const _ = require('underscore');
 const GameObject = require('./GameObject');
 const Deck = require('./deck.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
+const ClockSelector = require('./Clocks/ClockSelector');
 const RingEffects = require('./RingEffects.js');
 const PlayableLocation = require('./playablelocation.js');
 const PlayerPromptState = require('./playerpromptstate.js');
@@ -10,7 +11,7 @@ const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
 class Player extends GameObject {
-    constructor(id, user, owner, game) {
+    constructor(id, user, owner, game, clockdetails) {
         super(game, user.username);
         this.user = user;
         this.emailHash = this.user.emailHash;
@@ -48,8 +49,7 @@ class Player extends GameObject {
         this.imperialFavor = '';
         this.totalGloryForFavor = 0;
 
-        this.chessClockLeft = -1; // time left on clock in seconds
-        this.timerStart = 0;
+        this.clock = ClockSelector.for(this, clockdetails);
 
         this.deck = {};
         this.costReducers = [];
@@ -77,24 +77,14 @@ class Player extends GameObject {
     }
 
     startClock() {
-        if(this.chessClockLeft > -1 && this.timerStart === 0) {
-            this.timerStart = Date.now();
+        this.clock.start();
+        if(this.opponent) {
+            this.opponent.clock.opponentStart();
         }
     }
 
     stopClock() {
-        if(this.timerStart > 0 && this.chessClockLeft > 0) {
-            this.chessClockLeft -= Math.floor(((Date.now() - this.timerStart) / 1000) - 0.5);
-            this.timerStart = 0;
-            if(this.chessClockLeft < 0 && this.opponent) {
-                this.game.addMessage('{0}\'s clock has run out', this);
-                this.game.recordWinner(this.opponent, 'chessClock');
-                this.chessClockLeft = 0;
-                if(this.opponent) {
-                    this.opponent.chessClockLeft = 0;
-                }
-            }
-        }
+        this.clock.stop();
     }
 
     /**
@@ -980,8 +970,6 @@ class Player extends GameObject {
         return {
             fate: this.fate,
             honor: this.getTotalHonor(),
-            chessClockLeft: this.chessClockLeft,
-            chessClockActive: this.timerStart > 0,
             conflictsRemaining: this.conflictOpportunities,
             militaryRemaining: this.canInitiateConflict('military'),
             politicalRemaining: this.canInitiateConflict('political')
