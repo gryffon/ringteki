@@ -17,7 +17,7 @@ class AgashaSwordsmith extends DrawCard {
                 }];
                 this.game.promptWithHandlerMenu(context.player, {
                     activePromptTitle: 'Choose a card',
-                    source: context.source,
+                    context: context,
                     cards: attachments,
                     choices: choices,
                     handlers: handlers,

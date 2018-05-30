@@ -28,7 +28,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
             waitingPromptTitle: 'Waiting for opponent',
             activePrompt: {
                 promptTitle: TriggeredAbilityWindowTitles.getTitle(this.abilityType, this.events),
-                controls: this.getAdditionalPromptControls(),
+                controls: this.getPromptControls(),
                 buttons: [
                     { timer: true, method: 'pass' },
                     { text: 'I need more time', timerCancel: true },
@@ -93,7 +93,6 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
 
     getPromptForSelectProperties() {
         return _.extend(super.getPromptForSelectProperties(), {
-            controls: this.getAdditionalPromptControls(),
             selectCard: this.currentPlayer.optionSettings.markCardsUnselectable,
             buttons: [{ text: 'Pass', arg: 'pass' }],
             onMenuCommand: (player, arg) => {
@@ -101,20 +100,6 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
                 return true;
             }
         });
-    }
-
-    getAdditionalPromptControls() {
-        let controls = [];
-        for(let event of this.events) {
-            if(event.name === 'onCardAbilityInitiated' && event.allTargets.length > 0) {
-                controls.push({
-                    type: 'targeting',
-                    source: event.card.getShortSummary(),
-                    targets: event.allTargets.map(target => target.getShortSummary())
-                });
-            }
-        }
-        return controls;
     }
 }
 

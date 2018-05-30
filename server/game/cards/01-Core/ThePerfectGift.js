@@ -18,7 +18,7 @@ class ThePerfectGift extends DrawCard {
                         this.game.addMessage('{0} reveals the top {1} from their conflict deck: {2}', otherPlayer, n > 1 ? n + ' cards' : 'card', opponentTopFour);
                         this.game.promptWithHandlerMenu(context.player, {
                             activePromptTitle: 'Choose a card to give your opponent',
-                            source: context.source,
+                            context: context,
                             cards: opponentTopFour,
                             cardHandler: card => {
                                 this.game.addMessage('{0} chooses {1} to give {2}', context.player, card, otherPlayer);
@@ -30,7 +30,7 @@ class ThePerfectGift extends DrawCard {
                 }
                 this.game.queueSimpleStep(() => this.game.promptWithHandlerMenu(context.player, {
                     activePromptTitle: 'Choose a card to give your yourself',
-                    source: context.source,
+                    context: context,
                     cards: myTopFour,
                     cardHandler: card => {
                         this.game.addMessage('{0} chooses {1} to give themself', context.player, card);

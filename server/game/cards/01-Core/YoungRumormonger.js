@@ -14,7 +14,7 @@ class YoungRumormonger extends DrawCard {
                                                   card.allowGameAction(context.event.gameAction.action, context)
             },
             effect: '{1} {0} instead of {2}',
-            effectArgs: context => [context.event.gameAction.action, context.event.card],
+            effectArgs: context => [context.event.gameAction.name, context.event.card],
             handler: context => {
                 context.event.gameAction.card = context.target;
                 let newEvent = context.event.gameAction.getEvent(context.target, context);

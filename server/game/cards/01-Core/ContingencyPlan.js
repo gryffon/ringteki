@@ -11,7 +11,7 @@ class ContingencyPlan extends DrawCard {
             handler: context => {
                 if(context.player.honorBid > 0) {
                     this.game.promptWithHandlerMenu(context.player, {
-                        source: context.source,
+                        context: context,
                         choices: ['Increase your bid', 'Decrease your bid'],
                         handlers: [
                             () => {

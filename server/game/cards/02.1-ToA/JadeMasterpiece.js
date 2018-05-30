@@ -13,7 +13,7 @@ class JadeMasterpiece extends DrawCard {
             effect: 'move 1 fate from {0} to an unclaimed ring',
             handler: context => this.game.promptForRingSelect(context.player, {
                 activePromptTitle: 'Choose an unclaimed ring to move fate to',
-                source: context.source,
+                context: context,
                 ringCondition: ring => ring.isUnclaimed() && ring !== context.ring,
                 onSelect: (player, ring) => {
                     this.game.addMessage('{0} moves 1 fate from {2} to {3}', player, context.ring, ring);

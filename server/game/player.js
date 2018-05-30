@@ -292,11 +292,8 @@ class Player extends GameObject {
             this.moveCard(card, 'hand');
         }
 
-        if(remainingCards > 0) {
-            this.deckRanOutOfCards('conflict');
-            for(let card of this.conflictDeck.toArray().slice(0, remainingCards)) {
-                this.moveCard(card, 'hand');
-            }
+        if(remainingCards > 0 && this.deckRanOutOfCards('conflict')) {
+            this.drawCardsToHand(remainingCards);
         }
     }
 
@@ -305,14 +302,22 @@ class Player extends GameObject {
      * @param {String} deck - one of 'conflict' or 'dynasty'
      */
     deckRanOutOfCards(deck) {
-        this.game.addMessage('{0}\'s {1} deck has run out of cards and loses 5 honor', this, deck);
+        this.game.addMessage('{0}\'s {1} deck has run out of cards, so they lose 5 honor', this, deck);
         this.modifyHonor(-5);
         this.getSourceList(deck + ' discard pile').each(card => this.moveCard(card, deck + ' deck'));
         if(deck === 'dynasty') {
+            if(this.dynastyDeck.size() === 0) {
+                this.modifyHonor(-this.honor);
+                return false;
+            }
             this.shuffleDynastyDeck();
-        } else {
-            this.shuffleConflictDeck();
+            return true;
+        } else if(this.conflictDeck.size() === 0) {
+            this.modifyHonor(-this.honor);
+            return false;
         }
+        this.shuffleConflictDeck();
+        return true;
     }
 
     /**
@@ -323,10 +328,9 @@ class Player extends GameObject {
         if(this.getSourceList(location).size() > 1) {
             return;
         }
-        if(this.dynastyDeck.size() === 0) {
-            this.deckRanOutOfCards('dynasty');
+        if(this.dynastyDeck.size() > 0 || this.deckRanOutOfCards('dynasty')) {
+            this.moveCard(this.dynastyDeck.first(), location);
         }
-        this.moveCard(this.dynastyDeck.first(), location);
     }
 
     /**

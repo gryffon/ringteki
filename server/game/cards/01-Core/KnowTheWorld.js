@@ -10,12 +10,12 @@ class KnowTheWorld extends DrawCard {
             handler: context => {
                 // TODO: Does this need a condition?
                 this.game.promptForRingSelect(context.player, {
-                    source: context.source,
+                    context: context,
                     activePromptTitle: 'Choose a ring to return',
                     ringCondition: ring => ring.claimedBy === context.player.name,
                     onSelect: (player, ringToReturn) => {
                         this.game.promptForRingSelect(player, {
-                            source: context.source,
+                            context: context,
                             activePromptTitle: 'Choose a ring to take',
                             ringCondition: ring => ring.isUnclaimed(),
                             onSelect: (player, ring) => {

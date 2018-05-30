@@ -14,7 +14,6 @@ class ForShame extends DrawCard {
                     mode: 'select',
                     dependsOn: 'character',
                     player: 'opponent',
-                    // TODO: controls: { type: 'targeting', targets: [context.target] },
                     choices: {
                         'Dishonor this character': ability.actions.dishonor().target(context => context.targets.character),
                         'Bow this character': ability.actions.bow().target(context => context.targets.character)

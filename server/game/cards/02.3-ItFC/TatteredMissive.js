@@ -18,7 +18,7 @@ class TatteredMissive extends DrawCard {
                             context.player.moveCard(card, 'hand');
                             context.player.shuffleConflictDeck();
                         },
-                        source: context.source
+                        context: context
                     });
                 } else {
                     this.game.addMessage('{0} reveals {1} and adds it to their hand', context.player, cards[0]);

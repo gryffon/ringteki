@@ -50,7 +50,7 @@ class ShamefulDisplay extends ProvinceCard {
         });
         this.game.promptWithHandlerMenu(context.player, {
             activePromptTitle: 'Choose a character to:',
-            source: context.source,
+            context: context,
             choices: choices,
             handlers: handlers
         });

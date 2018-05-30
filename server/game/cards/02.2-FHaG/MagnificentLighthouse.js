@@ -34,7 +34,7 @@ class MagnificentLighthouse extends DrawCard {
                         topThree.splice(index, 1);
                         this.game.promptWithHandlerMenu(context.player, {
                             activePromptTitle: 'Select a card to put on the bottom of the deck',
-                            source: context.source,
+                            context: context,
                             cards: topThree,
                             cardHandler: cardHandler,
                             handlers: handlers,
@@ -54,7 +54,7 @@ class MagnificentLighthouse extends DrawCard {
                         if(messages.length > 0) {
                             this.game.promptWithHandlerMenu(context.player, {
                                 activePromptTitle: 'Select a card to put on the bottom of the deck',
-                                source: context.source,
+                                context: context,
                                 cards: topThree,
                                 cardHandler: cardHandler,
                                 choices: choices,
@@ -65,7 +65,7 @@ class MagnificentLighthouse extends DrawCard {
                 }
                 this.game.promptWithHandlerMenu(context.player, {
                     activePromptTitle: 'Select a card to discard',
-                    source: context.source,
+                    context: context,
                     cards: topThree,
                     cardHandler: cardHandler,
                     handlers: handlers,

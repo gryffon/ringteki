@@ -19,7 +19,7 @@ class KuroiMori extends ProvinceCard {
             handler: context => {
                 if(context.select === 'Switch the contested ring') {
                     this.game.promptForRingSelect(context.player, {
-                        source: context.source,
+                        context: context,
                         ringCondition: ring => ring.isUnclaimed(),
                         onSelect: (player, ring) => {
                             this.game.addMessage('{0} switches the conflict ring to {1}', player, ring);

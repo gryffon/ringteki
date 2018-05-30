@@ -12,7 +12,7 @@ class SecretCache extends ProvinceCard {
                 let myTopFive = context.player.conflictDeck.first(5);
                 if(myTopFive.length > 1) {
                     this.game.promptWithHandlerMenu(context.player, {
-                        source: context.source,
+                        context: context,
                         activePromptTitle: 'Choose a card',
                         cards: myTopFive,
                         cardHandler: card => {

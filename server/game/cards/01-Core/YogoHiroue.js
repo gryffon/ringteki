@@ -26,7 +26,7 @@ class YogoHiroue extends DrawCard {
                             },
                             () => true
                         ],
-                        source: context.source
+                        context: context
                     })
 
                 }

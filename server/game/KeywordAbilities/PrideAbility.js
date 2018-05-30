@@ -11,8 +11,8 @@ class PrideAbility extends TriggeredAbility {
             },
             title: card.name + '\'s Pride',
             printedAbility: false,
-            effect: '{0} is {1}honored due to their Pride',
-            effectArgs: context => context.event.conflict.winner === context.player ? '' : 'dis',
+            message: '{0} is {1}honored due to their Pride',
+            messageArgs: context => [context.source, context.event.conflict.winner === context.player ? '' : 'dis'],
             limit: AbilityLimit.perConflict(1),
             handler: context => {
                 if(context.event.conflict.winner === context.player) {

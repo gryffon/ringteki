@@ -74,11 +74,24 @@ class SelectCardPrompt extends UiPrompt {
     defaultProperties() {
         return {
             buttons: [],
+            controls: this.getDefaultControls(),
             selectCard: true,
             onSelect: () => true,
             onMenuCommand: () => true,
             onCancel: () => true
         };
+    }
+
+    getDefaultControls() {
+        let targets = this.context.targets ? Object.values(this.context.targets).map(target => target.getShortSummary()) : [];
+        if(targets.length === 0 && this.context.event && this.context.event.card) {
+            this.targets = [this.context.event.card.getShortSummary()];
+        }
+        return [{
+            type: 'targeting',
+            source: this.context.source.getShortSummary(),
+            targets: targets
+        }];
     }
 
     savePreviouslySelectedCards() {

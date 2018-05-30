@@ -45,11 +45,27 @@ class SelectRingPrompt extends UiPrompt {
     defaultProperties() {
         return {
             buttons: [],
+            controls: this.getDefaultControls(),
             ringCondition: () => true,
             onSelect: () => true,
             onMenuCommand: () => true,
             onCancel: () => true
         };
+    }
+
+    getDefaultControls() {
+        if(!this.properties.context) {
+            return [];
+        }
+        let targets = this.properties.context.targets ? Object.values(this.properties.context.targets).map(target => target.getShortSummary()) : [];
+        if(targets.length === 0 && this.properties.context.event && this.properties.context.event.card) {
+            this.targets = [this.properties.context.event.card.getShortSummary()];
+        }
+        return [{
+            type: 'targeting',
+            source: this.properties.context.source.getShortSummary(),
+            targets: targets
+        }];
     }
 
     activeCondition(player) {

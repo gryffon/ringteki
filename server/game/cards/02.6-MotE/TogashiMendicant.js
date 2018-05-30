@@ -15,7 +15,7 @@ class TogashiMendicant extends DrawCard {
     togashiMendicantPrompt(context, promptCards, orderedCards, promptTitle) {
         this.game.promptWithHandlerMenu(context.player, {
             activePromptTitle: promptTitle,
-            source: context.source,
+            context: context,
             cards: promptCards,
             cardHandler: card => {
                 orderedCards.unshift(card);

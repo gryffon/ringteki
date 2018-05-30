@@ -11,7 +11,7 @@ const testOfSkillCost = function() {
             let choices = ['attachment', 'character', 'event'];
             context.game.promptWithHandlerMenu(context.player, {
                 activePromptTitle: 'Select a card type',
-                source: context.source,
+                context: context,
                 choices: choices,
                 handlers: _.map(choices, choice => {
                     return () => {
@@ -57,7 +57,7 @@ class TestOfSkill extends DrawCard {
                 }
                 this.game.promptWithHandlerMenu(context.player, {
                     activePromptTitle: 'Select a card',
-                    source: context.source,
+                    context: context,
                     cards: matchingCards,
                     cardHandler: card => {
                         matchingCards = takeCardHandler(card);
@@ -66,7 +66,7 @@ class TestOfSkill extends DrawCard {
                         }
                         this.game.promptWithHandlerMenu(context.player, {
                             activePromptTitle: 'Select a card',
-                            source: context.source,
+                            context: context,
                             cards: matchingCards,
                             cardHandler: card => {
                                 matchingCards = takeCardHandler(card);

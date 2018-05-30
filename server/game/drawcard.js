@@ -169,17 +169,16 @@ class DrawCard extends BaseCard {
         return this.printedMilitarySkill === null || this.printedPoliticalSkill === null || dashEffects.length > 0;
     }
 
-    getSkill(type, printed = false) {
+    getSkill(type) {
         /**
          * Direct the skill query to the correct sub function.
          * @param  {string} type - The type of the skill; military or political
-         * @param  {boolean} printed - Use the printed value of the skill; default false
          * @return {integer} The chosen skill value
          */
         if(type === 'military') {
-            return this.getMilitarySkill(printed);
+            return this.getMilitarySkill();
         } else if(type === 'political') {
-            return this.getPoliticalSkill(printed);
+            return this.getPoliticalSkill();
         }
     }
 

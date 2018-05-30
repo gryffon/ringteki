@@ -44,7 +44,7 @@ class ConsumedByFiveFires extends DrawCard {
                     activePromptTitle: 'How much fate do you want to remove?',
                     choices: choices,
                     handlers: handlers,
-                    source: context.source
+                    context: context
                 });
                 return true;
             },

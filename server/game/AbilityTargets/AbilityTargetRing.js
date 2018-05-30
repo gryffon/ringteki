@@ -54,7 +54,6 @@ class AbilityTargetCard {
         let promptProperties = {
             waitingPromptTitle: waitingPromptTitle,
             context: context,
-            source: context.source,
             buttons: buttons,
             onSelect: (player, ring) => {
                 result.resolved = true;

@@ -13,7 +13,7 @@ class ShrewdYasuki extends DrawCard {
                 }
                 this.game.promptWithHandlerMenu(context.player, {
                     activePromptTitle: 'Choose a card to put in your hand',
-                    source: context.source,
+                    context: context,
                     cards: context.player.conflictDeck.first(2),
                     cardHandler: card => {
                         this.game.addMessage('{0} takes one card to their hand and puts the other on the bottom of their deck', context.player);

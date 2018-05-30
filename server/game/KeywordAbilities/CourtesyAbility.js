@@ -9,8 +9,8 @@ class CourtesyAbility extends TriggeredAbility {
             },
             title: card.name + '\'s Courtesy',
             printedAbility: false,
-            effect: '{1} gains a fate due to {0}\'s Courtesy',
-            effectArgs: context => context.source,
+            message: '{0} gains a fate due to {1}\'s Courtesy',
+            messageArgs: context => [context.player, context.source],
             handler: context => this.game.applyGameAction(context, { gainFate: context.player })
         });
     }

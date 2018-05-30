@@ -10,8 +10,8 @@ class PersonalHonorAbility extends TriggeredAbility {
             },
             title: card.name + '\'s Personal Honor',
             printedAbility: false,
-            effect: '{1} {2} 1 honor due to {0}\'s personal honor',
-            effectArgs: context => [context.player, context.source.isHonored ? 'gains' : 'loses'],
+            message: '{0} {1} 1 honor due to {2}\'s personal honor',
+            messageArgs: context => [context.player, context.source.isHonored ? 'gains' : 'loses', context.source],
             handler: context => {
                 if(context.source.isHonored) {
                     this.game.applyGameAction(context, { gainHonor: context.player });

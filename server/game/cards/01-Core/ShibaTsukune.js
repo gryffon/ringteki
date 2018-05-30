@@ -11,14 +11,14 @@ class ShibaTsukune extends DrawCard {
             effect: 'resolve up to 2 ring effects',
             handler: context => this.game.promptForRingSelect(context.player, {
                 activePromptTitle: 'Choose a ring to resolve',
-                source: context.source,
+                context: context,
                 ringCondition: ring => !ring.claimed,
                 onSelect: (player, firstRing) => {
                     if(_.size(_.filter(this.game.rings, ring => !ring.claimed)) > 1) {
                         this.game.promptForRingSelect(player, {
                             activePromptTitle: 'Choose a second ring to resolve, or click Done',
                             ringCondition: ring => !ring.claimed && ring !== firstRing,
-                            source: context.source,
+                            context: context,
                             optional: true,
                             onMenuCommand: player => {
                                 this.game.addMessage('{0} resolves {1}', player, firstRing);

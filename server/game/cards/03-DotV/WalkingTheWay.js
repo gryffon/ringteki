@@ -15,7 +15,7 @@ class WalkingTheWay extends DrawCard {
             effect: 'look at the top three cards of their dynasty deck',
             handler: context => this.game.promptWithHandlerMenu(context.player, {
                 activePromptTitle: 'Choose a card to place in a province',
-                source: context.source,
+                context: context,
                 cards: context.player.dynastyDeck.first(3),
                 cardHandler: cardFromDeck => this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a card to replace with ' + cardFromDeck.name,
