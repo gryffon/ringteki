@@ -137,7 +137,6 @@ class App extends React.Component {
             this.props.onGameHandoffReceived(server);
 
             if(this.props.gameSocket && this.props.currentGameId !== server.gameId) {
-                console.info(this.props.currentGameId, server.gameId);
                 this.props.closeGameSocket();
             }
 
