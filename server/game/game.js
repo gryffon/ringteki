@@ -729,8 +729,12 @@ class Game extends EventEmitter {
         this.provinceCards = this.allCards.filter(card => card.isProvince);
 
         if(playerWithNoStronghold) {
-            this.addMessage('{0} does not have a stronghold in their decklist', playerWithNoStronghold);
-            return;
+            this.queueSimpleStep(() => {
+                this.addMessage('{0} does not have a stronghold in their decklist', playerWithNoStronghold);
+                return false;
+            });
+            this.continue();
+            return false;
         }
 
         this.pipeline.initialise([

@@ -26,8 +26,9 @@ class FatePhase extends Phase {
 
     discardCharactersWithNoFate() {
         for(let player of this.game.getPlayersInFirstPlayerOrder()) {
-            let cardsToDiscard = player.filterCardsInPlay(card => card.fate === 0 && card.type === 'character' && card.allowGameAction('discardFromPlay'));
-            this.game.queueSimpleStep(() => this.promptPlayerToDiscard(player, cardsToDiscard));
+            this.game.queueSimpleStep(() => this.promptPlayerToDiscard(player, player.cardsInPlay.filter(card => (
+                card.fate === 0 && card.allowGameAction('discardFromPlay')
+            ))));
         }
     }
 

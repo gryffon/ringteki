@@ -4,6 +4,7 @@ const GameObject = require('./GameObject');
 const Deck = require('./deck.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
 const ClockSelector = require('./Clocks/ClockSelector');
+const GameActions = require('./GameActions/GameActions');
 const RingEffects = require('./RingEffects.js');
 const PlayableLocation = require('./playablelocation.js');
 const PlayerPromptState = require('./playerpromptstate.js');
@@ -292,8 +293,9 @@ class Player extends GameObject {
             this.moveCard(card, 'hand');
         }
 
-        if(remainingCards > 0 && this.deckRanOutOfCards('conflict')) {
-            this.drawCardsToHand(remainingCards);
+        if(remainingCards > 0) {
+            this.deckRanOutOfCards('conflict');
+            this.game.queueSimpleStep(() => this.drawCardsToHand(remainingCards));
         }
     }
 
@@ -302,22 +304,17 @@ class Player extends GameObject {
      * @param {String} deck - one of 'conflict' or 'dynasty'
      */
     deckRanOutOfCards(deck) {
+        let discardPile = this.getSourceList(deck + ' discard pile');
         this.game.addMessage('{0}\'s {1} deck has run out of cards, so they lose 5 honor', this, deck);
-        this.modifyHonor(-5);
-        this.getSourceList(deck + ' discard pile').each(card => this.moveCard(card, deck + ' deck'));
-        if(deck === 'dynasty') {
-            if(this.dynastyDeck.size() === 0) {
-                this.modifyHonor(-this.honor);
-                return false;
+        GameActions.loseHonor(5).resolve(this, this.game.getFrameworkContext());
+        this.game.queueSimpleStep(() => {
+            discardPile.each(card => this.moveCard(card, deck + ' deck'));
+            if(deck === 'dynasty') {
+                this.shuffleDynastyDeck();
+            } else {
+                this.shuffleConflictDeck();
             }
-            this.shuffleDynastyDeck();
-            return true;
-        } else if(this.conflictDeck.size() === 0) {
-            this.modifyHonor(-this.honor);
-            return false;
-        }
-        this.shuffleConflictDeck();
-        return true;
+        });
     }
 
     /**
@@ -328,7 +325,10 @@ class Player extends GameObject {
         if(this.getSourceList(location).size() > 1) {
             return;
         }
-        if(this.dynastyDeck.size() > 0 || this.deckRanOutOfCards('dynasty')) {
+        if(this.dynastyDeck.size() === 0) {
+            this.deckRanOutOfCards('dynasty');
+            this.game.queueSimpleStep(() => this.replaceDynastyCard(location));
+        } else {
             this.moveCard(this.dynastyDeck.first(), location);
         }
     }
@@ -340,7 +340,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their conflict deck', this);
         }
-        this.game.raiseEvent('onDeckShuffled', { player: this, deck: 'conflict deck' });
+        this.game.emitEvent('onDeckShuffled', { player: this, deck: 'conflict deck' });
         this.conflictDeck = _(this.conflictDeck.shuffle());
     }
 
@@ -351,7 +351,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their dynasty deck', this);
         }
-        this.game.raiseEvent('onDeckShuffled', { player: this, deck: 'dynasty deck' });
+        this.game.emitEvent('onDeckShuffled', { player: this, deck: 'dynasty deck' });
         this.dynastyDeck = _(this.dynastyDeck.shuffle());
     }
 
@@ -360,7 +360,6 @@ class Player extends GameObject {
      * @param {String} conflictType - one of 'military', 'political'
      */
     canInitiateConflict(conflictType = '') {
-        //console.log('canInitiatieConflict', conflictType);
         if(this.conflictOpportunities === 0) {
             return false;
         }

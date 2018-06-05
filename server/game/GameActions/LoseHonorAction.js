@@ -9,7 +9,7 @@ class LoseHonorAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onModifyHonor', { player: player, amount: this.amount, context: context }, () => player.modifyHonor(-this.amount));
+        return super.createEvent('onModifyHonor', { player: player, amount: -this.amount, context: context }, event => player.modifyHonor(event.amount));
     }
 }
 

@@ -21,10 +21,8 @@ class TransferHonorAction extends PlayerAction {
             afterBid: this.afterBid
         };
         return super.createEvent('onTransferHonor', params, event => {
-            event.player.honor -= event.amount;
-            event.player.opponent.honor += event.amount;
-            context.game.checkWinCondition(event.player);
-            context.game.checkWinCondition(event.player.opponent);
+            event.player.modifyHonor(-event.amount);
+            event.player.opponent.modifyHonor(event.amount);
         });
     }
 }

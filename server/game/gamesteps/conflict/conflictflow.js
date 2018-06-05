@@ -97,10 +97,14 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         let targets = this.conflict.defendingPlayer.cardsInPlay.filter(card => card.covert);
-        let sources = _.filter(this.conflict.attackers, card => card.isCovert());
+        let sources = this.conflict.attackers.filter(card => card.isCovert());
 
         if(sources.length === 0) {
             return;
+        }
+
+        for(let target of targets) {
+            target.covert = false;
         }
 
         // Need to have:
@@ -145,7 +149,7 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         this.game.raiseMultipleInitiateAbilityEvents(this.covert.map(context => ({
             params: { card: context.source, context: context },
-            handler: () => context.target = true
+            handler: () => context.target.covert = true
         })));
     }
 
@@ -293,7 +297,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         
         if(this.conflict.conflictUnopposed) {
             this.game.addMessage('{0} loses 1 honor for not defending the conflict', this.conflict.loser);
-            this.conflict.loser.modifyHonor(-1);
+            this.game.applyGameAction(null, { loseHonor: this.conflict.loser });
         }
     }
     

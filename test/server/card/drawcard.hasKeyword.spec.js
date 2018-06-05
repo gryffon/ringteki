@@ -49,7 +49,7 @@ describe('the DrawCard', function() {
         beforeEach(function() {
             this.gameService = jasmine.createSpyObj('gameService', ['save']);
             this.game = new Game({}, { gameService: this.gameService });
-            this.spy = spyOn(this.game, 'reportError');
+            this.spy = spyOn(this.game, 'checkWinCondition');
 
             this.player = new Player(1, { username: 'foo', settings: { optionSettings: {} } }, false, this.game);
             this.player.noTimer = true;
@@ -95,6 +95,7 @@ describe('the DrawCard', function() {
                     this.player.moveCard(this.card, 'play area');
                     // Resolve events in pipeline.
                     this.game.continue();
+                    this.game.checkGameState(true);
                 });
 
                 it('should return true for each keyword', function() {

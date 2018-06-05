@@ -3,7 +3,7 @@ const Duel = require('../Duel.js');
 const DuelFlow = require('../gamesteps/DuelFlow.js');
 
 class DuelAction extends CardGameAction {
-    constructor(type, resolutionHandler, challenger, costHandler) {
+    constructor(type, resolutionHandler, costHandler, challenger) {
         super('duel');
         this.type = type;
         this.challenger = challenger;
@@ -20,7 +20,7 @@ class DuelAction extends CardGameAction {
         if(!super.canAffect(card, context)) {
             return false;
         }
-        return card.location === 'play area' && !card.hasDash(this.type);
+        return this.challenger && !this.challenger.hasDash(this.type) && card.location === 'play area' && !card.hasDash(this.type);
     }
 
     resolveDuel(winner, loser) {
