@@ -2,19 +2,22 @@ const CardGameAction = require('./CardGameAction');
 const MoveFateEvent = require('../Events/MoveFateEvent');
 
 class PlaceFateAction extends CardGameAction {
-    constructor(amount = 1, origin) {
-        super('placeFate');
+    setDefaultProperties() {
+        this.amount = 1;
+        this.origin = null;
+    }
+
+    setup() {
+        this.name = 'placeFate';
         this.targetType = ['character'];
-        this.amount = amount;
-        this.origin = origin;
-        this.effect = 'place ' + amount + ' fate on {0}';
+        this.effectMsg = 'place ' + this.amount + ' fate on {0}';
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || card.type !== 'character') {
+        if(this.amount === 0 || card.location !== 'play area' || card.type !== 'character') {
             return false;
         }
-        return super.canAffect(card, context) && (!this.origin || this.origin.fate > 0);
+        return super.canAffect(card, context) && (!this.origin || this.origin.allowGameAction('removeFate'));
     }
 
     checkEventCondition(event) {

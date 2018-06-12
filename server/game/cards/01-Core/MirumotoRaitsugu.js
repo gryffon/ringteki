@@ -6,9 +6,14 @@ class MirumotoRaitsugu extends DrawCard {
             title: 'Duel an opposing character',
             condition: context => context.source.isParticipating(),
             target: {
-                cardType: 'character', 
-                cardCondition: (card, context) => card.controller !== context.player && card.isParticipating(),
-                gameAction: ability.actions.duel('military', this.resolutionHandler).options(context => ({ challenger: context.source }))
+                cardType: 'character',
+                controller: 'opponent',
+                cardCondition: card => card.isParticipating(),
+                gameAction: ability.actions.duel(context => ({
+                    type: 'military', 
+                    challenger: context.source,
+                    resolutionHandler: (context, winner, loser) => this.resolutionHandler(context, winner, loser)
+                }))
             }
         });
     }

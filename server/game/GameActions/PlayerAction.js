@@ -1,12 +1,11 @@
 const GameAction = require('./GameAction');
 
 class PlayerAction extends GameAction {
-    constructor(name) {
-        super(name);
+    setup() {
         this.targetType = ['player'];
     }
 
-    getDefaultTargets(context) {
+    defaultTargets(context) {
         return context.player.opponent;
     }
 

@@ -7,13 +7,15 @@ class KakitaYoshi extends DrawCard {
             condition: context => context.source.isParticipating(),
             cost: ability.costs.discardImperialFavor(),
             effect: 'draw 3 cards, and reduce the cost of events this conflict',
-            gameAction: ability.actions.draw(3),
-            untilEndOfConflict: {
-                effect: ability.effects.reduceCost({
-                    amount: 2,
-                    match: card => card.type === 'event'
+            gameAction: [
+                ability.actions.draw(3), 
+                ability.actions.playerLastingEffect({
+                    effect: ability.effects.reduceCost({
+                        amount: 2,
+                        match: card => card.type === 'event'
+                    })
                 })
-            }
+            ]
         });
     }
 }

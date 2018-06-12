@@ -7,8 +7,10 @@ class ShosuroActress extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.owner !== context.player && card.location.includes('discard pile') && 
-                                                  card.getCost() <= 3 && !card.hasTrait('shinobi'),
+                location: ['conflict discard pile', 'dynasty discard pile'],
+                controller: 'opponent',
+                cardCondition: card => card.getCost() <= 3 && !card.hasTrait('shinobi'),
+                // TODO make this take control
                 gameAction: ability.actions.putIntoConflict()
             }
         });

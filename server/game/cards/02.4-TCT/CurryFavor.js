@@ -9,7 +9,8 @@ class CurryFavor extends DrawCard {
                                                   this.game.completedConflicts.filter(conflict => conflict.attackingPlayer === context.player).length > 1 && 
                                                   !event.bowEvent.cancelled
             },
-            gameAction: ability.actions.ready().target(context => context.event.card)
+            cannotBeMirrored: true,
+            gameAction: ability.actions.ready(context => ({ target: context.event.card }))
         });
     }
 }

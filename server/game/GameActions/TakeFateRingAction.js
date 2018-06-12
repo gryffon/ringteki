@@ -2,15 +2,18 @@ const RingAction = require('./RingAction');
 const MoveFateEvent = require('../Events/MoveFateEvent');
 
 class TakeFateRingAction extends RingAction {
-    constructor(amount = 1) {
-        super('takeFate');
-        this.amount = amount;
-        this.effect = 'take ' + amount + ' fate from {0}';
+    setDefaultProperties() {
+        this.amount = 1;
+    }
+
+    setup() {
+        this.name = 'takeFate';
+        this.effectMsg = 'take ' + this.amount + ' fate from {0}';
     }
 
     canAffect(ring, context) {
         return context.player.checkRestrictions('takeFateFromRings', context) && 
-               ring.fate > 0 && super.canAffect(ring, context);
+               ring.fate > 0 && this.amount > 0 && super.canAffect(ring, context);
     }
 
     checkEventCondition(event) {

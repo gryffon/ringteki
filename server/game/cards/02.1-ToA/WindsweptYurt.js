@@ -16,13 +16,10 @@ class WindsweptYurt extends DrawCard {
             effect: 'give each player 2 {1}',
             effectArgs: context => context.select === 'Each player gains 2 fate' ? 'fate' : 'honor',
             handler: context => {
-                let action = 'gainHonor';
                 if(context.select === 'Each player gains 2 fate') {
-                    action = 'gainFate';
-                }
-                let gameAction = ability.actions[action](2);
-                if(gameAction.setTargets(this.game.getPlayers(), context)) {
-                    this.game.openEventWindow(gameAction.getEventArray(context));
+                    ability.actions.gainFate({ amount: 2 }).addToWindow(this.game.getPlayers(), context);
+                } else {
+                    ability.actions.gainHonor({ amount: 2 }).addToWindow(this.game.getPlayers(), context);
                 }
                 let card = this.controller.getDynastyCardInProvince(context.cardStateWhenInitiated.location);
                 if(card) {

@@ -7,7 +7,7 @@ class Kamayari extends DrawCard {
             when: {
                 onCardAbilityTriggered: (event, context) => event.card.type === 'character' && context.source.parent.isParticipating()
             },
-            gameAction: ability.actions.bow()
+            gameAction: ability.actions.bow(context => ({ target: context.event.card }))
         });
     }
 

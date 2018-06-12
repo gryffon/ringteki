@@ -2,6 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class KitsukiYaruma extends DrawCard {
     setupCardAbilities(ability) {
+        // TODO: This shouldn't be immunity
         this.persistentEffect({
             match: this,
             effect: ability.effects.immuneTo(context => context.source.hasTrait('poison'))

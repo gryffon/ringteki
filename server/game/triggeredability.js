@@ -47,16 +47,14 @@ class TriggeredAbility extends CardAbility {
     }
 
     createContext(event) {
-        let context = new TriggeredAbilityContext({ 
+        return new TriggeredAbilityContext({ 
             event: event, 
             game: this.game, 
             source: this.card, 
             player: this.card.controller, 
-            ability: this 
+            ability: this,
+            stage: 'pretarget'
         });
-        context.stage = 'pretarget';
-        this.updateGameActions(context);
-        return context;
     }
 
     isTriggeredByEvent(event, context) {

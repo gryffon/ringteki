@@ -1,11 +1,19 @@
 const PlayerAction = require('./PlayerAction');
 
 class LoseHonorAction extends PlayerAction {
-    constructor(amount = 1) {
-        super('loseHonor');
-        this.amount = amount;
-        this.effect = 'make {0} lose ' + amount + ' honor';
-        this.cost = 'losing ' + amount + ' honor';
+    setDefaultProperties() {
+        this.amount = 1;
+    }
+
+    setup() {
+        super.setup();
+        this.name = 'loseHonor';
+        this.effectMsg = 'make {0} lose ' + this.amount + ' honor';
+        this.cost = 'losing ' + this.amount + ' honor';
+    }
+
+    canAffect(player, context) {
+        return this.amount === 0 ? false : super.canAffect(player, context);        
     }
 
     getEvent(player, context) {

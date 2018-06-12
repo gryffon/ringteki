@@ -1,16 +1,21 @@
 const PlayerAction = require('./PlayerAction');
 
 class DrawAction extends PlayerAction {
-    constructor(amount = 1) {
-        super('draw');
-        this.amount = amount;
-        this.effect = 'draw {1} cards';
-        this.effectArgs = () => {
-            return this.amount;
-        };
+    setDefaultProperties() {
+        this.amount = 1;
     }
 
-    getDefaultTargets(context) {
+    setup() {
+        super.setup();
+        this.name = 'draw';
+        this.effectMsg = 'draw ' + this.amount + ' cards';
+    }
+
+    canAffect(player, context) {
+        return this.amount === 0 ? false : super.canAffect(player, context);
+    }
+
+    defaultTargets(context) {
         return context.player;
     }
 

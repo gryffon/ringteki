@@ -2,13 +2,19 @@ const CardGameAction = require('./CardGameAction');
 const EntersPlayEvent = require('../Events/EntersPlayEvent');
 
 class PutIntoPlayAction extends CardGameAction {
-    constructor(fate = 0, intoConflict = true) {
-        let name = intoConflict ? 'putIntoConflict' : 'putIntoPlay';
-        super(name);
+    constructor(propertyFactory, intoConflict = true) {
+        super(propertyFactory);
         this.intoConflict = intoConflict;
+    }
+
+    setDefaultProperties() {
+        this.fate = 0;
+    }
+
+    setup() {
+        this.name = this.intoConflict ? 'putIntoConflict' : 'putIntoPlay';
         this.targetType = ['character'];
-        this.fate = fate;
-        this.effect = 'put {0} into play' + intoConflict ? ' in the conflict' : '';
+        this.effectMsg = 'put {0} into play' + this.intoConflict ? ' in the conflict' : '';
         this.cost = 'putting {0} into play';
     }
 

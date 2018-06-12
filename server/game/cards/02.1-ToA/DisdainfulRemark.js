@@ -8,11 +8,11 @@ class DisdainfulRemark extends DrawCard {
                                   context.player.opponent && context.player.opponent.hand.size() > 0,
             effect: 'add {1} to the province strength',
             effectArgs: context => context.player.opponent.hand.size(),
-            untilEndOfConflict: context => ({
-                match: this.game.currentConflict.conflictProvince,
+            gameAction: ability.actions.lastingEffect(context => ({
+                target: this.game.currentConflict.conflictProvince,
                 targetLocation: 'province',
                 effect: ability.effects.modifyProvinceStrength(context.player.opponent.hand.size())
-            })
+            }))
         });
     }
 }

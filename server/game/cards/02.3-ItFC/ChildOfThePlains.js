@@ -8,10 +8,10 @@ class ChildOfThePlains extends DrawCard {
                 onProvinceRevealed: (event, context) => context.source.isAttacking()
             },
             effect: 'get the first action in this conflict',
-            untilEndOfConflict: {
+            gameAction: ability.actions.playerLastingEffect({
                 targetController: 'opponent',
-                effect: ability.effects.playerCannot('takeFirstAction')
-            }
+                effect:ability.effects.playerCannot('takeFirstAction')
+            })
         });
     }
 }

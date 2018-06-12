@@ -1,20 +1,35 @@
+const CardSelector = require('../CardSelector.js');
+
 class AbilityTargetAbility {
     constructor(name, properties) {
         this.name = name;
         this.properties = properties;
+        this.selector = this.getSelector(properties);
+    }
+
+    getSelector(properties) {
+        let cardCondition = (card, context) => {
+            let abilities = card.abilities.actions.concat(card.abilities.reactions).filter(ability => ability.printedAbility);
+            return abilities.some(ability => {
+                let contextCopy = context.copy();
+                contextCopy.targetAbility = ability;
+                return properties.gameAction.some(gameAction => gameAction.hasLegalTarget(context)) && 
+                       properties.cardCondition(card, context) && context.ability.canPayCosts(context);    
+            });
+        };
+        return CardSelector.for(Object.assign({}, properties, { cardCondition: cardCondition}));
     }
 
     canResolve(context) {
-        return this.getAllLegalTargets(context).length > 0;
+        return this.selector.hasEnoughTargets(context);
     }
 
     getAllLegalTargets(context) {
-        return context.game.findAnyCardsInPlay(card => this.properties.cardCondition(card, context) && 
-                                                       card.abilities.actions.concat(card.abilities.reactions).some(ability => ability.printedAbility));
+        return this.selector.getAllLegalTargets(context);
     }
 
-    updateGameActions() {
-        return;
+    getGameAction(context) {
+        return this.properties.gameAction.filter(gameAction => gameAction.hasLegalTarget(context));
     }
 
     resolve(context) {

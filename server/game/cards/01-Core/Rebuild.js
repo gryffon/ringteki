@@ -17,6 +17,7 @@ class Rebuild extends DrawCard {
                     cardCondition: (card, context) => card.location === 'dynasty discard pile' && card.controller === context.player
                 }
             },
+            cannotBeMirrored: true,
             effect: 'shuffle {1} back into their deck and replace it with {2}',
             effectArgs: context => [context.targets.cardToShuffle.facedown ? 'a facedown card' : context.targets.cardToShuffle, context.targets.cardToRebuild],
             handler: context => {

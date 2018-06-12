@@ -6,7 +6,10 @@ class CourtMask extends DrawCard {
             title: 'Return court mask to hand',
             effect: 'return {0} to hand, dishonoring {1}',
             effectArgs: context => context.source.parent,
-            gameAction: [ability.actions.returnToHand(), ability.actions.dishonor().target(context => context.source.parent)]
+            gameAction: [
+                ability.actions.returnToHand(), 
+                ability.actions.dishonor(context => ({ target: context.source.parent }))
+            ]
         });
     }
     

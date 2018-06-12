@@ -8,12 +8,12 @@ class FallenInBattle extends DrawCard {
                 afterConflict: (event, context) => event.conflict.winner === context.player && event.conflict.conflictType === 'military' && 
                                                    event.conflict.skillDifference >= 5
             },
-            max: ability.limit.perConflict(1),
             target: {
                 cardType: 'character',
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.discardFromPlay()
-            }
+            },
+            max: ability.limit.perConflict(1)
         });
     }
 }

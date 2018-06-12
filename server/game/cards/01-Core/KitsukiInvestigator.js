@@ -8,9 +8,11 @@ class KitsukiInvestigator extends DrawCard {
             cost: ability.costs.payFateToRing(1),
             effect: 'reveal {1}\'s hand: {2}',
             effectArgs: context => [context.player.opponent, context.player.opponent.hand.sortBy(card => card.name)],
-            gameAction: ability.actions.discardFromHand().promptWithHandlerMenu(context => ({
-                cards: context.player.opponent.hand.sortBy(card => card.name),
-                message: '{0} chooses {1} to be discarded'
+            gameAction: ability.actions.discardFromHand(context => ({
+                promptWithHandlerMenu: {
+                    cards: context.player.opponent.hand.sortBy(card => card.name),
+                    message: '{0} chooses {1} to be discarded'    
+                }
             })),
             max: ability.limit.perConflict(1)
         });

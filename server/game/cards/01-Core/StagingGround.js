@@ -8,7 +8,8 @@ class StagingGround extends DrawCard {
                 mode: 'upTo',
                 numCards: 2,
                 activePromptTitle: 'Choose up to 2 cards',
-                cardCondition: (card, context) => card.controller === context.player,
+                location: 'province',
+                controller: 'self',
                 gameAction: ability.actions.flipDynasty()
             }
         });

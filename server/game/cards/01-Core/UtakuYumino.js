@@ -7,13 +7,7 @@ class UtakuYumino extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.discardFromHand(),
             effect: 'give {1} +2/+2',
-            untilEndOfConflict: context => ({
-                match: context.source,
-                effect: [
-                    ability.effects.modifyMilitarySkill(2),
-                    ability.effects.modifyPoliticalSkill(2)
-                ]
-            }),
+            gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyBothSkills(2) }),
             limit: ability.limit.perConflict(1)
         });
     }

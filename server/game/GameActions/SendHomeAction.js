@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 
 class SendHomeAction extends CardGameAction {
-    constructor() {
-        super('sendHome');
+    setup() {
+        this.name = 'sendHome';
         this.targetType = ['character'];
-        this.effect = 'send {0} home';
+        this.effectMsg = 'send {0} home';
     }
 
     canAffect(card, context) {

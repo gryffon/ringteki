@@ -7,6 +7,7 @@ class WayOfTheUnicorn extends DrawCard {
             when: {
                 onPassFirstPlayer: (event, context) => event.player === context.player.opponent
             },
+            cannotBeMirrored: true,
             effect: 'keep the first player token',
             handler: context => context.cancel()
         });

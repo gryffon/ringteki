@@ -21,8 +21,9 @@ class MiyaSatoshi extends DrawCard {
                 this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a card to discard',
                     context: context,
-                    cardCondition: card => ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) &&
-                                           card.controller === context.player && !card.isProvince,
+                    location: 'province',
+                    controller: 'self',
+                    cardCondition: card => card.isDynasty,
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} chooses to discard {1}, and puts {2} faceup in its place', player, card, firstImperial);
                         context.player.moveCard(firstImperial, card.location);
@@ -36,6 +37,6 @@ class MiyaSatoshi extends DrawCard {
     }
 }
 
-MiyaSatoshi.id = 'miya-satoshi'; // This is a guess at what the id might be - please check it!!!
+MiyaSatoshi.id = 'miya-satoshi';
 
 module.exports = MiyaSatoshi;

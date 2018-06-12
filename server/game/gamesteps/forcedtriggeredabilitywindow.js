@@ -64,7 +64,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     }
 
     getPromptForSelectProperties() {
-        return this.getPromptProperties();
+        return Object.assign({ location: 'any' }, this.getPromptProperties());
     }
 
     getPromptProperties() {

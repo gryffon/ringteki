@@ -10,16 +10,22 @@ class CourtGames extends DrawCard {
                 player: 'self',
                 mode: 'select',
                 choices: {
-                    'Honor a friendly character': ability.actions.honor().promptForSelect(context => ({
-                        cardType: 'character', 
-                        cardCondition: card => card.isParticipating() && card.allowGameAction('target', context),
-                        message: '{0} chooses to honor {1}'
+                    'Honor a friendly character': ability.actions.honor(context => ({
+                        promptForSelect: {
+                            cardType: 'character',
+                            controller: 'self',
+                            cardCondition: card => card.isParticipating() && card.allowGameAction('target', context),
+                            message: '{0} chooses to honor {1}'    
+                        }
                     })),
-                    'Dishonor an opposing character': ability.actions.dishonor().promptForSelect(context => ({
-                        player: context.player.opponent,
-                        cardType: 'character', 
-                        cardCondition: card => card.isParticipating() && card.allowGameAction('target', context),
-                        message: '{0} chooses to dishonor {1}'
+                    'Dishonor an opposing character': ability.actions.dishonor(context => ({
+                        promptForSelect: {
+                            player: context.player.opponent,
+                            cardType: 'character',
+                            controller: 'opponent',
+                            cardCondition: card => card.isParticipating() && card.allowGameAction('target', context),
+                            message: '{0} chooses to dishonor {1}'
+                        }
                     }))
                 }
             },

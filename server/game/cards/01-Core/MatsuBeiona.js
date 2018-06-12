@@ -13,7 +13,7 @@ class MatsuBeiona extends DrawCard {
                     )).length >= 3
                 )
             },
-            gameAction: ability.actions.placeFate(2)
+            gameAction: ability.actions.placeFate({ amount: 2 })
         });
     }
 }

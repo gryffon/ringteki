@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 
 class DiscardStatusAction extends CardGameAction {
-    constructor() {
-        super('discardStatus');
+    setup() {
+        this.name = 'discardStatus';
         this.targetType = ['character'];
-        this.effect = 'discard {0}\'s status token';
+        this.effectMsg = 'discard {0}\'s status token';
     }
 
     canAffect(card, context) {

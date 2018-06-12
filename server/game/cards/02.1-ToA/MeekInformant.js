@@ -5,7 +5,7 @@ class MeekInformant extends DrawCard {
         this.reaction({
             title: 'Reveal opponent\'s hand',
             when: {
-                onCardPlayed: (event, context) => event.card === context.source && context.player.opponent && context.player.opponent.hand.size() > 0
+                onCardPlayed: (event, context) => event.card === context.source && context.player.opponent
             },
             effect: 'reveal {1}\'s hand',
             effectArgs: context => context.player.opponent,

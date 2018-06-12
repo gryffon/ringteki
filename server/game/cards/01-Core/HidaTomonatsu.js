@@ -10,6 +10,7 @@ class HidaTomonatsu extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             target: {
                 cardType: 'character',
+                controller: 'opponent',
                 cardCondition: card => card.isAttacking() && !card.isUnique(),
                 gameAction: ability.actions.returnToDeck()
             }

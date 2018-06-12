@@ -7,14 +7,13 @@ class Blackmail extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => !card.anotherUniqueInPlay(context.player) && card.getCost() < 3 && 
-                                                  card.controller !== context.player && card.location === 'play area'
+                controller: 'opponent',
+                cardCondition: (card, context) => !card.anotherUniqueInPlay(context.player) && card.getCost() < 3,
+                gameAction: ability.actions.cardLastingEffect(context => ({
+                    effect: ability.effects.takeControl(context.player)
+                }))
             },
-            effect: 'take control of {0}',
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: ability.effects.takeControl(context.player)
-            })
+            effect: 'take control of {0}'
         });
     }
 

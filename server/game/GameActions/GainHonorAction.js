@@ -1,13 +1,21 @@
 const PlayerAction = require('./PlayerAction');
 
 class GainHonorAction extends PlayerAction {
-    constructor(amount = 1) {
-        super('gainHonor');
-        this.amount = amount;
-        this.effect = 'gain ' + amount + ' honor';
+    setDefaultProperties() {
+        this.amount = 1;
     }
 
-    getDefaultTargets(context) {
+    setup() {
+        super.setup();
+        this.name = 'gainHonor';
+        this.effectMsg = 'gain ' + this.amount + ' honor';
+    }
+
+    canAffect(player, context) {
+        return this.amount === 0 ? false : super.canAffect(player, context);        
+    }
+
+    defaultTargets(context) {
         return context.player;
     }
 

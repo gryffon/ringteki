@@ -11,6 +11,7 @@ class WatchCommander extends DrawCard {
             gameAction: ability.actions.loseHonor()
         });
     }
+    
     canAttach(card, context) {
         if(card.attachments && card.attachments.any(card => card.id === 'watch-commander' && card !== this)) {
             return false;

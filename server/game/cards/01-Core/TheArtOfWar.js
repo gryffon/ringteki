@@ -7,7 +7,7 @@ class TheArtOfWar extends ProvinceCard {
             when: {
                 onBreakProvince: (event, context) => event.card === context.source
             },
-            gameAction: ability.actions.draw(3)
+            gameAction: ability.actions.draw({ amount: 3 })
         });
     }
 }

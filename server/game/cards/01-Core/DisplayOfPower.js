@@ -8,6 +8,7 @@ class DisplayOfPower extends DrawCard {
             when: {
                 afterConflict: (event, context) => event.conflict.loser === context.player && event.conflict.conflictUnopposed
             },
+            cannotBeMirrored: true,
             effect: 'resolve and claim the ring when the ring effect resolves',
             handler: context => this.game.once('onResolveRingEffect:cancelinterrupt', event => this.onResolveRingEffect(event, context))
         });

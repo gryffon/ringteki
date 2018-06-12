@@ -8,7 +8,7 @@ class SpiesAtCourt extends DrawCard {
                 afterConflict: (event, context) => event.conflict.winner === context.player && event.conflict.conflictType === 'political'
             },
             cost: ability.costs.dishonor(card => card.isParticipating()),
-            gameAction: ability.actions.discardAtRandom(2),
+            gameAction: ability.actions.discardAtRandom({ amount: 2 }),
             max: ability.limit.perConflict(1)
         });
     }

@@ -7,12 +7,13 @@ class NorthernWallSensei extends DrawCard {
             condition: context => context.source.isParticipating(),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.isParticipating() && card.controller === context.player && card.attachments.size() > 0
+                controller: 'self',
+                cardCondition: card => card.isParticipating() && card.attachments.size() > 0,
+                gameAction: ability.actions.cardLastingEffect({
+                    effect: ability.effects.immuneTo(context => context.source.type === 'event')
+                })
             },
-            effect: 'grant immunity to events to {0}',
-            untilEndOfConflict: {
-                effect: ability.effects.immuneTo(context => context.source.type === 'event')
-            }
+            effect: 'grant immunity to events to {0}'
         });
     }
 }

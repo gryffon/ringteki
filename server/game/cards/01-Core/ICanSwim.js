@@ -5,9 +5,11 @@ class ICanSwim extends DrawCard {
         this.action({
             title: 'Discard a dishonored character',
             condition: context => context.player.opponent && context.player.showBid > context.player.opponent.showBid,
+            cannotBeMirrored: true,
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.isParticipating() && card.isDishonored && card.controller === context.player.opponent,
+                controller: 'opponent',
+                cardCondition: card => card.isParticipating() && card.isDishonored,
                 gameAction: ability.actions.discardFromPlay()
             }
         });

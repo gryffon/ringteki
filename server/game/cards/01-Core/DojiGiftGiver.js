@@ -9,7 +9,8 @@ class DojiGiftGiver extends DrawCard {
             target: {
                 player: 'opponent',
                 cardType: 'character',
-                cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player,
+                controller: 'opponent',
+                cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.bow()
             }
         });

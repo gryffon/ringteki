@@ -1,18 +1,19 @@
 const PlayerAction = require('./PlayerAction');
 
 class ChosenDiscardAction extends PlayerAction {
-    constructor(amount = 1) {
-        super('discard');
-        this.amount = amount;
-        this.effect = 'discard {1} cards';
-        this.effectArgs = () => {
-            return this.amount;
-        };
+    setDefaultProperties() {
+        this.amount = 1;
+    }
+
+    setup() {
+        super.setup();
+        this.name = 'discard';
+        this.effectMsg = 'discard ' + this.amount + ' cards';
         this.cards = [];
     }
 
     canAffect(player, context) {
-        if(player.hand.size() === 0) {
+        if(player.hand.size() === 0 || this.amount === 0) {
             return false;
         }
         return super.canAffect(player, context);
@@ -20,7 +21,7 @@ class ChosenDiscardAction extends PlayerAction {
 
     preEventHandler(context) {
         super.preEventHandler(context);
-        const player = this.targets[0];
+        const player = this.target[0];
         let amount = Math.min(player.hand.size(), this.amount);
         if(amount === 0) {
             return;
@@ -31,7 +32,8 @@ class ChosenDiscardAction extends PlayerAction {
             mode: 'exactly',
             numCards: amount,
             ordered: true,
-            cardCondition: card => card.location === 'hand' && card.controller === player,
+            location: 'hand',
+            controller: 'self',
             onSelect: (player, cards) => {
                 this.cards = cards;
                 context.game.addMessage('{0} discards {1}', player, cards);

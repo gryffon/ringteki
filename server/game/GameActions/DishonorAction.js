@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 
 class DishonorAction extends CardGameAction {
-    constructor() {
-        super('dishonor');
+    setup() {
+        this.name = 'dishonor';
         this.targetType = ['character'];
-        this.effect = 'dishonor {0}';
+        this.effectMsg = 'dishonor {0}';
         this.cost = 'dishonoring {0}';
     }
 

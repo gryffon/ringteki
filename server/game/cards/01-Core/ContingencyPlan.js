@@ -2,6 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class ContingencyPlan extends DrawCard {
     setupCardAbilities() {
+        // TODO modfyHonorBid game action?
         this.reaction({
             title: 'Change your bid by 1',
             when: {

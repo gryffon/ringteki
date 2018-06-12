@@ -2,6 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class Breakthrough extends DrawCard {
     setupCardAbilities() {
+        // TODO: refactor this
         this.reaction({
             title: 'Declare a new conflict',
             when: {

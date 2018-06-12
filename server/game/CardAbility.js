@@ -54,11 +54,6 @@ class CardAbility extends ThenAbility {
     }
 
     meetsRequirements(context) {
-        // If this ability applies a gameAction to context.source, we need to check that that is legal
-        if(this.properties.gameAction && this.getGameActions(context).length === 0) {
-            return 'condition';
-        }
-
         if(this.card.isBlank() && this.printedAbility) {
             return 'blank';
         }
@@ -116,7 +111,7 @@ class CardAbility extends ThenAbility {
             let gameActions = this.getGameActions(context);
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
-                effectMessage = gameActions[0].effect;
+                effectMessage = gameActions[0].effectMsg;
                 effectArgs.push(gameActions[0].targets);
                 extraArgs = gameActions[0].effectArgs;
             }
@@ -142,7 +137,10 @@ class CardAbility extends ThenAbility {
     }
 
     openEventWindow(events) {
-        return this.game.openEventWindow(events);
+        for(let event of events) {
+            this.game.currentEventWindow.addEvent(event);
+        }
+        return this.game.currentEventWindow;
     }
 
     isCardPlayed() {

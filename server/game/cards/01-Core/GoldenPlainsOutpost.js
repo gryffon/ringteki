@@ -7,8 +7,9 @@ class GoldenPlainsOutpost extends StrongholdCard {
             cost: ability.costs.bowSelf(),
             condition: () => this.game.isDuringConflict('military'),
             target: {
-                cardType: 'character', 
-                cardCondition: (card, context) => card.hasTrait('cavalry') && card.controller === context.player,
+                cardType: 'character',
+                controller: 'self',
+                cardCondition: card => card.hasTrait('cavalry'),
                 gameAction: ability.actions.moveToConflict()
             }
         });

@@ -1,10 +1,18 @@
 const PlayerAction = require('./PlayerAction');
 
 class RandomDiscardAction extends PlayerAction {
-    constructor(amount = 1) {
-        super('discard');
-        this.amount = amount;
-        this.effect = 'discard ' + amount + ' cards at random';
+    setDefaultProperties() {
+        this.amount = 1;
+    }
+
+    setup() {
+        super.setup();
+        this.name = 'discard';
+        this.effectMsg = 'discard ' + this.amount + ' cards at random';
+    }
+
+    canAffect(player, context) {
+        return this.amount === 0 ? false : super.canAffect(player, context);
     }
 
     getEvent(player, context) {
@@ -21,6 +29,8 @@ class RandomDiscardAction extends PlayerAction {
                     mode: 'exactly',
                     numCards: event.cards.length,
                     ordered: true,
+                    location: 'hand',
+                    controller: 'self',
                     source: context.source,
                     buttons: [{ test: 'Done', arg: 'done' }],
                     cardCondition: card => event.cards.includes(card),

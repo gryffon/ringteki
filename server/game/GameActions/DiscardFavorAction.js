@@ -1,9 +1,10 @@
 const PlayerAction = require('./PlayerAction');
 
 class DiscardFavorAction extends PlayerAction {
-    constructor() {
-        super('discardFavor');
-        this.effect = 'make {0} lose the Imperial Favor';
+    setup() {
+        super.setup();
+        this.name = 'discardFavor';
+        this.effectMsg = 'make {0} lose the Imperial Favor';
         this.cost = 'discarding the Imperial Favor';
     }
 

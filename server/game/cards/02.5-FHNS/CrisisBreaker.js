@@ -13,7 +13,8 @@ class CrisisBreaker extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.hasTrait('berserker') && card.controller === context.player,
+                controller: 'self',
+                cardCondition: card => card.hasTrait('berserker'),
                 gameAction: [ability.actions.ready(), ability.actions.moveToConflict()]
             },
             effect: 'ready {0} and move it into the conflict'

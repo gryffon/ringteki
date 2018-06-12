@@ -9,36 +9,36 @@ class AbilityTargetSelect {
 
     canResolve(context) {
         let choices = Object.values(this.properties.choices);
-        return choices.some(choice => this.isChoiceLegal(choice, context)) && context.ability.canPayCosts(context);
+        return choices.some(choice => this.isChoiceLegal(choice, context));
     }
 
     isChoiceLegal(choice, context) {
         if(typeof choice === 'function') {
             return choice(context);
         }
-        return choice.some(action => action.setTarget(action.targetFunc(context), context));
-    }
-
-    updateGameActions(context) {
-        for(const key in this.properties.choices) {
-            if(typeof this.properties.choices[key] !== 'function') {
-                if(!Array.isArray(this.properties.choices[key])) {
-                    this.properties.choices[key] = [this.properties.choices[key]];
-                }
-                for(let action of this.properties.choices[key]) {
-                    action.update(context);
-                }
-            }
+        let contextCopy = context.copy();
+        contextCopy.selects[this.name] = new SelectChoice(choice);
+        if(this.name === 'target') {
+            contextCopy.select = choice;
         }
+        return choice.some(gameAction => gameAction.hasLegalTarget(contextCopy) && context.ability.canPayCosts(contextCopy));
     }
 
     getGameAction(context) {
         let choice = this.properties.choices[context.selects[this.name].choice];
         if(typeof choice !== 'function') {
-            return choice.filter(action => action.hasLegalTarget(context));
+            return choice.filter(gameAction => gameAction.hasLegalTarget(context));
         }
         return [];
     }
+
+    getContextsForDependentTargets(context) {
+        return this.getAllLegalTargets(context).map(choice => {
+            let contextCopy = context.copy();
+            contextCopy.selects[this.name] = new SelectChoice(choice);
+            return contextCopy;
+        });
+    }    
 
     getAllLegalTargets(context) {
         return Object.keys(this.properties.choices).filter(key => this.isChoiceLegal(this.properties.choices[key], context));

@@ -9,13 +9,13 @@ class SecludedShrine extends DrawCard {
             },
             target: {
                 mode: 'ring',
-                ringCondition: () => true
+                ringCondition: () => true,
+                gameAction: ability.actions.ringLastingEffect(context => ({
+                    duration: 'untilEndOfPhase',
+                    effect: ability.effects.considerRingAsClaimed(player => player === context.player)
+                }))
             },
-            effect: 'make it so that they are considered to have claimed {0} until the end of the phase',
-            untilEndOfPhase: context => ({
-                match: context.ring,
-                effect: ability.effects.considerRingAsClaimed(player => player === context.player)
-            })
+            effect: 'make it so that they are considered to have claimed {0} until the end of the phase'
         });
     }
 }

@@ -8,15 +8,16 @@ class ForShame extends DrawCard {
             targets: {
                 character: {
                     cardType: 'character',
-                    cardCondition: (card, context) => card.controller !== context.player && card.isParticipating()
+                    controller: 'opponent',
+                    cardCondition: card => card.isParticipating()
                 },
                 select: {
                     mode: 'select',
                     dependsOn: 'character',
                     player: 'opponent',
                     choices: {
-                        'Dishonor this character': ability.actions.dishonor().target(context => context.targets.character),
-                        'Bow this character': ability.actions.bow().target(context => context.targets.character)
+                        'Dishonor this character': ability.actions.dishonor(context => ({ target: context.targets.character })),
+                        'Bow this character': ability.actions.bow(context => ({ target: context.targets.character }))
                     }
                 }
             }

@@ -6,9 +6,9 @@ class Charge extends DrawCard {
             title: 'Put a character into play from a province',
             condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'military',
             target: {
-                cardType: 'character', 
-                cardCondition: (card, context) => ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && 
-                                                  card.controller === context.player,
+                cardType: 'character',
+                location: 'province', 
+                controller: 'self',
                 gameAction: ability.actions.putIntoConflict()
             }
         });

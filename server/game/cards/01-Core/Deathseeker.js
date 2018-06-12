@@ -2,6 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class Deathseeker extends DrawCard {
     setupCardAbilities(ability) {
+        // TODO: RemoveFateOrDiscard action?
         this.reaction({
             title: 'Remove fate/discard character',
             when: {
@@ -10,8 +11,8 @@ class Deathseeker extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.controller !== context.player && 
-                                                  (card.fate > 0 ? card.allowGameAction('removeFate', context) : card.allowGameAction('discardFromPlay', context))
+                controller: 'opponent',
+                cardCondition: (card, context) => (card.fate > 0 ? card.allowGameAction('removeFate', context) : card.allowGameAction('discardFromPlay', context))
             },
             effect: '{1} {0}',
             effectArgs: context => context.target.fate > 0 ? 'remove 1 fate from' : 'discard',

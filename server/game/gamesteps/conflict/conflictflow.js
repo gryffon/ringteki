@@ -128,10 +128,8 @@ class ConflictFlow extends BaseStepWithPipeline {
                 activePromptTitle: 'Choose covert target for ' + source.name,
                 buttons: [{ text: 'No target', arg: 'cancel' }],
                 cardType: 'character',
-                cardCondition: card => (
-                    card.controller === this.conflict.defendingPlayer && card.canBeCovertedBy(source) && 
-                    card.canBeDeclaredAsDefender()
-                ),
+                controller: 'opponent',
+                cardCondition: card => card.canBeCovertedBy(source),
                 onSelect: (player, card) => {
                     let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility() });
                     context['target'] = context.targets.target = card;

@@ -11,7 +11,7 @@ class ShinjoAltansarnai extends DrawCard {
                 activePromptTitle: 'Choose a character to discard',
                 cardType: 'character',
                 player: 'opponent',
-                cardCondition: (card, context) => card.controller === context.player.opponent,
+                controller: 'opponent',
                 gameAction: ability.actions.discardFromPlay()
             }
         });

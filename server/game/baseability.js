@@ -82,7 +82,13 @@ class BaseAbility {
      * @returns {String} 
      */
     meetsRequirements(context) {
+        // check legal targets exist
+        // check costs can be paid
+        // check for potential to change game state
         if(this.targets.length === 0) {
+            if(this.gameAction.length > 0 && !this.gameAction.some(gameAction => gameAction.hasLegalTarget(context))) {
+                return 'condition';
+            }
             return this.canPayCosts(context) ? '' : 'cost';
         }
         return this.canResolveTargets(context) ? '' : (this.canPayCosts(context) ? 'target' : 'cost');
@@ -93,14 +99,9 @@ class BaseAbility {
      *
      * @returns {Boolean}
      */
-    canPayCosts(context, targets = []) {
-        if(!Array.isArray(targets)) {
-            targets = [targets];
-        }
-        context.stage = 'costs';
-        let canPay = this.cost.every(cost => cost.canPay(context, targets));
-        context.stage = 'pretarget';
-        return canPay;
+    canPayCosts(context) {
+        let contextCopy = context.copy({ stage: 'costs' });
+        return this.cost.every(cost => cost.canPay(contextCopy));
     }
 
     /**
@@ -141,25 +142,7 @@ class BaseAbility {
      * @returns {Boolean}
      */
     canResolveTargets(context) {
-        return this.targets.every(target => {
-            let dependsOn = target.properties.dependsOn;
-            if(!dependsOn) {
-                return target.canResolve(context);
-            }
-            let dependsOnTarget = this.targets.find(t => t.name === dependsOn);
-            return dependsOnTarget.getAllLegalTargets(context).some(t => {
-                if(dependsOnTarget.mode === 'select') {
-                    context.selects[dependsOn] = t;
-                    return target.canResolve(context);
-                }
-                if(dependsOnTarget.mode === 'ring') {
-                    context.rings[dependsOn] = t;
-                    return target.canResolve(context);
-                }
-                context.targets[dependsOn] = t;
-                return target.canResolve(context);
-            });
-        });
+        return this.targets.every(target => target.canResolve(context));
     }
 
     /**
@@ -179,15 +162,6 @@ class BaseAbility {
             }
             return result;
         });
-    }
-
-    updateGameActions(context) {
-        for(let target of this.targets) {
-            target.updateGameActions(context);
-        }
-        for(let action of this.gameAction) {
-            action.update(context);
-        }
     }
 
     displayMessage(context) { // eslint-disable-line no-unused-vars

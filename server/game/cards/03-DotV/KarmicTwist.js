@@ -7,27 +7,19 @@ class KarmicTwist extends DrawCard {
             target: {
                 activePromptTitle: 'Choose a donor character',
                 cardType: 'character',
-                gameAction: ability.actions.removeFate(),
-                cardCondition: (card, context) => !card.isUnique() && card.controller.cardsInPlay.any(c => (
-                    !c.isUnique() && c.fate === 0 && c.allowGameAction('placeFate', context)
-                ))
+                cardCondition: (card, context) => !card.isUnique() && card.allowGameAction('removeFate', context),
+                gameAction: ability.actions.placeFate(context => ({
+                    amount: context.target.fate,
+                    origin: context.target,
+                    promptForSelect: {
+                        activePromptTitle: 'Choose a recipient character',
+                        cardType: 'character',
+                        cardCondition: (card, context) => !card.isUnique() && card.fate === 0 && card.controller === context.target.controller,
+                        message: '{0} moves ' + context.target.fate + ' to {2} with {1}'
+                    }
+                }))
             },
-            effect: 'move fate from {0} to another non-unique character',
-            handler: context => this.game.promptForSelect(context.player, {
-                activePromptTitle: 'Choose a recipient character',
-                cardType: 'character',
-                context: context,
-                cardCondition: card => 
-                    !card.isUnique() && 
-                    card.getFate() === 0 && 
-                    card.controller === context.target.controller && 
-                    card.allowGameAction('placeFate', context),
-                onSelect: (player, card) => {
-                    this.game.addMessage('{0} moves {1} fate from {2} to {3}', player, context.target.fate, context.target, card);
-                    ability.actions.removeFate(context.target.fate, card).resolve(context.target, context);
-                    return true;
-                }
-            })
+            effect: 'move fate from {0} to another non-unique character'
         });
     }
 }

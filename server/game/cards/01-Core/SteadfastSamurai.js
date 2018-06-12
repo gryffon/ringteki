@@ -9,8 +9,8 @@ class SteadfastSamurai extends DrawCard {
                                                     context.player.honor >= context.player.opponent.honor + 5
             },
             effect: 'stop him being discarded or losing fate in this phase',
-            untilEndOfPhase: context => ({
-                match: context.source,
+            gameAction: ability.actions.cardLastingEffect({
+                duration: 'untilEndOfPhase',    
                 effect: [
                     ability.effects.cardCannot('removeFate'),
                     ability.effects.cardCannot('discardFromPlay')

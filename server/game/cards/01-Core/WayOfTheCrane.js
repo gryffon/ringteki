@@ -6,7 +6,8 @@ class WayOfTheCrane extends DrawCard {
             title: 'Honor a character',
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.isFaction('crane') && card.controller === context.player,
+                controller: 'self',
+                cardCondition: card => card.isFaction('crane'),
                 gameAction: ability.actions.honor()
             }
         });

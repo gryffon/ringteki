@@ -6,19 +6,15 @@ class ShinjoTatsuo extends DrawCard {
             title: 'Move this and another character to the conflict',
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.controller === context.player && card !== context.source,
+                controller: 'self',
+                cardCondition: (card, context) => card !== context.source,
                 optional: true,
-                gameAction: ability.actions.moveToConflict()
+                gameAction: ability.actions.moveToConflict(context => {
+                    return context.target ? { target: [context.target, context.source] } : { target: context.source };
+                })
             },
             effect: 'move {1}{2}{3} into the conflict',
-            effectArgs: context => [context.source, context.target ? ' and ' : '', context.target ? context.target : ''],
-            handler: context => {
-                let cards = [context.source];
-                if(context.target) {
-                    cards.push(context.target);
-                }
-                this.game.applyGameAction(context, { moveToConflict: cards });
-            }
+            effectArgs: context => [context.source, context.target ? ' and ' : '', context.target ? context.target : '']
         });
     }
 }

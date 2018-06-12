@@ -6,25 +6,51 @@ class AbilityTargetCard {
     constructor(name, properties) {
         this.name = name;
         this.properties = properties;
-        this.selector = CardSelector.for(properties);
+        for(let gameAction of this.properties.gameAction) {
+            gameAction.getDefaultTargets = context => context.targets[name];
+        }
+        this.selector = this.getSelector(properties);
+    }
+
+    getSelector(properties) {
+        let cardCondition = (card, context) => {
+            let contextCopy = context.copy();
+            contextCopy.targets[this.name] = card;
+            if(this.name === 'target') {
+                contextCopy.target = card;
+            }
+            return (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(context))) && 
+                   properties.cardCondition(card, context) && context.ability.canPayCosts(context);
+        };
+        return CardSelector.for(Object.assign({}, properties, { cardCondition: cardCondition}));
     }
 
     canResolve(context) {
-        return this.selector.hasEnoughTargets(context, true);
-    }
-
-    updateGameActions(context) {
-        for(let action of this.properties.gameAction) {
-            action.target(context => context.targets[this.name]);
-            action.update(context);
+        if(this.properties.dependsOn) {
+            let dependsOnTarget = context.ability.targets.find(target => target.name === this.properties.dependsOn);
+            return dependsOnTarget.getContextsForDependentTargets(context).some(targetContext => this.selector.hasEnoughTargets(targetContext));
         }
+        // check for a legal target
+        return this.selector.hasEnoughTargets(context);
     }
 
     getGameAction(context) {
-        return this.properties.gameAction.filter(gameAction => gameAction.setTarget(context.targets[this.name], context));
+        return this.properties.gameAction.filter(gameAction => gameAction.hasLegalTarget(context));
+    }
+
+    getContextsForDependentTargets(context) {
+        return this.getAllLegalTargets(context).map(target => {
+            let contextCopy = context.copy();
+            contextCopy.targets[this.name] = target;
+            return contextCopy;
+        });
     }
 
     getAllLegalTargets(context) {
+        if(this.properties.dependsOn) {
+            let dependsOnTarget = context.ability.targets.find(target => target.name === this.properties.dependsOn);
+            return dependsOnTarget.getContextsForDependentTargets(context).some(targetContext => this.selector.getAllLegalTargets(targetContext));            
+        }
         return this.selector.getAllLegalTargets(context);
     }
 
@@ -90,7 +116,7 @@ class AbilityTargetCard {
         context.game.promptForSelect(player, Object.assign(promptProperties, otherProperties));
         return result;
     }
-    
+
     checkTarget(context) {
         if(this.properties.optional || context.targets[this.name] === 'noMoreTargets') {
             return true;

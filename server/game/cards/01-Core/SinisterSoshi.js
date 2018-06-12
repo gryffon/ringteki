@@ -7,17 +7,11 @@ class SinisterSoshi extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.isParticipating()
+                cardCondition: card => card.isParticipating(),
+                gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyBothSkills(-2) })
             },
             effect: 'give {0} -2{1}/-2{2}',
-            effectArgs: () => ['military', 'political'],
-            untilEndOfConflict: context => ({
-                match: context.player,
-                effect: [
-                    ability.effects.modifyMilitarySkill(-2),
-                    ability.effects.modifyPoliticalSkill(-2)
-                ]
-            })
+            effectArgs: () => ['military', 'political']
         });
     }
 }

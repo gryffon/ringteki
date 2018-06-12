@@ -5,10 +5,7 @@ class SeekerOfEnlightenment extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
-            effect: [
-                ability.effects.modifyMilitarySkill(() => this.getFateOnRings()),
-                ability.effects.modifyPoliticalSkill(() => this.getFateOnRings())
-            ]
+            effect: ability.effects.modifyBothSkill(() => this.getFateOnRings())
         });
     }
     

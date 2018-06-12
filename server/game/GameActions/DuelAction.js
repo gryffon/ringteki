@@ -3,16 +3,19 @@ const Duel = require('../Duel.js');
 const DuelFlow = require('../gamesteps/DuelFlow.js');
 
 class DuelAction extends CardGameAction {
-    constructor(type, resolutionHandler, costHandler, challenger) {
-        super('duel');
-        this.type = type;
-        this.challenger = challenger;
-        this.resolutionHandler = resolutionHandler;
-        this.costHandler = costHandler;
+    setDefaultProperties() {
+        this.type = '';
+        this.challenger = null;
+        this.resolutionHandler = null;
+        this.costHandler = null;
+    }
+
+    setup() {
+        this.name = 'duel';
         this.targetType = ['character'];
-        this.effect = 'initiate a {1} duel between {2} and {0}';
+        this.effectMsg = 'initiate a ' + this.type + ' duel between {1} and {0}';
         this.effectArgs = () => {
-            return [this.type, this.challenger];
+            return this.challenger;
         };
     }
 

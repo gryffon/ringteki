@@ -21,7 +21,8 @@ class WalkingTheWay extends DrawCard {
                     activePromptTitle: 'Choose a card to replace with ' + cardFromDeck.name,
                     context: context,
                     cardType: ['holding', 'character'],
-                    cardCondition: card => card.location.includes('province'),
+                    location: 'province',
+                    controller: 'self',
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} discards {1}, replacing it with {2}', player, card, cardFromDeck);
                         player.moveCard(cardFromDeck, card.location);

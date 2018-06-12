@@ -5,10 +5,7 @@ class IshikenInitiate extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
-            effect: [
-                ability.effects.modifyMilitarySkill(() => this.getNoOfClaimedRings()),
-                ability.effects.modifyPoliticalSkill(() => this.getNoOfClaimedRings())
-            ]
+            effect: ability.effects.modifyBothSkills(() => this.getNoOfClaimedRings())
         });
     }
     

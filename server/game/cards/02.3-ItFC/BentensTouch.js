@@ -9,7 +9,8 @@ class BentensTouch extends DrawCard {
             target: {
                 cardType: 'character',
                 activePromptTitle: 'Choose a character to honor',
-                cardCondition: (card, context) => card.isParticipating() && card.controller === context.player,
+                controller: 'self',
+                cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.honor()
             }
         });

@@ -9,7 +9,8 @@ class ReadyForBattle extends DrawCard {
                                                  context.player.opponent && event.context.source.controller === context.player.opponent) &&
                                                  event.card.allowGameAction('ready', context)
             },
-            gameAction: ability.actions.ready().target(context => context.event.card)
+            cannotBeMirrored: true,
+            gameAction: ability.actions.ready(context => ({ target: context.event.card }))
         });
     }
 }

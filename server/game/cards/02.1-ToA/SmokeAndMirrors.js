@@ -9,7 +9,8 @@ class SmokeAndMirrors extends DrawCard {
                 activePromptTitle: 'Choose characters',
                 numCards: 0,
                 cardType: 'character',
-                cardCondition: (card, context) => card.controller === context.player && card.hasTrait('shinobi'),
+                controller: 'self',
+                cardCondition: card => card.hasTrait('shinobi'),
                 gameAction: ability.actions.sendHome()
             }
         });

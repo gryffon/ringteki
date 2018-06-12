@@ -5,20 +5,13 @@ class ShiroNishiyama extends StrongholdCard {
         this.action({
             title: 'Give defending characters +1/+1',
             cost: ability.costs.bowSelf(),
-            condition: context => context.player.anyCardsInPlay(card => card.isDefending()),
+            condition: () => this.game.isDuringConflict(),
             effect: 'add +1{1}/+1{2} to all defenders they control',
             effectArgs: () => ['military', 'political'],
-            handler: context => context.player.cardsInPlay.each(card => {
-                if(card.isDefending()) {
-                    this.untilEndOfConflict(ability => ({
-                        match: card,
-                        effect: [
-                            ability.effects.modifyMilitarySkill(1),
-                            ability.effects.modifyPoliticalSkill(1)
-                        ]
-                    }));
-                }
-            })
+            gameAction: ability.actions.cardLastingEffect(context => ({
+                target: context.player.cardsInPlay.filter(card => card.isDefending()),
+                effect: ability.effects.modifyBothSkills(1)
+            }))
         });
     }
 }

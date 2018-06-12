@@ -4,17 +4,16 @@ class Banzai extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Increase a character\'s military skill',
-            condition: () => this.game.currentConflict,
+            condition: () => this.game.isDuringConflict(),
             max: ability.limit.perConflict(1),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.isParticipating()
+                cardCondition: card => card.isParticipating(),
+                gameAction: ability.actions.cardLastingEffect(() => ({
+                    effect: ability.effects.modifyMilitarySkill(2)
+                }))
             },
             effect: 'grant 2 military skill to {0}',
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: ability.effects.modifyMilitarySkill(2)
-            }),
             handler: context => this.game.promptWithHandlerMenu(context.player, {
                 activePromptTitle: 'Select one',
                 source: context.source,

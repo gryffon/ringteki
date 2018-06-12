@@ -7,7 +7,7 @@ class WholenessOfTheWorld extends DrawCard {
             when: {
                 onReturnRing: event => event.ring.isConsideredClaimed(this.controller)
             },
-            canCancel: true,
+            cannotBeMirrored: true,
             effect: 'prevent {1} from returning to the unclaimed pool',
             effectArgs: context => context.event.ring,
             handler: context => context.cancel()

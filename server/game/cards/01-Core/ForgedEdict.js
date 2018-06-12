@@ -7,6 +7,7 @@ class ForgedEdict extends DrawCard {
             when: {
                 onCardAbilityInitiated: event => event.card.type === 'event'
             },
+            cannotBeMirrored: true,
             cost: ability.costs.dishonor(card => card.hasTrait('courtier')),
             effect: 'cancel {1}',
             effectArgs: context => context.event.card,

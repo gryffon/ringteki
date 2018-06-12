@@ -7,7 +7,7 @@ class PlayerEffect extends Effect {
         super(game, source, properties, effect);
         this.targetController = properties.targetController || 'current';
         if(typeof this.match !== 'function') {
-            this.match = () => true;
+            this.match = player => true; // eslint-disable-line no-unused-vars
         }
 
     }

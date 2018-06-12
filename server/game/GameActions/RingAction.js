@@ -1,12 +1,11 @@
 const GameAction = require('./GameAction');
 
 class RingAction extends GameAction {
-    constructor(name) {
-        super(name);
+    setup() {
         this.targetType = ['ring'];
     }
 
-    getDefaultTargets(context) {
+    defaultTargets(context) {
         if(context.game.currentConflict) {
             return context.game.currentConflict.ring;
         }

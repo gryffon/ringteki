@@ -1,75 +1,73 @@
 const Event = require('../Events/Event.js');
 
 class GameAction {
-    constructor(name) {
-        this.name = name;
-        this.targets = [];
+    constructor(propertyFactory = () => {}) {
+        this.setDefaultProperties();
+        if(typeof propertyFactory === 'function') {
+            this.propertyFactory = propertyFactory;
+        } else {
+            this.applyProperties(propertyFactory);
+            this.propertyFactory = () => propertyFactory;
+        }
+        this.getDefaultTargets = context => this.defaultTargets(context);
+        this.setup();
+    }
+
+    setDefaultProperties() {
+    }
+
+    setup() {
+        this.name = '';
         this.targetType = [];
-        this.optionsFunc = () => ({});
-        this.targetFunc = this.getDefaultTargets;
-        this.effect = '';
+        this.effectMsg = '';
         this.cost = '';
     }
 
     update(context) {
-        this.setOptions(this.optionsFunc(context));
-        this.setTarget(this.targetFunc(context), context);
+        this.applyProperties(Object.assign({ target: this.getDefaultTargets(context) }, this.propertyFactory(context)));
     }
 
-    options(optionsFunc) {
-        if(typeof optionsFunc === 'function') {
-            this.optionsFunc = optionsFunc;
-        } else {
-            this.setOptions(optionsFunc);
-        }
-        return this;
-    }
-
-    setOptions(properties) {
+    applyProperties(properties) {
         for(let [key, value] of Object.entries(properties)) {
             this[key] = value;
         }
+        if(!Array.isArray(this.target)) {
+            this.target = [this.target];
+        }
+        this.setup();
+
     }
 
-    target(targetFunc) {
-        if(typeof targetFunc === 'function') {
-            this.targetFunc = targetFunc;
-        } else if(!Array.isArray(targetFunc)) {
-            this.targets = [targetFunc];
-            this.targetFunc = () => [targetFunc];
+    setTarget(targetFunc, context) {
+        if(typeof targetFunc !== 'function') {
+            this.getDefaultTargets = () => targetFunc;
         } else {
-            this.targets = targetFunc;
-            this.targetFunc = () => targetFunc;
+            this.getDefaultTargets = targetFunc;
         }
-        return this;
-    }
-
-    setTarget(targets, context) {
-        if(!targets) {
-            return false;
-        }
-        if(!Array.isArray(targets)) {
-            targets = [targets];
-        }
-        this.setOptions(this.optionsFunc(context));
-        this.targets = targets.filter(target => this.canAffect(target, context));
-        return this.targets.length > 0;
+        return this.hasLegalTarget(context);
     }
 
     hasLegalTarget(context) {
-        // If this game action has had a target set which doesn't exist yet (e.g. it depends on an ability cost), it needs to return true
-        if(this.targets.length === 0 && !this.targetFunc(context)) {
-            return true;
-        }
-        this.targets = this.targets.filter(target => this.canAffect(target, context));
-        return this.targets.length > 0;
+        this.update(context);
+        return this.target.some(target => this.canAffect(target, context));
     }
 
-    preEventHandler(context) { // eslint-disable-line no-unused-vars
+    preEventHandler(context) {
+        this.update(context);
+    }
+
+    addToWindow(targets, context) {
+        this.getDefaultTargets = () => targets;
+        this.preEventHandler(context);
+        context.game.queueSimpleStep(() => {
+            for(let event of this.getEventArray(context)) { 
+                context.game.currentEventWindow.addEvent(event);
+            }
+        });
     }
 
     resolve(targets, context) {
-        this.setTarget(targets, context);
+        this.getDefaultTargets = () => targets;
         this.preEventHandler(context);
         let window = context.game.openEventWindow([], false);
         context.game.queueSimpleStep(() => {
@@ -89,7 +87,7 @@ class GameAction {
         return true;
     }
 
-    getDefaultTargets(context) { // eslint-disable-line no-unused-vars
+    defaultTargets(context) { // eslint-disable-line no-unused-vars
         return null;
     }
 
@@ -98,11 +96,11 @@ class GameAction {
     }
 
     getEventArray(context) {
-        return this.targets.filter(target => this.canAffect(target, context)).map(target => this.getEvent(target, context));
+        return this.target.filter(target => this.canAffect(target, context)).map(target => this.getEvent(target, context));
     }
 
-    createEvent(name, optionsFunc, handler) {
-        let event = new Event(name, optionsFunc, handler, this);
+    createEvent(name, params, handler) {
+        let event = new Event(name, params, handler, this);
         return event;
     }
 }

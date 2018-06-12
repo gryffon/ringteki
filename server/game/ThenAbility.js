@@ -13,15 +13,13 @@ class ThenAbility extends BaseAbility {
     }
 
     createContext(player = this.card.controller) {
-        let context = new AbilityContext({
+        return new AbilityContext({
             ability: this,
             game: this.game,
             player: player,
-            source: this.card
+            source: this.card,
+            stage: 'pretarget'
         });
-        context.stage = 'pretarget';
-        this.updateGameActions(context);
-        return context;
     }
 
     displayMessage(context) {
@@ -36,34 +34,21 @@ class ThenAbility extends BaseAbility {
 
     getGameActions(context) {
         // if there are any targets, look for gameActions attached to them
-        let actions = this.targets.reduce((array, target) => array.concat(target.getGameAction(context)), []);
+        let actions = this.targets.reduce((array, target) => array.concat(target.gameAction.filter(action => action.hasLegalTarget(context))), []);
         // look for a gameAction on the ability itself, on an attachment execute that action on its parent, otherwise on the card itself
         return actions.concat(this.gameAction.filter(action => action.hasLegalTarget(context)));
     }
 
     executeHandler(context) {
-        for(const effectType of ['untilEndOfConflict', 'untilEndOfPhase', 'untilEndOfTurn', 'delayedEffect', 'lastingEffect']) {
-            if(this.properties[effectType]) {
-                let properties = this.properties[effectType];
-                if(typeof properties === 'function') {
-                    properties = properties(context);
-                }
-                properties.context = context;
-                context.source[effectType](() => properties);
-            }
-        }
-
         this.handler(context);
         this.game.queueSimpleStep(() => this.game.checkGameState());
     }
 
     executeGameActionPrehandlers(context) {
-        this.updateGameActions(context);
         for(const action of this.getGameActions(context)) {
             action.preEventHandler(context);
         }
         this.game.queueSimpleStep(() => this.executeGameActions(context));
-
     }
 
     executeGameActions(context) {

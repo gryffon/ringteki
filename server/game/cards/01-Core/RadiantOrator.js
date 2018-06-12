@@ -11,8 +11,8 @@ class RadiantOrator extends DrawCard {
                 context.player.opponent.cardsInPlay.reduce((oppTotal, card) => oppTotal + (card.isParticipating() && !card.bowed ? card.getGlory() : 0), 0)
             ),
             target: {
-                cardType: 'character', 
-                cardCondition: (card, context) => card.controller === context.player.opponent,
+                cardType: 'character',
+                controller: 'opponent',
                 gameAction: ability.actions.sendHome()
             }
         });

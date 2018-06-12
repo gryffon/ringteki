@@ -8,13 +8,14 @@ class HighKick extends DrawCard {
             cost: ability.costs.bow(card => card.hasTrait('monk') && card.isParticipating()),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent,
-                gameAction: ability.actions.bow()
+                controller: 'opponent',
+                cardCondition: card => card.isParticipating(),
+                gameAction: [
+                    ability.actions.bow(), 
+                    ability.actions.cardLastingEffect({ effect: ability.effects.cardCannot('triggerAbilities') })
+                ]
             },
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: ability.effects.cardCannot('triggerAbilities')
-            })
+            effect: 'bow {0} and prevent them from using abilities'
         });
     }
 }

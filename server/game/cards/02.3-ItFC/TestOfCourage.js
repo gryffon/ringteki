@@ -7,11 +7,12 @@ class TestOfCourage extends DrawCard {
             condition: context => context.player.opponent && context.player.showBid < context.player.opponent.showBid,
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.controller === context.player && card.isFaction('lion'),
+                controller: 'self',
+                cardCondition: card => card.isFaction('lion'),
                 gameAction: ability.actions.moveToConflict()
             },
             then: {
-                gameAction: ability.actions.honor().target(context => context.target)
+                gameAction: ability.actions.honor(context => ({ target: context.target }))
             }
         });
     }

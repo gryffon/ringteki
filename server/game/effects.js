@@ -75,6 +75,7 @@ const Effects = {
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static('increaseLimitOnAbilities', amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible('modifyBaseMilitarySkill', value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible('modifyBasePoliticalSkill', value),
+    modifyBothSkills: (value) => EffectBuilder.card.flexible('modifyBothSkills', value),
     modifyConflictElementsToResolve: (value) => EffectBuilder.conflict.static('modifyConflictElementsToResolve', value),
     modifyGlory: (value) => EffectBuilder.card.flexible('modifyGlory', value),
     modifyMilitarySkill: (value) => EffectBuilder.card.flexible('modifyMilitarySkill', value),

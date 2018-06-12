@@ -7,8 +7,8 @@ class OrigamiMaster extends DrawCard {
             condition: context => context.source.isHonored,
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.location === 'play area' && card.controller === context.player &&
-                                                  (card.isDishonored || card.allowGameAction('becomeHonored', context))
+                controller: 'self',
+                cardCondition: (card, context) => card.isDishonored || card.allowGameAction('becomeHonored', context)
             },
             effect: 'move an honor token to {0}',
             handler: context => {

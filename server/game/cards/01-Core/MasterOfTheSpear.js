@@ -8,7 +8,7 @@ class MasterOfTheSpear extends DrawCard {
             target: {
                 player: 'opponent',
                 activePromptTitle: 'Choose a character to send home',
-                cardCondition: (card, context) => card.controller !== context.player,
+                controller: 'opponent',
                 gameAction: ability.actions.sendHome()
             }
         });

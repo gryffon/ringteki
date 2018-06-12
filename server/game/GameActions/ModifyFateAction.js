@@ -1,20 +1,26 @@
 const PlayerAction = require('./PlayerAction');
 
 class ModifyFateAction extends PlayerAction {
-    constructor(amount = 1) {
-        let name = amount >= 0 ? 'gainFate' : 'spendFate';
-        super(name);
-        this.amount = amount;
-        this.effect = 'gain ' + amount + ' fate';
-        this.cost = 'paying ' + amount + ' fate';
+    setDefaultProperties() {
+        this.amount = 1;
     }
 
-    getDefaultTargets(context) {
+    setup() {
+        super.setup();
+        this.name = this.amount >= 0 ? 'gainFate' : 'spendFate';
+        this.effectMsg = 'gain ' + this.amount + ' fate';
+        this.cost = 'paying ' + this.amount + ' fate';
+    }
+
+    defaultTargets(context) {
         return context.player;
     }
 
     canAffect(player, context) {
-        return player.fate > -this.amount && super.canAffect(player, context);
+        if(this.amount === 0 || player.fate > -this.amount) {
+            return false;
+        }
+        return super.canAffect(player, context);
     }
 
     getEvent(player) {

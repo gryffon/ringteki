@@ -8,14 +8,14 @@ class AsahinaArtisan extends DrawCard {
             cost: ability.costs.bowSelf(),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card !== context.source && card.isFaction('crane') && card.location === 'play area'
+                cardCondition: (card, context) => card !== context.source && card.isFaction('crane'),
+                gameAction: ability.actions.cardLastingEffect(() => ({
+                    duration: 'untilEndOfConflict',
+                    effect: ability.effects.modifyPoliticalSkill(3)
+                }))
             },
             effect: 'give {0} +3{1} skill',
-            effectArgs: () => 'political',
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: ability.effects.modifyPoliticalSkill(3)
-            })
+            effectArgs: () => 'political'
         });
     }
 }

@@ -8,21 +8,20 @@ class BayushiShoju extends DrawCard {
             condition: context => context.source.isParticipating() && this.game.currentConflict.conflictType === 'political',
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player
+                controller: 'opponent', 
+                cardCondition: card => card.isParticipating(),
+                gameAction: ability.actions.cardLastingEffect(context => ({
+                    effect: [
+                        ability.effects.modifyPoliticalSkill(-1), 
+                        ability.effects.terminalCondition({
+                            condition: () => context.target.getPoliticalSkill() < 1,
+                            message: '{1} is discarded due to {0}\'s lasting effect',
+                            gameAction: ability.actions.discardFromPlay()
+                        })
+                    ]
+                }))
             },
-            effect: 'reduce {0}\'s political skill by 1 - they will die if they reach 0',
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: [
-                    ability.effects.modifyPoliticalSkill(-1),
-                    ability.effects.terminalCondition({
-                        context: context,
-                        condition: () => context.target.getPoliticalSkill() < 1,
-                        message: '{1} is discarded due to {0}\'s lasting effect',
-                        gameAction: ability.actions.discardFromPlay()
-                    })
-                ]
-            })
+            effect: 'reduce {0}\'s political skill by 1 - they will die if they reach 0'
         });
     }
 }

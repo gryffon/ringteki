@@ -2,15 +2,18 @@ const PlayerAction = require('./PlayerAction');
 const MoveFateEvent = require('../Events/MoveFateEvent');
 
 class TransferFateAction extends PlayerAction {
-    constructor(amount = 1) {
-        super('takeFate');
-        this.amount = amount;
-        this.effect = 'take ' + amount + ' fate from {0}';
-        this.cost = 'giving ' + amount + ' fate to their opponent';
+    setDefaultProperties() {
+        this.amount = 1;
+    }
+
+    setup() {
+        this.name = 'takeFate';
+        this.effectMsg = 'take ' + this.amount + ' fate from {0}';
+        this.cost = 'giving ' + this.amount + ' fate to their opponent';
     }
 
     canAffect(player, context) {
-        return player.opponent && player.fate >= this.amount && super.canAffect(player, context);
+        return player.opponent && this.amount > 0 && player.fate >= this.amount && super.canAffect(player, context);
     }
 
     getEvent(player, context) {

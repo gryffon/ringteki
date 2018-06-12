@@ -4,15 +4,15 @@ class FearsomeMystic extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
-            condition: () => this.game.currentConflict && this.game.currentConflict.hasElement('air'),
+            condition: () => this.game.isDuringConflict('air'),
             effect: ability.effects.modifyGlory(2)
         });
         this.action({
             title: 'Remove fate from characters',
             condition: context => context.source.isParticipating(),
-            gameAction: ability.actions.removeFate().target(context => (
-                this.game.currentConflict.getOpponentCards(context.player).filter(card => card.getGlory() < context.source.getGlory())
-            ))
+            gameAction: ability.actions.removeFate(context => ({
+                target: this.game.currentConflict.getCharacters(context.player.opponent).filter(card => card.getGlory() < context.source.getGlory())
+            }))
         });
     }
 }

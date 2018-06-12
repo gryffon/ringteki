@@ -8,6 +8,7 @@ class StandYourGround extends DrawCard {
                 onCardLeavesPlay: (event, context) => event.card.controller === context.player && event.card.isHonored
             },
             effect: 'prevent {0} from leaving play',
+            cannotBeMirrored: true,
             handler: context => {
                 context.event.window.addEvent(ability.actions.discardStatusToken().getEvent(context.event.card, context));
                 context.cancel();

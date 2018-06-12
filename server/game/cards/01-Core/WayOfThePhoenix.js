@@ -2,6 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class WayOfThePhoenix extends DrawCard {
     setupCardAbilities(ability) {
+        // TODO: refactor this
         this.action({
             title: 'Prevent an opponent contesting a ring',
             condition: context => context.player.opponent,
@@ -9,16 +10,13 @@ class WayOfThePhoenix extends DrawCard {
                 mode: 'ring',
                 ringCondition: () => true
             },
-            effect: 'prevent {1} from delcaring a conflict with {0}',
+            effect: 'prevent {1} from declaring a conflict with {0}',
             effectArgs: context => context.player.opponent,
-            handler: context => {
-                for(const element of context.ring.getElements()) {
-                    context.source.untilEndOfPhase(ability => ({
-                        match: this.game.rings[element],
-                        effect: ability.effects.cannotDeclareRing(player => player === context.player.opponent)                    
-                    }));    
-                }
-            },
+            gameAction: ability.actions.ringLastingEffect(context => ({
+                duration: 'untilEndOfPhase',
+                target: context.ring.getElements().map(element => this.game.rings[element]),
+                effect: ability.effects.cannotDeclareRing(player => player === context.player.opponent)
+            })),
             max: ability.limit.perPhase(1)
         });
     }

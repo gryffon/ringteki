@@ -37,6 +37,7 @@ class TestOfSkill extends DrawCard {
             cost: [ability.costs.revealCards(context => context.player.conflictDeck.first(
                 context.player.cardsInPlay.any(card => card.hasTrait('duelist')) ? 3 : 4
             )), testOfSkillCost()],
+            cannotBeMirrored: true,
             effect: 'take cards into their hand',
             handler: context => {
                 let [matchingCards, cardsToDiscard] = _.partition(context.costs.reveal, card => card.type === context.costs.testOfSkillCost && card.location === 'conflict deck');

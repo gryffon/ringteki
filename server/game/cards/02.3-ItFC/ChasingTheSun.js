@@ -10,8 +10,9 @@ class ChasingTheSun extends DrawCard {
             handler: context => this.game.promptForSelect(context.player, {
                 context: context,
                 cardType: 'province',
-                cardCondition: (card, context) => card.controller === context.player.opponent && !card.isConflictProvince() && (card.location !== 'stronghold province' ||
-                                                  _.size(this.game.allCards.filter(card => card.isProvince && card.isBroken && card.controller === context.player.opponent)) > 2),
+                location: 'province',
+                cardCondition: (card, context) => !card.isConflictProvince() && (card.location !== 'stronghold province' ||
+                                                  _.size(this.game.provinceCards.filter(card => card.isBroken && card.controller === context.player.opponent)) > 2),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} moves the conflict to {}', player, card);
                     card.inConflict = true;

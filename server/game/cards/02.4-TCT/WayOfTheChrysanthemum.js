@@ -8,7 +8,8 @@ class WayOfTheChrysanthemum extends DrawCard {
             when: {
                 onTransferHonor: (event, context) => event.player === context.player.opponent && event.afterBid
             },
-            gameAction: ability.actions.gainHonor().options(context => ({ amount: context.event.amount }))
+            cannotBeMirrored: true,
+            gameAction: ability.actions.gainHonor(context => ({ amount: context.event.amount }))
         });
     }
 }

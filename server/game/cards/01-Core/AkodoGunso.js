@@ -8,7 +8,9 @@ class AkodoGunso extends DrawCard {
                 onCharacterEntersPlay: (event, context) => event.card === context.source && 
                                                       ['province 1', 'province 2', 'province 3', 'province 4'].includes(event.originalLocation)
             },
-            gameAction: ability.actions.flipDynasty().target(context => context.player.getDynastyCardInProvince(context.event.originalLocation))
+            gameAction: ability.actions.flipDynasty(context => ({
+                target: context.player.getDynastyCardInProvince(context.event.originalLocation)
+            }))
         });
     }
 }

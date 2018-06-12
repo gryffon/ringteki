@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 
 class FlipDynastyAction extends CardGameAction {
-    constructor() {
-        super('reveal');
+    setup() {
+        this.name = 'reveal';
         this.targetType = ['character', 'holding'];
-        this.effect = 'revealing {0}';
+        this.effectMsg = 'revealing {0}';
     }
 
     canAffect(card, context) {

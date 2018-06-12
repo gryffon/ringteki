@@ -6,14 +6,15 @@ class KaiuInventor extends DrawCard {
             title: 'Add an additional ability use to a holding',
             target: {
                 cardType: 'holding',
-                cardCondition: (card, context) => card.controller === context.player && !card.facedown
+                location: 'province',
+                controller: 'self',
+                cardCondition: card => !card.facedown,
+                gameAction: ability.actions.cardLastingEffect({
+                    targetLocation: 'province',
+                    effect: ability.effects.increaseLimitOnAbilities(1)
+                })
             },
-            effect: 'add an additional use to each of {0}\'s abilities',
-            untilEndOfRound: context => ({
-                match: context.target,
-                targetLocation: 'province',
-                effect: ability.effects.increaseLimitOnAbilities(1)
-            })
+            effect: 'add an additional use to each of {0}\'s abilities'
         });
     }
 }

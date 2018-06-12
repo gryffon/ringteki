@@ -10,13 +10,7 @@ class ShibaTetsu extends DrawCard {
             },
             effect: 'give him +1{1}/+2{2}',
             effectArgs: () => ['military', 'political'],
-            untilEndOfConflict: context => ({
-                match: context.source,
-                effect: [
-                    ability.effects.modifyMilitarySkill(1),
-                    ability.effects.modifyPoliticalSkill(1)
-                ]
-            })
+            gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyBothSkills(1) })
         });
     }
 }

@@ -7,15 +7,13 @@ class WayOfTheLion extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area' && card.isFaction('lion') && 
-                                       !card.hasDash('military') && card.getBaseMilitarySkill() > 0
+                cardCondition: card => card.isFaction('lion') && card.getBaseMilitarySkill() > 0,
+                gameAction: ability.actions.cardLastingEffect(context => ({
+                    effect: ability.effects.modifyBaseMilitarySkill(context.target.getBaseMilitarySkill())
+                }))
             },
             effect: 'double the base {1} skill of {0}',
-            effectArgs: () => 'military',
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: ability.effects.modifyBaseMilitarySkill(context.target.getBaseMilitarySkill())
-            })
+            effectArgs: () => 'military'
         });
     }
 }

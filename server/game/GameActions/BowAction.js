@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 
 class BowAction extends CardGameAction {
-    constructor() {
-        super('bow');
+    setup() {
+        this.name = 'bow';
         this.targetType = ['character', 'attachment', 'stronghold'];
-        this.effect = 'bow {0}';
+        this.effectMsg = 'bow {0}';
         this.cost = 'bowing {0}';
     }
 

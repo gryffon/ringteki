@@ -10,14 +10,14 @@ class YogoHiroue extends DrawCard {
                 gameAction: ability.actions.moveToConflict()
             },
             then: context => ({
-                delayedEffect: {
+                gameAction: ability.actions.delayedEffect({
                     target: context.target,
                     when: {
                         afterConflict: event => event.conflict.winner === context.player && context.target.allowGameAction('dishonor')
                     },
-                    context: context,
                     handler: () => this.game.promptWithHandlerMenu(context.player, {
                         activePromptTitle: 'Dishonor ' + context.target.name + '?',
+                        context: context,
                         choices: ['Yes', 'No'],
                         handlers: [
                             () => {
@@ -25,11 +25,9 @@ class YogoHiroue extends DrawCard {
                                 this.game.applyGameAction(context, { dishonor: context.target });
                             },
                             () => true
-                        ],
-                        context: context
+                        ]
                     })
-
-                }
+                })
             })
         });
     }

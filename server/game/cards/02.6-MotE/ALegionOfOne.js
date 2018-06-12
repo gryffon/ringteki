@@ -7,9 +7,9 @@ class ALegionOfOne extends DrawCard {
             condition: () => this.game.isDuringConflict('military'),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.controller === context.player &&
-                                                  (card.isAttacking() && this.game.currentConflict.attackers.length === 1 ||
-                                                  card.isDefending() && this.game.currentConflict.defenders.length === 1)
+                controller: 'self',
+                cardCondition: card => card.isAttacking() && this.game.currentConflict.attackers.length === 1 ||
+                                       card.isDefending() && this.game.currentConflict.defenders.length === 1
             },
             effect: 'give {0} +3/+0',
             handler: context => {

@@ -7,8 +7,8 @@ class BackhandedCompliment extends DrawCard {
             target: {
                 mode: 'select',
                 choices:  {
-                    'Me': [ability.actions.loseHonor().target(context => context.player), ability.actions.draw()],
-                    'My Opponent': [ability.actions.loseHonor(), ability.actions.draw().target(context => context.player.opponent)]
+                    'Me': [ability.actions.loseHonor(context => ({ target: context.player })), ability.actions.draw()],
+                    'My Opponent': [ability.actions.loseHonor(), ability.actions.draw(context => ({ target: context.player.opponent }))]
                 }
             },
             effect: 'to make {1} lose an honor and draw a card',

@@ -9,13 +9,11 @@ class HirumaAmbusher extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area'
+                gameAction: ability.actions.untilEndOfConflict({
+                    effect: ability.effects.cardCannot('triggerAbilities')
+                })
             },
-            effect: 'prevent {0} from using any abilities',
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: ability.effects.cardCannot('triggerAbilities')
-            })
+            effect: 'prevent {0} from using any abilities'
         });
     }
 }

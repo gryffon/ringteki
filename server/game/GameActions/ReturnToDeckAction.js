@@ -2,11 +2,13 @@ const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
 
 class ReturnToDeckAction extends CardGameAction {
-    constructor(bottom = false) {
-        super('returnToDeck');
+    setDefaultProperties() {
+        this.bottom = false;
+    }
+    setup() {
+        this.name = 'returnToDeck';
         this.targetType = ['character', 'attachment'];
-        this.effect = 'return {0} to the ' + (bottom ? 'bottom' : 'top') + ' of their deck';
-        this.bottom = bottom;
+        this.effectMsg = 'return {0} to the ' + (this.bottom ? 'bottom' : 'top') + ' of their deck';
     }
 
     canAffect(card, context) {

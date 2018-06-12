@@ -8,8 +8,8 @@ class HirumaSkirmisher extends DrawCard {
                 'onCharacterEntersPlay': (event, context) => event.card === context.source
             },
             effect: 'give itself Covert until the end of the phase',
-            untilEndOfPhase: context => ({
-                match: context.source,
+            gameAction: ability.actions.cardLastingEffect({
+                duration: 'untilEndOfPhase',
                 effect: ability.effects.addKeyword('covert')
             })
         });

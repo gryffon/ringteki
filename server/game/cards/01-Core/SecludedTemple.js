@@ -11,7 +11,7 @@ class SecludedTemple extends DrawCard {
             target: {
                 player: 'opponent',
                 activePromptTitle: 'Choose a character to remove a fate from',
-                cardCondition: (card, context) => card.controller === context.player.opponent,
+                controller: 'opponent',
                 gameAction: ability.actions.removeFate()
             }
         });

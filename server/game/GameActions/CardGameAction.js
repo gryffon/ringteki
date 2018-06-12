@@ -1,71 +1,78 @@
-const CardSelector = require('../CardSelector');
 const GameAction = require('./GameAction');
+const CardSelector = require('../CardSelector');
 
 class CardGameAction extends GameAction {
-    constructor(name) {
-        super(name);
+    constructor(propertyFactory) {
+        super(propertyFactory);
+        this.promptForSelect = null;
+        this.promptWithHandlerMenu = null;
+    }
+    
+    setup() {
         this.targetType = ['character', 'attachment', 'holding', 'event', 'stronghold', 'province', 'role'];
     }
 
-    promptForSelect(propsFunc) {
-        this.selectProps = propsFunc;
-        return this;
-    }
-
-    getSelector(context) {
-        if(!this.selectProps) {
-            throw new Error('Selector requested with no prop function');
-        }
-        return CardSelector.for(Object.assign({ gameAction: this }, this.selectProps(context)));
-    }
-
-    promptWithHandlerMenu(propsFunc) {
-        this.handlerProps = propsFunc;
-        return this;
-    }
-
     hasLegalTarget(context) {
-        if(this.handlerProps || this.selectProps) {
-            return true;
+        let result = super.hasLegalTarget(context);
+        if(this.promptForSelect) {
+            return this.getSelector().hasEnoughTargets(context);
+        } else if(this.promptWithHandlerMenu) {
+            return this.promptWithHandlerMenu.cards.some(card => this.canAffect(card, context));
         }
-        return super.hasLegalTarget(context);
+        return result;
+    }
+
+    getSelector() {
+        let condition = this.promptForSelect.cardCondition || (() => true);
+        let cardCondition = (card, context) => this.canAffect(card, context) && condition(card, context);
+        return CardSelector.for(Object.assign({}, this.promptForSelect, { cardCondition: cardCondition }));
     }
 
     preEventHandler(context) {
-        if(this.selectProps) {
-            let properties = this.selectProps(context);
+        super.preEventHandler(context);
+        if(this.promptForSelect) {
+            let selector = this.getSelector();
+            if(!selector.hasEnoughTargets()) {
+                this.target = [];
+                return;
+            }
+            let defaultProperties = {
+                player: context.player,
+                context: context,
+                selector: selector,
+                onSelect: (player, cards) => {
+                    this.target = Array.isArray(cards) ? cards : [cards];
+                    if(this.promptForSelect.message) {
+                        context.game.addMessage(this.promptForSelect.message, player, context.source, cards);
+                    }
+                    return true;
+                }
+            };
+            let properties = Object.assign(defaultProperties, this.promptForSelect);
+            context.game.promptForSelect(properties.player, properties);
+        } else if(this.promptWithHandlerMenu) {
+            let properties = this.promptWithHandlerMenu;
+            properties.cards = properties.cards.filter(card => this.canAffect(card, context));
+            if(properties.cards.length === 0) {
+                this.target = [];
+            }
             if(!properties.player) {
                 properties.player = context.player;
             }
             let defaultProperties = {
                 context: context,
-                gameAction: this,
-                onSelect: (player, cards) => {
-                    this.setTarget(cards, context);
-                    context.game.addMessage(properties.message, player, context.source, cards);
-                    return true;
-                }
-            };
-            // TODO: What if there are no legal targets?
-            context.game.promptForSelect(properties.player, Object.assign(defaultProperties, properties));
-        }
-        if(this.handlerProps) {
-            let properties = this.handlerProps(context);
-            if(!properties.player) {
-                properties.player = context.player;
-            }
-            let defaultProperties = {
-                source: context.source,
                 cardHandler: card => {
-                    this.setTarget(card, context);
-                    context.game.addMessage(properties.message, properties.player, context.source, card);
+                    this.target = [card];
+                    if(properties.message) {
+                        context.game.addMessage(properties.message, properties.player, context.source, card);
+                    }
                 }
             };
             context.game.promptWithHandlerMenu(properties.player, Object.assign(defaultProperties, properties));
         }
     }
 
-    getDefaultTargets(context) {
+    defaultTargets(context) {
         return context.source;
     }
 

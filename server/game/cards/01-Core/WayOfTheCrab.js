@@ -8,11 +8,14 @@ class WayOfTheCrab extends DrawCard {
             cost: ability.costs.sacrifice(card => card.type === 'character' && card.isFaction('crab')),
             effect: 'force {1} to sacrifice a character',
             effectArgs: context => context.player.opponent,
-            gameAction: ability.actions.sacrifice().promptForSelect(context => ({
-                player: context.player.opponent,
-                activePromptTitle: 'Choose a character to sacrifice',
-                cardType: 'character',
-                message: '{0} sacrifices {2}'
+            gameAction: ability.actions.sacrifice(context => ({
+                promptForSelect: {
+                    player: context.player.opponent,
+                    activePromptTitle: 'Choose a character to sacrifice',
+                    cardType: 'character',
+                    controller: 'opponent',
+                    message: '{0} sacrifices {2}'
+                }
             })),
             max: ability.limit.perRound(1)
         });

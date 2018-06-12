@@ -8,13 +8,10 @@ class OniMask extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.isParticipating()
+                cardCondition: card => card.isParticipating(),
+                gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.blank() })
             },
-            effect: 'blank {0} until the end of the conflict',
-            untilEndOfConflict: context => ({
-                match: context.target,
-                effect: ability.effects.blank()
-            })
+            effect: 'blank {0} until the end of the conflict'
         });
     }
 

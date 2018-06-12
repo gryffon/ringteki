@@ -11,12 +11,14 @@ class DuelistTraining extends DrawCard {
                 printedAbility: false,
                 target: {
                     cardType: 'character',
-                    cardCondition: (card, context) => card.isParticipating() && card.controller !== context.player,
-                    gameAction: ability.actions.duel(
-                        'military', 
-                        (context, winner, loser) => this.resolutionHandler(context, winner, loser), 
-                        (context, prompt) => this.costHandler(context, prompt)
-                    ).options(context => ({ challenger: context.source }))
+                    controller: 'opponent',
+                    cardCondition: card => card.isParticipating(),
+                    gameAction: ability.actions.duel(context => ({
+                        type: 'military',
+                        challenger: context.source,
+                        resolutionHandler: (context, winner, loser) => this.resolutionHandler(context, winner, loser), 
+                        costHandler: (context, prompt) => this.costHandler(context, prompt)
+                    }))
                 }
             })
         });
@@ -48,7 +50,7 @@ class DuelistTraining extends DrawCard {
             choices: ['Pay with honor', 'Pay with cards'],
             handlers: [
                 () => prompt.transferHonorAfterBid(context), 
-                () => GameActions.chosenDiscard(difference).resolve(lowBidder, context)
+                () => GameActions.chosenDiscard({ amount: difference }).resolve(lowBidder, context)
             ]
         });
     }

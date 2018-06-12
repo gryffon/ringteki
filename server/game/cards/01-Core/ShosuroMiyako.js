@@ -13,11 +13,13 @@ class ShosuroMiyako extends DrawCard {
                 player: 'opponent',
                 choices: {
                     'Discard at random': ability.actions.discardAtRandom(),
-                    'Dishonor a character': ability.actions.dishonor().promptForSelect(context => ({
-                        activePromptTitle: 'Choose a character to dishonor',
-                        player: context.player.opponent,
-                        cardCondition: card => card.controller === context.player.opponent,
-                        message: '{0} chooses to dishonor {2}'
+                    'Dishonor a character': ability.actions.dishonor(context => ({
+                        promptForSelect: {
+                            activePromptTitle: 'Choose a character to dishonor',
+                            player: context.player.opponent,
+                            controller: 'opponent',
+                            message: '{0} chooses to dishonor {2}'
+                        }
                     }))
                 }
             },

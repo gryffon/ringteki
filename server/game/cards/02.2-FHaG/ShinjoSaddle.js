@@ -6,7 +6,8 @@ class ShinjoSaddle extends DrawCard {
             title: 'Move to another character',
             target: {
                 cardType: 'character',
-                gameAction: ability.actions.attach().options(context => ({ attachment: context.source }))
+                controller: 'self',
+                gameAction: ability.actions.attach(context => ({ attachment: context.source }))
             }
         });
     }

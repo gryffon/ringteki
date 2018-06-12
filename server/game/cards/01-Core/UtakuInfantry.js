@@ -5,10 +5,7 @@ class UtakuInfantry extends DrawCard {
         this.persistentEffect({
             condition: () => this.isParticipating(),
             match: this,
-            effect: [
-                ability.effects.modifyMilitarySkill(() => this.getNoOfUnicornCharacters()),
-                ability.effects.modifyPoliticalSkill(() => this.getNoOfUnicornCharacters())
-            ]
+            effect: ability.effects.modifyBothSkills(() => this.getNoOfUnicornCharacters())
         });
     }
 

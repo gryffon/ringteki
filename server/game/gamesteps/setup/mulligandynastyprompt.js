@@ -5,6 +5,7 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
     constructor(game) {
         super(game);
         this.selectedCards = {};
+        this.selectableCards = {};
         _.each(game.getPlayers(), player => this.selectedCards[player.name] = []);
     }
 
@@ -22,10 +23,10 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
 
     highlightSelectableCards() {
         _.each(this.game.getPlayers(), player => {
-            let selectableCards = this.game.allCards.filter(card => (
-                card.controller === player && this.cardCondition(card)
-            ));
-            player.setSelectableCards(selectableCards);
+            if(!this.selectableCards[player.name]) {
+                this.selectableCards[player.name] = ['province 1', 'province 2', 'province 3', 'province 4'].map(location => player.getDynastyCardInProvince(location));
+            }
+            player.setSelectableCards(this.selectableCards[player.name]);
         });
     }
 

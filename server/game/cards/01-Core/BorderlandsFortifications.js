@@ -5,7 +5,9 @@ class BorderlandsFortifications extends DrawCard {
         this.action({
             title: 'Switch this card with another',
             target: {
-                cardCondition: card => card.isDynasty && ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location)
+                location: 'province',
+                controller: 'self',
+                cardCondition: card => card.isDynasty
             },
             effect: 'swap it with {0}',
             handler: context => {

@@ -220,7 +220,7 @@ class DrawCard extends BaseCard {
         }
 
         // get base mill skill + effect modifiers
-        let skill = this.sumEffects('modifyMilitarySkill') + this.getBaseMilitarySkill();
+        let skill = this.sumEffects('modifyMilitarySkill') + this.sumEffects('modifyBothSkills') + this.getBaseMilitarySkill();
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.military_bonus);
@@ -247,7 +247,7 @@ class DrawCard extends BaseCard {
         }
 
         // get base mill skill + effect modifiers
-        let skill = this.sumEffects('modifyPoliticalSkill') + this.getBasePoliticalSkill();
+        let skill = this.sumEffects('modifyPoliticalSkill') + this.sumEffects('modifyBothSkills') + this.getBasePoliticalSkill();
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.political_bonus);
@@ -385,6 +385,7 @@ class DrawCard extends BaseCard {
             this.game.promptForSelect(this.controller, {
                 activePromptTitle: 'Choose an attachment to discard',
                 waitingPromptTitle: 'Waiting for opponent to choose an attachment to discard',
+                controller: 'self',
                 cardCondition: card => card.parent === this && card.isRestricted(),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);

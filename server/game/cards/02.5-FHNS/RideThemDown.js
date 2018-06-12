@@ -7,10 +7,11 @@ class RideThemDown extends DrawCard {
             cost: ability.costs.discardImperialFavor(),
             condition: () => this.game.isDuringConflict(),
             effect: 'reduce the strength of {0} to 1',
-            untilEndOfConflict: () => ({
+            gameAction: ability.actions.cardLastingEffect(() => ({
                 target: this.game.currentConflict.conflictProvince,
+                targetLocation: 'province',
                 effect: ability.effects.modifyProvinceStrength(this.game.currentConflict.conflictProvince.getBaseStrength() - 1)
-            })
+            }))
         });
     }
 }

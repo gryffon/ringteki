@@ -8,10 +8,7 @@ class StoicGunso extends DrawCard {
             cost: ability.costs.sacrifice(card => card.type === 'character'),
             effect: 'give himself +3{1}/+0{2}',
             effectArgs: () => ['military', 'political'],
-            untilEndOfConflict: context => ({
-                match: context.source,
-                effect: ability.effects.modifyMilitarySkill(3)
-            })
+            gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyMilitarySkill(3) })
         });
     }
 }

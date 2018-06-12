@@ -1,11 +1,14 @@
 const CardGameAction = require('./CardGameAction');
 
 class AttachAction extends CardGameAction {
-    constructor(attachment) {
-        super('attach');
-        this.attachment = attachment;
+    setDefaultProperties() {
+        this.attachment = null;
+    }
+    
+    setup() {
+        this.name = 'attach';
         this.targetType = ['character'];
-        this.effect = 'attach {1} to {0}';
+        this.effectMsg = 'attach {1} to {0}';
         this.effectArgs = () => {
             return this.attachment;
         };

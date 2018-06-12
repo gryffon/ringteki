@@ -145,26 +145,32 @@ const Costs = {
      */
     payReduceableFateCost: function(playingType) {
         return {
-            canPay: function(context, targets = []) {
+            canPay: function(context) {
                 let reducedCost = context.player.getReducedCost(playingType, context.source);
-                if(targets.length === 1) {
-                    reducedCost = context.player.getReducedCost(playingType, context.source, targets[0]);
-                } else if(context.target) {
-                    reducedCost = context.player.getReducedCost(playingType, context.source, context.target);
-                }
                 return context.player.fate >= reducedCost && (reducedCost === 0 || context.source.allowGameAction('spendFate', context));
             },
             pay: function(context) {
-                if(context.target) {
-                    context.costs.fate = context.player.getReducedCost(playingType, context.source, context.target);
-                    context.player.markUsedReducers(playingType, context.source, context.target);
-                } else {
-                    context.costs.fate = context.player.getReducedCost(playingType, context.source);
-                    context.player.markUsedReducers(playingType, context.source);
-                }
+                context.costs.fate = context.player.getReducedCost(playingType, context.source);
+                context.player.markUsedReducers(playingType, context.source);
                 context.player.fate -= context.costs.fate;
             },
             canIgnoreForTargeting: true
+        };
+    },
+    /**
+     * Cost that is dependent on context.targets[targetName]
+     */
+    payTargetDependentFateCost: function(targetName, playingType) {
+        return {
+            canPay: function(context) {
+                let reducedCost = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
+                return context.player.fate >= reducedCost && (reducedCost === 0 || context.source.allowGameAction('spendFate', context));
+            },
+            pay: function(context) {
+                context.costs.targetDependentFate = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
+                context.player.markUsedReducers(playingType, context.source, context.targets[targetName]);
+                context.player.fate -= context.costs.fate;
+            }
         };
     },
     /**

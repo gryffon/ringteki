@@ -7,6 +7,7 @@ class Censure extends DrawCard {
             when: {
                 onCardAbilityInitiated: event => event.card.type === 'event'
             },
+            cannotBeMirrored: true,
             effect: 'cancel {1}',
             effectArgs: context => context.event.card,
             handler: context => context.cancel()

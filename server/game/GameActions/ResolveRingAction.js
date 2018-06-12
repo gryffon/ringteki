@@ -1,10 +1,14 @@
 const RingAction = require('./RingAction');
 
 class ResolveRingAction extends RingAction {
-    constructor(resolveAsAttacker = true) {
-        super('resolveRing');
-        this.resolveAsAttacker = resolveAsAttacker;
-        this.effect = 'resolve {0}' + resolveAsAttacker ? '' : ' for the attacking player';
+    setDefaultProperties() {
+        this.resolveAsAttacker = true;
+    }
+
+    setup() {
+        super.setup();
+        this.name = 'resolveRing';
+        this.effectMsg = 'resolve {0}' + (this.resolveAsAttacker ? '' : ' for the attacking player');
     }
 
     getEvent(ring, context) {

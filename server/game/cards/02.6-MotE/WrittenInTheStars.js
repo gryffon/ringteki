@@ -7,12 +7,12 @@ class WrittenInTheStars extends DrawCard {
             target: {
                 mode: 'select',
                 choices: {
-                    'Place one fate on each unclaimed ring with no fate': ability.actions.placeFateOnRing().target(
-                        () => Object.values(this.game.rings).filter(ring => ring.isUnclaimed() && ring.fate === 0)
-                    ),
-                    'Remove one fate from each unclaimed ring': ability.actions.takeFateFromRing().target(
-                        () => Object.values(this.game.rings).filter(ring => ring.isUnclaimed() && ring.fate > 0)
-                    )
+                    'Place one fate on each unclaimed ring with no fate': ability.actions.placeFateOnRing(() => ({
+                        target: Object.values(this.game.rings).filter(ring => ring.isUnclaimed() && ring.fate === 0)
+                    })),
+                    'Remove one fate from each unclaimed ring': ability.actions.takeFateFromRing(() => ({
+                        target: Object.values(this.game.rings).filter(ring => ring.isUnclaimed() && ring.fate > 0)
+                    }))
                 }
             }
         });

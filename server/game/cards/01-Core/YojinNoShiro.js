@@ -5,17 +5,13 @@ class YojinNoShiro extends StrongholdCard {
         this.action({
             title: 'Give attacking characters +1/+0',
             cost: ability.costs.bowSelf(),
-            condition: context => context.player.anyCardsInPlay(card => card.isAttacking()),
+            condition: () => this.game.isDuringConflict(),
             effect: 'give attacking characters +1{1}/+0{2}',
             effectArgs: () => ['military', 'political'],
-            handler: context => context.player.cardsInPlay.each(card => {
-                if(card.isAttacking()) {
-                    context.source.untilEndOfConflict(ability => ({
-                        match: card,
-                        effect: ability.effects.modifyMilitarySkill(1)
-                    }));
-                }
-            })
+            gameAction: ability.actions.cardLastingEffect(context => ({
+                target: context.player.cardsInPlay.filter(card => card.isAttacking()),
+                effect: ability.effects.modifyMilitarySkill(1)
+            }))
         });
     }
 }

@@ -1,16 +1,19 @@
 const PlayerAction = require('./PlayerAction');
 
 class TransferHonorAction extends PlayerAction {
-    constructor(amount = 1, afterBid = false) {
-        super('takeHonor');
-        this.amount = amount;
-        this.afterBid = afterBid;
-        this.effect = 'take ' + amount + ' honor from {0}';
-        this.cost = 'giving ' + amount + ' honor to their opponent';
+    setDefaultProperties() {
+        this.amount = 1;
+        this.afterBid = false;
+    }
+
+    setup() {
+        this.name = 'takeHonor';
+        this.effectMsg = 'take ' + this.amount + ' honor from {0}';
+        this.cost = 'giving ' + this.amount + ' honor to their opponent';
     }
 
     canAffect(player, context) {
-        return player.opponent && super.canAffect(player, context);
+        return player.opponent && this.amount > 0 && super.canAffect(player, context);
     }
 
     getEvent(player, context) {

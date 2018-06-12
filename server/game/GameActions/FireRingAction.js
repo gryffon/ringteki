@@ -1,11 +1,15 @@
 const CardGameAction = require('./CardGameAction');
 
 class FireRingAction extends CardGameAction {
-    constructor() {
-        super('fireRingEffect');
-        this.targetType = ['character'];
-        this.effect = 'change {0}\'s personal honor';
+    constructor(propertyFactory) {
+        super(propertyFactory);
         this.map = new Map();
+    }
+    
+    setup() {
+        this.name = 'fireRingEffect';
+        this.targetType = ['character'];
+        this.effectMsg = 'change {0}\'s personal honor';
     }
 
     preEventHandler(context) {

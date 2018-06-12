@@ -5,8 +5,9 @@ class Outwit extends DrawCard {
         this.action({
             title: 'Send a character home.',
             target: {
-                cardType: 'character', 
-                cardCondition: (card, context) => card.controller !== context.player && context.player.cardsInPlay.some(myCard => (
+                cardType: 'character',
+                controller: 'opponent',
+                cardCondition: (card, context) => context.player.cardsInPlay.some(myCard => (
                     myCard.hasTrait('courtier') && myCard.politicalSkill > card.politicalSkill
                 )),
                 gameAction: ability.actions.sendHome()

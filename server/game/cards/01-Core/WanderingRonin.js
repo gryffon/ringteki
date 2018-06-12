@@ -8,13 +8,7 @@ class WanderingRonin extends DrawCard {
             cost: ability.costs.discardFateFromSelf(),
             effect: 'give himself +2{1}/+2{2}',
             effectArgs: () => ['military', 'political'],
-            untilEndOfConflict: context => ({
-                metch: context.source,
-                effect: [
-                    ability.effects.modifyMilitarySkill(2),
-                    ability.effects.modifyPoliticalSkill(2)
-                ]
-            }),
+            gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyBothSkills(2) }),
             limit: ability.limit.perConflict(2)
         });
     }

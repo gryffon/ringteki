@@ -12,11 +12,12 @@ class MasterOfGiseiToshi extends DrawCard {
                 ringCondition: () => true
             },
             effect: 'prevent non-spell events from being played while {0} is contested',
-            untilEndOfPhase: context => ({
+            gameAction: ability.actions.playerLastingEffect(context => ({
+                duration: 'untilEndOfPhase',
                 targetController: 'any',
                 condition: () => this.game.currentConflict && this.game.currentConflict.ring === context.ring,
                 effect: ability.effects.playerCannot('play', context => context.source.type === 'event' && !context.source.hasTrait('spell'))
-            })
+            }))
         });
     }
 }

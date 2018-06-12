@@ -42,6 +42,7 @@ class FatePhase extends Phase {
             waitingPromptTitle: 'Waiting for opponent to discard characters with no fate',
             cardCondition: card => cardsToDiscard.includes(card),
             cardType: 'character',
+            controller: 'self',
             buttons: [{ text: 'Done', arg: 'cancel' }],
             onSelect: (player, card) => {
                 this.game.applyGameAction(null, { discardFromPlay: card });

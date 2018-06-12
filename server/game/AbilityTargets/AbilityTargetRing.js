@@ -4,25 +4,38 @@ class AbilityTargetCard {
     constructor(name, properties) {
         this.name = name;
         this.properties = properties;
-    }
-
-    canResolve(context) {
-        return _.any(context.game.rings, ring => this.properties.ringCondition(ring)) && context.ability.canPayCosts(context);
-    }
-
-    updateGameActions(context) {
-        for(let action of this.properties.gameAction) {
-            action.target(context => context.targets[this.name]);
-            action.update(context);
+        this.properties.ringCondition = (ring, context) => {
+            let contextCopy = context.copy();
+            contextCopy.rings[this.name] = ring;
+            if(this.name === 'target') {
+                contextCopy.ring = ring;
+            }
+            return (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(context))) && 
+                   properties.ringCondition(ring, context) && context.ability.canPayCosts(context);
+        };
+        for(let gameAction of this.properties.gameAction) {
+            gameAction.getDefaultTargets = context => context.rings[name];
         }
     }
 
-    getGameAction(context) {
-        return this.properties.gameAction.filter(gameAction => gameAction.setTarget(context.targets[this.name], context));
+    canResolve(context) {
+        return _.any(context.game.rings, ring => this.properties.ringCondition(ring, context));
     }
 
+    getGameAction(context) {
+        return this.properties.gameAction.filter(gameAction => gameAction.hasLegalTarget(context));
+    }
+
+    getContextsForDependentTargets(context) {
+        return this.getAllLegalTargets(context).map(target => {
+            let contextCopy = context.copy();
+            contextCopy.rings[this.name] = target;
+            return contextCopy;
+        });
+    }    
+
     getAllLegalTargets(context) {
-        return _.filter(context.game.rings, ring => this.properties.ringCondition(ring));
+        return _.filter(context.game.rings, ring => this.properties.ringCondition(ring, context));
     }
 
     resolve(context, noCostsFirstButton = false) {

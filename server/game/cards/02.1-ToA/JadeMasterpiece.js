@@ -17,7 +17,7 @@ class JadeMasterpiece extends DrawCard {
                 ringCondition: ring => ring.isUnclaimed() && ring !== context.ring,
                 onSelect: (player, ring) => {
                     this.game.addMessage('{0} moves 1 fate from {2} to {3}', player, context.ring, ring);
-                    this.game.openEventWindow(ability.actions.placeFateOnRing(context.target).getEvent(ring, context));
+                    this.game.openEventWindow(ability.actions.placeFateOnRing({ origin: context.target }).getEvent(ring, context));
                     return true;
                 }
             })

@@ -231,8 +231,11 @@ class Conflict extends GameObject {
         return this.winner === this.attackingPlayer;
     }
 
-    getOpponentCards(player) {
-        return this.attackingPlayer === player ? this.defenders : this.attackers;
+    getCharacters(player) {
+        if(!player) {
+            return [];
+        }
+        return this.attackingPlayer === player ? this.attackers : this.defenders;
     }
 
     passConflict(message = '{0} has chosen to pass their conflict opportunity') {

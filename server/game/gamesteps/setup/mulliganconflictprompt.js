@@ -13,6 +13,15 @@ class MulliganConflictPrompt extends MulliganDynastyPrompt {
         });
     }
 
+    highlightSelectableCards() {
+        _.each(this.game.getPlayers(), player => {
+            if(!this.selectableCards[player.name]) {
+                this.selectableCards[player.name] = player.hand.toArray();
+            }
+            player.setSelectableCards(this.selectableCards[player.name]);
+        });
+    }
+
     cardCondition(card) {
         return card.location === 'hand';
     }

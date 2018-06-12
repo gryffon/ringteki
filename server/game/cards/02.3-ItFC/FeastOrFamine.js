@@ -11,7 +11,7 @@ class FeastOrFamine extends ProvinceCard {
             },
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.controller === context.player.opponent,
+                controller: 'opponent',
                 gameAction: ability.actions.removeFate()
             },
             effect: 'move all fate from {0} to a character they control',
@@ -19,10 +19,14 @@ class FeastOrFamine extends ProvinceCard {
                 activePromptTitle: 'Choose a character',
                 context: context,
                 cardType: 'character',
-                cardCondition: card => card.controller === context.player && card.allowGameAction('placeFate', context) && card.fate === 0,
+                controller: 'self',
+                cardCondition: card => card.allowGameAction('placeFate', context) && card.fate === 0,
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} moves {1} fate from {2} to {3}', player, context.target.fate, context.target, card);
-                    ability.actions.removeFate(context.target.fate, card).resolve(context.target, context);
+                    ability.actions.removeFate({
+                        amount: context.target.fate, 
+                        recipient: card
+                    }).resolve(context.target, context);
                     return true;
                 }
             })

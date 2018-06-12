@@ -7,22 +7,24 @@ class PolicyDebate extends DrawCard {
             targets: {
                 challenger: {
                     cardType: 'character',
-                    cardCondition: (card, context) => card.isParticipating() && card.controller === context.player && !card.hasDash('political')
+                    controller: 'self',
+                    cardCondition: card => card.isParticipating() && !card.hasDash('political')
                 },
                 duelTarget: {
                     cardType: 'character',
-                    cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent,
-                    gameAction: ability.actions.duel().options(context => ({
+                    controller: 'opponent',
+                    cardCondition: card => card.isParticipating(),
+                    gameAction: ability.actions.duel(context => ({
                         type: 'political',
                         challenger: context.targets.challenger,
-                        resolutionHandler: this.duelOutcome 
+                        resolutionHandler: (context, winner, loser) => this.duelOutcome(context, winner, loser) 
                     }))
                 }
             }
         });
     }
 
-    duelOutcome(winner, loser) {
+    duelOutcome(context, winner, loser) {
         if(loser) {
             this.game.addMessage('{0} wins the duel - {1} reveals their hand: {2}', winner, loser.controller, loser.controller.hand.sortBy(card => card.name));
             if(loser.controller.hand.size() === 0) {
@@ -30,9 +32,9 @@ class PolicyDebate extends DrawCard {
             }
             this.game.promptWithHandlerMenu(winner.controller, {
                 activePromptTitle: 'Choose card to discard',
+                context: context,
                 cards: loser.controller.hand.sortBy(card => card.name),
-                cardHandler: card => loser.controller.discardCardFromHand(card),
-                source: this
+                cardHandler: card => loser.controller.discardCardFromHand(card)
             });
         }
     }

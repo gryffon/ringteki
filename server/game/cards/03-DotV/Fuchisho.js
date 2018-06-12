@@ -9,9 +9,10 @@ class Fushicho extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                gameAction: ability.actions.putIntoPlay(1), 
-                cardCondition: (card, context) => card.location === 'dynasty discard pile' &&
-                                                  card.controller === context.player && card.isFaction('phoenix')
+                location: 'dynasty discard pile',
+                controller: 'self',
+                cardCondition: card => card.isFaction('phoenix'),
+                gameAction: ability.actions.putIntoPlay({ fate: 1 })
             }
         });
     }

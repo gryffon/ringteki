@@ -4,10 +4,7 @@ class SeppunIshikawa extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
-            effect: [
-                ability.effects.modifyMilitarySkill(() => this.getImperialCardsInPlay()),
-                ability.effects.modifyPoliticalSkill(() => this.getImperialCardsInPlay())
-            ]
+            effect: ability.effects.modifyBothSkills(() => this.getImperialCardsInPlay())
         });
     }
 

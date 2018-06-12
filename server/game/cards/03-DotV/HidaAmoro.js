@@ -10,11 +10,13 @@ class HidaAmoro extends DrawCard {
             limit: ability.limit.perPhase(Infinity),
             effect: 'force {1} to sacrifice a character',
             effectArgs: context => context.event.conflict.attackingPlayer,
-            gameAction: ability.actions.sacrifice().promptForSelect(context => ({
-                player: context.event.conflict.attackingPlayer,
-                activePromptTitle: 'Choose a character to sacrifice',
-                cardType: 'character',
-                message: '{0} sacrifices {2}'
+            gameAction: ability.actions.sacrifice(context => ({
+                promptForSelect: {
+                    player: context.event.conflict.attackingPlayer,
+                    activePromptTitle: 'Choose a character to sacrifice',
+                    cardType: 'character',
+                    message: '{0} sacrifices {2}'
+                }
             }))
         });
     }

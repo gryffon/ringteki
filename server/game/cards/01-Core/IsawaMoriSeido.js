@@ -7,13 +7,12 @@ class IsawaMoriSeido extends StrongholdCard {
             cost: ability.costs.bowSelf(),
             target: {
                 cardType: 'character',
-                cardCondition: card => card.location === 'play area'
+                gameAction: ability.actions.cardLastingEffect({
+                    duration: 'untilEndOfPhase',
+                    effect: ability.effects.modifyGlory(2)
+                })
             },
-            effect: 'give +2 glory to {0} until the end of the phase',
-            untilEndOfPhase: context => ({
-                match: context.target,
-                effect: ability.effects.modifyGlory(2)
-            })
+            effect: 'give +2 glory to {0} until the end of the phase'
         });
     }
 }

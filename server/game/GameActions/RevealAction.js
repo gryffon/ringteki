@@ -1,9 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 
 class RevealAction extends CardGameAction {
-    constructor() {
-        super('reveal');
-        this.effect = 'reveal {0}';
+    setup() {
+        super.setup();
+        this.name = 'reveal';
+        this.effectMsg = 'reveal {0}';
         this.cost = 'revealing {0}';
     }
 

@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 
 class MoveToConflictAction extends CardGameAction {
-    constructor() {
-        super('moveToConflict');
+    setup() {
+        this.name = 'moveToConflict';
         this.targetType = ['character'];
-        this.effect = 'move {0} into the conflict';
+        this.effectMsg = 'move {0} into the conflict';
     }
 
     canAffect(card, context) {

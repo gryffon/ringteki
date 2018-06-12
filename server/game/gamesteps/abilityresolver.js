@@ -142,14 +142,24 @@ class AbilityResolver extends BaseStepWithPipeline {
             // If this is an event, move it to 'being played', and queue a step to send it to the discard pile after it resolves
             if(this.context.source.type === 'event') {
                 this.context.player.moveCard(this.context.source, 'being played');
-                this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeHandler());
+                this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeCardAbilityHandler());
                 this.game.queueSimpleStep(() => this.context.player.moveCard(this.context.source, 'conflict discard pile'));
             } else {
-                this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeHandler());
+                this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeCardAbilityHandler());
             }
         } else {
             this.executeHandler();
         }
+    }
+
+    executeCardAbilityHandler() {
+        this.game.queueSimpleStep(() => {
+            this.context.stage = 'effect';
+            this.context.ability.executeHandler(this.context);
+        });
+        // create an event window for the handler to add events to
+        this.game.raiseEvent('onAbilityResolved', { card: this.context.source, context: this.context });
+
     }
 
     executeHandler() {
