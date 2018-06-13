@@ -8,8 +8,8 @@ class KaiuInventor extends DrawCard {
                 cardType: 'holding',
                 location: 'province',
                 controller: 'self',
-                cardCondition: card => !card.facedown,
                 gameAction: ability.actions.cardLastingEffect({
+                    duration: 'untilEndOfPhase',
                     targetLocation: 'province',
                     effect: ability.effects.increaseLimitOnAbilities(1)
                 })

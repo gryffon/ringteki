@@ -8,14 +8,16 @@ class IdeTadaji extends DrawCard {
             targets: {
                 myChar: {
                     cardType: 'character',
-                    cardCondition: (card, context) => !card.bowed && card.controller === context.player && card.getCost() <= 2,
+                    controller: 'self',
+                    cardCondition: (card, context) => !card.bowed && card.getCost() <= 2,
                     gameAction: ability.actions.moveToConflict()
                 },
                 oppChar: {
                     cardType: 'character',
-                    cardCondition: (card, context) => !card.bowed && card.controller === context.player.opponent && card.getCost() <= 2,
+                    controller: 'opponent',
+                    cardCondition: (card, context) => !card.bowed && card.getCost() <= 2,
                     gameAction: ability.actions.moveToConflict()                    
-                }                
+                }
             }
         });
     }
