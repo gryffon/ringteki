@@ -32,6 +32,10 @@ class Ring extends EffectSource {
         return this.game.getPlayers().some(player => check(player));
     }
 
+    isConflictType(type) {
+        return !this.isUnclaimed() && type === this.conflictType;
+    }
+
     canDeclare(player) {
         return !this.getEffects('cannotDeclare').some(match => match(player)) && !this.claimed;
     }

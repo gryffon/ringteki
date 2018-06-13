@@ -56,16 +56,6 @@ class GameAction {
         this.update(context);
     }
 
-    addToWindow(targets, context) {
-        this.getDefaultTargets = () => targets;
-        this.preEventHandler(context);
-        context.game.queueSimpleStep(() => {
-            for(let event of this.getEventArray(context)) { 
-                context.game.currentEventWindow.addEvent(event);
-            }
-        });
-    }
-
     resolve(targets, context) {
         this.getDefaultTargets = () => targets;
         this.preEventHandler(context);

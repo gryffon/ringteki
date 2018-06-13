@@ -41,7 +41,7 @@ class CardGameAction extends GameAction {
                 context: context,
                 selector: selector,
                 onSelect: (player, cards) => {
-                    this.target = Array.isArray(cards) ? cards : [cards];
+                    this.setTarget(cards, context);
                     if(this.promptForSelect.message) {
                         context.game.addMessage(this.promptForSelect.message, player, context.source, cards);
                     }
@@ -55,6 +55,7 @@ class CardGameAction extends GameAction {
             properties.cards = properties.cards.filter(card => this.canAffect(card, context));
             if(properties.cards.length === 0) {
                 this.target = [];
+                return;
             }
             if(!properties.player) {
                 properties.player = context.player;
@@ -62,7 +63,7 @@ class CardGameAction extends GameAction {
             let defaultProperties = {
                 context: context,
                 cardHandler: card => {
-                    this.target = [card];
+                    this.setTarget(card, context);
                     if(properties.message) {
                         context.game.addMessage(properties.message, properties.player, context.source, card);
                     }
