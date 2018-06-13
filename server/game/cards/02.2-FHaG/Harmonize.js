@@ -4,6 +4,7 @@ class Harmonize extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Send a character home from each side',
+            cannotBeMirrored: true,
             targets: {
                 myCharacter: {
                     cardCondition: (card, context) => card.isDefending() && card.controller === context.player,

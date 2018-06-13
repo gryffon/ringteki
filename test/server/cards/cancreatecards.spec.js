@@ -175,7 +175,7 @@ describe('All Cards:', function() {
                     return false;
                 })).toBe(true);
             });
-
+            /*
             it('should have a legal gameAction where one is attached directly to the ability', function() {
                 expect(this.calls.every(args => !args.gameAction || checkGameAction(args.gameAction))).toBe(true);
             });
@@ -213,7 +213,7 @@ describe('All Cards:', function() {
                     return true;
                 }))).toBe(true);
             });
-
+            */
             it('should have an string effect or a gameAction (either on the ability or one of its targets', function() {
                 expect(_.all(this.calls, args => {
                     if(!_.isUndefined(args.effect)) {
@@ -314,7 +314,7 @@ describe('All Cards:', function() {
                     return false;
                 })).toBe(true);
             });
-
+            /*
             it('should have a legal gameAction where one is attached directly to the ability', function() {
                 expect(this.calls.every(args => !args.gameAction || checkGameAction(args.gameAction))).toBe(true);
             });
@@ -352,7 +352,7 @@ describe('All Cards:', function() {
                     return true;
                 }))).toBe(true);
             });
-
+            */
             it('should have an string effect or a gameAction (either on the ability or one of its targets', function() {
                 expect(_.all(this.calls, args => {
                     if(!_.isUndefined(args.effect)) {

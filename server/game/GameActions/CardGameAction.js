@@ -32,7 +32,7 @@ class CardGameAction extends GameAction {
         super.preEventHandler(context);
         if(this.promptForSelect) {
             let selector = this.getSelector();
-            if(!selector.hasEnoughTargets()) {
+            if(!selector.hasEnoughTargets(context)) {
                 this.target = [];
                 return;
             }

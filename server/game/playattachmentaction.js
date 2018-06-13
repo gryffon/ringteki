@@ -37,7 +37,7 @@ class PlayAttachmentAction extends BaseAction {
             card: context.source, 
             originalLocation: context.source.location 
         });
-        context.game.openEventWindow([new AttachAction(context.source).getEvent(context.target, context), cardPlayedEvent]);
+        context.game.openEventWindow([new AttachAction({ attachment: context.source }).getEvent(context.target, context), cardPlayedEvent]);
     }
     
     isCardPlayed() {

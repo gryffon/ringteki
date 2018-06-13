@@ -10,7 +10,8 @@ class IllustriousPlagiarist extends DrawCard {
                 controller: 'opponent',
                 cardCondition: (card, context) => card === context.player.opponent.conflictDiscardPile.find(card => card.type === 'event') && 
                                                   card.abilities.actions.length > 0,
-                gameAction: ability.actions.cardLastingEffect(context => ({ 
+                gameAction: ability.actions.cardLastingEffect(context => ({
+                    target: context.source, 
                     effect: context.target.abilities.actions.map(action => {
                         // We need to keep the old abilityIdentifier
                         let newProps = { printedAbility: false, abilityIdentifier: action.abilityIdentifier };

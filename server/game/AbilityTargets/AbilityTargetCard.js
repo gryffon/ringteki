@@ -19,8 +19,11 @@ class AbilityTargetCard {
             if(this.name === 'target') {
                 contextCopy.target = card;
             }
-            return (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(context))) && 
-                   properties.cardCondition(card, context) && context.ability.canPayCosts(context);
+            if(context.stage === 'pretarget' && !context.ability.canPayCosts(contextCopy)) {
+                return false;
+            }
+            return (!properties.cardCondition || properties.cardCondition(card, contextCopy)) &&
+                   (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(contextCopy)));
         };
         return CardSelector.for(Object.assign({}, properties, { cardCondition: cardCondition}));
     }

@@ -14,7 +14,7 @@ class FireRingAction extends CardGameAction {
 
     preEventHandler(context) {
         super.preEventHandler(context);
-        for(const target of this.targets) {
+        for(const target of this.target) {
             if(!target.allowGameAction('honor', context)) {
                 this.map.set(target, 'dishonor');
             } else if(!target.allowGameAction('dishonor', context)) {
@@ -46,7 +46,7 @@ class FireRingAction extends CardGameAction {
     }
 
     getEventArray(context) {
-        return this.targets.filter(target => this.map.get(target) && this.canAffect(target, context)).map(target => this.getEvent(target, context));
+        return this.target.filter(target => this.map.get(target) && this.canAffect(target, context)).map(target => this.getEvent(target, context));
     }
 
     getEvent(card, context) {

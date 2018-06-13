@@ -7,6 +7,7 @@ class TransferFateAction extends PlayerAction {
     }
 
     setup() {
+        super.setup();
         this.name = 'takeFate';
         this.effectMsg = 'take ' + this.amount + ' fate from {0}';
         this.cost = 'giving ' + this.amount + ' fate to their opponent';

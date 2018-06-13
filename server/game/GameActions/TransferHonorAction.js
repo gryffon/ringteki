@@ -7,6 +7,7 @@ class TransferHonorAction extends PlayerAction {
     }
 
     setup() {
+        super.setup();
         this.name = 'takeHonor';
         this.effectMsg = 'take ' + this.amount + ' honor from {0}';
         this.cost = 'giving ' + this.amount + ' honor to their opponent';

@@ -9,7 +9,7 @@ class ClarityOfPurpose extends DrawCard {
                 cardType: 'character',
                 controller: 'self',
                 gameAction: [
-                    ability.actions.cardLastingeEffect({
+                    ability.actions.cardLastingEffect({
                         condition: () => this.game.isDuringConflict('political'),
                         effect: ability.effects.doesNotBow()
                     }),

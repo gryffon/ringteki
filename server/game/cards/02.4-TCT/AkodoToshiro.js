@@ -9,7 +9,7 @@ class AkodoToshiro extends DrawCard {
             gameAction: [
                 ability.actions.cardLastingEffect({ effect: ability.effects.modifyMilitarySkill(5) }),
                 ability.actions.cardLastingEffect(() => ({
-                    target: this.game.allCards.filter(card => card.isProvince),
+                    target: this.game.provinceCards,
                     targetLocation: 'province',
                     effect: ability.effects.cardCannot('break')
                 })),

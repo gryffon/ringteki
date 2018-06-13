@@ -13,8 +13,11 @@ class AbilityTargetAbility {
             return abilities.some(ability => {
                 let contextCopy = context.copy();
                 contextCopy.targetAbility = ability;
-                return properties.gameAction.some(gameAction => gameAction.hasLegalTarget(context)) && 
-                       properties.cardCondition(card, context) && context.ability.canPayCosts(context);    
+                if(context.stage === 'pretarget' && !context.ability.canPayCosts(contextCopy)) {
+                    return false;
+                }
+                return properties.cardCondition(card, contextCopy) &&
+                       properties.gameAction.some(gameAction => gameAction.hasLegalTarget(contextCopy));
             });
         };
         return CardSelector.for(Object.assign({}, properties, { cardCondition: cardCondition}));
@@ -51,6 +54,7 @@ class AbilityTargetAbility {
         let promptProperties = {
             waitingPromptTitle: waitingPromptTitle,
             buttons: buttons,
+            context: context,
             onSelect: (player, card) => {
                 result.resolved = true;
                 let ability = card.abilities.actions.find(action => action.printedAbility) || card.abilities.reactions.find(reaction => reaction.printedAbility);

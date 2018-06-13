@@ -8,7 +8,7 @@ class KitsuSpiritcaller extends DrawCard {
             cost: ability.costs.bowSelf(),
             target: {
                 activePrompt: 'Choose a character from a discard pile',
-                loctation: ['dynasty discard pile', 'conflict discard pile'],
+                location: ['dynasty discard pile', 'conflict discard pile'],
                 controller: 'self',
                 gameAction: ability.actions.putIntoConflict()
             },
@@ -20,7 +20,7 @@ class KitsuSpiritcaller extends DrawCard {
                         onConflictFinished: () => true
                     },
                     message: '{1} returns to the bottom of the deck due to {0}\'s effect',
-                    gameAction: ability.actions.returnToDeck(true)
+                    gameAction: ability.actions.returnToDeck({ bottom: true })
                 })
             })
         });

@@ -5,21 +5,27 @@ class AbilityTargetSelect {
     constructor(name, properties) {
         this.name = name;
         this.properties = properties;
+        for(const key of Object.keys(properties.choices)) {
+            if(typeof properties.choices[key] !== 'function' && !Array.isArray(properties.choices[key])) {
+                properties.choices[key] = [properties.choices[key]];
+            }
+        }
     }
 
     canResolve(context) {
-        let choices = Object.values(this.properties.choices);
-        return choices.some(choice => this.isChoiceLegal(choice, context));
+        let keys = Object.keys(this.properties.choices);
+        return keys.some(key => this.isChoiceLegal(key, context));
     }
 
-    isChoiceLegal(choice, context) {
+    isChoiceLegal(key, context) {
+        let choice = this.properties.choices[key];
         if(typeof choice === 'function') {
             return choice(context);
         }
         let contextCopy = context.copy();
-        contextCopy.selects[this.name] = new SelectChoice(choice);
+        contextCopy.selects[this.name] = new SelectChoice(key);
         if(this.name === 'target') {
-            contextCopy.select = choice;
+            contextCopy.select = key;
         }
         return choice.some(gameAction => gameAction.hasLegalTarget(contextCopy) && context.ability.canPayCosts(contextCopy));
     }
@@ -33,15 +39,15 @@ class AbilityTargetSelect {
     }
 
     getContextsForDependentTargets(context) {
-        return this.getAllLegalTargets(context).map(choice => {
+        return this.getAllLegalTargets(context).map(key => {
             let contextCopy = context.copy();
-            contextCopy.selects[this.name] = new SelectChoice(choice);
+            contextCopy.selects[this.name] = key;
             return contextCopy;
         });
     }    
 
     getAllLegalTargets(context) {
-        return Object.keys(this.properties.choices).filter(key => this.isChoiceLegal(this.properties.choices[key], context));
+        return Object.keys(this.properties.choices).filter(key => this.isChoiceLegal(key, context));
     }
 
     resolve(context, noCostsFirstButton = false) {
@@ -56,7 +62,7 @@ class AbilityTargetSelect {
         }
         let promptTitle = this.properties.activePromptTitle || 'Select one';
         let choices = Object.keys(this.properties.choices).filter(key => (
-            this.isChoiceLegal(this.properties.choices[key], context)
+            this.isChoiceLegal(key, context)
         ));
         let handlers = _.map(choices, choice => {
             return (() => {
@@ -97,7 +103,7 @@ class AbilityTargetSelect {
     }
     
     checkTarget(context) {
-        return this.isChoiceLegal(this.properties.choices[context.selects[this.name].choice], context);
+        return this.isChoiceLegal(context.selects[this.name].choice, context);
     }
 }
 

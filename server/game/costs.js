@@ -130,7 +130,7 @@ const Costs = {
         return {
             canPay: function(context) {
                 let amount = context.source.getCost();
-                return context.player.fate >= amount && (amount === 0 || context.source.allowGameAction('spendFate', context));
+                return context.player.fate >= amount && (amount === 0 || context.player.checkRestrictions('spendFate', context));
             },
             pay: function(context) {
                 context.player.fate -= context.source.getCost();
@@ -147,7 +147,7 @@ const Costs = {
         return {
             canPay: function(context) {
                 let reducedCost = context.player.getReducedCost(playingType, context.source);
-                return context.player.fate >= reducedCost && (reducedCost === 0 || context.source.allowGameAction('spendFate', context));
+                return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
             },
             pay: function(context) {
                 context.costs.fate = context.player.getReducedCost(playingType, context.source);
@@ -164,12 +164,12 @@ const Costs = {
         return {
             canPay: function(context) {
                 let reducedCost = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
-                return context.player.fate >= reducedCost && (reducedCost === 0 || context.source.allowGameAction('spendFate', context));
+                return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
             },
             pay: function(context) {
                 context.costs.targetDependentFate = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
                 context.player.markUsedReducers(playingType, context.source, context.targets[targetName]);
-                context.player.fate -= context.costs.fate;
+                context.player.fate -= context.costs.targetDependentFate;
             }
         };
     },
@@ -184,8 +184,8 @@ const Costs = {
     /**
      * Cost where a character must spend fate to an unclaimed ring
      */
-    payFateToRing: (ringCondition, amount) => CostBuilders.payFateToRing(ringCondition, amount),
-    giveFateToOpponent: (amount) => CostBuilders.giveFateToOpponent(amount),
+    payFateToRing: (amount = 1, ringCondition = ring => ring.isUnclaimed()) => CostBuilders.payFateToRing(amount, ringCondition),
+    giveFateToOpponent: (amount = 1) => CostBuilders.giveFateToOpponent(amount),
     chooseFate: function () {
         return {
             canPay: function() {
@@ -193,7 +193,7 @@ const Costs = {
             },
             resolve: function(context, result = { resolved: false }) {
                 let extrafate = context.player.fate - context.player.getReducedCost('play', context.source);
-                if(!context.player.allowGameAction('placeFateWhenPlayingCharacter', context) || !context.player.allowGameAction('spendFate', context)) {
+                if(!context.player.checkRestrictions('placeFateWhenPlayingCharacter', context) || !context.player.checkRestrictions('spendFate', context)) {
                     extrafate = 0;
                 }
                 let choices = [];

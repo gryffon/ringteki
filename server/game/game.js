@@ -237,8 +237,15 @@ class Game extends EventEmitter {
         return foundCards;
     }
 
-    isDuringConflict(type) {
-        return this.currentConflict && (!type || this.currentConflict.conflictType === type); 
+    isDuringConflict(types) {
+        if(!this.currentConflict) {
+            return false;
+        } else if(!types) {
+            return true;
+        } else if(!Array.isArray(types)) {
+            types = [types];
+        }
+        return types.every(type => this.currentConflict.elements.concat(this.currentConflict.conflictType).includes(type)); 
     }
 
     conflictCompleted(conflict) {
@@ -831,7 +838,7 @@ class Game extends EventEmitter {
         return window;
     }
 
-    openThenEventWindow(events, queueWindow = true) {
+    openThenEventWindow(events) {
         if(this.currentEventWindow) {
             let window = new ThenEventWindow(this, events);
             this.queueStep(window);

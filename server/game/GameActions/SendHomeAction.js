@@ -13,15 +13,6 @@ class SendHomeAction extends CardGameAction {
         }
         return card.isParticipating();
     }
-    /*
-    getEventArray(context) {
-        if(this.targets.length === 0) {
-            return [];
-        }
-        let events = this.targets.map(card => this.getEvent(card, context));
-        return events.concat(this.createEvent('onSendCharactersHome', { sendHomeEvents: events }));
-    }
-    */
 
     getEvent(card, context) {
         return super.createEvent('onSendHome', { card: card, context: context }, () => context.game.currentConflict.removeFromConflict(card));

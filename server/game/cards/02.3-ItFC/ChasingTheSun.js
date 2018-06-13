@@ -6,6 +6,7 @@ class ChasingTheSun extends DrawCard {
         this.action({
             title: 'Move the conflict to another eligible province',
             condition: context => context.player.isAttackingPlayer(),
+            cannotBeMirrored: true,
             effect: 'move the conflict to a different province',
             handler: context => this.game.promptForSelect(context.player, {
                 context: context,

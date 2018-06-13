@@ -112,7 +112,7 @@ class CardAbility extends ThenAbility {
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
                 effectMessage = gameActions[0].effectMsg;
-                effectArgs.push(gameActions[0].targets);
+                effectArgs.push(gameActions[0].target);
                 extraArgs = gameActions[0].effectArgs;
             }
         } else {
@@ -134,13 +134,6 @@ class CardAbility extends ThenAbility {
             messageArgs.push({ message: this.game.gameChat.formatMessage(effectMessage, effectArgs) });
         }
         this.game.addMessage('{0}{1}{2}{3}{4}{5}{6}', ...messageArgs);
-    }
-
-    openEventWindow(events) {
-        for(let event of events) {
-            this.game.currentEventWindow.addEvent(event);
-        }
-        return this.game.currentEventWindow;
     }
 
     isCardPlayed() {

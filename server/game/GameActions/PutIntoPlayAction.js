@@ -46,6 +46,10 @@ class PutIntoPlayAction extends CardGameAction {
         return true;
     }
 
+    getEventArray(context) {
+        return super.getEventArray(context);
+    }
+
     getEvent(card, context) {
         return new EntersPlayEvent({ intoConflict: this.intoConflict, context: context }, card, this.fate, this);
     }

@@ -23,6 +23,7 @@ describe('Togashi Yokuni', function() {
 
             it('should allow copying of an ability', function() {
                 this.togashiYokuni = this.player1.clickCard('togashi-yokuni');
+                expect(this.player1).toHavePrompt('Togashi Yokuni');
                 this.player1.clickCard(this.borderRider);
                 this.togashiYokuni.bowed = true;
                 this.player2.pass();
@@ -377,19 +378,25 @@ describe('Togashi Yokuni', function() {
             });
 
             it('should allow Yokuni to copy Plagiarist and play Banzai from hand and from Yokuni, but not from Yokuni twice', function() {
+                // Banzai! on Plagiarist
                 this.banzai = this.player2.clickCard('banzai');
                 this.illustriousPlagiarist = this.player2.clickCard('illustrious-plagiarist');
                 this.player2.clickPrompt('Done');
+                // Yokuni copies Plagiarist
                 this.togashiYokuni = this.player1.clickCard('togashi-yokuni');
                 this.player1.clickCard(this.illustriousPlagiarist);
                 this.player2.pass();
+                // Yokuni copies Banzai!
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickCard(this.banzai);
+                // Legion of One on Plagiarist
                 this.legionOfOne = this.player2.clickCard('a-legion-of-one');
                 this.player2.clickCard(this.illustriousPlagiarist);
+                // Banzai! on Yokuni
                 this.player1.clickCard('banzai');
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickPrompt('Done');
+                expect(this.togashiYokuni.getMilitarySkill()).toBe(8);                
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickPrompt('Increase a character\'s military skill');

@@ -2,7 +2,6 @@ const DrawCard = require('../../drawcard.js');
 
 class WayOfThePhoenix extends DrawCard {
     setupCardAbilities(ability) {
-        // TODO: refactor this
         this.action({
             title: 'Prevent an opponent contesting a ring',
             condition: context => context.player.opponent,

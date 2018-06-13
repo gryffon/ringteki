@@ -9,7 +9,7 @@ class HirumaAmbusher extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                gameAction: ability.actions.untilEndOfConflict({
+                gameAction: ability.actions.cardLastingEffect({
                     effect: ability.effects.cardCannot('triggerAbilities')
                 })
             },

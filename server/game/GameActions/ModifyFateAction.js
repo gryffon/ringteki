@@ -17,7 +17,7 @@ class ModifyFateAction extends PlayerAction {
     }
 
     canAffect(player, context) {
-        if(this.amount === 0 || player.fate > -this.amount) {
+        if(this.amount === 0 || player.fate < -this.amount) {
             return false;
         }
         return super.canAffect(player, context);

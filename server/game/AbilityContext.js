@@ -15,17 +15,21 @@ class AbilityContext {
     }
 
     copy(newProps) {
-        return new AbilityContext(Object.assign({}, {
+        return new AbilityContext(Object.assign({}, this.getProps(), newProps));
+    }
+
+    getProps() {
+        return {
             game: this.game,
             source: this.source,
             player: this.player,
             ability: this.ability,
-            costs: this.costs,
-            targets: this.targets,
-            rings: this.rings,
-            selects: this.selects,
+            costs: Object.assign({}, this.costs),
+            targets: Object.assign({}, this.targets),
+            rings: Object.assign({}, this.rings),
+            selects: Object.assign({}, this.selects),
             state: this.stage
-        }, newProps));
+        };
     }
 }
 

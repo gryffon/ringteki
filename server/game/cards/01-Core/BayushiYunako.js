@@ -2,7 +2,6 @@ const DrawCard = require('../../drawcard.js');
 
 class BayushiYunako extends DrawCard {
     setupCardAbilities(ability) {
-        // TODO add switch action?
         this.action({
             title: 'Switch a character\'s M and P skill',
             condition: context => context.source.isParticipating(),

@@ -5,7 +5,7 @@ class LastingEffectAction extends GameAction {
         this.duration = 'untilEndOfConflict';
         this.condition = null;
         this.until = null;
-        this.effect = null;
+        this.effect = [];
         this.targetController = null;
     }
 
@@ -16,6 +16,7 @@ class LastingEffectAction extends GameAction {
     }
 
     hasLegalTarget() {
+        this.update();
         return this.effect.length > 0;
     }
 

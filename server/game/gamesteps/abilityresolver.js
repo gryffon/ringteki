@@ -153,12 +153,11 @@ class AbilityResolver extends BaseStepWithPipeline {
     }
 
     executeCardAbilityHandler() {
-        this.game.queueSimpleStep(() => {
+        // create an event window for the handler to add events to
+        this.game.raiseEvent('onAbilityResolved', { card: this.context.source, context: this.context }, () => {
             this.context.stage = 'effect';
             this.context.ability.executeHandler(this.context);
         });
-        // create an event window for the handler to add events to
-        this.game.raiseEvent('onAbilityResolved', { card: this.context.source, context: this.context });
 
     }
 

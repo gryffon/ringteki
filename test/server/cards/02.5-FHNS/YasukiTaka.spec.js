@@ -61,7 +61,8 @@ describe('Yasuki Taka', function() {
                 this.player1.clickCard('yasuki-taka');
                 expect(this.player2).toHavePrompt('Way of the Crab');
                 expect(this.player2).toBeAbleToSelect('stoic-gunso');             
-                this.player2.clickCard('stoic-gunso');
+                this.stoicGunso = this.player2.clickCard('stoic-gunso');
+                expect(this.stoicGunso.location).toBe('conflict discard pile');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect('yasuki-taka');             
             });

@@ -34,9 +34,9 @@ class ThenAbility extends BaseAbility {
 
     getGameActions(context) {
         // if there are any targets, look for gameActions attached to them
-        let actions = this.targets.reduce((array, target) => array.concat(target.gameAction.filter(action => action.hasLegalTarget(context))), []);
+        let actions = this.targets.reduce((array, target) => array.concat(target.getGameAction(context)), []);
         // look for a gameAction on the ability itself, on an attachment execute that action on its parent, otherwise on the card itself
-        return actions.concat(this.gameAction.filter(action => action.hasLegalTarget(context)));
+        return actions.concat(this.gameAction);
     }
 
     executeHandler(context) {
@@ -45,16 +45,16 @@ class ThenAbility extends BaseAbility {
     }
 
     executeGameActionPrehandlers(context) {
-        for(const action of this.getGameActions(context)) {
+        let actions = this.getGameActions(context);
+        for(const action of actions) {
             action.preEventHandler(context);
         }
-        this.game.queueSimpleStep(() => this.executeGameActions(context));
+        this.game.queueSimpleStep(() => this.executeGameActions(actions, context));
     }
 
-    executeGameActions(context) {
+    executeGameActions(actions, context) {
         // Get any gameActions for this ability
         // Get their events, and execute simultaneously
-        let actions = this.getGameActions(context);
         let events = actions.reduce((array, action) => array.concat(action.getEventArray(context)), []);
         let then = this.properties.then;
         if(then && typeof then === 'function') {

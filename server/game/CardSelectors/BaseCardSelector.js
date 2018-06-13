@@ -12,14 +12,15 @@ class BaseCardSelector {
     }
 
     buildLocation(property) {
-        this.location = property || 'play area';
-        if(!Array.isArray(this.location)) {
-            this.location = [this.location];
+        let location = property || 'play area';
+        if(!Array.isArray(location)) {
+            location = [location];
         }
-        let index = this.location.indexOf('province');
+        let index = location.indexOf('province');
         if(index > -1) {
-            this.location = this.location.slice(index, 1, 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province');
+            location.splice(index, 1, 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province');
         }
+        return location;
     }
 
     findPossibleCards(context) {
@@ -28,22 +29,22 @@ class BaseCardSelector {
         }
         let possibleCards = [];
         if(this.controller !== 'opponent') {
-            for(const l of this.location) {
-                let cards = context.player.getSourceList(l).toArray();
-                possibleCards = possibleCards.concat(cards);
-                if(l === 'play area') {
-                    possibleCards = possibleCards.concat(cards.map(card => card.attachments.toArray()));
+            possibleCards = this.location.reduce((array, location) => {
+                let cards = context.player.getSourceList(location).toArray();
+                if(location === 'play area') {
+                    return array.concat(cards, ...cards.map(card => card.attachments.toArray()));
                 }
-            }
+                return array.concat(cards);
+            }, possibleCards);
         }
         if(this.controller !== 'self' && context.player.opponent) {
-            for(const l of this.location) {
-                let cards = context.player.opponent.getSourceList(l).toArray();
-                possibleCards = possibleCards.concat(cards);
-                if(l === 'play area') {
-                    possibleCards = possibleCards.concat(cards.map(card => card.attachments.toArray()));
+            possibleCards = this.location.reduce((array, location) => {
+                let cards = context.player.opponent.getSourceList(location).toArray();
+                if(location === 'play area') {
+                    return array.concat(cards, ...cards.map(card => card.attachments.toArray()));
                 }
-            }
+                return array.concat(cards);
+            }, possibleCards);
         }
         return possibleCards;
     }

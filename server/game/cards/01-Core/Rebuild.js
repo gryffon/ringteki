@@ -8,13 +8,16 @@ class Rebuild extends DrawCard {
             targets: {
                 cardToShuffle: {
                     activePromptTitle: 'Choose a card to shuffle into your deck',
-                    cardCondition: (card, context) => ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location) && 
-                                                      !card.isProvince && !context.player.getProvinceCardInProvince(card.location).isBroken
+                    location: 'province',
+                    controller: 'self',
+                    cardType: ['character', 'holding'],
+                    cardCondition: (card, context) => !context.player.getProvinceCardInProvince(card.location).isBroken
                 },
                 cardToRebuild: {
                     activePromptTitle: 'Choose a card to put into the province',
                     cardType: 'holding',
-                    cardCondition: (card, context) => card.location === 'dynasty discard pile' && card.controller === context.player
+                    location: 'dynasty discard pile',
+                    controller: 'self'
                 }
             },
             cannotBeMirrored: true,

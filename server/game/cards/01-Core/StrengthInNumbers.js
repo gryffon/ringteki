@@ -9,7 +9,8 @@ class StrengthInNumbers extends DrawCard {
                 cardType: 'character',
                 cardCondition: card => card.isDefending() && card.getGlory() <= this.game.currentConflict.attackers.length,
                 gameAction: ability.actions.sendHome()
-            }
+            },
+            cannotBeMirrored: true
         });
     }
 }

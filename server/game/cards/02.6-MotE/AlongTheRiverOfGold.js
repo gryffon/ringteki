@@ -1,7 +1,6 @@
 const ProvinceCard = require('../../provincecard.js');
 
 class AlongTheRiverOfGold extends ProvinceCard {
-    // TODO: Switch Action
     setupCardAbilities(ability) {
         this.action({
             title: 'switch a character\'s base skills',

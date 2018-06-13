@@ -15,7 +15,7 @@ class BayushiKachiko extends DrawCard {
                     mode: 'select',
                     activePromptTitle: 'Do you want to bow ' + context.target.name + '?',
                     choices: {
-                        'Yes': ability.actions.bow().target(context.target),
+                        'Yes': ability.actions.bow({ target: context.target }),
                         'No': () => true 
                     }
                 },

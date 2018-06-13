@@ -7,6 +7,7 @@ class TakeFateRingAction extends RingAction {
     }
 
     setup() {
+        super.setup();
         this.name = 'takeFate';
         this.effectMsg = 'take ' + this.amount + ' fate from {0}';
     }

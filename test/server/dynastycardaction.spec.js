@@ -21,6 +21,7 @@ describe('DynastyCardAction', function () {
             player: this.playerSpy,
             source: this.cardSpy
         };
+        this.context.copy = () => this.context;
         this.action = new DynastyCardAction(this.cardSpy);
     });
 

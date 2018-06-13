@@ -3,7 +3,7 @@ const _ = require('underscore');
 class AbilityTargetCard {
     constructor(name, properties) {
         this.name = name;
-        this.properties = properties;
+        this.properties = _.omit(properties, 'ringCondition');
         this.properties.ringCondition = (ring, context) => {
             let contextCopy = context.copy();
             contextCopy.rings[this.name] = ring;
@@ -93,7 +93,7 @@ class AbilityTargetCard {
     }
     
     checkTarget(context) {
-        return this.properties.ringCondition(context.rings[this.name]);
+        return this.properties.ringCondition(context.rings[this.name], context);
     }
 }
 

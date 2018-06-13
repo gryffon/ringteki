@@ -20,10 +20,10 @@ class DiscardFromHandAction extends CardGameAction {
     }
 
     getEventArray(context) {
-        if(this.targets.length === 0) {
+        if(this.target.length === 0) {
             return [];
         }
-        return [this.createEvent('onCardsDiscardedFromHand', { player: this.targets[0].controller, cards: this.targets, context: context }, event => {
+        return [this.createEvent('onCardsDiscardedFromHand', { player: this.target[0].controller, cards: this.target, context: context }, event => {
             for(const card of event.cards) {
                 card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
             }

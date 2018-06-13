@@ -108,10 +108,7 @@ class SelectCardPrompt extends UiPrompt {
     }
 
     highlightSelectableCards() {
-        let selectableCards = this.game.allCards.filter(card => {
-            return this.checkCardCondition(card);
-        });
-        this.choosingPlayer.setSelectableCards(selectableCards);
+        this.choosingPlayer.setSelectableCards(this.selector.getAllLegalTargets(this.context));
     }
 
     activeCondition(player) {
