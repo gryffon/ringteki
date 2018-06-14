@@ -2,6 +2,7 @@ const Event = require('../Events/Event.js');
 
 class GameAction {
     constructor(propertyFactory = () => {}) {
+        this.target = [];
         this.setDefaultProperties();
         if(typeof propertyFactory === 'function') {
             this.propertyFactory = propertyFactory;
@@ -29,20 +30,21 @@ class GameAction {
 
     applyProperties(properties) {
         for(let [key, value] of Object.entries(properties)) {
-            this[key] = value;
+            if(value) {
+                this[key] = value;
+            }
         }
         if(!Array.isArray(this.target)) {
             this.target = [this.target];
         }
         this.setup();
-
     }
 
     setTarget(targetFunc, context) {
-        if(typeof targetFunc !== 'function') {
-            this.getDefaultTargets = () => targetFunc;
-        } else {
+        if(typeof targetFunc === 'function') {
             this.getDefaultTargets = targetFunc;
+        } else if(targetFunc) {
+            this.getDefaultTargets = () => targetFunc;
         }
         return this.hasLegalTarget(context);
     }
@@ -78,7 +80,7 @@ class GameAction {
     }
 
     defaultTargets(context) { // eslint-disable-line no-unused-vars
-        return null;
+        return [];
     }
 
     getEvent(target, context) { // eslint-disable-line no-unused-vars

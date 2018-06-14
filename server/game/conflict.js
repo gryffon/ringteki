@@ -170,6 +170,15 @@ class Conflict extends GameObject {
         }, 0);
     }
 
+    hasMoreParticipants(player, predicate = () => true) {
+        if(!player.opponent) {
+            return this.anyParticipants(predicate);
+        }
+        let playerTotal = this.getCharacters(player).filter(predicate).length + player.sumEffects('additionalCharactersInConflict');
+        let opponentTotal = this.getCharacters(player.opponent).filter(predicate).length + player.opponent.sumEffects('additionalCharactersInConflict');
+        return playerTotal > opponentTotal;
+    }
+
     calculateSkill(stateChanged = false) {
         stateChanged = this.game.effectEngine.checkEffects(stateChanged);
 

@@ -2,7 +2,6 @@ const DrawCard = require('../../drawcard.js');
 
 class AgashaSwordsmith extends DrawCard {
     setupCardAbilities(ability) {
-        // TODO: add decksearch game action?
         this.action({
             title: 'Search top 5 card for attachment',
             limit: ability.limit.perRound(1),

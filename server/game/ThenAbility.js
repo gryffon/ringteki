@@ -26,7 +26,11 @@ class ThenAbility extends BaseAbility {
         if(this.properties.message) {
             let messageArgs = [context.player, context.source, context.target];
             if(this.properties.messageArgs) {
-                messageArgs = messageArgs.concat(this.properties.messageArgs);
+                let args = this.properties.messageArgs;
+                if(typeof args === 'function') {
+                    args = args(context);
+                }
+                messageArgs = messageArgs.concat(args);
             }
             this.game.addMessage(this.properties.message, ...messageArgs);
         }
@@ -65,8 +69,6 @@ class ThenAbility extends BaseAbility {
             if(then) {
                 window.addThenAbility(events, new ThenAbility(this.game, this.card, then));
             }
-        } else if(then) {
-            this.game.resolveAbility(new ThenAbility(this.game, this.card, then).createContext(context.player));
         }
     }
 

@@ -1,7 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
 class WaningHostilities extends DrawCard {
-    // TODO: refactor this
     setupCardAbilities(ability) {
         this.reaction({
             title: 'Both players may only declare 1 conflict opportunity this turn',

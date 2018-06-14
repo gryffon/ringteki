@@ -1,15 +1,18 @@
 const CardGameAction = require('./CardGameAction');
 
-class DiscardFromHandAction extends CardGameAction {
+class DiscardCardAction extends CardGameAction {
+    setDefaultProperties() {
+        this.location = '';
+    }
     setup() {
-        this.name = 'discardFromHand';
-        this.targetType = ['character', 'attachment', 'event'];
+        super.setup();
+        this.name = 'discardCard';
         this.effectMsg = 'discard {0}';
         this.cost = 'discarding {0}';
     }
 
     canAffect(card, context) {
-        if(card.location !== 'hand') {
+        if(this.location && card.location !== this.location) {
             return false;
         }
         return super.canAffect(card, context);
@@ -23,7 +26,7 @@ class DiscardFromHandAction extends CardGameAction {
         if(this.target.length === 0) {
             return [];
         }
-        return [this.createEvent('onCardsDiscardedFromHand', { player: this.target[0].controller, cards: this.target, context: context }, event => {
+        return [this.createEvent('onCardsDiscarded', { player: this.target[0].controller, cards: this.target, context: context }, event => {
             for(const card of event.cards) {
                 card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
             }
@@ -32,8 +35,8 @@ class DiscardFromHandAction extends CardGameAction {
 
     getEvent(card, context) {
         let handler = () => card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
-        return super.createEvent('onCardsDiscardedFromHand', { player: card.controller, cards: [card], context: context }, handler);
+        return super.createEvent('onCardsDiscarded', { player: card.controller, cards: [card], context: context }, handler);
     }
 }
 
-module.exports = DiscardFromHandAction;
+module.exports = DiscardCardAction;

@@ -51,6 +51,10 @@ const Costs = {
      */
     returnSelfToHand: () => CostBuilders.returnToHand.self(),
     /**
+     * Cost that requires discarding a specific card.
+     */
+    discardSpecific: cardFunc => CostBuilders.discardCard.specific(cardFunc),
+    /**
      * Cost that requires discarding a card from hand.
      */
     discardFromHand: condition => CostBuilders.discardFromHand.select(condition),

@@ -12,7 +12,11 @@ const CostBuilders = {
         select: 'Select province to break',
         selectMultiple: number => `Select ${number} provinces to break`
     }),
-    discardFromHand: new CostBuilder(GameActions.discardFromHand(), {
+    discardCard: new CostBuilder(GameActions.discardCard(), {
+        select: 'Select card to discard',
+        selectMultiple: number => `Select ${number} cards to discard`
+    }),
+    discardFromHand: new CostBuilder(GameActions.discardCard({ location: 'hand' }), {
         select: 'Select card to discard from hand',
         selectMultiple: number => `Select ${number} cards to discard from hand`
     }),

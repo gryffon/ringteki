@@ -3,6 +3,7 @@ const Phase = require('./phase.js');
 const SimpleStep = require('./simplestep.js');
 const ActionWindow = require('./actionwindow.js');
 const EndRoundPrompt = require('./regroup/endroundprompt.js');
+const GameActions = require('../GameActions/GameActions');
 
 /*
 V Regroup Phase
@@ -92,10 +93,7 @@ class RegroupPhase extends Phase {
     }
     
     returnRings() {
-        let ringsToReturn = _.filter(this.game.rings, ring => ring.claimed);
-        this.game.openEventWindow(ringsToReturn.map(ring => {
-            return this.game.getEvent('onReturnRing', { ring: ring }, () => ring.resetRing());
-        }));
+        GameActions.returnRing().resolve(_.filter(this.game.rings, ring => ring.claimed), this.game.getFrameworkContext());
     }
 
     passFirstPlayer() {

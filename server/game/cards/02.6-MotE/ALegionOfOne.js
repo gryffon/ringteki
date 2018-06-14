@@ -8,45 +8,38 @@ class ALegionOfOne extends DrawCard {
             target: {
                 cardType: 'character',
                 controller: 'self',
-                cardCondition: card => card.isAttacking() && this.game.currentConflict.attackers.length === 1 ||
-                                       card.isDefending() && this.game.currentConflict.defenders.length === 1
+                cardCondition: (card, context) => card.isParticipating() && this.game.currentConflict.getCharacters(context.player).length === 1,
+                gameAction: ability.actions.cardLastingEffect({
+                    effect: ability.effects.modifyMilitarySkill(3)
+                })
             },
             effect: 'give {0} +3/+0',
-            handler: context => {
-                let resolveAbility = () => {
-                    context.source.untilEndOfConflict(ability => ({
-                        match: context.target,
-                        effect: ability.effects.modifyMilitarySkill(3)
-                    }));
-                };
-                resolveAbility();
-                if(context.target.fate > 0 && context.target.allowGameAction('removeFate')) {
-                    let resolveAgain = () => {
-                        this.game.addMessage('{0} removes a fate from {1}, resolving {2} again', context.player, context.target, context.source);
-                        ability.actions.removeFate().resolve(context.target, context);
-                        context.dontRaiseCardPlayed = true;
-                        this.game.raiseInitiateAbilityEvent({ card: context.source, context: context }, () => {
-                            resolveAbility();
-                            if(context.target.fate > 0 && context.target.allowGameAction('removeFate')) {
-                                this.game.promptWithHandlerMenu(context.player, {
-                                    activePromptTitle: 'Discard a fate for no effect?',
-                                    source: context.source,
-                                    choices: ['Yes', 'No'],
-                                    handlers: [() => {
-                                        this.game.addMessage('{0} removes a fate from {1} for no effect', context.player, context.target);
-                                        ability.actions.removeFate().resolve(context.target, context);
-                                    }, () => true]
-                                });
+            then: context => {
+                if(context.isResolveAbility) {
+                    return { 
+                        target: {
+                            mode: 'select',
+                            choices: {
+                                'Remove 1 fate for no effect': ability.actions.removeFate({target: context.target }),
+                                'Done': () => true
                             }
-                        });
+                        },
+                        message: '{0} chooses {3}to remove a fate for no effect',
+                        messageArgs: context => context.select === 'Done' ? 'not ' : ''
                     };
-                    this.game.promptWithHandlerMenu(context.player, {
-                        activePromptTitle: 'Discard a fate to resolve A Legion of One again?',
-                        source: context.source,
-                        choices: ['Yes', 'No'],
-                        handlers: [resolveAgain, () => true]
-                    });
                 }
+                return {
+                    target: {
+                        mode: 'select',
+                        choices: {
+                            'Remove 1 fate to resolve this ability again': ability.actions.removeFate({target: context.target }),
+                            'Done': () => true
+                        }
+                    },
+                    message: '{0} chooses {3}to remove a fate to resolve {1} again',
+                    messageArgs: context => context.select === 'Done' ? 'not ' : '',
+                    then: { gameAction: ability.actions.resolveAbility({ ability: context.ability }) }
+                };                
             }
         });
     }

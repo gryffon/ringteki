@@ -5,7 +5,7 @@ class WholenessOfTheWorld extends DrawCard {
         this.wouldInterrupt({
             title: 'Keep a claimed ring',
             when: {
-                onReturnRing: event => event.ring.isConsideredClaimed(this.controller)
+                onReturnRing: (event, context) => event.ring.claimedBy === context.player.name
             },
             cannotBeMirrored: true,
             effect: 'prevent {1} from returning to the unclaimed pool',

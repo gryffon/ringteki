@@ -6,7 +6,7 @@ const DeckSearchAction = require('./DeckSearchAction');
 const DelayedEffectAction = require('./DelayedEffectAction');
 const DiscardFavorAction = require('./DiscardFavorAction');
 const DiscardFromPlayAction = require('./DiscardFromPlayAction');
-const DiscardFromHandAction = require('./DiscardFromHandAction');
+const DiscardCardAction = require('./DiscardCardAction');
 const DiscardStatusAction = require('./DiscardStatusAction');
 const DishonorAction = require('./DishonorAction');
 const DrawAction = require('./DrawAction');
@@ -16,10 +16,12 @@ const FlipDynastyAction = require('./FlipDynastyAction');
 const GainHonorAction = require('./GainHonorAction');
 const HonorAction = require('./HonorAction');
 const InitiateConflictAction = require('./InitiateConflictAction');
+const JointGameAction = require('./JointGameAction');
 const LastingEffectAction = require('./LastingEffectAction');
 const LastingEffectCardAction = require('./LastingEffectCardAction');
 const LastingEffectRingAction = require('./LastingEffectRingAction');
 const LoseHonorAction = require('./LoseHonorAction');
+const ModifyBidAction = require('./ModifyBidAction');
 const ModifyFateAction = require('./ModifyFateAction');
 const MoveToConflictAction = require('./MoveToConflictAction');
 const PlaceFateAction = require('./PlaceFateAction');
@@ -28,12 +30,15 @@ const PutIntoPlayAction = require('./PutIntoPlayAction');
 const RandomDiscardAction = require('./RandomDiscardAction');
 const ReadyAction = require('./ReadyAction');
 const RemoveFateAction = require('./RemoveFateAction');
+const ResolveAbilityAction = require('./ResolveAbilityAction');
 const ResolveRingAction = require('./ResolveRingAction');
+const ReturnRingAction = require('./ReturnRingAction');
 const ReturnToDeckAction = require('./ReturnToDeckAction');
 const ReturnToHandAction = require('./ReturnToHandAction');
 const RevealAction = require('./RevealAction');
 const SendHomeAction = require('./SendHomeAction');
 const TakeFateRingAction = require('./TakeFateRingAction');
+const TakeRingAction = require('./TakeRingAction');
 const TransferFateAction = require('./TransferFateAction');
 const TransferHonorAction = require('./TransferHonorAction');
 
@@ -44,7 +49,7 @@ const GameActions = {
     break: (propertyFactory) => new BreakAction(propertyFactory),
     cardLastingEffect: (propertyFactory) => new LastingEffectCardAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetLocation, condition, until
     delayedEffect: (propertyFactory) => new DelayedEffectAction(propertyFactory), // when, message, gameAction, handler
-    discardFromHand: (propertyFactory) => new DiscardFromHandAction(propertyFactory),
+    discardCard: (propertyFactory) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory) => new DiscardFromPlayAction(propertyFactory),
     discardStatusToken: (propertyFactory) => new DiscardStatusAction(propertyFactory),
     dishonor: (propertyFactory) => new DishonorAction(propertyFactory),
@@ -58,6 +63,7 @@ const GameActions = {
     putIntoPlay: (propertyFactory) => new PutIntoPlayAction(propertyFactory, false), // fate = 0
     ready: (propertyFactory) => new ReadyAction(propertyFactory),
     removeFate: (propertyFactory) => new RemoveFateAction(propertyFactory), // amount = 1, recipient
+    resolveAbility: (propertyFactory) => new ResolveAbilityAction(propertyFactory), // ability
     returnToDeck: (propertyFactory) => new ReturnToDeckAction(propertyFactory), // bottom = false
     returnToHand: (propertyFactory) => new ReturnToHandAction(propertyFactory),
     reveal: (propertyFactory) => new RevealAction(propertyFactory),
@@ -73,14 +79,19 @@ const GameActions = {
     initiateConflict: (propertyFactory) => new InitiateConflictAction(propertyFactory), // canPass = true
     loseHonor: (propertyFactory) => new LoseHonorAction(propertyFactory), // amount = 1
     loseImperialFavor: (propertyFactory) => new DiscardFavorAction(propertyFactory),
+    modifyBid: (propertyFactory) => new ModifyBidAction(propertyFactory), // amount = 1, direction = 'increast', promptPlayer = false
     playerLastingEffect: (propertyFactory) => new LastingEffectAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetController, condition, until
     takeFate: (propertyFactory) => new TransferFateAction(propertyFactory), // amount = 1
     takeHonor: (propertyFactory) => new TransferHonorAction(propertyFactory), // amount = 1
     // ring actions
     placeFateOnRing: (propertyFactory) => new PlaceFateRingAction(propertyFactory), // amount = 1, origin
     resolveRing: (propertyFactory) => new ResolveRingAction(propertyFactory), // resolveAsAttacker = true
+    returnRing: (propertyFactory) => new ReturnRingAction(propertyFactory),
     ringLastingEffect: (propertyFactory) => new LastingEffectRingAction(propertyFactory), // duration = 'untilEndOfConflict', effect, condition, until
-    takeFateFromRing: (propertyFactory) => new TakeFateRingAction(propertyFactory) // amount = 1
+    takeFateFromRing: (propertyFactory) => new TakeFateRingAction(propertyFactory), // amount = 1
+    takeRing: (propertyFactory) => new TakeRingAction(propertyFactory),
+    // meta actions
+    jointAction: (gameActions) => new JointGameAction(gameActions) // takes an array of gameActions, not a propertyFactory
 };
 
 module.exports = GameActions;

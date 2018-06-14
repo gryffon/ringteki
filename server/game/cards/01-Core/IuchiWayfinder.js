@@ -1,23 +1,20 @@
 const DrawCard = require('../../drawcard.js');
 
 class IuchiWayfinder extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Reveal a province',
             when: {
-                onCharacterEntersPlay: (event, context) => event.card === context.source && context.player.opponent &&
-                                                      context.game.allCards.any(card => card.isProvince && card.controller === context.player.opponent)
+                onCharacterEntersPlay: (event, context) => event.card === context.source
             },
             effect: 'reveal a province',
-            handler: context => this.game.promptForSelect(context.player, {
-                context: context,
-                activePromptTitle: 'Choose a province to reveal',
-                cardType: 'province',
-                locations: 'province',
-                cardCondition: card => card.facedown,
-                onSelect: (player, card) => {
-                    this.game.addMessage('{0} reveals {1}', context.source, card);
-                    return true;
+            gameAction: ability.actions.reveal({
+                promptForSelect: {
+                    activePromptTitle: 'Choose a province to reveal',
+                    cardType: 'province',
+                    locations: 'province',
+                    controller: 'opponent',
+                    cardCondition: card => card.facedown                       
                 }
             })
         });

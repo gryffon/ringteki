@@ -50,7 +50,6 @@ class EffectEngine {
     }
 
     checkTerminalConditions() {
-        // TODO this.terminalConditions = this.terminalConditions.filter(effect => effect.target.location !== 'play area');
         let effectsToTrigger = this.terminalConditions.filter(effect => effect.checkCondition());
         if(effectsToTrigger.length > 0) {
             this.game.openThenEventWindow(effectsToTrigger.map(effect => effect.getEvent()));

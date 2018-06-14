@@ -8,18 +8,23 @@ class AbilityResolver extends BaseStepWithPipeline {
         super(game);
 
         this.context = context;
+        this.initialise();
+    }
+
+    initialise() {
         this.pipeline.initialise([
-            new SimpleStep(game, () => this.createSnapshot()),
-            new SimpleStep(game, () => this.resolveEarlyTargets()),
-            new SimpleStep(game, () => this.waitForTargetResolution()),
-            new SimpleStep(game, () => this.resolveCosts()),
-            new SimpleStep(game, () => this.waitForCostResolution()),
-            new SimpleStep(game, () => this.payCosts()),
-            new SimpleStep(game, () => this.checkCostsWerePaid()),
-            new SimpleStep(game, () => this.resolveTargets()),
-            new SimpleStep(game, () => this.waitForTargetResolution()),
-            new SimpleStep(game, () => this.initiateAbility())
+            new SimpleStep(this.game, () => this.createSnapshot()),
+            new SimpleStep(this.game, () => this.resolveEarlyTargets()),
+            new SimpleStep(this.game, () => this.waitForTargetResolution()),
+            new SimpleStep(this.game, () => this.resolveCosts()),
+            new SimpleStep(this.game, () => this.waitForCostResolution()),
+            new SimpleStep(this.game, () => this.payCosts()),
+            new SimpleStep(this.game, () => this.checkCostsWerePaid()),
+            new SimpleStep(this.game, () => this.resolveTargets()),
+            new SimpleStep(this.game, () => this.waitForTargetResolution()),
+            new SimpleStep(this.game, () => this.initiateAbility())
         ]);
+
     }
 
     createSnapshot() {

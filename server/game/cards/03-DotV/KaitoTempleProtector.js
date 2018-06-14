@@ -12,42 +12,26 @@ class KaitoTempleProtector extends DrawCard {
             condition: context => context.source.isDefending(),
             target: {
                 cardType: 'character',
-                cardCondition: (card, context) => card.isParticipating() && card !== context.source
+                cardCondition: (card, context) => card.isParticipating() && card !== context.source,
+                gameAction: ability.actions.cardLastingEffect(context => {
+                    let effects = [];
+                    if(context.target.hasDash('military')) {
+                        effects.push(ability.actions.setDash('military'));
+                    } else {
+                        effects.push(ability.actions.setBaseMilitarySkill(context.target.militarySkill));
+                    }
+                    if(context.target.hasDash('political')) {
+                        effects.push(ability.actions.setDash('political'));
+                    } else {
+                        effects.push(ability.actions.setBasePoliticalSkill(context.target.politicalSkill));
+                    }
+                    return {
+                        target: context.source,
+                        effect: effects
+                    };
+                })
             },
-            effect: 'change his base skills to equal {0}\'s current skills', 
-            handler: context => {
-                let newMil = context.target.getMilitarySkill();
-                if(context.target.hasDash('military')) {
-                    newMil = '-';
-                }
-                let newPol = context.target.getPoliticalSkill();
-                if(context.target.hasDash('political')) {
-                    newPol = '-';
-                }
-                this.game.addMessage('{0} changes his base {1} skill to {2} and base {3} skill to {4}', context.source, 'military', newMil, 'political', newPol);
-                if(newMil === '-') {
-                    context.source.untilEndOfConflict(ability => ({
-                        match: context.source,
-                        effect: ability.effects.setDash('military')
-                    }));
-                } else {
-                    context.source.untilEndOfConflict(ability => ({
-                        match: context.source,
-                        effect: ability.effects.modifyBaseMilitarySkill(newMil - context.source.getbaseMilitarySkill())
-                    }));                    
-                }
-                if(newPol === '-') {
-                    context.source.untilEndOfConflict(ability => ({
-                        match: context.source,
-                        effect: ability.effects.setDash('political')
-                    }));
-                } else {
-                    context.source.untilEndOfConflict(ability => ({
-                        match: context.source,
-                        effect: ability.effects.modifyBasePoliticalSkill(newMil - context.source.getbasePoliticalSkill())
-                    }));
-                }
-            }
+            effect: 'change his base skills to equal {0}\'s current skills'
         });
     }
 }

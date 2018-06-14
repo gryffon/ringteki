@@ -217,6 +217,8 @@ class DrawCard extends BaseCard {
 
         if(this.hasDash('military')) {
             return 0;
+        } else if(this.mostRecentEffect('setMilitarySkill')) {
+            return this.mostRecentEffect('setMilitarySkill');
         }
 
         // get base mill skill + effect modifiers
@@ -244,6 +246,8 @@ class DrawCard extends BaseCard {
          */
         if(this.hasDash('political')) {
             return 0;
+        } else if(this.mostRecentEffect('setPoliticalSkill')) {
+            return this.mostRecentEffect('setPoliticalSkill');
         }
 
         // get base mill skill + effect modifiers
@@ -262,8 +266,9 @@ class DrawCard extends BaseCard {
         if(this.hasDash('military')) {
             return 0;
         }
-
-        return this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
+    
+        return this.mostRecentEffect('setBaseMilitarySkill') || 
+               this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
     }
     
     getBasePoliticalSkill() {
@@ -271,7 +276,8 @@ class DrawCard extends BaseCard {
             return 0;
         }
 
-        return this.sumEffects('modifyBasePoliticalSkill') + this.printedPoliticalSkill;
+        return this.mostRecentEffect('setBasePoliticalSkill') || 
+               this.sumEffects('modifyBasePoliticalSkill') + this.printedPoliticalSkill;
     }
 
     getSkillFromGlory() {

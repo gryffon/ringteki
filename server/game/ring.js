@@ -77,15 +77,11 @@ class Ring extends EffectSource {
         return menu;
     }
 
+    /**
+     * @param {Number} fate - the amount of fate to modify this card's fate total by
+     */
     modifyFate(fate) {
-        /**
-         * @param  {integer} fate - the amount of fate to modify this card's fate total by
-         */
-        this.fate += fate;
-
-        if(this.fate < 0) {
-            this.fate = 0;
-        }
+        this.fate = Math.max(this.fate + fate, 0);
     }
     
     removeFate() {
