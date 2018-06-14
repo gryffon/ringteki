@@ -52,7 +52,7 @@ class AbilityTargetCard {
     getAllLegalTargets(context) {
         if(this.properties.dependsOn) {
             let dependsOnTarget = context.ability.targets.find(target => target.name === this.properties.dependsOn);
-            return dependsOnTarget.getContextsForDependentTargets(context).some(targetContext => this.selector.getAllLegalTargets(targetContext));            
+            return dependsOnTarget.getContextsForDependentTargets(context).some(targetContext => this.selector.getAllLegalTargets(targetContext));
         }
         return this.selector.getAllLegalTargets(context);
     }

@@ -10,7 +10,7 @@ class AbilityTargetCard {
             if(this.name === 'target') {
                 contextCopy.ring = ring;
             }
-            return (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(context))) && 
+            return (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(context))) &&
                    properties.ringCondition(ring, context) && context.ability.canPayCosts(context);
         };
         for(let gameAction of this.properties.gameAction) {
@@ -32,7 +32,7 @@ class AbilityTargetCard {
             contextCopy.rings[this.name] = target;
             return contextCopy;
         });
-    }    
+    }
 
     getAllLegalTargets(context) {
         return _.filter(context.game.rings, ring => this.properties.ringCondition(ring, context));
@@ -91,7 +91,7 @@ class AbilityTargetCard {
         context.game.promptForRingSelect(player, _.extend(promptProperties, this.properties));
         return result;
     }
-    
+
     checkTarget(context) {
         return this.properties.ringCondition(context.rings[this.name], context);
     }

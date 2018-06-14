@@ -58,7 +58,7 @@ class BaseAbility {
 
         return [];
     }
-    
+
     getAbilityTarget(name, properties) {
         if(properties.gameAction) {
             if(!Array.isArray(properties.gameAction)) {
@@ -79,7 +79,7 @@ class BaseAbility {
 
     /**
      * @param {*} context
-     * @returns {String} 
+     * @returns {String}
      */
     meetsRequirements(context) {
         // check legal targets exist

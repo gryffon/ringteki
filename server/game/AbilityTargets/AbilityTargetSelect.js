@@ -44,7 +44,7 @@ class AbilityTargetSelect {
             contextCopy.selects[this.name] = key;
             return contextCopy;
         });
-    }    
+    }
 
     getAllLegalTargets(context) {
         return Object.keys(this.properties.choices).filter(key => this.isChoiceLegal(key, context));
@@ -101,7 +101,7 @@ class AbilityTargetSelect {
         }
         return result;
     }
-    
+
     checkTarget(context) {
         return this.isChoiceLegal(context.selects[this.name].choice, context);
     }

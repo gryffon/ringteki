@@ -18,7 +18,7 @@ const Effects = {
     addFaction: (faction) => EffectBuilder.card.static('addFaction', faction),
     addKeyword: (keyword) => EffectBuilder.card.static('addKeyword', keyword),
     addTrait: (trait) => EffectBuilder.card.static('addTrait', trait),
-    blank: () => EffectBuilder.card.static('blank'), 
+    blank: () => EffectBuilder.card.static('blank'),
     cardCannot: (type, predicate) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(type, predicate)),
     customDetachedCard: (properties) => EffectBuilder.card.detached('customEffect', properties),
     delayedEffect: (properties) => EffectBuilder.card.detached('delayedEffect', {
@@ -79,7 +79,7 @@ const Effects = {
         apply: (card, context) => {
             properties.target = card;
             properties.context = properties.context || context;
-            return context.source.terminalCondition(() => properties);    
+            return context.source.terminalCondition(() => properties);
         },
         unapply: (card, context, effect) => context.game.effectEngine.removeTerminalCondition(effect)
     }),
