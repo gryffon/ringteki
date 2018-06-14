@@ -171,7 +171,7 @@ class BaseCard extends EffectSource {
     }
 
     canTriggerAbilities(context) {
-        return !this.facedown && this.checkRestrictions('triggerAbilities', context);
+        return !this.facedown && (this.checkRestrictions('triggerAbilities', context) || !context.ability.isTriggeredAbility());
     }
     
     getModifiedLimitMax(max) {

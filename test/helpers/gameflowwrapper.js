@@ -122,8 +122,8 @@ class GameFlowWrapper {
      */
     finishConflictPhase() {
         this.guardCurrentPhase('conflict');
-        while(this.player1.player.conflictOpportunities > 0 ||
-            this.player2.player.conflictOpportunities > 0) {
+        while(this.player1.player.getConflictOpportunities() > 0 ||
+            this.player2.player.getConflictOpportunities() > 0) {
             try {
                 this.noMoreActions();
             } catch(e) {

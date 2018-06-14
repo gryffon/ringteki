@@ -1,9 +1,8 @@
-const _ = require('underscore');
 const Phase = require('./phase.js');
 const SimpleStep = require('./simplestep.js');
 const Conflict = require('../conflict.js');
-const ConflictFlow = require('./conflict/conflictflow.js');
 const ActionWindow = require('./actionwindow.js');
+const GameActions = require('../GameActions/GameActions');
 
 /*
 III Conflict Phase
@@ -38,35 +37,24 @@ class ConflictPhase extends Phase {
     }
 
     startConflictChoice() {
-        if(!this.currentPlayer.canInitiateConflict() && this.currentPlayer.opponent) {
+        if(this.currentPlayer.getConflictOpportunities() === 0 && this.currentPlayer.opponent) {
             this.currentPlayer = this.currentPlayer.opponent;
         }
-        if(this.currentPlayer.canInitiateConflict()) {
-            var conflict = new Conflict(this.game, this.currentPlayer, this.currentPlayer.opponent);
-            this.game.currentConflict = conflict;
-            let availableConflictTypes = _.filter(['military', 'political'], type => this.currentPlayer.canInitiateConflict(type));
-            if(this.currentPlayer.cardsInPlay.any(card => _.any(availableConflictTypes, type => card.canDeclareAsAttacker(type)))) {
-                this.game.queueStep(new ConflictFlow(this.game, conflict));
+        if(this.currentPlayer.getConflictOpportunities() > 0) {
+            if(GameActions.initiateConflict().canAffect(this.currentPlayer, this.game.getFrameworkContext(this.currentPlayer))) {
+                GameActions.initiateConflict().resolve(this.currentPlayer, this.game.getFrameworkContext(this.currentPlayer));
             } else {
+                var conflict = new Conflict(this.game, this.currentPlayer, this.currentPlayer.opponent);
                 conflict.passConflict('{0} passes their conflict opportunity as none of their characters can be declared as an attacker');
             }
-            this.game.queueStep(new SimpleStep(this.game, () => this.cleanupConflict()));
+            if(this.currentPlayer.opponent) {
+                this.currentPlayer = this.currentPlayer.opponent;
+            }
+            this.game.queueStep(new ActionWindow(this.game, 'Action Window', 'preConflict'));            
+            this.game.queueStep(new SimpleStep(this.game, () => this.startConflictChoice()));
         } else {
             this.game.queueStep(new SimpleStep(this.game, () => this.claimImperialFavor()));            
         }
-    }
-
-    cleanupConflict() {
-        if(!this.game.currentConflict.isSinglePlayer && !this.game.currentConflict.winnerGoesStraightToNextConflict) {
-            this.currentPlayer = this.game.getOtherPlayer(this.currentPlayer);
-        }
-        let skipActionWindow = this.game.currentConflict.winnerGoesStraightToNextConflict;
-        this.game.currentConflict = null;
-        this.game.checkGameState(true);
-        if(!skipActionWindow) {
-            this.game.queueStep(new ActionWindow(this.game, 'Action Window', 'preConflict'));            
-        } 
-        this.game.queueStep(new SimpleStep(this.game, () => this.startConflictChoice()));
     }
 
     claimImperialFavor() {

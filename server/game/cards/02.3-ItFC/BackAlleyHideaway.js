@@ -41,7 +41,7 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
         if(context.source.location !== 'backalley hideaway') {
             return 'location';
         }
-        if(!context.source.canPlay(context) || !context.source.parent.canTriggerAbilities()) {
+        if(!context.source.canPlay(context) || !context.source.parent.canTriggerAbilities(context)) {
             return 'cannotTrigger';
         }
         if(!this.canPayCosts(context)) {

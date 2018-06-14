@@ -46,9 +46,7 @@ class Player extends GameObject {
         this.passedDynasty = false;
         this.honorBid = 0; // amount from the most recent bid after modifiers
         this.showBid = 0; // amount shown on the dial
-        this.conflictOpportunities = 0;
         this.imperialFavor = '';
-        this.totalGloryForFavor = 0;
 
         this.clock = ClockSelector.for(this, clockdetails);
 
@@ -356,14 +354,21 @@ class Player extends GameObject {
     }
 
     /** 
-     * Checks whether this player can initiate a conflict of the passed type
-     * @param {String} conflictType - one of 'military', 'political'
+     * Returns the number of conflict opportunities remaining for this player
+     * @param {String} type - one of 'military', 'political', ''
+     * @returns {Number} opportunities remaining
      */
-    canInitiateConflict(conflictType = '') {
-        if(this.conflictOpportunities === 0) {
-            return false;
+
+    getConflictOpportunities(type = '') {
+        let myConflicts = this.game.completedConflicts.filter(conflict => conflict.attackingPlayer === this);
+        let additionalConflicts = this.getEffects('additionalConflict');
+        let maxConflicts = this.mostRecentEffect('maxConflicts') || 2 + additionalConflicts.length;
+        let opportunities = Math.max(maxConflicts - myConflicts.length, 0);
+        if(type) {
+            let maxConflictsForType = 1 + additionalConflicts.filter(t => t === type).length;
+            opportunities = Math.min(opportunities, maxConflictsForType - myConflicts.filter(conflict => conflict.declaredType === type).length);
         }
-        return !this.game.completedConflicts.some(conflict => conflict.attackingPlayer === this && conflict.declaredType === conflictType);
+        return Math.max(opportunities, 0);
     }
 
     /**
@@ -514,7 +519,6 @@ class Player extends GameObject {
 
         this.game.raiseEvent('onIncomeCollected', { player: this });
 
-        this.conflictOpportunities = 2;
         this.passedDynasty = false;
         this.limitedPlayed = 0;
     }
@@ -973,9 +977,9 @@ class Player extends GameObject {
         return {
             fate: this.fate,
             honor: this.getTotalHonor(),
-            conflictsRemaining: this.conflictOpportunities,
-            militaryRemaining: this.canInitiateConflict('military'),
-            politicalRemaining: this.canInitiateConflict('political')
+            conflictsRemaining: this.getConflictOpportunities(),
+            militaryRemaining: this.getConflictOpportunities('military'),
+            politicalRemaining: this.getConflictOpportunities('political')
         };
     }
 

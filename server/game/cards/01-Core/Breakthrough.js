@@ -1,20 +1,15 @@
 const DrawCard = require('../../drawcard.js');
 
 class Breakthrough extends DrawCard {
-    setupCardAbilities() {
-        // TODO: refactor this
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Declare a new conflict',
             when: {
-                onConflictFinished: (event, context) => {
-                    return (event.conflict.conflictProvince &&
-                            event.conflict.conflictProvince.isBroken && 
-                            event.conflict.winner === context.player &&
-                            context.player.canInitiateConflict());
-                }
+                onConflictFinished: (event, context) => event.conflict.attackingPlayer === context.player &&
+                                                        event.conflict.winner === context.player && 
+                                                        event.conflict.conflictProvince.isBroken
             },
-            effect: 'move straight to their next conflict!',
-            handler: context => context.event.conflict.winnerGoesStraightToNextConflict = true
+            gameAction: ability.actions.initiateConflict({ canPass: false })
         });
     }
 }

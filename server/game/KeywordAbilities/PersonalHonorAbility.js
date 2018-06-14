@@ -21,6 +21,10 @@ class PersonalHonorAbility extends TriggeredAbility {
             }
         });
     }
+
+    isTriggeredAbility() {
+        return false;
+    }
 }
 
 module.exports = PersonalHonorAbility;

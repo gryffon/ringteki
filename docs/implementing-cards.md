@@ -348,13 +348,13 @@ this.action({
         myChar: {
             cardType: 'character',
             controller: 'self',
-            cardCondition: (card, context) => !card.bowed && card.getCost() <= 2,
+            cardCondition: card => !card.bowed && card.getCost() <= 2,
             gameAction: ability.actions.moveToConflict()
         },
         oppChar: {
             cardType: 'character',
             controller: 'opponent',
-            cardCondition: (card, context) => !card.bowed && card.getCost() <= 2,
+            cardCondition: card => !card.bowed && card.getCost() <= 2,
             gameAction: ability.actions.moveToConflict()                    
         }
     }

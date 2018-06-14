@@ -19,8 +19,12 @@ class DrawAction extends PlayerAction {
         return context.player;
     }
 
-    getEvent(player) {
-        return super.createEvent('onDrawCards', { player: player, amount: this.amount }, () => player.drawCardsToHand(this.amount));
+    getEvent(player, context) {
+        return super.createEvent('onDrawCards', { 
+            player: player, 
+            amount: this.amount, 
+            context: context
+        }, () => player.drawCardsToHand(this.amount));
     }
 }
 

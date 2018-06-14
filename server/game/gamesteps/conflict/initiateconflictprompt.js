@@ -12,12 +12,13 @@ const capitalize = {
 };
 
 class InitiateConflictPrompt extends UiPrompt {
-    constructor(game, conflict, choosingPlayer, attackerChoosesRing = true) {
+    constructor(game, conflict, choosingPlayer, attackerChoosesRing = true, canPass = attackerChoosesRing) {
         super(game);
         
         this.conflict = conflict;
         this.choosingPlayer = choosingPlayer;
         this.attackerChoosesRing = attackerChoosesRing;
+        this.canPass = canPass;
         this.selectedDefenders = [];
         this.covertRemaining = false;
     }
@@ -46,7 +47,7 @@ class InitiateConflictPrompt extends UiPrompt {
         let menuTitle = '';
         let promptTitle = '';
         
-        if(this.attackerChoosesRing) {
+        if(this.canPass) {
             buttons.push({ text: 'Pass Conflict', arg: 'pass' });
         }
 
@@ -110,11 +111,11 @@ class InitiateConflictPrompt extends UiPrompt {
         let player = this.choosingPlayer;
 
         if(this.conflict.ring === ring) {
-            if(!player.canInitiateConflict(ring.conflictType === 'military' ? 'political' : 'military')) {
+            if(player.getConflictOpportunities(ring.conflictType === 'military' ? 'political' : 'military') === 0) {
                 return false;
             }
             ring.flipConflictType();
-        } else if(!player.canInitiateConflict(ring.conflictType) || this.conflict.attackers.some(card => !card.canDeclareAsAttacker(ring.conflictType))) {
+        } else if(player.getConflictOpportunities(ring.conflictType) === 0 || this.conflict.attackers.some(card => !card.canDeclareAsAttacker(ring.conflictType))) {
             ring.flipConflictType();
         }
 
@@ -126,7 +127,7 @@ class InitiateConflictPrompt extends UiPrompt {
 
         this.conflict.ring = ring;
         ring.contested = true;
-        if(this.conflict.conflictProvince && !this.conflict.conflictProvince.allowGameAction('initiateConflict')) {
+        if(this.conflict.conflictProvince && !this.conflict.conflictProvince.checkRestrictions('initiateConflict')) {
             this.conflict.conflictProvince.inConflict = false;
             this.conflict.conflictProvince = null;
         }
@@ -151,7 +152,7 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     checkCardCondition(card) {
-        if(card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken && card.allowGameAction('initiateConflict')) {
+        if(card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken && card.checkRestrictions('initiateConflict')) {
             if(card.location === 'stronghold province' && _.size(this.game.allCards.filter(card => card.isProvince && card.isBroken && card.controller !== this.choosingPlayer)) < 3) {
                 return false;
             }

@@ -23,6 +23,10 @@ class PrideAbility extends TriggeredAbility {
             }
         });
     }
+
+    isTriggeredAbility() {
+        return false;
+    }
 }
 
 module.exports = PrideAbility;

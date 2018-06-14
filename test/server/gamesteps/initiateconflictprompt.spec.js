@@ -79,7 +79,7 @@ describe('InitateConflictPrompt: ', function() {
 
     describe('the cardClicked function, ', function() {
         beforeEach(function() {
-            this.cardSpy = jasmine.createSpyObj('card', ['allowGameAction', 'canDeclareAsAttacker', 'isCovert', 'canBeBypassedByCovert']);
+            this.cardSpy = jasmine.createSpyObj('card', ['checkRestrictions', 'canDeclareAsAttacker', 'isCovert', 'canBeBypassedByCovert']);
         });
 
         describe('when a different player clicks a card, ', function() {
@@ -122,7 +122,7 @@ describe('InitateConflictPrompt: ', function() {
 
             describe('if a conflict can\'t be initiated here, ', function() {
                 beforeEach(function() {
-                    this.cardSpy.allowGameAction.and.returnValue(false);
+                    this.cardSpy.checkRestrictions.and.returnValue(false);
                 });
 
                 it('should return false', function() {
@@ -145,7 +145,7 @@ describe('InitateConflictPrompt: ', function() {
 
             describe('if a conflict can be initiated here', function() {
                 beforeEach(function() {
-                    this.cardSpy.allowGameAction.and.returnValue(true);
+                    this.cardSpy.checkRestrictions.and.returnValue(true);
                     this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
                 });
 
@@ -231,7 +231,7 @@ describe('InitateConflictPrompt: ', function() {
                     describe('and it\'s currently participating,', function() {
                         beforeEach(function() {
                             this.conflictSpy.attackers.push(this.cardSpy);
-                            this.defenderSpy = jasmine.createSpyObj('defender', ['allowGameAction', 'canBeBypassedByCovert']);
+                            this.defenderSpy = jasmine.createSpyObj('defender', ['checkRestrictions', 'canBeBypassedByCovert']);
                             this.defenderSpy.covert = true;
                             this.prompt.selectedDefenders = [this.defenderSpy];
                             this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy); 
@@ -376,9 +376,9 @@ describe('InitateConflictPrompt: ', function() {
             this.conflictSpy.element = 'fire';
             this.conflictSpy.ring = this.fireRing;
             this.conflictSpy.conflictType = 'military';
-            this.cardSpy = jasmine.createSpyObj('card', ['allowGameAction']);
+            this.cardSpy = jasmine.createSpyObj('card', ['checkRestrictions']);
             this.conflictSpy.conflictProvince = this.cardSpy;
-            this.attackerSpy = jasmine.createSpyObj('attacker', ['allowGameAction']);
+            this.attackerSpy = jasmine.createSpyObj('attacker', ['checkRestrictions']);
             this.conflictSpy.attackers = [this.attackerSpy];
             this.prompt.menuCommand(this.playerSpy, 'done');
         });

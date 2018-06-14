@@ -2,6 +2,7 @@ const AttachAction = require('./AttachAction');
 const BowAction = require('./BowAction');
 const BreakAction = require('./BreakAction');
 const ChosenDiscardAction = require('./ChosenDiscardAction');
+const DeckSearchAction = require('./DeckSearchAction');
 const DelayedEffectAction = require('./DelayedEffectAction');
 const DiscardFavorAction = require('./DiscardFavorAction');
 const DiscardFromPlayAction = require('./DiscardFromPlayAction');
@@ -14,6 +15,7 @@ const FireRingAction = require('./FireRingAction');
 const FlipDynastyAction = require('./FlipDynastyAction');
 const GainHonorAction = require('./GainHonorAction');
 const HonorAction = require('./HonorAction');
+const InitiateConflictAction = require('./InitiateConflictAction');
 const LastingEffectAction = require('./LastingEffectAction');
 const LastingEffectCardAction = require('./LastingEffectCardAction');
 const LastingEffectRingAction = require('./LastingEffectRingAction');
@@ -63,10 +65,12 @@ const GameActions = {
     sacrifice: (propertyFactory) => new DiscardFromPlayAction(propertyFactory, true),
     // player actions
     chosenDiscard: (propertyFactory) => new ChosenDiscardAction(propertyFactory), // amount = 1
+    deckSearch: (propertyFactory) => new DeckSearchAction(propertyFactory), // amount = -1, reveal = true, cardCondition = (card, context) => true
     discardAtRandom: (propertyFactory) => new RandomDiscardAction(propertyFactory), // amount = 1
     draw: (propertyFactory) => new DrawAction(propertyFactory), // amount = 1
     gainFate: (propertyFactory) => new ModifyFateAction(propertyFactory), // amount = 1
     gainHonor: (propertyFactory) => new GainHonorAction(propertyFactory), // amount = 1
+    initiateConflict: (propertyFactory) => new InitiateConflictAction(propertyFactory), // canPass = true
     loseHonor: (propertyFactory) => new LoseHonorAction(propertyFactory), // amount = 1
     loseImperialFavor: (propertyFactory) => new DiscardFavorAction(propertyFactory),
     playerLastingEffect: (propertyFactory) => new LastingEffectAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetController, condition, until

@@ -14,6 +14,10 @@ class CourtesyAbility extends TriggeredAbility {
             handler: context => this.game.applyGameAction(context, { gainFate: context.player })
         });
     }
+
+    isTriggeredAbility() {
+        return false;
+    }
 }
 
 module.exports = CourtesyAbility;

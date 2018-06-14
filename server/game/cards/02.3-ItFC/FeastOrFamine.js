@@ -5,31 +5,23 @@ class FeastOrFamine extends ProvinceCard {
         this.interrupt({
             title: 'Move fate from an opposing character',
             when: {
-                onBreakProvince: (event, context) => event.card === context.source && context.player.cardsInPlay.any(
-                    card => card.fate === 0 && card.allowGameAction('placeFate', context)
-                )
+                onBreakProvince: (event, context) => event.card === context.source
             },
             target: {
                 cardType: 'character',
                 controller: 'opponent',
-                gameAction: ability.actions.removeFate()
+                gameAction: ability.actions.placeFate(context => ({
+                    origin: context.target,
+                    amount: context.target.fate,
+                    promptForSelect: {
+                        cardType: 'character',
+                        controller: 'self',
+                        cardCondition: card => card.fate === 0,
+                        message: '{0} moves the fate to {2}'
+                    }
+                }))
             },
-            effect: 'move all fate from {0} to a character they control',
-            handler: context => this.game.promptForSelect(context.player, {
-                activePromptTitle: 'Choose a character',
-                context: context,
-                cardType: 'character',
-                controller: 'self',
-                cardCondition: card => card.allowGameAction('placeFate', context) && card.fate === 0,
-                onSelect: (player, card) => {
-                    this.game.addMessage('{0} moves {1} fate from {2} to {3}', player, context.target.fate, context.target, card);
-                    ability.actions.removeFate({
-                        amount: context.target.fate, 
-                        recipient: card
-                    }).resolve(context.target, context);
-                    return true;
-                }
-            })
+            effect: 'move all fate from {0} to a character they control'
         });
     }
 }

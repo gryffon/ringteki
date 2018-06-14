@@ -7,24 +7,7 @@ class TatteredMissive extends DrawCard {
             condition: context => context.player.conflictDeck.size() > 0,
             cost: ability.costs.bowParent(),
             effect: 'look at the top 5 cards of their conflict deck',
-            handler: context => {
-                let cards = context.player.conflictDeck.first(5);
-                if(cards.length > 1) {
-                    this.game.promptWithHandlerMenu(context.player, {
-                        activePromptTitle: 'Select a card to reveal and put in your hand',
-                        cards: cards,
-                        cardHandler: card => {
-                            this.game.addMessage('{0} reveals {1} and adds it to their hand', context.player, card);
-                            context.player.moveCard(card, 'hand');
-                            context.player.shuffleConflictDeck();
-                        },
-                        context: context
-                    });
-                } else {
-                    this.game.addMessage('{0} reveals {1} and adds it to their hand', context.player, cards[0]);
-                    context.player.moveCard(cards[0], 'hand');
-                }
-            }
+            gameAction: ability.actions.deckSearch({ amount: 5 })
         });
     }
 

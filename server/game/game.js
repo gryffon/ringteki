@@ -31,6 +31,8 @@ const AbilityResolver = require('./gamesteps/abilityresolver.js');
 const SimultaneousEffectWindow = require('./gamesteps/SimultaneousEffectWindow');
 const AbilityContext = require('./AbilityContext.js');
 const Ring = require('./ring.js');
+const Conflict = require('./conflict.js');
+const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
 const MenuCommands = require('./MenuCommands');
 
 class Game extends EventEmitter {
@@ -253,7 +255,8 @@ class Game extends EventEmitter {
             attackingPlayer: conflict.attackingPlayer,
             declaredType: conflict.declaredType,
             winner: conflict.winner,
-            typeSwitched: conflict.conflictTypeSwitched
+            typeSwitched: conflict.conflictTypeSwitched,
+            passed: conflict.conflictPassed
         });
     }
 
@@ -895,6 +898,11 @@ class Game extends EventEmitter {
 
     getFrameworkContext(player = null) {
         return new AbilityContext({ game: this, player: player });
+    }
+
+    initiateConflict(player) {
+        this.currentConflict = new Conflict(this, player, player.opponent);
+        this.queueStep(new ConflictFlow(this, this.currentConflict));
     }
 
     /**

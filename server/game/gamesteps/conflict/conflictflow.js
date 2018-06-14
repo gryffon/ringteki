@@ -23,9 +23,10 @@ Conflict Resolution
  */
 
 class ConflictFlow extends BaseStepWithPipeline {
-    constructor(game, conflict) {
+    constructor(game, conflict, canPass) {
         super(game);
         this.conflict = conflict;
+        this.canPass = canPass;
         this.pipeline.initialise([
             new SimpleStep(this.game, () => this.resetCards()),
             new SimpleStep(this.game, () => this.promptForNewConflict()),
@@ -54,7 +55,7 @@ class ConflictFlow extends BaseStepWithPipeline {
 
     promptForNewConflict() {
         if(this.conflict.attackingPlayer.allowGameAction('chooseConflictRing') || !this.conflict.attackingPlayer.opponent) {
-            this.pipeline.queueStep(new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer));
+            this.pipeline.queueStep(new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer, true, this.canPass));
             return;
         }
         this.game.promptWithHandlerMenu(this.conflict.attackingPlayer, {
@@ -68,7 +69,7 @@ class ConflictFlow extends BaseStepWithPipeline {
                     waitingPromptTitle: 'Waiting for defender to choose conflict ring',
                     ringCondition: ring => ring.canDeclare(this.conflict.attackingPlayer),
                     onSelect: (player, ring) => {
-                        if(!this.conflict.attackingPlayer.canInitiateConflict(ring.conflictType)) {
+                        if(this.conflict.attackingPlayer.getConflictOpportunities(ring.conflictType) === 0) {
                             ring.flipConflictType();
                         }
                         this.conflict.ring = ring;
@@ -369,10 +370,10 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
     
     completeConflict() {
+        this.game.currenConflict = null;
         if(this.conflict.conflictPassed) {
             return;
         }
-
         this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
         this.resetCards();
     }

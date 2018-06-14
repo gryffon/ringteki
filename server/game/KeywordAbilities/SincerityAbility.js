@@ -14,6 +14,10 @@ class SincerityAbility extends TriggeredAbility {
             handler: context => context.game.applyGameAction(context, { draw: context.player })
         });
     }
+
+    isTriggeredAbility() {
+        return false;
+    }
 }
 
 module.exports = SincerityAbility;

@@ -23,8 +23,8 @@ class ModifyFateAction extends PlayerAction {
         return super.canAffect(player, context);
     }
 
-    getEvent(player) {
-        return super.createEvent('onModifyFate', { player: player, amount: this.amount }, () => player.modifyFate(this.amount));
+    getEvent(player, context) {
+        return super.createEvent('onModifyFate', { player: player, amount: this.amount, context: context }, () => player.modifyFate(this.amount));
     }
 }
 

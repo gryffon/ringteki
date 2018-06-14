@@ -58,7 +58,7 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities() || this.card.type === 'event' && !this.card.canPlay(context)) {
+        if(!this.card.canTriggerAbilities(context) || this.card.type === 'event' && !this.card.canPlay(context)) {
             return 'cannotTrigger';
         }
 
