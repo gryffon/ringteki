@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class Kudaka extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
         this.reaction({
             title: 'Gain 1 fate and draw 1 card',
             limit: ability.limit.perRound(2),
@@ -14,6 +14,6 @@ class Kudaka extends DrawCard {
     }
 }
 
-Kudaka.id = 'kudaka'; // This is a guess at what the id might be - please check it!!!
+Kudaka.id = 'kudaka';
 
 module.exports = Kudaka;
