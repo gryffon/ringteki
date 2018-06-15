@@ -2,7 +2,7 @@ const _ = require('underscore');
 const SelectChoice = require('./SelectChoice.js');
 
 class AbilityTargetSelect {
-    constructor(name, properties) {
+    constructor(name, properties, ability) {
         this.name = name;
         this.properties = properties;
         for(const key of Object.keys(properties.choices)) {
@@ -10,9 +10,18 @@ class AbilityTargetSelect {
                 properties.choices[key] = [properties.choices[key]];
             }
         }
+        this.checkDependentTarget = context => true; // eslint-disable-line no-unused-vars
+        if(this.properties.dependsOn) {
+            let dependsOnTarget = ability.targets.find(target => target.name === this.properties.dependsOn);
+            dependsOnTarget.checkDependentTarget = context => this.hasLegalTarget(context);
+        }
     }
 
     canResolve(context) {
+        return !!this.properties.dependsOn || this.hasLegalTarget(context);
+    }
+
+    hasLegalTarget(context) {
         let keys = Object.keys(this.properties.choices);
         return keys.some(key => this.isChoiceLegal(key, context));
     }
@@ -27,7 +36,8 @@ class AbilityTargetSelect {
         if(this.name === 'target') {
             contextCopy.select = key;
         }
-        return choice.some(gameAction => gameAction.hasLegalTarget(contextCopy) && context.ability.canPayCosts(contextCopy));
+        return context.ability.canPayCosts(contextCopy) && this.checkDependentTarget(contextCopy) && 
+               choice.some(gameAction => gameAction.hasLegalTarget(contextCopy));
     }
 
     getGameAction(context) {
@@ -36,14 +46,6 @@ class AbilityTargetSelect {
             return choice.filter(gameAction => gameAction.hasLegalTarget(context));
         }
         return [];
-    }
-
-    getContextsForDependentTargets(context) {
-        return this.getAllLegalTargets(context).map(key => {
-            let contextCopy = context.copy();
-            contextCopy.selects[this.name] = key;
-            return contextCopy;
-        });
     }
 
     getAllLegalTargets(context) {
