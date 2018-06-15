@@ -411,6 +411,16 @@ class BaseCard extends EffectSource {
         return 0;
     }
 
+    getHasAbility() {
+        let abilities = this.abilities.actions.concat(this.abilities.reactions).filter(ability => ability.isTriggeredAbility());
+        return abilities.length > 0;
+    }
+
+    getUsedAllAbilities() {
+        let abilities = this.abilities.actions.concat(this.abilities.reactions).filter(ability => ability.isTriggeredAbility());
+        return abilities.every(ability => ability.limit.isAtMax(this.controller));
+    }
+
     getSummary(activePlayer, hideWhenFaceup) {
         let isActivePlayer = activePlayer === this.owner;
 
@@ -430,7 +440,7 @@ class BaseCard extends EffectSource {
         let state = {
             id: this.cardData.id,
             controlled: this.owner !== this.controller,
-            hasAction: this.abilities.actions.length > 0,
+            hasAbility: this.getHasAbility(),
             inConflict: this.inConflict,
             facedown: this.facedown,
             menu: this.getMenu(),
@@ -439,7 +449,7 @@ class BaseCard extends EffectSource {
             showPopup: this.showPopup,
             tokens: this.tokens,
             type: this.getType(),
-            usedAbility: _.all(this.abilities.actions, action => action.limit.isAtMax(this.controller)),
+            usedAbility: this.getUsedAllAbilities(),
             uuid: this.uuid
         };
 

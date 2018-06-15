@@ -142,7 +142,7 @@ class Card extends React.Component {
     getCountersForCard(card) {
         var counters = {};
 
-        counters['ability-indicator'] = card.hasAction ? { count: card.usedAbility ? 2 : 1, fade: card.type === 'attachment', shortName: 'A' } : undefined;
+        counters['ability-indicator'] = card.hasAbility ? { count: card.usedAbility ? 2 : 1, fade: card.type === 'attachment', shortName: 'A' } : undefined;
         counters['card-fate'] = card.fate ? { count: card.fate, fade: card.type === 'attachment', shortName: 'F' } : undefined;
         counters['card-honor'] = card.honor ? { count: card.honor, fade: card.type === 'attachment', shortName: 'H' } : undefined;
         if(card.isHonored) {
