@@ -42,7 +42,7 @@ describe('For Shame!', function() {
                 this.player2.playCharacterFromHand('steward-of-law');
                 this.player2.clickPrompt('Conflict');
                 this.player1.pass();
-                this.forShame = this.player2.clickCard('for-shame');
+                this.player2.clickCard('for-shame');
                 expect(this.player2).toHavePrompt('For Shame!');
                 expect(this.player2).toBeAbleToSelect(this.moto);
                 expect(this.player2).not.toBeAbleToSelect(this.outrider);
