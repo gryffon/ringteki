@@ -1,4 +1,4 @@
-fdescribe('Hurricane Punch', function() {
+describe('Hurricane Punch', function() {
     integration(function() {
         describe('Hurricane Punch\'s effect', function() {
             beforeEach(function() {

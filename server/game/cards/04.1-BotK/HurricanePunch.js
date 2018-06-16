@@ -13,11 +13,7 @@ class HurricanePunch extends DrawCard {
                     effect: ability.effects.modifyMilitarySkill(2)
                 }))
             },
-            then: function() {
-                return {
-                    gameAction: ability.actions.draw()
-                };
-            }
+            gameAction: ability.actions.draw()
         });
     }
 }
