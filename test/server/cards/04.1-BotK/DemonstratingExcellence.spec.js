@@ -1,4 +1,4 @@
-fdescribe('Demonstrating Excellence', function() {
+describe('Demonstrating Excellence', function() {
     integration(function() {
         describe('Demonstrating Excellence\'s ability', function() {
             beforeEach(function() {
