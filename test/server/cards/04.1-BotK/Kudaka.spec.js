@@ -18,7 +18,6 @@ describe('Kadaka', function() {
                     attackers: ['kudaka'],
                     defenders: []
                 });
-
                 this.player2.pass(); //Pass priority to player 1
                 this.kudaka = this.player1.findCardByName('Kudaka', 'play area');
                 this.player1.pass();
@@ -35,7 +34,7 @@ describe('Kadaka', function() {
             describe('when the player activates the reaction', function() {
                 beforeEach(function() {
                     this.player1.clickCard(this.kudaka);
-                }); 
+                });
 
                 it('should gain 1 fate', function() {
                     expect(this.player1.fate).toBe(1);
