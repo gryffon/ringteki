@@ -38,11 +38,11 @@ describe('Kadaka', function() {
                 }); 
 
                 it('should gain 1 fate', function() {
-                    expect(this.player1.hand.length).toBe(1);
+                    expect(this.player1.fate).toBe(1);
                 });
 
                 it('should draw 1 card', function() {
-                    expect(this.player1.fate).toBe(2);
+                    expect(this.player1.hand.length).toBe(2);
                 });
             });
         });
