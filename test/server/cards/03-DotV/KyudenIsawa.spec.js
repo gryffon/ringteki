@@ -7,9 +7,11 @@ describe('Kyuden Isawa', function() {
                     player1: {
                         stronghold: 'kyuden-isawa',
                         inPlay: ['adept-of-the-waves'],
-                        hand: ['against-the-waves']
+                        hand: ['against-the-waves', 'walking-the-way'],
+                        dynastyDeck: ['asako-tsuki']
                     }
                 });
+                this.asakoTsuki = this.player1.placeCardInProvince('asako-tsuki');
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: ['adept-of-the-waves'],
@@ -21,7 +23,7 @@ describe('Kyuden Isawa', function() {
                 this.player2.pass();
             });
 
-            it('should let you play a spell from the discard pile', function() {
+            it('should let you play a spell from the discard pile, and remove it from the game', function() {
                 expect(this.adeptOfTheWaves.bowed).toBe(true);
                 this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
                 expect(this.player1).toHavePrompt('Choose a spell event');
@@ -37,6 +39,23 @@ describe('Kyuden Isawa', function() {
                 this.player1.clickCard(this.againstTheWaves);
                 this.player1.clickCard(this.adeptOfTheWaves);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should allow you to cancel and choose a different spell', function() {
+                this.walkingTheWay = this.player1.clickCard('walking-the-way');
+                this.player1.clickPrompt('Adept of the Waves (3)');
+                this.player1.clickCard(this.asakoTsuki);
+                expect(this.walkingTheWay.location).toBe('conflict discard pile');
+                this.player2.pass();
+                this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
+                this.player1.clickCard(this.againstTheWaves);
+                expect(this.player1).toHavePrompt('Against the Waves');
+                expect(this.player1.currentButtons).toContain('Cancel');
+                this.player1.clickPrompt('Cancel');
+                expect(this.player1).toHavePrompt('Kyūden Isawa');
+                expect(this.player1).toBeAbleToSelect(this.walkingTheWay);
+                this.player1.clickCard(this.walkingTheWay);
+                expect(this.player1).toHavePrompt('Walking the Way');
             });
         });
     });
