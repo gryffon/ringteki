@@ -8,6 +8,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         super(game);
 
         this.context = context;
+        this.canCancel = true;
         this.targetResults = {};
         this.initialise();
     }
@@ -54,12 +55,19 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
+        this.canPayResults = {
+            cancelled: false,
+            canCancel: this.canCancel
+        };
         this.context.stage = 'costs';
-        this.canPayResults = this.context.ability.resolveCosts(this.context);
+        this.context.ability.resolveCosts(this.context, this.canPayResults);
     }
 
     payCosts() {
         if(this.cancelled) {
+            return;
+        } else if(this.canPayResults.cancelled) {
+            this.cancelled = true;
             return;
         }
         if(_.any(this.canPayResults, result => result.resolved && !result.value)) {
