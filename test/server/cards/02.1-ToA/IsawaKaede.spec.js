@@ -6,7 +6,7 @@ describe('Isawa Kaede', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['isawa-kaede', 'shiba-tsukune'],
-                        hand: ['seeker-of-knowledge', 'assassination']
+                        hand: ['seeker-of-knowledge', 'assassination', 'fine-katana', 'fallen-in-battle']
                     },
                     player2: {
                         provinces: ['defend-the-wall'],
@@ -105,6 +105,30 @@ describe('Isawa Kaede', function() {
                 expect(this.player1).toHavePrompt('Choose an effect to be resolved');
                 expect(this.player1.currentButtons).toContain('Fire Ring Effect');
                 expect(this.player1.currentButtons).toContain('Void Ring Effect');
+            });
+
+            it('should still allow resolution of multiple rings even when Kaede is no longer in play', function() {
+                this.player2.pass();
+                this.player1.clickCard('assassination');
+                this.player1.clickCard('shinjo-outrider', 'any', 'opponent');
+                this.player2.pass();
+                this.player1.clickCard('seeker-of-knowledge');
+                this.player1.clickPrompt('0');
+                this.player1.clickPrompt('Conflict');
+                this.player2.pass();
+                this.player1.playAttachment('fine-katana', this.isawaKaede);
+                this.noMoreActions();
+                this.player1.clickCard('fallen-in-battle');
+                expect(this.player1).toHavePrompt('Fallen In Battle');
+                this.player1.clickCard(this.isawaKaede);
+                expect(this.isawaKaede.location).toBe('dynasty discard pile');
+                this.player2.pass();
+                this.player1.clickPrompt('No');
+                expect(this.player1).toHavePrompt('Resolve Ring Effect');
+                this.player1.clickPrompt('Resolve All Elements');
+                expect(this.player1).toHavePrompt('Choose an effect to be resolved');
+                expect(this.player1.currentButtons).toContain('Fire Ring Effect');
+                expect(this.player1.currentButtons).toContain('Air Ring Effect');
             });
         });
     });

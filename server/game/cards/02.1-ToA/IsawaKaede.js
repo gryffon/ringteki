@@ -12,8 +12,16 @@ class IsawaKaede extends DrawCard {
             effect: ability.effects.addElement('void')
         });
         this.persistentEffect({
-            condition: () => this.isAttacking() && this.game.currentConflict.winner === this.controller,
-            effect: ability.effects.modifyConflictElementsToResolve(5)
+            match: this,
+            effect: ability.effects.delayedEffect({
+                multipleTrigger: true,
+                when: {
+                    afterConflict: event => event.conflict.winner === this.controller && this.isAttacking()
+                },
+                gameAction: ability.actions.playerLastingEffect({
+                    effect: ability.effects.modifyConflictElementsToResolve(5)
+                })
+            })
         });
     }
 }
