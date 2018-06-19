@@ -109,8 +109,8 @@ describe('AbilityResolver', function() {
         });
         describe('when not all costs can be paid', function() {
             beforeEach(function() {
-                this.ability.resolveCosts.and.returnValue([{ resolved: true, value: true }, { resolved: true, value: false }]);
-                this.resolver.continue();
+                this.resolver.canPayResults = { cancelled: true };
+                this.resolver.payCosts();
             });
 
             it('should not pay the costs', function() {
@@ -161,8 +161,8 @@ describe('AbilityResolver', function() {
 
             describe('and the cost could not be paid', function() {
                 beforeEach(function() {
-                    this.canPayResult.value = false;
-                    this.resolver.continue();
+                    this.resolver.canPayResults = { cancelled: true };
+                    this.resolver.payCosts();
                 });
 
                 it('should not pay the costs', function() {
