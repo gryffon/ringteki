@@ -379,8 +379,8 @@ export class InnerGameBoard extends React.Component {
 
             conflictElement = (<div>
                 <div className='conflict-panel'>
-                    <div className='phase-display conflict-count-top'> 
-                        { otherPlayerSkill } 
+                    <div className='phase-display conflict-count-top'>
+                        { otherPlayerSkill }
                     </div>
                     <div className='phase-display conflict-separator'>
                         vs
@@ -391,7 +391,12 @@ export class InnerGameBoard extends React.Component {
                 </div>
                 <div className='conflict-panel'>
                     <div className='phase-display'>
-                        <span className={ conflictClass } />
+                        <span className={ conflictClass } >&nbsp;</span>
+                        { conflict.elements && conflict.elements.includes('fire') && <span className={ 'icon-element-fire' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('water') && <span className={ 'icon-element-water' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('earth') && <span className={ 'icon-element-earth' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('air') && <span className={ 'icon-element-air' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('void') && <span className={ 'icon-element-void' } /> }
                     </div>
                 </div>
 
@@ -407,7 +412,6 @@ export class InnerGameBoard extends React.Component {
         </div>);
     }
 
-    
     renderSidebar(thisPlayer, otherPlayer) {
         let size = this.props.user.settings.cardSize;
         return (
@@ -429,8 +433,7 @@ export class InnerGameBoard extends React.Component {
                     { thisPlayer.hideProvinceDeck && <HonorFan value={ otherPlayer ? otherPlayer.showBid + '' : '0' } /> }
                     { this.getRings(otherPlayer ? otherPlayer.name : '\0', 'claimed-pool their-pool ' + size) }
                 </div>
-                <div className='sidebar-pane our-side'>
-                    { this.getRings(thisPlayer ? thisPlayer.name : '\0', 'claimed-pool my-pool ' + size) }
+                <div>
                     {
                         !thisPlayer.hideProvinceDeck &&
                         <div className='province-group our-side no-highlight'>
@@ -448,6 +451,9 @@ export class InnerGameBoard extends React.Component {
                                 size={ this.props.user.settings.cardSize } />
                         </div>
                     }
+                </div>
+                <div className='sidebar-pane our-side'>
+                    { this.getRings(thisPlayer ? thisPlayer.name : '\0', 'claimed-pool my-pool ' + size) }
                     { thisPlayer.hideProvinceDeck && <HonorFan value={ thisPlayer.showBid + '' } /> }
                     { thisPlayer.optionSettings.showStatusInSidebar &&
                         <div className='player-stats-box our-side'>
@@ -541,13 +547,13 @@ export class InnerGameBoard extends React.Component {
             });
         }
 
-        for(let i = thisPlayerCards.length; i < 2; i++) {
-            thisPlayerCards.push(<div className='card-row player-home' key={ 'this-empty' + i } />);
-        }
+        // for(let i = thisPlayerCards.length; i < 2; i++) {
+        //     thisPlayerCards.push(<div className='card-row player-home' key={ 'this-empty' + i } />);
+        // }
 
-        for(let i = otherPlayerCards.length; i < 2; i++) {
-            thisPlayerCards.push(<div className='card-row player-home' key={ 'other-empty' + i } />);
-        }
+        // for(let i = otherPlayerCards.length; i < 2; i++) {
+        //     thisPlayerCards.push(<div className='card-row player-home' key={ 'other-empty' + i } />);
+        // }
 
         let popup = (
             <div id='settings-modal' ref='modal' className='modal fade' tabIndex='-1' role='dialog'>

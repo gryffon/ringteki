@@ -5,6 +5,7 @@
 
 
 .player-board {
+    margin-top:10px;
     display:grid;
     grid-column-start:1;
     grid-column-end:4;
@@ -17,7 +18,6 @@
     &.their-side {
         grid-row-start:1;
         grid-row-end:3;
-        justify-content:right;
     }
 }
 
@@ -28,9 +28,6 @@
 player-home {
     grid-row-start:1;
     grid-column-start:2;
-    &.our-side {
-        grid-row-start:2;
-    }
 }
 
 .player-home-row {
@@ -102,6 +99,7 @@ player-home {
 }
 
 .board-middle {
+    margin-top:40px;
     display: grid;
     grid-template-rows: @card-height*1.3 1fr @card-height*1.3;
     grid-template-columns: auto;
@@ -119,7 +117,6 @@ player-home {
     height:100%;
     display:grid;
     grid-template-rows: (@card-height*1.3) 1fr @center-bar-height 1fr (@card-height*1.3);
-    grid-template-columns: (@card-width*3 + 15px) 1fr (@card-width*3 + 15px);
     grid-row-start:1;
     grid-row-end:6;
     grid-column-start:1;

@@ -28,7 +28,7 @@
     flex-wrap:wrap;
     margin:5px;
     min-height:@ring-sm-height*2;
-    max-width: @card-width * 1.1;
+    max-width: @card-lg-width * 1.1;
     &.large {
         max-width: @card-lg-width;
     }
@@ -42,7 +42,7 @@
 }
 
 .my-pool {
-    align-items:top left;
+    align-items:bottom left;
 }
 
 .ring {
@@ -54,10 +54,9 @@
 circle.ring-background {
     position:absolute;
     z-index:0;
-    cx:@ring-width/2;
-    cy:@ring-height/2;
-    r:@ring-width/2;
-    
+    cx:50%;
+    cy:50%;
+    r:50%;
     &.small {
         cx:@ring-sm-width/1.5;
         cy:@ring-sm-height/1.5;
@@ -70,12 +69,14 @@ circle.ring-background {
 
 svg.ring-svg {
     position:absolute;
-    max-height: @ring-height*1.1;
-    max-width: @ring-width*1.1;
+    left:0;
+    top:0;
+    height:2em;
+    width:2em;
     
-    &.small {
-        max-height: @ring-sm-height*1.1;
-        max-width: @ring-sm-width*1.1;
+    &.small { 
+        width:1.25em;
+        height:1.25em;
     }
 
     &.contested {

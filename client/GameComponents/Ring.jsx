@@ -93,9 +93,14 @@ class Ring extends React.Component {
     }
 
     render() {
-        let className = 'ring icon-element-' + this.props.ring.element + ' ' + this.props.size;
-        let bgClassName = 'ring-background  tint-' + this.props.ring.conflictType + ' ' + this.props.size; 
-        let svgClassName = 'ring-svg ' + this.props.size + ' ' + (this.props.ring.selected || this.props.ring.contested ? 'contested' : '');
+        let size = this.props.size;
+        if(this.props.ring.claimed) {
+            size = 'small';
+        }
+
+        let className = 'ring icon-element-' + this.props.ring.element + ' ' + size;
+        let bgClassName = 'ring-background  tint-' + this.props.ring.conflictType + ' ' + size;
+        let svgClassName = 'ring-svg ' + size + ' ' + (this.props.ring.selected || this.props.ring.contested ? 'contested' : '');
         if(this.props.ring.unselectable) {
             className = className + ' unselectable';
             bgClassName += ' unselectable';
@@ -104,28 +109,19 @@ class Ring extends React.Component {
         let visible = true;
         if((this.props.owner && (!this.props.ring.claimed || this.props.owner !== this.props.ring.claimedBy)) || (!this.props.owner && this.props.ring.claimed)) {
             className += ' hidden';
-            svgClassName += ' hidden'; 
+            svgClassName += ' hidden';
             visible = false;
         }
-
-        if(this.props.ring.claimed) {
-            className += ' small';
-            svgClassName += ' small';
-            bgClassName += ' small';
-        }
-
         return (
             <div className='ring no-highlight' onClick={ event => this.onClick(event, this.props.ring.element) } >
                 <svg className={ svgClassName } >
-                    <circle className={ bgClassName } />
+                    <circle cx='50%' cy='50%' r='50%' className={ bgClassName } />
                 </svg>
                 <span className={ className } />
                 { (this.showCounters() && visible) ? <CardCounters counters={ this.getCountersForRing(this.props.ring.element) } /> : null }
                 { this.showMenu() ? <CardMenu menu={ this.props.ring.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
             </div>);
-           
     }
-    
 }
 //<img className={ className } title={ this.props.ring.element } src={ '/img/' + this.props.ring.conflictType + '-' + this.props.ring.element + '.png' } />
 //     <div className={ this.props.ring.claimedBy.length > 12 ? 'ring-info-xs ' : 'ring-info ' } >
