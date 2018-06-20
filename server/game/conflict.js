@@ -246,6 +246,9 @@ class Conflict extends GameObject {
     passConflict(message = '{0} has chosen to pass their conflict opportunity') {
         this.game.addMessage(message, this.attackingPlayer);
         this.conflictPassed = true;
+        if(this.ring) {
+            this.ring.resetRing();
+        }
         this.game.conflictCompleted(this);
         this.game.raiseEvent('onConflictPass', { conflict: this });
         this.resetCards();
