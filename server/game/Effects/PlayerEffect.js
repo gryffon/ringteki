@@ -22,7 +22,7 @@ class PlayerEffect extends Effect {
     }
 
     getTargets() {
-        return _.filter(this.game.getPlayers(), player => this.match(player));
+        return this.game.getPlayers().filter(player => this.match(player));
     }
 }
 
