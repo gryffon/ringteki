@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 const Effect = require('./Effect.js');
 
 class PlayerEffect extends Effect {
