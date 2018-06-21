@@ -12,6 +12,7 @@ class DiscardCardAction extends CardGameAction {
     }
 
     canAffect(card, context) {
+        console.log(this.location, card.location, super.canAffect(card, context));
         if(this.location && card.location !== this.location) {
             return false;
         }
