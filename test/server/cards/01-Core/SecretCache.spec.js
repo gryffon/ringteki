@@ -1,6 +1,6 @@
-fdescribe('Shameful Display', function() {
+describe('Secret Cache', function() {
     integration(function() {
-        describe('Shameful Display\'s ability', function() {
+        describe('Secret Cache\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
