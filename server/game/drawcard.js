@@ -162,11 +162,11 @@ class DrawCard extends BaseCard {
     hasDash(type = '') {
         let dashEffects = this.getEffects('setDash');
         if(type === 'military') {
-            return this.printedMilitarySkill === null || dashEffects.includes(type);
+            return this.printedMilitarySkill === undefined || dashEffects.includes(type);
         } else if(type === 'political') {
-            return this.printedPoliticalSkill === null || dashEffects.includes(type);
+            return this.printedPoliticalSkill === undefined || dashEffects.includes(type);
         }
-        return this.printedMilitarySkill === null || this.printedPoliticalSkill === null || dashEffects.length > 0;
+        return this.printedMilitarySkill === undefined || this.printedPoliticalSkill === undefined || dashEffects.length > 0;
     }
 
     getSkill(type) {
