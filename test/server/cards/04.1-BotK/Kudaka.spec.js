@@ -1,6 +1,6 @@
-describe('Kadaka', function() {
+describe('Kudaka', function() {
     integration(function() {
-        describe('Kadaka\'s ability', function() {
+        describe('Kudaka\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
