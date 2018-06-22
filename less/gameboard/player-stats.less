@@ -19,6 +19,7 @@
 .our-side {
     .player-stats {
         flex-direction: column;
+        grid-row: 10;
     }
 }
 
@@ -63,6 +64,9 @@
 
 .player-stats-row {
     width: 100%;
+    grid-row-start:1;
+    grid-column-start:1;
+    grid-column-end:4;
 
     .player-stats {
         margin: 0;
@@ -81,6 +85,7 @@
         .player-stats {
             flex-direction: row;
         }
+        grid-row-start:3;
     }
 }
 

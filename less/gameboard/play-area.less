@@ -3,18 +3,34 @@
     display: flex;
 }
 
-.play-area, .player-board {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
 
 .player-board {
-    margin: 10px;
+    display:grid;
+    grid-column-start:1;
+    grid-column-end:4;
+
+    &.our-side {
+        grid-row-start:4;
+        grid-row-end:6;
+        align-content:bottom;
+    }
+    &.their-side {
+        grid-row-start:1;
+        grid-row-end:3;
+        justify-content:right;
+    }
 }
 
 .player-board.our-side > div:first-child {
-    margin-top: auto;
+    justify-content:bottom;
+}
+
+player-home {
+    grid-row-start:1;
+    grid-column-start:2;
+    &.our-side {
+        grid-row-start:2;
+    }
 }
 
 .player-home-row {
@@ -34,28 +50,37 @@
 }
 
 .player-deck-row {
-    display: flex;
+    
+    grid-row-start: 1;
+    grid-column-start:1;
+    
     margin-top: 5px;
 
     &.our-side {
         margin-top: 0;
         margin-bottom: 18px;
+        grid-row-start: 3;
     }
 }
 
 .player-stronghold-row {
+    grid-row-start:1;
+    grid-column-start:2;
+    grid-column-end:3;
     display: flex;
-    margin-top: 5px;
 
     &.our-side {
-        margin-top: 0;
-        margin-bottom: 18px;
+        grid-row-start:2;
+        grid-column-start:1;
+        grid-column-end:2;
     }
 }
 
 .deck-cards {
     display: flex;
 }
+
+
 
 .card-row, .hand {
     display: flex;
@@ -65,19 +90,38 @@
 .card-row .card.horizontal {
     margin-bottom: @card-height - @card-width;
 }
+.card-row {
+    flex-direction:row;
+    justify-content: flex-start;
+}
 
-.player-board .card-wrapper {
-    margin-right: 10px;
-    margin-bottom: 5px;
+.card-wrapper {
+    &.at-home {
+        margin: 0px 5px 0px 5px;
+    }
 }
 
 .board-middle {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+    display: grid;
+    grid-template-rows: @card-height*1.3 1fr @card-height*1.3;
+    grid-template-columns: auto;
+    grid-row-start:1;
+    grid-row-end:4;
+    grid-column-start:2;
 }
 
 .board-inner {
-    flex: 1;
-    display: flex;
+    grid-row-start:2;
+    grid-column-start:1;
+}
+
+.play-area {
+    height:100%;
+    display:grid;
+    grid-template-rows: (@card-height*1.3) 1fr @center-bar-height 1fr (@card-height*1.3);
+    grid-template-columns: (@card-width*3 + 15px) 1fr (@card-width*3 + 15px);
+    grid-row-start:1;
+    grid-row-end:6;
+    grid-column-start:1;
+    grid-column-end:4;
 }

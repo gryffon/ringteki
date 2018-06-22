@@ -104,7 +104,7 @@ class Ring extends EffectSource {
 
         let selectionState = {};
 
-        if(activePlayer) {
+        if(activePlayer) { 
             selectionState = activePlayer.getRingSelectionState(this);
         }
 
@@ -113,6 +113,7 @@ class Ring extends EffectSource {
             claimedBy: this.claimedBy,
             conflictType: this.conflictType,
             contested: this.contested,
+            selected: this.game.currentConflict && this.game.currentConflict.conflictRing === this.element,
             element: this.element,
             fate: this.fate,
             menu: this.getMenu()

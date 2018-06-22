@@ -171,9 +171,11 @@ class Card extends React.Component {
         let wrapperClassName = '';
         let attachments = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
         if(attachments > 0) {
-            wrapperClassName = 'wrapper-' + attachments.toString();
+            wrapperClassName += 'wrapper-' + attachments.toString();
         }
-
+        if(this.props.source === 'play area') {
+            wrapperClassName += ' at-home';
+        }
         return wrapperClassName;
     }
 

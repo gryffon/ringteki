@@ -1,6 +1,6 @@
 .ring-pane {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 }
@@ -8,24 +8,85 @@
 .ring-panel {
     padding: 0;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    align-self: stretch;
+    grid-row-start:5;
+    grid-column-start:2;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    float:left;
+    min-width: 25%;
+    &.small {
+        min-width: 25%;
+    }
 }
 
-.ring-display {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    align-self: stretch;
+.claimed-pool {
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    overflow:wrap;
+    flex-wrap:wrap;
+    margin:5px;
+    min-height:@ring-sm-height*2;
+    max-width: @card-width * 1.1;
+    &.large {
+        max-width: @card-lg-width;
+    }
+    &.x-large {
+        max-width: @card-xl-width;
+    }
+}
+
+.their-pool {
+    align-items:bottom left;
+}
+
+.my-pool {
+    align-items:top left;
 }
 
 .ring {
+    float:left;
     position: relative;
+    margin-right:2px;
 }
 
+circle.ring-background {
+    position:absolute;
+    z-index:0;
+    cx:@ring-width/2;
+    cy:@ring-height/2;
+    r:@ring-width/2;
+    
+    &.small {
+        cx:@ring-sm-width/1.5;
+        cy:@ring-sm-height/1.5;
+        r:@ring-sm-width/1.5;
+    }
+    &.unselectable {
+        filter: grayscale(100%) brightness(60%);
+    }
+}
+
+svg.ring-svg {
+    position:absolute;
+    max-height: @ring-height*1.1;
+    max-width: @ring-width*1.1;
+    
+    &.small {
+        max-height: @ring-sm-height*1.1;
+        max-width: @ring-sm-width*1.1;
+    }
+
+    &.contested {
+        -webkit-filter: drop-shadow( 0 0 12px white);
+        filter: drop-shadow( 0 0 12px white);
+    }
+    
+    &.hidden {
+        display:none;
+    }
+}
 .ring-info {
     flex: 1;
     font-size: 12px;
@@ -34,20 +95,42 @@
     text-overflow: ellipsis;
 }
 
-img.ring {
-    height: @ring-height;
-    width: @ring-width;
-    padding: 5px;
+.ring {
+    margin-top:0px;
+    position:relative;
+    color:white;
+    max-height: @ring-height;
+    max-width:@ring-width;
+    font-size:@ring-height;
 
     &.unselectable {
         filter: grayscale(100%) brightness(60%);
       }
+
+    &.hidden {
+        display:none;
+    }
     
     &.small {
-        height: @ring-sm-height;
-        width: @ring-sm-width;
+        max-height: @ring-sm-height;
+        max-width: @ring-sm-width;
+        font-size:@ring-sm-height;
     }
 }
+
+.tint-military {
+    fill: @military-ring-color;
+    &.unselectable {
+        fill:black;
+    }
+  }
+  
+  .tint-political {
+    fill: @political-ring-color;
+    &.unselectable {
+        fill:black;
+    }
+  }
 
 @media (max-width: 1366px) {
     .ring-panel {

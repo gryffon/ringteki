@@ -13,7 +13,7 @@ class StrongholdRow extends React.Component {
                 {
                     player &&
                     <img
-                        className={ `imperial-favor ${player.imperialFavor ? '' : 'hidden'}` }
+                        className={ `card-image imperial-favor ${ this.props.cardSize } ${player.imperialFavor ? '' : 'hidden'} ` }
                         src={ '/img/' + (player.imperialFavor ? player.imperialFavor : 'political') + '-favor.png' }
                     />
                 }
@@ -26,30 +26,20 @@ class StrongholdRow extends React.Component {
         if(this.props.isMe || this.props.spectating && !this.props.otherPlayer) {
 
             return (
-                <div className='stronghold-row'>
-                    <div className='deck-cards'>
-                        { this.props.role && this.props.role.location ? <CardPile className='rolecard' source='role card' cards={ [] } topCard={ this.props.role } disableMenu
-                            onMouseOver={ this.props.onMouseOver } onMouseOut={ this.props.onMouseOut } onCardClick={ this.props.onCardClick } size={ this.props.cardSize } /> : <Placeholder size={ this.props.cardSize } /> }
-                        <Province isMe={ this.props.isMe } source='stronghold province' cards={ this.props.strongholdProvinceCards } onMouseOver={ this.props.onMouseOver } onMouseOut={ this.props.onMouseOut } onDragDrop={ this.props.onDragDrop } onCardClick={ this.props.onCardClick } size={ this.props.cardSize } onMenuItemClick={ this.props.onMenuItemClick } />
-                        { this.getFavor(this.props.thisPlayer) }
-                    </div>
+                <div className='player-stronghold-row our-side'>
+                    { this.props.thisPlayer && this.props.thisPlayer.role && this.props.thisPlayer.role.location ? <CardPile className='rolecard' source='role card' cards={ [] } topCard={ this.props.thisPlayer.role } disableMenu
+                        onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut } onCardClick={ this.onCardClick } size={ this.props.cardSize } /> : <Placeholder size={ this.props.cardSize } /> }
+                    <Province isMe={ this.props.isMe } source='stronghold province' cards={ this.props.strongholdProvinceCards } onMouseOver={ this.props.onMouseOver } onMouseOut={ this.props.onMouseOut } onDragDrop={ this.props.onDragDrop } onCardClick={ this.props.onCardClick } size={ this.props.cardSize } onMenuItemClick={ this.props.onMenuItemClick } />
+                    { this.getFavor(this.props.thisPlayer) }
                 </div>
             );
         }
         return (
-            <div className='stronghold-row'>
-                <div className='deck-cards'>
-                    <Placeholder className='card-pile' size={ this.props.cardSize } />
-                    <Placeholder className='card-pile' size={ this.props.cardSize } />
-                    <Placeholder className='card-pile' size={ this.props.cardSize } />
-                    <Placeholder className='province' size={ this.props.cardSize } />
-                    <Placeholder className='province' size={ this.props.cardSize } />
-                    <Placeholder className='province' size={ this.props.cardSize } />
-                    { (!this.props.isMe && this.props.thisPlayer) ? this.getFavor(this.props.thisPlayer) : this.getFavor(this.props.otherPlayer) }
-                    <Province isMe={ this.props.isMe } source='stronghold province' cards={ this.props.strongholdProvinceCards } onMouseOver={ this.props.onMouseOver } onMouseOut={ this.props.onMouseOut } onCardClick={ this.props.onCardClick } size={ this.props.cardSize } />
-                    { this.props.role && this.props.role.location ? <CardPile className='rolecard' source='role card' cards={ [] } topCard={ this.props.role } disableMenu
-                        onMouseOver={ this.props.onMouseOver } onMouseOut={ this.props.onMouseOut } onCardClick={ this.props.onCardClick } size={ this.props.cardSize } onMenuItemClick={ this.props.onMenuItemClick } /> : '' }
-                </div>
+            <div className='player-stronghold-row their-side'>
+                { (!this.props.isMe && this.props.thisPlayer) ? this.getFavor(this.props.thisPlayer) : this.getFavor(this.props.otherPlayer) }
+                <Province isMe={ this.props.isMe } source='stronghold province' cards={ this.props.strongholdProvinceCards } onMouseOver={ this.props.onMouseOver } onMouseOut={ this.props.onMouseOut } onCardClick={ this.props.onCardClick } size={ this.props.cardSize } />
+                { this.props.otherPlayer && this.props.otherPlayer.role && this.props.otherPlayer.role.location ? <CardPile className='rolecard' source='role card' cards={ [] } topCard={ this.props.otherPlayer.role } disableMenu
+                    onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut } onCardClick={ this.onCardClick } size={ this.props.cardSize } /> : <Placeholder size={ this.props.cardSize } /> }
             </div>
         );
 
