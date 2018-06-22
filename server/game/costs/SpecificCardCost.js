@@ -17,13 +17,11 @@ class SpecificCardCost {
         return this.action.canAffect(card, context);
     }
 
-    resolve(context, result = { resolved: false }) {
+    resolve(context) {
         let card = this.cardFunc(context);
         context.costs[this.action.name] = card;
 
-        result.resolved = true;
-        result.value = this.action.setTarget(card, context);
-        return result;
+        this.action.setTarget(card);
     }
 
     payEvent(context) {

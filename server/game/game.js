@@ -250,14 +250,21 @@ class Game extends EventEmitter {
         return types.every(type => this.currentConflict.elements.concat(this.currentConflict.conflictType).includes(type));
     }
 
-    conflictCompleted(conflict) {
+    recordConflict(conflict) {
         this.completedConflicts.push({
             attackingPlayer: conflict.attackingPlayer,
             declaredType: conflict.declaredType,
-            winner: conflict.winner,
-            typeSwitched: conflict.conflictTypeSwitched,
-            passed: conflict.conflictPassed
+            passed: conflict.conflictPassed,
+            uuid: conflict.uuid
         });
+    }
+
+    recordConflictWinner(conflict) {
+        let record = this.completedConflicts.find(record => record.uuid === conflict.uuid);
+        if(record) {
+            record.winner = conflict.winner;
+            record.typeSwitched = conflict.conflictTypeSwitched;
+        }
     }
 
     stopClocks() {
@@ -284,6 +291,22 @@ class Game extends EventEmitter {
 
         // Check to see if the current step in the pipeline is waiting for input
         this.pipeline.handleCardClicked(player, card);
+    }
+
+    facedownCardClicked(playerName, location, controllerName, isProvince = false) {
+        let player = this.getPlayerByName(playerName);
+        let controller = this.getPlayerByName(controllerName);
+        if(!player || !controller) {
+            return;
+        }
+        let list = controller.getSourceList(location);
+        if(!list) {
+            return;
+        }
+        let card = list.find(card => !isProvince === !card.isProvince);
+        if(card) {
+            return this.pipeline.handleCardClicked(player, card);
+        }
     }
 
     /**
