@@ -2,6 +2,13 @@ const DrawCard = require('../../drawcard.js');
 
 class FeralNingyo extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+        this.action({
+            title: 'Put into play',
+            condition: this.game.isDuringConflict() && this.game.currentConflict.hasElement('water'),
+            //cost: ability.costs.putSelfIntoPlay(),
+            location: 'hand',
+            gameAction: ability.actions.putIntoConflict()
+        });
     }
 }
 
