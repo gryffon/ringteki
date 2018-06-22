@@ -46,7 +46,7 @@ describe('City of Lies', function() {
                 expect(this.player1.player.fate).toBe(4);
             });
 
-            fit('should reduce costs by 2 when 2 cities are used', function() {
+            it('should reduce costs by 2 when 2 cities are used', function() {
                 this.player1.clickCard(this.cityOfLies);
                 this.player2.pass();
                 this.player1.clickCard(this.cityOfLies2);
