@@ -48,11 +48,11 @@ class EventWindow extends BaseStepWithPipeline {
         this.events = _.reject(this.events, e => e === event);
     }
 
-    addThenAbility(events, ability) {
+    addThenAbility(events, ability, context) {
         if(!Array.isArray(events)) {
             events = [events];
         }
-        this.thenAbilities.push({ events: events, ability: ability });
+        this.thenAbilities.push({ events: events, ability: ability, context: context });
     }
 
     setCurrentEventWindow() {
@@ -118,7 +118,7 @@ class EventWindow extends BaseStepWithPipeline {
     checkThenAbilities() {
         for(const thenAbility of this.thenAbilities) {
             if(thenAbility.events.every(event => !event.cancelled)) {
-                this.game.resolveAbility(thenAbility.ability.createContext());
+                this.game.resolveAbility(thenAbility.ability.createContext(thenAbility.context.player));
             }
         }
     }
