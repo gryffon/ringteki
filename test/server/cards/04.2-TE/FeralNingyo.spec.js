@@ -56,6 +56,15 @@ describe('Feral Ningyo', function () {
                     this.player1.clickPrompt('Don\'t resolve');
                     expect(this.feral.location).toBe('conflict deck');
                 });
+
+                it('should shuffle when it is returned to the deck', function () {             
+                    this.player1.clickPrompt('Put into play');
+                    this.noMoreActions();
+                    spyOn(this.game, 'emitEvent');
+                    this.player1.clickPrompt('No');
+                    this.player1.clickPrompt('Don\'t resolve');
+                    expect(this.game.emitEvent).toHaveBeenCalledWith('onDeckShuffled', jasmine.anything());
+                });
             });
         });
     });

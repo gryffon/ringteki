@@ -4,7 +4,7 @@ class FeralNingyo extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Put into play',
-            condition: () => this.game.isDuringConflict() && this.game.currentConflict.hasElement('water'),
+            condition: () => this.game.isDuringConflict('water'),
             location: 'hand',
             gameAction: ability.actions.putIntoConflict(),
             then: () => ({
