@@ -1,4 +1,4 @@
-fdescribe('Maze of Illusion', function() {
+describe('Maze of Illusion', function() {
     integration(function() {
         describe('Maze of Illusion\'s ability', function() {
             beforeEach(function() {
