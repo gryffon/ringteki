@@ -51,7 +51,7 @@ describe('Embrace the Void', function() {
                 });
             });
 
-            fit('should give Embrace the Void\'s controller all fate when the character is assassinated', function() {
+            it('should give Embrace the Void\'s controller all fate when the character is assassinated', function() {
                 this.player2.clickCard('assassination');
                 this.player2.clickCard(this.adeptOfTheWaves);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
