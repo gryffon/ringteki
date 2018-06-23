@@ -1,4 +1,4 @@
-fdescribe('Restoration of Balance', function() {
+describe('Restoration of Balance', function() {
     integration(function() {
         describe('Restoration of Balance\'s ability', function() {
             beforeEach(function() {
