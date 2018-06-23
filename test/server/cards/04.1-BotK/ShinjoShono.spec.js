@@ -20,7 +20,7 @@ describe('Shinjo Shono', function() {
                 this.borderRider = this.player2.findCardByName('border-rider');
                 this.noMoreActions();
             });
-            //Not work when no numbers advantage, not hit non-cav, hit characters that gain cav, hit cav
+
             it('should not activate when there are not more participating characters than opponent', function() {
                 this.initiateConflict({
                     type: 'military',
