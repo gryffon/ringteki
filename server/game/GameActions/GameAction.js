@@ -1,14 +1,14 @@
 const Event = require('../Events/Event.js');
 
 class GameAction {
-    constructor(propertyFactory = () => {}) {
+    constructor(propertyFactory = {}) {
         this.target = [];
         this.setDefaultProperties();
         if(typeof propertyFactory === 'function') {
             this.propertyFactory = propertyFactory;
         } else {
             this.applyProperties(propertyFactory);
-            this.propertyFactory = () => propertyFactory;
+            this.propertyFactory = context => propertyFactory; // eslint-disable-line no-unused-vars
         }
         this.getDefaultTargets = context => this.defaultTargets(context);
         this.setup();

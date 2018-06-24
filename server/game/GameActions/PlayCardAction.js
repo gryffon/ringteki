@@ -17,7 +17,7 @@ class PlayCardResolver extends AbilityResolver {
             });
             this.cancelPressed = true;
         }
-        super.resolveCosts();
+        super.payCosts();
     }
 
     initiateAbility() {
@@ -41,19 +41,23 @@ class PlayCardAction extends CardGameAction {
         this.effectMsg = 'play {0} as if it were in their hand';
     }
 
-    defaultTargets() {
-        return [];
-    }
-
     canAffect(card, context) {
         let actions = card.getActions(context.player, this.location);
         if(actions.length === 0) {
             return false;
         }
-        let reason = actions[0].meetsRequirements();
-        if(reason && reason !== 'location') {
+        if(actions[0].getGameActions && actions[0].getGameActions(context).includes(this)) {
+            actions.shift();
+            if(actions.length === 0) {
+                return false;
+            }
+        }
+        let location = context.player.addPlayableLocation('play', card.controller, card.location);
+        let newContext = actions[0].createContext(context.player);
+        if(actions[0].meetsRequirements(newContext)) {
             return false;
         }
+        context.player.removePlayableLocation(location);
         return super.canAffect(card, context);
     }
 

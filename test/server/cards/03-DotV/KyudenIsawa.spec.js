@@ -34,6 +34,13 @@ describe('Kyuden Isawa', function() {
                 expect(this.againstTheWaves.location).toBe('removed from game');
             });
 
+            it('should not allow you to play a spell when you don\'t have enough fate', function() {
+                this.player1.fate = 0;
+                expect(this.adeptOfTheWaves.bowed).toBe(true);
+                this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
             it('should pass priority', function() {
                 this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
                 this.player1.clickCard(this.againstTheWaves);

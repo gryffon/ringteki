@@ -11,6 +11,7 @@ class KyudenIsawa extends StrongholdCard {
                 promptForSelect: {
                     activePromptTitle: 'Choose a spell event',
                     cardType: 'event',
+                    controller: 'self',
                     location: 'conflict discard pile',
                     cardCondition: card => card.hasTrait('spell')
                 },
