@@ -405,15 +405,15 @@ class DrawCard extends BaseCard {
         return false;
     }
 
-    getActions(player) {
-        if(this.location === 'play area') {
+    getActions(player, location = this.location) {
+        if(location === 'play area') {
             return super.getActions();
         }
         let actions = [];
         if(this.type === 'character') {
             if(player.getDuplicateInPlay(this)) {
                 actions.push(new DuplicateUniqueAction(this));
-            } else if(this.isDynasty && this.location !== 'hand') {
+            } else if(this.isDynasty && location !== 'hand') {
                 actions.push(new DynastyCardAction(this));
             } else {
                 actions.push(new PlayCharacterAction(this));

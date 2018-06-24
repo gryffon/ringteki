@@ -8,14 +8,11 @@ class SneakyShinjo extends DrawCard {
                 onPassDuringDynasty: (event, context) => event.player === context.player
             },
             effect: 'play {0}',
-            gameAction: ability.actions.playCard(context => ({
-                target: context.source,
-                location: 'province 1'
-            }))
+            gameAction: ability.actions.playCard({ location: 'province 1' })
         });
     }
 }
 
-SneakyShinjo.id = 'sneaky-shinjo'; // This is a guess at what the id might be - please check it!!!
+SneakyShinjo.id = 'sneaky-shinjo';
 
 module.exports = SneakyShinjo;
