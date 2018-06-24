@@ -41,7 +41,7 @@ describe('The Wrath of the Kami', function () {
 
                 it('should increase the province\'s strength by 1', function () {
                     // Pilgrimage 5 PS, holding +1 PS, and +1 PS from ability.
-                    expect(this.game.currentConflict.conflictProvince.getStrength()).toBe(7);
+                    expect(this.game.currentConflict.conflictProvince.getStrength()).toBe(this.game.currentConflict.conflictProvince.cardData.strength + 2);
                 });
 
                 it('should cost 1 honor', function () {
