@@ -16,10 +16,10 @@ describe('The Wrath of the Kami', function () {
                 });
                 this.wrath1 = this.player1.placeCardInProvince('the-wrath-of-the-kami', 'province 1');
                 this.wrath2 = this.player2.placeCardInProvince('the-wrath-of-the-kami', 'province 1');
+                this.noMoreActions();
             });
 
             it('should not activate during a conflict at another province', function () {
-                this.noMoreActions();
                 this.initiateConflict({
                     province: 'kuroi-mori',
                     attackers: ['adept-of-the-waves'],
@@ -31,7 +31,6 @@ describe('The Wrath of the Kami', function () {
 
             describe('during a conflict at the holding\'s province', function () {
                 beforeEach(function () {
-                    this.noMoreActions();
                     this.initiateConflict({
                         province: 'pilgrimage',
                         attackers: ['adept-of-the-waves'],
