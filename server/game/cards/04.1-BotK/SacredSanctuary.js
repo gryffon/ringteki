@@ -9,7 +9,7 @@ class SacredSanctuary extends ProvinceCard {
             },
             target: {
                 controller: 'self',
-                cardCondition: card => card.hasTrait('monk') && card.bowed,
+                cardCondition: card => card.hasTrait('monk'),
                 gameAction: [
                     ability.actions.ready(),
                     ability.actions.cardLastingEffect({
