@@ -150,7 +150,7 @@ class BaseCard extends EffectSource {
             'play area': ['play area'],
             'province': ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']
         };
-        if(from === 'play area' || activeLocations['province'].includes(from) && this.type === 'holding') {
+        if(from === 'play area' || this.type === 'holding' && activeLocations['province'].includes(from) && !activeLocations['province'].includes(to)) {
             this.removeLastingEffects();
         }
         _.each(this.abilities.persistentEffects, effect => {
