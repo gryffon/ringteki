@@ -16,12 +16,12 @@ class SacredSanctuary extends ProvinceCard {
                         condition: () => this.game.isDuringConflict(),
                         effect: ability.effects.doesNotBow()
                     }),
-                    ability.actions.cardLastingEffect({
-                        effect: ability.effects.cardCannot('bow', context => (
-                                context.source.type !== 'ring' && context.player && context.player.opponent &&
-                                context.source.controller === context.player.opponent
+                    ability.actions.cardLastingEffect(context => ({
+                                                effect: ability.effects.cardCannot('bow', abilityContext => (
+                                                    abilityContext.source.type !== 'ring' && context.player.opponent &&
+                                                    abilityContext.source.controller === context.player.opponent
                         ))
-                    })
+                    }))
                 ]           
             },
             effect: 'prevent opponents\' actions from bowing {0} and stop it bowing at the end of the conflict'
