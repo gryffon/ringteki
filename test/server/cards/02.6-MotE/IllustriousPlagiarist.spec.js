@@ -39,7 +39,7 @@ describe('Illustrious Plagiarist', function() {
             });
         });
 
-        fdescribe('When copying Assassinate', function() {
+        describe('When copying Assassinate', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
