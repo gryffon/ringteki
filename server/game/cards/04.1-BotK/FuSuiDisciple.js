@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class FuSuiDisciple extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
-            title: 'Honor or dishonor controlled by a player with the air ring',
+            title: 'Honor or dishonor a character controlled by a player with the air ring',
             targets: {
                 player: {
                     mode: 'select',
