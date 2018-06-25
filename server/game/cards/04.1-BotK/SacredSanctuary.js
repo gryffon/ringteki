@@ -13,7 +13,7 @@ class SacredSanctuary extends ProvinceCard {
                 gameAction: [
                     ability.actions.ready(),
                     ability.actions.cardLastingEffect({
-                        condition: () => this.game.isDuringConflict,
+                        condition: () => this.game.isDuringConflict(),
                         effect: ability.effects.doesNotBow()
                     }),
                     ability.actions.cardLastingEffect({
@@ -24,7 +24,7 @@ class SacredSanctuary extends ProvinceCard {
                     })
                 ]           
             },
-            effect: 'prevent opponents\' actions from bowing {0} and stop it bowing at the end of a political conflict'
+            effect: 'prevent opponents\' actions from bowing {0} and stop it bowing at the end of the conflict'
         });
     }
 }
