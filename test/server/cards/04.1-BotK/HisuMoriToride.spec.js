@@ -25,11 +25,27 @@ describe('Hisu Mori Toride', function() {
                 expect(this.player1).toHavePrompt('Air Ring');
             });
 
+            it('should bow the stronghold and sacrifice a bushi when triggered', function() {
+                this.player1.playAttachment('fine-katana', 'matsu-berserker');
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                this.hisuMoriToride = this.player1.clickCard('hisu-mori-toride');
+                expect(this.player1).toHavePrompt('Hisu Mori Toride');
+                expect(this.player1).toBeAbleToSelect('matsu-berserker');
+                expect(this.player1).toBeAbleToSelect('matsu-seventh-legion');
+                this.matsuBerserker = this.player1.clickCard('matsu-berserker');
+                expect(this.player1.player.getConflictOpportunities()).toBe(2);
+                expect(this.player1.player.getConflictOpportunities('military')).toBe(1);
+                expect(this.matsuBerserker.location).toBe('dynasty discard pile');
+                expect(this.hisuMoriToride.bowed).toBe(true);
+            });
+
             it('should give the triggering player an additional military conflict', function() {
                 this.player1.playAttachment('fine-katana', 'matsu-berserker');
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 this.player1.clickCard('hisu-mori-toride');
+                this.matsuBerserker = this.player1.clickCard('matsu-berserker');
                 expect(this.player1.player.getConflictOpportunities()).toBe(2);
                 expect(this.player1.player.getConflictOpportunities('military')).toBe(1);
                 this.player1.clickPrompt('No');
