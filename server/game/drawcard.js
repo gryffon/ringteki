@@ -230,7 +230,7 @@ class DrawCard extends BaseCard {
             return bonus ? total + bonus : total;
         }, skill);
         // multiply total
-        skill = this.getEffects('modifyMilitarySkillMultiplier').reduce((total, effect) => total * effect.value, skill);
+        skill = this.getEffects('modifyMilitarySkillMultiplier').reduce((total, value) => total * value, skill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -259,7 +259,7 @@ class DrawCard extends BaseCard {
             return bonus ? total + bonus : total;
         }, skill);
         // multiply total
-        skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, effect) => total * effect.value, skill);
+        skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, value) => total * value, skill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -414,7 +414,7 @@ class DrawCard extends BaseCard {
         return false;
     }
 
-    getActions(player) {
+    getActions(player, location = this.location) {
         if(this.location === 'play area') {
             return super.getActions();
         }
@@ -422,7 +422,7 @@ class DrawCard extends BaseCard {
         if(this.type === 'character') {
             if(player.getDuplicateInPlay(this)) {
                 actions.push(new DuplicateUniqueAction(this));
-            } else if(this.isDynasty && this.location !== 'hand') {
+            } else if(this.isDynasty && location !== 'hand') {
                 actions.push(new DynastyCardAction(this));
             } else {
                 actions.push(new PlayCharacterAction(this));
