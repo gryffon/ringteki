@@ -1,4 +1,4 @@
-fdescribe('Shiotome Encampment', function() {
+describe('Shiotome Encampment', function() {
     integration(function() {
         beforeEach(function() {
             this.setupTest({
