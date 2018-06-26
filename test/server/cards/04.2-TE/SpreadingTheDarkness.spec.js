@@ -25,9 +25,6 @@ describe('Spreading the Darkness', function() {
             it('should have DEF effect on GHI', function() {
 
             });
-
         });
-
     });
-
 });

@@ -25,9 +25,6 @@ describe('Apprentice Earthcaller', function() {
             it('should have DEF effect on GHI', function() {
 
             });
-
         });
-
     });
-
 });

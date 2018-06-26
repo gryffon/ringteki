@@ -25,9 +25,6 @@ describe('Sneaky Shinjo', function() {
             it('should have DEF effect on GHI', function() {
 
             });
-
         });
-
     });
-
 });

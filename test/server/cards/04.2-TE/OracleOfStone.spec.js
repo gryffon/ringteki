@@ -25,9 +25,6 @@ describe('Oracle of Stone', function() {
             it('should have DEF effect on GHI', function() {
 
             });
-
         });
-
     });
-
 });

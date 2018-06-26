@@ -25,9 +25,6 @@ describe('Marauding Oni', function() {
             it('should have DEF effect on GHI', function() {
 
             });
-
         });
-
     });
-
 });

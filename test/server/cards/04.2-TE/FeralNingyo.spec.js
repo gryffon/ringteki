@@ -25,9 +25,6 @@ describe('Feral Ningyo', function() {
             it('should have DEF effect on GHI', function() {
 
             });
-
         });
-
     });
-
 });
