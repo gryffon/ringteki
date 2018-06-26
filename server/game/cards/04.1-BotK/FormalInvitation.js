@@ -8,14 +8,14 @@ class FormalInvitation extends DrawCard {
             gameAction: ability.actions.moveToConflict(context => ({ target: context.source.parent }))
         });
     }
-    
+
     canAttach(card, context) {
         if(card.getType() === 'character' && card.getGlory() < 2) {
             return false;
         }
-        
+
         return super.canAttach(card, context);
-    }      
+    }
 }
 
 FormalInvitation.id = 'formal-invitation';
