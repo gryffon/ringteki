@@ -7,12 +7,11 @@ class SoulBeyondReproach extends DrawCard {
             target: {
                 cardType: 'character',
                 controller: 'self',
-                gameAction: [
-                    ability.actions.honor(),
-                    ability.actions.honor()
-                ]
+                gameAction: ability.actions.honor()
             },
-            effect: 'honor {0}, then honor {0} again'
+            then: context => ({
+                gameAction: ability.actions.honor({ target: context.target })
+            })
         });
     }
 }
