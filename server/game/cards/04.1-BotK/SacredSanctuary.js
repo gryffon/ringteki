@@ -22,7 +22,7 @@ class SacredSanctuary extends ProvinceCard {
                             abilityContext.source.controller === context.player.opponent
                         ))
                     }))
-                ]           
+                ]
             },
             effect: 'prevent opponents\' actions from bowing {0} and stop it bowing at the end of the conflict'
         });
