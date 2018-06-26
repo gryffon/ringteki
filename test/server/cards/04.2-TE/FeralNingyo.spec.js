@@ -57,7 +57,7 @@ describe('Feral Ningyo', function () {
                     expect(this.feral.location).toBe('conflict deck');
                 });
 
-                it('should shuffle when it is returned to the deck', function () {             
+                it('should shuffle when it is returned to the deck', function () {
                     this.player1.clickPrompt('Put into play');
                     this.noMoreActions();
                     spyOn(this.game, 'emitEvent');
