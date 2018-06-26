@@ -12,6 +12,8 @@ class TestOfCourage extends DrawCard {
                 gameAction: ability.actions.moveToConflict()
             },
             then: context => ({
+                message: '{1} honors {3}',
+                messageArgs: context.target,
                 gameAction: ability.actions.honor({ target: context.target })
             })
         });
