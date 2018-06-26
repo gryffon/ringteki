@@ -25,8 +25,6 @@ fdescribe('Hiruma Outpose', function() {
                     province: this.shamefulDisplay,
                     attackers: ['matsu-berserker']
                 });
-                console.log(this.hirumaOutpost.abilities.reactions);
-                console.log(this.game.effectEngine.getDebugInfo());
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.hirumaOutpost);
             });

@@ -1,28 +1,12 @@
-describe('Oracle of Stone', function() {
+fdescribe('Oracle of Stone', function() {
     integration(function() {
         describe('Oracle of Stone\'s effect', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        conflictDeck: [
-                            'charge',
-                            'spyglass',
-                            'mantra-of-fire',
-                            'mantra-of-water'
-                        ],
                         hand: ['oracle-of-stone']
                     },
-                    player2: {
-                        conflictDeck: [
-                            'mantra-of-fire',
-                            'mantra-of-water'
-                        ],
-                        hand: [
-                            'charge',
-                            'spyglass'
-                        ]
-                    }
                 });
                 this.oracleOfStone = this.player1.findCardByName('oracle-of-stone');
             });
@@ -40,13 +24,16 @@ describe('Oracle of Stone', function() {
             });
 
             it('should discard 2 cards', function() {
-                this.player1.clickCard(this.oracleOfStone);
-                let hand = this.player2.hand.length;
-                this.player2.clickCard('charge');
-                this.player2.clickCard('mantra-of-water');
-                // expect(this.player2.hand.length).toBe(hand - 2);
-                console.log(this.player1.formatPrompt(), '\n--');
+                this.player1.clickCard('oracle-of-stone', 'hand');
+                // console.log(this.player1.formatPrompt(), '\n--');
+                // let hand = this.player2.hand.length;
+                this.player2.clickCard('supernatural-storm', 'hand');
                 console.log(this.player2.formatPrompt());
+                this.player2.clickCard('supernatural-storm', 'hand');
+                // expect(this.player2.hand.length).toBe(hand - 2);
+                // console.log(this.ss1.location);
+                // console.log(this.player1.formatPrompt(), '\n--');
+                // console.log(this.player2.formatPrompt());
             });
         });
     });
