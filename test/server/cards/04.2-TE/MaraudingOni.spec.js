@@ -1,11 +1,11 @@
 describe('Marauding Oni', function() {
     integration(function() {
-        describe('Marauding Oni's ability', function() {
+        describe('Marauding Oni\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [marauding-oni]
+                        inPlay: ['marauding-oni']
                     },
                     player2: {
                         inPlay: []

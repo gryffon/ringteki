@@ -1,11 +1,11 @@
 describe('Sneaky Shinjo', function() {
     integration(function() {
-        describe('Sneaky Shinjo's ability', function() {
+        describe('Sneaky Shinjo\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [sneaky-shinjo]
+                        inPlay: ['sneaky-shinjo']
                     },
                     player2: {
                         inPlay: []

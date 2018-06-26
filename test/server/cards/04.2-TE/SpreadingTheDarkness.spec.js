@@ -1,11 +1,11 @@
 describe('Spreading the Darkness', function() {
     integration(function() {
-        describe('Spreading the Darkness's ability', function() {
+        describe('Spreading the Darkness\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [spreading-the-darkness]
+                        inPlay: ['spreading-the-darkness']
                     },
                     player2: {
                         inPlay: []

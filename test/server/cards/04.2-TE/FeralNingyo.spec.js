@@ -1,11 +1,11 @@
 describe('Feral Ningyo', function() {
     integration(function() {
-        describe('Feral Ningyo's ability', function() {
+        describe('Feral Ningyo\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [feral-ningyo]
+                        inPlay: ['feral-ningyo']
                     },
                     player2: {
                         inPlay: []

@@ -1,11 +1,11 @@
 describe('Kuni Yori', function() {
     integration(function() {
-        describe('Kuni Yori's ability', function() {
+        describe('Kuni Yori\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [kuni-yori]
+                        inPlay: ['kuni-yori']
                     },
                     player2: {
                         inPlay: []

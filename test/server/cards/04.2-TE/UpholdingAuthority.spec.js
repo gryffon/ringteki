@@ -1,11 +1,11 @@
 describe('Upholding Authority', function() {
     integration(function() {
-        describe('Upholding Authority's ability', function() {
+        describe('Upholding Authority\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [upholding-authority]
+                        inPlay: ['upholding-authority']
                     },
                     player2: {
                         inPlay: []

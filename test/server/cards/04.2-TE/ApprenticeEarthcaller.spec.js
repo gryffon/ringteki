@@ -1,11 +1,11 @@
 describe('Apprentice Earthcaller', function() {
     integration(function() {
-        describe('Apprentice Earthcaller's ability', function() {
+        describe('Apprentice Earthcaller\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [apprentice-earthcaller]
+                        inPlay: ['apprentice-earthcaller']
                     },
                     player2: {
                         inPlay: []

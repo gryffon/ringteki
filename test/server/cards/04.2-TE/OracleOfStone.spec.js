@@ -1,11 +1,11 @@
 describe('Oracle of Stone', function() {
     integration(function() {
-        describe('Oracle of Stone's ability', function() {
+        describe('Oracle of Stone\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: [oracle-of-stone]
+                        inPlay: ['oracle-of-stone']
                     },
                     player2: {
                         inPlay: []
