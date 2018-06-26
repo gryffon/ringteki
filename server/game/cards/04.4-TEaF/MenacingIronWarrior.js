@@ -11,7 +11,7 @@ class MenacingIronWarrior extends DrawCard {
                 effect: ability.effects.cardCannot('triggerAbilities')
             })),
             effect: 'prevent {1}\'s participating characters from using any abilities if their military skill is equal to or lower than {2}. This affects: {3}',
-            effectArgs: context => [context.player.opponent, context.source.getMilitarySkill(), this.game.currentConflict.getCharacters(context.player.opponent).filter(card => card.getMilitarySkill() <= context.source.getMilitarySkill() && card !== context.source)]
+            effectArgs: context => [context.player.opponent, context.source.getMilitarySkill(), context.game.currentConflict.getCharacters(context.player.opponent).filter(card => card.getMilitarySkill() <= context.source.getMilitarySkill() && card !== context.source)]
         });
     }
 }
