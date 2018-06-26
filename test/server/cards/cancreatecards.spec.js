@@ -54,6 +54,7 @@ const eventNames = [
     'onDynastyCardTurnedFaceup',
     'onTransferHonor',
     'onFirstPassDuringDynasty',
+    'onModifyHonor',
     'onAbilityResolved'
 ];
 

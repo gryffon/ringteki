@@ -73,9 +73,6 @@ class BackAlleyHideaway extends DrawCard {
     setupCardAbilities(ability) {
         this.backAlleyActionLimit = ability.limit.perRound(1);
         this.persistentEffect({
-            location: 'any',
-            targetLocation: 'province',
-            condition: () => !this.facedown,
             match: this,
             effect: ability.effects.customDetachedCard(backAlleyPersistentEffect)
         });
