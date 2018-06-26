@@ -37,7 +37,7 @@ describe('The Wrath of the Kami', function () {
                         defenders: []
                     });
                     this.player2.clickCard(this.wrath2);
-                })
+                });
 
                 it('should increase the province\'s strength by 1', function () {
                     // Pilgrimage 5 PS, holding +1 PS, and +1 PS from ability.
@@ -47,7 +47,7 @@ describe('The Wrath of the Kami', function () {
                 it('should cost 1 honor', function () {
                     expect(this.player2.honor).toBe(9);
                 });
-            })
+            });
         });
     });
 });

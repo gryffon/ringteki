@@ -8,7 +8,7 @@ class WrathOfTheKami extends DrawCard {
             cost: ability.costs.payHonor(1),
             limit: ability.limit.unlimitedPerConflict(),
             effect: 'add 1 to the province strength',
-            gameAction: ability.actions.cardLastingEffect(context => ({
+            gameAction: ability.actions.cardLastingEffect(() => ({
                 target: this.game.currentConflict.conflictProvince,
                 targetLocation: 'province',
                 effect: ability.effects.modifyProvinceStrength(1)
