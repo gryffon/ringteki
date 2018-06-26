@@ -13,7 +13,7 @@ class AbandoningHonor extends ProvinceCard {
             title: 'Choose a dishonored character',
             when: {
                 onBreakProvince: (event, context) => event.card === context.source
-           },
+            },
             target: {
                 cardtype: 'character',
                 cardCondition: card => card.isDishonored,
