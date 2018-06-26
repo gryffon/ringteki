@@ -4,7 +4,6 @@ class AbandoningHonor extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
              match: this,
-             targetLocation: 'province',
              condition: () => this.controller.role.hasTrait('fire'),
              effect: ability.effects.modifyProvinceStrength(2)
         });
@@ -24,5 +23,5 @@ class AbandoningHonor extends ProvinceCard {
 }
 
 AbandoningHonor.id = 'abandoning-honor';
- 
+
 module.exports = AbandoningHonor;
