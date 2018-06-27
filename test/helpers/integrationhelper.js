@@ -124,6 +124,10 @@ global.integration = function(definitions) {
                 });
 
                 if(options.phase !== 'setup') {
+                    if(['draw', 'fate', 'regroup'].includes(options.phase)) {
+                        this.player1.player.promptedActionWindows[options.phase] = true;
+                        this.player2.player.promptedActionWindows[options.phase] = true;
+                    }
                     this.keepDynasty();
                     this.keepConflict();
 
@@ -156,6 +160,9 @@ global.integration = function(definitions) {
                 this.player2.provinces = options.player2.provinces;
                 this.player1.dynastyDiscard = options.player1.dynastyDiscard;
                 this.player2.dynastyDiscard = options.player2.dynastyDiscard;
+                if(options.phase !== 'setup') {
+                    this.game.checkGameState(true);
+                }
             };
 
             this.initiateConflict = function(options = {}) {

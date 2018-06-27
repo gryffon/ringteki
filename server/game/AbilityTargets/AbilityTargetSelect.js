@@ -10,10 +10,11 @@ class AbilityTargetSelect {
                 properties.choices[key] = [properties.choices[key]];
             }
         }
-        this.checkDependentTarget = context => true; // eslint-disable-line no-unused-vars
+        this.dependentTarget = null;
+        this.dependentCost = null;
         if(this.properties.dependsOn) {
             let dependsOnTarget = ability.targets.find(target => target.name === this.properties.dependsOn);
-            dependsOnTarget.checkDependentTarget = context => this.hasLegalTarget(context);
+            dependsOnTarget.dependentTarget = this;
         }
     }
 
@@ -27,17 +28,22 @@ class AbilityTargetSelect {
     }
 
     isChoiceLegal(key, context) {
-        let choice = this.properties.choices[key];
-        if(typeof choice === 'function') {
-            return choice(context);
-        }
         let contextCopy = context.copy();
         contextCopy.selects[this.name] = new SelectChoice(key);
         if(this.name === 'target') {
             contextCopy.select = key;
         }
-        return context.ability.canPayCosts(contextCopy) && this.checkDependentTarget(contextCopy) &&
-               choice.some(gameAction => gameAction.hasLegalTarget(contextCopy));
+        if(context.stage === 'pretarget' && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
+            return false;
+        }
+        if(this.dependentTarget && !this.dependentTarget.hasLegalTarget(contextCopy)) {
+            return false;
+        }
+        let choice = this.properties.choices[key];
+        if(typeof choice === 'function') {
+            return choice(contextCopy);
+        }
+        return choice.some(gameAction => gameAction.hasLegalTarget(contextCopy));
     }
 
     getGameAction(context) {
@@ -52,13 +58,15 @@ class AbilityTargetSelect {
         return Object.keys(this.properties.choices).filter(key => this.isChoiceLegal(key, context));
     }
 
-    resolve(context, noCostsFirstButton = false) {
-        let result = { resolved: false, name: this.name, value: null, costsFirst: false, mode: 'select' };
+    resolve(context, targetResults) {
+        if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
+            return;
+        }
         let player = context.player;
         if(this.properties.player && this.properties.player === 'opponent') {
             if(context.stage === 'pretarget') {
-                result.costsFirst = true;
-                return result;
+                targetResults.delayTargeting = this;
+                return;
             }
             player = player.opponent;
         }
@@ -68,18 +76,19 @@ class AbilityTargetSelect {
         ));
         let handlers = _.map(choices, choice => {
             return (() => {
-                result.resolved = true;
-                result.value = choice;
                 context.selects[this.name] = new SelectChoice(choice);
+                if(this.name === 'target') {
+                    context.select = choice;
+                }
             });
         });
         if(this.properties.player !== 'opponent' && context.stage === 'pretarget') {
-            if(!noCostsFirstButton) {
+            if(!targetResults.noCostsFirstButton) {
                 choices.push('Pay costs first');
-                handlers.push(() => result.costsFirst = true);
+                handlers.push(() => targetResults.payCostsFirst = true);
             }
             choices.push('Cancel');
-            handlers.push(() => result.resolved = true);
+            handlers.push(() => targetResults.cancelled = true);
         }
         if(handlers.length === 1) {
             handlers[0]();
@@ -101,11 +110,11 @@ class AbilityTargetSelect {
                 handlers: handlers
             });
         }
-        return result;
     }
 
     checkTarget(context) {
-        return this.isChoiceLegal(context.selects[this.name].choice, context);
+        return context.selects[this.name] && this.isChoiceLegal(context.selects[this.name].choice, context) &&
+               (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }
 }
 

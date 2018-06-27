@@ -3,9 +3,7 @@ const ProvinceCard = require('../../provincecard.js');
 class BloodOfOnnotangu extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetType: 'player',
-            targetController: 'any',
-            condition: () => !this.isBroken && this.game.currentConflict && this.game.currentConflict.conflictProvince === this,
+            condition: () => this.isConflictProvince(),
             effect: ability.effects.playerCannot('spendFate')
         });
     }

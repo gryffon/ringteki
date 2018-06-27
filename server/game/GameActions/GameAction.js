@@ -1,14 +1,16 @@
 const Event = require('../Events/Event.js');
 
 class GameAction {
-    constructor(propertyFactory = () => {}) {
+    constructor(propertyFactory = {}) {
         this.target = [];
         this.setDefaultProperties();
         if(typeof propertyFactory === 'function') {
             this.propertyFactory = propertyFactory;
+        } else if(typeof propertyFactory !== 'object') {
+            throw new Error('Game Actions should only be passed functions or objects');
         } else {
             this.applyProperties(propertyFactory);
-            this.propertyFactory = () => propertyFactory;
+            this.propertyFactory = context => propertyFactory; // eslint-disable-line no-unused-vars
         }
         this.getDefaultTargets = context => this.defaultTargets(context);
         this.setup();
@@ -30,7 +32,7 @@ class GameAction {
 
     applyProperties(properties) {
         for(let [key, value] of Object.entries(properties)) {
-            if(value) {
+            if(value !== undefined) {
                 this[key] = value;
             }
         }

@@ -25,6 +25,11 @@ class BaseCardSelector {
 
     findPossibleCards(context) {
         if(this.location.includes('any')) {
+            if(this.controller === 'self') {
+                return context.game.allCards.filter(card => card.controller === context.player);
+            } else if(this.controller === 'opponent') {
+                return context.game.allCards.filter(card => card.controller === context.player.opponent);
+            }
             return context.game.allCards.toArray();
         }
         let possibleCards = [];
@@ -54,6 +59,15 @@ class BaseCardSelector {
             return false;
         }
         if(context.stage.includes('target') && !card.checkRestrictions('target', context)) {
+            return false;
+        }
+        if(this.controller === 'self' && card.controller !== context.player) {
+            return false;
+        }
+        if(this.controller === 'opponent' && card.controller !== context.player.opponent) {
+            return false;
+        }
+        if(!this.location.includes('any') && !this.location.includes(card.location)) {
             return false;
         }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);
