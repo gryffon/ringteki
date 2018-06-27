@@ -1,4 +1,4 @@
-fdescribe('Oracle of Stone', function() {
+describe('Oracle of Stone', function() {
     integration(function() {
         describe('Oracle of Stone\'s effect', function() {
             beforeEach(function() {
@@ -14,7 +14,7 @@ fdescribe('Oracle of Stone', function() {
                 this.oracleOfStone = this.player1.findCardByName('oracle-of-stone');
             });
 
-            it('should draw 2 cards', function() {
+            it('should make each player 2 cards', function() {
                 let hand = this.player1.hand.length;
                 let conflictDeck = this.player1.conflictDeck.length;
                 let hand2 = this.player2.hand.length;
@@ -27,7 +27,7 @@ fdescribe('Oracle of Stone', function() {
                 expect(this.player2.conflictDeck.length).toBe(conflictDeck2 - 2);
             });
 
-            it('should discard 2 cards', function() {
+            it('should make each player discard 2 cards', function() {
                 this.player1.clickCard(this.oracleOfStone);
                 let hand1 = this.player1.hand.length;
                 let charge = this.player1.clickCard('charge', 'hand');
