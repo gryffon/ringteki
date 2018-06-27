@@ -2,6 +2,7 @@ const AttachAction = require('./AttachAction');
 const BowAction = require('./BowAction');
 const BreakAction = require('./BreakAction');
 const ChosenDiscardAction = require('./ChosenDiscardAction');
+const CreateTokenAction = require('./CreateTokenAction');
 const DeckSearchAction = require('./DeckSearchAction');
 const DelayedEffectAction = require('./DelayedEffectAction');
 const DiscardFavorAction = require('./DiscardFavorAction');
@@ -49,6 +50,7 @@ const GameActions = {
     bow: (propertyFactory) => new BowAction(propertyFactory),
     break: (propertyFactory) => new BreakAction(propertyFactory),
     cardLastingEffect: (propertyFactory) => new LastingEffectCardAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetLocation, condition, until
+    createToken: (propertyFactory) => new CreateTokenAction(propertyFactory),
     delayedEffect: (propertyFactory) => new DelayedEffectAction(propertyFactory), // when, message, gameAction, handler
     discardCard: (propertyFactory) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory) => new DiscardFromPlayAction(propertyFactory),

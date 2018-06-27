@@ -1,38 +1,5 @@
 const CardGameAction = require('./CardGameAction');
 const DiscardFromPlayAction = require('./DiscardFromPlayAction');
-const DrawCard = require('../drawcard.js');
-
-class SpiritOfTheRiver extends DrawCard {
-    constructor(facedownCard) {
-        super(facedownCard.owner, {
-            clan: 'neutral',
-            cost: null,
-            glory: 0,
-            id: 'spirit-of-the-river',
-            military: 1,
-            name: 'Spirit of the River',
-            political: null,
-            side: 'dynasty',
-            text: '',
-            type: 'character',
-            traits: ['spirit', 'cavalry'],
-            unicity: false
-        });
-        this.facedownCard = facedownCard;
-    }
-
-    leavesPlay() {
-        this.owner.moveCard(this.facedownCard, 'dynasty discard pile');
-        this.game.queueSimpleStep(() => this.owner.removeCardFromPile(this));
-        super.leavesPlay();
-    }
-
-    getSummary() {
-        let summary = super.getSummary();
-        return Object.assign(summary, { isToken: true });
-    }
-}
-
 class CreateTokenAction extends CardGameAction {
     setup() {
         this.name = 'createToken';
@@ -51,8 +18,9 @@ class CreateTokenAction extends CardGameAction {
 
     getEvent(card, context) {
         return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
-            let token = new SpiritOfTheRiver(card);
+            let token = context.game.createToken(card);
             card.owner.removeCardFromPile(card);
+            card.owner.replaceDynastyCard(card.location);
             card.moveTo('spirit of the river');
             card.owner.moveCard(token, 'play area');
             if(context.player.isAttackingPlayer()) {
@@ -62,6 +30,7 @@ class CreateTokenAction extends CardGameAction {
             }
             context.source.delayedEffect(() => ({
                 target: token,
+                context: context,
                 when: {
                     onConflictFinished: () => true
                 },
