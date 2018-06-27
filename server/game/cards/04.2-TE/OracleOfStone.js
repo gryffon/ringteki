@@ -10,8 +10,8 @@ class OracleOfStone extends DrawCard {
             })),
             then: context => ({
                 gameAction: ability.actions.chosenDiscard({
-                    amount: 2,
-                    target: context.game.getPlayers()
+                    target: context.game.getPlayers(),
+                    amount: 2
                 })
             })
         });
