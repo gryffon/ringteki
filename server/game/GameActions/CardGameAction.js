@@ -32,8 +32,8 @@ class CardGameAction extends GameAction {
         super.preEventHandler(context);
         if(this.promptForSelect) {
             let selector = this.getSelector();
+            this.target = [];
             if(!selector.hasEnoughTargets(context)) {
-                this.target = [];
                 return;
             }
             let defaultProperties = {
@@ -53,12 +53,15 @@ class CardGameAction extends GameAction {
         } else if(this.promptWithHandlerMenu) {
             let properties = this.promptWithHandlerMenu;
             properties.cards = properties.cards.filter(card => this.canAffect(card, context));
+            this.target = [];
             if(properties.cards.length === 0) {
-                this.target = [];
                 return;
             }
             if(!properties.player) {
                 properties.player = context.player;
+            }
+            if(properties.customHandler) {
+                properties.cardHandler = card => properties.customHandler(card, this);
             }
             let defaultProperties = {
                 context: context,
