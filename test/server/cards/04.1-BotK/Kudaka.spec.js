@@ -29,22 +29,51 @@ describe('Kudaka', function () {
                 expect(this.player1).not.toBeAbleToSelect(this.kudaka);
             });
 
-            it('should trigger when Seeker of Knowledge is present', function () {
-                this.initiateConflict({
-                    type: 'military',
-                    ring: 'water',
-                    attackers: ['kudaka'],
-                    defenders: []
+            describe('when Seeker of Knowledge is present', function () {
+                beforeEach(function () {
+                    this.initiateConflict({
+                        type: 'military',
+                        ring: 'water',
+                        attackers: ['kudaka'],
+                        defenders: []
+                    });
+                    this.player2.pass();
+                    this.seeker = this.player1.clickCard('seeker-of-knowledge', 'hand');
+                    this.player1.clickPrompt('0');
+                    this.player1.clickPrompt('Conflict');
+                    this.noMoreActions();
+                    // Discard card in province
+                    this.player1.clickPrompt('Yes');
                 });
-                this.player2.pass();
-                this.player1.clickCard('seeker-of-knowledge', 'hand');
-                this.player1.clickPrompt('0');
-                this.player1.clickPrompt('Conflict');
-                this.noMoreActions();
-                // Discard card in province
-                this.player1.clickPrompt('Yes');
-                this.player1.clickPrompt('Don\'t Resolve the Conflict Ring');
-                expect(this.player1).toBeAbleToSelect(this.kudaka);
+
+                it('should trigger Kudaka\'s ability when air is selected', function () {
+                    this.player1.clickRing('air');
+                    this.player1.clickPrompt('Gain 2 Honor');
+                    expect(this.player1).toBeAbleToSelect(this.kudaka);
+                });
+
+                it('should trigger Kudaka\'s ability when air is selected but not resolved', function () {
+                    this.player1.clickRing('air');
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.player1).toBeAbleToSelect(this.kudaka);
+                });
+
+                it('should trigger Kudaka\'s ability when the original element is selected', function () {
+                    this.player1.clickRing('water');
+                    this.player1.clickCard(this.seeker);
+                    expect(this.player1).toBeAbleToSelect(this.kudaka);
+                });
+
+                it('should trigger Kudaka\'s ability when the original element is selected but not resolved', function () {
+                    this.player1.clickRing('water');
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.player1).toBeAbleToSelect(this.kudaka);
+                });
+
+                it('should trigger Kudaka\'s ability when no ring is resolved', function () {
+                    this.player1.clickPrompt('Don\'t Resolve the Conflict Ring');
+                    expect(this.player1).toBeAbleToSelect(this.kudaka);
+                });
             });
 
             describe('when the ring of air is claimed', function () {
