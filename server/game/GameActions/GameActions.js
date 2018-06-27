@@ -1,3 +1,4 @@
+const ApplyUnopposedAction = require('./ApplyUnopposedAction');
 const AttachAction = require('./AttachAction');
 const BowAction = require('./BowAction');
 const BreakAction = require('./BreakAction');
@@ -72,6 +73,7 @@ const GameActions = {
     sendHome: (propertyFactory) => new SendHomeAction(propertyFactory),
     sacrifice: (propertyFactory) => new DiscardFromPlayAction(propertyFactory, true),
     // player actions
+    applyUnopposed: (propertyFactory) => new ApplyUnopposedAction(propertyFactory), // amount = 1
     chosenDiscard: (propertyFactory) => new ChosenDiscardAction(propertyFactory), // amount = 1
     deckSearch: (propertyFactory) => new DeckSearchAction(propertyFactory), // amount = -1, reveal = true, cardCondition = (card, context) => true
     discardAtRandom: (propertyFactory) => new RandomDiscardAction(propertyFactory), // amount = 1
