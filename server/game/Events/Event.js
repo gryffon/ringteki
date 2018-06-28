@@ -42,7 +42,7 @@ class Event {
     }
 
     checkCondition() {
-        if(this.cancelled || this.resolved) {
+        if(this.cancelled || this.resolved || this.name === 'unnamedEvent') {
             return;
         }
         if(this.gameAction && !this.gameAction.checkEventCondition(this)) {
