@@ -54,6 +54,8 @@ const eventNames = [
     'onDynastyCardTurnedFaceup',
     'onTransferHonor',
     'onPassDuringDynasty'
+    'onModifyHonor',
+    'onAbilityResolved'
 ];
 
 const actionNames = [
@@ -124,6 +126,9 @@ const mockContext = {
     },
     targetAbility: {},
     select: { toLowerCase: () => 'abc' },
+    costs: {
+        discardCard: { getCost: () => 1 }
+    },
     targets: { cardToShuffle: {} },
     target: {
         attachments: { size: () => 1 }

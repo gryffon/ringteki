@@ -54,7 +54,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     promptForNewConflict() {
-        if(this.conflict.attackingPlayer.allowGameAction('chooseConflictRing') || !this.conflict.attackingPlayer.opponent) {
+        if(this.conflict.attackingPlayer.checkRestrictions('chooseConflictRing') || !this.conflict.attackingPlayer.opponent) {
             this.pipeline.queueStep(new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer, true, this.canPass));
             return;
         }
@@ -89,6 +89,7 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         _.each(this.conflict.attackers, card => card.inConflict = true);
         this.game.addMessage('{0} is initiating a {1} conflict at {2}, contesting {3}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictProvince, this.conflict.ring);
+        this.game.recordConflict(this.conflict);
     }
 
     promptForCovert() {
@@ -115,24 +116,25 @@ class ConflictFlow extends BaseStepWithPipeline {
         if(targets.length === sources.length) {
             for(let i = 0; i < targets.length; i++) {
                 let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: sources[i], ability: new CovertAbility() });
-                context.targets.target = targets[i];
+                context['target'] = context.targets.target = targets[i];
                 this.covert.push(context);
             }
-            if(this.covert.every(context => context.targets.target.canBeCovertedBy(context.source))) {
+            if(this.covert.every(context => context.targets.target.canBeBypassedByCovert(context))) {
                 return;
             }
             this.covert = [];
         }
 
         for(const source of sources) {
+            let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility() });
             this.game.promptForSelect(this.conflict.attackingPlayer, {
                 activePromptTitle: 'Choose covert target for ' + source.name,
-                buttons: [{ text: 'No target', arg: 'cancel' }],
+                buttons: [{ text: 'No Target', arg: 'cancel' }],
                 cardType: 'character',
                 controller: 'opponent',
-                cardCondition: card => card.canBeCovertedBy(source),
+                source: 'Choose Covert',
+                cardCondition: card => card.canBeBypassedByCovert(context),
                 onSelect: (player, card) => {
-                    let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility() });
                     context['target'] = context.targets.target = card;
                     this.covert.push(context);
                     return true;
@@ -171,7 +173,7 @@ class ConflictFlow extends BaseStepWithPipeline {
                 ring: ring,
                 fate: ring.fate
             }));
-            if(this.conflict.attackingPlayer.allowGameAction('takeFateFromRings')) {
+            if(this.conflict.attackingPlayer.checkRestrictions('takeFateFromRings')) {
                 this.game.addMessage('{0} takes {1} fate from {2}', this.conflict.attackingPlayer, ring.fate, ring);
                 this.conflict.attackingPlayer.modifyFate(ring.fate);
                 ring.removeFate();
@@ -279,7 +281,11 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     afterConflict() {
-        this.game.conflictCompleted(this.conflict);
+        if(this.conflict.conflictPassed) {
+            return;
+        }
+
+        this.game.recordConflictWinner(this.conflict);
         this.game.checkGameState(true);
 
         if(this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) {
@@ -370,10 +376,11 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     completeConflict() {
-        this.game.currenConflict = null;
         if(this.conflict.conflictPassed) {
             return;
         }
+
+        this.game.currentConflict = null;
         this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
         this.resetCards();
     }

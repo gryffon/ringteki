@@ -8,11 +8,11 @@ class RaiseTheAlarm extends DrawCard {
             cannotBeMirrored: true,
             effect: 'flip the card in the conflict province faceup',
             gameAction: ability.actions.flipDynasty(context => ({
-                target: context.player.controller.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location)
+                target: context.player.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location)
             })),
             then: context => ({
                 handler: () => {
-                    let card = context.player.controller.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location);
+                    let card = context.player.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location);
                     if(card.type === 'character' && card.allowGameAction('putIntoConflict', context)) {
                         this.game.addMessage('{0} is revealed and brought into the conflict!', card);
                         ability.actions.putIntoConflict().resolve(card, context);
