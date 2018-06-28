@@ -8,6 +8,7 @@ class KuniYori extends DrawCard {
         });
 
         this.action({
+            title: 'Select a player to discard a card at random',
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.payHonor(1),
             target: {
