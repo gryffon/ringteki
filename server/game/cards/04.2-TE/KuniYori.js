@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class KuniYori extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => (this.game.currentConflict && this.game.currentConflict.hasElement('earth')),
+            condition: () => this.game.isDuringConflict('earth'),
             effect: ability.effects.modifyBothSkills(1)
         });
 
