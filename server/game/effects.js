@@ -96,6 +96,10 @@ const Effects = {
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),
+    gainActionPhasePriority: () => EffectBuilder.player.detached('actionPhasePriority', {
+        apply: player => player.actionPhasePriority = true,
+        unapply: player => player.actionPhasePriority = false
+    }),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
     playerCannot: (type, predicate) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(type, predicate)),
     reduceCost: (properties) => EffectBuilder.player.detached('costReducer', {
