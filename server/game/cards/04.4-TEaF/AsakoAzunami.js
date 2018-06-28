@@ -9,10 +9,9 @@ class AsakoAzunami extends DrawCard {
             },
             effect: 'replace the water ring effect with bowing and readying two characters',
             handler: context => context.event.replaceHandler(() => {
-                let window = this.game.openEventWindow([], false);
+                let eventWindow;
                 let bowGameAction = ability.actions.bow();
                 let readyGameAction = ability.actions.ready();
-                let bowedCharacter;
                 this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a character to bow',
                     optional: true,
@@ -21,8 +20,7 @@ class AsakoAzunami extends DrawCard {
                     cardCondition: card => card.checkRestrictions('target', context),
                     onCancel: player => this.game.addMessage('{0} chooses not to bow a character', player),
                     onSelect: (player, card) => {
-                        bowedCharacter = card;
-                        window.addEvent(bowGameAction.getEvent(card, context));
+                        eventWindow.addEvent(bowGameAction.getEvent(card, context));
                         this.game.addMessage('{0} chooses to bow {1} with {2}\'s effect', player, card, context.source);
                         return true;
                     }
@@ -32,15 +30,15 @@ class AsakoAzunami extends DrawCard {
                     optional: true,
                     context: context,
                     gameAction: readyGameAction,
-                    cardCondition: card => card !== bowedCharacter && card.checkRestrictions('target', context),
+                    cardCondition: card => card.checkRestrictions('target', context),
                     onCancel: player => this.game.addMessage('{0} chooses not to ready a character', player),
                     onSelect: (player, card) => {
-                        window.addEvent(readyGameAction.getEvent(card, context));
+                        eventWindow.addEvent(readyGameAction.getEvent(card, context));
                         this.game.addMessage('{0} chooses to ready {1} with {2}\'s effect', player, card, context.source);
                         return true;
                     }
                 });
-                this.game.queueStep(window);
+                eventWindow = this.game.openEventWindow([]);
             })
         });
     }

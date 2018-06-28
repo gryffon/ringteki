@@ -19,7 +19,7 @@ class ResolveConflictRingAction extends RingAction {
         }
         let player = this.resolveAsAttacker ? context.player : context.game.currentConflict.attackingPlayer;
         let elements = ring.getElements();
-        return super.createEvent('onResolveRingEffect', { player: player, conflict: conflict, ring: ring, context: context }, () => {
+        return super.createEvent('onResolveConflictRing', { player: player, conflict: conflict, ring: ring, context: context }, () => {
             if(elements.length === 1 || (!this.resolveAsAttacker && conflict.elementsToResolve >= elements.length)) {
                 this.resolveRingEffects(player, elements, this.resolveAsAttacker);
             } else {
@@ -75,8 +75,8 @@ class ResolveConflictRingAction extends RingAction {
             elements = [elements];
         }
         let rings = elements.map(element => player.game.rings[element]);
-        let action = new ResolveElementAction({ optional: optional });
-        action.resolve(rings, player.game.getFrameworkContext(player));
+        let action = new ResolveElementAction({ target: rings, optional: optional });
+        player.game.openThenEventWindow(action.getEventArray(player.game.getFrameworkContext(player)));
     }
 }
 
