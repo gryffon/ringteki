@@ -4,7 +4,7 @@ describe('Ancient Master', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
-                    player1: {                        
+                    player1: {
                         inPlay: ['niten-master'],
                         hand: ['ancient-master'],
                         conflictDeck: ['hurricane-punch', 'centipede-tattoo', 'mantra-of-fire', 'censure', 'ornate-fan'],
