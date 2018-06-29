@@ -15,7 +15,7 @@ class ApprenticeEarthcaller extends DrawCard {
                     ]
                 }))
             },
-            effect: 'set {0}\'s skill values to its printed values until the end of the conflict'
+            effect: 'set {0}\'s skill values to their printed values until the end of the conflict'
         });
     }
 }
