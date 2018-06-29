@@ -9,18 +9,18 @@ describe('Adopted Kin', function() {
                         hand: ['adopted-kin', 'fine-katana', 'ancient-master', 'reprieve']
                     },
                     player2: {
-						inPlay: ['mirumoto-raitsugu'],
+                        inPlay: ['mirumoto-raitsugu'],
                         hand: ['assassination', 'let-go', 'ornate-fan']
                     }
                 });
                 this.adept = this.player1.findCardByName('niten-adept');
-				this.shugenja = this.player1.findCardByName('doomed-shugenja');
+                this.shugenja = this.player1.findCardByName('doomed-shugenja');
                 this.katana = this.player1.findCardByName('fine-katana');
                 this.master = this.player1.findCardByName('ancient-master');
                 this.kin = this.player1.findCardByName('adopted-kin');
-				this.reprieve = this.player1.findCardByName('reprieve');
-				this.raitsugu = this.player2.findCardByName('mirumoto-raitsugu');
-				this.fan = this.player2.findCardByName('ornate-fan');
+                this.reprieve = this.player1.findCardByName('reprieve');
+                this.raitsugu = this.player2.findCardByName('mirumoto-raitsugu');
+                this.fan = this.player2.findCardByName('ornate-fan');
                 this.assassination = this.player2.findCardByName('assassination');
                 this.letGo = this.player2.findCardByName('let-go');
 
@@ -46,7 +46,7 @@ describe('Adopted Kin', function() {
             });
 
             it('should return other attachments to hand when attached character is discarded', function() {
-				expect(this.player1.player.hand.size()).toBe(1);
+                expect(this.player1.player.hand.size()).toBe(1);
                 this.player2.clickCard(this.assassination);
                 this.player2.clickCard(this.adept);
                 expect(this.player1.player.hand.size()).toBe(3);
@@ -60,12 +60,12 @@ describe('Adopted Kin', function() {
                 expect(this.katana.hasKeyword('ancestral')).toBe(false);
                 expect(this.master.hasKeyword('ancestral')).toBe(false);
             });
-			
-			it('should only give the "ancestral"-keyword to attachments on attached character', function() {
+
+            it('should only give the "ancestral"-keyword to attachments on attached character', function() {
                 this.player2.clickCard(this.fan);
                 this.player2.clickCard(this.raitsugu);
-				this.player1.clickCard(this.reprieve);
-				this.player1.clickCard(this.shugenja);
+                this.player1.clickCard(this.reprieve);
+                this.player1.clickCard(this.shugenja);
                 expect(this.fan.hasKeyword('ancestral')).toBe(false);
                 expect(this.reprieve.hasKeyword('ancestral')).toBe(false);
             });
