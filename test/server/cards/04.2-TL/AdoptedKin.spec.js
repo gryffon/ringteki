@@ -33,7 +33,7 @@ describe('Adopted Kin', function() {
                 this.player1.clickCard(this.adept);
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: [this.adept],
+                    attackers: [this.adept]
                 });
                 this.player1.pass();
                 this.player2.clickPrompt('Done');

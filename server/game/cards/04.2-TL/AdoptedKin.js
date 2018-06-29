@@ -2,11 +2,11 @@ const DrawCard = require('../../drawcard.js');
 
 class AdoptedKin extends DrawCard {
     setupCardAbilities(ability) {
-    	this.persistentEffect({
+        this.persistentEffect({
             condition: () => this.getType() === 'attachment' && this.parent,
             match: card => card !== this && card.getType() === 'attachment' && this.parent === card.parent,
             effect: ability.effects.addKeyword('ancestral')
-        })
+        });
     }
 
     canAttach(card, context) {
@@ -14,7 +14,7 @@ class AdoptedKin extends DrawCard {
             return false;
         }
         return super.canAttach(card, context);
-	}    
+    }
 }
 
 AdoptedKin.id = 'adopted-kin';
