@@ -4,6 +4,7 @@ class SneakyShinjo extends DrawCard {
     setupCardAbilities(ability) {
         this.reaction({
             title: 'Play this character',
+            location: 'province',
             when: {
                 onPassDuringDynasty: (event, context) => event.player === context.player
             },

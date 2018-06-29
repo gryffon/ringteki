@@ -53,7 +53,7 @@ const eventNames = [
     'onDuelResolution',
     'onDynastyCardTurnedFaceup',
     'onTransferHonor',
-    'onPassDuringDynasty'
+    'onPassDuringDynasty',
     'onModifyHonor',
     'onAbilityResolved'
 ];
