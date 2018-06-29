@@ -6,9 +6,9 @@ class Sabotage extends DrawCard {
             condition: this.game.isDuringConflict('military'),
             title: 'Discard a card in a province',
             target: {
-                activePromptTitle: 'Choose a card in your opponent\'s province',
                 location: 'province',
                 controller: 'opponent',
+                cardType: ['character','holding'],
                 gameAction: ability.actions.discardCard()
             }
         });
