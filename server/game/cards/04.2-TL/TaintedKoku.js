@@ -16,6 +16,6 @@ class TaintedKoku extends DrawCard {
     }
 }
 
-TaintedKoku.id = 'tainted-currency';
+TaintedKoku.id = 'tainted-koku';
 
 module.exports = TaintedKoku;
