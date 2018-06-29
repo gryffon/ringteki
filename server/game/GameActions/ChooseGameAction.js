@@ -4,6 +4,7 @@ class ChooseGameAction extends GameAction {
     setDefaultProperties() {
         this.choice = null;
         this.choices = {};
+        this.messages = {};
         this.activePromptTitle = 'Select an action:';
     }
 
@@ -26,6 +27,7 @@ class ChooseGameAction extends GameAction {
     }
 
     setTarget(target) {
+        super.setTarget(target);
         for(let gameAction of this.gameActions) {
             gameAction.setTarget(target);
         }
@@ -35,9 +37,13 @@ class ChooseGameAction extends GameAction {
         super.preEventHandler(context);
         let activePromptTitle = this.activePromptTitle;
         let choices = Object.keys(this.choices);
+        choices = choices.filter(key => this.choices[key].some(action => action.hasLegalTarget(context)));
         let handlers = choices.map(choice => {
             return () => {
                 this.choice = choice;
+                if(this.messages[choice]) {
+                    context.game.addMessage(this.messages[choice], context.player, this.target);
+                }
                 for(let gameAction of this.choices[choice]) {
                     context.game.queueSimpleStep(() => gameAction.preEventHandler(context));
                 }

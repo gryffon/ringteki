@@ -24,6 +24,7 @@ const LastingEffectRingAction = require('./LastingEffectRingAction');
 const LoseHonorAction = require('./LoseHonorAction');
 const ModifyBidAction = require('./ModifyBidAction');
 const ModifyFateAction = require('./ModifyFateAction');
+const MoveCardAction = require('./MoveCardAction');
 const MoveToConflictAction = require('./MoveToConflictAction');
 const PlaceFateAction = require('./PlaceFateAction');
 const PlaceFateRingAction = require('./PlaceFateRingAction');
@@ -59,6 +60,7 @@ const GameActions = {
     fireRingEffect: (propertyFactory) => new FireRingAction(propertyFactory),
     flipDynasty: (propertyFactory) => new FlipDynastyAction(propertyFactory),
     honor: (propertyFactory) => new HonorAction(propertyFactory),
+    moveCard: (propertyFactory) => new MoveCardAction(propertyFactory), // destination, switch = false, shuffle = false
     moveToConflict: (propertyFactory) => new MoveToConflictAction(propertyFactory),
     placeFate: (propertyFactory) => new PlaceFateAction(propertyFactory), // amount = 1, origin
     playCard: (propertyFactory) => new PlayCardAction(propertyFactory), // resetOnCancel = false, postHandler
