@@ -70,5 +70,29 @@ describe('Adopted Kin', function() {
                 expect(this.reprieve.hasKeyword('ancestral')).toBe(false);
             });
         });
+
+        describe('Adopted Kin', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['niten-adept', 'doomed-shugenja'],
+                        hand: ['adopted-kin', 'adopted-kin']
+                    },
+                    player2: { }
+                });
+                this.adept = this.player1.findCardByName('niten-adept');
+                this.shugenja = this.player1.findCardByName('doomed-shugenja');
+                this.player1.playAttachment('adopted-kin', this.adept);
+                this.kin = this.player1.findCardByName('adopted-kin', 'hand');
+                this.player2.pass();
+            });
+
+            it('should not be able to be attached twice to the same character', function() {
+                this.player1.clickCard(this.kin);
+                expect(this.player1).toBeAbleToSelect(this.shugenja);
+                expect(this.player1).not.toBeAbleToSelect(this.adept);
+            });
+        });
     });
 });
