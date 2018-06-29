@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class Yoritomo extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
             effect: ability.effects.modifyBothSkills(() => this.controller.fate)
@@ -9,6 +9,6 @@ class Yoritomo extends DrawCard {
     }
 }
 
-Yoritomo.id = 'yoritomo'; // This is a guess at what the id might be - please check it!!!
+Yoritomo.id = 'yoritomo';
 
 module.exports = Yoritomo;
