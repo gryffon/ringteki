@@ -80,6 +80,13 @@ describe('Smoke', function () {
                     expect(this.juro.getMilitarySkill()).toBe(this.juro.cardData.military);
                     expect(this.tatsuo.getMilitarySkill()).toBe(this.tatsuo.cardData.military);
                 });
+
+                it('should last until the end of the conflict', function () {
+                    this.noMoreActions();
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.rider.getMilitarySkill()).toBe(this.rider.cardData.military);
+                    expect(this.scout.getMilitarySkill()).toBe(this.scout.cardData.military);
+                });
             });
         });
     });
