@@ -34,7 +34,7 @@ describe('Adopted Kin', function() {
                 this.player2.clickPrompt('Done');
             });
 
-            it('should give every other attachment the "ancestral"-trait', function() {
+            it('should give every other attachment the "ancestral"-keyword', function() {
                 expect(this.katana.hasKeyword('ancestral')).toBe(true);
                 expect(this.master.hasKeyword('ancestral')).toBe(true);
                 expect(this.kin.hasKeyword('ancestral')).toBe(false);
@@ -48,7 +48,7 @@ describe('Adopted Kin', function() {
                 expect(this.player1.player.hand).toContain(this.master);
             });
 
-            it('should make every other attachment lose the "ancestral"-trait if removed from character', function() {
+            it('should make every other attachment lose the "ancestral"-keyword if removed from character', function() {
                 this.player2.clickCard(this.letGo);
                 this.player2.clickCard(this.kin);
                 expect(this.katana.hasKeyword('ancestral')).toBe(false);
