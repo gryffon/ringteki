@@ -8,7 +8,7 @@ describe('Bayushi Shoju', function() {
                     player1: {
                         honor: 10,
                         inPlay: ['bayushi-shoju'],
-                        hand: ['fiery-madness']
+                        hand: ['fiery-madness', 'a-fate-worse-than-death']
                     },
                     player2: {
                         honor: 9,
