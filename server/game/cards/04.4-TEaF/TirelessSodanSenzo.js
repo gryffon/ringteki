@@ -4,6 +4,7 @@ class TirelessSodanSenzo extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: () => this.isParticipating && this.game.currentConflict.loser,
+            match: this,
             effect: ability.effects.doesNotBow()
         });
     }
