@@ -6,15 +6,17 @@ class ChooseGameAction extends GameAction {
         this.choices = {};
         this.messages = {};
         this.activePromptTitle = 'Select an action:';
+
+        this.gameActions = []; // This shouldn't be set as a property
     }
 
     setup() {
         super.setup();
-        this.effectMsg = 'do several things';
+        this.effectMsg = 'choose between different actions';
     }
 
     update(context) {
-        super.update();
+        super.update(context);
         for(const key of Object.keys(this.choices)) {
             if(!Array.isArray(this.choices[key])) {
                 this.choices[key] = [this.choices[key]];
@@ -53,6 +55,7 @@ class ChooseGameAction extends GameAction {
     }
 
     hasLegalTarget(context) {
+        this.update(context);
         return this.gameActions.some(gameAction => gameAction.hasLegalTarget(context));
     }
 

@@ -4,7 +4,7 @@ class AsahinaTakako extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetLocation: 'province',
-            match: card => ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location),
+            match: card => card.isDynasty && card.facedown,
             effect: ability.effects.canBeSeenWhenFacedown()
         });
 
