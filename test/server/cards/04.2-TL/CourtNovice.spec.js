@@ -16,12 +16,12 @@ describe('Court Novice', function() {
             });
 
             it('should give +2 to political skill if the air ring is claimed', function() {
-                this.game.air.fire.claimRing(this.player1.player);
+                this.game.rings.air.claimRing(this.player1.player);
                 expect(this.novice.getPoliticalSkill()).toBe(3);
             });
 
             it('should give +2 to political skill if the water ring is claimed', function() {
-                this.game.air.water.claimRing(this.player1.player);
+                this.game.rings.water.claimRing(this.player1.player);
                 expect(this.novice.getPoliticalSkill()).toBe(3);
             });
 
