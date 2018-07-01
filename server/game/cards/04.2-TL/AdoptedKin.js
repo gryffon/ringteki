@@ -5,7 +5,8 @@ class AdoptedKin extends DrawCard {
         this.persistentEffect({
             condition: () => this.getType() === 'attachment' && this.parent,
             match: card => card !== this && card.getType() === 'attachment' && this.parent === card.parent,
-            effect: ability.effects.addKeyword('ancestral')
+            effect: ability.effects.addKeyword('ancestral'),
+            targetController: 'any'
         });
     }
 
