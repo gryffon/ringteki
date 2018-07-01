@@ -8,7 +8,7 @@ class DeceptiveOffer extends DrawCard {
                 character: {
                     cardType: 'character',
                     controller: 'self',
-                    cardCondition: card => card.isparticipating()
+                    cardCondition: card => card.isParticipating()
                 },
                 select: {
                     mode: 'select',
