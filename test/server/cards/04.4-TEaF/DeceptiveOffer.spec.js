@@ -19,6 +19,7 @@ describe('Deceptive Offer', function() {
       it('should prompt a character to be chosen', function() {
         this.initiateConflict({
           type: 'military',
+          ring: 'air',
           attackers: [this.bayushiManipulator],
           defenders: []
         });
@@ -31,6 +32,7 @@ describe('Deceptive Offer', function() {
       it('should give the opponent an option to select between effects', function() {
         this.initiateConflict({
           type: 'military',
+          ring: 'air',
           attackers: [this.bayushiManipulator],
           defenders: []
         });
@@ -45,6 +47,7 @@ describe('Deceptive Offer', function() {
       it('should give +2/+2 when the option is selected', function() {
         this.initiateConflict({
           type: 'military',
+          ring: 'air',
           attackers: [this.bayushiManipulator],
           defenders: []
         });
@@ -60,6 +63,7 @@ describe('Deceptive Offer', function() {
       it('should cause the opponent to lose 1 honor and the player to gain 1 honor', function() {
         this.initiateConflict({
           type: 'military',
+          ring: 'air',
           attackers: [this.bayushiManipulator],
           defenders: []
         });
