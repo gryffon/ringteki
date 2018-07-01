@@ -15,7 +15,8 @@ class DeceptiveOffer extends DrawCard {
                     dependsOn: 'character',
                     player: 'opponent',
                     choices: {
-                        'Allow your opponent\'s character to gain military and political skill': ability.actions.cardLastingEffect(() => ({
+                        'Allow your opponent\'s character to gain military and political skill': ability.actions.cardLastingEffect(context => ({
+                            target: context.targets.character,
                             duration: 'untilEndOfConflict',
                             effect: ability.effects.modifyBothSkills(2)
                         })),
