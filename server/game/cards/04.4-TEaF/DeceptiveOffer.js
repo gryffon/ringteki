@@ -1,4 +1,8 @@
-this.action({
+const DrawCard = require('../../drawcard.js');
+
+class DeceptiveOffer extends DrawCard {
+  setupCardAbilities(ability) {
+    this.action({
       title: 'Increase a character\'s military and political skill or take an honor from your opponent',
       targets: {
         character: {
@@ -24,3 +28,9 @@ this.action({
         }
       }
     });
+  }
+}
+
+DeceptiveOffer.id = 'deceptive-offer';
+
+module.exports = DeceptiveOffer;
