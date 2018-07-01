@@ -72,6 +72,6 @@ describe('Deceptive Offer', function() {
         expect(this.player2.player.honor).toBe(9);
       });
       
-    }
-  }
-}
+    });
+  });
+});
