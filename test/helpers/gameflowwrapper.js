@@ -262,6 +262,47 @@ class GameFlowWrapper {
             promptedPlayer.clickPrompt('Second Player');
         }
     }
+
+    /**
+     * Get an array of the latest chat messages
+     * @param {Number} num - number of messages to retrieve, starting from the latest
+     * @param {Boolean} reverse - reverse the retrieved elements so the array is easily read when printed
+     */
+    latestChatMessages(num = 1, reverse = true) {
+        let results = [];
+        for(let i = 0; i < this.game.messages.length && i < num; i++) {
+            let result = '';
+            let chatMessage = this.game.messages[this.game.messages.length - i - 1];
+            for(let j = 0; j < chatMessage.message.length; j++) {
+                result += getChatString(chatMessage.message[j]);
+            }
+            results.push(result);
+        }
+
+        return reverse ? results.reverse() : results;
+
+        function getChatString(item) {
+            if(Array.isArray(item)) {
+                return item.map(arrItem => getChatString(arrItem)).join('');
+            } else if(item instanceof Object) {
+                if(item.name) {
+                    return item.name;
+                } else if(item.message) {
+                    return getChatString(item.message);
+                }
+            }
+            return item;
+        }
+    }
+
+    /**
+     * Get specified chat message or nothing
+     * @param {Number} idx - the index of the array you want to return, defaults to the latest chat message
+     */
+    getChat(idx = 0) {
+        let messages = this.latestChatMessages(this.game.messages.length, false);
+        return messages.length && messages[idx] ? messages[idx] : '<No Message Found>';
+    }
 }
 
 module.exports = GameFlowWrapper;
