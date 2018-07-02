@@ -268,7 +268,7 @@ class GameFlowWrapper {
      * @param {Number} num - number of messages to retrieve, starting from the latest
      * @param {Boolean} reverse - reverse the retrieved elements so the array is easily read when printed
      */
-    latestChatMessages(num = 1, reverse = true) {
+    getChatLogs(num = 1, reverse = true) {
         let results = [];
         for(let i = 0; i < this.game.messages.length && i < num; i++) {
             let result = '';
@@ -299,7 +299,7 @@ class GameFlowWrapper {
      * Get specified chat message or nothing
      * @param {Number} idx - the index of the array you want to return, defaults to the latest chat message
      */
-    getChat(idx = 0) {
+    getChatLog(idx = 0) {
         let messages = this.latestChatMessages(this.game.messages.length, false);
         return messages.length && messages[idx] ? messages[idx] : '<No Message Found>';
     }
