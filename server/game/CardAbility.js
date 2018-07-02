@@ -10,6 +10,7 @@ class CardAbility extends ThenAbility {
         this.limit = properties.limit || AbilityLimit.perRound(1);
         this.limit.registerEvents(game);
         this.limit.card = card;
+        this.abilityCost = this.cost;
         this.location = this.buildLocation(card, properties.location);
         this.printedAbility = properties.printedAbility === false ? false : true;
         this.cannotBeCancelled = properties.cannotBeCancelled;
@@ -93,7 +94,7 @@ class CardAbility extends ThenAbility {
         let messageArgs = [context.player, context.source.type === 'event' ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
             if(cost.action && cost.action.cost) {
-                return { message: this.game.gameChat.formatMessage(cost.action.cost, [context.costs[cost.action.name]]) };
+                return { message: this.game.gameChat.getFormattedMessage(cost.action.cost, context.costs[cost.action.name]) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
@@ -108,7 +109,7 @@ class CardAbility extends ThenAbility {
         let effectArgs = [];
         let extraArgs = null;
         if(!effectMessage) {
-            let gameActions = this.getGameActions(context);
+            let gameActions = this.getGameActions(context).filter(gameAction => gameAction.hasLegalTarget(context));
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
                 effectMessage = gameActions[0].effectMsg;
@@ -131,7 +132,7 @@ class CardAbility extends ThenAbility {
             // to
             messageArgs.push(' to ');
             // discard Stoic Gunso
-            messageArgs.push({ message: this.game.gameChat.formatMessage(effectMessage, effectArgs) });
+            messageArgs.push({ message: this.game.gameChat.getFormattedMessage(effectMessage, ...effectArgs) });
         }
         this.game.addMessage('{0}{1}{2}{3}{4}{5}{6}', ...messageArgs);
     }

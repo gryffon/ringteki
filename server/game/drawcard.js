@@ -162,11 +162,12 @@ class DrawCard extends BaseCard {
     hasDash(type = '') {
         let dashEffects = this.getEffects('setDash');
         if(type === 'military') {
-            return this.printedMilitarySkill === null || dashEffects.includes(type);
+            return this.printedMilitarySkill === undefined || this.printedMilitarySkill === null || dashEffects.includes(type);
         } else if(type === 'political') {
-            return this.printedPoliticalSkill === null || dashEffects.includes(type);
+            return this.printedPoliticalSkill === undefined || this.printedPoliticalSkill === null || dashEffects.includes(type);
         }
-        return this.printedMilitarySkill === null || this.printedPoliticalSkill === null || dashEffects.length > 0;
+        return this.printedMilitarySkill === undefined || this.printedMilitarySkill === null ||
+               this.printedPoliticalSkill === undefined || this.printedPoliticalSkill === null || dashEffects.length > 0;
     }
 
     getSkill(type) {
@@ -229,7 +230,7 @@ class DrawCard extends BaseCard {
             return bonus ? total + bonus : total;
         }, skill);
         // multiply total
-        skill = this.getEffects('modifyMilitarySkillMultiplier').reduce((total, effect) => total * effect.value, skill);
+        skill = this.getEffects('modifyMilitarySkillMultiplier').reduce((total, value) => total * value, skill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -258,8 +259,12 @@ class DrawCard extends BaseCard {
             return bonus ? total + bonus : total;
         }, skill);
         // multiply total
-        skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, effect) => total * effect.value, skill);
+        skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, value) => total * value, skill);
         return floor ? Math.max(0, skill) : skill;
+    }
+
+    get baseMilitarySkill() {
+        return this.getBaseMilitarySkill();
     }
 
     getBaseMilitarySkill() {
@@ -269,6 +274,10 @@ class DrawCard extends BaseCard {
 
         return this.mostRecentEffect('setBaseMilitarySkill') ||
                this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
+    }
+
+    get basePoliticalSkill() {
+        return this.getBasePoliticalSkill();
     }
 
     getBasePoliticalSkill() {
@@ -367,7 +376,7 @@ class DrawCard extends BaseCard {
     }
 
     canPlay(context) {
-        return this.checkRestrictions('play', context);
+        return this.checkRestrictions('play', context) && context.player.checkRestrictions('play', context);
     }
 
     /**
@@ -405,7 +414,7 @@ class DrawCard extends BaseCard {
         return false;
     }
 
-    getActions(player) {
+    getActions(player, location = this.location) {
         if(this.location === 'play area') {
             return super.getActions();
         }
@@ -413,7 +422,7 @@ class DrawCard extends BaseCard {
         if(this.type === 'character') {
             if(player.getDuplicateInPlay(this)) {
                 actions.push(new DuplicateUniqueAction(this));
-            } else if(this.isDynasty && this.location !== 'hand') {
+            } else if(this.isDynasty && location !== 'hand') {
                 actions.push(new DynastyCardAction(this));
             } else {
                 actions.push(new PlayCharacterAction(this));
@@ -463,6 +472,10 @@ class DrawCard extends BaseCard {
         this.inConflict = false;
     }
 
+    canBeBypassedByCovert(context) {
+        return !this.isCovert() && this.checkRestrictions('applyCovert', context);
+    }
+
     canDeclareAsAttacker(conflictType = this.game.currentConflict.conflictType) {
         return (this.allowGameAction('declareAsAttacker') && this.canParticipateAsAttacker(conflictType) &&
                 this.location === 'play area' && !this.bowed);
@@ -485,10 +498,6 @@ class DrawCard extends BaseCard {
 
     bowsOnReturnHome() {
         return !this.anyEffect('doesNotBow');
-    }
-
-    readiesDuringReadyPhase() {
-        return this.anyEffect('doesNotReady');
     }
 
     setDefaultController(player) {

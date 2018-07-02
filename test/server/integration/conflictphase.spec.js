@@ -68,6 +68,68 @@ describe('conflict phase', function() {
                 expect(this.player1).toHavePrompt('Choose an elemental ring\n(click the ring again to change conflict type)');
             });
         });
+
+        // check conflicts pass correctly
+        describe('When the action window closes', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['sinister-soshi'],
+                        hand: ['steward-of-law', 'political-rival']
+                    },
+                    player2: {
+                        inPlay:['otomo-courtier']
+                    }
+                });
+            });
+            it('should pass the conflict when the player chooses that option', function() {
+                this.stewardOfLaw = this.player1.playCharacterFromHand('steward-of-law');
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Initiate Conflict');
+                this.player1.clickPrompt('Pass Conflict');
+                expect(this.player1).toHavePrompt('Pass Conflict');
+                this.player1.clickPrompt('Yes');
+                expect(this.player1).toHavePrompt('Action Window');
+                this.noMoreActions();
+                expect(this.player2).toHavePrompt('Initiate Conflict');
+                this.player2.clickPrompt('Pass Conflict');
+                expect(this.player2).toHavePrompt('Pass Conflict');
+                this.player2.clickPrompt('Yes');
+                expect(this.player1).toHavePrompt('Action Window');
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Initiate Conflict');
+            });
+
+            it('should pass the conflict when the player has no legal attackers', function() {
+                this.chat = spyOn(this.game, 'addMessage');
+                this.noMoreActions();
+                expect(this.chat).toHaveBeenCalledWith('{0} passes their conflict opportunity as none of their characters can be declared as an attacker', this.player1.player);
+                expect(this.player1).toHavePrompt('Action Window');
+            });
+
+            it('should pass the conflict when the player has no attackers who can attack in their remaining conflict types', function() {
+                this.chat = spyOn(this.game, 'addMessage');
+                this.stewardOfLaw = this.player1.playCharacterFromHand('steward-of-law');
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.stewardOfLaw],
+                    defenders: ['otomo-courtier']
+                });
+                this.noMoreActions();
+                // End of Conflict
+                expect(this.player1).toHavePrompt('Action Window');
+                this.noMoreActions();
+                // player 2's conflict autopasses
+                expect(this.player1).toHavePrompt('Action Window');
+                this.politicalRival = this.player1.playCharacterFromHand('political-rival');
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.chat).toHaveBeenCalledWith('{0} passes their conflict opportunity as none of their characters can be declared as an attacker', this.player1.player);
+            });
+        });
+
         // check conflict declaration on first conflict, provinces/rings are correctly selectable, only legal attackers can be selected
         describe('When a players is prompted to declare a conflict', function() {
             beforeEach(function() {
@@ -195,6 +257,156 @@ describe('conflict phase', function() {
                 });
             });
         });
+
+        // check covert works and is correctly cancellable
+        describe('Covert declaration', function() {
+            beforeEach(function() {
+                //this.errors = spyOn(this.game, 'reportError');
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['unassuming-yojimbo', 'kaiu-shuichi']
+                    },
+                    player2: {
+                        inPlay: ['seppun-guardsman', 'adept-of-the-waves', 'miya-mystic'],
+                        hand: ['finger-of-jade']
+                    }
+                });
+                this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 1');
+                this.seppunGuardsman = this.player2.findCardByName('seppun-guardsman');
+                this.miyaMystic = this.player2.findCardByName('miya-mystic');
+                this.player1.pass();
+                this.fingerOfJade = this.player2.playAttachment('finger-of-jade', this.miyaMystic);
+                this.player1.pass();
+                this.adeptOfTheWaves = this.player2.clickCard('adept-of-the-waves');
+                this.player2.clickCard(this.adeptOfTheWaves);
+                this.noMoreActions();
+            });
+
+            it('should allow covert to be declared when attackers are selected', function() {
+                this.player1.clickRing('air');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                expect(this.unassumingYojimbo.inConflict).toBe(true);
+                this.player1.clickCard(this.seppunGuardsman);
+                expect(this.seppunGuardsman.covert).toBe(true);
+            });
+
+            it('should not prompt the players if the characters selected are legal targets for covert', function() {
+                this.player1.clickRing('air');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard('kaiu-shuichi');
+                this.player1.clickCard(this.seppunGuardsman);
+                this.player1.clickCard(this.adeptOfTheWaves);
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player2).toHavePrompt('Choose Defenders');
+            });
+
+            it('should prompt the player if insufficient covert targets are selected', function() {
+                this.player1.clickRing('water');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard('kaiu-shuichi');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player1).toHavePrompt('Choose Covert');
+            });
+
+            it('should allow the player not to covert if they don\'t want to', function() {
+                this.player1.clickRing('water');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player1.currentButtons).toContain('No Target');
+                this.player1.clickPrompt('No Target');
+                expect(this.player2).toHavePrompt('Choose Defenders');
+                expect(this.seppunGuardsman.covert).toBe(false);
+                expect(this.adeptOfTheWaves.covert).toBe(false);
+                expect(this.miyaMystic.covert).toBe(false);
+            });
+
+            it('should not allow the player to select characters with covert', function() {
+                this.player1.clickRing('water');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player1).toHavePrompt('Choose Covert');
+                expect(this.player1).toBeAbleToSelect(this.seppunGuardsman);
+                expect(this.player1).not.toBeAbleToSelect(this.adeptOfTheWaves);
+            });
+
+            it('should prompt the player separately for multiple characters with covert', function() {
+                this.player1.clickRing('air');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard('kaiu-shuichi');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player1).toHavePrompt('Choose covert target for Unassuming Yōjimbō');
+                this.player1.clickCard(this.seppunGuardsman);
+                expect(this.player1).toHavePrompt('Choose covert target for Kaiu Shuichi');
+            });
+
+            it('should allow selecting the same target multiple times for covert', function() {
+                this.player1.clickRing('air');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard('kaiu-shuichi');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player1).toHavePrompt('Choose covert target for Unassuming Yōjimbō');
+                this.player1.clickCard(this.seppunGuardsman);
+                expect(this.player1).toHavePrompt('Choose covert target for Kaiu Shuichi');
+                expect(this.player1).toBeAbleToSelect(this.seppunGuardsman);
+            });
+
+            it('should prompt the player simultaneously for all covert choices for cancels when targeted automatically', function() {
+                this.player1.clickRing('air');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard('kaiu-shuichi');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                this.player1.clickCard(this.seppunGuardsman);
+                this.player1.clickCard(this.miyaMystic);
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                let controls = this.player2.currentPrompt().controls;
+                expect(controls[0].source.id).toBe('unassuming-yojimbo');
+                expect(controls[0].targets[0].id).toBe('seppun-guardsman');
+                expect(controls[1].source.id).toBe('kaiu-shuichi');
+                expect(controls[1].targets[0].id).toBe('miya-mystic');
+            });
+
+            it('should apply covert to all non-cancelled coverts', function() {
+                this.player1.clickRing('air');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard('kaiu-shuichi');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                this.player1.clickCard(this.seppunGuardsman);
+                this.player1.clickCard(this.miyaMystic);
+                this.player2.clickCard(this.fingerOfJade);
+                expect(this.player2).toHavePrompt('Choose Defenders');
+                this.player2.clickCard(this.seppunGuardsman);
+                this.player2.clickCard(this.miyaMystic);
+                expect(this.game.currentConflict.defenders).toContain(this.miyaMystic);
+                expect(this.game.currentConflict.defenders).not.toContain(this.seppunGuardsman);
+            });
+
+            it('should apply double targeted characters that only cancelled one instance of covert', function() {
+                this.player1.clickRing('air');
+                this.unassumingYojimbo = this.player1.clickCard('unassuming-yojimbo');
+                this.player1.clickCard('kaiu-shuichi');
+                this.player1.clickCard(this.shamefulDisplay);
+                this.player1.clickPrompt('Initiate Conflict');
+                this.player1.clickCard(this.miyaMystic);
+                this.player1.clickCard(this.miyaMystic);
+                this.player2.clickCard(this.fingerOfJade);
+                this.player2.clickCard(this.unassumingYojimbo);
+                expect(this.player2).toHavePrompt('Choose Defenders');
+                this.player2.clickCard(this.seppunGuardsman);
+                this.player2.clickCard(this.miyaMystic);
+                expect(this.game.currentConflict.defenders).not.toContain(this.miyaMystic);
+                expect(this.game.currentConflict.defenders).toContain(this.seppunGuardsman);
+            });
+        });
+
         // check reacting to conflict declaration works correctly
         describe('reactions to declaring a conflict', function() {
             beforeEach(function() {
@@ -299,7 +511,6 @@ describe('conflict phase', function() {
             });
         });
 
-        // check covert works and is correctly cancellable
         // check defender declaration works and stops illegal defenders from being selected
         // check conflict action window works properly, and messages are correctly displayed
         // check pride is properly triggered and can be interrupted and reacted to
@@ -514,6 +725,38 @@ describe('conflict phase', function() {
         });
 
         // check that the next pre-conflict window works properly
+        describe('after conflict window', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['doji-whisperer'],
+                        hand: ['levy']
+                    }
+                });
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: ['doji-whisperer'],
+                    defenders: []
+                });
+                this.noMoreActions();
+            });
+
+            it('should no longer have an ongoing conflict', function() {
+                expect(this.game.isDuringConflict()).toBe(false);
+            });
+
+            it('should give priority to player 1', function() {
+                expect(this.player1).toHavePrompt('Action Window');
+            });
+
+            it('should pass priority properly', function() {
+                this.player1.clickCard('levy');
+                this.player2.clickPrompt('Give your opponent 1 honor');
+                expect(this.player2).toHavePrompt('Action Window');
+            });
+        });
+
         // check that passing conflicts works
         // check that auto-passing conflicts works correctly
         // check that second conflict declaration works

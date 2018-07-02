@@ -47,10 +47,10 @@ class HonorBidPrompt extends AllPlayerPrompt {
         let difference = firstPlayer.honorBid - firstPlayer.opponent.honorBid;
         if(difference > 0) {
             this.game.addMessage('{0} gives {1} {2} honor', firstPlayer, firstPlayer.opponent, difference);
-            GameActions.takeHonor({ amount: difference }).resolve(firstPlayer, context);
+            GameActions.takeHonor({ amount: difference, afterBid: true }).resolve(firstPlayer, context);
         } else if(difference < 0) {
             this.game.addMessage('{0} gives {1} {2} honor', firstPlayer.opponent, firstPlayer, -difference);
-            GameActions.takeHonor({ amount: -difference }).resolve(firstPlayer.opponent, context);
+            GameActions.takeHonor({ amount: -difference, afterBid: true }).resolve(firstPlayer.opponent, context);
         }
     }
 
@@ -76,7 +76,7 @@ class HonorBidPrompt extends AllPlayerPrompt {
     menuCommand(player, bid) {
         this.game.addMessage('{0} has chosen a bid.', player);
 
-        player.honorBid = bid;
+        player.honorBid = parseInt(bid);
 
         return true;
     }

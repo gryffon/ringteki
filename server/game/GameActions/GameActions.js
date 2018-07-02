@@ -1,6 +1,7 @@
 const AttachAction = require('./AttachAction');
 const BowAction = require('./BowAction');
 const BreakAction = require('./BreakAction');
+const ChooseGameAction = require('./ChooseGameAction');
 const ChosenDiscardAction = require('./ChosenDiscardAction');
 const DeckSearchAction = require('./DeckSearchAction');
 const DelayedEffectAction = require('./DelayedEffectAction');
@@ -26,6 +27,7 @@ const ModifyFateAction = require('./ModifyFateAction');
 const MoveToConflictAction = require('./MoveToConflictAction');
 const PlaceFateAction = require('./PlaceFateAction');
 const PlaceFateRingAction = require('./PlaceFateRingAction');
+const PlayCardAction = require('./PlayCardAction');
 const PutIntoPlayAction = require('./PutIntoPlayAction');
 const RandomDiscardAction = require('./RandomDiscardAction');
 const ReadyAction = require('./ReadyAction');
@@ -59,6 +61,7 @@ const GameActions = {
     honor: (propertyFactory) => new HonorAction(propertyFactory),
     moveToConflict: (propertyFactory) => new MoveToConflictAction(propertyFactory),
     placeFate: (propertyFactory) => new PlaceFateAction(propertyFactory), // amount = 1, origin
+    playCard: (propertyFactory) => new PlayCardAction(propertyFactory), // resetOnCancel = false, postHandler
     putIntoConflict: (propertyFactory) => new PutIntoPlayAction(propertyFactory), // fate = 0
     putIntoPlay: (propertyFactory) => new PutIntoPlayAction(propertyFactory, false), // fate = 0
     ready: (propertyFactory) => new ReadyAction(propertyFactory),
@@ -91,6 +94,7 @@ const GameActions = {
     takeFateFromRing: (propertyFactory) => new TakeFateRingAction(propertyFactory), // amount = 1
     takeRing: (propertyFactory) => new TakeRingAction(propertyFactory),
     // meta actions
+    chooseAction: (propertyFactory) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
     jointAction: (gameActions) => new JointGameAction(gameActions) // takes an array of gameActions, not a propertyFactory
 };
 

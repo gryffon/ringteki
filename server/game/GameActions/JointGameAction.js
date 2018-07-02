@@ -17,9 +17,9 @@ class JointGameAction extends GameAction {
         }
     }
 
-    setTarget(target, context) {
+    setTarget(target) {
         for(let gameAction of this.gameActions) {
-            gameAction.setTarget(target, context);
+            gameAction.setTarget(target);
         }
     }
 
@@ -33,8 +33,8 @@ class JointGameAction extends GameAction {
         return this.gameActions.every(gameAction => gameAction.hasLegalTarget(context));
     }
 
-    canAffect(player, context) {
-        return this.gameActions.every(gameAction => gameAction.hasLegalTarget(context));
+    canAffect(target, context) {
+        return this.gameActions.every(gameAction => gameAction.canAffect(target, context));
     }
 
     getEventArray(context) {

@@ -155,6 +155,10 @@ class Conflict extends GameObject {
         return this.attackers.concat(this.defenders).some(predicate);
     }
 
+    getParticipants(predicate = () => true) {
+        return this.attackers.concat(this.defenders).filter(predicate);
+    }
+
     getNumberOfParticipants(predicate) {
         let participants = this.attackers.concat(this.defenders);
         return _.reduce(participants, (count, card) => {
@@ -166,13 +170,22 @@ class Conflict extends GameObject {
         }, 0);
     }
 
-    hasMoreParticipants(player, predicate = () => true) {
-        if(!player.opponent) {
-            return this.anyParticipants(predicate);
+    getNumberOfParticipantsFor(player, predicate) {
+        let characters = this.getCharacters(player);
+        if(predicate) {
+            return characters.filter(predicate).length;
         }
-        let playerTotal = this.getCharacters(player).filter(predicate).length + player.sumEffects('additionalCharactersInConflict');
-        let opponentTotal = this.getCharacters(player.opponent).filter(predicate).length + player.opponent.sumEffects('additionalCharactersInConflict');
-        return playerTotal > opponentTotal;
+        return characters.length + player.sumEffects('additionalCharactersInConflict');
+    }
+
+    hasMoreParticipants(player, predicate) {
+        if(!player) {
+            return false;
+        }
+        if(!player.opponent) {
+            return !!this.getNumberOfParticipantsFor(player, predicate);
+        }
+        return this.getNumberOfParticipantsFor(player) > this.getNumberOfParticipantsFor(player.opponent);
     }
 
     calculateSkill(stateChanged = false) {
@@ -246,7 +259,11 @@ class Conflict extends GameObject {
     passConflict(message = '{0} has chosen to pass their conflict opportunity') {
         this.game.addMessage(message, this.attackingPlayer);
         this.conflictPassed = true;
-        this.game.conflictCompleted(this);
+        if(this.ring) {
+            this.ring.resetRing();
+        }
+        this.game.recordConflict(this);
+        this.game.currentConflict = null;
         this.game.raiseEvent('onConflictPass', { conflict: this });
         this.resetCards();
     }

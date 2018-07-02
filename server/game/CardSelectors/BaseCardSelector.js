@@ -25,14 +25,23 @@ class BaseCardSelector {
 
     findPossibleCards(context) {
         if(this.location.includes('any')) {
+            if(this.controller === 'self') {
+                return context.game.allCards.filter(card => card.controller === context.player);
+            } else if(this.controller === 'opponent') {
+                return context.game.allCards.filter(card => card.controller === context.player.opponent);
+            }
             return context.game.allCards.toArray();
+        }
+        let attachments = context.player.cardsInPlay.reduce((array, card) => array.concat(card.attachments.toArray()), []);
+        if(context.player.opponent) {
+            attachments = attachments.concat(...context.player.opponent.cardsInPlay.map(card => card.attachments.toArray()));
         }
         let possibleCards = [];
         if(this.controller !== 'opponent') {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.getSourceList(location).toArray();
                 if(location === 'play area') {
-                    return array.concat(cards, ...cards.map(card => card.attachments.toArray()));
+                    return array.concat(cards, attachments.filter(card => card.controller === context.player));
                 }
                 return array.concat(cards);
             }, possibleCards);
@@ -41,7 +50,7 @@ class BaseCardSelector {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.opponent.getSourceList(location).toArray();
                 if(location === 'play area') {
-                    return array.concat(cards, ...cards.map(card => card.attachments.toArray()));
+                    return array.concat(cards, attachments.filter(card => card.controller === context.player.opponent));
                 }
                 return array.concat(cards);
             }, possibleCards);
@@ -54,6 +63,15 @@ class BaseCardSelector {
             return false;
         }
         if(context.stage.includes('target') && !card.checkRestrictions('target', context)) {
+            return false;
+        }
+        if(this.controller === 'self' && card.controller !== context.player) {
+            return false;
+        }
+        if(this.controller === 'opponent' && card.controller !== context.player.opponent) {
+            return false;
+        }
+        if(!this.location.includes('any') && !this.location.includes(card.location)) {
             return false;
         }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);
