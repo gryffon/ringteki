@@ -1,4 +1,4 @@
-fdescribe('Marauding Oni', function() {
+describe('Marauding Oni', function() {
     integration(function() {
         describe('Marauding Oni\'s ability', function() {
             beforeEach(function() {
