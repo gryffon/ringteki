@@ -2,8 +2,7 @@ const GameAction = require('./GameAction');
 
 class JointGameAction extends GameAction {
     constructor(gameActions) {
-        super();
-        this.gameActions = gameActions;
+        super({ gameActions: gameActions });
     }
 
     setup() {
