@@ -29,14 +29,14 @@ describe('Invocation of Ash', function () {
             it('should be able to attach to a character without fate', function () {
                 this.player1.clickCard(this.ash);
                 this.player1.clickCard(this.rider);
-                expect(this.ash.parent.name).toBe(this.rider.name);
+                expect(this.ash.parent).toBe(this.rider);
             });
 
             it('should remove a fate from a character with fate', function () {
                 this.initFate = this.scout.fate;
                 this.player1.clickCard(this.ash);
                 this.player1.clickCard(this.scout);
-                expect(this.ash.parent.name).toBe(this.scout.name);
+                expect(this.ash.parent).toBe(this.scout);
                 expect(this.scout.fate).toBe(this.initFate - 1);
             });
         });
