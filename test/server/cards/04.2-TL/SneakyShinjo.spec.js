@@ -1,4 +1,4 @@
-fdescribe('Sneaky Shinjo', function() {
+describe('Sneaky Shinjo', function() {
     integration(function() {
         describe('Sneaky Shinjo\'s ability', function() {
             beforeEach(function() {
