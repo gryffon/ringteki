@@ -10,7 +10,7 @@ describe('Tainted Koku', function() {
                     },
                     player2: {
                         inPlay: ['bayushi-shoju'],
-                        hand: ['tainted-koku']
+                        hand: ['tainted-koku','assassinate']
                     }
                 });
                 this.initiate = this.player1.findCardByName('togashi-initiate');
@@ -18,6 +18,7 @@ describe('Tainted Koku', function() {
 
                 this.koku = this.player2.findCardByName('tainted-koku');
                 this.shoju = this.player2.findCardByName('bayushi-shoju');
+                this.assa = this.player2.findCardByName('assassinate');
 
             });
 
@@ -28,6 +29,27 @@ describe('Tainted Koku', function() {
                 this.player1.clickCard(this.letgo);
                 this.player1.clickCard(this.mendicant);
                 expect(this.koku.location).toBe('conflict discard pile');
+            });
+
+            it('should correctly be movable after character leaves play ', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.mendicant],
+                    defenders: [this.shoju],
+                    type: 'political'
+                });
+                this.player2.clickCard(this.koku);
+                this.player2.clickCard(this.mendicant);
+                this.player1.pass();
+                this.player2.clickCard(this.shoju);
+                this.player2.clickCard(this.mendicant);
+                expect(this.mendicant.location).toBe('dynasty discard pile');
+                expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
+                expect(this.player2).toBeAbleToSelect(this.koku);
+                this.player2.clickCard(this.koku);
+                expect(this.player2).toBeAbleToSelect(this.initiate);
+                this.player2.clickCard(this.initiate);
+                expect(this.initiate.attachments.toArray()).toContain(this.koku);
             });
         });
     });
