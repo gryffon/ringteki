@@ -11,9 +11,9 @@ class WickedTetsubo extends DrawCard {
                     cardType: 'character',
                     cardCondition: card => card.isDefending()
                 },
-                skill: {
-                    dependsOn: 'character',
+                effect: {
                     mode: 'select',
+                    dependsOn: 'character',
                     activePromptTitle: 'Choose a skill to set to 0',
                     choices: {
                         'military': ability.actions.cardLastingEffect(context => ({
@@ -31,7 +31,7 @@ class WickedTetsubo extends DrawCard {
     }
 
     canAttach(card, context) {
-        if(card.controller !== context.player) {
+        if(!card.hasTrait('berserker')) {
             return false;
         }
 
