@@ -26,7 +26,10 @@ class WickedTetsubo extends DrawCard {
                         }))
                     }
                 }
-            }
+            },
+            effect: 'set {0}\'s {1} skill to 0',
+            effectArgs: context => context.select.choice
+            handler: () =>
         });
     }
 
