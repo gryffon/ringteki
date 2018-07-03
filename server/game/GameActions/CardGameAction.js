@@ -15,9 +15,13 @@ class CardGameAction extends GameAction {
     hasLegalTarget(context) {
         let result = super.hasLegalTarget(context);
         if(this.promptForSelect) {
-            return this.getSelector().hasEnoughTargets(context);
+            let contextCopy = context.copy();
+            contextCopy.stage = 'effect';
+            return this.getSelector().hasEnoughTargets(contextCopy);
         } else if(this.promptWithHandlerMenu) {
-            return this.promptWithHandlerMenu.cards.some(card => this.canAffect(card, context));
+            let contextCopy = context.copy();
+            contextCopy.stage = 'effect';
+            return this.promptWithHandlerMenu.cards.some(card => this.canAffect(card, contextCopy));
         }
         return result;
     }
@@ -41,7 +45,7 @@ class CardGameAction extends GameAction {
                 context: context,
                 selector: selector,
                 onSelect: (player, cards) => {
-                    this.setTarget(cards, context);
+                    this.setTarget(cards);
                     if(this.promptForSelect.message) {
                         context.game.addMessage(this.promptForSelect.message, player, context.source, cards);
                     }
@@ -63,7 +67,7 @@ class CardGameAction extends GameAction {
             let defaultProperties = {
                 context: context,
                 cardHandler: card => {
-                    this.setTarget(card, context);
+                    this.setTarget(card);
                     if(properties.message) {
                         context.game.addMessage(properties.message, properties.player, context.source, card);
                     }
