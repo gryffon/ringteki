@@ -3,6 +3,7 @@ const GameAction = require('./GameAction');
 class JointGameAction extends GameAction {
     constructor(gameActions) {
         super({ gameActions: gameActions });
+        this.gameActions = gameActions;
     }
 
     setup() {
