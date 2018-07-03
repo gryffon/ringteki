@@ -51,6 +51,27 @@ describe('Tainted Koku', function() {
                 this.player2.clickCard(this.initiate);
                 expect(this.initiate.attachments.toArray()).toContain(this.koku);
             });
+
+            it('should go back to hand if ancestral and only attached character left leaves play ', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.mendicant],
+                    defenders: [this.shoju],
+                    type: 'political'
+                });
+                this.player2.clickCard(this.koku);
+                this.player2.clickCard(this.mendicant);
+                this.koku.addKeyword('ancestral');
+                this.player1.pass();
+                this.Player2.clickCard('assa');
+                this.Player2.clickCard('this.initiate');
+                expect(this.initiate.location).toBe('dynasty discard pile');
+                this.player1.pass();
+                this.player2.clickCard(this.shoju);
+                this.player2.clickCard(this.mendicant);
+                expect(this.mendicant.location).toBe('dynasty discard pile');
+                expect(this.player2.player.hand).toContain(this.koku);
+            });
         });
     });
 });
