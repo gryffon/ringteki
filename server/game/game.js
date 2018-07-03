@@ -152,7 +152,7 @@ class Game extends EventEmitter {
      */
     getPlayerByName(playerName) {
         let player = this.playersAndSpectators[playerName];
-        if(!this.isSpectator(player)) {
+        if(player && !this.isSpectator(player)) {
             return player;
         }
     }
