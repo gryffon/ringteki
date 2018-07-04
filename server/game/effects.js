@@ -96,13 +96,17 @@ const Effects = {
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),
+    changePlayerSkillModifier: (value) => EffectBuilder.player.flexible('conflictSkillModifier', value),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
     playerCannot: (type, predicate) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(type, predicate)),
     reduceCost: (properties) => EffectBuilder.player.detached('costReducer', {
         apply: (player, context) => player.addCostReducer(context.source, properties),
         unapply: (player, context, reducer) => player.removeCostReducer(reducer)
     }),
-    reduceNextPlayedCardCost: (amount, match) => Effects.reduceCost({ amount: amount, match: match, limit: AbilityLimit.fixed(1) }),
+    reduceNextPlayedCardCost: (amount, match) => EffectBuilder.player.detached('costReducer', {
+        apply: (player, context) => player.addCostReducer(context.source, { amount: amount, match: match, limit: AbilityLimit.fixed(1) }),
+        unapply: (player, context, reducer) => player.removeCostReducer(reducer)
+    }),
     setMaxConflicts: (amount) => EffectBuilder.player.static('maxConflicts', amount),
     showTopConflictCard: () => EffectBuilder.player.static('showTopConflictCard'),
     // Conflict effects

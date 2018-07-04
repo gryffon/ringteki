@@ -1,6 +1,7 @@
 const AttachAction = require('./AttachAction');
 const BowAction = require('./BowAction');
 const BreakAction = require('./BreakAction');
+const ChooseGameAction = require('./ChooseGameAction');
 const ChosenDiscardAction = require('./ChosenDiscardAction');
 const DeckSearchAction = require('./DeckSearchAction');
 const DelayedEffectAction = require('./DelayedEffectAction');
@@ -20,6 +21,7 @@ const JointGameAction = require('./JointGameAction');
 const LastingEffectAction = require('./LastingEffectAction');
 const LastingEffectCardAction = require('./LastingEffectCardAction');
 const LastingEffectRingAction = require('./LastingEffectRingAction');
+const LookAtAction = require('./LookAtAction');
 const LoseHonorAction = require('./LoseHonorAction');
 const ModifyBidAction = require('./ModifyBidAction');
 const ModifyFateAction = require('./ModifyFateAction');
@@ -58,6 +60,7 @@ const GameActions = {
     fireRingEffect: (propertyFactory) => new FireRingAction(propertyFactory),
     flipDynasty: (propertyFactory) => new FlipDynastyAction(propertyFactory),
     honor: (propertyFactory) => new HonorAction(propertyFactory),
+    lookAt: (propertyFactory) => new LookAtAction(propertyFactory),
     moveToConflict: (propertyFactory) => new MoveToConflictAction(propertyFactory),
     placeFate: (propertyFactory) => new PlaceFateAction(propertyFactory), // amount = 1, origin
     playCard: (propertyFactory) => new PlayCardAction(propertyFactory), // resetOnCancel = false, postHandler
@@ -68,7 +71,7 @@ const GameActions = {
     resolveAbility: (propertyFactory) => new ResolveAbilityAction(propertyFactory), // ability
     returnToDeck: (propertyFactory) => new ReturnToDeckAction(propertyFactory), // bottom = false
     returnToHand: (propertyFactory) => new ReturnToHandAction(propertyFactory),
-    reveal: (propertyFactory) => new RevealAction(propertyFactory),
+    reveal: (propertyFactory) => new RevealAction(propertyFactory), // chatMessage = false
     sendHome: (propertyFactory) => new SendHomeAction(propertyFactory),
     sacrifice: (propertyFactory) => new DiscardFromPlayAction(propertyFactory, true),
     // player actions
@@ -93,6 +96,7 @@ const GameActions = {
     takeFateFromRing: (propertyFactory) => new TakeFateRingAction(propertyFactory), // amount = 1
     takeRing: (propertyFactory) => new TakeRingAction(propertyFactory),
     // meta actions
+    chooseAction: (propertyFactory) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
     jointAction: (gameActions) => new JointGameAction(gameActions) // takes an array of gameActions, not a propertyFactory
 };
 

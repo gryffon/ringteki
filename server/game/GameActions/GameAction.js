@@ -2,8 +2,7 @@ const Event = require('../Events/Event.js');
 
 class GameAction {
     constructor(propertyFactory = {}) {
-        this.target = [];
-        this.setDefaultProperties();
+        this.reset();
         if(typeof propertyFactory === 'function') {
             this.propertyFactory = propertyFactory;
         } else if(typeof propertyFactory !== 'object') {
@@ -17,6 +16,11 @@ class GameAction {
     }
 
     setDefaultProperties() {
+    }
+
+    reset() {
+        this.target = [];
+        this.setDefaultProperties();
     }
 
     setup() {
@@ -42,13 +46,12 @@ class GameAction {
         this.setup();
     }
 
-    setTarget(targetFunc, context) {
-        if(typeof targetFunc === 'function') {
-            this.getDefaultTargets = targetFunc;
-        } else if(targetFunc) {
-            this.getDefaultTargets = () => targetFunc;
+    setTarget(target) {
+        if(Array.isArray(target)) {
+            this.target = target;
+        } else {
+            this.target = [target];
         }
-        return this.hasLegalTarget(context);
     }
 
     hasLegalTarget(context) {
@@ -63,14 +66,14 @@ class GameAction {
     resolve(targets, context) {
         this.getDefaultTargets = () => targets;
         this.preEventHandler(context);
-        let window = context.game.openEventWindow([], false);
+        let eventWindow;
         context.game.queueSimpleStep(() => {
             for(let event of this.getEventArray(context)) {
-                window.addEvent(event);
+                eventWindow.addEvent(event);
             }
         });
-        context.game.queueStep(window);
-        return window;
+        eventWindow = context.game.openEventWindow([]);
+        return eventWindow;
     }
 
     canAffect(target, context) {
