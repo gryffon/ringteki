@@ -14,6 +14,7 @@ const ImmunityRestriction = require('./immunityrestriction.js');
 const Effects = {
     // Card effects
     addFaction: (faction) => EffectBuilder.card.static('addFaction', faction),
+    addGloryWhileDishonored: () => EffectBuilder.card.static('addGloryWhileDishonored'),
     addKeyword: (keyword) => EffectBuilder.card.static('addKeyword', keyword),
     addTrait: (trait) => EffectBuilder.card.static('addTrait', trait),
     blank: () => EffectBuilder.card.static('blank'),
