@@ -13,14 +13,15 @@ class Infiltrator extends DrawCard {
                     choices: {
                         'Play this card': ability.actions.playCard({ target: topCard }),
                         'Discard this card': ability.actions.discardCard({ target: topCard })
-                    }
+                    },
+                    messages: { 'Discard this card': '{0} chooses to discard {1}' }
                 };
             })
         });
     }
 
     canPlay(context) {
-        if(!context.player.opponent || context.player.showBid <= context.player.opponent) {
+        if(!context.player.opponent || context.player.showBid <= context.player.opponent.showBid) {
             return false;
         }
         return super.canPlay(context);
