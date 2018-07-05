@@ -16,11 +16,11 @@ class WickedTetsubo extends DrawCard {
                     dependsOn: 'character',
                     activePromptTitle: 'Choose a skill to set to 0',
                     choices: {
-                        'military': ability.actions.cardLastingEffect(context => ({
+                        'Military': ability.actions.cardLastingEffect(context => ({
                             target: context.targets.character,
                             effect: ability.effects.setMilitarySkill(0)
                         })),
-                        'political': ability.actions.cardLastingEffect(context => ({
+                        'Political': ability.actions.cardLastingEffect(context => ({
                             target: context.targets.character,
                             effect: ability.effects.setPoliticalSkill(0)
                         }))
@@ -28,8 +28,7 @@ class WickedTetsubo extends DrawCard {
                 }
             },
             effect: 'set {0}\'s {1} skill to 0',
-            effectArgs: context => context.select.choice
-            handler: () =>
+            effectArgs: context => [context.targets.character, context.selects.effect.toLowerCase()]
         });
     }
 
