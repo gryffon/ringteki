@@ -16,7 +16,7 @@ describe('Feral Ningyo', function () {
                 });
                 this.feral = this.player1.findCardByName('feral-ningyo');
                 this.kisada = this.player2.findCardByName('hida-kisada');
-                this.player1.playAttachment('cloud-the-mind', this.kisada);
+                this.cloud = this.player1.playAttachment('cloud-the-mind', this.kisada);
             });
 
             it('should not activate outside of conflicts', function () {
@@ -38,9 +38,8 @@ describe('Feral Ningyo', function () {
                 expect(this.player1).not.toHavePromptButton('Put into play');
             });
 
-            describe('when Hida Kisada\'s ability is active', function() {
+            describe('when Hida Kisada\'s ability is active', function () {
                 beforeEach(function () {
-                    this.cloud = this.player1.findCardByName('cloud-the-mind');
                     this.player2.clickCard('let-go', 'hand');
                     this.player2.clickCard(this.cloud);
                     this.noMoreActions();
