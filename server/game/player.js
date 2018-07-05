@@ -12,6 +12,8 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
+const provinceLocations = ['stronghold province', 'province 1', 'province 2', 'province 3', 'province 4'];
+
 class Player extends GameObject {
     constructor(id, user, owner, game, clockdetails) {
         super(game, user.username);
@@ -248,7 +250,7 @@ class Player extends GameObject {
      * Returns the total number of holdings controlled by this player
      */
     getNumberOfHoldingsInPlay() {
-        return _.reduce(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'], (n, province) => {
+        return provinceLocations.reduce((n, province) => {
             return this.getSourceList(province).filter(card => card.getType() === 'holding' && !card.facedown).length + n;
         }, 0);
     }
@@ -682,7 +684,7 @@ class Player extends GameObject {
             return false;
         }
 
-        const provinceLocations = ['stronghold province', 'province 1', 'province 2', 'province 3', 'province 4'];
+
         const conflictCardLocations = ['hand', 'conflict deck', 'conflict discard pile', 'removed from game'];
         const legalLocations = {
             stronghold: ['stronghold province'],
@@ -815,7 +817,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === 'play area' || (card.type === 'holding' && ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(location))) {
+        if(location === 'play area' || (card.type === 'holding' && provinceLocations.includes(location))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;
@@ -838,13 +840,16 @@ class Player extends GameObject {
                 this.promptForAttachment(card);
                 return;
             }
+        } else if(location === 'being played' && card.owner !== this) {
+            card.owner.moveCard(card, targetLocation, options);
+            return;
         } else {
             card.controller = card.owner;
         }
 
         card.moveTo(targetLocation);
 
-        if(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(targetLocation)) {
+        if(provinceLocations.includes(targetLocation)) {
             if(['dynasty deck', 'province deck'].includes(location)) {
                 card.facedown = true;
             }
@@ -866,7 +871,7 @@ class Player extends GameObject {
         }
         */
         // Replace a card which has been played, put into play or discarded from a province
-        if(card.isDynasty && ['province 1', 'province 2', 'province 3', 'province 4'].includes(location) && targetLocation !== 'dynasty deck') {
+        if(card.isDynasty && provinceLocations.includes(location) && targetLocation !== 'dynasty deck') {
             this.replaceDynastyCard(location);
         }
     }
