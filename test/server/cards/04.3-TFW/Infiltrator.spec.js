@@ -1,4 +1,4 @@
-describe('Infiltrator', function() {
+fdescribe('Infiltrator', function() {
     integration(function() {
         describe('Infiltrator\'s ability', function() {
             beforeEach(function() {
@@ -12,7 +12,7 @@ describe('Infiltrator', function() {
                     },
                     player2: {
                         honor: 10,
-                        fate: 3,
+                        fate: 4,
                         hand: ['infiltrator']
                     }
                 });
@@ -82,10 +82,14 @@ describe('Infiltrator', function() {
                 this.player2.clickCard(this.infiltrator);
                 this.player2.clickPrompt('Play this card');
                 expect(this.player2).toHavePrompt('Master of the Spear');
-                this.player2.clickCard(this.matsuBerserker);
-                expect(this.honoredBlade.location).toBe('play area');
-                expect(this.matsuBerserker.attachments.toArray()).toContain(this.honoredBlade);
-                expect(this.player2.fate).toBe(2);
+                expect(this.player2.currentButtons).toContain('0');
+                expect(this.player2.currentButtons).not.toContain('1');
+                this.player2.clickPrompt('0');
+                this.player2.clickPrompt('Conflict');
+                expect(this.masterOfTheSpear.location).toBe('play area');
+                expect(this.masterOfTheSpear.inConflict).toBe(true);
+                expect(this.masterOfTheSpear.controller).toBe(this.player2.player);
+                expect(this.player2.fate).toBe(0);
             });
         });
     });
