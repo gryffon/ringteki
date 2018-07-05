@@ -56,6 +56,7 @@ describe('Feral Ningyo', function () {
                     this.player1.clickCard(this.feral);
                     this.player1.clickPrompt('Put into play');
                     expect(this.feral.location).toBe('hand');
+                    expect(this.player2).toHavePrompt('Conflict Action Window');
                 });
             });
 
