@@ -137,9 +137,9 @@ class BaseCard extends EffectSource {
 
     updateAbilityEvents(from, to) {
         _.each(this.abilities.reactions, reaction => {
-            if(reaction.location.includes(to) && !reaction.location.includes(from) || this.type === 'event' && to === 'conflict deck') {
+            if((reaction.location.includes(to) || this.type === 'event' && to === 'conflict deck') && !reaction.location.includes(from)) {
                 reaction.registerEvents();
-            } else if(!reaction.location.includes(to) && reaction.location.includes(from)) {
+            } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === 'event' && to === 'conflict deck')) {
                 reaction.unregisterEvents();
             }
         });
@@ -266,7 +266,7 @@ class BaseCard extends EffectSource {
     }
 
     getActions() {
-        return this.abilities.actions;
+        return this.abilities.actions.slice();
     }
 
     getProvinceStrengthBonus() {
