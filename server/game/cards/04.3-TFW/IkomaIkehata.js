@@ -1,10 +1,23 @@
 const DrawCard = require('../../drawcard.js');
 
 class IkomaIkehata extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
+        this.reaction({
+            title: 'Honor a character and draw a card',
+            when: {
+                afterConflict: (event, context) => event.conflict.winner === context.player && context.source.isParticipating() && event.conflict.conflictType === 'political'
+            },
+            target: {
+                activePromptTitle: 'Choose a character to honor',
+                cardType: 'character',
+                controller: 'self',
+                gameAction: [ability.actions.honor(),
+                    ability.actions.draw()]
+            }
+        });
     }
 }
 
-IkomaIkehata.id = 'ikoma-ikehata'; // This is a guess at what the id might be - please check it!!!
+IkomaIkehata.id = 'ikoma-ikehata';
 
 module.exports = IkomaIkehata;
