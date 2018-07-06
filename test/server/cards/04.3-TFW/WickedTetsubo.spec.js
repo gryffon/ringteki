@@ -23,13 +23,14 @@ describe('Wicked Tetsubo', function() {
 
             it('should only attach to Berserker characters', function() {
                 this.player1.clickCard(this.tetsubo);
-                expect.this.player1.not.toBeAbleToSelect(this.historian);
-                expect.this.player1.not.toBeAbleToSelect(this.ttg);
-                expect.this.player1.toBeAbleToSelect(this.breaker);
-                expect.this.player1.toBeAbleToSelect(this.matsu);
+                expect(this.player1).not.toBeAbleToSelect(this.historian);
+                expect(this.player1).not.toBeAbleToSelect(this.ttg);
+                expect(this.player1).toBeAbleToSelect(this.breaker);
+                expect(this.player1).toBeAbleToSelect(this.matsu);
             });
 
             it('should not work on defense', function() {
+                this.noMoreActions();
                 this.player1.clickPrompt('Pass Conflict');
                 this.player1.clickPrompt('Yes');
                 this.noMoreActions();
@@ -38,15 +39,15 @@ describe('Wicked Tetsubo', function() {
                     attackers: [this.historian],
                     defenders: [this.breaker]
                 });
-                this.player2.pass();
                 this.player1.clickCard(this.tetsubo);
                 this.player1.clickCard(this.breaker);
                 this.player2.pass();
                 this.player1.clickCard(this.tetsubo);
-                expect.this.player1.toHavePrompt('Pass');
+                expect(this.player1).toHavePromptButton('Pass');
             });
 
             it('should work on offense', function() {
+                this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.breaker],
@@ -57,11 +58,12 @@ describe('Wicked Tetsubo', function() {
                 this.player1.clickCard(this.breaker);
                 this.player2.pass();
                 this.player1.clickCard(this.tetsubo);
-                expect.this.player1.toBeAbleToSelect(this.historian);
-                expect.this.player1.not.toBeAbleToSelect(this.matsu);
+                expect(this.player1).toBeAbleToSelect(this.historian);
+                expect(this.player1).not.toBeAbleToSelect(this.matsu);
             });
 
             it('should not work on targets with a dash', function() {
+                this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.breaker],
@@ -72,13 +74,14 @@ describe('Wicked Tetsubo', function() {
                 this.player1.clickCard(this.breaker);
                 this.player2.pass();
                 this.player1.clickCard(this.tetsubo);
-                expect.this.player1.toBeAbleToSelect(this.historian);
+                expect(this.player1).toBeAbleToSelect(this.historian);
                 this.player1.clickCard(this.historian);
-                expect.this.player1.toHavePrompt('Political');
-                expect.this.player1.not.toHavePrompt('Military');
+                expect(this.player1).toHavePromptButton('Political');
+                expect(this.player1).not.toHavePromptButton('Military');
             });
 
             it('should correctly set skill to 0', function() {
+                this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.breaker],
@@ -90,8 +93,9 @@ describe('Wicked Tetsubo', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.tetsubo);
                 this.player1.clickCard(this.historian);
+                expect(this.player1).not.toHavePromptButton('Political');
                 this.player1.clickPrompt('Political');
-                expect(this.historian.getPoliticalSkill()).toBe(0);
+                expect(this.historian.politicalSkill).toBe(0);
             });
         });
     });
