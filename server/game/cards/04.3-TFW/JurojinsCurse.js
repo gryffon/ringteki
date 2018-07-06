@@ -6,12 +6,12 @@ class JurojinsCurse extends DrawCard {
         this.forcedInterrupt({
             title: 'Resolve a second fate phase',
             when: {
-                onPhaseEnds: (event, context) => event.phase === 'fate' && !context.source.parent.bowed
+                onPhaseEnded: (event, context) => event.phase === 'fate' && !context.source.parent.bowed
             },
             effect: 'resolve a second fate phase after this',
             handler: context => context.source.delayedEffect(() => ({
                 when: {
-                    onPhaseEnds: event => event.phase === 'fate'
+                    onPhaseEnded: event => event.phase === 'fate'
                 },
                 context: context,
                 handler: () => {
