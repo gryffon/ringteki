@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 
-class BreachOfProtocol extends DrawCard {
+class BreachOfEtiquette extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Force honor loss on players when their non-courtier characters use abilities',
@@ -27,6 +27,6 @@ class BreachOfProtocol extends DrawCard {
     }
 }
 
-BreachOfProtocol.id = 'breach-of-protocol';
+BreachOfEtiquette.id = 'breach-of-etiquette';
 
-module.exports = BreachOfProtocol;
+module.exports = BreachOfEtiquette;

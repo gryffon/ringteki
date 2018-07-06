@@ -1,6 +1,6 @@
-describe('Breach of Protocol', function() {
+describe('Breach of Etiquette', function() {
     integration(function() {
-        describe('Breach of Protocol\'s ability', function() {
+        describe('Breach of Etiquette\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
