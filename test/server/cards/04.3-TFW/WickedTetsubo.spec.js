@@ -93,7 +93,7 @@ describe('Wicked Tetsubo', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.tetsubo);
                 this.player1.clickCard(this.historian);
-                expect(this.player1).not.toHavePromptButton('Political');
+                expect(this.player1).toHavePromptButton('Political');
                 this.player1.clickPrompt('Political');
                 expect(this.historian.politicalSkill).toBe(0);
             });
