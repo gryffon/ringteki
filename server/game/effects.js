@@ -20,7 +20,7 @@ const Effects = {
     canBeSeenWhenFacedown: () => EffectBuilder.card.static('canBeSeenWhenFacedown'),
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static('cannotParticipateAsAttacker', type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static('cannotParticipateAsDefender', type),
-    cardCannot: (type, predicate) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(type, predicate)),
+    cardCannot: (type, predicate) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(type, predicate)), // TODO: Add this to lasting effect checks
     customDetachedCard: (properties) => EffectBuilder.card.detached('customEffect', properties),
     delayedEffect: (properties) => EffectBuilder.card.detached('delayedEffect', {
         apply: (card, context) => {
@@ -59,7 +59,7 @@ const Effects = {
             }
         }
     }),
-    immuneTo: (condition) => EffectBuilder.card.static('abilityRestrictions', new ImmunityRestriction(condition)),
+    immuneTo: (condition) => EffectBuilder.card.static('abilityRestrictions', new ImmunityRestriction(condition)), // TODO: Add this to lasting effect checks
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static('increaseLimitOnAbilities', amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible('modifyBaseMilitarySkill', value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible('modifyBasePoliticalSkill', value),
@@ -86,8 +86,8 @@ const Effects = {
     }),
     // Ring effects
     addElement: (element) => EffectBuilder.ring.static('addElement', element),
-    cannotDeclareRing: (match) => EffectBuilder.ring.static('cannotDeclare', match),
-    considerRingAsClaimed: (match) => EffectBuilder.ring.static('considerAsClaimed', match),
+    cannotDeclareRing: (match) => EffectBuilder.ring.static('cannotDeclare', match), // TODO: Add this to lasting effect checks
+    considerRingAsClaimed: (match) => EffectBuilder.ring.static('considerAsClaimed', match), // TODO: Add this to lasting effect checks
     // Player effects
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible('additionalCharactersInConflict', amount),
     additionalConflict: (type) => EffectBuilder.player.static('additionalConflict', type),
@@ -98,7 +98,7 @@ const Effects = {
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),
     changePlayerSkillModifier: (value) => EffectBuilder.player.flexible('conflictSkillModifier', value),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
-    playerCannot: (type, predicate) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(type, predicate)),
+    playerCannot: (type, predicate) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(type, predicate)), // TODO: Add this to lasting effect checks
     reduceCost: (properties) => EffectBuilder.player.detached('costReducer', {
         apply: (player, context) => player.addCostReducer(context.source, properties),
         unapply: (player, context, reducer) => player.removeCostReducer(reducer)
@@ -111,9 +111,9 @@ const Effects = {
     showTopConflictCard: () => EffectBuilder.player.static('showTopConflictCard'),
     // Conflict effects
     contributeToConflict: (card) => EffectBuilder.conflict.static('contribute', card),
-    changeConflictSkillFunction: (func) => EffectBuilder.conflict.static('skillFunction', func),
-    modifyConflictElementsToResolve: (value) => EffectBuilder.conflict.static('modifyConflictElementsToResolve', value),
-    restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static('restrictNumberOfDefenders', value)
+    changeConflictSkillFunction: (func) => EffectBuilder.conflict.static('skillFunction', func), // TODO: Add this to lasting effect checks
+    modifyConflictElementsToResolve: (value) => EffectBuilder.conflict.static('modifyConflictElementsToResolve', value), // TODO: Add this to lasting effect checks
+    restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static('restrictNumberOfDefenders', value) // TODO: Add this to lasting effect checks
 };
 
 module.exports = Effects;
