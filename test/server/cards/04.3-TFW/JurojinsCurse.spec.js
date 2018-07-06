@@ -1,6 +1,6 @@
-describe('Jurojin's Curse', function() {
+describe('Jurojin\'s Curse', function() {
     integration(function() {
-        describe('Jurojin's Curse\'s ability', function() {
+        describe('Jurojin\' Curse\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
