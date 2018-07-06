@@ -1,6 +1,6 @@
 describe('Shiksha Scout', function () {
     integration(function () {
-        describe('Shiksha Scout ability', function () {
+        describe('Shiksha Scout\'s ability', function () {
             beforeEach(function () {
                 this.setupTest({
                     phase: 'conflict',
