@@ -8,13 +8,15 @@ describe('Tireless Sodan Senzo', function() {
                         inPlay: ['tireless-sodan-senzo']
                     },
                     player2: {
-                        inPlay: ['akoko-toturi'],
+                        inPlay: ['matsu-berserker'],
                         provinces: ['shameful-display']
                     }
                 });
                 this.senzo = this.player1.findCardByName('tireless-sodan-senzo');
-                this.toturi = this.player2.findCardByName('akodo-toturi');
+
+                this.berserker = this.player2.findCardByName('matsu-berserker');
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 1');
+
                 this.noMoreActions();
             });
 
@@ -23,9 +25,10 @@ describe('Tireless Sodan Senzo', function() {
                     type: 'military',
                     province: this.shamefulDisplay,
                     attackers: [this.senzo],
-                    defenders: [this.toturi],
-                    jumpTo: 'afterConflict'
+                    defenders: [this.berserker]
                 });
+                this.player2.pass();
+                this.player1.pass();
                 expect(this.senzo.bowed).toBe(false);
             });
         });
