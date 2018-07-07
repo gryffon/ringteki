@@ -10,6 +10,6 @@ class HeroicResolve extends DrawCard {
     }
 }
 
-HeroicResolve.id = 'heroic-resolve'; // This is a guess at what the id might be - please check it!!!
+HeroicResolve.id = 'heroic-resolve';
 
 module.exports = HeroicResolve;
