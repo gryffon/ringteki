@@ -25,10 +25,9 @@ describe('Tireless Sodan Senzo', function() {
                     type: 'military',
                     province: this.shamefulDisplay,
                     attackers: [this.senzo],
-                    defenders: [this.berserker]
+                    defenders: [this.berserker],
+                    jumpTo: 'afterConflict'
                 });
-                this.player2.pass();
-                this.player1.pass();
                 expect(this.senzo.bowed).toBe(false);
             });
         });
