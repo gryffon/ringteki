@@ -11,7 +11,7 @@ class AbandoningHonor extends ProvinceCard {
         this.interrupt({
             title: 'Choose a dishonored character',
             when: {
-                onBreakProvince: (event, context) => event.card === context.source
+                onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
             },
             target: {
                 cardtype: 'character',
