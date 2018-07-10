@@ -5,7 +5,7 @@ const checkRestrictions = {
     events: context => context.source.type === 'event',
     opponentsCardEffects: (context, player) =>
         context.player && context.player === player.opponent &&
-        context.source.type && context.source.type !== 'ring',
+        context.ability.isCardAbility(),
     opponentsEvents: (context, player) =>
         context.player && context.player === player.opponent && context.source.type === 'event',
     opponentsRingEffects: (context, player) =>
