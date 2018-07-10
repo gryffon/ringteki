@@ -17,7 +17,7 @@ class AsakoAzunami extends DrawCard {
                     optional: true,
                     context: context,
                     gameAction: bowGameAction,
-                    cardCondition: card => card.checkRestrictions('target', context),
+                    targets: true,
                     onCancel: player => this.game.addMessage('{0} chooses not to bow a character', player),
                     onSelect: (player, card) => {
                         eventWindow.addEvent(bowGameAction.getEvent(card, context));
@@ -30,7 +30,7 @@ class AsakoAzunami extends DrawCard {
                     optional: true,
                     context: context,
                     gameAction: readyGameAction,
-                    cardCondition: card => card.checkRestrictions('target', context),
+                    targets: true,
                     onCancel: player => this.game.addMessage('{0} chooses not to ready a character', player),
                     onSelect: (player, card) => {
                         eventWindow.addEvent(readyGameAction.getEvent(card, context));
