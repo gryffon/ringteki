@@ -11,6 +11,7 @@ class IkomaIkehata extends DrawCard {
                 activePromptTitle: 'Choose a character to honor',
                 cardType: 'character',
                 controller: 'self',
+                cardcondition: card => !card.isHonored,
                 gameAction: [ability.actions.honor(),
                     ability.actions.draw()]
             }
