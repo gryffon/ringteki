@@ -20,7 +20,6 @@ describe('Sadane Student', function() {
                     function() {
                         let political = this.student.getPoliticalSkill();
                         this.player1.claimRing(ringType);
-                        this.game.checkGameState(true);
                         expect(this.student.getPoliticalSkill()).toBe(political + 2);
                     }
                 );
@@ -35,7 +34,6 @@ describe('Sadane Student', function() {
                     function() {
                         let political = this.student.getPoliticalSkill();
                         this.player1.claimRing(ringType);
-                        this.game.checkGameState(true);
                         expect(this.student.getPoliticalSkill()).toBe(political);
                     }
                 );
@@ -50,7 +48,6 @@ describe('Sadane Student', function() {
                     let political = this.student.getPoliticalSkill();
                     this.player2.claimRing('air');
                     this.player2.claimRing('fire');
-                    this.game.checkGameState(true);
                     expect(this.student.getPoliticalSkill()).toBe(political);
                 }
             );
