@@ -5,7 +5,7 @@ describe('Matsu Mitsuko', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['matsu-mitsuko']
+                        inPlay: []
                     },
                     player2: {
                         inPlay: []
