@@ -1,6 +1,6 @@
-const DrawCard = require('../../drawcard.js');
+const ProvinceCard = require('../../provincecard.js');
 
-class AppealingToTheFortunes extends DrawCard {
+class AppealingToTheFortunes extends ProvinceCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }
 }

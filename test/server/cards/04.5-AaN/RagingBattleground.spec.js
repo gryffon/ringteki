@@ -5,7 +5,7 @@ describe('Raging Battleground', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['raging-battleground']
+                        inPlay: []
                     },
                     player2: {
                         inPlay: []

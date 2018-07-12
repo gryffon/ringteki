@@ -5,7 +5,7 @@ describe('Perfect Land Ethos', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['perfect-land-ethos']
+                        inPlay: []
                     },
                     player2: {
                         inPlay: []

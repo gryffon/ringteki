@@ -5,7 +5,7 @@ describe('Mark of Shame', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['mark-of-shame']
+                        inPlay: []
                     },
                     player2: {
                         inPlay: []

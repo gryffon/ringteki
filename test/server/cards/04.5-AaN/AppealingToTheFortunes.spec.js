@@ -5,7 +5,7 @@ describe('Appealing to the Fortunes', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['appealing-to-the-fortunes']
+                        inPlay: []
                     },
                     player2: {
                         inPlay: []

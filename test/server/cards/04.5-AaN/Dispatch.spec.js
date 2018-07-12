@@ -5,7 +5,7 @@ describe('Dispatch', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['dispatch']
+                        inPlay: []
                     },
                     player2: {
                         inPlay: []
