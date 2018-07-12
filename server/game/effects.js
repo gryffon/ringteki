@@ -3,7 +3,6 @@ const _ = require('underscore');
 const AbilityLimit = require('./abilitylimit.js');
 const CannotRestriction = require('./cannotrestriction.js');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const ImmunityRestriction = require('./immunityrestriction.js');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -20,7 +19,7 @@ const Effects = {
     canBeSeenWhenFacedown: () => EffectBuilder.card.static('canBeSeenWhenFacedown'),
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static('cannotParticipateAsAttacker', type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static('cannotParticipateAsDefender', type),
-    cardCannot: (type, predicate) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(type, predicate)), // TODO: Add this to lasting effect checks
+    cardCannot: (properties) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(properties)),
     customDetachedCard: (properties) => EffectBuilder.card.detached('customEffect', properties),
     delayedEffect: (properties) => EffectBuilder.card.detached('delayedEffect', {
         apply: (card, context) => {
@@ -59,7 +58,7 @@ const Effects = {
             }
         }
     }),
-    immuneTo: (condition) => EffectBuilder.card.static('abilityRestrictions', new ImmunityRestriction(condition)), // TODO: Add this to lasting effect checks
+    immuneTo: (properties) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(properties)),
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static('increaseLimitOnAbilities', amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible('modifyBaseMilitarySkill', value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible('modifyBasePoliticalSkill', value),
@@ -90,7 +89,10 @@ const Effects = {
     considerRingAsClaimed: (match) => EffectBuilder.ring.static('considerAsClaimed', match), // TODO: Add this to lasting effect checks
     // Player effects
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible('additionalCharactersInConflict', amount),
-    additionalConflict: (type) => EffectBuilder.player.static('additionalConflict', type),
+    additionalConflict: (type) => EffectBuilder.player.detached('additionalConflict', {
+        apply: player => player.addConflictOpportunity(type),
+        unapply: () => true
+    }),
     canPlayFromOwn: (location) => EffectBuilder.player.detached('canPlayFromOwn', {
         apply: (player) => player.addPlayableLocation('play', player, location),
         unapply: (player, context, location) => player.removePlayableLocation(location)
@@ -98,7 +100,7 @@ const Effects = {
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),
     changePlayerSkillModifier: (value) => EffectBuilder.player.flexible('conflictSkillModifier', value),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
-    playerCannot: (type, predicate) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(type, predicate)), // TODO: Add this to lasting effect checks
+    playerCannot: (properties) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(properties)),
     reduceCost: (properties) => EffectBuilder.player.detached('costReducer', {
         apply: (player, context) => player.addCostReducer(context.source, properties),
         unapply: (player, context, reducer) => player.removeCostReducer(reducer)
