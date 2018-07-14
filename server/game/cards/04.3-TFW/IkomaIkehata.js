@@ -12,9 +12,9 @@ class IkomaIkehata extends DrawCard {
                 cardType: 'character',
                 controller: 'self',
                 cardcondition: card => !card.isHonored,
-                gameAction: [ability.actions.honor(),
-                    ability.actions.draw()]
-            }
+                gameAction: ability.actions.honor()
+            },
+            gameAction: ability.actions.draw()
         });
     }
 }
