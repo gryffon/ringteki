@@ -22,12 +22,16 @@ class NezumiInfiltrator extends DrawCard {
                     'Raise attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
                         target: this.game.currentConflict.conflictProvince,
                         targetLocation: 'province',
-                        effect: ability.effects.modifyProvinceStrength(1)
+                        effect: ability.effects.modifyProvinceStrength(1),
+                        message: 'raise {1}\'s strength by 1 until the end of the conflict',
+                        messageArgs: this.game.currentConflict.conflictProvince
                     })),
                     'Lower attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
                         target: this.game.currentConflict.conflictProvince,
                         targetLocation: 'province',
-                        effect: ability.effects.modifyProvinceStrength(-1)
+                        effect: ability.effects.modifyProvinceStrength(-1),
+                        message: 'lower {1}\'s strength by 1 until the end of the conflict',
+                        messageArgs: this.game.currentConflict.conflictProvince
                     }))
                 }
             }
