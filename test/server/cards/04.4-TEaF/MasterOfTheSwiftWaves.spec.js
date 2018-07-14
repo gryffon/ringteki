@@ -72,7 +72,7 @@ describe('Master of the Swift Waves', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.swift);
-                expect(this.player1).not.toHavePromptButton('Choose a participating character');
+                expect(this.player1).not.toHavePromptButton('Choose a participating character to send home');
             });
 
         });
