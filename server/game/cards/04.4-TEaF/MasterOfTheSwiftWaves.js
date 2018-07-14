@@ -5,21 +5,26 @@ class MasterOfTheSwiftWaves extends DrawCard {
         this.action({
             title:'Switch 2 characters you control',
             condition: () => this.game.isDuringConflict(),
-            targets: {
-                conflict: {
-                    activePromptTitle: 'Choose a participating character',
-                    cardType: 'character',
-                    cardCondition: (card,context) => card.isParticipating() && card.controller === context.player
-                },
-                home: {
-                    activePromptTitle: 'Choose a character at home',
-                    cardType: 'character',
-                    cardCondition: (card,context) => !card.isParticipating() && card.controller === context.player && !card.hasDash(this.game.currentConflict.conflictType),
-                    gameAction: context => [ability.actions.sendHome(context.targets.conflict), ability.actions.moveToConflict(context.targets.home)]
-                }
-            },
-            effect: 'switch {1} and {2} positions',
-            effectArgs: context => [context.targets.conflict, context.targets.home]
+            gameAction: ability.actions.jointAction([
+                ability.actions.sendHome(context => ({
+                    promptForSelect: {
+                        activePromptTitle: 'Choose a participating character to send home',
+                        cardType: 'character',
+                        cardCondition: (card,context) => card.isParticipating() && card.controller === context.player,
+                        message: '{0} moves {1} back home',
+                        messageArgs: card => [context.player, card]
+                    }
+                })),
+                ability.actions.moveToConflict(context => ({
+                    promptForSelect: {
+                        activePromptTitle: 'Choose a character to move to the conflict',
+                        cardType: 'character',
+                        cardCondition: (card,context) => !card.isParticipating() && card.controller === context.player,
+                        message: '{0} moves {1} to the conflict',
+                        messageArgs: card => [context.player, card]
+                    }
+                }))
+            ])
         });
     }
 }
