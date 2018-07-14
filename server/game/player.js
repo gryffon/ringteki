@@ -4,12 +4,15 @@ const GameObject = require('./GameObject');
 const Deck = require('./deck.js');
 const AttachmentPrompt = require('./gamesteps/attachmentprompt.js');
 const ClockSelector = require('./Clocks/ClockSelector');
+const CostReducer = require('./costreducer.js');
 const GameActions = require('./GameActions/GameActions');
 const RingEffects = require('./RingEffects.js');
 const PlayableLocation = require('./playablelocation.js');
 const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
+
+const provinceLocations = ['stronghold province', 'province 1', 'province 2', 'province 3', 'province 4'];
 
 class Player extends GameObject {
     constructor(id, user, owner, game, clockdetails) {
@@ -46,6 +49,11 @@ class Player extends GameObject {
         this.passedDynasty = false;
         this.honorBid = 0; // amount from the most recent bid after modifiers
         this.showBid = 0; // amount shown on the dial
+        this.conflictOpportunities = {
+            military: 1,
+            political: 1,
+            total: 2
+        };
         this.imperialFavor = '';
 
         this.clock = ClockSelector.for(this, clockdetails);
@@ -247,7 +255,7 @@ class Player extends GameObject {
      * Returns the total number of holdings controlled by this player
      */
     getNumberOfHoldingsInPlay() {
-        return _.reduce(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'], (n, province) => {
+        return provinceLocations.reduce((n, province) => {
             return this.getSourceList(province).filter(card => card.getType() === 'holding' && !card.facedown).length + n;
         }, 0);
     }
@@ -332,7 +340,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Shuffles the conflict deck, raising an event and displaying a message in chat
+     * Shuffles the conflict deck, emitting an event and displaying a message in chat
      */
     shuffleConflictDeck() {
         if(this.name !== 'Dummy Player') {
@@ -343,7 +351,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Shuffles the dynasty deck, raising an event and displaying a message in chat
+     * Shuffles the dynasty deck, emitting an event and displaying a message in chat
      */
     shuffleDynastyDeck() {
         if(this.name !== 'Dummy Player') {
@@ -353,22 +361,25 @@ class Player extends GameObject {
         this.dynastyDeck = _(this.dynastyDeck.shuffle());
     }
 
+    addConflictOpportunity(type) {
+        if(type) {
+            this.conflictOpportunities[type]++;
+        }
+        this.conflictOpportunities.total++;
+    }
+
     /**
      * Returns the number of conflict opportunities remaining for this player
      * @param {String} type - one of 'military', 'political', ''
      * @returns {Number} opportunities remaining
      */
 
-    getConflictOpportunities(type = '') {
-        let myConflicts = this.game.completedConflicts.filter(conflict => conflict.attackingPlayer === this);
-        let additionalConflicts = this.getEffects('additionalConflict');
-        let maxConflicts = this.anyEffect('maxConflicts') ? this.mostRecentEffect('maxConflicts') : 2 + additionalConflicts.length;
-        let opportunities = Math.max(maxConflicts - myConflicts.length, 0);
-        if(type) {
-            let maxConflictsForType = 1 + additionalConflicts.filter(t => t === type).length;
-            opportunities = Math.min(opportunities, maxConflictsForType - myConflicts.filter(conflict => conflict.declaredType === type).length);
+    getConflictOpportunities(type = 'total') {
+        let maxConflicts = this.mostRecentEffect('maxConflicts');
+        if(maxConflicts) {
+            return Math.max(0, maxConflicts - this.game.getConflicts(this).length);
         }
-        return Math.max(opportunities, 0);
+        return this.conflictOpportunities[type];
     }
 
     /**
@@ -417,9 +428,12 @@ class Player extends GameObject {
 
     /**
      * Adds the passed Cost Reducer to this Player
-     * @param {CostReducer} reducer
+     * @param {EffectSource} source = source of the reducer
+     * @param {Object} properties
+     * @returns {CostReducer}
      */
-    addCostReducer(reducer) {
+    addCostReducer(source, properties) {
+        let reducer = new CostReducer(this.game, source, properties);
         this.costReducers.push(reducer);
         return reducer;
     }
@@ -433,6 +447,16 @@ class Player extends GameObject {
             reducer.unregisterEvents();
             this.costReducers = _.reject(this.costReducers, r => r === reducer);
         }
+    }
+
+    addPlayableLocation(type, player, location) {
+        let playableLocation = new PlayableLocation(type, player, location);
+        this.playableLocations.push(playableLocation);
+        return playableLocation;
+    }
+
+    removePlayableLocation(location) {
+        this.playableLocations = _.reject(this.playableLocations, l => l === location);
     }
 
     /**
@@ -522,6 +546,9 @@ class Player extends GameObject {
 
         this.passedDynasty = false;
         this.limitedPlayed = 0;
+        this.conflictOpportunities.military = 1;
+        this.conflictOpportunities.political = 1;
+        this.conflictOpportunities.total = 2;
     }
 
     showConflictDeck() {
@@ -668,7 +695,7 @@ class Player extends GameObject {
             return false;
         }
 
-        const provinceLocations = ['stronghold province', 'province 1', 'province 2', 'province 3', 'province 4'];
+
         const conflictCardLocations = ['hand', 'conflict deck', 'conflict discard pile', 'removed from game'];
         const legalLocations = {
             stronghold: ['stronghold province'],
@@ -715,6 +742,10 @@ class Player extends GameObject {
 
     get gloryModifier() {
         return this.getEffects('gloryModifier').reduce((total, value) => total + value, 0);
+    }
+
+    get skillModifier() {
+        return this.getEffects('conflictSkillModifier').reduce((total, value) => total + value, 0);
     }
 
     modifyFate(amount) {
@@ -797,7 +828,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === 'play area' || (card.type === 'holding' && ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(location))) {
+        if(location === 'play area' || (card.type === 'holding' && provinceLocations.includes(location))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;
@@ -820,13 +851,16 @@ class Player extends GameObject {
                 this.promptForAttachment(card);
                 return;
             }
+        } else if(location === 'being played' && card.owner !== this) {
+            card.owner.moveCard(card, targetLocation, options);
+            return;
         } else {
             card.controller = card.owner;
         }
 
         card.moveTo(targetLocation);
 
-        if(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(targetLocation)) {
+        if(provinceLocations.includes(targetLocation)) {
             if(['dynasty deck', 'province deck'].includes(location)) {
                 card.facedown = true;
             }
@@ -848,7 +882,7 @@ class Player extends GameObject {
         }
         */
         // Replace a card which has been played, put into play or discarded from a province
-        if(card.isDynasty && ['province 1', 'province 2', 'province 3', 'province 4'].includes(location) && targetLocation !== 'dynasty deck') {
+        if(card.isDynasty && provinceLocations.includes(location) && targetLocation !== 'dynasty deck') {
             this.replaceDynastyCard(location);
         }
     }

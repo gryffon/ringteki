@@ -15,6 +15,7 @@ class CardAbility extends ThenAbility {
         this.printedAbility = properties.printedAbility === false ? false : true;
         this.cannotBeCancelled = properties.cannotBeCancelled;
         this.cannotTargetFirst = !!properties.cannotTargetFirst;
+        this.cannotBeMirrored = !!properties.cannotBeMirrored;
         this.max = properties.max;
         this.abilityIdentifier = properties.abilityIdentifier;
         if(!this.abilityIdentifier) {
@@ -109,7 +110,7 @@ class CardAbility extends ThenAbility {
         let effectArgs = [];
         let extraArgs = null;
         if(!effectMessage) {
-            let gameActions = this.getGameActions(context);
+            let gameActions = this.getGameActions(context).filter(gameAction => gameAction.hasLegalTarget(context));
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
                 effectMessage = gameActions[0].effectMsg;
