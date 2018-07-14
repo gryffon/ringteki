@@ -27,10 +27,11 @@ describe('Master of the Swift Waves', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.swift);
-                expect(this.player1).toHavePrompt('Choose a participating character');
+                expect(this.player1).toHavePrompt('Choose a participating character to send home');
                 expect(this.player1).not.toBeAbleToSelect(this.berserker);
                 expect(this.player1).not.toBeAbleToSelect(this.historian);
                 expect(this.player1).not.toBeAbleToSelect(this.shono);
+                expect(this.player1).toBeAbleToSelect(this.swift);
             });
 
             it('should correctly target home characters', function() {
@@ -42,7 +43,7 @@ describe('Master of the Swift Waves', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.swift);
                 this.player1.clickCard(this.swift);
-                expect(this.player1).toHavePromptButton('Choose a character at home');
+                expect(this.player1).toHavePromptButton('Choose a character to move to the conflict');
                 expect(this.player1).not.toBeAbleToSelect(this.swift);
                 expect(this.player1).not.toBeAbleToSelect(this.historian);
                 expect(this.player1).toBeAbleToSelect(this.shono);
