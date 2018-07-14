@@ -54,7 +54,6 @@ describe('Hiruma Kogoe', function () {
                 this.player2.clickPrompt('3');
                 expect(this.fan.location).toBe('hand');
             });
-
         });
     });
 });
