@@ -23,20 +23,22 @@ class NezumiInfiltrator extends DrawCard {
             max: ability.limit.perConflict(1),
             target: {
                 gameAction: ability.actions.chooseAction(() => ({
+                    messages: {
+                        'Raise attacked province\'s strength by 1': '{0} chooses to increase {1}\'s strength by 1',
+                        'Lower attacked province\'s strength by 1': '{0} chooses to reduce {1}\'s strength by 1',
+                        messageArgs: this.game.currentConflict.conflictProvince
+                    },
                     choices: {
                         'Raise attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
                             target: this.game.currentConflict.conflictProvince,
-                            targetLocation: 'province',
-                            effect: ability.effects.modifyProvinceStrength(1),
-                            message: 'raise {1}\'s strength by 1 until the end of the conflict',
-                            messageArgs: this.game.currentConflict.conflictProvince
+                            effect: ability.effects.modifyProvinceStrength(1)
                         })),
                         'Lower attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
                             target: this.game.currentConflict.conflictProvince,
-                            targetLocation: 'province',
-                            effect: ability.effects.modifyProvinceStrength(-1),
-                            message: 'lower {1}\'s strength by 1 until the end of the conflict',
-                            messageArgs: this.game.currentConflict.conflictProvince
+                            effect: (
+                                this.game.currentConflict.conflictProvince.getStrength() > 1 ?
+                                    ability.effects.modifyProvinceStrength(-1) : []
+                            )
                         }))
                     }
                 }))
