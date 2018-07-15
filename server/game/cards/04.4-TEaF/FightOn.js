@@ -4,7 +4,7 @@ class FightOn extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.action({
             title: 'Ready character and move to conflict',
-            condition: context => context.player.isDefendingingPlayer(),
+            condition: context => context.player.isDefendingPlayer(),
             target: {
                 cardType: 'character',
                 location: 'play area',

@@ -23,20 +23,18 @@ describe('Fight On', function() {
                     attackers: ['shrewd-yasuki'],
                     defenders: []
                 });
+                this.player2.clickCard('fight-on');
             });
 
-            it('should ready controllers bowed character and move it to the conflict', function() {
-                this.player2.clickCard('fight-on');
+            it('should ready selected bowed character and move it to the conflict', function() {
                 this.player2.clickCard(this.borderlandsDefender);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
                 expect(this.borderlandsDefender.bowed).toBeFalsy();
                 expect(this.borderlandsDefender.inConflict).toBeTruthy();
             });
 
-            it('should not work on an opponents character', function() {
-                this.player2.clickCard('fight-on');
-                this.player2.clickCard(this.vaguardWarrior);
-                expect(this.vaguardWarrior.bowed).toBeTruthy();
-                expect(this.vaguardWarrior.inConflict).toBeFalsy();
+            it('should not be able to select an opponents character', function() {
+                expect(this.player2).not.toBeAbleToSelect(this.vaguardWarrior);
             });
         });
     });
