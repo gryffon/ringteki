@@ -25,8 +25,7 @@ class NezumiInfiltrator extends DrawCard {
                 gameAction: ability.actions.chooseAction(() => ({
                     messages: {
                         'Raise attacked province\'s strength by 1': '{0} chooses to increase {1}\'s strength by 1',
-                        'Lower attacked province\'s strength by 1': '{0} chooses to reduce {1}\'s strength by 1',
-                        messageArgs: this.game.currentConflict.conflictProvince
+                        'Lower attacked province\'s strength by 1': '{0} chooses to reduce {1}\'s strength by 1'
                     },
                     choices: {
                         'Raise attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
