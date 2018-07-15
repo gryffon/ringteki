@@ -44,7 +44,7 @@ describe('My Ancestors Strength', function() {
                 this.player1.clickCard('my-ancestor-s-strength');
                 this.fearsomeMystic = this.player1.clickCard('fearsome-mystic');
                 this.player1.clickCard('naive-student');
-                expect(this.player2).toHavePrompt('Action Window');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
                 expect(this.fearsomeMystic.hasDash('military')).toBeTruthy();
                 expect(this.fearsomeMystic.politicalSkill).toBe(2);
             });
