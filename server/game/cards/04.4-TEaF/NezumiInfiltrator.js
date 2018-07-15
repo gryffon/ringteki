@@ -16,9 +16,8 @@ class NezumiInfiltrator extends DrawCard {
         }),
         this.reaction({
             title: 'Change attacked province\'s strength',
-            condition: () => this.game.isDuringConflict(),
             when: {
-                onCharacterEntersPlay: (event, context) => event.card === context.source
+                onCharacterEntersPlay: (event, context) => event.card === context.source && this.game.isDuringConflict()
             },
             max: ability.limit.perConflict(1),
             target: {
