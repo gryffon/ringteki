@@ -5,6 +5,6 @@ class Ofushukai extends DrawCard {
     }
 }
 
-Ofushukai.id = 'ofushukai'; // This is a guess at what the id might be - please check it!!!
+Ofushukai.id = 'ofushukai';
 
 module.exports = Ofushukai;
