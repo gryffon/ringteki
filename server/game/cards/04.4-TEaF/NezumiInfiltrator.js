@@ -4,10 +4,15 @@ class NezumiInfiltrator extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
-            effect: ability.effects.immuneTo({
-                restricts: '',
-                source: this
-            })
+            effect: [
+                ability.effects.immuneTo({
+                    restricts: 'maho',
+                    source: this
+                }),
+                ability.effects.immuneTo({
+                    restricts: 'shadowlands',
+                    source: this
+                })]
         }),
         this.reaction({
             title: 'Change attacked province\'s strength',
@@ -17,23 +22,24 @@ class NezumiInfiltrator extends DrawCard {
             },
             max: ability.limit.perConflict(1),
             target: {
-                mode: 'select',
-                choices: {
-                    'Raise attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
-                        target: this.game.currentConflict.conflictProvince,
-                        targetLocation: 'province',
-                        effect: ability.effects.modifyProvinceStrength(1),
-                        message: 'raise {1}\'s strength by 1 until the end of the conflict',
-                        messageArgs: this.game.currentConflict.conflictProvince
-                    })),
-                    'Lower attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
-                        target: this.game.currentConflict.conflictProvince,
-                        targetLocation: 'province',
-                        effect: ability.effects.modifyProvinceStrength(-1),
-                        message: 'lower {1}\'s strength by 1 until the end of the conflict',
-                        messageArgs: this.game.currentConflict.conflictProvince
-                    }))
-                }
+                gameAction: ability.actions.chooseAction(() => ({
+                    choices: {
+                        'Raise attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
+                            target: this.game.currentConflict.conflictProvince,
+                            targetLocation: 'province',
+                            effect: ability.effects.modifyProvinceStrength(1),
+                            message: 'raise {1}\'s strength by 1 until the end of the conflict',
+                            messageArgs: this.game.currentConflict.conflictProvince
+                        })),
+                        'Lower attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
+                            target: this.game.currentConflict.conflictProvince,
+                            targetLocation: 'province',
+                            effect: ability.effects.modifyProvinceStrength(-1),
+                            message: 'lower {1}\'s strength by 1 until the end of the conflict',
+                            messageArgs: this.game.currentConflict.conflictProvince
+                        }))
+                    }
+                }))
             }
         });
     }
