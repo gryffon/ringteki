@@ -2,18 +2,18 @@ const DrawCard = require('../../drawcard.js');
 
 class NezumiInfiltrator extends DrawCard {
     setupCardAbilities(ability) {
-        this.persistentEffect({
-            match: this,
-            effect: [
-                ability.effects.immuneTo({
-                    restricts: 'maho',
-                    source: this
-                }),
-                ability.effects.immuneTo({
-                    restricts: 'shadowlands',
-                    source: this
-                })]
-        }),
+        //this.persistentEffect({
+        //  match: this,
+        //effect: [
+        //  ability.effects.immuneTo({
+        //    restricts: 'maho',
+        //  source: this
+        //}),
+        //ability.effects.immuneTo({
+        //  restricts: 'shadowlands',
+        //source: this
+        //})]
+        //}),
         this.reaction({
             title: 'Change attacked province\'s strength',
             when: {
