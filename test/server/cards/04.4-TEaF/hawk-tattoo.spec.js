@@ -53,6 +53,7 @@ describe('Hawk Tattoo', function() {
                 this.hawkTattoo = this.player1.playAttachment('hawk-tattoo', this.seppunGuardsman);
                 expect(this.seppunGuardsman.attachments.toArray()).toContain(this.hawkTattoo);
                 expect(this.hawkTattoo.location).toBe('play area');
+                expect(this.seppunGuardsman.hasTrait('tattooed')).toBe(true);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
