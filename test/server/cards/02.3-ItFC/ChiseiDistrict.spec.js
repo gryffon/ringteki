@@ -24,7 +24,7 @@ describe('Chisei District', function () {
                         province: 'pilgrimage',
                         attackers: ['adept-of-the-waves'],
                         defenders: []
-                    })
+                    });
                 }).toThrow();
                 expect(this.player1).toHavePrompt('Choose province to attack');
             });
