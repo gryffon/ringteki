@@ -17,7 +17,7 @@ describe('Master of the Swift Waves', function() {
                 this.shono = this.player1.findCardByName('shinjo-shono');
 
                 this.historian = this.player2.findCardByName('venerable-historian');
-                
+
                 this.noMoreActions();
             });
 
