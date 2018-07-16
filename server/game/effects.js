@@ -70,7 +70,7 @@ const Effects = {
     modifyPoliticalSkillMultiplier: (value) => EffectBuilder.card.flexible('modifyPoliticalSkillMultiplier', value),
     modifyProvinceStrength: (value) => EffectBuilder.card.flexible('modifyProvinceStrength', value),
     setBaseMilitarySkill: (value) => EffectBuilder.card.static('setBaseMilitarySkill', value),
-    setBasePoliticalSkill: (value) => EffectBuilder.card.static('setBasePolitcalSkill', value),
+    setBasePoliticalSkill: (value) => EffectBuilder.card.static('setBasePoliticalSkill', value),
     setDash: (type) => EffectBuilder.card.static('setDash', type),
     setMilitarySkill: (value) => EffectBuilder.card.static('setMilitarySkill', value),
     setPoliticalSkill: (value) => EffectBuilder.card.static('setPoliticalSkill', value),
@@ -99,6 +99,7 @@ const Effects = {
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),
     changePlayerSkillModifier: (value) => EffectBuilder.player.flexible('conflictSkillModifier', value),
+    customDetachedPlayer: (properties) => EffectBuilder.player.detached('customEffect', properties),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
     playerCannot: (properties) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(properties)),
     reduceCost: (properties) => EffectBuilder.player.detached('costReducer', {

@@ -1,5 +1,4 @@
 const checkRestrictions = {
-    charactersFromHand: context => context.source.type === 'character' && context.source.location === 'hand',
     copiesOfDiscardEvents: context =>
         context.source.type === 'event' && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
     events: context => context.source.type === 'event',
@@ -37,7 +36,7 @@ class CannotRestriction {
         } else if(!context) {
             return false; // throw Error here?
         }
-        let player = this.player || this.source.controller;
+        let player = this.player || this.source && this.source.controller;
         return checkRestrictions[this.restriction](context, player, this.source);
     }
 }
