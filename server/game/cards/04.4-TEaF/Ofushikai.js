@@ -7,7 +7,7 @@ class Ofushukai extends DrawCard {
             match: card => card.hasTrait('champion'),
             effect: ability.effects.gainAbility('action', {
                 title: 'Send a character home',
-                condition: context => context.source.parent.isParticipating(),
+                condition: context => context.source.isParticipating(),
                 printedAbility: false,
                 target: {
                     cardType: 'character',
@@ -26,10 +26,13 @@ class Ofushukai extends DrawCard {
     }
 
     canAttach(card, context) {
-        return context.source.isUnique() && context.source.getPrintedFaction() === 'phoenix' ? super.canAttach(card, context) : false;
+        if(card.controller !== context.player) {
+            return false;
+        }
+        return card.isUnique() && card.getPrintedFaction() === 'phoenix' ? super.canAttach(card, context) : false;
     }
 }
 
-Ofushukai.id = 'ofushukai';
+Ofushukai.id = 'ofushikai';
 
 module.exports = Ofushukai;
