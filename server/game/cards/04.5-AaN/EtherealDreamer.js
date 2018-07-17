@@ -13,7 +13,7 @@ class EtherealDreamer extends DrawCard {
             },
             effect: 'Gain +2{1}/+2{2} while {0} is contested',
             effectArgs: ['military', 'political'],
-            gameAction: ability.actions.playerLastingEffect(context => ({
+            gameAction: ability.actions.cardLastingEffect(context => ({
                 duration: 'untilEndOfPhase',
                 condition: () => this.game.currentConflict && this.game.currentConflict.ring === context.ring,
                 effect: ability.effects.modifyBothSkills(2)
