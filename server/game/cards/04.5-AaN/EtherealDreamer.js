@@ -11,7 +11,7 @@ class EtherealDreamer extends DrawCard {
                 mode: 'ring',
                 ringCondition: () => true
             },
-            effect: 'Gain +2{1}/+2{2} while {0} is contested',
+            effect: 'give herself +2{1}/+2{2} while the {0} is contested',
             effectArgs: ['military', 'political'],
             gameAction: ability.actions.cardLastingEffect(context => ({
                 duration: 'untilEndOfPhase',
