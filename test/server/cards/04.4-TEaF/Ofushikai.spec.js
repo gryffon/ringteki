@@ -58,7 +58,7 @@ describe('Ofushikai', function() {
                         defenders: [this.crisisBreaker]
                     });
                     this.player2.pass();
-                    this.player1.clickCard(this.shibaTsukune);                    
+                    this.player1.clickCard(this.shibaTsukune);
                     expect(this.player1).toHavePrompt('Choose a character');
                     this.player1.clickCard(this.crisisBreaker);
                     expect(this.player2).toHavePrompt('Conflict Action Window');
