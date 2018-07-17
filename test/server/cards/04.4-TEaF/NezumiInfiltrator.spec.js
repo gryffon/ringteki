@@ -28,7 +28,7 @@ describe('Nezumi Infiltrator', function() {
                 this.player1.clickCard(this.nezumi);
                 this.player1.clickPrompt('0');
                 expect(this.nezumi.location).toBe('play area');
-                expect(this.player1).not.toBeAbleToSelect(this.nezumi);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
             });
 
             it('should trigger when entering play at home during a conflict', function() {
@@ -37,7 +37,7 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: ['shameful-display']
+                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -53,7 +53,7 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: ['shameful-display']
+                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -69,7 +69,7 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: ['shameful-display']
+                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -88,7 +88,7 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: ['shameful-display']
+                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -108,7 +108,7 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: ['shameful-display']
+                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.rtd);
