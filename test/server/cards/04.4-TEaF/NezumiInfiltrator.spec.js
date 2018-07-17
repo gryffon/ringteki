@@ -11,7 +11,6 @@ describe('Nezumi Infiltrator', function() {
                     },
                     player2: {
                         inPlay: ['borderlands-defender'],
-                        provinces: ['shameful-display']
                     }
                 });
 
@@ -37,7 +36,6 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -53,7 +51,6 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -69,7 +66,6 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -88,7 +84,6 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.nezumi);
@@ -108,7 +103,6 @@ describe('Nezumi Infiltrator', function() {
                     type: 'military',
                     attackers: ['third-tower-guard'],
                     defenders: ['borderlands-defender'],
-                    province: 'shameful-display'
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.rtd);
