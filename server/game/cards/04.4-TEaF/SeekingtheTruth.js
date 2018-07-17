@@ -12,7 +12,7 @@ class SeekingtheTruth extends ProvinceCard {
         this.interrupt({
             title: 'Move a character home',
             when: {
-                onBreakProvince: (event, context) => event.card === context.source
+                onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
             },
             target: {
                 cardType: 'character',
