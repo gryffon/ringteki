@@ -152,7 +152,10 @@ class Game extends EventEmitter {
      * @returns {Player}
      */
     getPlayerByName(playerName) {
-        return this.playersAndSpectators[playerName];
+        let player = this.playersAndSpectators[playerName];
+        if(player && !this.isSpectator(player)) {
+            return player;
+        }
     }
 
     /**
@@ -244,6 +247,10 @@ class Game extends EventEmitter {
         let token = new SpiritOfTheRiver(card);
         this.allCards.push(token);
         return token;
+    }
+
+    get actions() {
+        return GameActions;
     }
 
     isDuringConflict(types) {
@@ -794,6 +801,7 @@ class Game extends EventEmitter {
      */
     queueStep(step) {
         this.pipeline.queueStep(step);
+        return step;
     }
 
     /*
@@ -858,25 +866,18 @@ class Game extends EventEmitter {
      * Creates an EventWindow which will open windows for each kind of triggered
      * ability which can respond any passed events, and execute their handlers.
      * @param {Event[]} events
-     * @param {Boolean} queueWindow - sets whether the game should queue the window or not
      * @returns {EventWindow}
      */
-    openEventWindow(events, queueWindow = true) {
+    openEventWindow(events) {
         if(!_.isArray(events)) {
             events = [events];
         }
-        let window = new EventWindow(this, events);
-        if(queueWindow) {
-            this.queueStep(window);
-        }
-        return window;
+        return this.queueStep(new EventWindow(this, events));
     }
 
     openThenEventWindow(events) {
         if(this.currentEventWindow) {
-            let window = new ThenEventWindow(this, events);
-            this.queueStep(window);
-            return window;
+            return this.queueStep(new ThenEventWindow(this, events));
         }
         return this.openEventWindow(events);
     }
@@ -916,10 +917,8 @@ class Game extends EventEmitter {
         let actionPairs = Object.entries(actions);
         let events = actionPairs.reduce((array, [action, cards]) => {
             let gameAction = GameActions[action]();
-            if(gameAction.setTarget(cards, context)) {
-                return array.concat(gameAction.getEventArray(context));
-            }
-            return array;
+            gameAction.setTarget(cards);
+            return array.concat(gameAction.getEventArray(context));
         }, []);
         if(events.length > 0) {
             this.openEventWindow(events);

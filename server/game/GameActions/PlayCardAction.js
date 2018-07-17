@@ -46,7 +46,8 @@ class PlayCardAction extends CardGameAction {
         if(actions.length === 0) {
             return false;
         }
-        if(actions[0].getGameActions && actions[0].getGameActions(context).includes(this)) {
+        let gameActions = actions[0].targets.reduce((array, target) => array.concat(target.properties.gameAction), actions[0].gameAction);
+        if(gameActions.includes(this)) {
             actions.shift();
             if(actions.length === 0) {
                 return false;
@@ -55,6 +56,7 @@ class PlayCardAction extends CardGameAction {
         let location = context.player.addPlayableLocation('play', card.controller, card.location);
         let newContext = actions[0].createContext(context.player);
         if(actions[0].meetsRequirements(newContext)) {
+            context.player.removePlayableLocation(location);
             return false;
         }
         context.player.removePlayableLocation(location);
