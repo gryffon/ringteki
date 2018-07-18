@@ -12,15 +12,15 @@ class PlayCharacterAction extends BaseAction {
         this.title = 'Play this character';
     }
 
-    meetsRequirements(context = this.createContext()) {
-        if(context.game.currentPhase === 'dynasty') {
+    meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
+        if(!ignoredRequirements.includes('phase') && context.game.currentPhase === 'dynasty') {
             return 'phase';
         }
-        if(!context.player.isCardInPlayableLocation(context.source, 'play')) {
+        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, 'play')) {
             return 'location';
         }
-        if(!context.source.canPlay(context)) {
-            return 'triggerAbility';
+        if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, 'playCharacter')) {
+            return 'cannotTrigger';
         }
         if(context.source.anotherUniqueInPlay(context.player)) {
             return 'unique';
@@ -29,7 +29,12 @@ class PlayCharacterAction extends BaseAction {
     }
 
     executeHandler(context) {
-        let cardPlayedEvent = context.game.getEvent('onCardPlayed', { player: context.player, card: context.source, originalLocation: context.source.location });
+        let cardPlayedEvent = context.game.getEvent('onCardPlayed', {
+            player: context.player,
+            card: context.source,
+            originalLocation: context.source.location,
+            playType: 'character'
+        });
         let putIntoPlayHandler = () => {
             context.game.addMessage('{0} plays {1} at home with {2} additional fate', context.player, context.source, context.chooseFate);
             context.game.openEventWindow([GameActions.putIntoPlay({ fate: context.chooseFate }).getEvent(context.source, context), cardPlayedEvent]);

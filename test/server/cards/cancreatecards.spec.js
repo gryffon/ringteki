@@ -50,15 +50,17 @@ const eventNames = [
     'onSendCharactersHome',
     'onCardPlayed',
     'onDeckShuffled',
+    'afterDuel',
     'onDuelResolution',
     'onDynastyCardTurnedFaceup',
     'onTransferHonor',
-    'onFirstPassDuringDynasty',
+    'onPassDuringDynasty',
     'onModifyHonor',
     'onAbilityResolved'
 ];
 
 const actionNames = [
+    'applyLastingEffect',
     'attach',
     'bow',
     'break',
@@ -125,6 +127,9 @@ const mockContext = {
         conflict: { attackingPlayer: {} }
     },
     targetAbility: {},
+    selects: {
+        effect: { choice: '' }
+    },
     select: { toLowerCase: () => 'abc' },
     costs: {
         discardCard: { getCost: () => 1 }
@@ -423,8 +428,8 @@ describe('All Cards:', function() {
             it('should have a legal location as its location', function() {
                 expect(_.all(this.calls, args => (
                     _.isUndefined(args.location) ||
-                    ['province 1', 'province 2', 'province 3', 'province 4', 'dynasty discard pile', 'conflict discard pile', 'hand'].includes(args.location) ||
-                    _.every(args.location, location => ['province 1', 'province 2', 'province 3', 'province 4', 'dynasty discard pile', 'conflict discard pile', 'hand'].includes(location))
+                    ['province', 'dynasty discard pile', 'conflict discard pile', 'hand'].includes(args.location) ||
+                    _.every(args.location, location => ['province', 'dynasty discard pile', 'conflict discard pile', 'hand'].includes(location))
                 ))).toBe(true);
             });
         });
