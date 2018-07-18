@@ -11,10 +11,7 @@ class PlayCardResolver extends AbilityResolver {
 
     payCosts() {
         if((this.cancelled || this.canPayResults.cancelled) && this.playGameAction.resetOnCancel) {
-            this.playGameAction.preEventHandler(this.gameActionContext);
-            this.game.queueSimpleStep(() => {
-                this.game.openThenEventWindow(this.playGameAction.getEventArray(this.gameActionContext));
-            });
+            this.gameActionContext.ability.executeHandler(this.gameActionContext);
             this.cancelPressed = true;
         }
         super.payCosts();
@@ -46,18 +43,17 @@ class PlayCardAction extends CardGameAction {
         if(actions.length === 0) {
             return false;
         }
-        if(actions[0].getGameActions && actions[0].getGameActions(context).includes(this)) {
+        let gameActions = actions[0].targets.reduce((array, target) => array.concat(target.properties.gameAction), actions[0].gameAction);
+        if(gameActions.includes(this)) {
             actions.shift();
             if(actions.length === 0) {
                 return false;
             }
         }
-        let location = context.player.addPlayableLocation('play', card.controller, card.location);
         let newContext = actions[0].createContext(context.player);
-        if(actions[0].meetsRequirements(newContext)) {
+        if(actions[0].meetsRequirements(newContext, ['location', 'player'])) {
             return false;
         }
-        context.player.removePlayableLocation(location);
         return super.canAffect(card, context);
     }
 
