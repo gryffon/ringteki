@@ -36,6 +36,7 @@ class TaryuJiai extends DrawCard {
             onSelect: (player, ring) => {
                 this.game.addMessage('{0} chooses to resolve {1}\'s effect', player, ring);
                 this.game.openThenEventWindow(ability.actions.resolveRingEffect().getEvent(ring, context));
+                return true;
             }
         });
     }
