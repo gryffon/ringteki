@@ -161,19 +161,27 @@ const Costs = {
                     let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
                     if(reducedCost > maxPlayerFate + (alternatePool ? alternatePool.fate : 0)) {
                         result.cancelled = true;
-                        return;
-                    }
-                    if(alternatePool && alternatePool.fate > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
+                    } else if(alternatePool && alternatePool.fate > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
                         let minFateFromAlternate = Math.max(reducedCost - maxPlayerFate, 0);
                         let maxFateFromAlternate = Math.min(alternatePool.fate, reducedCost);
-                        let numberOfChoices = maxFateFromAlternate - minFateFromAlternate;
-                        if(numberOfChoices > 0) {
+                        let numberOfChoices = maxFateFromAlternate - minFateFromAlternate + 1;
+                        if(numberOfChoices > 1) {
                             let choices = Array.from(Array(numberOfChoices), (x, i) => i + minFateFromAlternate);
                             context.game.promptWithHandlerMenu(context.player, {
-                                activePromptTitle: 'Choose amount of fate to spend from ' + alternatePool.name,
+                                activePromptTitle: 'Choose amount of fate to spend from the ' + alternatePool.name,
                                 choices: choices,
-                                choiceHandler: choice => context.costs.alternateFate = choice
+                                choiceHandler: choice => {
+                                    if(choice > 0) {
+                                        context.game.addMessage('{0} takes {1} fate from {2} to pay the cost of {3}', context.player, choice, alternatePool, context.source);
+                                    }
+                                    context.costs.alternateFate = choice;
+                                }
                             });
+                        } else if(numberOfChoices === 1) {
+                            if(minFateFromAlternate > 0) {
+                                context.game.addMessage('{0} takes {1} fate from {2} to pay the cost of {3}', context.player, minFateFromAlternate, alternatePool, context.source);
+                            }
+                            context.costs.alternateFate = minFateFromAlternate;
                         }
                     }
                 });
@@ -184,8 +192,10 @@ const Costs = {
                 if(context.costs.alternateFate) {
                     let alternatePool = context.player.getAlternateFatePool(playingType, context.source);
                     alternatePool.modifyFate(-context.costs.alternateFate);
+                    context.player.fate -= Math.max(context.costs.fate - context.costs.alternateFate, 0);
+                } else {
+                    context.player.fate -= context.costs.fate;
                 }
-                context.player.fate -= context.costs.fate;
             },
             canIgnoreForTargeting: true
         };
@@ -212,19 +222,27 @@ const Costs = {
                     let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
                     if(reducedCost > maxPlayerFate + (alternatePool ? alternatePool.fate : 0)) {
                         result.cancelled = true;
-                        return;
-                    }
-                    if(alternatePool && alternatePool.fate > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
+                    } else if(alternatePool && alternatePool.fate > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
                         let minFateFromAlternate = Math.max(reducedCost - maxPlayerFate, 0);
                         let maxFateFromAlternate = Math.min(alternatePool.fate, reducedCost);
-                        let numberOfChoices = maxFateFromAlternate - minFateFromAlternate;
-                        if(numberOfChoices > 0) {
+                        let numberOfChoices = maxFateFromAlternate - minFateFromAlternate + 1;
+                        if(numberOfChoices > 1) {
                             let choices = Array.from(Array(numberOfChoices), (x, i) => i + minFateFromAlternate);
                             context.game.promptWithHandlerMenu(context.player, {
-                                activePromptTitle: 'Choose amount of fate to spend from ' + alternatePool.name,
+                                activePromptTitle: 'Choose amount of fate to spend from the ' + alternatePool.name,
                                 choices: choices,
-                                choiceHandler: choice => context.costs.alternateFate = choice
+                                choiceHandler: choice => {
+                                    if(choice > 0) {
+                                        context.game.addMessage('{0} takes {1} fate from {2} to pay the cost of {3}', context.player, choice, alternatePool, context.source);
+                                    }
+                                    context.costs.alternateFate = choice;
+                                }
                             });
+                        } else if(numberOfChoices === 1) {
+                            if(minFateFromAlternate > 0) {
+                                context.game.addMessage('{0} takes {1} fate from {2} to pay the cost of {3}', context.player, minFateFromAlternate, alternatePool, context.source);
+                            }
+                            context.costs.alternateFate = minFateFromAlternate;
                         }
                     }
                 });
@@ -235,8 +253,10 @@ const Costs = {
                 if(context.costs.alternateFate) {
                     let alternatePool = context.player.getAlternateFatePool(playingType, context.source);
                     alternatePool.modifyFate(-context.costs.alternateFate);
+                    context.player.fate -= Math.max(context.costs.targetDependentFate - context.costs.alternateFate, 0);
+                } else {
+                    context.player.fate -= context.costs.targetDependentFate;
                 }
-                context.player.fate -= context.costs.targetDependentFate;
             }
         };
     },
