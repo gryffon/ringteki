@@ -5,7 +5,7 @@ class MantisTenkinja extends DrawCard {
         this.interrupt({
             title: 'Reduce cost of next event',
             when: {
-                onResolveFateCost: event => event.card.type === 'event'
+                onResolveFateCost: (event, context) => event.card.type === 'event' && event.player === context.player
             },
             cost: ability.costs.payHonor(1),
             effect: 'reduce the cost of their next event by 1',
