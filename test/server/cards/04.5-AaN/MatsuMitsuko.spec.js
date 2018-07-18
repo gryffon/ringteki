@@ -31,7 +31,7 @@ describe('Matsu Mitsuko', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.mitsuko);
-                expect(this.player1).not.toHavePrompt('Move a character to the conflict');
+                expect(this.player1).toHavePromptButton('Pass');
             });
 
             it('should work during a military conflict', function() {
@@ -42,11 +42,11 @@ describe('Matsu Mitsuko', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.mitsuko);
-                expect(this.player1).toHavePrompt('Move a character to the conflict');
+                expect(this.player1).toHavePrompt('Choose a character');
             });
 
             it('should not work if lower honor', function() {
-                this.player1.honor = '9';
+                this.player1.player.honor = 9;
                 this.initiateConflict({
                     type: 'military',
                     attackers: [this.berzerker],
@@ -54,11 +54,11 @@ describe('Matsu Mitsuko', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.mitsuko);
-                expect(this.player1).not.toHavePrompt('Move a character to the conflict');
+                expect(this.player1).toHavePromptButton('Pass');
             });
 
             it('should not work if even honor', function() {
-                this.player1.honor = '10';
+                this.player1.player.honor = 10;
                 this.initiateConflict({
                     type: 'military',
                     attackers: [this.berzerker],
@@ -66,7 +66,7 @@ describe('Matsu Mitsuko', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.mitsuko);
-                expect(this.player1).not.toHavePrompt('Move a character to the conflict');
+                expect(this.player1).toHavePromptButton('Pass');
             });
 
             it('should correctly move the chosen character to the conflict', function() {
