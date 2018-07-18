@@ -150,12 +150,41 @@ const Costs = {
     payReduceableFateCost: function(playingType) {
         return {
             canPay: function(context) {
-                let reducedCost = context.player.getReducedCost(playingType, context.source);
+                let reducedCost = context.player.getMinimumCost(playingType, context.source);
                 return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
+            },
+            resolve: function(context, result) {
+                context.game.raiseEvent('onResolveFateCost', { card: context.source });
+                context.game.queueSimpleStep(() => {
+                    let reducedCost = context.player.getReducedCost(playingType, context.source);
+                    let alternatePool = context.player.getAlternateFatePool(playingType, context.source);
+                    let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
+                    if(reducedCost > maxPlayerFate + (alternatePool ? alternatePool.fate : 0)) {
+                        result.cancelled = true;
+                        return;
+                    }
+                    if(alternatePool && alternatePool.fate > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
+                        let minFateFromAlternate = Math.max(reducedCost - maxPlayerFate, 0);
+                        let maxFateFromAlternate = Math.min(alternatePool.fate, reducedCost);
+                        let numberOfChoices = maxFateFromAlternate - minFateFromAlternate;
+                        if(numberOfChoices > 0) {
+                            let choices = Array.from(Array(numberOfChoices), (x, i) => i + minFateFromAlternate);
+                            context.game.promptWithHandlerMenu(context.player, {
+                                activePromptTitle: 'Choose amount of fate to spend from ' + alternatePool.name,
+                                choices: choices,
+                                choiceHandler: choice => context.costs.alternateFate = choice
+                            });
+                        }
+                    }
+                });
             },
             pay: function(context) {
                 context.costs.fate = context.player.getReducedCost(playingType, context.source);
                 context.player.markUsedReducers(playingType, context.source);
+                if(context.costs.alternateFate) {
+                    let alternatePool = context.player.getAlternateFatePool(playingType, context.source);
+                    alternatePool.modifyFate(-context.costs.alternateFate);
+                }
                 context.player.fate -= context.costs.fate;
             },
             canIgnoreForTargeting: true
@@ -172,12 +201,41 @@ const Costs = {
                     // we don't need to check now because this will be checked again once targeting is done
                     return true;
                 }
-                let reducedCost = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
+                let reducedCost = context.player.getMinimumCost(playingType, context.source, context.targets[targetName]);
                 return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
+            },
+            resolve: function(context, result) {
+                context.game.raiseEvent('onResolveFateCost', { card: context.source });
+                context.game.queueSimpleStep(() => {
+                    let reducedCost = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
+                    let alternatePool = context.player.getAlternateFatePool(playingType, context.source);
+                    let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
+                    if(reducedCost > maxPlayerFate + (alternatePool ? alternatePool.fate : 0)) {
+                        result.cancelled = true;
+                        return;
+                    }
+                    if(alternatePool && alternatePool.fate > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
+                        let minFateFromAlternate = Math.max(reducedCost - maxPlayerFate, 0);
+                        let maxFateFromAlternate = Math.min(alternatePool.fate, reducedCost);
+                        let numberOfChoices = maxFateFromAlternate - minFateFromAlternate;
+                        if(numberOfChoices > 0) {
+                            let choices = Array.from(Array(numberOfChoices), (x, i) => i + minFateFromAlternate);
+                            context.game.promptWithHandlerMenu(context.player, {
+                                activePromptTitle: 'Choose amount of fate to spend from ' + alternatePool.name,
+                                choices: choices,
+                                choiceHandler: choice => context.costs.alternateFate = choice
+                            });
+                        }
+                    }
+                });
             },
             pay: function(context) {
                 context.costs.targetDependentFate = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
                 context.player.markUsedReducers(playingType, context.source, context.targets[targetName]);
+                if(context.costs.alternateFate) {
+                    let alternatePool = context.player.getAlternateFatePool(playingType, context.source);
+                    alternatePool.modifyFate(-context.costs.alternateFate);
+                }
                 context.player.fate -= context.costs.targetDependentFate;
             }
         };

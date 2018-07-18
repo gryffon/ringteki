@@ -93,6 +93,7 @@ const Effects = {
         apply: player => player.addConflictOpportunity(type),
         unapply: () => true
     }),
+    alternateFatePool: (match) => EffectBuilder.player.static('alternateFatePool', match),
     canPlayFromOwn: (location) => EffectBuilder.player.detached('canPlayFromOwn', {
         apply: (player) => player.addPlayableLocation('play', player, location),
         unapply: (player, context, location) => player.removePlayableLocation(location)
