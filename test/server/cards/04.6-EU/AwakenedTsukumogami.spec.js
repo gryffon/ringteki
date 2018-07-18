@@ -26,9 +26,10 @@ describe('Awakened Tsukumogami', function() {
                 expect(this.player2).toHavePrompt('Against the Waves');
                 this.player2.clickCard(this.agashaSwordsmith);
                 expect(this.player2).toHavePrompt('Choose amount of fate to spend from the Water ring');
-                expect(this.player2.currentButtons.length).toBe(2);
+                expect(this.player2.currentButtons.length).toBe(3);
                 expect(this.player2.currentButtons).toContain('0');
                 expect(this.player2.currentButtons).toContain('1');
+                expect(this.player2.currentButtons).toContain('Cancel');
             });
 
             it('should pay with ring fate when selected', function() {
@@ -55,11 +56,12 @@ describe('Awakened Tsukumogami', function() {
                 this.player2.fate = 3;
                 this.player2.clickCard('consumed-by-five-fires');
                 expect(this.player2).toHavePrompt('Choose amount of fate to spend from the Fire ring');
-                expect(this.player2.currentButtons.length).toBe(4);
+                expect(this.player2.currentButtons.length).toBe(5);
                 expect(this.player2.currentButtons).toContain('2');
                 expect(this.player2.currentButtons).toContain('3');
                 expect(this.player2.currentButtons).toContain('4');
                 expect(this.player2.currentButtons).toContain('5');
+                expect(this.player2.currentButtons).toContain('Cancel');
                 this.player2.clickPrompt('3');
                 expect(this.player2.fate).toBe(1);
                 expect(this.game.rings.fire.fate).toBe(2);
@@ -75,9 +77,10 @@ describe('Awakened Tsukumogami', function() {
                 expect(this.player2).toHavePrompt('The Mirror\'s Gaze');
                 this.player2.clickCard('asako-azunami');
                 expect(this.player2).toHavePrompt('Choose amount of fate to spend from the Air ring');
-                expect(this.player2.currentButtons.length).toBe(2);
+                expect(this.player2.currentButtons.length).toBe(3);
                 expect(this.player2.currentButtons).toContain('0');
                 expect(this.player2.currentButtons).toContain('1');
+                expect(this.player2.currentButtons).toContain('Cancel');
                 this.player2.clickPrompt('1');
                 expect(this.mirrorsGaze.location).toBe('play area');
                 expect(this.player2.fate).toBe(1);

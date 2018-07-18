@@ -459,16 +459,15 @@ class Player extends GameObject {
         this.playableLocations = _.reject(this.playableLocations, l => l === location);
     }
 
-    getAlternateFatePool(playingType, card) {
+    getAlternateFatePools(playingType, card) {
         let effects = this.getEffects('alternateFatePool');
-        let match = effects.find(match => match(card));
-        return match && match(card);
+        return effects.filter(match => match(card) && match(card).fate > 0).map(match => match(card));
     }
 
     getMinimumCost(playingType, card, target) {
         let reducedCost = this.getReducedCost(playingType, card, target);
-        let alternateFatePool = this.getAlternateFatePool(playingType, card);
-        let alternateFate = alternateFatePool ? alternateFatePool.fate : 0;
+        let alternateFatePools = this.getAlternateFatePools(playingType, card);
+        let alternateFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0);
         let triggeredCostReducers = 0;
         let fakeWindow = { addChoice: () => triggeredCostReducers++ };
         let fakeEvent = this.game.getEvent('onResolveFateCost', { card: card, player: this });
