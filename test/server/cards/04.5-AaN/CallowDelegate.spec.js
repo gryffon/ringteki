@@ -5,10 +5,12 @@ describe('Callow Delegate', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
+                        honor: 9,
                         inPlay: ['bayushi-shoju'],
                         hand: ['assassination']
                     },
                     player2: {
+                        honor: 9,
                         inPlay: ['callow-delegate', 'doji-challenger']
                     }
                 });
@@ -17,9 +19,7 @@ describe('Callow Delegate', function() {
 
                 this.callowDelegate = this.player2.findCardByName('callow-delegate');
                 this.dojiChallenger = this.player2.findCardByName('doji-challenger');
-            });
 
-            it('should prompt to honor a character when leaving play', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
@@ -27,6 +27,9 @@ describe('Callow Delegate', function() {
                     defenders: [this.callowDelegate]
                 });
                 this.player2.pass();
+            });
+
+            it('should prompt to honor a character when leaving play', function() {
                 this.player1.clickCard(this.assassination);
                 this.player1.clickCard(this.callowDelegate);
                 expect(this.player2).toHavePrompt('Triggered Abilities');
@@ -39,6 +42,20 @@ describe('Callow Delegate', function() {
                 this.player2.clickCard(this.dojiChallenger);
                 expect(this.callowDelegate.location).toBe('dynasty discard pile');
                 expect(this.dojiChallenger.isHonored).toBe(true);
+            });
+
+            it('should increase player honor if callow delegate is the target of the interupt', function() {
+                let player2HonorBefore = this.player2.player.honor;
+                this.player1.clickCard(this.assassination);
+                this.player1.clickCard(this.callowDelegate);
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.callowDelegate);
+                this.player2.clickCard(this.callowDelegate);
+                expect(this.player2).toHavePrompt('Callow Delegate');
+                expect(this.player2).toBeAbleToSelect(this.callowDelegate);
+                this.player2.clickCard(this.callowDelegate);
+                expect(this.callowDelegate.location).toBe('dynasty discard pile');
+                expect(this.player2.player.honor).toBe(player2HonorBefore + 1);
             });
         });
     });
