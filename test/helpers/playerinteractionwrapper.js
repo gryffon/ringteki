@@ -406,6 +406,9 @@ class PlayerInteractionWrapper {
             this.player.moveCard(card, location);
         }
         card.facedown = false;
+        if(this.game.currentPhase !== 'setup') {
+            this.game.checkGameState(true);
+        }
         return card;
     }
 
@@ -547,7 +550,7 @@ class PlayerInteractionWrapper {
         }
         card = this.findCardByName(card, 'province deck');
         this.clickCard(card);
-        //this.clickPrompt('Done');
+        this.clickPrompt('Done');
     }
 
     /**

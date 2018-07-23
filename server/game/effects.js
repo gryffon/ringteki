@@ -58,6 +58,14 @@ const Effects = {
             }
         }
     }),
+    gainPlayAction: (playActionClass) => EffectBuilder.card.detached('gainPlayAction', {
+        apply: card => {
+            let action = new playActionClass(card);
+            card.abilities.playActions.push(action);
+            return action;
+        },
+        unapply: (card, context, playAction) => card.abilities.playActions = card.abilities.playActions.filter(action => action !== playAction)
+    }),
     immuneTo: (properties) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(properties)),
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static('increaseLimitOnAbilities', amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible('modifyBaseMilitarySkill', value),
@@ -70,7 +78,7 @@ const Effects = {
     modifyPoliticalSkillMultiplier: (value) => EffectBuilder.card.flexible('modifyPoliticalSkillMultiplier', value),
     modifyProvinceStrength: (value) => EffectBuilder.card.flexible('modifyProvinceStrength', value),
     setBaseMilitarySkill: (value) => EffectBuilder.card.static('setBaseMilitarySkill', value),
-    setBasePoliticalSkill: (value) => EffectBuilder.card.static('setBasePolitcalSkill', value),
+    setBasePoliticalSkill: (value) => EffectBuilder.card.static('setBasePoliticalSkill', value),
     setDash: (type) => EffectBuilder.card.static('setDash', type),
     setMilitarySkill: (value) => EffectBuilder.card.static('setMilitarySkill', value),
     setPoliticalSkill: (value) => EffectBuilder.card.static('setPoliticalSkill', value),
@@ -100,6 +108,10 @@ const Effects = {
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),
     changePlayerSkillModifier: (value) => EffectBuilder.player.flexible('conflictSkillModifier', value),
     customDetachedPlayer: (properties) => EffectBuilder.player.detached('customEffect', properties),
+    gainActionPhasePriority: () => EffectBuilder.player.detached('actionPhasePriority', {
+        apply: player => player.actionPhasePriority = true,
+        unapply: player => player.actionPhasePriority = false
+    }),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
     playerCannot: (properties) => EffectBuilder.player.static('abilityRestrictions', new CannotRestriction(properties)),
     reduceCost: (properties) => EffectBuilder.player.detached('costReducer', {
