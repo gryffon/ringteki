@@ -15,7 +15,7 @@ describe('Mantis Tenkinja', function() {
                     }
                 });
                 this.agashaSwordsmith = this.player2.findCardByName('agasha-swordsmith');
-                this.mantisTenkinja = this.player1.findCardByName('mantis-tenkinja');
+                this.mantisTenkinja = this.player1.findCardByName('mantis-tenkinja', 'play area');
                 this.mantisTenkinja2 = this.player1.findCardByName('mantis-tenkinja', 'dynasty discard pile');
                 this.player1.placeCardInProvince(this.mantisTenkinja2);
                 this.awakenedTsukumogami = this.player1.placeCardInProvince('awakened-tsukumogami', 'province 2');
