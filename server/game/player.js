@@ -47,6 +47,7 @@ class Player extends GameObject {
         this.takenDynastyMulligan = false;
         this.takenConflictMulligan = false;
         this.passedDynasty = false;
+        this.actionPhasePriority = false;
         this.honorBid = 0; // amount from the most recent bid after modifiers
         this.showBid = 0; // amount shown on the dial
         this.conflictOpportunities = {
@@ -201,6 +202,12 @@ class Player extends GameObject {
         });
 
         return cardsToReturn;
+    }
+
+    areLocationsAdjacent(location1, location2) {
+        let index1 = provinceLocations.indexOf(location1);
+        let index2 = provinceLocations.indexOf(location2);
+        return index1 > -1 && index2 > -2 && Math.abs(index1 - index2) === 1;
     }
 
     /**
