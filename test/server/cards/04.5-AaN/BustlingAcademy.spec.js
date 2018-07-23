@@ -8,7 +8,7 @@ describe('Bustling Academy', function() {
                         inPlay: ['naive-student','bustling-academy','kanjo-district']
                     },
                     player2: {
-                        inPlay: ['shiotome-encampment','moto-youth','moto-juro'],
+                        inPlay: ['shiotome-encampment','moto-youth','moto-juro','shinjo-scout'],
                         hand: ['noble-sacrifice']
                     }
                 });
@@ -20,6 +20,7 @@ describe('Bustling Academy', function() {
                 this.shio = this.player2.placeCardInProvince('shiotome-encampment','province 1');
                 this.youth = this.player2.placeCardInProvince('moto-youth','province 2');
                 this.juro = this.player2.findCardByName('moto-juro');
+                this.scout = this.player2.findCardByName('shinjo-scout');
             });
 
             it('should correctly target cards in provinces', function() {
@@ -35,6 +36,14 @@ describe('Bustling Academy', function() {
                 this.player1.clickCard(this.ba);
                 this.player1.clickCard(this.shio);
                 expect(this.shio.location).toBe('dynasty discard pile');
+            });
+
+            it('should correctly refill the province faceup', function() {
+                this.player2.moveCard('shinjo-scout', 'dynasty deck');
+                this.player1.clickCard(this.ba);
+                this.player1.clickCard(this.shio);
+                expect(this.shio.location).toBe('dynasty discard pile');
+                expect(this.scout.location).toBe('province 1');
             });
 
             it('should correctly discard itself', function() {
