@@ -3,17 +3,17 @@ const DrawCard = require('../../drawcard.js');
 class KuniLaboratory extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: card => card.getType() === 'character' && card.location === 'play area',
-            targetController: 'self',
+            match: card => card.getType() === 'character',
             effect: ability.effects.modifyBothSkills(1)
         });
 
         this.forcedReaction({
-            title: 'After the conflict phase begins lose 1 honor',
+            title: 'After the conflict phase begins',
             when: {
                 onPhaseStarted: event => event.phase === 'conflict'
             },
-            gameAction: ability.actions.loseHonor()
+            effect: 'lose an honor',
+            gameAction: ability.actions.loseHonor(context => ({ target: context.player }))
         });
     }
 }
