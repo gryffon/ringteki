@@ -45,7 +45,7 @@ describe('Callow Delegate', function() {
             });
 
             it('should increase player honor if callow delegate is the target of the interupt', function() {
-                let player2HonorBefore = this.player2.player.honor;
+                let player2HonorBefore = this.player2.honor;
                 this.player1.clickCard(this.assassination);
                 this.player1.clickCard(this.callowDelegate);
                 expect(this.player2).toHavePrompt('Triggered Abilities');
@@ -54,8 +54,9 @@ describe('Callow Delegate', function() {
                 expect(this.player2).toHavePrompt('Callow Delegate');
                 expect(this.player2).toBeAbleToSelect(this.callowDelegate);
                 this.player2.clickCard(this.callowDelegate);
+                expect(this.callowDelegate.isHonored).toBe(true);
                 expect(this.callowDelegate.location).toBe('dynasty discard pile');
-                expect(this.player2.player.honor).toBe(player2HonorBefore + 1);
+                expect(this.player2.honor).toBe(player2HonorBefore + 1);
             });
         });
     });
