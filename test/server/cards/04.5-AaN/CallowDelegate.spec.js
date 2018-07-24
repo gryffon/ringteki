@@ -54,7 +54,6 @@ describe('Callow Delegate', function() {
                 expect(this.player2).toHavePrompt('Callow Delegate');
                 expect(this.player2).toBeAbleToSelect(this.callowDelegate);
                 this.player2.clickCard(this.callowDelegate);
-                expect(this.callowDelegate.isHonored).toBe(true);
                 expect(this.callowDelegate.location).toBe('dynasty discard pile');
                 expect(this.player2.honor).toBe(player2HonorBefore + 1);
             });
