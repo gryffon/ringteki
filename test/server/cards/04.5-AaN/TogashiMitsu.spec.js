@@ -1,4 +1,4 @@
-fdescribe('Togashi Mitsu', function() {
+describe('Togashi Mitsu', function() {
     integration(function() {
         describe('Togashi Mitsu\'s ability', function() {
             beforeEach(function() {
