@@ -5,7 +5,7 @@ class TaintedHero extends DrawCard {
         this.persistentEffect({
             match: this,
             effect: [
-                ability.effects.cardCannot('declareAsAttacker'), 
+                ability.effects.cardCannot('declareAsAttacker'),
                 ability.effects.cardCannot('declareAsDefender')
             ]
         });
