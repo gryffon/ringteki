@@ -8,7 +8,7 @@ class VoidFist extends DrawCard {
         this.eventRegistrar.register(['onConflictFinished', 'onCardPlayed']);
         this.action({
             title: 'Bow and send a character home',
-            condition: context => this.cardsPlayedThisConflict[context.player.name] > 2,
+            condition: context => this.cardsPlayedThisConflict[context.player.uuid] >= 2,
             target: {
                 cardType: 'character',
                 cardCondtion: (card, context) =>
@@ -27,10 +27,10 @@ class VoidFist extends DrawCard {
 
     onCardPlayed(event) {
         if(this.game.isDuringConflict()) {
-            if(this.cardsPlayedThisConflict[event.player.name]) {
-                this.cardsPlayedThisConflict[event.player.name] += 1;
+            if(this.cardsPlayedThisConflict[event.player.uuid]) {
+                this.cardsPlayedThisConflict[event.player.uuid] += 1;
             } else {
-                this.cardsPlayedThisConflict[event.player.name] = 1;
+                this.cardsPlayedThisConflict[event.player.uuid] = 1;
             }
         }
     }
