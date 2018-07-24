@@ -4,6 +4,7 @@ class ImperialLibrarian extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: card => card !== this,
+            targetController: 'any',
             effect: ability.effects.modifyGlory(1)
         });
     }
