@@ -5,10 +5,12 @@ describe('Bustling Academy', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['naive-student','bustling-academy','kanjo-district']
+                        inPlay: ['naive-student'],
+                        dynastyDiscard: ['bustling-academy','kanjo-district']
                     },
                     player2: {
-                        inPlay: ['shiotome-encampment','moto-youth','shinjo-scout'],
+                        inPlay: ['moto-youth','shinjo-scout'],
+                        dynastyDiscard:['shiotome-encampment'],
                         hand: []
                     }
                 });
