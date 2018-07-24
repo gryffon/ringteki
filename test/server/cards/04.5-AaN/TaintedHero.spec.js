@@ -107,7 +107,7 @@ describe('Tainted Hero', function() {
                 });
 
                 it('should be allowed to be declared as a defender after sacrificing a friendly character', function() {
-                    
+
                     // pre-conflict actions
                     expect(this.player1).toHavePrompt('Initiate an action');
                     this.player1.pass();
