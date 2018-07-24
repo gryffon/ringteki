@@ -23,7 +23,7 @@ class FateCostInterruptWindow extends ForcedTriggeredAbilityWindow {
 
     getPromptForSelectProperties() {
         let buttons = [];
-        if(this.resolvedAbilities.length === 0) {
+        if(this.resolvedAbilities.length === 0 && this.result.canCancel) {
             buttons.push({ text: 'Cancel', arg: 'cancel' });
         }
         if(this.totalReduction >= this.minCostReduction) {
