@@ -21,7 +21,7 @@ class NezumiInfiltrator extends DrawCard {
             },
             max: ability.limit.perConflict(1),
             effect: 'change the province strength of {1}',
-            effectArgs: () => this.game.currentConflict.conflictProvince,
+            effectArgs: context => context.game.currentConflict.conflictProvince,
             gameAction: ability.actions.chooseAction(() => ({
                 target: this.game.currentConflict.conflictProvince,
                 messages: {
