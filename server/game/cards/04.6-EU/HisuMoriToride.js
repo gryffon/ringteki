@@ -1,6 +1,6 @@
-const DrawCard = require('../../drawcard.js');
+const StrongholdCard = require('../../strongholdcard.js');
 
-class HisuMoriToride extends DrawCard {
+class HisuMoriToride extends StrongholdCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }
 }
