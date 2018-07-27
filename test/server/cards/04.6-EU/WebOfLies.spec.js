@@ -8,15 +8,14 @@ describe('Web of Lies', function() {
                         inPlay: ['borderlands-defender']
                     },
                     player2: {
-                        inPlay: ['bayushi-kachiko'],
-                        hand: ['policy-debate'],
+                        inPlay: [],
+                        hand: ['maze-of-illusion'],
                         provinces: ['web-of-lies']
                     }
                 });
                 this.borderlandsDefender = this.player1.findCardByName('borderlands-defender');
 
                 this.webOfLies = this.player2.findCardByName('web-of-lies');
-                this.bayushiKachiko = this.player2.findCardByName('bayushi-kachiko');
                 this.player2.showBid = 3;
 
                 this.noMoreActions();
@@ -29,7 +28,19 @@ describe('Web of Lies', function() {
             });
 
             it('provice should update if the players bid changes', function() {
-
+                this.initiateConflict({
+                    type: 'military',
+                    province: 'web-of-lies',
+                    attackers: [this.borderlandsDefender],
+                    defenders: []
+                });
+                this.player2.clickCard('maze-of-illusion');
+                this.player2.clickCard(this.borderlandsDefender);
+                this.player2.clickPrompt('1');
+                this.player1.clickPrompt('Odd');
+                expect(this.matsuBerserker.isDishonored).toBe(false);
+                expect(this.matsuBerserker.bowed).toBe(false);
+                expect(this.webOfLies.getStrength()).toBe(2);
             });
         });
     });
