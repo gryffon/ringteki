@@ -13,6 +13,7 @@ class UpholdingAuthority extends ProvinceCard {
             when: {
                 onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
             },
+            effect: 'look at their opponent\'s hand and choose a card to be discarded',
             gameAction: ability.actions.discardCard(context => ({
                 promptWithHandlerMenu: {
                     activePromptTitle: 'Choose a card to discard',
@@ -47,7 +48,7 @@ class UpholdingAuthority extends ProvinceCard {
             return;
         }
         gameAction.setTarget(cards.splice(0, choice));
-        this.game.addMessage('{0} chooses to discard {1} cop{2} of {3}', context.player, choice, choice === 1 ? 'y' : 'ies', cards[0]);
+        this.game.addMessage('{0} chooses to discard {1} cop{2} of {3}', context.player, choice, (choice === 1 ? 'y' : 'ies'), cards[0]);
     }
 }
 

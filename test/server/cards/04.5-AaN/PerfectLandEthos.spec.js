@@ -6,7 +6,7 @@ describe('Perfect Land Ethos', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['doji-hotaru', 'kakita-yoshi'],
-			hand: ['perfect-land-ethos']
+			                  hand: ['perfect-land-ethos']
                     },
                     player2: {
                         inPlay: ['bayushi-liar']
@@ -31,8 +31,6 @@ describe('Perfect Land Ethos', function() {
 		expect(this.liar.isHonored).toBe(false);
 		expect(this.liar.isDishonored).toBe(false);
             });
-
-            
         });
     });
 });

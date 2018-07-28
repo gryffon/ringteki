@@ -7,7 +7,6 @@ const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
 const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
-const PersonalHonorAbility = require('./KeywordAbilities/PersonalHonorAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 
@@ -53,7 +52,6 @@ class DrawCard extends BaseCard {
 
         if(cardData.type === 'character') {
             this.abilities.reactions.push(new CourtesyAbility(this.game, this));
-            this.abilities.reactions.push(new PersonalHonorAbility(this.game, this));
             this.abilities.reactions.push(new PrideAbility(this.game, this));
             this.abilities.reactions.push(new SincerityAbility(this.game, this));
         }
@@ -132,6 +130,10 @@ class DrawCard extends BaseCard {
 
     getFate() {
         return this.fate;
+    }
+
+    costLessThan(num) {
+        return num && (this.cardData.cost || this.cardData.cost === 0) && this.cardData.cost < num;
     }
 
     anotherUniqueInPlay(player) {
@@ -218,7 +220,7 @@ class DrawCard extends BaseCard {
 
         if(this.hasDash('military')) {
             return 0;
-        } else if(this.mostRecentEffect('setMilitarySkill')) {
+        } else if(this.anyEffect('setMilitarySkill')) {
             return this.mostRecentEffect('setMilitarySkill');
         }
 
@@ -247,7 +249,7 @@ class DrawCard extends BaseCard {
          */
         if(this.hasDash('political')) {
             return 0;
-        } else if(this.mostRecentEffect('setPoliticalSkill')) {
+        } else if(this.anyEffect('setPoliticalSkill')) {
             return this.mostRecentEffect('setPoliticalSkill');
         }
 
@@ -270,10 +272,10 @@ class DrawCard extends BaseCard {
     getBaseMilitarySkill() {
         if(this.hasDash('military')) {
             return 0;
+        } else if(this.anyEffect('setBaseMilitarySkill')) {
+            return this.mostRecentEffect('setBaseMilitarySkill');
         }
-
-        return this.mostRecentEffect('setBaseMilitarySkill') ||
-               this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
+        return this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
     }
 
     get basePoliticalSkill() {
@@ -283,10 +285,10 @@ class DrawCard extends BaseCard {
     getBasePoliticalSkill() {
         if(this.hasDash('political')) {
             return 0;
+        } else if(this.anyEffect('setBasePoliticalSkill')) {
+            return this.mostRecentEffect('setBasePoliticalSkill');
         }
-
-        return this.mostRecentEffect('setBasePoliticalSkill') ||
-               this.sumEffects('modifyBasePoliticalSkill') + this.printedPoliticalSkill;
+        return this.sumEffects('modifyBasePoliticalSkill') + this.printedPoliticalSkill;
     }
 
     getSkillFromGlory() {
@@ -296,6 +298,9 @@ class DrawCard extends BaseCard {
         if(this.isHonored) {
             return this.getGlory();
         } else if(this.isDishonored) {
+            if(this.anyEffect('addGloryWhileDishonored')) {
+                return this.getGlory();
+            }
             return 0 - this.getGlory();
         }
         return 0;
@@ -375,8 +380,8 @@ class DrawCard extends BaseCard {
         return card && card.getType() === 'character' && this.getType() === 'attachment';
     }
 
-    canPlay(context) {
-        return this.checkRestrictions('play', context) && context.player.checkRestrictions('play', context);
+    canPlay(context, type = 'play') {
+        return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context);
     }
 
     /**
@@ -456,6 +461,14 @@ class DrawCard extends BaseCard {
 
         if(this.isParticipating()) {
             this.game.currentConflict.removeFromConflict(this);
+        }
+
+        if(this.isDishonored && this.checkRestrictions('affectedByHonor')) {
+            this.game.addMessage('{0} loses 1 honor due to {1}\'s personal honor', this.controller, this);
+            this.game.openThenEventWindow(this.game.actions.loseHonor().getEvent(this.controller, this.game.getFrameworkContext()));
+        } else if(this.isHonored && this.checkRestrictions('affectedByHonor')) {
+            this.game.addMessage('{0} gains 1 honor due to {1}\'s personal honor', this.controller, this);
+            this.game.openThenEventWindow(this.game.actions.gainHonor().getEvent(this.controller, this.game.getFrameworkContext()));
         }
 
         this.isDishonored = false;

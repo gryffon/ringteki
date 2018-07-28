@@ -1,6 +1,6 @@
-describe('Breach of Protocol', function() {
+describe('Tengu Sensei', function() {
     integration(function() {
-        describe('Breach of Protocol\'s ability', function() {
+        describe('Tengu Sensei\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',

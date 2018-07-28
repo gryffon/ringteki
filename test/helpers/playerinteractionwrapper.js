@@ -406,6 +406,9 @@ class PlayerInteractionWrapper {
             this.player.moveCard(card, location);
         }
         card.facedown = false;
+        if(this.game.currentPhase !== 'setup') {
+            this.game.checkGameState(true);
+        }
         return card;
     }
 
@@ -512,6 +515,7 @@ class PlayerInteractionWrapper {
             throw new Error(`${element} is not a valid ring selection`);
         }
         this.game.rings[element].claimRing(this.player);
+        this.game.checkGameState(true);
         this.game.continue();
     }
     /**
@@ -546,7 +550,7 @@ class PlayerInteractionWrapper {
         }
         card = this.findCardByName(card, 'province deck');
         this.clickCard(card);
-        //this.clickPrompt('Done');
+        this.clickPrompt('Done');
     }
 
     /**

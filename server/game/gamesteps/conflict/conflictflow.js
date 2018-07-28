@@ -303,7 +303,7 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         if(this.conflict.conflictUnopposed) {
             this.game.addMessage('{0} loses 1 honor for not defending the conflict', this.conflict.loser);
-            this.game.applyGameAction(null, { loseHonor: this.conflict.loser });
+            GameActions.loseHonor({ dueToUnopposed: true }).resolve(this.conflict.loser, this.game.getFrameworkContext(this.conflict.loser));
         }
     }
 
@@ -324,7 +324,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         if(this.conflict.isAttackerTheWinner()) {
-            GameActions.resolveRing().resolve(this.conflict.ring, this.game.getFrameworkContext(this.conflict.attackingPlayer));
+            GameActions.resolveConflictRing().resolve(this.conflict.ring, this.game.getFrameworkContext(this.conflict.attackingPlayer));
         }
     }
 
@@ -383,7 +383,7 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         this.game.currentConflict = null;
         this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
-        this.resetCards();
+        this.game.queueSimpleStep(() => this.resetCards());
     }
 }
 

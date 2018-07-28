@@ -34,6 +34,7 @@ const Ring = require('./ring.js');
 const Conflict = require('./conflict.js');
 const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
 const MenuCommands = require('./MenuCommands');
+const SpiritOfTheRiver = require('./cards/SpiritOfTheRiver');
 
 class Game extends EventEmitter {
     constructor(details, options = {}) {
@@ -65,7 +66,7 @@ class Game extends EventEmitter {
         this.password = details.password;
         this.roundNumber = 0;
 
-        this.completedConflicts = [];
+        this.conflictRecord = [];
         this.rings = {
             air: new Ring(this, 'air','military'),
             earth: new Ring(this, 'earth','political'),
@@ -242,6 +243,12 @@ class Game extends EventEmitter {
         return foundCards;
     }
 
+    createToken(card) {
+        let token = new SpiritOfTheRiver(card);
+        this.allCards.push(token);
+        return token;
+    }
+
     get actions() {
         return GameActions;
     }
@@ -258,16 +265,36 @@ class Game extends EventEmitter {
     }
 
     recordConflict(conflict) {
-        this.completedConflicts.push({
+        this.conflictRecord.push({
             attackingPlayer: conflict.attackingPlayer,
             declaredType: conflict.declaredType,
             passed: conflict.conflictPassed,
             uuid: conflict.uuid
         });
+        conflict.attackingPlayer.conflictOpportunities.total--;
+        if(conflict.conflictPassed) {
+            conflict.attackingPlayer.conflictOpportunities.military = Math.max(
+                conflict.attackingPlayer.conflictOpportunities.military,
+                conflict.attackingPlayer.conflictOpportunities.total
+            );
+            conflict.attackingPlayer.conflictOpportunities.political = Math.max(
+                conflict.attackingPlayer.conflictOpportunities.political,
+                conflict.attackingPlayer.conflictOpportunities.total
+            );
+        } else {
+            conflict.attackingPlayer.conflictOpportunities[conflict.declaredType]--;
+        }
+    }
+
+    getConflicts(player) {
+        if(!player) {
+            return [];
+        }
+        return this.conflictRecord.filter(record => record.attackingPlayer === player);
     }
 
     recordConflictWinner(conflict) {
-        let record = this.completedConflicts.find(record => record.uuid === conflict.uuid);
+        let record = this.conflictRecord.find(record => record.uuid === conflict.uuid);
         if(record) {
             record.completed = true;
             record.winner = conflict.winner;
@@ -870,6 +897,9 @@ class Game extends EventEmitter {
 
     openThenEventWindow(events) {
         if(this.currentEventWindow) {
+            if(!_.isArray(events)) {
+                events = [events];
+            }
             return this.queueStep(new ThenEventWindow(this, events));
         }
         return this.openEventWindow(events);

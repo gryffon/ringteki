@@ -15,7 +15,7 @@ const eventNames = [
     'onDefendersDeclared',
     'afterConflict',
     'onBreakProvince',
-    'onResolveRingEffects',
+    'onResolveConflictRings',
     'onClaimRing',
     'onReturnHome',
     'onParticipantsReturnHome',
@@ -50,6 +50,7 @@ const eventNames = [
     'onSendCharactersHome',
     'onCardPlayed',
     'onDeckShuffled',
+    'afterDuel',
     'onDuelResolution',
     'onDynastyCardTurnedFaceup',
     'onTransferHonor',
@@ -59,6 +60,7 @@ const eventNames = [
 ];
 
 const actionNames = [
+    'applyLastingEffect',
     'attach',
     'bow',
     'break',
@@ -107,7 +109,11 @@ const checkGameAction = function(gameAction) {
 };
 
 const mockContext = {
-    game: {},
+    game: {
+        currentConflict: {
+            getCharacters: () => []
+        }
+    },
     player: {
         cardsInPlay: [],
         getNumberOfHoldingsInPlay: () => 1,
@@ -119,12 +125,18 @@ const mockContext = {
             }
         }
     },
-    source: {},
+    source: {
+        getMilitarySkill: () => 1
+    },
     ability: {},
     event: {
         conflict: { attackingPlayer: {} }
     },
     targetAbility: {},
+    selects: {
+        effect: { choice: '' },
+        select: { choice: '' }
+    },
     select: { toLowerCase: () => 'abc' },
     costs: {
         discardCard: { getCost: () => 1 }

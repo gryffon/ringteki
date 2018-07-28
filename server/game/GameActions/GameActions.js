@@ -3,6 +3,7 @@ const BowAction = require('./BowAction');
 const BreakAction = require('./BreakAction');
 const ChooseGameAction = require('./ChooseGameAction');
 const ChosenDiscardAction = require('./ChosenDiscardAction');
+const CreateTokenAction = require('./CreateTokenAction');
 const DeckSearchAction = require('./DeckSearchAction');
 const DelayedEffectAction = require('./DelayedEffectAction');
 const DiscardFavorAction = require('./DiscardFavorAction');
@@ -35,7 +36,8 @@ const RandomDiscardAction = require('./RandomDiscardAction');
 const ReadyAction = require('./ReadyAction');
 const RemoveFateAction = require('./RemoveFateAction');
 const ResolveAbilityAction = require('./ResolveAbilityAction');
-const ResolveRingAction = require('./ResolveRingAction');
+const ResolveConflictRingAction = require('./ResolveConflictRingAction');
+const ResolveElementAction = require('./ResolveElementAction');
 const ReturnRingAction = require('./ReturnRingAction');
 const ReturnToDeckAction = require('./ReturnToDeckAction');
 const ReturnToHandAction = require('./ReturnToHandAction');
@@ -52,6 +54,7 @@ const GameActions = {
     bow: (propertyFactory) => new BowAction(propertyFactory),
     break: (propertyFactory) => new BreakAction(propertyFactory),
     cardLastingEffect: (propertyFactory) => new LastingEffectCardAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetLocation, condition, until
+    createToken: (propertyFactory) => new CreateTokenAction(propertyFactory),
     delayedEffect: (propertyFactory) => new DelayedEffectAction(propertyFactory), // when, message, gameAction, handler
     discardCard: (propertyFactory) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory) => new DiscardFromPlayAction(propertyFactory),
@@ -92,7 +95,8 @@ const GameActions = {
     takeHonor: (propertyFactory) => new TransferHonorAction(propertyFactory), // amount = 1
     // ring actions
     placeFateOnRing: (propertyFactory) => new PlaceFateRingAction(propertyFactory), // amount = 1, origin
-    resolveRing: (propertyFactory) => new ResolveRingAction(propertyFactory), // resolveAsAttacker = true
+    resolveConflictRing: (propertyFactory) => new ResolveConflictRingAction(propertyFactory), // resolveAsAttacker = true
+    resolveRingEffect: (propertyFactory) => new ResolveElementAction(propertyFactory), // options = false
     returnRing: (propertyFactory) => new ReturnRingAction(propertyFactory),
     ringLastingEffect: (propertyFactory) => new LastingEffectRingAction(propertyFactory), // duration = 'untilEndOfConflict', effect, condition, until
     takeFateFromRing: (propertyFactory) => new TakeFateRingAction(propertyFactory), // amount = 1
