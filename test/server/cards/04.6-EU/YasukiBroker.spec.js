@@ -28,12 +28,12 @@ describe('Yasuki Broker', function() {
                     attackers: [this.yasukiBroker],
                     defenders: [this.borderRider]
                 });
-                expect(this.yasukiBroker).toBe(true);
-                expect(this.yasukiBroker).toBe(true);
-                expect(this.hidaGuardian).toBe(true);
-                expect(this.hidaGuardian).toBe(true);
-                expect(this.borderRider).toBe(false);
-                expect(this.borderRider).toBe(false);
+                expect(this.yasukiBroker.hasSincerity()).toBe(true);
+                expect(this.yasukiBroker.hasCourtesy()).toBe(true);
+                expect(this.hidaGuardian.hasSincerity()).toBe(true);
+                expect(this.hidaGuardian.hasCourtesy()).toBe(true);
+                expect(this.borderRider.hasSincerity()).toBe(false);
+                expect(this.borderRider.hasCourtesy()).toBe(false);
             });
 
             it('should not give all characters courtesy and sincerity when not participating', function() {
@@ -42,12 +42,12 @@ describe('Yasuki Broker', function() {
                     attackers: [this.hidaGuardian],
                     defenders: [this.borderRider]
                 });
-                expect(this.yasukiBroker).toBe(false);
-                expect(this.yasukiBroker).toBe(false);
-                expect(this.hidaGuardian).toBe(false);
-                expect(this.hidaGuardian).toBe(false);
-                expect(this.borderRider).toBe(false);
-                expect(this.borderRider).toBe(false);
+                expect(this.yasukiBroker.hasSincerity()).toBe(false);
+                expect(this.yasukiBroker.hasCourtesy()).toBe(false);
+                expect(this.hidaGuardian.hasSincerity()).toBe(false);
+                expect(this.hidaGuardian.hasCourtesy()).toBe(false);
+                expect(this.borderRider.hasSincerity()).toBe(false);
+                expect(this.borderRider.hasCourtesy()).toBe(false);
             });
         });
     });
