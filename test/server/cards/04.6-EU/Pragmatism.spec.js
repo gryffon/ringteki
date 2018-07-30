@@ -96,23 +96,6 @@ describe('Pragmatism', function() {
                     expect(this.player2).toBeAbleToSelect(this.keeperInitiate);
                 });
 
-                it('attached character can be honored is already dishonored', function () {
-                    this.borderlandsDefender.isDishonored = true;
-                    this.player2.clickCard(this.shamefulDisplay);
-                    expect(this.player2).toHavePrompt('Shameful Display');
-                    expect(this.player2).toBeAbleToSelect(this.borderlandsDefender);
-                    expect(this.player2).toBeAbleToSelect(this.bayushiLiar);
-                    this.player2.clickCard(this.borderlandsDefender);
-                    this.player2.clickCard(this.bayushiLiar);
-                    this.player2.clickPrompt('Done');
-                    this.player2.clickPrompt('Honor');
-                    expect(this.player2).toBeAbleToSelect(this.borderlandsDefender);
-                    this.player2.clickCard(this.borderlandsDefender);
-                    expect(this.borderlandsDefender.isHonored).toBe(false);
-                    expect(this.borderlandsDefender.isDishonored).toBe(false);
-                    expect(this.bayushiLiar.isDishonored).toBe(true);
-                });
-
                 it('attached character can be dishonored', function () {
                     this.player2.clickCard(this.shamefulDisplay);
                     expect(this.player2).toHavePrompt('Shameful Display');
@@ -123,23 +106,6 @@ describe('Pragmatism', function() {
                     this.player2.clickPrompt('Dishonor');
                     expect(this.player2).not.toBeAbleToSelect(this.borderlandsDefender);
                     expect(this.player2).toBeAbleToSelect(this.keeperInitiate);
-                });
-
-                it('attached character can be dishonored is already honored', function () {
-                    this.borderlandsDefender.isHonored = true;
-                    this.player2.clickCard(this.shamefulDisplay);
-                    expect(this.player2).toHavePrompt('Shameful Display');
-                    expect(this.player2).toBeAbleToSelect(this.borderlandsDefender);
-                    expect(this.player2).toBeAbleToSelect(this.bayushiLiar);
-                    this.player2.clickCard(this.borderlandsDefender);
-                    this.player2.clickCard(this.bayushiLiar);
-                    this.player2.clickPrompt('Done');
-                    this.player2.clickPrompt('Dishonor');
-                    expect(this.player2).toBeAbleToSelect(this.borderlandsDefender);
-                    this.player2.clickCard(this.borderlandsDefender);
-                    expect(this.borderlandsDefender.isDishonored).toBe(false);
-                    expect(this.borderlandsDefender.isHonored).toBe(false);
-                    expect(this.bayushiLiar.isHonored).toBe(true);
                 });
             });
         });

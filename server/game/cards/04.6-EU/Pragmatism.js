@@ -8,8 +8,8 @@ class Pragmatism extends DrawCard {
             effect: [
                 ability.effects.modifyMilitarySkill(1),
                 ability.effects.modifyPoliticalSkill(1),
-                ability.effects.cardCannot('becomeHonored'),
-                ability.effects.cardCannot('becomeDishonored')
+                ability.effects.cardCannot('honor'),
+                ability.effects.cardCannot('dishonor')
             ]
         });
     }
