@@ -7,21 +7,21 @@ describe('Pragmatism', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['borderlands-defender', 'keeper-initiate'],
-                        //hand: ['pragmatism']
+                        hand: ['pragmatism']
                     },
                     player2: {
                         inPlay: ['bayushi-liar']
                     }
                 });
-                
+
                 this.keeperInitiate = this.player1.findCardByName('keeper-initiate');
                 this.borderlandsDefender = this.player1.findCardByName('borderlands-defender');
-                //this.pragmatism = this.player1.playAttachment('pragmatism', 'borderlands-defender');
+                this.pragmatism = this.player1.playAttachment('pragmatism', 'borderlands-defender');
 
-                this.bayushiLiar = this.player2.findCardByName('bayushi-liar');                
+                this.bayushiLiar = this.player2.findCardByName('bayushi-liar');
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 1');
 
-                this.noMoreActions();               
+                this.noMoreActions();
 
                 this.initiateConflict({
                     type: 'political',
@@ -87,7 +87,7 @@ describe('Pragmatism', function() {
                 it('attached character can be honored', function () {
                     this.player2.clickCard(this.shamefulDisplay);
                     expect(this.player2).toHavePrompt('Shameful Display');
-                    expect(this.player2).not.toBeAbleToSelect(this.borderlandsDefender);                    
+                    expect(this.player2).not.toBeAbleToSelect(this.borderlandsDefender);
                     expect(this.player2).toBeAbleToSelect(this.keeperInitiate);
                     expect(this.player2).toBeAbleToSelect(this.bayushiLiar);
                     this.player2.clickPrompt('Done');
@@ -99,7 +99,7 @@ describe('Pragmatism', function() {
                 it('attached character can be dishonored', function () {
                     this.player2.clickCard(this.shamefulDisplay);
                     expect(this.player2).toHavePrompt('Shameful Display');
-                    expect(this.player2).not.toBeAbleToSelect(this.borderlandsDefender);                    
+                    expect(this.player2).not.toBeAbleToSelect(this.borderlandsDefender);
                     expect(this.player2).toBeAbleToSelect(this.keeperInitiate);
                     expect(this.player2).toBeAbleToSelect(this.bayushiLiar);
                     this.player2.clickPrompt('Done');
