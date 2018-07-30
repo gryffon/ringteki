@@ -11,9 +11,9 @@ class VoidFist extends DrawCard {
             condition: context => this.cardsPlayedThisConflict[context.player.uuid] >= 2,
             target: {
                 cardType: 'character',
-                cardCondtion: (card, context) =>
+                cardCondition: (card, context) =>
                     card.isParticipating() && this.game.currentConflict.getCharacters(context.player).some(myCard =>
-                        myCard.hasTrait('monk') && myCard.militarySkill > card.militarySkill
+                        myCard.hasTrait('monk') && myCard.militarySkill >= card.militarySkill
                     ),
                 gameAction: [ability.actions.bow(), ability.actions.sendHome()]
             },
