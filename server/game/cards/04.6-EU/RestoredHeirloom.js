@@ -11,7 +11,7 @@ class RestoredHeirloom extends DrawCard {
             location: ['hand','conflict discard pile'],
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: 'self'
             },
             handler: context => {
                 context.cancel();
@@ -22,6 +22,6 @@ class RestoredHeirloom extends DrawCard {
     }
 }
 
-RestoredHeirloom.id = 'restored-heirloom'; 
+RestoredHeirloom.id = 'restored-heirloom';
 
 module.exports = RestoredHeirloom;

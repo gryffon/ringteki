@@ -29,7 +29,7 @@ describe('Restored Heirloom', function() {
                 expect(this.player1).toBeAbleToSelect(this.heirloom);
             });
 
-            it('should put the heirloom into play for free', function(){
+            it('should put the heirloom into play for free', function() {
                 this.initiateConflict({
                     ring: 'water',
                     attackers: ['matsu-berserker'],
@@ -39,11 +39,11 @@ describe('Restored Heirloom', function() {
                 //break province prompt
                 this.player1.clickPrompt('no');
 
-                this.player1.clickCard(this.heirloom)
+                this.player1.clickCard(this.heirloom);
                 expect(this.player1).toBeAbleToSelect(this.berserker);
-                this.player1.clickCard(this.berserker)
-                expect(this.heirloom.location).toBe('play area')
-                expect(this.player1.fate).toBe(2)
+                this.player1.clickCard(this.berserker);
+                expect(this.heirloom.location).toBe('play area');
+                expect(this.player1.fate).toBe(2);
             });
         });
     });
