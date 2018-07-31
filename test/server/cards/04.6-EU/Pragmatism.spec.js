@@ -35,6 +35,7 @@ describe('Pragmatism', function() {
                 beforeEach(function() {
                     this.player1.player.honor = 6;
                     this.player2.player.honor = 5;
+                    this.game.checkGameState();
                 });
 
                 it('should increase attached characters military and political skills by 1', function () {
@@ -77,6 +78,7 @@ describe('Pragmatism', function() {
                 beforeEach(function() {
                     this.player1.player.honor = 5;
                     this.player2.player.honor = 6;
+                    this.game.checkGameState();
                 });
 
                 it('should increase attached characters military and political skills by 2', function () {
