@@ -5,19 +5,19 @@ class KitsuWarrior extends DrawCard {
         this.persistentEffect({
             match: this,
             effect: [
-                ability.effects.modifyMilitarySkill(() => this.TwiceMilClaimedRings()),
-                ability.effects.modifyPoliticalSkill(() => this.TwicePolClaimedRings())
+                ability.effects.modifyMilitarySkill(() => this.twiceMilClaimedRings()),
+                ability.effects.modifyPoliticalSkill(() => this.twicePolClaimedRings())
             ]
         });
     }
 
-    TwiceMilClaimedRings() {
-        let MilclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() & ring.isConflictType('military'));
-        return 2 * MilclaimedRings.length;
+    twiceMilClaimedRings() {
+        let milclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() & ring.isConflictType('military'));
+        return 2 * milclaimedRings.length;
     }
-    TwicePolClaimedRings() {
-        let PolclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() & ring.isConflictType('political'));
-        return 2 * PolclaimedRings.length;
+    twicePolClaimedRings() {
+        let polclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() & ring.isConflictType('political'));
+        return 2 * polclaimedRings.length;
     }
 }
 
