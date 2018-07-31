@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class UnleashTheDjinn extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
         this.action({
             title: 'Make all participating characters 3/3',
             condition: () => this.game.isDuringConflict(),
