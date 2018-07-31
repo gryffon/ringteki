@@ -6,10 +6,12 @@ describe('Pragmatism', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
+                        honor: 5,
                         inPlay: ['borderlands-defender', 'keeper-initiate'],
                         hand: ['pragmatism']
                     },
                     player2: {
+                        honor: 5,
                         inPlay: ['bayushi-liar']
                     }
                 });
@@ -33,9 +35,7 @@ describe('Pragmatism', function() {
 
             describe('when controller is more honorable than the opponent', function() {
                 beforeEach(function() {
-                    this.player1.player.honor = 6;
-                    this.player2.player.honor = 5;
-                    this.game.checkGameState();
+                    this.player1.player.modifyHonor(1);
                 });
 
                 it('should increase attached characters military and political skills by 1', function () {
@@ -76,9 +76,7 @@ describe('Pragmatism', function() {
 
             describe('when controller is less honorable than the opponent', function() {
                 beforeEach(function() {
-                    this.player1.player.honor = 5;
-                    this.player2.player.honor = 6;
-                    this.game.checkGameState();
+                    this.player1.player.modifyHonor(-1);
                 });
 
                 it('should increase attached characters military and political skills by 2', function () {

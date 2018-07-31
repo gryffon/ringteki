@@ -742,8 +742,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Returns true if this player is l
-     * ess honorable than its opponent.  Returns false if
+     * Returns true if this player is less honorable than its opponent.  Returns false if
      * the player does not have an opponent.
      */
     isLessHonorableThanOpponent() {
