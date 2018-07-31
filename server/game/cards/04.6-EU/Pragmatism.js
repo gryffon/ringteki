@@ -1,4 +1,3 @@
-
 const DrawCard = require('../../drawcard.js');
 
 class Pragmatism extends DrawCard {
@@ -12,6 +11,13 @@ class Pragmatism extends DrawCard {
                 ability.effects.cardCannot('dishonor')
             ]
         });
+    }
+
+    canAttach(card, context) {
+        if(card.controller !== context.player) {
+            return false;
+        }
+        return super.canAttach(card, context);
     }
 }
 
