@@ -6,7 +6,8 @@ class ReclusiveZokujin extends DrawCard {
             condition: () => this.game.rings.earth.contested,
             match: this,
             effect: ability.effects.immune({
-                restricts: 'opponentsCardEffects'
+                restricts: 'opponentsCardEffects',
+                source: this
             })
         });
     }
