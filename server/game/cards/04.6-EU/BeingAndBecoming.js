@@ -13,10 +13,10 @@ class BeingAndBecoming extends DrawCard {
                     origin: context.ring,
                     amount: context.ring.fate,
                     target: context.source.parent,
-                    message: '{0} uses {1} to move all fate from {2} to {3}',
-                    messageArgs: context => [context.player, context.source, context.ring, context.source.parent]
                 }))
-            }
+            },
+            effect: 'move {1} fate from {2} to {3}',
+            effectArgs: context => [context.ring.fate, context.ring, context.source.parent]
         });
     }
 
