@@ -4,7 +4,7 @@ class WebOfLies extends ProvinceCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.persistentEffect({
             match: this,
-            effect: ability.effects.modifyProvinceStrength(context => -(this.getStrength() - (context.player.showBid * 2)))
+            effect: ability.effects.modifyProvinceStrength(() => this.controller.showBid * 2)
         });
     }
 }
