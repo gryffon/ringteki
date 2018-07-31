@@ -30,7 +30,7 @@ describe('Roving Michibiku', function () {
                 expect(this.player1).toBeAbleToSelect(this.roving);
             });
 
-            it('should trigger when the roving michibiku wins a conflict as the defender', function () {
+            it('should not trigger when the roving michibiku wins a conflict as the defender', function () {
                 this.player1.clickPrompt('Pass Conflict');
                 this.player1.clickPrompt('Yes');
                 this.noMoreActions();
@@ -40,8 +40,8 @@ describe('Roving Michibiku', function () {
                     defenders: [this.roving]
                 });
                 this.noMoreActions();
-                expect(this.player1).toHavePrompt('Triggered Abilities');
-                expect(this.player1).toBeAbleToSelect(this.roving);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).not.toBeAbleToSelect(this.roving);
             });
 
             it('should not trigger when the roving michibiku loses a conflict', function () {

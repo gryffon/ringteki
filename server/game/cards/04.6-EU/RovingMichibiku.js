@@ -5,15 +5,14 @@ class RovingMichibiku extends DrawCard {
         this.reaction({
             title: 'Take a ring from opponent\'s claimed pool',
             when: {
-                afterConflict: (event, context) => context.source.isParticipating() && event.conflict.winner === context.player
+                afterConflict: (event, context) => context.source.isAttacking() && event.conflict.winner === context.player
             },
             gameAction: ability.actions.takeRing(context => ({
-                takeFate: true,
                 promptForSelect: {
                     activePromptTitle: 'Choose a ring to take',
                     ringCondition: ring => ring.claimedBy === context.player.opponent.name,
                     message: '{0} takes {1}',
-                    messageArgs: card => [context.player, card]
+                    messageArgs: ring => [context.player, ring]
                 }
             }))
         });
