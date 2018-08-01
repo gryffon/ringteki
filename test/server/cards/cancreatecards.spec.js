@@ -144,6 +144,7 @@ const mockContext = {
         discardCard: { getCost: () => 1 },
         returnRing: []
     },
+    ring: { fate: 0 },
     targets: { cardToShuffle: {} },
     target: {
         attachments: { size: () => 1 }

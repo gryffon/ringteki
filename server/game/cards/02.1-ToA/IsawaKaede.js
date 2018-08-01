@@ -4,7 +4,7 @@ class IsawaKaede extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             match: this,
-            effect: ability.effects.immuneTo({
+            effect: ability.effects.immunity({
                 restricts: 'opponentsRingEffects',
                 source: this
             })
