@@ -41,7 +41,6 @@ describe('Roving Michibiku', function () {
                 });
                 this.noMoreActions();
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
-                expect(this.player1).not.toBeAbleToSelect(this.roving);
             });
 
             it('should not trigger when the roving michibiku loses a conflict', function () {

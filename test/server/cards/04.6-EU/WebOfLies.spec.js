@@ -8,7 +8,7 @@ describe('Web of Lies', function() {
                         inPlay: ['borderlands-defender']
                     },
                     player2: {
-                        inPlay: [],
+                        role: 'seeker-of-air',
                         hand: ['maze-of-illusion'],
                         provinces: ['web-of-lies']
                     }

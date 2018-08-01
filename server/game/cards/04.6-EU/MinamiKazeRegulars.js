@@ -5,7 +5,7 @@ class MinamiKazeRegulars extends DrawCard {
         this.reaction({
             title: 'Gain a fate and draw a card',
             when: {
-                afterConflict: (event, context) => 
+                afterConflict: (event, context) =>
                     event.conflict.winner === context.player &&
                     context.source.isParticipating() &&
                     context.game.currentConflict.hasMoreParticipants(context.player)
