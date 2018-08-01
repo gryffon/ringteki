@@ -18,6 +18,6 @@ class HisuMoriToride extends StrongholdCard {
     }
 }
 
-HisuMoriToride.id = 'hisu-mori-toride-1';
+HisuMoriToride.id = 'hisu-mori-toride-elements-unbound';
 
 module.exports = HisuMoriToride;
