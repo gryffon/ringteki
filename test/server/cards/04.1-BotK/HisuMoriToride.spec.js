@@ -5,7 +5,7 @@ describe('Hisu Mori Toride', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        stronghold: 'hisu-mori-toride',
+                        stronghold: 'hisu-mori-toride-lion',
                         inPlay: ['matsu-berserker', 'matsu-seventh-legion'],
                         hand: ['fine-katana']
                     }
@@ -29,7 +29,7 @@ describe('Hisu Mori Toride', function() {
                 this.player1.playAttachment('fine-katana', 'matsu-berserker');
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
-                this.hisuMoriToride = this.player1.clickCard('hisu-mori-toride');
+                this.hisuMoriToride = this.player1.clickCard('hisu-mori-toride-lion');
                 expect(this.player1).toHavePrompt('Hisu Mori Toride');
                 expect(this.player1).toBeAbleToSelect('matsu-berserker');
                 expect(this.player1).toBeAbleToSelect('matsu-seventh-legion');
@@ -44,7 +44,7 @@ describe('Hisu Mori Toride', function() {
                 this.player1.playAttachment('fine-katana', 'matsu-berserker');
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
-                this.player1.clickCard('hisu-mori-toride');
+                this.player1.clickCard('hisu-mori-toride-lion');
                 this.matsuBerserker = this.player1.clickCard('matsu-berserker');
                 expect(this.player1.player.getConflictOpportunities()).toBe(2);
                 expect(this.player1.player.getConflictOpportunities('military')).toBe(1);

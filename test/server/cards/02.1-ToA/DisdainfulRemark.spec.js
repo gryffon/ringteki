@@ -49,7 +49,7 @@ describe('Disdainful Remark', function () {
 
                 it('should increase the province\'s strength by the opponent\'s hand size', function () {
                     // Pilgrimage 5 PS, card ability +3 from opponent's hand size
-                    expect(this.game.currentConflict.conflictProvince.getStrength()).toBe(this.game.currentConflict.conflictProvince.cardData.strength + this.player1.hand.length);
+                    expect(this.game.currentConflict.conflictProvince.getStrength()).toBe(parseInt(this.game.currentConflict.conflictProvince.cardData.strength) + this.player1.hand.length);
                 });
             });
         });

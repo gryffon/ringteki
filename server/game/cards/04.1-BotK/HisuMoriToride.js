@@ -17,6 +17,6 @@ class HisuMoriToride extends StrongholdCard {
     }
 }
 
-HisuMoriToride.id = 'hisu-mori-toride';
+HisuMoriToride.id = 'hisu-mori-toride-lion';
 
 module.exports = HisuMoriToride;

@@ -107,7 +107,6 @@ describe('Menacing Iron Warrior', function() {
                 it('should not prevent characters in future conflicts from triggering abilities', function() {
                     this.player1.pass();
                     this.player2.pass();
-                    this.player1.clickPrompt('No');
                     this.player1.clickPrompt('Take 1 honor from opponent');
                     this.kakitaKaezin.ready();
                     this.kakitaYoshi.ready();
