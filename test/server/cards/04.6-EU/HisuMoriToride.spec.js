@@ -5,7 +5,7 @@ describe('Hisu Mori Toride', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        stronghold: 'hisu-mori-toride-elements-unbound',
+                        stronghold: 'hisu-mori-toride-unicorn',
                         inPlay: ['aggressive-moto', 'border-rider', 'ide-trader']
                     },
                     player2: {
@@ -43,7 +43,7 @@ describe('Hisu Mori Toride', function() {
                 });
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
-                this.hisuMoriToride = this.player1.clickCard('hisu-mori-toride-elements-unbound');
+                this.hisuMoriToride = this.player1.clickCard('hisu-mori-toride-unicorn');
                 expect(this.player1).toHavePrompt('Select card to sacrifice');
                 expect(this.player1).toBeAbleToSelect(this.aggressiveMoto);
                 expect(this.player1).toBeAbleToSelect(this.borderRider);
@@ -64,7 +64,7 @@ describe('Hisu Mori Toride', function() {
                 });
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
-                this.player1.clickCard('hisu-mori-toride-elements-unbound');
+                this.player1.clickCard('hisu-mori-toride-unicorn');
                 expect(this.player1).toHavePrompt('Select card to sacrifice');
                 this.player1.clickCard(this.aggressiveMoto);
                 expect(this.player1.player.getConflictOpportunities()).toBe(2);
