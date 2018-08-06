@@ -32,7 +32,7 @@ class ProvinceCard extends BaseCard {
         if(this.anyEffect('setBaseProvinceStrength')) {
             return this.mostRecentEffect('setBaseProvinceStrength');
         }
-        return this.sumEffects('modifyBaseProvinceStrength') + this.cardData.strength;
+        return this.sumEffects('modifyBaseProvinceStrength') + (parseInt(this.cardData.strength) ? parseInt(this.cardData.strength) : 0);
     }
 
     getDynastyOrStrongholdCardModifier() {
