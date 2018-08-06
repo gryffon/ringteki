@@ -12,7 +12,7 @@ class BeingAndBecoming extends DrawCard {
                 gameAction: ability.actions.placeFate(context => ({
                     origin: context.ring,
                     amount: context.ring.fate,
-                    target: context.source.parent,
+                    target: context.source.parent
                 }))
             },
             effect: 'move {1} fate from {2} to {3}',

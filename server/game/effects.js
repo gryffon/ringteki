@@ -67,7 +67,7 @@ const Effects = {
         },
         unapply: (card, context, playAction) => card.abilities.playActions = card.abilities.playActions.filter(action => action !== playAction)
     }),
-    immuneTo: (properties) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(properties)),
+    immunity: (properties) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(properties)),
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static('increaseLimitOnAbilities', amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible('modifyBaseMilitarySkill', value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible('modifyBasePoliticalSkill', value),

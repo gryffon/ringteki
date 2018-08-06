@@ -29,7 +29,7 @@ class Ofushukai extends DrawCard {
         if(card.controller !== context.player) {
             return false;
         }
-        return card.isUnique() && card.getPrintedFaction() === 'phoenix' ? super.canAttach(card, context) : false;
+        return card.isUnique() && card.isFaction('phoenix') ? super.canAttach(card, context) : false;
     }
 }
 
