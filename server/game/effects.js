@@ -67,10 +67,11 @@ const Effects = {
         },
         unapply: (card, context, playAction) => card.abilities.playActions = card.abilities.playActions.filter(action => action !== playAction)
     }),
-    immuneTo: (properties) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(properties)),
+    immunity: (properties) => EffectBuilder.card.static('abilityRestrictions', new CannotRestriction(properties)),
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static('increaseLimitOnAbilities', amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible('modifyBaseMilitarySkill', value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible('modifyBasePoliticalSkill', value),
+    modifyBaseProvinceStrength: (value) => EffectBuilder.card.flexible('modifyBaseProvinceStrength', value),
     modifyBothSkills: (value) => EffectBuilder.card.flexible('modifyBothSkills', value),
     modifyGlory: (value) => EffectBuilder.card.flexible('modifyGlory', value),
     modifyMilitarySkill: (value) => EffectBuilder.card.flexible('modifyMilitarySkill', value),
@@ -78,11 +79,14 @@ const Effects = {
     modifyPoliticalSkill: (value) => EffectBuilder.card.flexible('modifyPoliticalSkill', value),
     modifyPoliticalSkillMultiplier: (value) => EffectBuilder.card.flexible('modifyPoliticalSkillMultiplier', value),
     modifyProvinceStrength: (value) => EffectBuilder.card.flexible('modifyProvinceStrength', value),
+    modifyProvinceStrengthMultiplier: (value) => EffectBuilder.card.flexible('modifyProvinceStrengthMultiplier', value),
     setBaseMilitarySkill: (value) => EffectBuilder.card.static('setBaseMilitarySkill', value),
     setBasePoliticalSkill: (value) => EffectBuilder.card.static('setBasePoliticalSkill', value),
+    setBaseProvinceStrength: (value) => EffectBuilder.card.static('setBaseProvinceStrength', value),
     setDash: (type) => EffectBuilder.card.static('setDash', type),
     setMilitarySkill: (value) => EffectBuilder.card.static('setMilitarySkill', value),
     setPoliticalSkill: (value) => EffectBuilder.card.static('setPoliticalSkill', value),
+    setProvinceStrength: (value) => EffectBuilder.card.static('setProvinceStrength', value),
     takeControl: (player) => EffectBuilder.card.static('takeControl', player),
     terminalCondition: (properties) => EffectBuilder.card.detached('terminalCondition', {
         apply: (card, context) => {
@@ -102,6 +106,7 @@ const Effects = {
         apply: player => player.addConflictOpportunity(type),
         unapply: () => true
     }),
+    alternateFatePool: (match) => EffectBuilder.player.static('alternateFatePool', match),
     canPlayFromOwn: (location) => EffectBuilder.player.detached('canPlayFromOwn', {
         apply: (player) => player.addPlayableLocation('play', player, location),
         unapply: (player, context, location) => player.removePlayableLocation(location)

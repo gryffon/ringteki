@@ -19,7 +19,7 @@ describe('Yoritomo', function() {
 
                 this.yoritomo = this.player1.findCardByName('yoritomo');
                 this.yurt = this.player1.placeCardInProvince('windswept-yurt', 'province 1');
-                this.baseSkill = this.yoritomo.cardData.military;
+                this.baseSkill = this.yoritomo.printedMilitarySkill;
                 this.initialFate = this.player1.fate;
             });
 

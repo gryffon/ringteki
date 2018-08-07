@@ -72,20 +72,20 @@ describe('Smoke', function () {
                 });
 
                 it('should reduce the military skill of all non-unique participants by 2', function () {
-                    expect(this.rider.getMilitarySkill()).toBe(this.rider.cardData.military - 2);
-                    expect(this.scout.getMilitarySkill()).toBe(this.scout.cardData.military - 2);
+                    expect(this.rider.getMilitarySkill()).toBe(parseInt(this.rider.cardData.military - 2));
+                    expect(this.scout.getMilitarySkill()).toBe(parseInt(this.scout.cardData.military - 2));
                 });
 
                 it('should not effect the military skill of all unique participants', function () {
-                    expect(this.juro.getMilitarySkill()).toBe(this.juro.cardData.military);
-                    expect(this.tatsuo.getMilitarySkill()).toBe(this.tatsuo.cardData.military);
+                    expect(this.juro.getMilitarySkill()).toBe(parseInt(this.juro.cardData.military));
+                    expect(this.tatsuo.getMilitarySkill()).toBe(parseInt(this.tatsuo.cardData.military));
                 });
 
                 it('should last until the end of the conflict', function () {
                     this.noMoreActions();
                     this.player1.clickPrompt('Don\'t Resolve');
-                    expect(this.rider.getMilitarySkill()).toBe(this.rider.cardData.military);
-                    expect(this.scout.getMilitarySkill()).toBe(this.scout.cardData.military);
+                    expect(this.rider.getMilitarySkill()).toBe(parseInt(this.rider.cardData.military));
+                    expect(this.scout.getMilitarySkill()).toBe(parseInt(this.scout.cardData.military));
                 });
             });
         });

@@ -5,11 +5,11 @@ class NezumiInfiltrator extends DrawCard {
         this.persistentEffect({
             match: this,
             effect: [
-                ability.effects.immuneTo({
+                ability.effects.immunity({
                     restricts: 'maho',
                     source: this
                 }),
-                ability.effects.immuneTo({
+                ability.effects.immunity({
                     restricts: 'shadowlands',
                     source: this
                 })]

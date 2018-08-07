@@ -28,8 +28,8 @@ class DrawCard extends BaseCard {
         this.attachments = _([]);
         this.parent = null;
 
-        this.printedMilitarySkill = cardData.military;
-        this.printedPoliticalSkill = cardData.political;
+        this.printedMilitarySkill = parseInt(cardData.military);
+        this.printedPoliticalSkill = parseInt(cardData.political);
         this.fate = 0;
         this.bowed = false;
         this.covert = false;
@@ -162,14 +162,16 @@ class DrawCard extends BaseCard {
     }
 
     hasDash(type = '') {
+        if(type === 'glory') {
+            return false;
+        }
         let dashEffects = this.getEffects('setDash');
         if(type === 'military') {
-            return this.printedMilitarySkill === undefined || this.printedMilitarySkill === null || dashEffects.includes(type);
+            return Number.isNaN(this.printedMilitarySkill) || dashEffects.includes(type);
         } else if(type === 'political') {
-            return this.printedPoliticalSkill === undefined || this.printedPoliticalSkill === null || dashEffects.includes(type);
+            return Number.isNaN(this.printedPoliticalSkill) || dashEffects.includes(type);
         }
-        return this.printedMilitarySkill === undefined || this.printedMilitarySkill === null ||
-               this.printedPoliticalSkill === undefined || this.printedPoliticalSkill === null || dashEffects.length > 0;
+        return Number.isNaN(this.printedMilitarySkill) || Number.isNaN(this.printedPoliticalSkill) || dashEffects.length > 0;
     }
 
     getSkill(type) {

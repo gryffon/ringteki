@@ -1,6 +1,8 @@
 const _ = require('underscore');
 const ChooseCost = require('./costs/choosecost.js');
 const CostBuilders = require('./costs/CostBuilders.js');
+const ReduceableFateCost = require('./costs/ReduceableFateCost');
+const TargetDependentFateCost = require('./costs/TargetDependentFateCost');
 
 const Costs = {
     /**
@@ -147,41 +149,11 @@ const Costs = {
      * reducer effects the play has activated. Upon playing the card, all
      * matching reducer effects will expire, if applicable.
      */
-    payReduceableFateCost: function(playingType) {
-        return {
-            canPay: function(context) {
-                let reducedCost = context.player.getReducedCost(playingType, context.source);
-                return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
-            },
-            pay: function(context) {
-                context.costs.fate = context.player.getReducedCost(playingType, context.source);
-                context.player.markUsedReducers(playingType, context.source);
-                context.player.fate -= context.costs.fate;
-            },
-            canIgnoreForTargeting: true
-        };
-    },
+    payReduceableFateCost: playingType => new ReduceableFateCost(playingType),
     /**
      * Cost that is dependent on context.targets[targetName]
      */
-    payTargetDependentFateCost: function(targetName, playingType) {
-        return {
-            dependsOn: targetName,
-            canPay: function(context) {
-                if(!context.targets[targetName]) {
-                    // we don't need to check now because this will be checked again once targeting is done
-                    return true;
-                }
-                let reducedCost = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
-                return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
-            },
-            pay: function(context) {
-                context.costs.targetDependentFate = context.player.getReducedCost(playingType, context.source, context.targets[targetName]);
-                context.player.markUsedReducers(playingType, context.source, context.targets[targetName]);
-                context.player.fate -= context.costs.targetDependentFate;
-            }
-        };
-    },
+    payTargetDependentFateCost: (targetName, playingType) => new TargetDependentFateCost(playingType, targetName),
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of fate.
      */
@@ -195,6 +167,50 @@ const Costs = {
      */
     payFateToRing: (amount = 1, ringCondition = ring => ring.isUnclaimed()) => CostBuilders.payFateToRing(amount, ringCondition),
     giveFateToOpponent: (amount = 1) => CostBuilders.giveFateToOpponent(amount),
+    returnRings: function () {
+        return {
+            canPay: function(context) {
+                return Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name);
+            },
+            resolve: function(context, result) {
+                let chosenRings = [];
+                let promptPlayer = () => {
+                    let buttons = [];
+                    if(chosenRings.length > 0) {
+                        buttons.push({ text: 'Done', arg: 'done' });
+                    }
+                    if(result.canCancel) {
+                        buttons.push({ text: 'Cancel', arg: 'cancel'});
+                    }
+                    context.game.promptForRingSelect(context.player, {
+                        activePromptTitle: 'Choose a ring to return',
+                        context: context,
+                        buttons: buttons,
+                        ringCondition: ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring),
+                        onSelect: (player, ring) => {
+                            chosenRings.push(ring);
+                            if(Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring))) {
+                                promptPlayer();
+                            } else {
+                                context.costs.returnRing = chosenRings;
+                            }
+                            return true;
+                        },
+                        onMenuCommand: (player, arg) => {
+                            if(arg === 'done') {
+                                context.costs.returnRing = chosenRings;
+                                return true;
+                            }
+                        },
+                        onCancel: () => context.costs.returnRing = []
+                    });
+                };
+                promptPlayer();
+            },
+            payEvent: context => context.game.actions.returnRing({ target: context.costs.returnRing }).getEventArray(context),
+            promptsPlayer: true
+        };
+    },
     chooseFate: function () {
         return {
             canPay: function() {
