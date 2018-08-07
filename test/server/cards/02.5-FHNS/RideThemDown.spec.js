@@ -40,7 +40,7 @@ describe('Ride Them Down', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard('ride-them-down', 'hand');
-                expect(this.game.currentConflict.conflictProvince.getStrength()).toBe(this.game.currentConflict.conflictProvince.cardData.strength);
+                expect(this.game.currentConflict.conflictProvince.getStrength()).toBe(parseInt(this.game.currentConflict.conflictProvince.cardData.strength));
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
