@@ -11,6 +11,7 @@ class ReclusiveZokujin extends DrawCard {
                     restricts: 'opponentsCardEffects',
                     source: this
                 })
+            ]
         });
     }
 }
