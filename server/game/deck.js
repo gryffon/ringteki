@@ -26,7 +26,7 @@ class Deck {
 
         //conflict
         this.eachRepeatedCard(this.data.conflictCards, cardData => {
-            if(['conflict'].includes(cardData.side)) {
+            if(cardData && ['conflict'].includes(cardData.side)) {
                 var conflictCard = this.createCard(DrawCard, player, cardData);
                 conflictCard.location = 'conflict deck';
                 result.conflictCards.push(conflictCard);
@@ -35,7 +35,7 @@ class Deck {
 
         //dynasty
         this.eachRepeatedCard(this.data.dynastyCards, cardData => {
-            if(['dynasty'].includes(cardData.side)) {
+            if(cardData && ['dynasty'].includes(cardData.side)) {
                 var dynastyCard = this.createCard(DrawCard, player, cardData);
                 dynastyCard.location = 'dynasty deck';
                 result.dynastyCards.push(dynastyCard);
@@ -43,7 +43,7 @@ class Deck {
         });
 
         this.eachRepeatedCard(this.data.provinceCards, cardData => {
-            if(cardData.type === 'province') {
+            if(cardData && cardData.type === 'province') {
                 var provinceCard = this.createCard(ProvinceCard, player, cardData);
                 provinceCard.location = 'province deck';
                 result.provinceCards.push(provinceCard);
@@ -51,7 +51,7 @@ class Deck {
         });
 
         this.eachRepeatedCard(this.data.stronghold, cardData => {
-            if(cardData.type === 'stronghold') {
+            if(cardData && cardData.type === 'stronghold') {
                 var strongholdCard = this.createCard(StrongholdCard, player, cardData);
                 strongholdCard.location = '';
                 result.stronghold = strongholdCard;
@@ -59,7 +59,7 @@ class Deck {
         });
 
         this.eachRepeatedCard(this.data.role, cardData => {
-            if(cardData.type === 'role') {
+            if(cardData && cardData.type === 'role') {
                 var roleCard = this.createCard(RoleCard, player, cardData);
                 result.role = roleCard;
             }
