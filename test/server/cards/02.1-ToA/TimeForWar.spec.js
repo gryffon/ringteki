@@ -1,4 +1,4 @@
-fdescribe('Time For War', function() {
+describe('Time For War', function() {
     integration(function() {
         describe('Time For War\'s ability', function() {
             beforeEach(function() {
