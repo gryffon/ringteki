@@ -10,13 +10,15 @@ class TimeForWar extends DrawCard {
             targets: {
                 weapon: {
                     cardType: 'attachment',
-                    cardCondition: (card, context) => card.controller === context.player && card.costLessThan(4) && card.hasTrait('weapon') &&
-                                                      ['conflict discard pile', 'hand'].includes(card.location)
+                    location: ['conflict discard pile', 'hand'],
+                    controller: 'self',
+                    cardCondition: card => card.costLessThan(4) && card.hasTrait('weapon')
                 },
                 bushi: {
                     dependsOn: 'weapon',
                     cardType: 'character',
-                    cardCondition: (card, context) => card.controller === context.player && card.hasTrait('bushi'),
+                    controller: 'self',
+                    cardCondition: card => card.hasTrait('bushi'),
                     gameAction: ability.actions.attach(context => ({ attachment: context.targets.weapon }))
                 }
             }
