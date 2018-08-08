@@ -4,14 +4,14 @@ const moment = require('moment');
 
 const RestrictedList = require('./RestrictedList');
 
-const worldsRole = {
-    crab: 'keeper-of-earth',
-    crane: 'seeker-of-air',
-    dragon: 'seeker-of-fire',
-    lion: 'keeper-of-fire',
-    phoenix: 'keeper-of-water',
-    scorpion: 'seeker-of-void',
-    unicorn: 'keeper-of-void'
+const officialRoles = {
+    crab: ['keeper-of-earth', 'seeker-of-earth'],
+    crane: ['seeker-of-air', 'keeper-of-air'],
+    dragon: ['seeker-of-fire', 'keeper-of-void'],
+    lion: ['keeper-of-fire', 'seeker-of-void'],
+    phoenix: ['keeper-of-water', 'seeker-of-air'],
+    scorpion: ['seeker-of-void', 'keeper-of-earth'],
+    unicorn: ['keeper-of-void', 'keeper-of-fire']
 };
 
 const openRoles = [
@@ -211,7 +211,7 @@ class DeckValidator {
         return {
             basicRules: errors.length === 0,
             noUnreleasedCards: unreleasedCards.length === 0,
-            officialRole: !role || role.id === worldsRole[deck.faction.value] || openRoles.includes(role.id),
+            officialRole: !role || officialRoles[deck.faction.value].includes(role.id) || openRoles.includes(role.id),
             faqRestrictedList: restrictedResult.valid,
             faqVersion: restrictedResult.version,
             provinceCount: provinceCount,

@@ -23,6 +23,19 @@ describe('Hisu Mori Toride', function() {
             });
 
 
+            it('should not trigger when winning a political conflict', function() {
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.borderRider],
+                    defenders: []
+                });
+                this.noMoreActions();
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).toHavePrompt('Air Ring');
+                this.player1.clickPrompt('Don\'t resolve');
+            });
+
+
             it('should not trigger when winning a conflict with the same of less participants', function() {
                 this.initiateConflict({
                     type: 'military',

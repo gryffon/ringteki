@@ -5,7 +5,14 @@ class ForceOfTheRiver extends DrawCard {
         this.action({
             title: 'Create spirits from facedown dynasty cards',
             condition: () => this.game.isDuringConflict(),
-            effect: 'summon Spirits of the River!',
+            effect: 'summon {1}!',
+            effectArgs: {
+                id: 'spirit-of-the-river',
+                label: 'Sprits of the River',
+                name: 'Sprits of the River',
+                facedown: false,
+                type: 'character'
+            },
             gameAction: ability.actions.createToken(context => ({
                 target: ['province 1', 'province 2', 'province 3', 'province 4'].map(
                     location => context.player.getDynastyCardInProvince(location)

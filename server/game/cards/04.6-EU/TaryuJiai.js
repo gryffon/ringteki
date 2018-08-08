@@ -21,7 +21,7 @@ class TaryuJiai extends DrawCard {
                     gameAction: ability.actions.duel(context => ({
                         type: 'glory',
                         challenger: context.targets.myShugenja,
-                        resolutionHandler: winner => winner && this.resolveRingEffect(winner.controller, context, ability)
+                        resolutionHandler: winner => winner && this.resolveRingEffect(winner.controller)
                     }))
                 }
             },
@@ -30,12 +30,12 @@ class TaryuJiai extends DrawCard {
         });
     }
 
-    resolveRingEffect(player, context, ability) {
+    resolveRingEffect(player) {
         this.game.promptForRingSelect(player, {
             activePromptTitle: 'Choose a ring effect to resolve',
             onSelect: (player, ring) => {
                 this.game.addMessage('{0} chooses to resolve {1}\'s effect', player, ring);
-                this.game.openThenEventWindow(ability.actions.resolveRingEffect().getEvent(ring, context));
+                this.game.openThenEventWindow(this.game.actions.resolveRingEffect().getEvent(ring, this.game.getFrameworkContext(player)));
                 return true;
             }
         });

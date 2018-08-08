@@ -6,7 +6,7 @@ class HisuMoriToride extends StrongholdCard {
         this.reaction({
             title: 'Gain additional military conflict',
             when: {
-                afterConflict: (event, context) => event.conflict.winner === context.player &&
+                afterConflict: (event, context) => event.conflict.winner === context.player && event.conflict.conflictType === 'military' &&
                     context.game.currentConflict.hasMoreParticipants(context.player)
             },
             cost: [ability.costs.bowSelf(), ability.costs.sacrifice(card => card.hasTrait('cavalry'))],
