@@ -62,6 +62,28 @@ describe('Asako Azunami', function() {
                 expect(this.player1).toBeAbleToSelect(this.shibaTsukune);
             });
 
+            it('should allow the player to cancel the prompts', function() {
+                this.initiateConflict({
+                    ring: 'water',
+                    attackers: ['asako-azunami'],
+                    defenders: []
+                });
+                this.noMoreActions();
+                // Break Province prompt
+                this.player1.clickPrompt('No');
+                this.player1.clickCard(this.asakoAzunami);
+                expect(this.player1).toHavePrompt('Choose a character to bow');
+                expect(this.player1).toBeAbleToSelect(this.seppunGuardsman);
+                expect(this.player1).toBeAbleToSelect('isawa-kaede');
+                this.player1.clickPrompt('Cancel Prompt');
+                this.player1.clickCard(this.seppunGuardsman);
+                expect(this.player1).toHavePrompt('Choose a character to ready');
+                expect(this.seppunGuardsman.bowed).toBe(false);
+                expect(this.player1).toBeAbleToSelect(this.shibaTsukune);
+                this.player1.clickPrompt('Cancel Prompt');
+                expect(this.player1).toHavePrompt('Action Window');
+            });
+
             it('should bow and ready the selected targets', function() {
                 this.initiateConflict({
                     ring: 'water',
