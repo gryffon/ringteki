@@ -75,12 +75,12 @@ describe('Asako Azunami', function() {
                 expect(this.player1).toHavePrompt('Choose a character to bow');
                 expect(this.player1).toBeAbleToSelect(this.seppunGuardsman);
                 expect(this.player1).toBeAbleToSelect('isawa-kaede');
-                this.player1.clickPrompt('Cancel Prompt');
+                this.player1.clickPrompt('Cancel');
                 this.player1.clickCard(this.seppunGuardsman);
                 expect(this.player1).toHavePrompt('Choose a character to ready');
                 expect(this.seppunGuardsman.bowed).toBe(false);
                 expect(this.player1).toBeAbleToSelect(this.shibaTsukune);
-                this.player1.clickPrompt('Cancel Prompt');
+                this.player1.clickPrompt('Cancel');
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
