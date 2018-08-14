@@ -33,10 +33,6 @@ describe('Agasha Shunsen', function () {
                 this.player1.clickCard('agasha-shunsen');
                 this.player1.clickPrompt('Cancel');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
-                this.player1.clickCard('agasha-shunsen');
-                this.player1.clickCard('agasha-shunsen');
-                this.player1.clickPrompt('Cancel');
-                expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
             it('should prompt the player to return a ring', function () {
