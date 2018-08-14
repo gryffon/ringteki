@@ -202,7 +202,10 @@ const Costs = {
                                 return true;
                             }
                         },
-                        onCancel: () => context.costs.returnRing = []
+                        onCancel: () => { 
+                            context.costs.returnRing = [];
+                            result.cancelled = true;
+                         }
                     });
                 };
                 promptPlayer();

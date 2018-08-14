@@ -1,7 +1,7 @@
-describe('Agasha Shunsen', function() {
-    integration(function() {
-        describe('Agasha Shunsen\'s ability', function() {
-            beforeEach(function() {
+describe('Agasha Shunsen', function () {
+    integration(function () {
+        describe('Agasha Shunsen\'s ability', function () {
+            beforeEach(function () {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
@@ -12,7 +12,6 @@ describe('Agasha Shunsen', function() {
                         inPlay: []
                     }
                 });
-                this.player1.claimRing('earth');
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: ['agasha-shunsen'],
@@ -21,7 +20,27 @@ describe('Agasha Shunsen', function() {
                 this.player2.pass();
             });
 
-            it('should prompt the player to return a ring', function() {
+            it('should not prompt the player to return a ring if none are claimed', function () {
+                this.agashaShunsen = this.player1.clickCard('agasha-shunsen');
+                this.player1.clickCard('agasha-shunsen');
+                expect(this.player1).not.toHavePrompt('Choose a ring to return');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should not prompt the player to select an attachment if the player chooses to cancel ring selection', function () {
+                this.player1.claimRing('earth');
+                this.agashaShunsen = this.player1.clickCard('agasha-shunsen');
+                this.player1.clickCard('agasha-shunsen');
+                this.player1.clickPrompt('Cancel');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard('agasha-shunsen');
+                this.player1.clickCard('agasha-shunsen');
+                this.player1.clickPrompt('Cancel');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should prompt the player to return a ring', function () {
+                this.player1.claimRing('earth');
                 this.agashaShunsen = this.player1.clickCard('agasha-shunsen');
                 this.player1.clickCard('agasha-shunsen');
                 expect(this.player1).toHavePrompt('Choose a ring to return');
@@ -35,7 +54,8 @@ describe('Agasha Shunsen', function() {
                 expect(this.player1).toHavePrompt('Choose a ring to return');
             });
 
-            it('should prompt the player to choose a card', function() {
+            it('should prompt the player to choose a card', function () {
+                this.player1.claimRing('earth');
                 this.agashaShunsen = this.player1.clickCard('agasha-shunsen');
                 this.player1.clickCard('agasha-shunsen');
                 this.player1.clickRing('earth');
@@ -43,7 +63,8 @@ describe('Agasha Shunsen', function() {
                 expect(this.player1).toHavePrompt('Agasha Shunsen');
             });
 
-            it('should attach the chosen card', function() {
+            it('should attach the chosen card', function () {
+                this.player1.claimRing('earth');
                 this.agashaShunsen = this.player1.clickCard('agasha-shunsen');
                 this.player1.clickCard('agasha-shunsen');
                 this.player1.clickRing('earth');
