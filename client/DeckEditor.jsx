@@ -44,23 +44,23 @@ class InnerDeckEditor extends React.Component {
         if(this.props.deck && (this.props.deck.stronghold || this.props.deck.role || this.props.deck.provinceCards ||
                 this.props.deck.conflictCards || this.props.deck.dynastyCards)) {
             _.each(this.props.deck.stronghold, card => {
-                cardList += card.count + ' ' + card.card.name + '\n';
+                cardList += this.getCardListEntry(card.count, card.card);
             });
 
             _.each(this.props.deck.role, card => {
-                cardList += card.count + ' ' + card.card.name + '\n';
+                cardList += this.getCardListEntry(card.count, card.card);
             });
 
             _.each(this.props.deck.conflictCards, card => {
-                cardList += card.count + ' ' + card.card.name + '\n';
+                cardList += this.getCardListEntry(card.count, card.card);
             });
 
             _.each(this.props.deck.dynastyCards, card => {
-                cardList += card.count + ' ' + card.card.name + '\n';
+                cardList += this.getCardListEntry(card.count, card.card);
             });
 
             _.each(this.props.deck.provinceCards, card => {
-                cardList += card.count + ' ' + card.card.name + '\n';
+                cardList += this.getCardListEntry(card.count, card.card);
             });
 
             this.setState({ cardList: cardList });
@@ -134,7 +134,7 @@ class InnerDeckEditor extends React.Component {
         }
 
         let cardList = this.state.cardList;
-        cardList += this.state.numberToAdd + ' ' + this.state.cardToAdd.name + '\n';
+        cardList += this.getCardListEntry(this.state.numberToAdd, this.state.cardToAdd);
 
         this.addCard(this.state.cardToAdd, parseInt(this.state.numberToAdd));
         this.setState({ cardList: cardList });
@@ -170,15 +170,15 @@ class InnerDeckEditor extends React.Component {
 
             let packOffset = line.indexOf('(');
             let cardName = line.substr(index, packOffset === -1 ? line.length : packOffset - index - 1);
-            let packName = line.substr(packOffset + 1, line.length - packOffset - 2);
+            let packName = packOffset > -1 ? line.substr(packOffset + 1, line.length - packOffset - 2) : '';
 
             let pack = _.find(this.props.packs, function(pack) {
                 return pack.id.toLowerCase() === packName.toLowerCase() || pack.name.toLowerCase() === packName.toLowerCase();
             });
 
             let card = _.find(this.props.cards, function(card) {
-                if(pack) {
-                    return card.name.toLowerCase() === cardName.toLowerCase() || card.name.toLowerCase() === (cardName + ' (' + pack.id + ')').toLowerCase();
+                if(pack && card.pack_cards.length) {
+                    return card.name.toLowerCase() === cardName.toLowerCase() && card.pack_cards[0].pack.id === pack.id;
                 }
                 return card.name.toLowerCase() === cardName.toLowerCase();
             });
@@ -233,6 +233,19 @@ class InnerDeckEditor extends React.Component {
 
     onImportDeckClick() {
         $(findDOMNode(this.refs.modal)).modal('show');
+    }
+
+    getCardListEntry(count, card) {
+        let packName = '';
+        if(card.pack_cards.length) {
+            let packData = _.find(card.pack_cards, data => data.image_url);
+            this.setState({ test: packData.pack.id });
+            let pack = _.find(this.props.packs, p => p.id === packData.pack.id);
+            if(pack && pack.name) {
+                packName = ' (' + pack.name + ')';
+            }
+        }
+        return count + ' ' + card.name + packName + '\n';
     }
 
     importDeck() {
@@ -301,8 +314,8 @@ class InnerDeckEditor extends React.Component {
                 deck.alliance = this.props.factions['crab'];
             }
 
-            _.each(deckList, (count, card) => {
-                cardList += count + ' ' + this.props.cards[card].name + '\n';
+            _.each(deckList, (count, id) => {
+                cardList += this.getCardListEntry(count, this.props.cards[id]);
             });
 
             //Duplicate onCardListChange to get this working correctly
@@ -322,15 +335,15 @@ class InnerDeckEditor extends React.Component {
 
                 let packOffset = line.indexOf('(');
                 let cardName = line.substr(index, packOffset === -1 ? line.length : packOffset - index - 1);
-                let packName = line.substr(packOffset + 1, line.length - packOffset - 2);
+                let packName = packOffset > -1 ? line.substr(packOffset + 1, line.length - packOffset - 2) : '';
 
                 let pack = _.find(this.props.packs, function(pack) {
                     return pack.id.toLowerCase() === packName.toLowerCase() || pack.name.toLowerCase() === packName.toLowerCase();
                 });
 
                 let card = _.find(this.props.cards, function(card) {
-                    if(pack) {
-                        return card.name.toLowerCase() === cardName.toLowerCase() || card.name.toLowerCase() === (cardName + ' (' + pack.id + ')').toLowerCase();
+                    if(pack && card.pack_cards.length) {
+                        return card.name.toLowerCase() === cardName.toLowerCase() && _.any(card.pack_cards, data => data.pack.id === pack.id);
                     }
                     return card.name.toLowerCase() === cardName.toLowerCase();
                 });
