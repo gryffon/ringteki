@@ -132,8 +132,12 @@ class SelectCardPrompt extends UiPrompt {
                 buttons = [{ text: 'Done', arg: 'done' }].concat(buttons);
             }
         }
-        if(this.game.manualMode && !_.any(buttons, button => button.arg === 'cancel')) {
-            buttons = buttons.concat({ text: 'Cancel Prompt', arg: 'cancel' });
+        if((this.selector.optional || this.game.manualMode) && !_.any(buttons, button => button.arg === 'cancel')) {
+            let text = 'Cancel Prompt';
+            if(this.selector.optional) {
+                text = typeof this.selector.optional === 'string' ? this.selector.optional : 'Cancel';
+            }
+            buttons = buttons.concat({ text: text, arg: 'cancel' });
         }
         return {
             selectCard: this.properties.selectCard,
