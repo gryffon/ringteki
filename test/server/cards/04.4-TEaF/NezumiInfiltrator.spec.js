@@ -117,5 +117,31 @@ describe('Nezumi Infiltrator', function() {
                 expect(this.player1).toHavePromptButton('Raise attacked province\'s strength by 1');
             });
         });
+
+        describe('Nezumi Infiltrator leaving play after being dishonored', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 10,
+                        inPlay: ['nezumi-infiltrator']
+                    },
+                    player2: {
+
+                    }
+                });
+                this.nezumi = this.player1.findCardByName('nezumi-infiltrator');
+                this.nezumi.dishonor();
+                this.nezumi.fate = 0;
+                this.nextPhase();
+            });
+
+            it('should correctly leave play during the fate phase and cause a honor loss', function() {
+                this.p1Honor = this.player1.honor;
+                this.player1.clickPrompt('Done');
+                expect(this.player1.honor).toBe(this.p1Honor - 1);
+                expect(this.nezumi.location).toBe('conflict discard pile');
+            });
+        });
     });
 });
