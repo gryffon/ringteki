@@ -54,7 +54,7 @@ class ConflictFlow extends BaseStepWithPipeline {
     }
 
     promptForNewConflict() {
-        if(this.conflict.attackingPlayer.checkRestrictions('chooseConflictRing') || !this.conflict.attackingPlayer.opponent) {
+        if(this.conflict.attackingPlayer.checkRestrictions('chooseConflictRing', this.game.getFrameworkContext()) || !this.conflict.attackingPlayer.opponent) {
             this.pipeline.queueStep(new InitiateConflictPrompt(this.game, this.conflict, this.conflict.attackingPlayer, true, this.canPass));
             return;
         }
@@ -174,7 +174,7 @@ class ConflictFlow extends BaseStepWithPipeline {
                 ring: ring,
                 fate: ring.fate
             }));
-            if(this.conflict.attackingPlayer.checkRestrictions('takeFateFromRings')) {
+            if(this.conflict.attackingPlayer.checkRestrictions('takeFateFromRings', this.game.getFrameworkContext())) {
                 this.game.addMessage('{0} takes {1} fate from {2}', this.conflict.attackingPlayer, ring.fate, ring);
                 this.conflict.attackingPlayer.modifyFate(ring.fate);
                 ring.removeFate();

@@ -19,7 +19,7 @@ class TakeFateRingAction extends RingAction {
         return this.createEvent('onTakeRing', { ring: ring, context: context }, () => {
             ring.claimRing(context.player);
             ring.contested = false;
-            if(this.takeFate && context.player.checkRestrictions('takeFateFromRings')) {
+            if(this.takeFate && context.player.checkRestrictions('takeFateFromRings', context)) {
                 context.game.addMessage('{0} takes {1} fate from {2}', context.player, ring.fate, ring);
                 context.player.modifyFate(ring.fate);
                 ring.removeFate();

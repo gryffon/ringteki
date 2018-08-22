@@ -31,7 +31,7 @@ class CannotRestriction {
         if(!this.restriction) {
             return true;
         } else if(!context) {
-            return false; // throw Error here?
+            throw new Error('checkRestrictions called without a context');
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
         }

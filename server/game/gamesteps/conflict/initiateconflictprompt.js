@@ -132,7 +132,7 @@ class InitiateConflictPrompt extends UiPrompt {
             }
         });
 
-        if(this.conflict.conflictProvince && !this.conflict.conflictProvince.checkRestrictions('initiateConflict')) {
+        if(this.conflict.conflictProvince && !this.conflict.conflictProvince.checkRestrictions('initiateConflict', this.game.getFrameworkContext())) {
             this.conflict.conflictProvince.inConflict = false;
             this.conflict.conflictProvince = null;
         }
@@ -157,7 +157,7 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     checkCardCondition(card) {
-        if(card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken && card.checkRestrictions('initiateConflict')) {
+        if(card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken && card.checkRestrictions('initiateConflict', this.game.getFrameworkContext())) {
             if(card.location === 'stronghold province' && _.size(this.game.allCards.filter(card => card.isProvince && card.isBroken && card.controller !== this.choosingPlayer)) < 3) {
                 return false;
             }
