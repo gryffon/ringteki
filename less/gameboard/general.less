@@ -7,13 +7,19 @@
     display: grid;
     grid-template-columns:  @sidebar-width auto @chat-width;
     grid-template-rows:  1fr;
+    align-content:stretch;
 }
 
 .main-window {
+    position:absolute;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
     grid-column-start:1;
     grid-column-end: 4;
-    grid-row-start: 1;
-    grid-row-end:2;
+    //grid-row-start: 1;
+    //grid-row-end:2;
     display:grid; 
     grid-template-columns: @sidebar-width auto @chat-width;
     grid-template-rows: 1fr;

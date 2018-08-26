@@ -15,7 +15,8 @@
   }
 
   &.at-home {
-    margin: 0 8px 0 8px;
+    margin-left:3px;
+    margin-right:3px;
   }
 
   &.imperial-favor {
@@ -420,6 +421,7 @@
 .fatecounter {
   box-sizing:border-box;
   font-size: 25px;
+  font-weight:bold;
   width: 1em;
   height: 1em;
   line-height:1em;
@@ -449,9 +451,11 @@
   z-index: @layer-cards + 3;
   font-size:0.5em;
 }
-@media(max-width: 1366px) {
+@media(max-width: 1279px) {
   .fatecounter {
-    font-size:15px;
+    &.ring-fate {
+      font-size:15px;
+    }
   }
 }
 

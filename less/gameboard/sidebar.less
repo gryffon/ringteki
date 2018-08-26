@@ -3,14 +3,17 @@
 @import "sidebar/rings";
 
 .province-pane {
+    font-size:14px;
+    position:absolute;
+    min-height:100%;
+    top:0px;
+    bottom:0px;
     //background-image:linear-gradient(to right,rgba(0,0,0,.8),transparent);
     background-color:rgba(0,0,0,0.4);
     box-shadow: 0 0 10px 5px rgba(0,0,0,0.4);
-    grid-row-start: 1;
-    grid-row-end: 2;
     grid-column-start: 1;
     display:grid;
-    grid-template-rows: 1fr 10px 1fr;
+    grid-template-rows: min-content 1fr 0px 1fr min-content;
     grid-template-columns: @sidebar-width;
     text-overflow:ellipsis;
 }
@@ -18,15 +21,42 @@
 .sidebar-pane {
     display:flex;
     flex-direction: column;
-    grid-row-start: 1;
-    grid-row-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
     grid-column-start:1;
-    justify-content:space-between;
+    justify-content:flex-end;
     padding-top:0.5em;
     padding-bottom:0.5em;
     &.our-side {
+        justify-content:flex-start;
         border-top:1px solid rgba(255,255,255,0.4);
-        grid-row-start:3;
-        grid-row-end:4;
+        grid-row-start:4;
+        grid-row-end:5;
     }
+}
+
+.player-nameplate {
+    grid-row-start:1;
+    grid-row-end:2;
+    grid-column-start:1;
+    grid-column-end:2;
+    display:flex;
+    flex-direction:row;
+    flex-wrap:none;
+    font-weight:bold;
+    margin:5px 5px 5px 5px;
+    padding-right: 0;
+    padding-left: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    &.our-side {
+        grid-row-start:5;
+        grid-row-end:6;
+    }
+}
+
+.player-nameplate > .player-name {
+    min-width:0px;
+    overflow:hidden;
+    text-overflow:ellipsis;
 }

@@ -8,18 +8,14 @@
     justify-content: flex-start;
     align-items: stretch;
 
+    &.our-side {
+        flex-direction: column;
+    }
     &.panel {
         margin: 0;
         border-radius: 0;
         padding: 10px 0 10px 5px;
         position: initial;
-    }
-}
-
-.our-side {
-    .player-stats {
-        flex-direction: column;
-        grid-row: 10;
     }
 }
 
@@ -115,24 +111,6 @@
     outline: 0px;
 }
 
-.player-nameplate { 
-    display:flex;
-    flex-direction:row;
-    font-weight:bold;
-    margin:5px 5px 5px 5px;
-    padding-right: 0;
-    padding-left: 0;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
-
-.player-nameplate > .player-name {
-    min-width:0px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-}
-
-
 .first-player-indicator {
     margin:10px;
     height: 50px;
@@ -142,7 +120,7 @@
     align-items: center;
 
     &.hidden {
-        display: none;
+        visibility:hidden;
     }
     
     &.invisible {

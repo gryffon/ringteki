@@ -36,7 +36,7 @@ class Conflict extends GameObject {
         return effects.length === 0 ? -1 : Math.min(...effects);
     }
 
-    getSummary() { 
+    getSummary() {
         return {
             attackingPlayerId: this.attackingPlayer.id,
             defendingPlayerId: this.defendingPlayer.id,
@@ -44,12 +44,12 @@ class Conflict extends GameObject {
             defenderSkill: this.defenderSkill,
             type: this.conflictType,
             elements: this.elements,
-            attackerWins: this.attackers.length > 0 && this.attackerSkill >= this.defenderSkill, 
+            attackerWins: this.attackers.length > 0 && this.attackerSkill >= this.defenderSkill,
             breaking: this.conflictProvince && (this.conflictProvince.getStrength() - (this.attackerSkill - this.defenderSkill) <= 0),
-            unopposed: this.defenders && this.defenders.length > 0
+            unopposed: !(this.defenders && this.defenders.length > 0)
         };
     }
-    
+
     singlePlayerDefender() {
         let dummyPlayer = new Player('', Settings.getUserWithDefaultsSet({ username: 'Dummy Player' }), false, this.game);
         dummyPlayer.initialise();

@@ -417,13 +417,13 @@ export class InnerGameBoard extends React.Component {
         let size = this.props.user.settings.cardSize;
         return (
             <div className='province-pane'>
-                <div className='sidebar-pane their-side'>
-                    <div className='player-nameplate'>
-                        <Avatar emailHash={ otherPlayer && otherPlayer.user ? otherPlayer.user.emailHash : 'unknown' } />
-                        <div className='player-name'>
-                            { otherPlayer && otherPlayer.user ? otherPlayer.user.username : 'Noone' }
-                        </div>
+                <div className='player-nameplate'>
+                    <Avatar emailHash={ otherPlayer && otherPlayer.user ? otherPlayer.user.emailHash : 'unknown' } />
+                    <div className='player-name'>
+                        { otherPlayer && otherPlayer.user ? otherPlayer.user.username : 'Noone' }
                     </div>
+                </div>
+                <div className='sidebar-pane their-side'>
                     { thisPlayer.hideProvinceDeck && <HonorFan value={ otherPlayer ? otherPlayer.showBid + '' : '0' } /> }
                     { this.getRings(otherPlayer ? otherPlayer.name : '\0', 'claimed-pool their-pool ' + (size ? size : '')) }
                     <div className='sidebar-pane their-side'>
@@ -450,14 +450,6 @@ export class InnerGameBoard extends React.Component {
                         handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
                     { this.getRings(thisPlayer ? thisPlayer.name : '\0', 'claimed-pool my-pool ' + (size ? size : '')) }
                     { thisPlayer.hideProvinceDeck && <HonorFan value={ thisPlayer.showBid + '' } /> }
-                    {
-                        <div className='player-nameplate'>
-                            <Avatar emailHash={ thisPlayer.user ? thisPlayer.user.emailHash : 'unknown' } />
-                            <div className='player-name'>
-                                { thisPlayer.user ? thisPlayer.user.username : 'Noone' }
-                            </div>
-                        </div>
-                    }
                     { false && thisPlayer.optionSettings.showStatusInSidebar &&
                         <div className='player-stats-box our-side'>
                             <PlayerStatsBox
@@ -472,7 +464,12 @@ export class InnerGameBoard extends React.Component {
                                 handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
                         </div>
                     }
-
+                </div>
+                <div className='player-nameplate our-side'>
+                    <Avatar emailHash={ thisPlayer.user ? thisPlayer.user.emailHash : 'unknown' } />
+                    <div className='player-name'>
+                        { thisPlayer.user ? thisPlayer.user.username : 'Noone' }
+                    </div>
                 </div>
             </div>
         );

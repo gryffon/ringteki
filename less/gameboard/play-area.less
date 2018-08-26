@@ -10,7 +10,7 @@
     grid-row-start:1;
     grid-row-end:2;
     grid-column-start:1;
-    grid-column-end:2;
+    grid-column-end:3;
     display:grid;
     grid-template-columns: 1fr repeat(3,(@card-width + 10px));
     grid-template-rows: minmax(@card-height+@attachment-offset*2,auto) minmax(@card-height + @attachment-offset + 5px,auto);
@@ -171,27 +171,29 @@
 }
 
 .play-area {
-    overflow:scroll;
+    position:absolute;    
+    min-height:100%;
+    width:100%;
     grid-row-start:1;
     grid-row-end:4;
     grid-column-start:2;
     grid-column-end:4;
     display:grid;
-    grid-template-rows: minmax(2*@card-height+2*@attachment-offset,min-content) 1fr @center-bar-height 1fr minmax(2*@card-height+2*@attachment-offset,min-content);
-    grid-template-columns: minmax(9*(@card-width+10px), auto) 10px @chat-width;
+    grid-template-rows: minmax(2*@card-height+2*@attachment-offset,max-content) 1fr @center-bar-height 1fr minmax(2*@card-height+2*@attachment-offset,max-content);
+    grid-template-columns: minmax(9*(@card-width+10px), auto) 1fr @chat-width;
 
     &.small {
-        grid-template-rows: minmax(2*@card-sm-height + 2*@attachment-offset-sm, min-content) 1fr @center-bar-height 1fr minmax(2*@card-sm-height + 2*@attachment-offset-sm, min-content);
-        grid-template-columns: minmax(9*(@card-sm-width+10px), auto) 10px (@card-sm-width*3) @chat-width;
+        grid-template-rows: minmax(2*@card-sm-height + 2*@attachment-offset-sm, max-content) 1fr @center-bar-height 1fr minmax(2*@card-sm-height + 2*@attachment-offset-sm, max-content);
+        grid-template-columns: minmax(9*(@card-sm-width+10px), auto) 1fr @chat-width;
     }
 
     &.large {
-        grid-template-rows: minmax(2*@card-lg-height+2*@attachment-offset-lg,min-content) 1fr @center-bar-height 1fr minmax(2*@card-lg-height+2*@attachment-offset-lg,min-content);
-        grid-template-columns: minmax(9*(@card-lg-width+10px), auto) 10px (@card-lg-width*3) @chat-width;
+        grid-template-rows: minmax(2*@card-lg-height+2*@attachment-offset-lg,max-content) 1fr @center-bar-height 1fr minmax(2*@card-lg-height+2*@attachment-offset-lg,max-content);
+        grid-template-columns: minmax(9*(@card-lg-width+10px), auto) 1fr @chat-width;
     }
 
     &.x-large {
-        grid-template-rows: minmax(2*@card-xl-height + 2*@attachment-offset-xl,min-content) 1fr @center-bar-height 1fr minmax(2*@card-xl-height + 2*@attachment-offset-xl,min-content);
-        grid-template-columns: minmax(9*(@card-xl-width+10px), auto) 10px @chat-width;
+        grid-template-rows: minmax(2*@card-xl-height + 2*@attachment-offset-xl,max-content) 1fr @center-bar-height 1fr minmax(2*@card-xl-height + 2*@attachment-offset-xl,max-content);
+        grid-template-columns: minmax(9*(@card-xl-width+10px), auto) 1fr @chat-width;
     }
 }

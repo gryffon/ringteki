@@ -53,7 +53,7 @@ export class PlayerStatsBox extends React.Component {
         );
 
         return (
-            <div className='player-stats'>
+            <div className={ 'player-stats' + (this.props.otherPlayer ? '' : ' our-side') } >
                 <div className='stats-row'>
                     {
                         <div className='state first-player-state'>
