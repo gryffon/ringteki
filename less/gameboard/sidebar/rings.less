@@ -11,44 +11,26 @@
     grid-row-start:5;
     grid-column-start:2;
     flex-direction: row;
-    justify-content: left;
+    justify-content: center;
     align-items: center;
-    float:left;
     min-width: 25%;
-    &.small {
-        min-width: 25%;
-    }
+    font-size:40pt;
+}
+
+.ring-prompt {
+    font-size:40pt;
+    min-height:@ring-height;
+    min-width:@ring-width;
 }
 
 .claimed-pool {
+    font-size:24pt;
     display:flex;
+    justify-content:flex-start;
     flex-direction:row;
-    justify-content:center;
-    overflow:wrap;
     flex-wrap:wrap;
-    margin:5px;
-    min-height:@ring-sm-height*2;
-    max-width: @card-lg-width * 1.1;
-    &.large {
-        max-width: @card-lg-width;
-    }
-    &.x-large {
-        max-width: @card-xl-width;
-    }
-}
-
-.their-pool {
-    align-items:bottom left;
-}
-
-.my-pool {
-    align-items:bottom left;
-}
-
-.ring {
-    float:left;
-    position: relative;
-    margin-right:2px;
+    width:100%;
+    margin:10px;
 }
 
 circle.ring-background {
@@ -57,33 +39,33 @@ circle.ring-background {
     cx:50%;
     cy:50%;
     r:50%;
-    &.small {
-        cx:@ring-sm-width/1.5;
-        cy:@ring-sm-height/1.5;
-        r:@ring-sm-width/1.5;
-    }
+    
     &.unselectable {
-        filter: grayscale(100%) brightness(60%);
+        filter: brightness(60%);
     }
 }
 
 svg.ring-svg {
+    top:0px;
     position:absolute;
-    left:0;
-    top:0;
-    height:2em;
-    width:2em;
+    height:@ring-height;
+    width:@ring-width;
     
-    &.small { 
-        width:1.25em;
-        height:1.25em;
+    &.contested {
+        &.tint-military {
+            -webkit-filter: drop-shadow( 0 0 12px pink);
+            filter: drop-shadow( 0 0 12px pink);
+        }
+        &.tint-political {
+            -webkit-filter: drop-shadow( 0 0 12px lightblue);
+            filter: drop-shadow( 0 0 12px lightblue);
+        }
+        &.tint-neutral {
+            -webkit-filter: drop-shadow( 0 0 12px white);
+            filter: drop-shadow( 0 0 12px white);
+        }
     }
 
-    &.contested {
-        -webkit-filter: drop-shadow( 0 0 12px white);
-        filter: drop-shadow( 0 0 12px white);
-    }
-    
     &.hidden {
         display:none;
     }
@@ -97,52 +79,53 @@ svg.ring-svg {
 }
 
 .ring {
+    margin-right:5px;
     margin-top:0px;
     position:relative;
     color:white;
+    min-height: @ring-height;
     max-height: @ring-height;
-    max-width:@ring-width;
-    font-size:@ring-height;
+    max-width: @ring-width;
 
     &.unselectable {
-        filter: grayscale(100%) brightness(60%);
+        filter: brightness(60%);
       }
 
     &.hidden {
         display:none;
-    }
-    
-    &.small {
-        max-height: @ring-sm-height;
-        max-width: @ring-sm-width;
-        font-size:@ring-sm-height;
+        margin-right:0px;
     }
 }
 
 .tint-military {
     fill: @military-ring-color;
     &.unselectable {
-        fill:black;
+        fill:darkred;
     }
   }
   
   .tint-political {
     fill: @political-ring-color;
     &.unselectable {
-        fill:black;
+        fill:darkblue;
+    }
+
+    .tint-neutral {
+        fill: darkgrey;
+        &.unselectable {
+            fill:darkslategrey;
+        }
     }
   }
 
 @media (max-width: 1366px) {
     .ring-panel {
         padding: 0 5px;
+        font-size:24pt;
     }
 
-    .ring-display {
-        img.ring {
-            width: @ring-sm-width;
-            height: @ring-sm-height;
-        }
+    .claimed-pool {
+        font-size:18pt;
     }
 
     .ring-info {

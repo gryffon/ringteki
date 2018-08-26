@@ -195,12 +195,15 @@ class CardPile extends React.Component {
     }
 
     render() {
-        let className = 'panel card-pile ' + this.props.className;
+        let className = 'card-pile ' + this.props.className;
         if(this.props.size !== 'normal') {
             className += ' ' + this.props.size;
         }
 
-        let cardCount = this.props.cardCount || (this.props.cards ? this.props.cards.length : '0');
+        let cardCount = this.props.cardCount || (this.props.cards ? this.props.cards.length : 0);
+        if(cardCount === 0) {
+            className += ' panel';
+        }
         let headerText = this.props.title ? this.props.title + ' (' + (cardCount) + ')' : '';
         let topCard = this.props.topCard || _.first(this.props.cards);
         let cardOrientation = this.props.orientation === 'horizontal' && topCard && topCard.facedown ? 'bowed' : this.props.orientation;

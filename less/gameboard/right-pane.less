@@ -1,4 +1,5 @@
 .right-side {
+    pointer-events:none;
     position: absolute;
     display: flex;
     justify-content: space-between;
@@ -8,6 +9,7 @@
     min-width: 312px;
     top: 0;
     right: 0;
+    z-index:@layer-chat;
 
     .card-large {
         position: relative;
@@ -17,6 +19,7 @@
 }
 
 .chat {
+    pointer-events:auto;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -50,6 +53,8 @@
 }
 
 .controls {
+    pointer-events:auto;
+    z-index:@layer-popups;
     display: flex;
     justify-content: end;
     align-items: center;

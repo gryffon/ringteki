@@ -1,58 +1,22 @@
-.navbar-fixed-top {
-    z-index: 1060;
-}
-
-
 .game-board {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 50px;
-    
+    position:absolute;
+    top:50px;
+    bottom:0;
+    left:0;
+    right:0;
     display: grid;
     grid-template-columns:  @sidebar-width auto @chat-width;
-    grid-template-rows:  40px auto 40px;
-}
-
-.temp-spot-for-stuff {
-    &.x-large {
-        grid-template-columns:  @sidebar-width (@card-xl-width*3 + 15px) auto (@card-xl-width*3 + 15px) @chat-width;
-        grid-template-rows:  27px 81px (@card-xl-height*1.3 - 50px) (@card-xl-height*1.3) 1fr @center-bar-height 1fr (@card-xl-height*1.3) (@card-xl-height*1.3 - 50px) 81px 27px;
-    }
-
-    &.large {
-        grid-template-columns:  @sidebar-width (@card-lg-width*3 + 15px) auto (@card-lg-width*3 + 15px) @chat-width;
-        grid-template-rows:  27px 81px (@card-lg-height*1.3 - 50px) (@card-lg-height*1.3) 1fr @center-bar-height 1fr (@card-lg-height*1.3) (@card-lg-height*1.3 - 50px) 81px 27px;
-    }
-
-    &.small {
-        grid-template-columns:  @sidebar-width (@card-sm-width*3 + 15px) auto (@card-sm-width*3 + 15px) @chat-width;
-        grid-template-rows:  27px 81px (@card-sm-height*1.3 - 50px) (@card-sm-height*1.3) 1fr @center-bar-height 1fr (@card-sm-height*1.3) (@card-sm-height*1.3 - 50px) 81px 27px;
-    }
-}
-
-.game-board {
-    top:64px;
-}
-
-@media (max-width: 1366px) {
-    .game-board {
-        top: 25px;
-    }
+    grid-template-rows:  1fr;
 }
 
 .main-window {
     grid-column-start:1;
     grid-column-end: 4;
-    grid-row-start: 2;
-    
+    grid-row-start: 1;
+    grid-row-end:2;
     display:grid; 
-    grid-template-columns: @sidebar-width 1fr @chat-width;
-    grid-template-rows: 1fr @center-bar-height 1fr;
-
-    min-height: calc(~"100vh - 170px");
-    z-index: 1010;
+    grid-template-columns: @sidebar-width auto @chat-width;
+    grid-template-rows: 1fr;
 }
 
 .popup {

@@ -3,28 +3,30 @@
 @import "sidebar/rings";
 
 .province-pane {
+    //background-image:linear-gradient(to right,rgba(0,0,0,.8),transparent);
+    background-color:rgba(0,0,0,0.4);
+    box-shadow: 0 0 10px 5px rgba(0,0,0,0.4);
     grid-row-start: 1;
-    grid-row-end: 4;
+    grid-row-end: 2;
     grid-column-start: 1;
-    display:flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: left;
+    display:grid;
+    grid-template-rows: 1fr 10px 1fr;
+    grid-template-columns: @sidebar-width;
+    text-overflow:ellipsis;
 }
 
 .sidebar-pane {
     display:flex;
     flex-direction: column;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    grid-column-start:1;
+    justify-content:space-between;
+    padding-top:0.5em;
+    padding-bottom:0.5em;
     &.our-side {
-        align-content:space-between;
-    }
-    &.their-side {
-        align-content:space-between;
-    }
-}
-
-@media (max-width: 1366px) {
-    .province-pane {
-        max-width: 220px;
+        border-top:1px solid rgba(255,255,255,0.4);
+        grid-row-start:3;
+        grid-row-end:4;
     }
 }

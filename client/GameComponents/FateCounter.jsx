@@ -16,7 +16,7 @@ class FateCounter extends Counter {
         }
 
         return (<div key={ this.props.name } className={ className }>
-            <img src='/img/Fate.png' title='Fate' alt='Fate' />
+            <img src='/img/Fate_token.png' title='Fate' alt='Fate' />
             <div className='fatecountertext'> { this.props.value } </div>
         </div>);
     }

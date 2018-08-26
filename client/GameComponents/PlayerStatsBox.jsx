@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Avatar from '../Avatar.jsx';
 import Clock from './Clock.jsx';
 
 export class PlayerStatsBox extends React.Component {
@@ -33,9 +32,9 @@ export class PlayerStatsBox extends React.Component {
                         <img src='/img/Minus.png' title='-' alt='-' />
                     </button>
                 }
-                <div className='stat-image' style={ imageStyle }>
-                    <div className='stat-value'>{ this.getStatValueOrDefault(stat) }</div>
-                </div>
+                <div className='stat-image' style={ imageStyle } />
+                <div>:</div>
+                <div className='stat-value'>{ this.getStatValueOrDefault(stat) }</div>
                 {
                     this.props.showControls &&
                     <button className='btn btn-stat' onClick={ this.sendUpdate.bind(this, statToSet, 'up') }>
@@ -47,12 +46,6 @@ export class PlayerStatsBox extends React.Component {
     }
 
     render() {
-        var playerAvatar = (
-            <div className='player-avatar state'>
-                <Avatar emailHash={ this.props.user ? this.props.user.emailHash : 'unknown' } />
-                <b>{ this.props.user ? this.props.user.username : 'Noone' }</b>
-            </div>);
-
         let clock = (!this.props.clockState || this.props.clockState.mode === 'off') ? null : (
             <div className='state'>
                 <Clock secondsLeft={ this.props.clockState.timeLeft } mode={ this.props.clockState.mode } stateId={ this.props.clockState.stateId } />
@@ -60,42 +53,41 @@ export class PlayerStatsBox extends React.Component {
         );
 
         return (
-            <div className='panel player-stats'>
+            <div className='player-stats'>
                 <div className='stats-row'>
-                    { playerAvatar }
                     {
-                        this.props.firstPlayer &&
                         <div className='state first-player-state'>
-                            <img className='first-player-indicator' src='/img/first-player.png' title='First Player' />
+                            <img className={ 'first-player-indicator' + (this.props.firstPlayer ? '' : ' hidden') } src='/img/first-player.png' title='First Player' />
                         </div>
                     }
                 </div>
-                {
-                    (this.props.otherPlayer || this.props.spectating) ?
-                        <div className='stats-row'>
-                            <div className='state'>
-                                <div className='hand-size'>Hand Size: { this.props.handSize }</div>
-                            </div>
-                            { this.getButton('fate', 'Fate') }
-                            { this.getButton('honor', 'Honor') }
-                        </div> :
-                        <div className='stats-row'>
-                            { this.getButton('fate', 'Fate') }
-                            { this.getButton('honor', 'Honor') }
-                        </div>
-                }
+                <div className='stats-row'>
+                    { clock }
+                </div>
                 <div className='stats-row'>
                     <div className='state'>
                         <div className='conflicts-remaining'>
-                            Conflicts Remaining: { this.getStatValueOrDefault('conflictsRemaining') }
-                            { this.getStatValueOrDefault('politicalRemaining') > 0 ? <span className='icon-political'/> : null }
-                            { this.getStatValueOrDefault('politicalRemaining') > 1 ? <span className='icon-political'/> : null }
-                            { this.getStatValueOrDefault('militaryRemaining') > 0 ? <span className='icon-military'/> : null }
-                            { this.getStatValueOrDefault('militaryRemaining') > 1 ? <span className='icon-military'/> : null }
+                            Conflicts: { this.getStatValueOrDefault('conflictsRemaining') }
+                            <div>
+                                { this.getStatValueOrDefault('politicalRemaining') > 0 ? <span className='icon-political'/> : null }
+                                { this.getStatValueOrDefault('politicalRemaining') > 1 ? <span className='icon-political'/> : null }
+                                { this.getStatValueOrDefault('militaryRemaining') > 0 ? <span className='icon-military'/> : null }
+                                { this.getStatValueOrDefault('militaryRemaining') > 1 ? <span className='icon-military'/> : null }
+                            </div>
                         </div>
                     </div>
                 </div>
-                { clock }
+                <div className='stats-row'>
+                    <div className='state'>
+                        <div className='hand-size'>Hand Size: { this.props.handSize }</div>
+                    </div>
+                </div>
+                <div className='stats-row'>
+                    { this.getButton('fate', 'Fate_token') }
+                </div>
+                <div className='stats-row'>
+                    { this.getButton('honor', 'Honor') }
+                </div>
             </div>
         );
     }

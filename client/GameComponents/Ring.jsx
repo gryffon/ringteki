@@ -100,7 +100,7 @@ class Ring extends React.Component {
 
         let className = 'ring icon-element-' + this.props.ring.element + ' ' + size;
         let bgClassName = 'ring-background  tint-' + this.props.ring.conflictType + ' ' + size;
-        let svgClassName = 'ring-svg ' + size + ' ' + (this.props.ring.selected || this.props.ring.contested ? 'contested' : '');
+        let svgClassName = 'ring-svg tint-' + this.props.ring.conflictType + ' ' + size + ' ' + (this.props.ring.selected || this.props.ring.contested ? 'contested' : '');
         if(this.props.ring.unselectable) {
             className = className + ' unselectable';
             bgClassName += ' unselectable';
@@ -112,12 +112,15 @@ class Ring extends React.Component {
             svgClassName += ' hidden';
             visible = false;
         }
+        if(!visible) {
+            return (<div/>);
+        }
         return (
             <div className='ring no-highlight' onClick={ event => this.onClick(event, this.props.ring.element) } >
                 <svg className={ svgClassName } >
                     <circle cx='50%' cy='50%' r='50%' className={ bgClassName } />
                 </svg>
-                <span className={ className } />
+                <div className={ className } />
                 { (this.showCounters() && visible) ? <CardCounters counters={ this.getCountersForRing(this.props.ring.element) } /> : null }
                 { this.showMenu() ? <CardMenu menu={ this.props.ring.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
             </div>);

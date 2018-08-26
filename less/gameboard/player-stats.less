@@ -25,9 +25,11 @@
 
 .stats-row {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    padding: 1px 0;
+    padding-left: 5px;
+    padding-right: 5px;
+    margin-top:5px;
 }
 
 .state {
@@ -38,7 +40,7 @@
     display: flex;
     flex-grow: 1;
     align-items: center;
-    justify-content: space-around;
+    justify-content: center;
 
     span {
         padding-right: 3px;
@@ -51,6 +53,7 @@
 
     &.first-player-state {
         flex-grow: 0;
+        margin:10px;
     }
 
     .glyphicon {
@@ -64,6 +67,7 @@
 
 .player-stats-row {
     width: 100%;
+    z-index: @layer-cards + 100;
     grid-row-start:1;
     grid-column-start:1;
     grid-column-end:4;
@@ -95,7 +99,7 @@
 
 .btn-stat {
     padding: 0;
-    font-size: 12px;
+    font-size: 14pt;
     line-height: 18px;
     height: 22px;
     width: 22px;
@@ -111,17 +115,38 @@
     outline: 0px;
 }
 
+.player-nameplate { 
+    display:flex;
+    flex-direction:row;
+    font-weight:bold;
+    margin:5px 5px 5px 5px;
+    padding-right: 0;
+    padding-left: 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.player-nameplate > .player-name {
+    min-width:0px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+
 .first-player-indicator {
-    margin: 5px;
-    padding: 5px;
-    height: 40px;
-    width: auto;
+    margin:10px;
+    height: 50px;
+    width: 40px;
     position: relative;
     justify-content: center;
     align-items: center;
 
     &.hidden {
         display: none;
+    }
+    
+    &.invisible {
+        visibility: hidden;
     }
 }
 
@@ -132,10 +157,10 @@
     text-overflow: ellipsis;
     overflow: hidden;
     line-height: 27px;
-    vertical-align: middle;
 }
 
 .stat-image {
+    margin-right: 5px;
     width: 28px;
     height: 28px;
     background: no-repeat center;
@@ -147,8 +172,7 @@
 }
 
 .stat-value {
-    background: rgba(0, 0, 0, 0.7) center;
-    border-radius: 50%;
+    margin-left: 5px;
     width: 18px;
     height: 18px;
     text-align: center;
@@ -157,16 +181,15 @@
 
 @media (max-width: 1366px) {
     .first-player-indicator {
-        margin: 0 5px;
-        padding: 0 5px;
         height: 25px;
+        width: 25px
     }
 
     .player-stats {
-        font-size: 12px;
+        font-size: 10pt;
 
         &.panel {
             padding: 2px 0 2px 5px;
-        }
     }
+}
 }

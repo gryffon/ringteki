@@ -5,19 +5,47 @@
 
 
 .player-board {
-    margin-top:10px;
-    display:grid;
+    padding-top:10px;
+    padding-bottom:10px;
+    grid-row-start:1;
+    grid-row-end:2;
     grid-column-start:1;
-    grid-column-end:4;
+    grid-column-end:2;
+    display:grid;
+    grid-template-columns: 1fr repeat(3,(@card-width + 10px));
+    grid-template-rows: minmax(@card-height+@attachment-offset*2,auto) minmax(@card-height + @attachment-offset + 5px,auto);
+
+    &.small {
+        grid-template-columns: 1fr repeat(3, (@card-sm-width + 10px));
+        grid-template-rows: minmax(@card-sm-height+@attachment-offset-sm*2,auto) minmax(@card-sm-height + @attachment-offset-sm + 5px,auto) minmax(2*@attachment-offset,auto);
+    }
+    &.large {
+        grid-template-columns: 1fr repeat(3, (@card-lg-width + 10px));
+        grid-template-rows: minmax(@card-lg-height+@attachment-offset-lg*2,auto) minmax(@card-lg-height + @attachment-offset-lg + 5px,auto) minmax(2*@attachment-offset,auto);
+    }
+    &.x-large {
+        grid-template-columns: 1fr repeat(3, (@card-xl-width + 10px));
+        grid-template-rows: minmax(@card-xl-height+@attachment-offset-xl*2,auto) minmax(@card-xl-height + @attachment-offset-xl + 5px,auto) minmax(2*@attachment-offset,auto);
+    }
+    
 
     &.our-side {
-        grid-row-start:4;
+        grid-row-start:5;
         grid-row-end:6;
-        align-content:bottom;
-    }
-    &.their-side {
-        grid-row-start:1;
-        grid-row-end:3;
+        grid-template-columns: repeat(3, (@card-width + 10px)) 1fr;
+        grid-template-rows: minmax(2*@attachment-offset,auto) minmax(@card-height+@attachment-offset + 5px,auto) minmax(@card-height + @attachment-offset + 5px,auto);
+        &.small {
+            grid-template-columns: repeat(3, (@card-sm-width + 10px)) 1fr;
+            grid-template-rows: minmax(2*@attachment-offset-sm,auto) minmax(@card-sm-height+@attachment-offset-sm+ 5px,auto) minmax(@card-sm-height + @attachment-offset-sm + 5px,auto);
+        }
+        &.large {
+            grid-template-columns: repeat(3, (@card-lg-width + 10px)) 1fr;
+            grid-template-rows: minmax(2*@attachment-offset-lg,auto) minmax(@card-lg-height+@attachment-offset-lg + 5px,auto) minmax(@card-lg-height + @attachment-offset-lg + 5px,auto);
+        }
+        &.x-large {
+            grid-template-columns: repeat(3, (@card-xl-width + 10px)) 1fr;
+            grid-template-rows: minmax(2*@attachment-offset-xl,auto) minmax(@card-xl-height+@attachment-offset-xl  + 5px,auto) minmax(@card-xl-height + @attachment-offset-xl + 5px,auto);
+        }
     }
 }
 
@@ -25,15 +53,12 @@
     justify-content:bottom;
 }
 
-player-home {
-    grid-row-start:1;
-    grid-column-start:2;
-}
-
 .player-home-row {
     display: flex;
+    flex-wrap: wrap;
     margin-top: 5px;
-
+    min-width:0;
+    min-height:0;
     &.our-side {
         margin-top: 0;
         margin-bottom: 5px;
@@ -47,36 +72,89 @@ player-home {
 }
 
 .player-deck-row {
-    
     grid-row-start: 1;
     grid-column-start:1;
-    
-    margin-top: 5px;
-
+    grid-column-end:5;
     &.our-side {
-        margin-top: 0;
-        margin-bottom: 18px;
         grid-row-start: 3;
+        grid-row-end:4;
     }
 }
 
 .player-stronghold-row {
-    grid-row-start:1;
-    grid-column-start:2;
-    grid-column-end:3;
     display: flex;
+    flex-direction:row;
+    justify-content:flex-end;
+    align-items: flex-start;
+    grid-row-start:2;
+    grid-column-start:3;
+    grid-column-end:5;
 
+    &.favor {
+        grid-column-start:2;
+    }
     &.our-side {
+        justify-content:flex-start;
+        grid-column-start:1;
+        grid-column-end: 3;
+        &.favor {
+            grid-column-end:4;
+        }
+        grid-row-start:2;
+    }
+}
+
+.player-home {
+    &.card-row {
+        display:flex;
+        flex-direction:row-reverse;
+        justify-content:flex-start;
+        align-items:flex-end;
+        flex-wrap: wrap-reverse;
+
         grid-row-start:2;
         grid-column-start:1;
-        grid-column-end:2;
+        grid-column-end:3;
+
+        &.favor {
+            grid-column-end:2;
+        }
+        &.our-side {
+            align-items:flex-start;
+            flex-direction:row;
+            flex-wrap:wrap;
+            grid-row-start:2;
+            grid-column-start:3;
+            &.favor {
+                grid-column-start:4;
+            }
+            grid-column-end:5;
+        }
     }
 }
 
 .deck-cards {
     display: flex;
+    justify-content:space-between;
 }
 
+.province-row {
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+}
+
+.left-decks {
+    display:flex; 
+    flex-direction:row;
+    justify-content:flex-start;
+}
+
+.right-decks {
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-end;
+}
 
 
 .card-row, .hand {
@@ -92,33 +170,28 @@ player-home {
     justify-content: flex-start;
 }
 
-.card-wrapper {
-    &.at-home {
-        margin: 0px 5px 0px 5px;
-    }
-}
-
-.board-middle {
-    margin-top:40px;
-    display: grid;
-    grid-template-rows: @card-height*1.3 1fr @card-height*1.3;
-    grid-template-columns: auto;
+.play-area {
+    overflow:scroll;
     grid-row-start:1;
     grid-row-end:4;
     grid-column-start:2;
-}
-
-.board-inner {
-    grid-row-start:2;
-    grid-column-start:1;
-}
-
-.play-area {
-    height:100%;
-    display:grid;
-    grid-template-rows: (@card-height*1.3) 1fr @center-bar-height 1fr (@card-height*1.3);
-    grid-row-start:1;
-    grid-row-end:6;
-    grid-column-start:1;
     grid-column-end:4;
+    display:grid;
+    grid-template-rows: minmax(2*@card-height+2*@attachment-offset,min-content) 1fr @center-bar-height 1fr minmax(2*@card-height+2*@attachment-offset,min-content);
+    grid-template-columns: minmax(9*(@card-width+10px), auto) 10px @chat-width;
+
+    &.small {
+        grid-template-rows: minmax(2*@card-sm-height + 2*@attachment-offset-sm, min-content) 1fr @center-bar-height 1fr minmax(2*@card-sm-height + 2*@attachment-offset-sm, min-content);
+        grid-template-columns: minmax(9*(@card-sm-width+10px), auto) 10px (@card-sm-width*3) @chat-width;
+    }
+
+    &.large {
+        grid-template-rows: minmax(2*@card-lg-height+2*@attachment-offset-lg,min-content) 1fr @center-bar-height 1fr minmax(2*@card-lg-height+2*@attachment-offset-lg,min-content);
+        grid-template-columns: minmax(9*(@card-lg-width+10px), auto) 10px (@card-lg-width*3) @chat-width;
+    }
+
+    &.x-large {
+        grid-template-rows: minmax(2*@card-xl-height + 2*@attachment-offset-xl,min-content) 1fr @center-bar-height 1fr minmax(2*@card-xl-height + 2*@attachment-offset-xl,min-content);
+        grid-template-columns: minmax(9*(@card-xl-width+10px), auto) 10px @chat-width;
+    }
 }

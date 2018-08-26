@@ -7,6 +7,7 @@ import 'jquery-nearest';
 
 import CardMenu from './CardMenu.jsx';
 import CardCounters from './CardCounters.jsx';
+import { textChangeRangeIsUnchanged } from 'typescript';
 
 class Card extends React.Component {
     constructor() {
@@ -170,11 +171,12 @@ class Card extends React.Component {
     getWrapper() {
         let wrapperClassName = '';
         let attachments = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
-        if(attachments > 0) {
-            wrapperClassName += 'wrapper-' + attachments.toString();
-        }
+        wrapperClassName += 'wrapper-' + attachments.toString();
         if(this.props.source === 'play area') {
             wrapperClassName += ' at-home';
+        }
+        if(this.props.size !== 'normal') {
+            wrapperClassName += ' ' + this.props.size;
         }
         return wrapperClassName;
     }
