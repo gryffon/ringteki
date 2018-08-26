@@ -25,7 +25,7 @@ class StrongholdRow extends React.Component {
 
         if(this.props.isMe || this.props.spectating && !this.props.otherPlayer) {
             let shClass = 'player-stronghold-row our-side';
-            if(this.props.thisPlayer && this.props.thisPlayer.favor) {
+            if(this.props.thisPlayer && this.props.thisPlayer.imperialFavor) {
                 shClass += ' favor';
             }
             return (
@@ -38,7 +38,7 @@ class StrongholdRow extends React.Component {
             );
         }
         let shClass = 'player-stronghold-row their-side';
-        if(this.props.otherPlayer && this.props.otherPlayer.favor) {
+        if(this.props.otherPlayer && this.props.otherPlayer.imperialFavor) {
             shClass += ' favor';
         }
         return (
