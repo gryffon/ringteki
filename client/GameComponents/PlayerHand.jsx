@@ -39,25 +39,36 @@ class PlayerHand extends React.Component {
     }
 
     getCards(needsSquish) {
-        let cardIndex = 0;
         let handLength = this.props.cards ? this.props.cards.length : 0;
+        let cardIndex = 1;
         let cardWidth = this.getCardWidth();
-
-        let requiredWidth = handLength * cardWidth;
-        let overflow = requiredWidth - 480;
-        let offset = overflow / (handLength - 1);
+        let attachmentOffset = 13;
+        switch(this.props.size) {
+            case 'large':
+                attachmentOffset *= 1.4;
+                break;
+            case 'small':
+                attachmentOffset *= 0.8;
+                break;
+            case 'x-large':
+                attachmentOffset *= 2;
+                break;
+        }
 
         let hand = _.map(this.props.cards, card => {
-            let left = (cardWidth - offset) * cardIndex++;
-
             let style = {};
+            let className = '';
             if(needsSquish) {
-                style = {
-                    left: left + 'px'
-                };
+                className += ' squish';
+                if(cardIndex++ === handLength) {
+                    className += ' tail';
+                    if(attachmentOffset > (480 / (cardWidth * handLength))) {
+                        className += ' nohide';
+                    }
+                }
             }
 
-            return (<Card key={ card.uuid } card={ card } style={ style } disableMouseOver={ !this.props.isMe } source='hand'
+            return (<Card key={ card.uuid } card={ card } className={ className } style={ style } disableMouseOver={ !this.props.isMe } source='hand'
                 onMouseOver={ this.props.onMouseOver }
                 onMouseOut={ this.props.onMouseOut }
                 onClick={ this.props.onCardClick }
