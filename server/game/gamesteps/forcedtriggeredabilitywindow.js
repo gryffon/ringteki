@@ -30,7 +30,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     }
 
     addChoice(context) {
-        if(!this.resolvedAbilities.some(resolved => resolved.ability === context.ability && resolved.event === context.event)) {
+        if(!context.event.cancelled && !this.resolvedAbilities.some(resolved => resolved.ability === context.ability && resolved.event === context.event)) {
             this.choices.push(context);
         }
     }

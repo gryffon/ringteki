@@ -30,10 +30,10 @@ class CannotRestriction {
     checkCondition(context) {
         if(!this.restriction) {
             return true;
+        } else if(!context) {
+            throw new Error('checkRestrictions called without a context');
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
-        } else if(!context) {
-            return false; // throw Error here?
         }
         let player = this.player || this.source && this.source.controller;
         return checkRestrictions[this.restriction](context, player, this.source);

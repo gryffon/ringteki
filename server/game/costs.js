@@ -101,12 +101,12 @@ const Costs = {
      * Cost that ensures that the player can still play a Limited card this
      * round.
      */
-    playLimited: function() {
+    playLimited: function () {
         return {
-            canPay: function(context) {
+            canPay: function (context) {
                 return !context.source.isLimited() || context.player.limitedPlayed < context.player.maxLimited;
             },
-            pay: function(context) {
+            pay: function (context) {
                 if(context.source.isLimited()) {
                     context.player.limitedPlayed += 1;
                 }
@@ -118,12 +118,12 @@ const Costs = {
     /**
      * Cost that represents using your action in an ActionWindow
      */
-    useInitiateAction: function() {
+    useInitiateAction: function () {
         return {
-            canPay: function() {
+            canPay: function () {
                 return true;
             },
-            pay: function(context) {
+            pay: function (context) {
                 context.game.markActionAsTaken();
             },
             canIgnoreForTargeting: true
@@ -132,13 +132,13 @@ const Costs = {
     /**
      * Cost that will pay the exact printed fate cost for the card.
      */
-    payPrintedFateCost: function() {
+    payPrintedFateCost: function () {
         return {
-            canPay: function(context) {
+            canPay: function (context) {
                 let amount = context.source.getCost();
                 return context.player.fate >= amount && (amount === 0 || context.player.checkRestrictions('spendFate', context));
             },
-            pay: function(context) {
+            pay: function (context) {
                 context.player.fate -= context.source.getCost();
             },
             canIgnoreForTargeting: true
@@ -169,10 +169,10 @@ const Costs = {
     giveFateToOpponent: (amount = 1) => CostBuilders.giveFateToOpponent(amount),
     returnRings: function () {
         return {
-            canPay: function(context) {
+            canPay: function (context) {
                 return Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name);
             },
-            resolve: function(context, result) {
+            resolve: function (context, result) {
                 let chosenRings = [];
                 let promptPlayer = () => {
                     let buttons = [];
@@ -180,7 +180,7 @@ const Costs = {
                         buttons.push({ text: 'Done', arg: 'done' });
                     }
                     if(result.canCancel) {
-                        buttons.push({ text: 'Cancel', arg: 'cancel'});
+                        buttons.push({ text: 'Cancel', arg: 'cancel' });
                     }
                     context.game.promptForRingSelect(context.player, {
                         activePromptTitle: 'Choose a ring to return',
@@ -202,7 +202,10 @@ const Costs = {
                                 return true;
                             }
                         },
-                        onCancel: () => context.costs.returnRing = []
+                        onCancel: () => {
+                            context.costs.returnRing = [];
+                            result.cancelled = true;
+                        }
                     });
                 };
                 promptPlayer();
@@ -213,10 +216,10 @@ const Costs = {
     },
     chooseFate: function () {
         return {
-            canPay: function() {
+            canPay: function () {
                 return true;
             },
-            resolve: function(context, result) {
+            resolve: function (context, result) {
                 let extrafate = context.player.fate - context.player.getReducedCost('play', context.source);
                 if(!context.player.checkRestrictions('placeFateWhenPlayingCharacter', context) || !context.player.checkRestrictions('spendFate', context)) {
                     extrafate = 0;
@@ -275,7 +278,7 @@ const Costs = {
                     handlers: handlers
                 });
             },
-            pay: function(context) {
+            pay: function (context) {
                 context.player.fate -= context.chooseFate;
             },
             promptsPlayer: true

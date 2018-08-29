@@ -2,7 +2,7 @@ const InitateConflictPrompt = require('../../../server/game/gamesteps/conflict/i
 
 describe('InitateConflictPrompt: ', function() {
     beforeEach(function() {
-        this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'raiseEvent', 'promptWithHandlerMenu']);
+        this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'raiseEvent', 'promptWithHandlerMenu', 'getFrameworkContext']);
         this.fireRing = { element: 'fire' };
         this.gameSpy.rings = { fire: this.fireRing};
         this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan']);

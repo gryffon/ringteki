@@ -16,9 +16,9 @@ class DeckSummary extends React.Component {
         };
     }
 
-    onCardMouseOver(event) {
+    onCardMouseOver(event, id) {
         var cardToDisplay = _.filter(this.props.cards, card => {
-            return event.target.innerText === card.name;
+            return id === card.id;
         });
 
         this.setState({ cardToShow: cardToDisplay[0] });
@@ -52,7 +52,7 @@ class DeckSummary extends React.Component {
             let count = 0;
 
             _.each(cardList, card => {
-                cards.push(<div key={ card.card.id }><span>{ card.count + 'x ' }</span><span className='card-link' onMouseOver={ this.onCardMouseOver } onMouseOut={ this.onCardMouseOut }>{ card.card.name }</span></div>);
+                cards.push(<div key={ card.card.id }><span>{ card.count + 'x ' }</span><span className='card-link' onMouseOver={ event => this.onCardMouseOver(event, card.card.id) } onMouseOut={ this.onCardMouseOut }>{ card.card.name }</span></div>);
                 count += parseInt(card.count);
             });
 

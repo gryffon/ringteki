@@ -465,10 +465,10 @@ class DrawCard extends BaseCard {
             this.game.currentConflict.removeFromConflict(this);
         }
 
-        if(this.isDishonored && this.checkRestrictions('affectedByHonor')) {
+        if(this.isDishonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
             this.game.addMessage('{0} loses 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.loseHonor().getEvent(this.controller, this.game.getFrameworkContext()));
-        } else if(this.isHonored && this.checkRestrictions('affectedByHonor')) {
+        } else if(this.isHonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
             this.game.addMessage('{0} gains 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.gainHonor().getEvent(this.controller, this.game.getFrameworkContext()));
         }
