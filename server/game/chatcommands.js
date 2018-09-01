@@ -26,6 +26,7 @@ class ChatCommands {
             '/stop-clocks': this.stopClocks,
             '/start-clocks': this.startClocks,
             '/modify-clock': this.modifyClock,
+            '/roll': this.random,
             '/disconnectme': this.disconnectMe,
             '/manual': this.manual
         };
@@ -56,6 +57,13 @@ class ChatCommands {
         let num = this.getNumberOrDefault(args[1], 60);
         this.game.addMessage('{0} adds {1} seconds to their clock', player, num);
         player.clock.modify(num);
+    }
+
+    random(player, args) {
+        let num = this.getNumberOrDefault(args[1], 4);
+        if(num > 1) {
+            this.game.addMessage('{0} rolls a d{1}: {2}', player, num, Math.floor(Math.random() * num) + 1);
+        }
     }
 
     draw(player, args) {
