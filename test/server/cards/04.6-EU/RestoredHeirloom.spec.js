@@ -46,7 +46,7 @@ describe('Restored Heirloom', function() {
                 expect(this.player1.fate).toBe(2);
             });
 
-            fit('should trigger when the water ring is resolved by Shiba Tsukune', function() {
+            it('should trigger when the water ring is resolved by Shiba Tsukune', function() {
                 this.player1.clickPrompt('Pass Conflict');
                 this.player1.clickPrompt('Yes');
                 this.berserker.bowed = true;
