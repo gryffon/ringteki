@@ -134,6 +134,26 @@ describe('Asako Azunami', function() {
                 expect(this.seppunGuardsman.bowed).toBe(true);
                 expect(this.shibaTsukune.bowed).toBe(false);
             });
+
+            it('should work with Shiba Tsukune', function() {
+                this.player1.clickPrompt('Pass Conflict');
+                this.player1.clickPrompt('Yes');
+                this.seppunGuardsman.bowed = true;
+                this.isawaKaede = this.player1.findCardByName('isawa-kaede');
+                this.isawaKaede.bowed = true;
+                this.asakoAzunami.bowed = true;
+                this.noMoreActions();
+                this.noMoreActions();
+                this.noMoreActions();
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.shibaTsukune);
+                this.player1.clickCard(this.shibaTsukune);
+                this.player1.clickRing('water');
+                this.player1.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.asakoAzunami);
+            });
         });
     });
 });

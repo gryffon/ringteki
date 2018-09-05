@@ -6,7 +6,7 @@ describe('Restored Heirloom', function() {
                     phase: 'conflict',
                     player1: {
                         fate: 2,
-                        inPlay: ['matsu-berserker'],
+                        inPlay: ['matsu-berserker', 'shiba-tsukune'],
                         conflictDiscard: ['restored-heirloom']
                     }
                 });
@@ -44,6 +44,25 @@ describe('Restored Heirloom', function() {
                 this.player1.clickCard(this.berserker);
                 expect(this.heirloom.location).toBe('play area');
                 expect(this.player1.fate).toBe(2);
+            });
+
+            fit('should trigger when the water ring is resolved by Shiba Tsukune', function() {
+                this.player1.clickPrompt('Pass Conflict');
+                this.player1.clickPrompt('Yes');
+                this.berserker.bowed = true;
+                this.shibaTsukune = this.player1.findCardByName('shiba-tsukune');
+                this.shibaTsukune.bowed = true;
+                this.noMoreActions();
+                this.noMoreActions();
+                this.noMoreActions();
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.shibaTsukune);
+                this.player1.clickCard(this.shibaTsukune);
+                this.player1.clickRing('water');
+                this.player1.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.heirloom);
             });
         });
     });
