@@ -168,6 +168,35 @@ describe('Karada District', function() {
                 });
             });
         });
+
+        describe('Karada/Talisman interaction', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['borderlands-defender'],
+                        hand: ['talisman-of-the-sun'],
+                        dynastyDiscard: ['karada-district']
+                    },
+                    player2: {
+                        inPlay: ['bayushi-liar'],
+                        hand: ['calling-in-favors']
+                    }
+                });
+                this.karadaDistrict = this.player1.placeCardInProvince('karada-district');
+            });
+
+            it('should discard owned Talisman of the Sun', function() {
+                this.talismanOfTheSun = this.player1.playAttachment('talisman-of-the-sun', 'borderlands-defender');
+                this.player2.clickCard('calling-in-favors');
+                this.player2.clickCard(this.talismanOfTheSun);
+                this.bayushiLiar = this.player2.clickCard('bayushi-liar');
+                expect(this.talismanOfTheSun.controller).toBe(this.player2.player);
+                this.player1.clickCard(this.karadaDistrict);
+                this.player1.clickCard(this.talismanOfTheSun);
+                expect(this.talismanOfTheSun.location).toBe('conflict discard pile');
+            });
+        });
     });
 });
 
