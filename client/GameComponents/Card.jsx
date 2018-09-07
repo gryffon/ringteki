@@ -472,7 +472,7 @@ class Card extends React.Component {
     render() {
         if(this.props.wrapped) {
             return (
-                <div className={ 'card-wrapper' } style={ Object.assign(this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
+                <div className={ 'card-wrapper' } style={ Object.assign({}, this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
                     { this.getCard() }
                     { this.getAttachments() }
                 </div>);
