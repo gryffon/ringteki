@@ -83,6 +83,7 @@ class SetupProvincesPrompt extends AllPlayerPrompt {
             this.strongholdProvince[player.uuid].inConflict = false;
             this.strongholdProvince[player.uuid] = null;
             this.selectableCards[player.uuid] = player.provinceDeck.toArray();
+            this.selectedCards[player.uuid] = [];
             return true;
         } else if(arg !== 'done') {
             return false;
