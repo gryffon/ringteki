@@ -63,5 +63,88 @@ describe('Embrace the Void', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
         });
+
+        describe('Embrace the Void/A Legion of One interaction', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        fate:1,
+                        inPlay: ['adept-of-the-waves'],
+                        hand: ['a-legion-of-one']
+                    },
+                    player2: {
+                        inPlay: ['adept-of-the-waves'],
+                        hand: ['embrace-the-void']
+                    }
+                });
+                this.legion = this.player1.findCardByName('a-legion-of-one');
+                this.adept = this.player1.findCardByName('adept-of-the-waves');
+                this.adept.fate = 2;
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.adept],
+                    defenders: []
+                });
+            });
+
+            it('should give Embrace the Void\'s controller the fate but still let A Legion Of One trigger a second time', function() {
+                this.milStat = this.adept.getMilitarySkill();
+                this.polStat = this.adept.getMilitarySkill();
+                this.fateStat = this.adept.fate;
+                this.player2.playAttachment('embrace-the-void', this.adept);
+                this.player1.clickCard(this.legion);
+                this.player1.clickCard(this.adept);
+                this.player1.clickPrompt('Remove 1 fate to resolve this ability again');
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect('embrace-the-void');
+                this.player2.clickCard('embrace-the-void');
+                expect(this.player1).toHavePrompt('Choose a character');
+                expect(this.player1).toBeAbleToSelect(this.adept);
+                this.player1.clickCard(this.adept);
+                this.player1.clickPrompt('Done');
+                expect(this.adept.getMilitarySkill()).toBe(this.milStat + 6);
+                expect(this.adept.getPoliticalSkill()).toBe(this.polStat);
+                expect(this.adept.fate).toBe(this.fateStat - 1);
+            });
+        });
+
+        describe('Embrace the Void/I Am Ready interaction', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        fate:1,
+                        inPlay: ['wandering-ronin', 'shinjo-outrider'],
+                        hand: ['i-am-ready']
+                    },
+                    player2: {
+                        fate: 1,
+                        inPlay: ['adept-of-the-waves'],
+                        hand: ['embrace-the-void']
+                    }
+                });
+                this.ronin = this.player1.findCardByName('wandering-ronin');
+                this.shinjo = this.player1.findCardByName('shinjo-outrider');
+                this.shinjo.fate = 2;
+                this.ronin.fate = 2;
+                this.shinjo.bowed = true;
+                this.game.checkGameState(true);
+                this.player1.pass();
+                this.embrace = this.player2.playAttachment('embrace-the-void', this.shinjo);
+            });
+
+            it('should not cancel the effects of the event', function() {
+                this.fateStat = this.shinjo.fate;
+                this.player1.clickCard('i-am-ready');
+                this.player1.clickCard(this.shinjo);
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect('embrace-the-void');
+                this.player2.clickCard('embrace-the-void');
+                expect(this.shinjo.bowed).toBe(false);
+                expect(this.shinjo.fate).toBe(this.fateStat - 1);
+                expect(this.player2.fate).toBe(2);
+            });
+        });
     });
 });

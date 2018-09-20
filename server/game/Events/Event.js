@@ -16,6 +16,10 @@ class Event {
         this.order = 0;
         this.isContingent = false;
 
+        this.setupParams(params);
+    }
+
+    setupParams(params) {
         _.extend(this, params);
     }
 

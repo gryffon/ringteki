@@ -10,13 +10,11 @@ class EmbraceTheVoid extends DrawCard {
             effect: 'take the {1} fate being removed from {2}',
             effectArgs: context => [context.event.fate, context.source.parent],
             handler: context => {
-                let newEvent = context.event.window.addEvent(ability.actions.removeFate({
+                let newEvent = ability.actions.removeFate({
                     recipient: context.player,
                     amount: context.event.fate
-                }).getEvent(context.source.parent, context));
-                context.event.getResult = () => newEvent.getResult();
-                newEvent.order = context.event.order;
-                context.cancel();
+                }).getEvent(context.source.parent, context);
+                context.event.replaceMoveFate(newEvent);
             }
         });
     }

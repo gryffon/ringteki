@@ -8,6 +8,15 @@ class MoveFateEvent extends Event {
         this.recipient = recipient;
         this.fate = fate;
         this.gameAction = gameAction;
+        this.params = params;
+    }
+
+    replaceMoveFate(newMoveFate) {
+        this.setupParams(newMoveFate.params);
+        this.origin = newMoveFate.origin;
+        this.recipient = newMoveFate.recipient;
+        this.fate = newMoveFate.fate;
+        this.gameAction = newMoveFate.gameAction;
     }
 
     moveFate() {
