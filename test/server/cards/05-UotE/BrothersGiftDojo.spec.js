@@ -1,6 +1,6 @@
-describe('Brother's Gift Dojo', function() {
+describe('Brother\'s Gift Dojo', function() {
     integration(function() {
-        describe('Brother's Gift Dojo\'s ability', function() {
+        describe('Brother\'s Gift Dojo\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',

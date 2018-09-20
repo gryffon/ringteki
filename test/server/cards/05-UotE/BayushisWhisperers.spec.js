@@ -1,6 +1,6 @@
-describe('Bayushi's Whisperers', function() {
+describe('Bayushi\'s Whisperers', function() {
     integration(function() {
-        describe('Bayushi's Whisperers\'s ability', function() {
+        describe('Bayushi\'s Whisperers\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
