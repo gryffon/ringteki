@@ -177,16 +177,51 @@ class Card extends React.Component {
         return wrapperClassName;
     }
 
+    getWrapperStyle() {
+        let wrapperStyle = {};
+        let attachmentOffset = 13;
+        switch(this.props.size) {
+            case 'large':
+                attachmentOffset *= 1.4;
+                break;
+            case 'small':
+                attachmentOffset *= 0.8;
+                break;
+            case 'x-large':
+                attachmentOffset *= 2;
+                break;
+        }
+        let attachments = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
+        if(attachments > 0) {
+            wrapperStyle = { marginLeft:(attachments * attachmentOffset) + 'px'};
+        }
+
+        return wrapperStyle;
+    }
+
     getAttachments() {
 
         if(this.props.source !== 'play area') {
             return null;
         }
 
+        let attachmentOffset = 13;
+        let cardLayer = 10;
+        switch(this.props.size) {
+            case 'large':
+                attachmentOffset *= 1.4;
+                break;
+            case 'small':
+                attachmentOffset *= 0.8;
+                break;
+            case 'x-large':
+                attachmentOffset *= 2;
+                break;
+        }
         var index = 1;
         var attachments = _.map(this.props.card.attachments, attachment => {
             var returnedAttachment = (<Card key={ attachment.uuid } source={ this.props.source } card={ attachment }
-                className={ 'attachment attachment-' + index } wrapped={ false }
+                className={ 'attachment' } wrapped={ false } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }
                 onMouseOver={ this.props.disableMouseOver ? null : this.onMouseOver.bind(this, attachment) }
                 onMouseOut={ this.props.disableMouseOver ? null : this.onMouseOut }
                 onClick={ this.props.onClick }
@@ -326,6 +361,7 @@ class Card extends React.Component {
                 onTouchStart={ ev => this.onTouchStart(ev) }>
                 { this.getCardOrder() }
                 <div className={ cardClass }
+                    style={ this.props.wrapped ? {} : this.props.style }
                     onMouseOver={ this.props.disableMouseOver ? null : this.onMouseOver.bind(this, this.props.card) }
                     onMouseOut={ this.props.disableMouseOver ? null : this.onMouseOut }
                     onClick={ ev => this.onClick(ev, this.props.card) }
@@ -436,7 +472,7 @@ class Card extends React.Component {
     render() {
         if(this.props.wrapped) {
             return (
-                <div className={ 'card-wrapper ' + this.getWrapper() } style={ this.props.style }>
+                <div className={ 'card-wrapper' } style={ Object.assign({}, this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
                     { this.getCard() }
                     { this.getAttachments() }
                 </div>);
