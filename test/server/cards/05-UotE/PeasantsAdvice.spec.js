@@ -1,6 +1,6 @@
-describe('Peasant's Advice', function() {
+describe('Peasant\'s Advice', function() {
     integration(function() {
-        describe('Peasant's Advice\'s ability', function() {
+        describe('Peasant\'s Advice\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',

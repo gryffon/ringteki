@@ -1,6 +1,6 @@
-describe('Liar's Mask', function() {
+describe('Liar\'s Mask', function() {
     integration(function() {
-        describe('Liar's Mask\'s ability', function() {
+        describe('Liar\'s Mask\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
