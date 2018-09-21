@@ -1,6 +1,6 @@
-describe('Askao Maezawa', function() {
+describe('Asako Maezawa', function() {
     integration(function() {
-        describe('Askao Maezawa\'s ability', function() {
+        describe('Asako Maezawa\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
