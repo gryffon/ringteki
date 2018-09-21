@@ -27,7 +27,7 @@ describe('Yasuki Oguri', function() {
                 this.player2.pass();
                 this.player1.clickCard('banzai', 'hand');
                 this.player1.clickCard(this.outrider);
-                this.player1.clickPrompt('Done');
+                //this.player1.clickPrompt('Done');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.oguri);
             });
@@ -41,7 +41,7 @@ describe('Yasuki Oguri', function() {
                 this.player2.pass();
                 this.player1.clickCard('banzai', 'hand');
                 this.player1.clickCard(this.outrider);
-                this.player1.clickPrompt('Done');
+                //this.player1.clickPrompt('Done');
                 expect(this.player2).not.toHavePrompt('Triggered Abilities');
                 expect(this.player2).not.toBeAbleToSelect(this.oguri);
             });
@@ -58,7 +58,6 @@ describe('Yasuki Oguri', function() {
                 this.player2.pass();
                 this.player1.clickCard('banzai', 'hand');
                 this.player1.clickCard(this.outrider);
-                this.player1.clickPrompt('Done');
                 this.player2.clickCard(this.oguri);
                 expect(this.oguri.getMilitarySkill()).toBe(this.mil + 1);
                 expect(this.oguri.getPoliticalSkill()).toBe(this.pol + 1);
