@@ -15,7 +15,7 @@ describe('Ignoble Enforcers', function() {
                 this.ignobleEnforcers = this.player1.placeCardInProvince('ignoble-enforcers');
             });
 
-            it('should trigger under XYZ circumstances', function() {
+            it('should trigger when Ignoble Enforcers is played', function() {
                 this.player1.clickCard(this.ignobleEnforcers);
                 this.player1.clickPrompt('1');
                 expect(this.ignobleEnforcers.location).toBe('play area');
@@ -36,14 +36,6 @@ describe('Ignoble Enforcers', function() {
                 this.player1.clickPrompt('2');
                 expect(this.player1.honor).toBe(8);
                 expect(this.ignobleEnforcers.fate).toBe(3);
-            });
-
-            it('should not trigger under ABC circumstances', function() {
-
-            });
-
-            it('should have DEF effect on GHI', function() {
-
             });
         });
     });
