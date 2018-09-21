@@ -90,6 +90,7 @@ class HowToPlay extends React.Component {
                         <li>/unclaim-ring ring - Set 'ring' as unclaimed.</li>
                         <li>/honor - Move the state of a character towards honored.</li>
                         <li>/dishonor - Move the state of a character towards dishonored.</li>
+                        <li>/roll x - Displays a random number between 1 and x (4 by default).</li>
                         <li>/manual - Activate or deactivate manual mode (see above).</li>
                     </ul>
 

@@ -15,7 +15,7 @@
 
 .hand {
     .card-wrapper {
-        margin: 0 5px 0 0;
+        margin: 0 0 0 0;
     }
 
     &.small {
@@ -36,6 +36,44 @@
     margin: 0px 5px;
 }
 
-.hand.squish .card-wrapper {
-    position: absolute;
+.hand.squish {
+    flex-shrink:1;
+    flex-wrap:nowrap;
+    .card-wrapper {
+        border-radius: 4px 0px 0px 4px;
+        min-width:@attachment-offset;
+        flex-basis:@card-width;
+        &.large {
+            min-width:@attachment-offset-lg;
+            flex-basis:@card-lg-width;
+        }
+
+        &.small {
+            min-width:@attachment-offset-sm;
+            flex-basis:@card-sm-width;
+        }
+        
+        &.x-large {
+            min-width:@attachment-offset-xl;
+            flex-basis:@card-xl-width;
+        }
+        &.tail {
+            overflow:hidden;
+            &.nohide {
+                overflow:visible;
+                border-radius: 4px;
+            }
+        }
+        .card-frame {
+            border-radius: 4px;
+            .card {
+                overflow: visible;
+                border-radius: 4px;
+                .card-image {
+                    border-radius: 4px;
+                }
+            }
+        }
+        
+    }
 }
