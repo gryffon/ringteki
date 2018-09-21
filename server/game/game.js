@@ -850,7 +850,9 @@ class Game extends EventEmitter {
      * @returns {undefined}
      */
     resolveAbility(context) {
-        this.queueStep(new AbilityResolver(this, context));
+        let resolver = new AbilityResolver(this, context);
+        this.queueStep(resolver);
+        return resolver;
     }
 
     openSimultaneousEffectWindow(choices) {
