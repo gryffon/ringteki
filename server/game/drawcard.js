@@ -140,7 +140,8 @@ class DrawCard extends BaseCard {
         return this.isUnique() && this.game.allCards.any(card => (
             card.location === 'play area' &&
             card.name === this.name &&
-            (card.owner === player || card.controller === player || (card.owner === this.owner && card !== this))
+            card !== this &&
+            (card.owner === player || card.controller === player || card.owner === this.owner)
         ));
     }
 
@@ -196,7 +197,7 @@ class DrawCard extends BaseCard {
          * @return {integer} The military skill value
          */
         if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
-            return Math.max(0, this.sumEffects('modifyGlory') + this.cardData.glory);
+            return Math.max(0, this.sumEffects('modifyGlory') + this.cardData.glory) + this.sumEffects('modifyDuelGlory');
         }
         return 0;
     }
@@ -234,7 +235,7 @@ class DrawCard extends BaseCard {
         }, skill);
         // multiply total
         skill = this.getEffects('modifyMilitarySkillMultiplier').reduce((total, value) => total * value, skill);
-        return floor ? Math.max(0, skill) : skill;
+        return floor ? Math.max(0, skill) + this.sumEffects('modifyDuelMilitarySkill') : skill + this.sumEffects('modifyDuelMilitarySkill');
     }
 
     get politicalSkill() {
@@ -263,7 +264,7 @@ class DrawCard extends BaseCard {
         }, skill);
         // multiply total
         skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, value) => total * value, skill);
-        return floor ? Math.max(0, skill) : skill;
+        return floor ? Math.max(0, skill) + this.sumEffects('modifyDuelPoliticalSkill') : skill + this.sumEffects('modifyDuelPoliticalSkill');
     }
 
     get baseMilitarySkill() {
