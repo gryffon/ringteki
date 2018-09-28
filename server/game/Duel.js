@@ -15,9 +15,9 @@ class Duel {
     getSkillTotal(card) {
         if(card.location === 'play area') {
             if(this.type === 'military') {
-                return card.getMilitarySkill(false, this.bidFinished);
+                return card.getMilitarySkill(this.bidFinished);
             } else if(this.type === 'political') {
-                return card.getPoliticalSkill(false, this.bidFinished);
+                return card.getPoliticalSkill(this.bidFinished);
             } else if(this.type === 'glory') {
                 return card.glory;
             }
@@ -37,9 +37,9 @@ class Duel {
         this.bidFinished = true;
         let cards = [this.challenger, this.target].filter(card => card.location === 'play area');
         let typeToEffect = {
-            military: 'modifyMilitarySkill',
-            political: 'modifyPoliticalSkill',
-            glory: 'modifyGlory'
+            military: 'modifyDuelMilitarySkill',
+            political: 'modifyDuelPoliticalSkill',
+            glory: 'modifyDuelGlory'
         };
         _.each(cards, card => {
             this.source.untilEndOfDuel(ability => ({
