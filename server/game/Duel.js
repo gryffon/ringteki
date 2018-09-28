@@ -9,7 +9,7 @@ class Duel {
         this.challengerTotal = this.getSkillTotal(challenger);
         this.target = target;
         this.targetTotal = this.getSkillTotal(target);
-        this.bidFinished = false; 
+        this.bidFinished = false;
     }
 
     getSkillTotal(card) {
