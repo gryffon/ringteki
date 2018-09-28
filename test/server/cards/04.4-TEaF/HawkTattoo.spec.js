@@ -5,7 +5,7 @@ describe('Hawk Tattoo', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['tattooed-wanderer', 'ancient-master'],
+                        inPlay: ['tattooed-wanderer', 'agasha-swordsmith' , 'ancient-master'],
                         hand: ['hawk-tattoo']
                     },
                     player2: {
@@ -13,11 +13,12 @@ describe('Hawk Tattoo', function() {
                     }
                 });
                 this.tattooedWanderer = this.player1.findCardByName('tattooed-wanderer');
+                this.agashaSwordsmith = this.player1.findCardByName('agasha-swordsmith');
                 this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
                 this.seppunGuardsman = this.player2.findCardByName('seppun-guardsman');
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: ['ancient-master'],
+                    attackers: ['ancient-master','agasha-swordsmith'],
                     defenders: ['seppun-guardsman']
                 });
                 this.player2.pass();
@@ -32,16 +33,13 @@ describe('Hawk Tattoo', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
-            it('should move an opposing character to the conflict', function() {
-                this.hawkTattoo = this.player1.playAttachment('hawk-tattoo', this.adeptOfTheWaves);
-                expect(this.player1).toHavePrompt('Triggered Abilities');
-                expect(this.player1).toBeAbleToSelect(this.hawkTattoo);
-                this.player1.clickCard(this.hawkTattoo);
-                expect(this.adeptOfTheWaves.inConflict).toBe(true);
-                expect(this.player2).toHavePrompt('Conflict Action Window');
+            it('should not be playable on an opposing character', function() {
+                this.hawkTattoo = this.player1.clickCard('hawk-tattoo', 'hand');
+                expect(this.player1).toBeAbleToSelect(this.tattooedWanderer);
+                expect(this.player1).not.toBeAbleToSelect(this.seppunGuardsman);
             });
 
-            it('should not pass priority if played on a character in the conflict', function() {
+            it('should not pass priority if played on a monk in the conflict', function() {
                 this.hawkTattoo = this.player1.playAttachment('hawk-tattoo', 'ancient-master');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hawkTattoo);
@@ -50,10 +48,10 @@ describe('Hawk Tattoo', function() {
             });
 
             it('should not trigger if played on a character in the conflict who is not a monk', function() {
-                this.hawkTattoo = this.player1.playAttachment('hawk-tattoo', this.seppunGuardsman);
-                expect(this.seppunGuardsman.attachments.toArray()).toContain(this.hawkTattoo);
+                this.hawkTattoo = this.player1.playAttachment('hawk-tattoo', this.agashaSwordsmith);
+                expect(this.agashaSwordsmith.attachments.toArray()).toContain(this.hawkTattoo);
                 expect(this.hawkTattoo.location).toBe('play area');
-                expect(this.seppunGuardsman.hasTrait('tattooed')).toBe(true);
+                expect(this.agashaSwordsmith.hasTrait('tattooed')).toBe(true);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
