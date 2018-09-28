@@ -265,7 +265,8 @@ class DrawCard extends BaseCard {
         }, skill);
         // multiply total
         skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, value) => total * value, skill);
-        return floor ? Math.max(0, skill) + this.sumEffects('modifyDuelPoliticalSkill') : skill + this.sumEffects('modifyDuelPoliticalSkill');
+        skill += this.sumEffects('modifyDuelPoliticalSkill');
+        return floor ? Math.max(0, skill) : skill;
     }
 
     get baseMilitarySkill() {
