@@ -197,7 +197,7 @@ class DrawCard extends BaseCard {
          * @return {integer} The military skill value
          */
         if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
-            return Math.max(0, this.sumEffects('modifyGlory') + this.cardData.glory) + this.sumEffects('modifyDuelGlory');
+            return Math.max(0, this.sumEffects('modifyGlory') + this.cardData.glory + this.sumEffects('modifyDuelGlory'));
         }
         return 0;
     }
