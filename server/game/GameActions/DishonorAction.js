@@ -18,7 +18,7 @@ class DishonorAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onCardDishonored', { card: card, context: context }, () => card.dishonor());
+        return super.createEvent('onCardDishonored', { card, context }, event => event.card.dishonor());
     }
 }
 

@@ -12,6 +12,10 @@ class DiscardCardAction extends CardGameAction {
         return true;
     }
 
+    fullyResolved(event) {
+        return this.target.length === 0 || this.target.every(card => event.cards.includes(card));
+    }
+
     getEventArray(context) {
         if(this.target.length === 0) {
             return [];

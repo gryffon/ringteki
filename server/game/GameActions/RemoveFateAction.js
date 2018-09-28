@@ -32,6 +32,10 @@ class RemoveFateAction extends CardGameAction {
         return this.canAffect(event.origin, event.context);
     }
 
+    fullyResolved(event) {
+        return this.target.length === 0 || this.target.includes(event.origin);
+    }
+
     getEvent(card, context) {
         return new MoveFateEvent({ context: context }, this.amount, card, this.recipient, this);
     }
