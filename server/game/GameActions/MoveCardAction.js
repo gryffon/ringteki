@@ -5,6 +5,7 @@ class MoveCardAction extends CardGameAction {
         this.destination = '';
         this.switch = false;
         this.shuffle = false;
+        this.faceup = false;
     }
 
     setup() {
@@ -39,6 +40,8 @@ class MoveCardAction extends CardGameAction {
                 } else if(this.destination === 'dynasty deck') {
                     context.player.shuffleDynastyDeck();
                 }
+            } else if(this.faceup) {
+                card.facedown = false;
             }
         });
     }

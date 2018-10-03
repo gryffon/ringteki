@@ -336,7 +336,7 @@ class Player extends GameObject {
      */
     replaceDynastyCard(location) {
         if(this.getSourceList(location).size() > 1) {
-            return;
+            return false;
         }
         if(this.dynastyDeck.size() === 0) {
             this.deckRanOutOfCards('dynasty');

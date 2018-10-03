@@ -8,20 +8,15 @@ class BustlingAcademy extends DrawCard {
             target: {
                 location: 'province',
                 cardType: ['character','holding'],
-                gameAction: ability.actions.discardCard()
+                gameAction: [
+                    ability.actions.discardCard(),
+                    ability.actions.refillFaceup(context => ({
+                        target: context.target.controller,
+                        location: context.target.location
+                    }))
+                ]
             },
-            then: context => {
-                let location = context.target.location;
-                let controller = context.target.controller;
-                return {
-                    handler: () => {
-                        let card = controller.getDynastyCardInProvince(location);
-                        if(card) {
-                            card.facedown = false;
-                        }
-                    }
-                };
-            }
+            effect: 'discard {0} and refill it faceup'
         });
     }
 }

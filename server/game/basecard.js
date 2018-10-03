@@ -284,6 +284,10 @@ class BaseCard extends EffectSource {
         return !this.anyEffect('canBeSeenWhenFacedown');
     }
 
+    createSnapshot() {
+        return {};
+    }
+
     getSummary(activePlayer, hideWhenFaceup) {
         let isActivePlayer = activePlayer === this.owner;
         let selectionState = activePlayer.getCardSelectionState(this);

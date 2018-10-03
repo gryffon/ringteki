@@ -17,10 +17,10 @@ class CreateTokenAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
+        return super.createEvent('unnamedEvent', { card: card, context: context }, event => {
             let token = context.game.createToken(card);
             card.owner.removeCardFromPile(card);
-            card.owner.replaceDynastyCard(card.location);
+            event.window.refillProvince(card.owner, card.location, context);
             card.moveTo('spirit of the river');
             card.owner.moveCard(token, 'play area');
             if(context.player.isAttackingPlayer()) {
