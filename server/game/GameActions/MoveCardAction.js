@@ -22,16 +22,12 @@ class MoveCardAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onMoveCard', { card: card, context: context }, () => {
+        return super.createEvent('onMoveCard', { card: card, context: context }, event => {
             if(this.switch) {
-                // This is somewhat convoluted in order to avoid triggering refilling the province
                 let otherCard = card.controller.getDynastyCardInProvince(this.destination);
-                if(otherCard) {
-                    card.controller.removeCardFromPile(otherCard);
-                    otherCard.moveTo(card.location);
-                    let sourcePile = card.controller.getSourceList(card.location);
-                    sourcePile.push(otherCard);
-                }
+                context.player.moveCard(otherCard, card.location);
+            } else if(['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location)) {
+                event.window.refillProvince(context.player, card.location, context);
             }
             context.player.moveCard(card, this.destination);
             if(this.shuffle) {

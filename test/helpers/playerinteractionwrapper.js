@@ -402,8 +402,10 @@ class PlayerInteractionWrapper {
             throw new Error(`${location} is not a valid province`);
         }
         if(card.location !== location) {
+            let oldLocation = card.location;
             this.player.moveCard(this.player.getDynastyCardInProvince(location), 'dynasty deck');
             this.player.moveCard(card, location);
+            this.player.replaceDynastyCard(oldLocation);
         }
         card.facedown = false;
         if(this.game.currentPhase !== 'setup') {

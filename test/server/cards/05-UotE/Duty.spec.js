@@ -77,7 +77,7 @@ describe('Duty', function() {
                 this.favorableGround.facedown = true;
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
-                this.forceOfTheRiver = this.player1.playAttachment('force-of-the-river', this.soshiIllusionist)
+                this.forceOfTheRiver = this.player1.playAttachment('force-of-the-river', this.soshiIllusionist);
                 this.noMoreActions();
                 this.noMoreActions();
                 this.initiateConflict({
@@ -143,7 +143,7 @@ describe('Duty', function() {
                 expect(this.duty.location).toBe('conflict discard pile');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 expect(this.soshiIllusionist.militarySkill).toBe(3);
-            })
+            });
         });
     });
 });

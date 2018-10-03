@@ -27,8 +27,8 @@ class RefillFaceupAction extends PlayerAction {
                     if(card) {
                         card.facedown = false;
                     }
-                });    
-            };
+                });
+            }
         });
     }
 }

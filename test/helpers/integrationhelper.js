@@ -166,6 +166,10 @@ global.integration = function(definitions) {
                 //Dynsaty deck related
                 this.player1.provinces = options.player1.provinces;
                 this.player2.provinces = options.player2.provinces;
+                for(const location of ['province 1', 'province 2', 'province 3', 'province 4']) {
+                    this.player1.player.replaceDynastyCard(location);
+                    this.player2.player.replaceDynastyCard(location);
+                }
                 if(options.phase !== 'setup') {
                     this.game.checkGameState(true);
                 }

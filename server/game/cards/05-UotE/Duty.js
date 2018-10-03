@@ -5,9 +5,9 @@ class Duty extends DrawCard {
         this.wouldInterrupt({
             title: 'Cancel honor loss',
             when: {
-                onModifyHonor: (event, context) => 
+                onModifyHonor: (event, context) =>
                     event.player === context.player && event.amount <= -context.player.honor && event.context.stage === 'effect',
-                onTransferHonor: (event, context) => 
+                onTransferHonor: (event, context) =>
                     event.player === context.player && event.amount >= context.player.honor && event.context.stage === 'effect'
             },
             effect: 'cancel their honor loss',

@@ -913,9 +913,11 @@ class Player extends GameObject {
         }
         */
         // Replace a card which has been played, put into play or discarded from a province
+        /*
         if(card.isDynasty && provinceLocations.includes(location) && targetLocation !== 'dynasty deck') {
             this.replaceDynastyCard(location);
         }
+        */
     }
 
     /**
