@@ -37,7 +37,7 @@ describe('Mountaintop Statuary', function() {
         describe('when Rebuild is played on Mountaintop Statuary in the stronghold province', function() {
             beforeEach(function() {
                 this.player1.clickCard(this.mountaintopStatuary);
-                this.rebuild = this.player1.clickCard('rebuild');
+                this.player1.clickCard('rebuild');
             });
 
             it('it should prompt the player', function() {
