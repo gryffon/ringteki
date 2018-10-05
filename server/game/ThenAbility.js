@@ -51,7 +51,7 @@ class ThenAbility extends BaseAbility {
     executeGameActionPrehandlers(context) {
         let actions = this.getGameActions(context);
         for(const action of actions) {
-            action.preEventHandler(context);
+            this.game.queueSimpleStep(() => action.preEventHandler(context));
         }
         this.game.queueSimpleStep(() => this.executeGameActions(actions, context));
     }
