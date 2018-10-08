@@ -1,10 +1,20 @@
 const DrawCard = require('../../drawcard.js');
 
 class SeppunTruthseeker extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
+        this.forcedInterrupt({
+            title: 'Each player draws 2 cards',
+            when: {
+                onCardLeavesPlay: (event, context) => event.card === context.source
+            },
+            gameAction: ability.actions.draw(context => ({
+                target: context.game.getPlayers(),
+                amount: 2
+            }))
+        });
     }
 }
 
-SeppunTruthseeker.id = 'seppun-truthseeker'; // This is a guess at what the id might be - please check it!!!
+SeppunTruthseeker.id = 'seppun-truthseeker';
 
 module.exports = SeppunTruthseeker;
