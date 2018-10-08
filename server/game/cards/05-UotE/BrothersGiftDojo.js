@@ -12,8 +12,7 @@ class BrothersGiftDojo extends ProvinceCard {
                 controller: 'self',
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.sendHome()
-            },
-            effect: 'move {0} home'
+            }
         });
     }
 }
