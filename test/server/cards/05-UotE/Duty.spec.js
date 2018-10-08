@@ -144,6 +144,16 @@ describe('Duty', function() {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 expect(this.soshiIllusionist.militarySkill).toBe(3);
             });
+
+            it('should not trigger when its the last card in the deck and 5 cards are drawn', function() {
+                this.player1.player.conflictDeck.each(card => {
+                    this.player1.player.moveCard(card, 'conflict discard pile');
+                });
+                this.player1.moveCard('duty', 'conflict deck');
+                this.player1.clickPrompt('5');
+                this.player2.clickPrompt('5');
+                expect(this.player1).toHavePrompt('Game Won');
+            });
         });
     });
 });

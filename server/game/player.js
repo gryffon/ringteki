@@ -299,16 +299,18 @@ class Player extends GameObject {
 
         if(numCards > this.conflictDeck.size()) {
             remainingCards = numCards - this.conflictDeck.size();
-            numCards = this.conflictDeck.size();
-        }
-
-        for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
-            this.moveCard(card, 'hand');
-        }
-
-        if(remainingCards > 0) {
+            let cards = this.conflictDeck.toArray();
             this.deckRanOutOfCards('conflict');
+            this.game.queueSimpleStep(() => {
+                for(let card of cards) {
+                    this.moveCard(card, 'hand');
+                }
+            });
             this.game.queueSimpleStep(() => this.drawCardsToHand(remainingCards));
+        } else {
+            for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
+                this.moveCard(card, 'hand');
+            }
         }
     }
 
