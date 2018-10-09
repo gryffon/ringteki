@@ -15,8 +15,7 @@ class MakeAnOpening extends DrawCard {
                 cardType: 'character',
                 controller: 'opponent',
                 cardCondition: card =>
-                    card.isParticipating() &&
-                    (card.militarySkill > 0 || card.politicalSkill > 0),
+                    card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: ability.effects.modifyBothSkills(() => -(this.getHonorDialDifference(context)))
                 }))

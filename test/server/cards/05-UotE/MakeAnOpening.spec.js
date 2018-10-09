@@ -55,15 +55,6 @@ describe('Make An Opening', function() {
                 expect(this.player1).not.toHavePrompt('Make An Opening');
                 expect(this.player1).not.toBeAbleToSelect(this.tenguSensei);
             });
-
-            it('should not be able to target a 0/0 character', function() {
-                this.player1.player.showBid = 5;
-                this.player2.player.showBid = 4;
-                this.player2.pass();
-                this.player1.clickCard('make-an-opening');
-                expect(this.player1).toBeAbleToSelect(this.tenguSensei);
-                expect(this.player1).not.toBeAbleToSelect(this.asahinaArtisan);
-            });
         });
     });
 });
