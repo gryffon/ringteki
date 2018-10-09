@@ -8,7 +8,7 @@ class UtakuTetsuko extends DrawCard {
             targetController: 'opponent',
             effect: ability.effects.increaseCost({
                 amount: 1,
-                match: card => card.type === 'event' || 'character' || 'attachment'
+                match: card => ['event', 'character', 'attachment'].includes(card.type)
             })
         });
     }
