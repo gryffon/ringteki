@@ -27,7 +27,7 @@ class ReturnToDeckAction extends CardGameAction {
             return new LeavesPlayEvent({ context: context, destination: destination, options: { bottom: this.bottom, shuffle: this.shuffle } }, card, this);
         }
         return super.createEvent('onMoveCard', { card: card, context: context }, () => {
-            card.owner.moveCard(card, 'hand', { bottom: this.bottom });
+            card.owner.moveCard(card, destination, { bottom: this.bottom });
             if(this.shuffle) {
                 if(destination === 'dynasty deck') {
                     card.owner.shuffleDynastyDeck();
