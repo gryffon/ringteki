@@ -456,8 +456,8 @@ class Player extends GameObject {
         }
     }
 
-    addPlayableLocation(type, player, location) {
-        let playableLocation = new PlayableLocation(type, player, location);
+    addPlayableLocation(type, player, location, cards = []) {
+        let playableLocation = new PlayableLocation(type, player, location, cards);
         this.playableLocations.push(playableLocation);
         return playableLocation;
     }
