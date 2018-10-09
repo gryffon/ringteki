@@ -11,7 +11,7 @@ class StolenBreath extends DrawCard {
     }
 
     canPlay(context) {
-        if(this.game.currentConflict) {
+        if(this.game.isDuringConflict()) {
             return false;
         }
 
