@@ -5,21 +5,21 @@ class HenshinDisciple extends DrawCard {
         this.persistentEffect({
             condition: () => (
                 this.game.rings.air.isConsideredClaimed(this.controller)) ||
-                (this.game.currentConflict && this.game.currentConflict.hasElement('air')),
+                (this.game.isDuringConflict('air') && this.game.currentConflict.ring.contested),
             match: this,
             effect: ability.effects.modifyPoliticalSkill(2)
         });
         this.persistentEffect({
             condition: () => (
                 this.game.rings.earth.isConsideredClaimed(this.controller)) ||
-                (this.game.currentConflict && this.game.currentConflict.hasElement('earth')),
+                (this.game.isDuringConflict('earth') && this.game.currentConflict.ring.contested),
             match: this,
             effect: ability.effects.modifyMilitarySkill(2)
         });
         this.persistentEffect({
             condition: () => (
                 this.game.rings.fire.isConsideredClaimed(this.controller)) ||
-                (this.game.currentConflict && this.game.currentConflict.hasElement('fire')),
+                (this.game.isDuringConflict('fire') && this.game.currentConflict.ring.contested),
             match: this,
             effect: ability.effects.addKeyword('pride')
         });

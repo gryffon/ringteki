@@ -33,8 +33,8 @@ describe('setup phase', function() {
                 this.selectFirstPlayer(this.player1);
             });
 
-            it('should give 1 fate to second player', function() {
-                expect(this.player2.player.fate).toBe(1);
+            it('should not give 1 fate to second player (RRG v16)', function() {
+                expect(this.player2.player.fate).toBe(0);
             });
 
             it('should start with no cards in hand or on provinces', function() {
