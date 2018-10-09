@@ -1,10 +1,19 @@
 const DrawCard = require('../../drawcard.js');
 
 class LiarsMask extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
+
+    }
+
+    canAttach(card, context) {
+        if(context.player.honor > 6) {
+            return false;
+        }
+
+        return super.canAttach(card, context);
     }
 }
 
-LiarsMask.id = 'liar-s-mask'; // This is a guess at what the id might be - please check it!!!
+LiarsMask.id = 'liar-s-mask';
 
 module.exports = LiarsMask;
