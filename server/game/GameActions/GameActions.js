@@ -43,6 +43,7 @@ const ReturnToDeckAction = require('./ReturnToDeckAction');
 const ReturnToHandAction = require('./ReturnToHandAction');
 const RevealAction = require('./RevealAction');
 const SendHomeAction = require('./SendHomeAction');
+const SetDialAction = require('./SetDialAction');
 const TakeFateRingAction = require('./TakeFateRingAction');
 const TakeRingAction = require('./TakeRingAction');
 const TransferFateAction = require('./TransferFateAction');
@@ -91,6 +92,7 @@ const GameActions = {
     loseImperialFavor: (propertyFactory) => new DiscardFavorAction(propertyFactory),
     modifyBid: (propertyFactory) => new ModifyBidAction(propertyFactory), // amount = 1, direction = 'increast', promptPlayer = false
     playerLastingEffect: (propertyFactory) => new LastingEffectAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetController, condition, until
+    setHonorDial: (propertyFactory) => new SetDialAction(propertyFactory), // value
     takeFate: (propertyFactory) => new TransferFateAction(propertyFactory), // amount = 1
     takeHonor: (propertyFactory) => new TransferHonorAction(propertyFactory), // amount = 1
     // ring actions
