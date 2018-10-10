@@ -7,7 +7,8 @@ class KitsukiShomon extends DrawCard {
             title: 'Dishonor this character instead',
             when: {
                 onCardDishonored: (event, context) =>
-                    event.card.controller === context.player && !context.source.isDishonored &&
+                    event.card.controller === context.player &&
+                    context.source.allowGameAction('dishonor', context) &&
                     event.card !== context.source
             },
             effect: 'dishonor {0} instead of {1}',
