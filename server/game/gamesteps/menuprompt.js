@@ -42,7 +42,7 @@ class MenuPrompt extends UiPrompt {
             return false;
         }
 
-        if(this.context[method](player, arg, method)) {
+        if(this.context[method](player, arg, this.context)) {
             this.complete();
         }
 

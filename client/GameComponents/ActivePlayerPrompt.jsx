@@ -4,6 +4,7 @@ import Draggable from 'react-draggable';
 import _ from 'underscore';
 
 import AbilityTargeting from './AbilityTargeting.jsx';
+import CardNameLookup from './CardNameLookup';
 
 class ActivePlayerPrompt extends React.Component {
     constructor() {
@@ -164,6 +165,8 @@ class ActivePlayerPrompt extends React.Component {
                             onMouseOver={ this.props.onMouseOver }
                             source={ control.source }
                             targets={ control.targets } />);
+                case 'card-name':
+                    return <CardNameLookup cards={ this.props.cards } onCardSelected={ this.onCardNameSelected.bind(this, control.command, control.method) } />;
             }
         });
     }
