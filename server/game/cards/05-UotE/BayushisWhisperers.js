@@ -10,6 +10,7 @@ class BayushisWhisperers extends DrawCard {
             gameAction: ability.actions.lookAt(context => ({ target: context.player.opponent.hand.sortBy(card => card.name), chatMessage: true })),
             then: {
                 handler: context => this.game.promptWithMenu(context.player, this, {
+                    source: context.source,
                     activePrompt: {
                         menuTitle: 'Name a card',
                         controls: [
@@ -21,14 +22,14 @@ class BayushisWhisperers extends DrawCard {
         });
     }
 
-    selectCardName(player, cardName, context) {
+    selectCardName(player, cardName, source) {
         this.game.addMessage('{0} names {1} - {2} cannot play copies of this card this phase', player, cardName, player.opponent);
-        context.source.untilEndOfPhase(ability => ({
+        source.untilEndOfPhase(ability => ({
             targetController: 'opponent',
             effect: ability.effects.playerCannot({
                 cannot: 'play',
                 restricts: 'copiesOfX',
-                source: context.source,
+                source: source,
                 params: cardName
             })
         }));
