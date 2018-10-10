@@ -4,7 +4,7 @@ import Draggable from 'react-draggable';
 import _ from 'underscore';
 
 import AbilityTargeting from './AbilityTargeting.jsx';
-import CardNameLookup from './CardNameLookup';
+import CardNameLookup from './CardNameLookup.jsx';
 
 class ActivePlayerPrompt extends React.Component {
     constructor() {
