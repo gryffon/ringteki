@@ -8,7 +8,7 @@ class LiarsMask extends DrawCard {
         });
     }
 
-    canAttach(card, context) {
+    canPlay(card, context) {
         if(context.player.honor > 6) {
             return false;
         }
