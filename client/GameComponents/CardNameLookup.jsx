@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Typeahead from '../Form/Typeahead';
+import Typeahead from '../FormComponents/Typeahead.jsx';
 
 class CardNameLookup extends React.Component {
     constructor(props) {
