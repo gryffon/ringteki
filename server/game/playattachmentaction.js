@@ -36,7 +36,7 @@ class PlayAttachmentAction extends BaseAction {
             player: context.player,
             card: context.source,
             originalLocation: context.source.location,
-            playType: 'attachment'
+            playType: 'playFromHand'
         });
         context.game.openEventWindow([new AttachAction({ attachment: context.source }).getEvent(context.target, context), cardPlayedEvent]);
     }

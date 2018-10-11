@@ -33,7 +33,7 @@ class PlayCharacterAction extends BaseAction {
             player: context.player,
             card: context.source,
             originalLocation: context.source.location,
-            playType: 'character'
+            playType: 'playFromHand'
         });
         let putIntoPlayHandler = () => {
             context.game.addMessage('{0} plays {1} at home with {2} additional fate', context.player, context.source, context.chooseFate);
