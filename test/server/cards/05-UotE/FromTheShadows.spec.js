@@ -126,7 +126,7 @@ describe('From the Shadows', function() {
                                 this.player1.putIntoPlay(this.youngRumormonger);
                             });
 
-                            it('should allow Young Rumormonger to use his ability', function() {
+                            it('should not allow Young Rumormonger to use his ability', function() {
                                 expect(this.player1.formatPrompt()).not.toContain('interrupt');
                                 expect(this.player1).not.toBeAbleToSelect(this.youngRumormonger);
                                 expect(this.player1).toHavePrompt('Conflict Action Window');
