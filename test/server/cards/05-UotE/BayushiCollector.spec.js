@@ -25,6 +25,9 @@ describe('Bayushi Collector', function() {
                 this.player1.clickCard(this.liar);
                 expect(this.liar.attachments.toArray()).toContain(this.fan);
                 this.player2.pass();
+                this.player1.clickCard(this.katana);
+                this.player1.clickCard(this.collector);
+                this.player2.pass();
                 this.player1.clickCard(this.collector);
                 expect(this.player1).toBeAbleToSelect(this.fan);
                 this.player1.clickCard(this.fan);
@@ -32,8 +35,15 @@ describe('Bayushi Collector', function() {
                 expect(this.liar.isDishonored).toBe(false);
             });
 
-            it('should not trigger under ABC circumstances', function() {
-
+            it('should correctly discard attachment and status token', function() {
+                this.liar.dishonor();
+                this.player1.clickCard(this.fan);
+                this.player1.clickCard(this.liar);
+                this.player2.pass();
+                this.player1.clickCard(this.collector);
+                this.player1.clickCard(this.fan);
+                expect(this.fan.location).toBe('conflict discard pile');
+                expect(this.liar.isDishonored).toBe(false);
             });
 
             it('should have DEF effect on GHI', function() {
