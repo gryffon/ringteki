@@ -214,13 +214,13 @@ const Costs = {
             promptsPlayer: true
         };
     },
-    chooseFate: function () {
+    chooseFate: function (type) {
         return {
             canPay: function () {
                 return true;
             },
             resolve: function (context, result) {
-                let extrafate = context.player.fate - context.player.getReducedCost('play', context.source);
+                let extrafate = context.player.fate - context.player.getReducedCost(type, context.source);
                 if(!context.player.checkRestrictions('placeFateWhenPlayingCharacter', context) || !context.player.checkRestrictions('spendFate', context)) {
                     extrafate = 0;
                 }

@@ -111,7 +111,7 @@ const Effects = {
     }),
     alternateFatePool: (match) => EffectBuilder.player.static('alternateFatePool', match),
     canPlayFromOwn: (location) => EffectBuilder.player.detached('canPlayFromOwn', {
-        apply: (player) => player.addPlayableLocation('play', player, location),
+        apply: (player) => player.addPlayableLocation('playFromHand', player, location),
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),

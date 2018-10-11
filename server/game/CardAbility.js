@@ -28,7 +28,7 @@ class CardAbility extends ThenAbility {
         }
 
         if(card.getType() === 'event') {
-            this.cost = this.cost.concat(Costs.payReduceableFateCost('play'), Costs.playLimited());
+            this.cost = this.cost.concat(Costs.payReduceableFateCost('playFromHand'), Costs.playLimited());
         }
     }
 
@@ -76,7 +76,7 @@ class CardAbility extends ThenAbility {
     }
 
     isInValidLocation(context) {
-        return this.card.type === 'event' ? context.player.isCardInPlayableLocation(context.source, 'play') : this.location.includes(this.card.location);
+        return this.card.type === 'event' ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
     }
 
     displayMessage(context) {
