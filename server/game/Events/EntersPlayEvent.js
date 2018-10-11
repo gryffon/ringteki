@@ -17,8 +17,11 @@ class EntersPlayEvent extends Event {
             this.card.fate = this.fate;
         }
 
-        this.card.isHonored = this.status === 'honored';
-        this.card.isDishonored = this.status === 'dishonored';
+        if(this.status === 'honored') {
+            this.card.honor();
+        } else if(this.status === 'dishonored') {
+            this.card.dishonor();
+        }
 
         this.context.player.moveCard(this.card, 'play area');
 

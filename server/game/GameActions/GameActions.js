@@ -69,8 +69,8 @@ const GameActions = {
     moveToConflict: (propertyFactory) => new MoveToConflictAction(propertyFactory),
     placeFate: (propertyFactory) => new PlaceFateAction(propertyFactory), // amount = 1, origin
     playCard: (propertyFactory) => new PlayCardAction(propertyFactory), // resetOnCancel = false, postHandler
-    putIntoConflict: (propertyFactory) => new PutIntoPlayAction(propertyFactory), // fate = 0, status = normal
-    putIntoPlay: (propertyFactory) => new PutIntoPlayAction(propertyFactory, false), // fate = 0, status = normal
+    putIntoConflict: (propertyFactory) => new PutIntoPlayAction(propertyFactory), // fate = 0, status = ordinary
+    putIntoPlay: (propertyFactory) => new PutIntoPlayAction(propertyFactory, false), // fate = 0, status = ordinary
     ready: (propertyFactory) => new ReadyAction(propertyFactory),
     removeFate: (propertyFactory) => new RemoveFateAction(propertyFactory), // amount = 1, recipient
     resolveAbility: (propertyFactory) => new ResolveAbilityAction(propertyFactory), // ability

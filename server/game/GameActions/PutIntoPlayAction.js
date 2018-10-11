@@ -9,7 +9,7 @@ class PutIntoPlayAction extends CardGameAction {
 
     setDefaultProperties() {
         this.fate = 0;
-        this.status = 'normal';
+        this.status = 'ordinary';
     }
 
     setup() {
