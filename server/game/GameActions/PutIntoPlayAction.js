@@ -9,6 +9,7 @@ class PutIntoPlayAction extends CardGameAction {
 
     setDefaultProperties() {
         this.fate = 0;
+        this.status = 'normal';
     }
 
     setup() {
@@ -51,7 +52,7 @@ class PutIntoPlayAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return new EntersPlayEvent({ intoConflict: this.intoConflict, context: context }, card, this.fate, this);
+        return new EntersPlayEvent({ intoConflict: this.intoConflict, context: context }, card, this.fate, this.status, this);
     }
 }
 
