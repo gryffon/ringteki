@@ -24,6 +24,7 @@ describe('Bayushi Collector', function() {
                 this.player1.clickCard(this.fan);
                 this.player1.clickCard(this.liar);
                 expect(this.liar.attachments.toArray()).toContain(this.fan);
+                this.player2.pass();
                 this.player1.clickCard(this.collector);
                 expect(this.player1).toBeAbleToSelect(this.fan);
                 this.player1.clickCard(this.fan);
