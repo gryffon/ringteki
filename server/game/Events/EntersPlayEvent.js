@@ -6,8 +6,7 @@ class EntersPlayEvent extends Event {
         this.handler = this.entersPlay;
         this.card = card;
         this.fate = fate;
-        this.card.isHonored = status === 'honored';
-        this.card.isDishonored = status === 'dishonored';
+        this.status = status;
         this.gameAction = gameAction;
         this.originalLocation = card.location;
     }
@@ -17,6 +16,10 @@ class EntersPlayEvent extends Event {
         if(this.fate) {
             this.card.fate = this.fate;
         }
+
+        this.card.isHonored = this.status === 'honored';
+        this.card.isDishonored = this.status === 'dishonored';
+
         this.context.player.moveCard(this.card, 'play area');
 
         if(this.intoConflict) {
