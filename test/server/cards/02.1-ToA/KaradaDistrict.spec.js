@@ -184,9 +184,10 @@ describe('Karada District', function() {
                     }
                 });
                 this.karadaDistrict = this.player1.placeCardInProvince('karada-district');
+                this.borderlandsDefender = this.player1.findCardByName('borderlands-defender');
             });
 
-            it('should discard owned Talisman of the Sun', function() {
+            it('should take control of owned Talisman of the Sun (RRG v1.6)', function() {
                 this.talismanOfTheSun = this.player1.playAttachment('talisman-of-the-sun', 'borderlands-defender');
                 this.player2.clickCard('calling-in-favors');
                 this.player2.clickCard(this.talismanOfTheSun);
@@ -194,7 +195,12 @@ describe('Karada District', function() {
                 expect(this.talismanOfTheSun.controller).toBe(this.player2.player);
                 this.player1.clickCard(this.karadaDistrict);
                 this.player1.clickCard(this.talismanOfTheSun);
-                expect(this.talismanOfTheSun.location).toBe('conflict discard pile');
+                expect(this.player1).toHavePrompt('Karada District');
+                expect(this.player1).toBeAbleToSelect(this.borderlandsDefender);
+                this.player1.clickCard(this.borderlandsDefender);
+                expect(this.talismanOfTheSun.location).toBe('play area');
+                expect(this.talismanOfTheSun.parent).toBe(this.borderlandsDefender);
+                expect(this.borderlandsDefender.attachments.toArray()).toContain(this.talismanOfTheSun);
             });
         });
     });
