@@ -14,16 +14,19 @@ describe('Bayushi Collector', function() {
                 });
                 this.collector = this.player1.findCardByName('bayushi-collector');
                 this.liar = this.player1.findCardByName('bayushi-liar');
-                this.katana = this.player1.playAttachment('fine-katana', this.collector);
-                this.fan = this.player1.playAttachment('ornate-fan', this.liar);
+                this.katana = this.player1.findCardByName('fine-katana');
+                this.fan = this.player1.findCardByName('ornate-fan');
 
             });
 
             it('should only target attachments of dishonored characters', function() {
                 this.liar.dishonor();
+                this.player1.clickCard(this.fan);
+                this.player1.clickCard(this.liar);
+                expect(this.liar.attachments.toArray()).toContain(this.fan);
                 this.player1.clickCard(this.collector);
-                expect(this.player1).not.toBeAbleToSelect(this.katana);
-                expect(this.player1).toBeAbleToSelect(this.fan);
+                this.player1.clickCard(this.fan);
+                expect(this.fan.location).toBe('conflict discard pile');
             });
 
             it('should not trigger under ABC circumstances', function() {
