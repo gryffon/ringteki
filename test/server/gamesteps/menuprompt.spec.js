@@ -61,7 +61,7 @@ describe('the MenuPrompt', function() {
         });
 
         describe('when the method exists', function() {
-            describe('when there is no button for the method', function() {
+            xdescribe('when there is no button for the method', function() {
                 it('should not call the specified method on the context object', function() {
                     this.prompt.onMenuCommand(this.player, this.arg, this.prompt.uuid, 'forbiddenMethod');
                     expect(this.contextObj.forbiddenMethod).not.toHaveBeenCalled();

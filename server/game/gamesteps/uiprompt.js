@@ -72,7 +72,6 @@ class UiPrompt extends BaseStep {
     }
 
     onMenuCommand(player, arg, uuid, method) {
-        console.log('onMenuCommand', player, arg, uuid, method)
         if(!this.activeCondition(player) || uuid !== this.uuid) {
             return false;
         }
