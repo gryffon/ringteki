@@ -43,6 +43,9 @@ class UiPrompt extends BaseStep {
                 button.uuid = this.uuid;
             });
         }
+        if(prompt.controls) {
+            _.each(prompt.controls, controls => controls.uuid = this.uuid);
+        }
         return prompt;
     }
 
@@ -69,6 +72,7 @@ class UiPrompt extends BaseStep {
     }
 
     onMenuCommand(player, arg, uuid, method) {
+        console.log('onMenuCommand', player, arg, uuid, method)
         if(!this.activeCondition(player) || uuid !== this.uuid) {
             return false;
         }

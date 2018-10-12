@@ -33,6 +33,7 @@ class BayushisWhisperers extends DrawCard {
                 params: cardName
             })
         }));
+        return true;
     }
 }
 
