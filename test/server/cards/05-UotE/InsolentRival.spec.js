@@ -25,6 +25,7 @@ describe('Insolent Rival', function() {
             it('should not get +2 to both skills if honor bid is lower', function() {
                 this.player1.player.showBid = 1;
                 this.player2.player.showBid = 5;
+                this.game.checkGameState(true);
                 expect(this.rival.militarySkill).toBe(2);
                 expect(this.rival.politicalSkill).toBe(1);
             });
@@ -70,14 +71,15 @@ describe('Insolent Rival', function() {
                 this.initiateConflict({
                     type: 'military',
                     attackers: [this.rival],
-                    defenders: ['doji-whisperer']
+                    defenders: [this.doji]
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.rival);
-                expect(this.player1).toBeAbleToSelect('doji-whisperer');
-                this.player1.clickCard('doji-whisperer');
+                expect(this.player1).toBeAbleToSelect(this.doji);
+                this.player1.clickCard(this.doji);
                 this.player1.clickPrompt('5');
                 this.player2.clickPrompt('1');
+                this.player1.pass();
                 expect(this.doji.isDishonored).toBe(true);
             });
         });
