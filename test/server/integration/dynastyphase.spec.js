@@ -59,12 +59,13 @@ describe('dynasty phase', function() {
             });
 
             it('should charge player for playing card and fate and pass priority', function() {
+                let startingFate = this.player1.player.fate;
                 this.player1.clickCard(this.akodoToturi);
                 this.player1.clickPrompt('1');
 
                 expect(this.akodoToturi.location).toBe('play area');
                 expect(this.akodoToturi.fate).toBe(1);
-                expect(this.player1.player.fate).toBe(1);
+                expect(this.player1.player.fate).toBe(startingFate - (this.akodoToturi.cardData.cost + 1));
                 expect(this.player2).toHavePrompt('Click pass when done');
             });
 
@@ -76,11 +77,11 @@ describe('dynasty phase', function() {
             });
 
             it('should give the first player who passes 1 fate', function() {
+                let startingFate = this.player2.player.fate;
                 this.player1.clickCard(this.akodoToturi);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('Pass');
-
-                expect(this.player2.player.fate).toBe(9);
+                expect(this.player2.player.fate).toBe(1 + startingFate);
             });
 
             it('should not pass priority to a player who has previously passed', function() {

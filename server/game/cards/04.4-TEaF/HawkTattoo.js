@@ -19,6 +19,13 @@ class HawkTattoo extends DrawCard {
             ]
         });
     }
+    canAttach(card, context) {
+        if(card.controller !== context.player) {
+            return false;
+        }
+
+        return super.canAttach(card, context);
+    }
 }
 
 HawkTattoo.id = 'hawk-tattoo';

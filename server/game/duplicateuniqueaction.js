@@ -15,7 +15,7 @@ class DuplicateUniqueAction extends BaseAction {
             return 'phase';
         }
 
-        if(!this.card.controller.isCardInPlayableLocation(this.card, 'dynasty') && !this.card.controller.isCardInPlayableLocation(this.card, 'play')) {
+        if(!this.card.controller.isCardInPlayableLocation(this.card, 'playFromProvince') && !this.card.controller.isCardInPlayableLocation(this.card, 'playFromHand')) {
             if(!ignoredRequirements.includes('location')) {
                 return 'location';
             }

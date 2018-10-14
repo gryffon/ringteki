@@ -10,7 +10,7 @@ class DaimyosFavor extends DrawCard {
             gameAction: ability.actions.playerLastingEffect(context => ({
                 duration: 'untilEndOfPhase',
                 effect: ability.effects.reduceCost({
-                    playingTypes: 'play',
+                    playingTypes: 'playFromHand',
                     amount: 1,
                     match: card => card.type === 'attachment',
                     targetCondition: target => target === context.source.parent,
