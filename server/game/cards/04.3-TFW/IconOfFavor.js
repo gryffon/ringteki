@@ -2,7 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class IconOfFavor extends DrawCard {
     setupCardAbilities(ability) {
-        this.persistentEffect({
+        this.whileAttached({
             condition: () => this.controller.imperialFavor !== '',
             effect: ability.effects.modifyGlory(1)
         });
