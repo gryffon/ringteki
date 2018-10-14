@@ -166,8 +166,12 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     }
 
     resolveAbility(context) {
-        this.game.resolveAbility(context);
-        this.resolvedAbilities.push({ ability: context.ability, event: context.event });
+        let resolver = this.game.resolveAbility(context);
+        this.game.queueSimpleStep(() => {
+            if(!resolver.cancelled) {
+                this.resolvedAbilities.push({ ability: context.ability, event: context.event });
+            }
+        });
     }
 
     emitEvents() {

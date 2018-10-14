@@ -1,7 +1,17 @@
 const DrawCard = require('../../drawcard.js');
 
 class IgnobleEnforcers extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
+        this.reaction({
+            title: 'Place additional fate on this character',
+            when: {
+                onCharacterEntersPlay: (event, context) => event.card === context.source
+            },
+            cost: ability.costs.variableHonorCost(3),
+            effect: 'place {1} fate on {0}',
+            effectArgs: context => context.costs.variableHonorCost,
+            gameAction: ability.actions.placeFate(context => ({ amount: context.costs.variableHonorCost }))
+        });
     }
 }
 

@@ -172,6 +172,38 @@ const Costs = {
      */
     payFateToRing: (amount = 1, ringCondition = ring => ring.isUnclaimed()) => CostBuilders.payFateToRing(amount, ringCondition),
     giveFateToOpponent: (amount = 1) => CostBuilders.giveFateToOpponent(amount),
+    variableHonorCost: function (amount) {
+        return {
+            canPay: function (context) {
+                return context.game.actions.loseHonor().canAffect(context.player, context);
+            },
+            resolve: function (context, result) {
+                let max = Math.min(amount, context.player.honor);
+                let choices = Array.from(Array(max), (x, i) => String(i + 1));
+                if(result.canCancel) {
+                    choices.push('Cancel');
+                }
+                context.game.promptWithHandlerMenu(context.player, {
+                    activePromptTitle: 'Choose how much honor to pay',
+                    context: context,
+                    choices: choices,
+                    choiceHandler: choice => {
+                        if(choice === 'Cancel') {
+                            context.costs.variableHonorCost = 0;
+                            result.cancelled = true;
+                        } else {
+                            context.costs.variableHonorCost = parseInt(choice);                            
+                        }
+                    }
+                })
+            },
+            payEvent: function (context) {
+                let action = context.game.actions.loseHonor({ amount: context.costs.variableHonorCost });
+                return action.getEvent(context.player, context);
+            },
+            promptsPlayer: true
+        }
+    },
     returnRings: function () {
         return {
             canPay: function (context) {
