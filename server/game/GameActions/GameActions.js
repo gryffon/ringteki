@@ -43,6 +43,8 @@ const ReturnToDeckAction = require('./ReturnToDeckAction');
 const ReturnToHandAction = require('./ReturnToHandAction');
 const RevealAction = require('./RevealAction');
 const SendHomeAction = require('./SendHomeAction');
+const SequentialAction = require('./SequentialAction');
+const SetDialAction = require('./SetDialAction');
 const TakeFateRingAction = require('./TakeFateRingAction');
 const TakeRingAction = require('./TakeRingAction');
 const TransferFateAction = require('./TransferFateAction');
@@ -69,8 +71,8 @@ const GameActions = {
     moveToConflict: (propertyFactory) => new MoveToConflictAction(propertyFactory),
     placeFate: (propertyFactory) => new PlaceFateAction(propertyFactory), // amount = 1, origin
     playCard: (propertyFactory) => new PlayCardAction(propertyFactory), // resetOnCancel = false, postHandler
-    putIntoConflict: (propertyFactory) => new PutIntoPlayAction(propertyFactory), // fate = 0
-    putIntoPlay: (propertyFactory) => new PutIntoPlayAction(propertyFactory, false), // fate = 0
+    putIntoConflict: (propertyFactory) => new PutIntoPlayAction(propertyFactory), // fate = 0, status = ordinary
+    putIntoPlay: (propertyFactory) => new PutIntoPlayAction(propertyFactory, false), // fate = 0, status = ordinary
     ready: (propertyFactory) => new ReadyAction(propertyFactory),
     removeFate: (propertyFactory) => new RemoveFateAction(propertyFactory), // amount = 1, recipient
     resolveAbility: (propertyFactory) => new ResolveAbilityAction(propertyFactory), // ability
@@ -91,6 +93,7 @@ const GameActions = {
     loseImperialFavor: (propertyFactory) => new DiscardFavorAction(propertyFactory),
     modifyBid: (propertyFactory) => new ModifyBidAction(propertyFactory), // amount = 1, direction = 'increast', promptPlayer = false
     playerLastingEffect: (propertyFactory) => new LastingEffectAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetController, condition, until
+    setHonorDial: (propertyFactory) => new SetDialAction(propertyFactory), // value
     takeFate: (propertyFactory) => new TransferFateAction(propertyFactory), // amount = 1
     takeHonor: (propertyFactory) => new TransferHonorAction(propertyFactory), // amount = 1
     // ring actions
@@ -103,7 +106,8 @@ const GameActions = {
     takeRing: (propertyFactory) => new TakeRingAction(propertyFactory),
     // meta actions
     chooseAction: (propertyFactory) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
-    jointAction: (gameActions) => new JointGameAction(gameActions) // takes an array of gameActions, not a propertyFactory
+    jointAction: (gameActions) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
+    sequentialAction: (gameActions) => new SequentialAction(gameActions) // takes an array of gameActions, not a propertyFactory
 };
 
 module.exports = GameActions;

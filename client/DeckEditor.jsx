@@ -178,7 +178,12 @@ class InnerDeckEditor extends React.Component {
 
             let card = _.find(this.props.cards, function(card) {
                 if(pack && card.pack_cards.length) {
-                    return card.name.toLowerCase() === cardName.toLowerCase() && card.pack_cards[0].pack.id === pack.id;
+                    if(card.name.toLowerCase() === cardName.toLowerCase()) {
+                        return _.find(card.pack_cards, function(packCard) {
+                            return packCard.pack.id === pack.id;
+                        });
+                    }
+                    return false;
                 }
                 return card.name.toLowerCase() === cardName.toLowerCase();
             });

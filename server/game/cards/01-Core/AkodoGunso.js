@@ -6,7 +6,7 @@ class AkodoGunso extends DrawCard {
             title: 'Refill province faceup',
             when: {
                 onCharacterEntersPlay: (event, context) => event.card === context.source &&
-                                                      ['province 1', 'province 2', 'province 3', 'province 4'].includes(event.originalLocation)
+                                                           ['province 1', 'province 2', 'province 3', 'province 4'].includes(event.originalLocation)
             },
             gameAction: ability.actions.flipDynasty(context => ({
                 target: context.player.getDynastyCardInProvince(context.event.originalLocation)

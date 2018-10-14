@@ -73,6 +73,9 @@ const Effects = {
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible('modifyBasePoliticalSkill', value),
     modifyBaseProvinceStrength: (value) => EffectBuilder.card.flexible('modifyBaseProvinceStrength', value),
     modifyBothSkills: (value) => EffectBuilder.card.flexible('modifyBothSkills', value),
+    modifyDuelGlory: (value) => EffectBuilder.card.static('modifyDuelGlory', value),
+    modifyDuelMilitarySkill: (value) => EffectBuilder.card.static('modifyDuelMilitarySkill', value),
+    modifyDuelPoliticalSkill: (value) => EffectBuilder.card.static('modifyDuelPoliticalSkill', value),
     modifyGlory: (value) => EffectBuilder.card.flexible('modifyGlory', value),
     modifyMilitarySkill: (value) => EffectBuilder.card.flexible('modifyMilitarySkill', value),
     modifyMilitarySkillMultiplier: (value) => EffectBuilder.card.flexible('modifyMilitarySkillMultiplier', value),
@@ -84,6 +87,7 @@ const Effects = {
     setBasePoliticalSkill: (value) => EffectBuilder.card.static('setBasePoliticalSkill', value),
     setBaseProvinceStrength: (value) => EffectBuilder.card.static('setBaseProvinceStrength', value),
     setDash: (type) => EffectBuilder.card.static('setDash', type),
+    setGlory: (value) => EffectBuilder.card.static('setGlory', value),
     setMilitarySkill: (value) => EffectBuilder.card.static('setMilitarySkill', value),
     setPoliticalSkill: (value) => EffectBuilder.card.static('setPoliticalSkill', value),
     setProvinceStrength: (value) => EffectBuilder.card.static('setProvinceStrength', value),
@@ -108,7 +112,7 @@ const Effects = {
     }),
     alternateFatePool: (match) => EffectBuilder.player.static('alternateFatePool', match),
     canPlayFromOwn: (location, cards) => EffectBuilder.player.detached('canPlayFromOwn', {
-        apply: (player) => player.addPlayableLocation('play', player, location, cards),
+        apply: (player) => player.addPlayableLocation('playFromHand', player, location, cards),
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),

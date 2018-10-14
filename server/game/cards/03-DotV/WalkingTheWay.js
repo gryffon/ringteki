@@ -7,7 +7,7 @@ class WalkingTheWay extends DrawCard {
             targetType: 'player',
             targetController: 'any',
             match: player => player.cardsInPlay.any(card => card.hasTrait('shugenja')),
-            effect: ability.effects.reduceCost({ playingTypes: 'play', match: card => card === this })
+            effect: ability.effects.reduceCost({ playingTypes: 'playFromHand', match: card => card === this })
         });
         this.action({
             title: 'Place a card from your deck faceup on a province',

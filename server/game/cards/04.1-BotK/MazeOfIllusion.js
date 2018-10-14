@@ -39,7 +39,7 @@ class MazeOfIllusion extends DrawCard {
     resolveAbility(choice, value, context) {
         this.game.addMessage('{0} guesses {1}', context.player.opponent, choice);
         this.game.addMessage('{0} reveals their honor dial:{1}', context.player, value);
-        context.player.showBid = value;
+        this.game.actions.setHonorDial({ value }).resolve(context.player, context);
         if((choice === 'Odd') === (value % 2 === 0)) {
             context.game.applyGameAction(context, { bow: context.target, dishonor: context.target });
         }

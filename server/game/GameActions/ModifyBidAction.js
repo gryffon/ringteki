@@ -57,9 +57,9 @@ class ModifyBidAction extends PlayerAction {
         };
         return super.createEvent('onModifyBid', params, event => {
             if(event.direction === 'increase') {
-                player.honorBid += this.amount;
+                player.honorBidModifier += this.amount;
             } else {
-                player.honorBid = Math.max(player.honorBid - this.amount, 0);
+                player.honorBidModifier -= this.amount;
             }
         });
     }

@@ -1,6 +1,7 @@
 const checkRestrictions = {
     copiesOfDiscardEvents: context =>
         context.source.type === 'event' && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
+    copiesOfX: (context, player, source, params) => context.source.name === params,
     events: context => context.source.type === 'event',
     nonSpellEvents: context => context.source.type === 'event' && !context.source.hasTrait('spell'),
     opponentsCardEffects: (context, player) =>
@@ -20,6 +21,7 @@ class CannotRestriction {
             this.restriction = properties.restricts;
             this.player = properties.player;
             this.source = properties.source;
+            this.params = properties.params;
         }
     }
 
@@ -36,7 +38,7 @@ class CannotRestriction {
             return context.source.hasTrait(this.restriction);
         }
         let player = this.player || this.source && this.source.controller;
-        return checkRestrictions[this.restriction](context, player, this.source);
+        return checkRestrictions[this.restriction](context, player, this.source, this.params);
     }
 }
 

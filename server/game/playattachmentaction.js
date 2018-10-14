@@ -4,7 +4,7 @@ const AttachAction = require('./GameActions/AttachAction');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card) {
-        super(card, [Costs.payTargetDependentFateCost('target', 'play'), Costs.playLimited()], {
+        super(card, [Costs.payTargetDependentFateCost('target', 'playFromHand'), Costs.playLimited()], {
             gameAction: new AttachAction(context => ({ attachment: context.source })),
             cardCondition: (card, context) => context.source.canPlayOn(card)
         });
@@ -15,7 +15,7 @@ class PlayAttachmentAction extends BaseAction {
         if(!ignoredRequirements.includes('phase') && context.game.currentPhase === 'dynasty') {
             return 'phase';
         }
-        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, 'play')) {
+        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, 'playFromHand')) {
             return 'location';
         }
         if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context)) {
@@ -36,7 +36,7 @@ class PlayAttachmentAction extends BaseAction {
             player: context.player,
             card: context.source,
             originalLocation: context.source.location,
-            playType: 'attachment'
+            playType: 'playFromHand'
         });
         context.game.openEventWindow([new AttachAction({ attachment: context.source }).getEvent(context.target, context), cardPlayedEvent]);
     }

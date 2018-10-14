@@ -417,6 +417,7 @@ export class InnerGameBoard extends React.Component {
         return (<div className='inset-pane'>
             <ActivePlayerPrompt title={ thisPlayer.menuTitle }
                 buttons={ thisPlayer.buttons }
+                cards={ this.props.cards }
                 controls={ thisPlayer.controls }
                 promptTitle={ thisPlayer.promptTitle }
                 onButtonClick={ this.onCommand }
@@ -660,6 +661,7 @@ export class InnerGameBoard extends React.Component {
 InnerGameBoard.displayName = 'GameBoard';
 InnerGameBoard.propTypes = {
     cardToZoom: PropTypes.object,
+    cards: PropTypes.object,
     clearZoom: PropTypes.func,
     closeGameSocket: PropTypes.func,
     currentGame: PropTypes.object,
@@ -675,6 +677,7 @@ InnerGameBoard.propTypes = {
 function mapStateToProps(state) {
     return {
         cardToZoom: state.cards.zoomCard,
+        cards: state.cards.cards,
         currentGame: state.games.currentGame,
         socket: state.socket.socket,
         user: state.auth.user,
