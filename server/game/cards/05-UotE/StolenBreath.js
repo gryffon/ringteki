@@ -1,10 +1,24 @@
 const DrawCard = require('../../drawcard.js');
 
 class StolenBreath extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
+        this.whileAttached({
+            effect: [
+                ability.effects.cannotParticipateAsAttacker('political'),
+                ability.effects.cannotParticipateAsDefender('political')
+            ]
+        });
+    }
+
+    canPlay(context) {
+        if(this.game.isDuringConflict()) {
+            return false;
+        }
+
+        return super.canPlay(context);
     }
 }
 
-StolenBreath.id = 'stolen-breath'; // This is a guess at what the id might be - please check it!!!
+StolenBreath.id = 'stolen-breath';
 
 module.exports = StolenBreath;
