@@ -9,9 +9,6 @@ class Event {
         this.gameAction = gameAction;
         this.context = null;
         this.window = null;
-        this.getResult = () => {
-            return { resolved: this.resolved, cancelled: this.cancelled };
-        };
         this.condition = (event) => true; // eslint-disable-line no-unused-vars
         this.order = 0;
         this.isContingent = false;
@@ -50,7 +47,6 @@ class Event {
             this.cancel();
             return;
         }
-        // TODO: do we need to check conditions on anything anymore?
         if(!this.condition(this)) {
             this.cancel();
         }

@@ -31,6 +31,10 @@ class AttachAction extends CardGameAction {
         return this.canAffect(event.parent, event.context);
     }
 
+    fullyResolved(event) {
+        return this.target.length === 0 || this.target.includes(event.parent);
+    }
+
     getEventArray(context) {
         this.attachmentChosenOnResolution = false;
         return super.getEventArray(context);

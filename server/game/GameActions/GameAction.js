@@ -86,6 +86,10 @@ class GameAction {
         return true;
     }
 
+    fullyResolved(event) { // eslint-disable-line no-unused-vars
+        return true;
+    }
+
     defaultTargets(context) { // eslint-disable-line no-unused-vars
         return [];
     }
