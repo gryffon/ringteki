@@ -11,6 +11,7 @@ class EventWindow extends BaseStepWithPipeline {
 
         this.events = [];
         this.thenAbilities = [];
+        this.provincesToRefill = [];
         _.each(events, event => {
             if(!event.cancelled) {
                 this.addEvent(event);
@@ -35,6 +36,7 @@ class EventWindow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.checkThenAbilities()),
             new SimpleStep(this.game, () => this.openWindow('forcedreaction')),
             new SimpleStep(this.game, () => this.openWindow('reaction')),
+            new SimpleStep(this.game, () => this.refillProvinces()),
             new SimpleStep(this.game, () => this.resetCurrentEventWindow())
         ]);
     }
@@ -121,6 +123,24 @@ class EventWindow extends BaseStepWithPipeline {
         for(const thenAbility of this.thenAbilities) {
             if(thenAbility.events.every(event => !event.cancelled)) {
                 this.game.resolveAbility(thenAbility.ability.createContext(thenAbility.context.player));
+            }
+        }
+    }
+
+    refillProvince(player, location, context) {
+        if(context.stage === 'cost') {
+            this.previousEventWindow.provincesToRefill.push({ player, location });
+        } else {
+            this.provincesToRefill.push({ player, location });
+        }
+    }
+
+    refillProvinces() {
+        for(let player of this.game.getPlayersInFirstPlayerOrder()) {
+            for(let refill of this.provincesToRefill.filter(refill => refill.player === player)) {
+                this.game.queueSimpleStep(() => {
+                    player.replaceDynastyCard(refill.location);
+                });
             }
         }
     }

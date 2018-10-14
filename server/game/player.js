@@ -299,16 +299,18 @@ class Player extends GameObject {
 
         if(numCards > this.conflictDeck.size()) {
             remainingCards = numCards - this.conflictDeck.size();
-            numCards = this.conflictDeck.size();
-        }
-
-        for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
-            this.moveCard(card, 'hand');
-        }
-
-        if(remainingCards > 0) {
+            let cards = this.conflictDeck.toArray();
             this.deckRanOutOfCards('conflict');
+            this.game.queueSimpleStep(() => {
+                for(let card of cards) {
+                    this.moveCard(card, 'hand');
+                }
+            });
             this.game.queueSimpleStep(() => this.drawCardsToHand(remainingCards));
+        } else {
+            for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
+                this.moveCard(card, 'hand');
+            }
         }
     }
 
@@ -336,7 +338,7 @@ class Player extends GameObject {
      */
     replaceDynastyCard(location) {
         if(this.getSourceList(location).size() > 1) {
-            return;
+            return false;
         }
         if(this.dynastyDeck.size() === 0) {
             this.deckRanOutOfCards('dynasty');
@@ -917,9 +919,11 @@ class Player extends GameObject {
         }
         */
         // Replace a card which has been played, put into play or discarded from a province
+        /*
         if(card.isDynasty && provinceLocations.includes(location) && targetLocation !== 'dynasty deck') {
             this.replaceDynastyCard(location);
         }
+        */
     }
 
     /**

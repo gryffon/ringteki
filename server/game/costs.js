@@ -53,6 +53,11 @@ const Costs = {
      */
     returnSelfToHand: () => CostBuilders.returnToHand.self(),
     /**
+     * Cost that will shuffle a selected card into the relevant deck which matches the passed
+     * condition.
+     */
+    shuffleIntoDeck: condition => CostBuilders.shuffleIntoDeck.select(condition),
+    /**
      * Cost that requires discarding a specific card.
      */
     discardCardSpecific: cardFunc => CostBuilders.discardCard.specific(cardFunc),

@@ -12,6 +12,10 @@ class EntersPlayEvent extends Event {
     }
 
     entersPlay() {
+        if(this.card.location.includes('province')) {
+            this.window.refillProvince(this.card.controller, this.card.location, this.context);
+        }
+
         this.card.new = true;
         if(this.fate) {
             this.card.fate = this.fate;

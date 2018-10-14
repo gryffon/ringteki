@@ -40,6 +40,10 @@ const CostBuilders = {
         select: 'Select card to sacrifice',
         selectMultiple: number => `Select ${number} cards to sacrifice`
     }),
+    shuffleIntoDeck: new CostBuilder(GameActions.returnToDeck({ shuffle: true, ignoreLocation: true }), {
+        select: 'Select a card to shuffle into deck',
+        selectMultiple: number => `Select ${number} cards to shuffle into deck`
+    }),
     discardImperialFavor: () => new PlayerCost(GameActions.loseImperialFavor()),
     giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate({ amount: amount })),
     payHonor: (amount) => new PlayerCost(GameActions.loseHonor({ amount: amount })),

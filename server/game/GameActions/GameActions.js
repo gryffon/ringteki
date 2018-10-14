@@ -34,6 +34,7 @@ const PlayCardAction = require('./PlayCardAction');
 const PutIntoPlayAction = require('./PutIntoPlayAction');
 const RandomDiscardAction = require('./RandomDiscardAction');
 const ReadyAction = require('./ReadyAction');
+const RefillFaceupAction = require('./RefillFaceupAction');
 const RemoveFateAction = require('./RemoveFateAction');
 const ResolveAbilityAction = require('./ResolveAbilityAction');
 const ResolveConflictRingAction = require('./ResolveConflictRingAction');
@@ -67,7 +68,7 @@ const GameActions = {
     flipDynasty: (propertyFactory) => new FlipDynastyAction(propertyFactory),
     honor: (propertyFactory) => new HonorAction(propertyFactory),
     lookAt: (propertyFactory) => new LookAtAction(propertyFactory),
-    moveCard: (propertyFactory) => new MoveCardAction(propertyFactory), // destination, switch = false, shuffle = false
+    moveCard: (propertyFactory) => new MoveCardAction(propertyFactory), // destination, switch = false, shuffle = false, faceup = false
     moveToConflict: (propertyFactory) => new MoveToConflictAction(propertyFactory),
     placeFate: (propertyFactory) => new PlaceFateAction(propertyFactory), // amount = 1, origin
     playCard: (propertyFactory) => new PlayCardAction(propertyFactory), // resetOnCancel = false, postHandler
@@ -93,6 +94,7 @@ const GameActions = {
     loseImperialFavor: (propertyFactory) => new DiscardFavorAction(propertyFactory),
     modifyBid: (propertyFactory) => new ModifyBidAction(propertyFactory), // amount = 1, direction = 'increast', promptPlayer = false
     playerLastingEffect: (propertyFactory) => new LastingEffectAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetController, condition, until
+    refillFaceup: (propertyFactory) => new RefillFaceupAction(propertyFactory), // location
     setHonorDial: (propertyFactory) => new SetDialAction(propertyFactory), // value
     takeFate: (propertyFactory) => new TransferFateAction(propertyFactory), // amount = 1
     takeHonor: (propertyFactory) => new TransferHonorAction(propertyFactory), // amount = 1

@@ -5,12 +5,13 @@ describe('Shiba Peacemaker', function() {
                 phase: 'conflict',
                 player1: {
                     inPlay: ['shiba-peacemaker'],
-                    dynastyDeck: ['shiba-peacemaker'],
+                    dynastyDiscard: ['shiba-peacemaker'],
                     hand: ['seeker-of-knowledge', 'charge']
                 }
             });
             this.shibaPeacemaker1 = this.player1.findCardByName('shiba-peacemaker', 'play area');
-            this.shibaPeacemaker2 = this.player1.placeCardInProvince('shiba-peacemaker', 'province 1');
+            this.shibaPeacemaker2 = this.player1.findCardByName('shiba-peacemaker', 'dynasty discard pile');
+            this.player1.placeCardInProvince(this.shibaPeacemaker2);
         });
 
         describe('When Shiba Peacemaker is in play', function() {
