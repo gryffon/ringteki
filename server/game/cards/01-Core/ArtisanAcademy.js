@@ -18,7 +18,7 @@ class ArtisanAcademy extends DrawCard {
                     },
                     effect: [
                         ability.effects.showTopConflictCard(),
-                        ability.effects.canPlayFromOwn('conflict deck')
+                        ability.effects.canPlayFromOwn('conflict deck', [topCard])
                     ]
                 };
             })

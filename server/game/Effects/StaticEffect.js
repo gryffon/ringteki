@@ -5,7 +5,6 @@ const binaryCardEffects = [
     'canBeSeenWhenFacedown',
     'cannotParticipateAsAttacker',
     'cannotParticipateAsDefender',
-    'canPlayFromOwn',
     'abilityRestrictions',
     'doesNotBow',
     'doesNotReady',
