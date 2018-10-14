@@ -5,8 +5,8 @@ const GameActions = require('./GameActions/GameActions');
 class PlayCharacterAction extends BaseAction {
     constructor(card) {
         super(card, [
-            Costs.chooseFate(),
-            Costs.payReduceableFateCost('play'),
+            Costs.chooseFate('playFromHand'),
+            Costs.payReduceableFateCost('playFromHand'),
             Costs.playLimited()
         ]);
         this.title = 'Play this character';
@@ -16,7 +16,7 @@ class PlayCharacterAction extends BaseAction {
         if(!ignoredRequirements.includes('phase') && context.game.currentPhase === 'dynasty') {
             return 'phase';
         }
-        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, 'play')) {
+        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, 'playFromHand')) {
             return 'location';
         }
         if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, 'playCharacter')) {
@@ -33,7 +33,7 @@ class PlayCharacterAction extends BaseAction {
             player: context.player,
             card: context.source,
             originalLocation: context.source.location,
-            playType: 'character'
+            playType: 'playFromHand'
         });
         let putIntoPlayHandler = () => {
             context.game.addMessage('{0} plays {1} at home with {2} additional fate', context.player, context.source, context.chooseFate);

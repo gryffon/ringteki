@@ -3,6 +3,7 @@ const CardGameAction = require('./CardGameAction');
 class RevealAction extends CardGameAction {
     setDefaultProperties() {
         this.chatMessage = false;
+        this.player = null;
     }
 
     setup() {
@@ -27,7 +28,7 @@ class RevealAction extends CardGameAction {
         }
         return super.createEvent(eventName, { card, context }, event => {
             if(this.chatMessage) {
-                context.game.addMessage('{0} reveals {1}', context.source, card);
+                context.game.addMessage('{0} reveals {1} due to {2}', this.player || context.player, card, context.source);
             }
             event.card.facedown = false;
         });

@@ -41,9 +41,8 @@ class SetupPhase extends Phase {
                 source: 'Choose First Player',
                 choices: ['First Player', 'Second Player'],
                 handlers: [
-                    () => firstPlayer.opponent.modifyFate(1),
+                    () => {},
                     () => {
-                        firstPlayer.modifyFate(1);
                         this.game.setFirstPlayer(firstPlayer.opponent);
                     }
                 ]

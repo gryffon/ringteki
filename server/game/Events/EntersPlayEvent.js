@@ -1,11 +1,12 @@
 const Event = require('./Event.js');
 
 class EntersPlayEvent extends Event {
-    constructor(params, card, fate, gameAction) {
+    constructor(params, card, fate, status, gameAction) {
         super('onCharacterEntersPlay', params);
         this.handler = this.entersPlay;
         this.card = card;
         this.fate = fate;
+        this.status = status;
         this.gameAction = gameAction;
         this.originalLocation = card.location;
     }
@@ -19,6 +20,13 @@ class EntersPlayEvent extends Event {
         if(this.fate) {
             this.card.fate = this.fate;
         }
+
+        if(this.status === 'honored') {
+            this.card.honor();
+        } else if(this.status === 'dishonored') {
+            this.card.dishonor();
+        }
+
         this.context.player.moveCard(this.card, 'play area');
 
         if(this.intoConflict) {

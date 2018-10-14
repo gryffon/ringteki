@@ -38,11 +38,11 @@ class MenuPrompt extends UiPrompt {
     }
 
     menuCommand(player, arg, method) {
-        if(!this.context[method] || !this.hasMethodButton(method)) {
+        if(!this.context[method]) {
             return false;
         }
 
-        if(this.context[method](player, arg, method)) {
+        if(this.context[method](player, arg, this.properties.source)) {
             this.complete();
         }
 

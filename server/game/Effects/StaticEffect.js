@@ -5,7 +5,6 @@ const binaryCardEffects = [
     'canBeSeenWhenFacedown',
     'cannotParticipateAsAttacker',
     'cannotParticipateAsDefender',
-    'canPlayFromOwn',
     'abilityRestrictions',
     'doesNotBow',
     'doesNotReady',
@@ -30,6 +29,7 @@ const hasDash = {
 const conflictingEffects = {
     modifyBaseMilitarySkill: card => card.effects.filter(effect => effect.type === 'setBaseMilitarySkill'),
     modifyBasePoliticalSkill: card => card.effects.filter(effect => effect.type === 'setBasePoliticalSkill'),
+    modifyGlory: card => card.effects.filter(effect => effect.type === 'setGlory'),
     modifyMilitarySkill: card => card.effects.filter(effect => effect.type === 'setMilitarySkill'),
     modifyMilitarySkillMultiplier: card => card.effects.filter(effect => effect.type === 'setMilitarySkill'),
     modifyPoliticalSkill: card => card.effects.filter(effect => effect.type === 'setPoliticalSkill'),
