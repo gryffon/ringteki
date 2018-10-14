@@ -5,8 +5,8 @@ class ShosuroMiyako extends DrawCard {
         this.reaction({
             title: 'Opponent discards or dishonors',
             when: {
-                onCardPlayed: (event, context) => event.player === context.player && event.playType === 'character' &&
-                                                  context.player.opponent
+                onCardPlayed: (event, context) => event.player === context.player && event.playType === 'playFromHand' &&
+                                                  event.card.type === 'character' && context.player.opponent
             },
             target: {
                 mode: 'select',

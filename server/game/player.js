@@ -62,11 +62,11 @@ class Player extends GameObject {
         this.deck = {};
         this.costReducers = [];
         this.playableLocations = [
-            new PlayableLocation('play', this, 'hand'),
-            new PlayableLocation('dynasty', this, 'province 1'),
-            new PlayableLocation('dynasty', this, 'province 2'),
-            new PlayableLocation('dynasty', this, 'province 3'),
-            new PlayableLocation('dynasty', this, 'province 4')
+            new PlayableLocation('playFromHand', this, 'hand'),
+            new PlayableLocation('playFromProvince', this, 'province 1'),
+            new PlayableLocation('playFromProvince', this, 'province 2'),
+            new PlayableLocation('playFromProvince', this, 'province 3'),
+            new PlayableLocation('playFromProvince', this, 'province 4')
         ];
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings

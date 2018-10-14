@@ -15,7 +15,7 @@ class InitiateAbilityEventWindow extends EventWindow {
                     player: event.context.player,
                     card: event.card,
                     originalLocation: 'hand', // TODO: this isn't true with Kyuden Isawa
-                    playType: 'event'
+                    playType: 'playFromHand'
                 }));
             }
             if(event.context.ability.isTriggeredAbility()) {
