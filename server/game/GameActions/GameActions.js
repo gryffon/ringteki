@@ -43,6 +43,7 @@ const ReturnToDeckAction = require('./ReturnToDeckAction');
 const ReturnToHandAction = require('./ReturnToHandAction');
 const RevealAction = require('./RevealAction');
 const SendHomeAction = require('./SendHomeAction');
+const SequentialAction = require('./SequentialAction');
 const SetDialAction = require('./SetDialAction');
 const TakeFateRingAction = require('./TakeFateRingAction');
 const TakeRingAction = require('./TakeRingAction');
@@ -105,7 +106,8 @@ const GameActions = {
     takeRing: (propertyFactory) => new TakeRingAction(propertyFactory),
     // meta actions
     chooseAction: (propertyFactory) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
-    jointAction: (gameActions) => new JointGameAction(gameActions) // takes an array of gameActions, not a propertyFactory
+    jointAction: (gameActions) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
+    sequentialAction: (gameActions) => new SequentialAction(gameActions) // takes an array of gameActions, not a propertyFactory
 };
 
 module.exports = GameActions;
