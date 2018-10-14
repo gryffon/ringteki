@@ -1,7 +1,16 @@
 const DrawCard = require('../../drawcard.js');
 
 class DojiFumiki extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
+        this.action({
+            title: 'Bow a dishonored character',
+            condition: context => context.source.isParticipating(),
+            target: {
+                cardtype: 'character',
+                cardCondition: card => card.isDishonored && card.isParticipating(),
+                gameAction: ability.actions.bow()
+            }
+        });
     }
 }
 
