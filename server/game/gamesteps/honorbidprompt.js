@@ -6,18 +6,15 @@ class HonorBidPrompt extends AllPlayerPrompt {
         super(game);
         this.menuTitle = menuTitle || 'Choose a bid';
         this.costHandler = costHandler;
-        for(let player of game.getPlayers()) {
-            player.honorBid = 0;
-            player.showBid = 0;
-        }
+        this.bid = {};
     }
 
     activeCondition(player) {
-        return player.honorBid === 0;
+        return !this.bid[player.uuid];
     }
 
     completionCondition(player) {
-        return player.honorBid > 0;
+        return this.bid[player.uuid] > 0;
     }
 
     continue() {
@@ -26,7 +23,8 @@ class HonorBidPrompt extends AllPlayerPrompt {
         if(completed) {
             this.game.raiseEvent('onHonorDialsRevealed', {}, () => {
                 for(const player of this.game.getPlayers()) {
-                    player.setShowBid();
+                    player.honorBidModifier = 0;
+                    this.game.actions.setHonorDial({ value: this.bid[player.uuid]}).resolve(player, this.game.getFrameworkContext());
                 }
             });
             if(this.costHandler) {
@@ -76,7 +74,7 @@ class HonorBidPrompt extends AllPlayerPrompt {
     menuCommand(player, bid) {
         this.game.addMessage('{0} has chosen a bid.', player);
 
-        player.honorBid = parseInt(bid);
+        this.bid[player.uuid] = parseInt(bid);
 
         return true;
     }

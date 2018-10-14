@@ -48,7 +48,7 @@ class Player extends GameObject {
         this.takenConflictMulligan = false;
         this.passedDynasty = false;
         this.actionPhasePriority = false;
-        this.honorBid = 0; // amount from the most recent bid after modifiers
+        this.honorBidModifier = 0; // most recent bid modifiers
         this.showBid = 0; // amount shown on the dial
         this.conflictOpportunities = {
             military: 1,
@@ -771,6 +771,10 @@ class Player extends GameObject {
         });
     }
 
+    get honorBid() {
+        return Math.max(0, this.showBid + this.honorBidModifier);
+    }
+
     get gloryModifier() {
         return this.getEffects('gloryModifier').reduce((total, value) => total + value, 0);
     }
@@ -1015,9 +1019,9 @@ class Player extends GameObject {
     /**
      * Sets te value of the dial in the UI, and sends a chat message revealing the players bid
      */
-    setShowBid() {
-        this.showBid = this.honorBid;
-        this.game.addMessage('{0} reveals a bid of {1}', this, this.showBid);
+    setShowBid(bid) {
+        this.showBid = bid;
+        this.game.addMessage('{0} reveals a bid of {1}', this, bid);
     }
 
     isTopConflictCardShown() {
