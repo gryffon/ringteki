@@ -18,6 +18,7 @@ describe('Insolent Rival', function() {
             it('should get +2 to both skills if honor bid is higher', function() {
                 this.player1.player.showBid = 5;
                 this.player2.player.showBid = 1;
+                this.game.checkGameState(true);
                 expect(this.rival.militarySkill).toBe(4);
                 expect(this.rival.politicalSkill).toBe(3);
             });
@@ -25,7 +26,6 @@ describe('Insolent Rival', function() {
             it('should not get +2 to both skills if honor bid is lower', function() {
                 this.player1.player.showBid = 1;
                 this.player2.player.showBid = 5;
-                this.game.checkGameState(true);
                 expect(this.rival.militarySkill).toBe(2);
                 expect(this.rival.politicalSkill).toBe(1);
             });

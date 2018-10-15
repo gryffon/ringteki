@@ -1,4 +1,4 @@
-fdescribe('Opium Wastrel', function() {
+describe('Opium Wastrel', function() {
     integration(function() {
         describe('Opium Wastrel\'s ability', function() {
             beforeEach(function() {
@@ -35,7 +35,7 @@ fdescribe('Opium Wastrel', function() {
                 expect(this.player2).toHavePrompt('Action Window');
             });
 
-            fit('should reduce the targeted character\'s glory to 0', function() {
+            it('should reduce the targeted character\'s glory to 0', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',

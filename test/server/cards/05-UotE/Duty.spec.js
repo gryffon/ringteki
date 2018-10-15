@@ -50,7 +50,6 @@ describe('Duty', function() {
                 expect(this.player2.honor).toBe(11);
                 expect(this.player1.player.hand.size()).toBe(4);
                 expect(this.player2.player.hand.size()).toBe(2);
-                expect(this.duty.location).toBe('conflict deck');
             });
 
             it('should not trigger when losing due paying a cost', function() {

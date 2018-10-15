@@ -20,7 +20,7 @@ describe('Alibi Artist', function() {
             it('should only work at 6 honor or less', function() {
                 this.player1.honor = 7;
                 this.player1.clickCard('alibi-artist');
-                expect(this.player1).nottoHavePrompt('Choose a card to put in your hand');
+                expect(this.player1).not.toHavePrompt('Choose a card to put in your hand');
             });
 
             it('should work at 6 or less honor and correctly put cards in hand and at bottom of conflict deck', function() {

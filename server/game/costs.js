@@ -192,17 +192,17 @@ const Costs = {
                             context.costs.variableHonorCost = 0;
                             result.cancelled = true;
                         } else {
-                            context.costs.variableHonorCost = parseInt(choice);                            
+                            context.costs.variableHonorCost = parseInt(choice);
                         }
                     }
-                })
+                });
             },
             payEvent: function (context) {
                 let action = context.game.actions.loseHonor({ amount: context.costs.variableHonorCost });
                 return action.getEvent(context.player, context);
             },
             promptsPlayer: true
-        }
+        };
     },
     returnRings: function () {
         return {
