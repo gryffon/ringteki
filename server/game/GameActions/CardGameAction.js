@@ -37,6 +37,7 @@ class CardGameAction extends GameAction {
         if(this.promptForSelect) {
             let selector = this.getSelector();
             if(!selector.hasEnoughTargets(context)) {
+                this.target = [];
                 return;
             }
             let properties = this.promptForSelect;
@@ -69,7 +70,6 @@ class CardGameAction extends GameAction {
             let properties = this.promptWithHandlerMenu;
             if(!properties.customHandler) {
                 properties.cards = properties.cards.filter(card => this.canAffect(card, context));
-                this.target = [];
             }
             if(properties.cards.length === 0) {
                 return;

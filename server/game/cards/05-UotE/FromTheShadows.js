@@ -14,7 +14,7 @@ class FromTheShadows extends DrawCard {
             }
         });
     }
-    
+
     canPlay(context, type) {
         return context.player.opponent && context.player.honor < context.player.opponent.honor && super.canPlay(context, type);
     }
