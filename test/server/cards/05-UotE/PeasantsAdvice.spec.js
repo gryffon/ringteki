@@ -50,6 +50,7 @@ fdescribe('Peasant\'s Advice', function() {
             it('should both display a text message and offer the option to shuffle a faceup card in a facedown province', function() {
                 this.player1.clickCard('peasant-s-advice');
                 this.player1.clickCard(this.shamefulDisplay);
+                this.spy = spyOn(this.player2.player, 'moveCard').and.callThrough();
                 this.seppunGuardsman = this.player1.clickCard('seppun-guardsman');
                 expect(this.getChatLogs(5)).toContain('Peasant\'s Advice sees Shameful Display');
                 expect(this.player1).toHavePrompt('Choose a card to return to owner\'s deck');
@@ -58,7 +59,7 @@ fdescribe('Peasant\'s Advice', function() {
                 this.player1.clickPrompt('Shiba Tsukune');
                 expect(this.player2).toHavePrompt('Action Window');
                 expect(this.getChatLogs(5)).toContain('Peasant\'s Advice sees Shameful Display');
-                expect(this.shibaTsukune.location).toBe('dynasty deck');
+                expect(this.spy).toHaveBeenCalledWith(this.shibaTsukune, 'dynasty deck', { bottom: false });
                 expect(this.player2.player.getDynastyCardInProvince('province 1')).not.toBeUndefined();
             });
 
