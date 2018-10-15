@@ -48,7 +48,7 @@ class Player extends GameObject {
         this.takenConflictMulligan = false;
         this.passedDynasty = false;
         this.actionPhasePriority = false;
-        this.honorBid = 0; // amount from the most recent bid after modifiers
+        this.honorBidModifier = 0; // most recent bid modifiers
         this.showBid = 0; // amount shown on the dial
         this.conflictOpportunities = {
             military: 1,
@@ -62,11 +62,11 @@ class Player extends GameObject {
         this.deck = {};
         this.costReducers = [];
         this.playableLocations = [
-            new PlayableLocation('play', this, 'hand'),
-            new PlayableLocation('dynasty', this, 'province 1'),
-            new PlayableLocation('dynasty', this, 'province 2'),
-            new PlayableLocation('dynasty', this, 'province 3'),
-            new PlayableLocation('dynasty', this, 'province 4')
+            new PlayableLocation('playFromHand', this, 'hand'),
+            new PlayableLocation('playFromProvince', this, 'province 1'),
+            new PlayableLocation('playFromProvince', this, 'province 2'),
+            new PlayableLocation('playFromProvince', this, 'province 3'),
+            new PlayableLocation('playFromProvince', this, 'province 4')
         ];
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings
@@ -299,16 +299,18 @@ class Player extends GameObject {
 
         if(numCards > this.conflictDeck.size()) {
             remainingCards = numCards - this.conflictDeck.size();
-            numCards = this.conflictDeck.size();
-        }
-
-        for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
-            this.moveCard(card, 'hand');
-        }
-
-        if(remainingCards > 0) {
+            let cards = this.conflictDeck.toArray();
             this.deckRanOutOfCards('conflict');
+            this.game.queueSimpleStep(() => {
+                for(let card of cards) {
+                    this.moveCard(card, 'hand');
+                }
+            });
             this.game.queueSimpleStep(() => this.drawCardsToHand(remainingCards));
+        } else {
+            for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
+                this.moveCard(card, 'hand');
+            }
         }
     }
 
@@ -336,7 +338,7 @@ class Player extends GameObject {
      */
     replaceDynastyCard(location) {
         if(this.getSourceList(location).size() > 1) {
-            return;
+            return false;
         }
         if(this.dynastyDeck.size() === 0) {
             this.deckRanOutOfCards('dynasty');
@@ -456,8 +458,8 @@ class Player extends GameObject {
         }
     }
 
-    addPlayableLocation(type, player, location) {
-        let playableLocation = new PlayableLocation(type, player, location);
+    addPlayableLocation(type, player, location, cards = []) {
+        let playableLocation = new PlayableLocation(type, player, location, cards);
         this.playableLocations.push(playableLocation);
         return playableLocation;
     }
@@ -771,6 +773,10 @@ class Player extends GameObject {
         });
     }
 
+    get honorBid() {
+        return Math.max(0, this.showBid + this.honorBidModifier);
+    }
+
     get gloryModifier() {
         return this.getEffects('gloryModifier').reduce((total, value) => total + value, 0);
     }
@@ -913,9 +919,11 @@ class Player extends GameObject {
         }
         */
         // Replace a card which has been played, put into play or discarded from a province
+        /*
         if(card.isDynasty && provinceLocations.includes(location) && targetLocation !== 'dynasty deck') {
             this.replaceDynastyCard(location);
         }
+        */
     }
 
     /**
@@ -1015,9 +1023,9 @@ class Player extends GameObject {
     /**
      * Sets te value of the dial in the UI, and sends a chat message revealing the players bid
      */
-    setShowBid() {
-        this.showBid = this.honorBid;
-        this.game.addMessage('{0} reveals a bid of {1}', this, this.showBid);
+    setShowBid(bid) {
+        this.showBid = bid;
+        this.game.addMessage('{0} reveals a bid of {1}', this, bid);
     }
 
     isTopConflictCardShown() {

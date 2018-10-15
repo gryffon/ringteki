@@ -16,7 +16,7 @@ class HonorAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onCardHonored', { card: card, context: context }, () => card.honor());
+        return super.createEvent('onCardHonored', { card, context }, event => event.card.honor());
     }
 }
 

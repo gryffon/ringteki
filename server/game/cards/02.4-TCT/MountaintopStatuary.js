@@ -8,7 +8,7 @@ class MountaintopStatuary extends DrawCard {
                 onDynastyCardTurnedFaceup: (event, context) => event.card === context.source
             },
             effect: 'move it to their stronghold province',
-            handler: context => context.player.moveCard(context.source, 'stronghold province')
+            gameAction: ability.actions.moveCard({ destination: 'stronghold province' })
         });
         this.action({
             title: 'Send a 2 or lower cost character home',

@@ -28,7 +28,7 @@ class CardAbility extends ThenAbility {
         }
 
         if(card.getType() === 'event') {
-            this.cost = this.cost.concat(Costs.payReduceableFateCost('play'), Costs.playLimited());
+            this.cost = this.cost.concat(Costs.payReduceableFateCost('playFromHand'), Costs.playLimited());
         }
     }
 
@@ -76,7 +76,7 @@ class CardAbility extends ThenAbility {
     }
 
     isInValidLocation(context) {
-        return this.card.type === 'event' ? context.player.isCardInPlayableLocation(context.source, 'play') : this.location.includes(this.card.location);
+        return this.card.type === 'event' ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
     }
 
     displayMessage(context) {
@@ -95,7 +95,11 @@ class CardAbility extends ThenAbility {
         let messageArgs = [context.player, context.source.type === 'event' ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
             if(cost.action && cost.action.cost) {
-                return { message: this.game.gameChat.getFormattedMessage(cost.action.cost, context.costs[cost.action.name]) };
+                let card = context.costs[cost.action.name];
+                if(card && card.facedown) {
+                    card = 'a facedown card';
+                }
+                return { message: this.game.gameChat.getFormattedMessage(cost.action.cost, card) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {

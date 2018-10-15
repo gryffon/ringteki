@@ -75,7 +75,9 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
                     }
                 }
                 for(const card of this.selectedCards[player.name]) {
+                    let location = card.location;
                     player.moveCard(card, 'dynasty deck bottom');
+                    player.replaceDynastyCard(location);
                 }
                 player.shuffleDynastyDeck();
                 this.game.addMessage('{0} has mulliganed {1} cards from the dynasty deck', player, this.selectedCards[player.name].length);

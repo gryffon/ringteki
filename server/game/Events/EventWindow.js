@@ -11,6 +11,7 @@ class EventWindow extends BaseStepWithPipeline {
 
         this.events = [];
         this.thenAbilities = [];
+        this.provincesToRefill = [];
         _.each(events, event => {
             if(!event.cancelled) {
                 this.addEvent(event);
@@ -35,6 +36,7 @@ class EventWindow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.checkThenAbilities()),
             new SimpleStep(this.game, () => this.openWindow('forcedreaction')),
             new SimpleStep(this.game, () => this.openWindow('reaction')),
+            new SimpleStep(this.game, () => this.refillProvinces()),
             new SimpleStep(this.game, () => this.resetCurrentEventWindow())
         ]);
     }
@@ -50,11 +52,14 @@ class EventWindow extends BaseStepWithPipeline {
         return event;
     }
 
-    addThenAbility(events, ability, context) {
+    addThenAbility(events, ability, context, condition) {
+        if(!condition) {
+            condition = event => !event.cancelled && (!event.gameAction || event.gameAction.fullyResolved(event));
+        }
         if(!Array.isArray(events)) {
             events = [events];
         }
-        this.thenAbilities.push({ events: events, ability: ability, context: context });
+        this.thenAbilities.push({ events, ability, context, condition });
     }
 
     setCurrentEventWindow() {
@@ -119,8 +124,26 @@ class EventWindow extends BaseStepWithPipeline {
 
     checkThenAbilities() {
         for(const thenAbility of this.thenAbilities) {
-            if(thenAbility.events.every(event => !event.cancelled)) {
+            if(thenAbility.events.every(event => thenAbility.condition(event))) {
                 this.game.resolveAbility(thenAbility.ability.createContext(thenAbility.context.player));
+            }
+        }
+    }
+
+    refillProvince(player, location, context) {
+        if(context.stage === 'cost') {
+            this.previousEventWindow.provincesToRefill.push({ player, location });
+        } else {
+            this.provincesToRefill.push({ player, location });
+        }
+    }
+
+    refillProvinces() {
+        for(let player of this.game.getPlayersInFirstPlayerOrder()) {
+            for(let refill of this.provincesToRefill.filter(refill => refill.player === player)) {
+                this.game.queueSimpleStep(() => {
+                    player.replaceDynastyCard(refill.location);
+                });
             }
         }
     }

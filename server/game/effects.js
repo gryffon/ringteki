@@ -87,6 +87,7 @@ const Effects = {
     setBasePoliticalSkill: (value) => EffectBuilder.card.static('setBasePoliticalSkill', value),
     setBaseProvinceStrength: (value) => EffectBuilder.card.static('setBaseProvinceStrength', value),
     setDash: (type) => EffectBuilder.card.static('setDash', type),
+    setGlory: (value) => EffectBuilder.card.static('setGlory', value),
     setMilitarySkill: (value) => EffectBuilder.card.static('setMilitarySkill', value),
     setPoliticalSkill: (value) => EffectBuilder.card.static('setPoliticalSkill', value),
     setProvinceStrength: (value) => EffectBuilder.card.static('setProvinceStrength', value),
@@ -110,8 +111,8 @@ const Effects = {
         unapply: () => true
     }),
     alternateFatePool: (match) => EffectBuilder.player.static('alternateFatePool', match),
-    canPlayFromOwn: (location) => EffectBuilder.player.detached('canPlayFromOwn', {
-        apply: (player) => player.addPlayableLocation('play', player, location),
+    canPlayFromOwn: (location, cards) => EffectBuilder.player.detached('canPlayFromOwn', {
+        apply: (player) => player.addPlayableLocation('playFromHand', player, location, cards),
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static('gloryModifier', value),

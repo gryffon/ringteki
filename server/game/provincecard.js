@@ -77,7 +77,7 @@ class ProvinceCard extends BaseCard {
                         handlers: [
                             () => {
                                 this.game.addMessage('{0} chooses to discard {1}', this.controller.opponent, dynastyCard.facedown ? 'the facedown card' : dynastyCard);
-                                this.controller.moveCard(dynastyCard, 'dynasty discard pile');
+                                this.game.applyGameAction(this.game.getFrameworkContext(), { discardCard: dynastyCard });
                             },
                             () => this.game.addMessage('{0} chooses not to discard {1}', this.controller.opponent, dynastyCard.facedown ? 'the facedown card' : dynastyCard)
                         ]

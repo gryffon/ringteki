@@ -20,14 +20,7 @@ class WindsweptYurt extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             effect: 'give each player 2 {1}',
             effectArgs: context => context.select === 'Each player gains 2 fate' ? 'fate' : 'honor',
-            then: context => ({
-                handler: () => {
-                    let card = context.player.getDynastyCardInProvince(context.cardStateWhenInitiated.location);
-                    if(card) {
-                        card.facedown = false;
-                    }
-                }
-            })
+            gameAction: ability.actions.refillFaceup(context => ({ location: context.cardStateWhenInitiated.location }))
         });
     }
 }

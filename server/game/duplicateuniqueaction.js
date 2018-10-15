@@ -15,7 +15,7 @@ class DuplicateUniqueAction extends BaseAction {
             return 'phase';
         }
 
-        if(!this.card.controller.isCardInPlayableLocation(this.card, 'dynasty') && !this.card.controller.isCardInPlayableLocation(this.card, 'play')) {
+        if(!this.card.controller.isCardInPlayableLocation(this.card, 'playFromProvince') && !this.card.controller.isCardInPlayableLocation(this.card, 'playFromHand')) {
             if(!ignoredRequirements.includes('location')) {
                 return 'location';
             }
@@ -29,8 +29,7 @@ class DuplicateUniqueAction extends BaseAction {
 
     executeHandler(context) {
         let duplicate = context.player.getDuplicateInPlay(context.source);
-        context.player.moveCard(context.source, context.source.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
-        context.game.applyGameAction(context, { placeFate: duplicate });
+        context.game.applyGameAction(context, { placeFate: duplicate, discardCard: context.source });
     }
 }
 

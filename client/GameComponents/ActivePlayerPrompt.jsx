@@ -4,6 +4,7 @@ import Draggable from 'react-draggable';
 import _ from 'underscore';
 
 import AbilityTargeting from './AbilityTargeting.jsx';
+import CardNameLookup from './CardNameLookup.jsx';
 
 class ActivePlayerPrompt extends React.Component {
     constructor() {
@@ -109,7 +110,7 @@ class ActivePlayerPrompt extends React.Component {
         this.setState({ showTimer: false, timerHandle: undefined, timerCancelled: true });
 
         if(button.method) {
-            this.props.onButtonClick(button.command, button.arg, button.method);
+            this.props.onButtonClick(button.command, button.arg, button.uuid, button.method);
         }
     }
 
@@ -154,6 +155,12 @@ class ActivePlayerPrompt extends React.Component {
         return buttons;
     }
 
+    onCardNameSelected(command, uuid, method, cardName) {
+        if(this.props.onButtonClick) {
+            this.props.onButtonClick(command, cardName, uuid, method);
+        }
+    }
+
     getControls() {
         return _.map(this.props.controls, control => {
             switch(control.type) {
@@ -164,6 +171,8 @@ class ActivePlayerPrompt extends React.Component {
                             onMouseOver={ this.props.onMouseOver }
                             source={ control.source }
                             targets={ control.targets } />);
+                case 'card-name':
+                    return <CardNameLookup cards={ this.props.cards } onCardSelected={ this.onCardNameSelected.bind(this, control.command, control.uuid, control.method) } />;
             }
         });
     }
@@ -219,6 +228,7 @@ class ActivePlayerPrompt extends React.Component {
 ActivePlayerPrompt.displayName = 'ActivePlayerPrompt';
 ActivePlayerPrompt.propTypes = {
     buttons: PropTypes.array,
+    cards: PropTypes.object,
     controls: PropTypes.array,
     getDefaultPosition: PropTypes.func,
     onButtonClick: PropTypes.func,

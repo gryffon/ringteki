@@ -30,6 +30,11 @@ class SelectCardCost {
             buttons: result.canCancel ? [{ text: 'Cancel', arg: 'cancel' }] : [],
             onSelect: (player, cards) => {
                 context.costs[this.action.name] = cards;
+                if(Array.isArray(cards)) {
+                    context.costs[this.action.name + 'StateWhenChosen'] = cards.map(card => card.createSnapshot());
+                } else {
+                    context.costs[this.action.name + 'StateWhenChosen'] = cards.createSnapshot();
+                }
                 this.action.setTarget(cards);
                 return true;
             },

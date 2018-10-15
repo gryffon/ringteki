@@ -1,7 +1,30 @@
 const DrawCard = require('../../drawcard.js');
 
 class PeasantsAdvice extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
+        this.action({
+            title: 'look at a province and return its dynasty card to deck',
+            phase: 'conflict',
+            cost: ability.costs.dishonor(() => true),
+            target: {
+                cardType: 'province',
+                location: 'province',
+                gameAction: ability.actions.sequentialAction([
+                    ability.actions.lookAt(),
+                    ability.actions.returnToDeck(context => ({
+                        location: context.target.location,
+                        shuffle: true,
+                        promptWithHandlerMenu: {
+                            activePromptTitle: 'Choose a card to return to owner\'s deck',
+                            cards: context.target.controller.getSourceList(context.target.location).filter(card => card.isDynasty && !card.facedown),
+                            choices: ['Done'],
+                            handlers: [() => this.game.addMessage('{0} chooses not to return a dynasty card to its owner\'s deck', context.player)],
+                            message: '{0} chooses to shuffle {2} into its owner\'s deck'
+                        }
+                    }))
+                ])
+            }
+        });
     }
 }
 

@@ -20,6 +20,7 @@ class LookAtAction extends CardGameAction {
     }
 
     getEventArray(context) {
+        this.target = this.target.filter(card => this.canAffect(card, context));
         if(this.target.length === 0) {
             return [];
         }

@@ -28,7 +28,7 @@ class CardGameAction extends GameAction {
 
     getSelector() {
         let condition = this.promptForSelect.cardCondition || (() => true);
-        let cardCondition = (card, context) => this.canAffect(card, context) && condition(card, context);
+        let cardCondition = (card, context) => (this.promptForSelect.customHandler || this.canAffect(card, context)) && condition(card, context);
         return CardSelector.for(Object.assign({}, this.promptForSelect, { cardCondition: cardCondition }));
     }
 
@@ -36,12 +36,18 @@ class CardGameAction extends GameAction {
         super.preEventHandler(context);
         if(this.promptForSelect) {
             let selector = this.getSelector();
-            this.target = [];
             if(!selector.hasEnoughTargets(context)) {
+                this.target = [];
                 return;
             }
+            let properties = this.promptForSelect;
+            if(properties.customHandler) {
+                properties.onSelect = (player, cards) => properties.customHandler(cards, this);
+            }
+            if(!properties.player) {
+                properties.player = context.player;
+            }
             let defaultProperties = {
-                player: context.player,
                 context: context,
                 selector: selector,
                 onSelect: (player, cards) => {
@@ -59,13 +65,11 @@ class CardGameAction extends GameAction {
                     return true;
                 }
             };
-            let properties = Object.assign(defaultProperties, this.promptForSelect);
-            context.game.promptForSelect(properties.player, properties);
+            context.game.promptForSelect(properties.player, Object.assign(defaultProperties, properties));
         } else if(this.promptWithHandlerMenu) {
             let properties = this.promptWithHandlerMenu;
             if(!properties.customHandler) {
                 properties.cards = properties.cards.filter(card => this.canAffect(card, context));
-                this.target = [];
             }
             if(properties.cards.length === 0) {
                 return;
@@ -95,6 +99,10 @@ class CardGameAction extends GameAction {
 
     checkEventCondition(event) {
         return this.canAffect(event.card, event.context);
+    }
+
+    fullyResolved(event) {
+        return this.target.length === 0 || this.target.includes(event.card);
     }
 }
 
