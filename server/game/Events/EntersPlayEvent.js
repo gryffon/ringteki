@@ -13,7 +13,7 @@ class EntersPlayEvent extends Event {
 
     entersPlay() {
         if(this.card.location.includes('province')) {
-            this.window.refillProvince(this.card.controller, this.card.location, this.context);
+            this.context.refillProvince(this.card.controller, this.card.location);
         }
 
         this.card.new = true;

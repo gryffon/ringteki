@@ -30,7 +30,7 @@ class ReturnToDeckAction extends CardGameAction {
         }
         return super.createEvent('onMoveCard', { card: card, context: context }, event => {
             if(card.location.includes('province')) {
-                event.window.refillProvince(card.controller, card.location, context);
+                event.context.refillProvince(card.controller, card.location, context);
             }
             card.owner.moveCard(card, destination, { bottom: this.bottom });
             if(this.shuffle) {

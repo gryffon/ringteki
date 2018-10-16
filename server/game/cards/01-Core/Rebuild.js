@@ -9,7 +9,7 @@ class Rebuild extends DrawCard {
                 !context.player.getProvinceCardInProvince(card.location).isBroken
             ),
             target: {
-                activePromptTitle: 'Choose a card to put into the province',
+                activePromptTitle: 'Choose a holding to put into the province',
                 cardType: 'holding',
                 location: 'dynasty discard pile',
                 controller: 'self'

@@ -23,7 +23,7 @@ class DiscardCardAction extends CardGameAction {
         return [this.createEvent('onCardsDiscarded', { player: this.target[0].controller, cards: this.target, context: context }, event => {
             for(const card of event.cards) {
                 if(card.location.includes('province')) {
-                    event.window.refillProvince(card.controller, card.location, context);
+                    event.context.refillProvince(card.controller, card.location);
                 }
                 card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
             }
@@ -33,7 +33,7 @@ class DiscardCardAction extends CardGameAction {
     getEvent(card, context) {
         return super.createEvent('onCardsDiscarded', { player: card.controller, cards: [card], context: context }, event => {
             if(card.location.includes('province')) {
-                event.window.refillProvince(card.controller, card.location, context);
+                event.context.refillProvince(card.controller, card.location);
             }
             card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
         });
