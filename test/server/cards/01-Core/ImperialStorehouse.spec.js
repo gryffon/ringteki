@@ -18,7 +18,7 @@ describe('Imperial Storehouse', function () {
                 this.player1.clickCard(this.imperialStorehouse);
                 expect(this.player1.hand.length).toBe(handCount + 1);
             });
-            
+
             it('should sacrifice itself', function () {
                 this.player1.clickCard(this.imperialStorehouse);
                 expect(this.imperialStorehouse.location).toBe('dynasty discard pile');

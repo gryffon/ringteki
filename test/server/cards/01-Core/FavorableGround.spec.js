@@ -13,7 +13,7 @@ describe('Favorable Ground', function () {
                     }
                 });
                 this.favorableGround = this.player1.placeCardInProvince('favorable-ground', 'province 1');
-                
+
                 this.adeptOfTheWaves = this.player1.findCardByName('adept-of-the-waves');
                 this.asakoDiplomat = this.player1.findCardByName('asako-diplomat');
                 this.naiveStudent = this.player1.findCardByName('naive-student');
