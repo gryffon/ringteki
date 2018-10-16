@@ -84,12 +84,16 @@ class RegroupPhase extends Phase {
                     return true;
                 }
             });
-            return;
-        }
-        if(cardsToDiscard.length > 0) {
+        } else if(cardsToDiscard.length > 0) {
             this.game.addMessage('{0} discards {1} from their provinces', player, cardsToDiscard);
             this.game.applyGameAction(this.game.getFrameworkContext(), { discardCard: cardsToDiscard });
         }
+
+        this.game.queueSimpleStep(() => {
+            for(let location of ['province 1', 'province 2', 'province 3', 'province 4']) {
+                player.replaceDynastyCard(location);
+            }
+        });
     }
 
     returnRings() {
