@@ -17,7 +17,6 @@ class FlipDynastyAction extends CardGameAction {
 
     getEvent(card, context) {
         return super.createEvent('onDynastyCardTurnedFaceup', { card: card, context: context }, () => {
-            context.game.addMessage('{0} reveals {1}', context.source, card);
             card.facedown = false;
         });
     }
