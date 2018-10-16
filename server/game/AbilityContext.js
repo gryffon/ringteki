@@ -12,6 +12,10 @@ class AbilityContext {
         this.rings = properties.rings || {};
         this.selects = properties.selects || {};
         this.stage = properties.stage || 'effect';
+        this.target = null;
+        this.select = null;
+        this.ring = null;
+        this.provincesToRefill = [];
     }
 
     copy(newProps) {
@@ -20,6 +24,10 @@ class AbilityContext {
         copy.select = this.select;
         copy.ring = this.ring;
         return copy;
+    }
+
+    refillProvince(player, location) {
+        this.provincesToRefill.push({ player, location });
     }
 
     getProps() {
@@ -32,7 +40,8 @@ class AbilityContext {
             targets: Object.assign({}, this.targets),
             rings: Object.assign({}, this.rings),
             selects: Object.assign({}, this.selects),
-            stage: this.stage
+            stage: this.stage,
+            provincesToRefill: this.provincesToRefill
         };
     }
 }

@@ -27,7 +27,7 @@ class MoveCardAction extends CardGameAction {
                 let otherCard = card.controller.getDynastyCardInProvince(this.destination);
                 context.player.moveCard(otherCard, card.location);
             } else if(['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location)) {
-                event.window.refillProvince(context.player, card.location, context);
+                event.context.refillProvince(context.player, card.location);
             }
             context.player.moveCard(card, this.destination);
             if(this.shuffle) {

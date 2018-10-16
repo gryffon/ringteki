@@ -47,7 +47,7 @@ class LeavesPlayEvent extends Event {
 
     leavesPlay() {
         if(['province 1', 'province 2', 'province 3', 'province 4'].includes(this.card.location)) {
-            this.window.refillProvince(this.context.player, this.card.location, this.context);
+            this.context.refillProvince(this.context.player, this.card.location);
         }
         this.card.owner.moveCard(this.card, this.destination, this.options);
         if(this.options.shuffle) {
