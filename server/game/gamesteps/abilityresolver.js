@@ -9,6 +9,7 @@ class AbilityResolver extends BaseStepWithPipeline {
 
         this.context = context;
         this.canCancel = true;
+        this.provincesToRefill = [];
         this.targetResults = {};
         this.initialise();
     }
@@ -136,6 +137,15 @@ class AbilityResolver extends BaseStepWithPipeline {
         } else {
             this.executeHandler();
         }
+        this.game.queueSimpleStep(() => {
+            for(let player of this.game.getPlayersInFirstPlayerOrder()) {
+                for(let refill of this.context.provincesToRefill.filter(refill => refill.player === player)) {
+                    this.game.queueSimpleStep(() => {
+                        player.replaceDynastyCard(refill.location);
+                    });
+                }
+            }
+        });
     }
 
     executeHandler() {
