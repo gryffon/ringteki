@@ -11,8 +11,8 @@ class StolenSecrets extends DrawCard {
             handler: context => this.game.promptWithHandlerMenu(context.player, {
                 activePromptTitle: 'Choose a card to remove from the game',
                 context: context,
-                cards: context.player.opponent.first(4),
-                cardHandler: card => this.stealCard(card, context.player.opponent.first(4).filter(c => c !== card), context)
+                cards: context.player.opponent.conflictDeck.first(4),
+                cardHandler: card => this.stealCard(card, context.player.opponent.conflictdeck.first(4).filter(c => c !== card), context)
             })
         });
     }
