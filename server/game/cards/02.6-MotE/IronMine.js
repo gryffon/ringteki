@@ -11,7 +11,9 @@ class IronMine extends DrawCard {
             effect: 'prevent {1} from leaving play',
             effectArgs: context => context.event.card,
             handler: context => {
-                context.event.window.addEvent(ability.actions.sacrifice().getEvent(context.source, context));
+                context.event.window.addEvent(ability.actions.sacrifice().getEvent(context.source, context.event.context));
+                // add a check to refill this province once the triggering ability resolves
+                context.event.context.refillProvince(context.source.controller, context.source.location);
                 context.cancel();
             }
         });
