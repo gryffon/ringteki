@@ -99,6 +99,7 @@ describe('Stolen Secrets', function() {
                         expect(this.player1).toHavePromptButton(this.mantraOfFire.name);
                         expect(this.player1).toHavePromptButton(this.censure.name);
                         this.player1.clickPrompt(this.mantraOfFire.name);
+                        expect(this.player1).toHavePrompt('Which card do you want to be the second card?');
                         expect(this.player1).toHavePromptButton(this.censure.name);
                         expect(this.player1).toHavePromptButton(this.centipedeTattoo.name);
                         this.player1.clickPrompt(this.censure.name);
