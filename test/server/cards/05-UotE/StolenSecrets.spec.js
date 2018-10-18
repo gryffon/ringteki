@@ -65,7 +65,6 @@ describe('Stolen Secrets', function() {
                 it('should not be playable if there are 0 cards in your opponent\'s deck', function () {
                     this.player2.conflictDeck = [];
                     this.player1.clickCard(this.stolenSecrets);
-                    this.player1.clickCard(this.stolenSecrets);
                 });
 
                 describe('if costs are paid', function () {
