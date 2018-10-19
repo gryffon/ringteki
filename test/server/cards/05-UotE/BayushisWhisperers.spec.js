@@ -65,8 +65,6 @@ describe('Bayushi\'s Whisperers', function() {
 
                 it('should prompt to name a card', function () {
                     expect(this.player1).toHavePrompt('Name a card');
-                    expect(this.player1).toHavePromptButton(this.assassination.name);
-                    expect(this.player1).toHavePromptButton(this.fineKatana.name);
                 });
 
             });
