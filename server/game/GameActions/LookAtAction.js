@@ -34,6 +34,10 @@ class LookAtAction extends CardGameAction {
             context.game.addMessage('{0} sees {1}', context.source, card);
         });
     }
+
+    fullyResolved() {
+        return true;
+    }
 }
 
 module.exports = LookAtAction;
