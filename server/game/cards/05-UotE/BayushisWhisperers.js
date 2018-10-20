@@ -14,7 +14,7 @@ class BayushisWhisperers extends DrawCard {
                     activePrompt: {
                         menuTitle: 'Name a card',
                         controls: [
-                            { type: 'card-name', command: 'menuButton', method: 'selectCardName' }
+                            { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
                         ]
                     }
                 })

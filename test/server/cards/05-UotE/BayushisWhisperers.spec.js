@@ -78,13 +78,12 @@ describe('Bayushi\'s Whisperers', function() {
                     });
                     this.player2.pass();
                     this.player1.clickCard(this.bayushisWhisperers);
-                    this.player1.clickPrompt(this.fineKatana.name);
-                    this.player2.pass();
+                    this.player1.chooseCardInPrompt(this.fineKatana.name, 'card-name');
                 });
 
                 it('opponent should not be able to play copies of named card', function () {
-                    this.player1.clickCard(this.fineKatana);
-                    expect(this.player1).toHavePrompt('Initiate an action');
+                    this.player2.clickCard(this.fineKatana);
+                    expect(this.player2).toHavePrompt('Conflict Action Window');
                 });
             });
 
