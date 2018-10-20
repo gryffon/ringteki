@@ -61,9 +61,9 @@ class SelectRingPrompt extends UiPrompt {
         if(!this.properties.context) {
             return [];
         }
-        let targets = this.properties.context.targets ? Object.values(this.properties.context.targets).map(target => target.getShortSummary()) : [];
+        let targets = this.properties.context.targets ? Object.values(this.properties.context.targets).map(target => target.getShortSummaryForControls()) : [];
         if(targets.length === 0 && this.properties.context.event && this.properties.context.event.card) {
-            this.targets = [this.properties.context.event.card.getShortSummary()];
+            this.targets = [this.properties.context.event.card.getShortSummaryForControls()];
         }
         return [{
             type: 'targeting',

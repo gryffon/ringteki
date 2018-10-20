@@ -100,7 +100,7 @@ class SelectCardPrompt extends UiPrompt {
         return [{
             type: 'targeting',
             source: this.context.source.getShortSummary(),
-            targets: targets.map(target => target.getShortSummary())
+            targets: targets.map(target => target.getShortSummaryForControls(this.choosingPlayer))
         }];
     }
 
