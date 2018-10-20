@@ -57,7 +57,7 @@ describe('Akodo Kage', function() {
                     expect(this.player1).not.toBeAbleToSelect(this.akodoKage.id);
                 });
             });
-            
+
             describe('if it resolves', function () {
                 beforeEach(function () {
                     this.player1.honor = 11;
