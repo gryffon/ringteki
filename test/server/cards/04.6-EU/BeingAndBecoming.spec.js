@@ -1,5 +1,33 @@
 describe('Being And Becoming', function() {
-    integration(function() {
+    integration(function () {
+        describe('Being and Becoming', function () {
+            beforeEach(function () {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['togashi-initiate'],
+                        hand: ['being-and-becoming']
+                    },
+                    player2: {
+                        inPlay: ['adept-of-the-waves'],
+                        hand: []
+                    }
+                });
+                this.togashiInitiate = this.player1.findCardByName('togashi-initiate');
+                this.beingAndBecoming = this.player1.findCardByName('being-and-becoming');
+                this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
+            });
+
+            it('should only be able to be attached to character you control', function () {
+                this.player1.clickCard(this.beingAndBecoming);
+                expect(this.player1).toHavePrompt('Choose a card');
+                this.player1.clickCard(this.adeptOfTheWaves);
+                expect(this.player1).toHavePrompt('Choose a card');
+                this.player1.clickCard(this.togashiInitiate);
+                expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
+            });
+        });
+
         describe('Being And Becoming\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
@@ -9,13 +37,14 @@ describe('Being And Becoming', function() {
                         hand: ['being-and-becoming']
                     },
                     player2: {
-                        inPlay: [],
+                        inPlay: ['adept-of-the-waves'],
                         hand: []
                     }
                 });
                 this.initiate = this.player1.findCardByName('togashi-initiate');
                 this.mendicant = this.player1.findCardByName('togashi-mendicant');
                 this.bab = this.player1.findCardByName('being-and-becoming');
+                this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
 
                 this.game.rings.fire.fate = 2;
             });
