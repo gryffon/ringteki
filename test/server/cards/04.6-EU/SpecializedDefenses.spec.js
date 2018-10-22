@@ -68,7 +68,7 @@ describe('Specialized Defenses', function() {
                     expect(this.player1).toHavePrompt('Conflict Action Window');
                     expect(this.kuroiMori.strength).toBe(8);
                 });
-            });            
+            });
         });
     });
 });
