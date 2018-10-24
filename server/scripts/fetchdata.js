@@ -41,23 +41,13 @@ let fetchCards = apiRequest('cards')
 
         var i = 0;
 
-        cards.forEach(function(card) {
-            var imagePath = path.join(imageDir, card.id + '.jpg');
-            let imagesrc;
-
-            if(card.pack_cards.length === 1 && card.pack_cards[0].image_url) {
-                imagesrc = card.pack_cards[0].image_url;
-
-                if(imagesrc && !fs.existsSync(imagePath)) {
-                    fetchImage(imagesrc, card.id, imagePath, i++ * 200);
-                }
-            }
-
-            if(card.pack_cards.length === 2 && card.pack_cards[1].image_url) {
-                imagesrc = card.pack_cards[1].image_url;
-
-                if(imagesrc && !fs.existsSync(imagePath)) {
-                    fetchImage(imagesrc, card.id, imagePath, i++ * 200);
+        cards.forEach(function (card) {
+            if(card.pack_cards.length > 0) {
+                var imagePath = path.join(imageDir, card.id + '.jpg');
+                let firstCardWithImageUrl = card.pack_cards.find(card => card.image_url);
+                let imageSrc = firstCardWithImageUrl.image_url;
+                if(imageSrc && !fs.existsSync(imagePath)) {
+                    fetchImage(imageSrc, card.id, imagePath, i++ * 200);
                 }
             }
         });
