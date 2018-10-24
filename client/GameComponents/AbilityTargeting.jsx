@@ -4,7 +4,7 @@ import _ from 'underscore';
 
 class AbilityTargeting extends React.Component {
     onMouseOver(event, card) {
-        if(card && this.props.onMouseOver) {
+        if(card && !card.facedown && this.props.onMouseOver) {
             this.props.onMouseOver(card);
         }
     }

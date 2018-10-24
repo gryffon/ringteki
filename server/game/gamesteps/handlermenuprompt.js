@@ -75,7 +75,7 @@ class HandlerMenuPrompt extends UiPrompt {
             return [{
                 type: 'targeting',
                 source: this.properties.source.getShortSummary(),
-                targets: this.properties.controls.targets.map(target => target.getShortSummaryForControls())
+                targets: this.properties.controls.targets.map(target => target.getShortSummaryForControls(this.player))
             }];
         }
         if(this.context.source.type === '') {
@@ -89,7 +89,7 @@ class HandlerMenuPrompt extends UiPrompt {
         return [{
             type: 'targeting',
             source: this.context.source.getShortSummary(),
-            targets: targets.map(target => target.getShortSummaryForControls())
+            targets: targets.map(target => target.getShortSummaryForControls(this.player))
         }];
     }
 
