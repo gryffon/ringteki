@@ -17,6 +17,20 @@ describe('Alibi Artist', function() {
                 this.reprieve = this.player1.findCardByName('reprieve');
             });
 
+            describe('if the conflict deck is empty', function () {
+                beforeEach(function () {
+                    this.player1.player.conflictDeck.each(card => {
+                        this.player1.player.moveCard(card, 'conflict discard pile');
+                    });
+                });
+
+                it('should not trigger', function () {
+                    this.player1.honor = 4;
+                    this.player1.clickCard('alibi-artist');
+                    expect(this.player1).not.toHavePrompt('Choose a card to put in your hand');
+                });
+            });
+
             it('should only work at 6 honor or less', function() {
                 this.player1.honor = 7;
                 this.player1.clickCard('alibi-artist');
