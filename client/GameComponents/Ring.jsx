@@ -69,7 +69,7 @@ class Ring extends React.Component {
         return true;
     }
 
-    getRingText() {
+    getRingInfo() {
         if(!this.props.ring.claimed && !this.props.ring.contested) {
             return (
                 <div className='ring-info'>
@@ -78,7 +78,7 @@ class Ring extends React.Component {
             );
         }
         return (
-            <div className={ this.props.ring.claimedBy.length > 12 ? 'ring-info-xs' : 'ring-info' } >
+            <div className='ring-info' >
                 { this.getIcon() }
                 { this.props.ring.claimed ? ' Claimed: ' + this.props.ring.claimedBy : ' Contested' }
             </div>
@@ -105,7 +105,7 @@ class Ring extends React.Component {
                 <img className={ className } title={ this.props.ring.element } src={ '/img/' + this.props.ring.conflictType + '-' + this.props.ring.element + '.png' } />
                 { this.showCounters() ? <CardCounters counters={ this.getCountersForRing(this.props.ring.element) } /> : null }
             </div>
-            { this.getRingText() }
+            { this.getRingInfo() }
             { this.showMenu() ? <CardMenu menu={ this.props.ring.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
         </div>);
     }
