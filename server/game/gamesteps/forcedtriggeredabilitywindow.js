@@ -96,7 +96,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
         return [...map.entries()].map(([source, targets]) => ({
             type: 'targeting',
             source: source.getShortSummary(),
-            targets: targets.map(target => target.getShortSummary())
+            targets: targets.map(target => target.getShortSummaryForControls(this.currentPlayer))
         }));
     }
 

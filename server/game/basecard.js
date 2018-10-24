@@ -288,11 +288,18 @@ class BaseCard extends EffectSource {
         return {};
     }
 
+    getShortSummaryForControls(activePlayer) {
+        if(this.facedown && (activePlayer !== this.controller || this.hideWhenFacedown())) {
+            return { facedown: true, isDynasty: this.isDynasty, isConflict: this.isConflict };
+        }
+        return super.getShortSummary();
+    }
+
     getSummary(activePlayer, hideWhenFaceup) {
-        let isActivePlayer = activePlayer === this.owner;
+        let isActivePlayer = activePlayer === this.controller;
         let selectionState = activePlayer.getCardSelectionState(this);
 
-        // This is my facedowm card, but I'm not allowed to look at it
+        // This is my facedown card, but I'm not allowed to look at it
         // OR This is not my card, and it's either facedown or hidden from me
         if(isActivePlayer ? this.facedown && this.hideWhenFacedown() : (this.facedown || hideWhenFaceup)) {
             let state = {

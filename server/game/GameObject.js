@@ -83,7 +83,7 @@ class GameObject {
         return false;
     }
 
-    getShortSummary() {
+    getShortSummary(activePlayer) { // eslint-disable-line no-unused-vars
         return {
             id: this.id,
             label: this.name,
