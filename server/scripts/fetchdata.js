@@ -45,9 +45,11 @@ let fetchCards = apiRequest('cards')
             if(card.pack_cards.length > 0) {
                 var imagePath = path.join(imageDir, card.id + '.jpg');
                 let firstCardWithImageUrl = card.pack_cards.find(card => card.image_url);
-                let imageSrc = firstCardWithImageUrl.image_url;
-                if(imageSrc && !fs.existsSync(imagePath)) {
-                    fetchImage(imageSrc, card.id, imagePath, i++ * 200);
+                if(firstCardWithImageUrl) {
+                    let imageSrc = firstCardWithImageUrl.image_url;
+                    if(imageSrc && !fs.existsSync(imagePath)) {
+                        fetchImage(imageSrc, card.id, imagePath, i++ * 200);
+                    }
                 }
             }
         });
