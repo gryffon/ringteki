@@ -137,15 +137,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         } else {
             this.executeHandler();
         }
-        this.game.queueSimpleStep(() => {
-            for(let player of this.game.getPlayersInFirstPlayerOrder()) {
-                for(let refill of this.context.provincesToRefill.filter(refill => refill.player === player)) {
-                    this.game.queueSimpleStep(() => {
-                        player.replaceDynastyCard(refill.location);
-                    });
-                }
-            }
-        });
+        this.game.queueSimpleStep(() => this.context.refill());
     }
 
     executeHandler() {

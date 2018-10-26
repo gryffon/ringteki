@@ -30,6 +30,16 @@ class AbilityContext {
         this.provincesToRefill.push({ player, location });
     }
 
+    refill() {
+        for(let player of this.game.getPlayersInFirstPlayerOrder()) {
+            for(let refill of this.provincesToRefill.filter(refill => refill.player === player)) {
+                this.game.queueSimpleStep(() => {
+                    player.replaceDynastyCard(refill.location);
+                });
+            }
+        }
+    }
+
     getProps() {
         return {
             game: this.game,
