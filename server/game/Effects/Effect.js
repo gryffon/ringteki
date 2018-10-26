@@ -37,7 +37,7 @@ class Effect {
         this.location = properties.location || 'play area';
         this.effect = effect;
         this.targets = [];
-        this.context = game.getFrameworkContext(game, source.controller);
+        this.context = game.getFrameworkContext(source.controller);
         this.context.source = source;
         this.effect.context = this.context;
         this.effect.duration = this.duration;

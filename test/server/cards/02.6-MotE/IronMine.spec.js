@@ -28,7 +28,7 @@ describe('Iron Mine', function() {
                     defenders: [this.bayushiAramoro]
                 });
             });
-            
+
             it('should be able to be used when a character you control is leaving play', function () {
                 this.player2.pass();
                 this.player1.clickCard(this.assassination);
@@ -87,7 +87,7 @@ describe('Iron Mine', function() {
                     expect(this.player1).toBeAbleToSelect(this.ironMine);
                     this.player1.clickCard(this.ironMine);
                     expect(this.ironMine.location).toBe('dynasty discard pile');
-                    expect(this.borderlandsDefender.location).toBe('dynasty discard pile')
+                    expect(this.borderlandsDefender.location).toBe('dynasty discard pile');
                     this.newCard = this.player1.player.getDynastyCardInProvince('province 1');
                     expect(this.newCard).not.toBeUndefined();
                 });
