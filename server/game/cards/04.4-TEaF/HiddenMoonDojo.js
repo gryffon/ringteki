@@ -14,7 +14,7 @@ class HiddenMoonDojo extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetLocation: 'province',
-            match: card => card.isDynasty && !card.facedown && this.controller.areLocationsAdjacent(this.location, card.location),
+            match: (card, context) => card.isDynasty && !card.facedown && context.player.areLocationsAdjacent(context.source.location, card.location),
             effect: ability.effects.gainPlayAction(HiddenMoonDojoPlayAction)
         });
 

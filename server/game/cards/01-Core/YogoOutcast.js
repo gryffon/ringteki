@@ -3,15 +3,14 @@ const DrawCard = require('../../drawcard.js');
 class YogoOutcast extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isLessHonorableThanOpponent(),
-            match: this,
+            condition: context => this.isLessHonorableThanOpponent(context.player),
             effect: ability.effects.modifyBothSkills(1)
         });
     }
 
-    isLessHonorableThanOpponent() {
-        let otherPlayer = this.game.getOtherPlayer(this.controller);
-        if(otherPlayer && otherPlayer.honor > this.controller.honor) {
+    isLessHonorableThanOpponent(player) {
+        let otherPlayer = this.game.getOtherPlayer(player);
+        if(otherPlayer && otherPlayer.honor > player.honor) {
             return true;
         }
         return false;

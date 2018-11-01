@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class StewardOfLaw extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating(),
+            condition: context => context.source.isParticipating(),
             targetController: 'any',
             match: card => card.getType() === 'character' && card.location === 'play area',
             effect: ability.effects.cardCannot('becomeDishonored')

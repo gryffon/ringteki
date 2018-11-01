@@ -5,7 +5,7 @@ class ChiseiDistrict extends DrawCard {
         this.persistentEffect({
             targetLocation: 'province',
             condition: () => this.game.isDuringConflict('military'),
-            match: card => card.isProvince && card.location === this.location && card.controller === this.controller,
+            match: (card, context) => card.isProvince && card.location === context.source.location,
             effect: ability.effects.cardCannot('initiateConflict')
         });
     }

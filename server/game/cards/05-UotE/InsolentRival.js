@@ -3,8 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class InsolentRival extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            condition: () => this.controller.opponent && this.controller.showBid > this.controller.opponent.showBid,
+            condition: context => context.player.opponent && context.player.showBid > context.player.opponent.showBid,
             effect: ability.effects.modifyBothSkills(2)
         });
 

@@ -3,15 +3,12 @@ const DrawCard = require('../../drawcard.js');
 class NezumiInfiltrator extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
             effect: [
                 ability.effects.immunity({
-                    restricts: 'maho',
-                    source: this
+                    restricts: 'maho'
                 }),
                 ability.effects.immunity({
-                    restricts: 'shadowlands',
-                    source: this
+                    restricts: 'shadowlands'
                 })]
         }),
         this.reaction({

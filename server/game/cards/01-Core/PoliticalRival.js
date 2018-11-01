@@ -3,8 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class PoliticalRival extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isDefending(),
-            match: this,
+            condition: context => context.source.isDefending(),
             effect: ability.effects.modifyPoliticalSkill(3)
         });
     }

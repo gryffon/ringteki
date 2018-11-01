@@ -5,7 +5,7 @@ class IuchiShahai extends DrawCard {
         this.persistentEffect({
             effect: ability.effects.reduceCost({
                 match: card => card.hasTrait('meishodo'),
-                targetCondition: target => target === this || target.isFaction('neutral')
+                targetCondition: (target, source) => target === source || target.isFaction('neutral')
             })
         });
     }

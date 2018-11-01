@@ -6,7 +6,6 @@ class MotoYouth extends DrawCard {
             condition: () => this.game.isDuringConflict('military') && this.game.conflictRecord.every(conflict => (
                 conflict.declaredType !== 'military' && !conflict.typeSwitched || !conflict.completed
             )),
-            match: this,
             effect: ability.effects.modifyMilitarySkill(1)
         });
     }

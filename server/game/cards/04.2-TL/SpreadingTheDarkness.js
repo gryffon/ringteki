@@ -15,8 +15,7 @@ class SpreadingTheDarkness extends DrawCard {
                         ability.effects.modifyMilitarySkill(4),
                         ability.effects.cardCannot({
                             cannot: 'target',
-                            restricts: 'opponentsCardEffects',
-                            player: context.player
+                            restricts: 'opponentsCardEffects'
                         })
                     ]
                 }))

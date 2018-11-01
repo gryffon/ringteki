@@ -3,8 +3,7 @@ const ProvinceCard = require('../../provincecard.js');
 class AppealingToTheFortunes extends ProvinceCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.persistentEffect({
-            match: this,
-            condition: () => this.controller.role.hasTrait('void'),
+            condition: context => context.player.role && context.player.role.hasTrait('void'),
             effect: ability.effects.modifyProvinceStrength(2)
         });
 

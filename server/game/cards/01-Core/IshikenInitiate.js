@@ -4,18 +4,13 @@ const DrawCard = require('../../drawcard.js');
 class IshikenInitiate extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
             effect: ability.effects.modifyBothSkills(() => this.getNoOfClaimedRings())
         });
     }
 
     getNoOfClaimedRings() {
-        let claimedRings = _.size(this.controller.getClaimedRings());
-        let otherPlayer = this.game.getOtherPlayer(this.controller);
-        if(otherPlayer) {
-            claimedRings += _.size(otherPlayer.getClaimedRings());
-        }
-        return claimedRings;
+        let claimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed());
+        return claimedRings.length;
     }
 }
 

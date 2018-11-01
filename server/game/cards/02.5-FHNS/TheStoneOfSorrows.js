@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class TheStoneOfSorrows extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.parent && !this.parent.bowed,
+            condition: context => context.source.parent && !context.source.parent.bowed,
             targetType: 'player',
             targetController: 'opponent',
             effect: ability.effects.playerCannot('takeFateFromRings')

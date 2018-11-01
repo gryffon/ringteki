@@ -3,7 +3,6 @@ const ProvinceCard = require('../../provincecard.js');
 class TeachingsOfTheElements extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
             effect: ability.effects.modifyProvinceStrength(() => this.getNoOfClaimedRings())
         });
     }

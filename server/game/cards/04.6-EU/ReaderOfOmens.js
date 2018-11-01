@@ -3,11 +3,10 @@ const DrawCard = require('../../drawcard.js');
 class ReaderOfOmens extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.air.isConsideredClaimed(this.controller) ||
-                this.game.rings.void.isConsideredClaimed(this.controller)
+            condition: context => (
+                this.game.rings.air.isConsideredClaimed(context.player) ||
+                this.game.rings.void.isConsideredClaimed(context.player)
             ),
-            match: this,
             effect: ability.effects.modifyPoliticalSkill(3)
         });
     }

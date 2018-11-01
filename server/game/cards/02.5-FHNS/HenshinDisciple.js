@@ -3,24 +3,21 @@ const DrawCard = require('../../drawcard.js');
 class HenshinDisciple extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.air.isConsideredClaimed(this.controller)) ||
+            condition: context => 
+                this.game.rings.air.isConsideredClaimed(context.player) ||
                 (this.game.isDuringConflict('air') && this.game.currentConflict.ring.contested),
-            match: this,
             effect: ability.effects.modifyPoliticalSkill(2)
         });
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.earth.isConsideredClaimed(this.controller)) ||
+            condition: context =>
+                this.game.rings.earth.isConsideredClaimed(context.player) ||
                 (this.game.isDuringConflict('earth') && this.game.currentConflict.ring.contested),
-            match: this,
             effect: ability.effects.modifyMilitarySkill(2)
         });
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.fire.isConsideredClaimed(this.controller)) ||
+            condition: context =>
+                this.game.rings.fire.isConsideredClaimed(context.player) ||
                 (this.game.isDuringConflict('fire') && this.game.currentConflict.ring.contested),
-            match: this,
             effect: ability.effects.addKeyword('pride')
         });
     }

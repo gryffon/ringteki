@@ -3,8 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class KitsuWarrior extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            effect: [
+             effect: [
                 ability.effects.modifyMilitarySkill(() => this.twiceMilClaimedRings()),
                 ability.effects.modifyPoliticalSkill(() => this.twicePolClaimedRings())
             ]

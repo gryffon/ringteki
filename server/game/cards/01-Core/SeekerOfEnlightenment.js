@@ -4,7 +4,6 @@ const DrawCard = require('../../drawcard.js');
 class SeekerOfEnlightenment extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
             effect: ability.effects.modifyBothSkills(() => this.getFateOnRings())
         });
     }

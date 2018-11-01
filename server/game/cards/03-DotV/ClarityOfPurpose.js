@@ -17,7 +17,6 @@ class ClarityOfPurpose extends DrawCard {
                         effect: ability.effects.cardCannot({
                             cannot: 'bow',
                             restricts: 'opponentsCardEffects',
-                            player: context.player
                         })
                     }))
                 ]

@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class ImperialLibrarian extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: card => card !== this,
+            match: (card, context) => card !== context.source,
             targetController: 'any',
             effect: ability.effects.modifyGlory(1)
         });

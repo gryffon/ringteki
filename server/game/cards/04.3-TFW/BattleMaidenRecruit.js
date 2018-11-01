@@ -3,9 +3,9 @@ const DrawCard = require('../../drawcard.js');
 class BattleMaidenRecruit extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.water.isConsideredClaimed(this.controller) ||
-                this.game.rings.void.isConsideredClaimed(this.controller)
+            condition: context => (
+                this.game.rings.water.isConsideredClaimed(context.player) ||
+                this.game.rings.void.isConsideredClaimed(context.player)
             ),
             match: this,
             effect: ability.effects.modifyMilitarySkill(2)

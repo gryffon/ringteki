@@ -13,8 +13,7 @@ class MantraOfEarth extends DrawCard {
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: ability.effects.cardCannot({
                         cannot: 'target',
-                        restricts: 'opponentsCardEffects',
-                        player: context.player
+                        restricts: 'opponentsCardEffects'
                     })
                 }))
             },

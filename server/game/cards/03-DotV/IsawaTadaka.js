@@ -7,8 +7,7 @@ class IsawaTadaka extends DrawCard {
             match: player => !this.game.rings.earth.isConsideredClaimed(player),
             effect: ability.effects.playerCannot({
                 cannot: 'play',
-                restricts: 'copiesOfDiscardEvents',
-                source: this
+                restricts: 'copiesOfDiscardEvents'
             })
         });
     }
