@@ -5,7 +5,7 @@ const checkRestrictions = {
     events: context => context.source.type === 'event',
     nonSpellEvents: context => context.source.type === 'event' && !context.source.hasTrait('spell'),
     opponentsCardEffects: (context, player) =>
-        (!context.ability || context.player && context.player === player.opponent && context.ability.isCardAbility()) &&
+        context.player === player.opponent && (context.ability.isCardAbility() || !context.ability.isCardPlayed()) &&
         ['event', 'character', 'holding', 'attachment', 'stronghold', 'province', 'role'].includes(context.source.type),
     opponentsEvents: (context, player) =>
         context.player && context.player === player.opponent && context.source.type === 'event',

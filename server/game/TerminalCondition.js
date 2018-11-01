@@ -37,6 +37,7 @@ class TerminalCondition {
             return this.getEventFunc();
         } else if(this.gameAction) {
             this.event = this.gameAction.getEvent(this.target, this.context);
+            this.game.queueSimpleStep(() => this.context.refill());
             return this.event;
         }
     }
