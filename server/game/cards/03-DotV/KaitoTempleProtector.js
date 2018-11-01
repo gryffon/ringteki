@@ -9,7 +9,7 @@ class KaitoTempleProtector extends DrawCard {
                 restricts: 'opponentsCardEffects'
             })
         });
-        
+
         this.action({
             title: 'Change base skills to match another character\'s',
             condition: context => context.source.isDefending(),

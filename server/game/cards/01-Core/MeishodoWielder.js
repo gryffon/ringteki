@@ -5,7 +5,7 @@ class MeishodoWielder extends DrawCard {
         this.persistentEffect({
             location: 'any',
             condition: context => this.game.getFirstPlayer() === context.source.controller, // TODO: context.player?
-            effect: ability.effects.reduceCost({ 
+            effect: ability.effects.reduceCost({
                 playingTypes: 'playFromProvince', match: (card, source) => card === source
             })
         });

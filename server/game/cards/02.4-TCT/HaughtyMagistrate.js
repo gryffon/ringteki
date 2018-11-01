@@ -4,7 +4,7 @@ class HaughtyMagistrate extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: context => context.source.isAttacking(),
-            match: (card, context) => 
+            match: (card, context) =>
                 card.getGlory() < context.source.getGlory() && card !== context.source,
             targetController: 'any',
             effect: ability.effects.cardCannot('countForResolution')

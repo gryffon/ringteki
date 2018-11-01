@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class HenshinDisciple extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: context => 
+            condition: context =>
                 this.game.rings.air.isConsideredClaimed(context.player) ||
                 (this.game.isDuringConflict('air') && this.game.currentConflict.ring.contested),
             effect: ability.effects.modifyPoliticalSkill(2)

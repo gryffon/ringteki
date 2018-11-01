@@ -7,7 +7,7 @@ class ReclusiveZokujin extends DrawCard {
             effect: [
                 ability.effects.addKeyword('covert'),
                 ability.effects.immunity({
-                    restricts: 'opponentsCardEffects',
+                    restricts: 'opponentsCardEffects'
                 })
             ]
         });

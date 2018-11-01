@@ -6,7 +6,7 @@ class FearsomeMystic extends DrawCard {
             condition: () => this.game.isDuringConflict('air'),
             effect: ability.effects.modifyGlory(2)
         });
-        
+
         this.action({
             title: 'Remove fate from characters',
             condition: context => context.source.isParticipating(),

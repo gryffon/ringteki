@@ -55,6 +55,9 @@ const Effects = {
         },
         unapply: (card, context, ability) => {
             if(abilityType === 'persistent') {
+                if(ability.ref) {
+                    card.removeEffectFromEngine(ability.ref);
+                }
                 card.abilities.persistentEffects = card.abilities.persistentEffects.filter(a => a !== ability);
             } else if(abilityType === 'action') {
                 card.abilities.actions = card.abilities.actions.filter(a => a !== ability);

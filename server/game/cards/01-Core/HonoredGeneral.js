@@ -7,7 +7,7 @@ class HonoredGeneral extends DrawCard {
             match: (card, context) => card.isParticipating() && card.isFaction('lion') && card !== context.source,
             effect: ability.effects.modifyMilitarySkill(1)
         });
-        
+
         this.reaction({
             title: 'Honor this character',
             when: {
