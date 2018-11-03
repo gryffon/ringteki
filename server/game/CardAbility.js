@@ -12,7 +12,7 @@ class CardAbility extends ThenAbility {
         this.limit.card = card;
         this.abilityCost = this.cost;
         this.location = this.buildLocation(card, properties.location);
-        this.printedAbility = properties.printedAbility === false ? false : true;
+        this.printedAbility = properties.printedAbility !== false;
         this.cannotBeCancelled = properties.cannotBeCancelled;
         this.cannotTargetFirst = !!properties.cannotTargetFirst;
         this.cannotBeMirrored = !!properties.cannotBeMirrored;

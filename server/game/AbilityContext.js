@@ -1,5 +1,6 @@
 const BaseAbility = require('./baseability.js');
 const EffectSource = require('./EffectSource.js');
+const { Stages } = require('./Constants.js');
 
 class AbilityContext {
     constructor(properties) {
@@ -11,7 +12,7 @@ class AbilityContext {
         this.targets = properties.targets || {};
         this.rings = properties.rings || {};
         this.selects = properties.selects || {};
-        this.stage = properties.stage || 'effect';
+        this.stage = properties.stage || Stages.EFFECT;
         this.target = null;
         this.select = null;
         this.ring = null;

@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const CardAbility = require('./CardAbility.js');
 const TriggeredAbilityContext = require('./TriggeredAbilityContext.js');
+const { Stages } = require('./Constants.js');
 
 /**
  * Represents a reaction/interrupt ability provided by card text.
@@ -54,7 +55,7 @@ class TriggeredAbility extends CardAbility {
             source: this.card,
             player: player,
             ability: this,
-            stage: 'pretarget'
+            stage: Stages.PRETARGET
         });
     }
 

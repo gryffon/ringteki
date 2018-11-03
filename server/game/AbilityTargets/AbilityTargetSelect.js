@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const SelectChoice = require('./SelectChoice.js');
+const { Stages } = require('../Constants.js');
 
 class AbilityTargetSelect {
     constructor(name, properties, ability) {
@@ -39,7 +40,7 @@ class AbilityTargetSelect {
         if(this.name === 'target') {
             contextCopy.select = key;
         }
-        if(context.stage === 'pretarget' && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
+        if(context.stage === Stages.PRETARGET && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
             return false;
         }
         if(this.dependentTarget && !this.dependentTarget.hasLegalTarget(contextCopy)) {
@@ -70,7 +71,7 @@ class AbilityTargetSelect {
         }
         let player = context.player;
         if(this.properties.player && this.properties.player === 'opponent') {
-            if(context.stage === 'pretarget') {
+            if(context.stage === Stages.PRETARGET) {
                 targetResults.delayTargeting = this;
                 return;
             }
@@ -88,7 +89,7 @@ class AbilityTargetSelect {
                 }
             });
         });
-        if(this.properties.player !== 'opponent' && context.stage === 'pretarget') {
+        if(this.properties.player !== 'opponent' && context.stage === Stages.PRETARGET) {
             if(!targetResults.noCostsFirstButton) {
                 choices.push('Pay costs first');
                 handlers.push(() => targetResults.payCostsFirst = true);
@@ -100,7 +101,7 @@ class AbilityTargetSelect {
             handlers[0]();
         } else if(handlers.length > 1) {
             let waitingPromptTitle = '';
-            if(context.stage === 'pretarget') {
+            if(context.stage === Stages.PRETARGET) {
                 if(context.ability.abilityType === 'action') {
                     waitingPromptTitle = 'Waiting for opponent to take an action or pass';
                 } else {

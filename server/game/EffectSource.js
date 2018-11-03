@@ -4,6 +4,7 @@ const AbilityDsl = require('./abilitydsl.js');
 const DelayedEffect = require('./DelayedEffect.js');
 const GameObject = require('./GameObject');
 const TerminalCondition = require('./TerminalCondition.js');
+const { Stages } = require('./Constants.js');
 
 // This class is inherited by Ring and BaseCard and also represents Framework effects
 
@@ -79,7 +80,7 @@ class EffectSource extends GameObject {
      */
     addEffectToEngine(properties) {
         let effect = properties.effect;
-        properties = _.omit(properties, 'effect');
+        properties = _.omit(properties, Stages.EFFECT);
         if(Array.isArray(effect)) {
             return effect.map(factory => this.game.effectEngine.add(factory(this.game, this, properties)));
         }

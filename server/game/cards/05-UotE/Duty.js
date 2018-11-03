@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Stages } = require('../../Constants.js');
 
 class Duty extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -6,9 +7,9 @@ class Duty extends DrawCard {
             title: 'Cancel honor loss',
             when: {
                 onModifyHonor: (event, context) =>
-                    event.player === context.player && event.amount <= -context.player.honor && event.context.stage === 'effect',
+                    event.player === context.player && event.amount <= -context.player.honor && event.context.stage === Stages.EFFECT,
                 onTransferHonor: (event, context) =>
-                    event.player === context.player && event.amount >= context.player.honor && event.context.stage === 'effect'
+                    event.player === context.player && event.amount >= context.player.honor && event.context.stage === Stages.EFFECT
             },
             effect: 'cancel their honor loss',
             handler: context => {

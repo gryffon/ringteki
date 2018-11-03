@@ -2,6 +2,7 @@ const AbilityTargetAbility = require('./AbilityTargets/AbilityTargetAbility.js')
 const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
+const { Stages } = require('./Constants.js');
 /**
  * Base class representing an ability that can be done by the player. This
  * includes card actions, reactions, interrupts, playing a card, marshaling a
@@ -161,7 +162,7 @@ class BaseAbility {
      */
     resolveTargets(context) {
         let targetResults = {
-            canIgnoreAllCosts: context.stage === 'pretarget' ? this.cost.every(cost => cost.canIgnoreForTargeting) : false,
+            canIgnoreAllCosts: context.stage === Stages.PRETARGET ? this.cost.every(cost => cost.canIgnoreForTargeting) : false,
             cancelled: false,
             payCostsFirst: false,
             delayTargeting: null

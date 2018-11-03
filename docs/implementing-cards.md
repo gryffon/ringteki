@@ -248,7 +248,7 @@ class AbilityContext {
         this.targets = {};
         this.rings = {};
         this.selects = {};
-        this.stage = 'effect';
+        this.stage = Stages.EFFECT;
     }
 }
 ```

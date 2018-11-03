@@ -1,5 +1,6 @@
 const AbilityContext = require('./AbilityContext.js');
 const BaseAbility = require('./baseability.js');
+const { Stages } = require('./Constants.js');
 
 class ThenAbility extends BaseAbility {
     constructor(game, card, properties) {
@@ -18,7 +19,7 @@ class ThenAbility extends BaseAbility {
             game: this.game,
             player: player,
             source: this.card,
-            stage: 'pretarget'
+            stage: Stages.PRETARGET
         });
     }
 

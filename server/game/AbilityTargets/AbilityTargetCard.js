@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const CardSelector = require('../CardSelector.js');
+const { Stages } = require('../Constants.js');
 
 class AbilityTargetCard {
     constructor(name, properties, ability) {
@@ -25,7 +26,7 @@ class AbilityTargetCard {
             if(this.name === 'target') {
                 contextCopy.target = card;
             }
-            if(context.stage === 'pretarget' && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
+            if(context.stage === Stages.PRETARGET && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
                 return false;
             }
             return (!properties.cardCondition || properties.cardCondition(card, contextCopy)) &&
@@ -69,7 +70,7 @@ class AbilityTargetCard {
         }
         let player = context.player;
         if(playerProp === 'opponent') {
-            if(context.stage === 'pretarget') {
+            if(context.stage === Stages.PRETARGET) {
                 targetResults.delayTargeting = this;
                 return;
             }
@@ -80,7 +81,7 @@ class AbilityTargetCard {
         if(this.properties.optional) {
             buttons.push({ text: 'No more targets', arg: 'noMoreTargets' });
         }
-        if(context.stage === 'pretarget') {
+        if(context.stage === Stages.PRETARGET) {
             if(!targetResults.noCostsFirstButton) {
                 buttons.push({ text: 'Pay costs first', arg: 'costsFirst' });
             }
