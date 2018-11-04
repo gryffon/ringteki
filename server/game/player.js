@@ -601,7 +601,7 @@ class Player extends GameObject {
                 return this.conflictDiscardPile;
             case Locations.DynastyDiscardPile:
                 return this.dynastyDiscardPile;
-            case 'removed from game':
+            case Locations.RemovedFromGame:
                 return this.removedFromGame;
             case Locations.PlayArea:
                 return this.cardsInPlay;
@@ -615,7 +615,7 @@ class Player extends GameObject {
                 return this.provinceFour;
             case Locations.StrongholdProvince:
                 return this.strongholdProvince;
-            case 'province deck':
+            case Locations.ProvinceDeck:
                 return this.provinceDeck;
             default:
                 if(this.additionalPiles[source]) {
@@ -650,7 +650,7 @@ class Player extends GameObject {
             case Locations.DynastyDiscardPile:
                 this.dynastyDiscardPile = targetList;
                 break;
-            case 'removed from game':
+            case Locations.RemovedFromGame:
                 this.removedFromGame = targetList;
                 break;
             case Locations.PlayArea:
@@ -671,7 +671,7 @@ class Player extends GameObject {
             case Locations.StrongholdProvince:
                 this.strongholdProvince = targetList;
                 break;
-            case 'province deck':
+            case Locations.ProvinceDeck:
                 this.provinceDeck = targetList;
                 break;
             default:
@@ -697,12 +697,12 @@ class Player extends GameObject {
         }
 
         // Don't allow two province cards in one province
-        if(card.isProvince && target !== 'province deck' && this.getSourceList(target).any(card => card.isProvince)) {
+        if(card.isProvince && target !== Locations.ProvinceDeck && this.getSourceList(target).any(card => card.isProvince)) {
             return;
         }
 
         let display = 'a card';
-        if(!card.facedown && source !== Locations.Hand || [Locations.PlayArea, Locations.DynastyDiscardPile, Locations.ConflictDiscardPile, 'removed from game'].includes(target)) {
+        if(!card.facedown && source !== Locations.Hand || [Locations.PlayArea, Locations.DynastyDiscardPile, Locations.ConflictDiscardPile, Locations.RemovedFromGame].includes(target)) {
             display = card;
         }
 
@@ -722,14 +722,14 @@ class Player extends GameObject {
         }
 
 
-        const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, 'removed from game'];
+        const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, Locations.RemovedFromGame];
         const legalLocations = {
             stronghold: [Locations.StrongholdProvince],
             role: ['role'],
-            province: [...provinceLocations, 'province deck'],
-            holding: [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, 'removed from game'],
+            province: [...provinceLocations, Locations.ProvinceDeck],
+            holding: [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame],
             character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.PlayArea],
-            event: [...conflictCardLocations, 'being played'],
+            event: [...conflictCardLocations, Locations.BeingPlayed],
             attachment: [...conflictCardLocations, Locations.PlayArea]
         };
 
@@ -889,7 +889,7 @@ class Player extends GameObject {
                 this.promptForAttachment(card);
                 return;
             }
-        } else if(location === 'being played' && card.owner !== this) {
+        } else if(location === Locations.BeingPlayed && card.owner !== this) {
             card.owner.moveCard(card, targetLocation, options);
             return;
         } else {
@@ -899,7 +899,7 @@ class Player extends GameObject {
         card.moveTo(targetLocation);
 
         if(provinceLocations.includes(targetLocation)) {
-            if([Locations.DynastyDeck, 'province deck'].includes(location)) {
+            if([Locations.DynastyDeck, Locations.ProvinceDeck].includes(location)) {
                 card.facedown = true;
             }
             if(!this.takenDynastyMulligan && card.isDynasty) {
@@ -908,7 +908,7 @@ class Player extends GameObject {
             targetPile.push(card);
         } else if([Locations.ConflictDeck, Locations.DynastyDeck].includes(targetLocation) && !options.bottom) {
             targetPile.unshift(card);
-        } else if([Locations.ConflictDiscardPile, Locations.DynastyDiscardPile, 'removed from game'].includes(targetLocation)) {
+        } else if([Locations.ConflictDiscardPile, Locations.DynastyDiscardPile, Locations.RemovedFromGame].includes(targetLocation)) {
             // new cards go on the top of the discard pile
             targetPile.unshift(card);
         } else if(targetPile) {

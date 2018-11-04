@@ -46,7 +46,7 @@ class Deck {
         this.eachRepeatedCard(this.data.provinceCards, cardData => {
             if(cardData && cardData.type === 'province') {
                 var provinceCard = this.createCard(ProvinceCard, player, cardData);
-                provinceCard.location = 'province deck';
+                provinceCard.location = Locations.ProvinceDeck;
                 result.provinceCards.push(provinceCard);
             }
         });

@@ -19,7 +19,7 @@ class KyudenIsawa extends StrongholdCard {
                 resetOnCancel: true,
                 postHandler: card => {
                     context.game.addMessage('{0} is removed from the game by {1}\'s ability', card, context.source);
-                    context.player.moveCard(card, 'removed from game');
+                    context.player.moveCard(card, Locations.RemovedFromGame);
                 }
             }))
         });
