@@ -261,7 +261,7 @@ class DrawCard extends BaseCard {
             return this.mostRecentEffect('setPoliticalSkill');
         }
 
-        // get base mill skill + effect modifiers
+        // get base pol skill + effect modifiers
         let skill = this.sumEffects('modifyPoliticalSkill') + this.sumEffects('modifyBothSkills') + this.getBasePoliticalSkill();
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
