@@ -14,7 +14,7 @@ class FixedAbilityLimit {
     }
 
     isAtMax(player) {
-        return !!this.useCount[player.name] && this.useCount[player.name] >= this.getModifiedMax();
+        return this.useCount[player.name] && this.useCount[player.name] >= this.getModifiedMax();
     }
 
     increment(player) {
@@ -59,6 +59,16 @@ class RepeatableAbilityLimit extends FixedAbilityLimit {
     }
 }
 
+class DefaultAbilityLimit extends RepeatableAbilityLimit {
+    constructor() {
+        super(1, 'onRoundEnded');
+    }
+
+    isAtMax() {
+        return Object.values(this.useCount).reduce((a, b) => a + b, 0) >= this.getModifiedMax();
+    }
+}
+
 var AbilityLimit = {};
 
 AbilityLimit.fixed = function(max) {
@@ -83,6 +93,10 @@ AbilityLimit.perRound = function(max) {
 
 AbilityLimit.unlimitedPerConflict = function() {
     return new RepeatableAbilityLimit(Infinity, 'onConflictFinished');
+};
+
+AbilityLimit.default = function() {
+    return new DefaultAbilityLimit();
 };
 
 module.exports = AbilityLimit;

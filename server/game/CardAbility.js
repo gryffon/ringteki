@@ -7,7 +7,7 @@ class CardAbility extends ThenAbility {
         super(game, card, properties);
 
         this.title = properties.title;
-        this.limit = properties.limit || AbilityLimit.perRound(1);
+        this.limit = properties.limit || AbilityLimit.default();
         this.limit.registerEvents(game);
         this.limit.card = card;
         this.abilityCost = this.cost;
