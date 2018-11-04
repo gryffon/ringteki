@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const BaseCard = require('./basecard.js');
+const { EffectNames } = require('./Constants');
 
 class RoleCard extends BaseCard {
     constructor(owner, cardData) {
@@ -32,7 +33,7 @@ class RoleCard extends BaseCard {
         let illegalActions = [
             'bow', 'ready', 'dishonor', 'honor', 'sacrifice',
             'discardFromPlay', 'moveToConflict', 'sendHome', 'putIntoPlay', 'putIntoConflict',
-            'break', 'returnToHand', 'takeControl', 'placeFate', 'removeFate'
+            'break', 'returnToHand', EffectNames.TakeControl, 'placeFate', 'removeFate'
         ];
         if(illegalActions.includes(actionType)) {
             return false;

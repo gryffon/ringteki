@@ -23,6 +23,66 @@ const Decks = {
     DynastyDeck: 'dynasty deck'
 };
 
+const EffectNames = {
+    AbilityRestrictions: 'abilityRestrictions',
+    AddFaction: 'addFaction',
+    AddGloryWhileDishonored: 'addGloryWhileDishonored',
+    AddKeyword: 'addKeyword',
+    AddTrait: 'addTrait',
+    Blank: 'blank',
+    CanBeSeenWhenFacedown: 'canBeSeenWhenFacedown',
+    CannotParticipateAsAttacker: 'cannotParticipateAsAttacker',
+    CannotParticipateAsDefender: 'cannotParticipateAsDefender',
+    CustomEffect: 'customEffect',
+    DelayedEffect: 'delayedEffect',
+    DoesNotBow: 'doesNotBow',
+    DoesNotReady: 'doesNotReady',
+    GainAbility: 'gainAbility',
+    GainPlayAction: 'gainPlayAction',
+    IncreaseLimitOnAbilities: 'increaseLimitOnAbilities',
+    ModifyBaseMilitarySkill: 'modifyBaseMilitarySkill',
+    ModifyBasePoliticalSkill: 'modifyBasePoliticalSkill',
+    ModifyBaseProvinceStrength: 'modifyBaseProvinceStrength',
+    ModifyBothSkills: 'modifyBothSkills',
+    ModifyDuelGlory: 'modifyDuelGlory',
+    ModifyDuelMilitarySkill: 'modifyDuelMilitarySkill',
+    ModifyDuelPoliticalSkill: 'modifyDuelPoliticalSkill',
+    ModifyGlory: 'modifyGlory',
+    ModifyMilitarySkill: 'modifyMilitarySkill',
+    ModifyMilitarySkillMultiplier: 'modifyMilitarySkillMultiplier',
+    ModifyPoliticalSkill: 'modifyPoliticalSkill',
+    ModifyPoliticalSkillMultiplier: 'modifyPoliticalSkillMultiplier',
+    ModifyProvinceStrength: 'modifyProvinceStrength',
+    ModifyProvinceStrengthMultiplier: 'modifyProvinceStrengthMultiplier',
+    SetBaseMilitarySkill: 'setBaseMilitarySkill',
+    SetBasePoliticalSkill: 'setBasePoliticalSkill',
+    SetBaseProvinceStrength: 'setBaseProvinceStrength',
+    SetDash: 'setDash',
+    SetGlory: 'setGlory',
+    SetMilitarySkill: 'setMilitarySkill',
+    SetPoliticalSkill: 'setPoliticalSkill',
+    SetProvinceStrength: 'setProvinceStrength',
+    TakeControl: 'takeControl',
+    TerminalCondition: 'terminalCondition',
+    AddElement: 'addElement',
+    CannotDeclareRing: 'cannotDeclare',
+    ConsiderRingAsClaimed: 'considerAsClaimed',
+    AdditionalCharactersInConflict: 'additionalCharactersInConflict',
+    AdditionalConflict: 'additionalConflict',
+    AlternateFatePool: 'alternateFatePool',
+    CanPlayFromOwn: 'canPlayFromOwn',
+    ChangePlayerGloryModifier: 'gloryModifier',
+    ChangePlayerSkillModifier: 'conflictSkillModifier',
+    GainActionPhasePriority: 'actionPhasePriority',
+    CostReducer:'costReducer',
+    SetMaxConflicts: 'maxConflicts',
+    ShowTopConflictCard: 'showTopConflictCard',
+    ContributeToConflict: 'contribute',
+    ChangeConflictSkillFunction: 'skillFunction',
+    ModifyConflictElementsToResolve: 'modifyConflictElementsToResolve',
+    RestrictNumberOfDefenders: 'restrictNumberOfDefenders'
+};
+
 const Durations = {
     UntilEndOfDuel: 'untilEndOfDuel',
     UntilEndOfConflict: 'untilEndOfConflict',
@@ -30,6 +90,7 @@ const Durations = {
     UntilEndOfRound: 'untilEndOfRound',
     Persistent: 'persistent',
     Custom: 'custom'
+};
 
 const Stages = {
     Cost: 'cost',
@@ -41,6 +102,7 @@ const Stages = {
 module.exports = {
     Locations,
     Decks,
-    Durations
+    EffectNames,
+    Durations,
     Stages
 };

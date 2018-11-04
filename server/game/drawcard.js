@@ -10,7 +10,7 @@ const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 
-const { Locations } = require('./Constants');
+const { Locations, EffectNames } = require('./Constants');
 
 const ValidKeywords = [
     'ancestral',
@@ -90,7 +90,7 @@ class DrawCard extends BaseCard {
 
 
     hasKeyword(keyword) {
-        return this.getEffects('addKeyword').includes(keyword.toLowerCase());
+        return this.getEffects(EffectNames.AddKeyword).includes(keyword.toLowerCase());
     }
 
     hasPrintedKeyword(keyword) {
@@ -166,7 +166,7 @@ class DrawCard extends BaseCard {
         if(type === 'glory') {
             return false;
         }
-        let dashEffects = this.getEffects('setDash');
+        let dashEffects = this.getEffects(EffectNames.SetDash);
         if(type === 'military') {
             return Number.isNaN(this.printedMilitarySkill) || dashEffects.includes(type);
         } else if(type === 'political') {
@@ -198,10 +198,10 @@ class DrawCard extends BaseCard {
          * @return {integer} The military skill value
          */
         if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
-            if(this.anyEffect('setGlory')) {
-                return Math.max(0, this.mostRecentEffect('setGlory'));
+            if(this.anyEffect(EffectNames.SetGlory)) {
+                return Math.max(0, this.mostRecentEffect(EffectNames.SetGlory));
             }
-            return Math.max(0, this.sumEffects('modifyGlory') + this.cardData.glory + this.sumEffects('modifyDuelGlory'));
+            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + this.cardData.glory + this.sumEffects(EffectNames.ModifyDuelGlory));
 
         }
         return 0;
@@ -227,20 +227,20 @@ class DrawCard extends BaseCard {
 
         if(this.hasDash('military')) {
             return 0;
-        } else if(this.anyEffect('setMilitarySkill')) {
-            return this.mostRecentEffect('setMilitarySkill');
+        } else if(this.anyEffect(EffectNames.SetMilitarySkill)) {
+            return this.mostRecentEffect(EffectNames.SetMilitarySkill);
         }
 
         // get base mill skill + effect modifiers
-        let skill = this.sumEffects('modifyMilitarySkill') + this.sumEffects('modifyBothSkills') + this.getBaseMilitarySkill();
+        let skill = this.sumEffects(EffectNames.ModifyMilitarySkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBaseMilitarySkill();
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.military_bonus);
             return bonus ? total + bonus : total;
         }, skill);
         // multiply total
-        skill = this.getEffects('modifyMilitarySkillMultiplier').reduce((total, value) => total * value, skill);
-        skill += this.sumEffects('modifyDuelMilitarySkill');
+        skill = this.getEffects(EffectNames.ModifyMilitarySkillMultiplier).reduce((total, value) => total * value, skill);
+        skill += this.sumEffects(EffectNames.ModifyDuelMilitarySkill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -257,20 +257,20 @@ class DrawCard extends BaseCard {
          */
         if(this.hasDash('political')) {
             return 0;
-        } else if(this.anyEffect('setPoliticalSkill')) {
-            return this.mostRecentEffect('setPoliticalSkill');
+        } else if(this.anyEffect(EffectNames.SetPoliticalSkill)) {
+            return this.mostRecentEffect(EffectNames.SetPoliticalSkill);
         }
 
         // get base pol skill + effect modifiers
-        let skill = this.sumEffects('modifyPoliticalSkill') + this.sumEffects('modifyBothSkills') + this.getBasePoliticalSkill();
+        let skill = this.sumEffects(EffectNames.ModifyPoliticalSkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBasePoliticalSkill();
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.political_bonus);
             return bonus ? total + bonus : total;
         }, skill);
         // multiply total
-        skill = this.getEffects('modifyPoliticalSkillMultiplier').reduce((total, value) => total * value, skill);
-        skill += this.sumEffects('modifyDuelPoliticalSkill');
+        skill = this.getEffects(EffectNames.ModifyPoliticalSkillMultiplier).reduce((total, value) => total * value, skill);
+        skill += this.sumEffects(EffectNames.ModifyDuelPoliticalSkill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -281,10 +281,10 @@ class DrawCard extends BaseCard {
     getBaseMilitarySkill() {
         if(this.hasDash('military')) {
             return 0;
-        } else if(this.anyEffect('setBaseMilitarySkill')) {
-            return this.mostRecentEffect('setBaseMilitarySkill');
+        } else if(this.anyEffect(EffectNames.SetBaseMilitarySkill)) {
+            return this.mostRecentEffect(EffectNames.SetBaseMilitarySkill);
         }
-        return this.sumEffects('modifyBaseMilitarySkill') + this.printedMilitarySkill;
+        return this.sumEffects(EffectNames.ModifyBaseMilitarySkill) + this.printedMilitarySkill;
     }
 
     get basePoliticalSkill() {
@@ -294,10 +294,10 @@ class DrawCard extends BaseCard {
     getBasePoliticalSkill() {
         if(this.hasDash('political')) {
             return 0;
-        } else if(this.anyEffect('setBasePoliticalSkill')) {
-            return this.mostRecentEffect('setBasePoliticalSkill');
+        } else if(this.anyEffect(EffectNames.SetBasePoliticalSkill)) {
+            return this.mostRecentEffect(EffectNames.SetBasePoliticalSkill);
         }
-        return this.sumEffects('modifyBasePoliticalSkill') + this.printedPoliticalSkill;
+        return this.sumEffects(EffectNames.ModifyBasePoliticalSkill) + this.printedPoliticalSkill;
     }
 
     getSkillFromGlory() {
@@ -307,7 +307,7 @@ class DrawCard extends BaseCard {
         if(this.isHonored) {
             return this.getGlory();
         } else if(this.isDishonored) {
-            if(this.anyEffect('addGloryWhileDishonored')) {
+            if(this.anyEffect(EffectNames.AddGloryWhileDishonored)) {
                 return this.getGlory();
             }
             return 0 - this.getGlory();
@@ -509,17 +509,17 @@ class DrawCard extends BaseCard {
     }
 
     canParticipateAsAttacker(conflictType = this.game.currentConflict.conflictType) {
-        let effects = this.getEffects('cannotParticipateAsAttacker');
+        let effects = this.getEffects(EffectNames.CannotParticipateAsAttacker);
         return !effects.some(value => value === 'both' || value === conflictType) && !this.hasDash(conflictType);
     }
 
     canParticipateAsDefender(conflictType = this.game.currentConflict.conflictType) {
-        let effects = this.getEffects('cannotParticipateAsDefender');
+        let effects = this.getEffects(EffectNames.CannotParticipateAsDefender);
         return !effects.some(value => value === 'both' || value === conflictType) && !this.hasDash(conflictType);
     }
 
     bowsOnReturnHome() {
-        return !this.anyEffect('doesNotBow');
+        return !this.anyEffect(EffectNames.DoesNotBow);
     }
 
     setDefaultController(player) {
@@ -528,7 +528,7 @@ class DrawCard extends BaseCard {
 
     getModifiedController() {
         if(this.location === Locations.PlayArea) {
-            return this.mostRecentEffect('takeControl') || this.defaultController;
+            return this.mostRecentEffect(EffectNames.TakeControl) || this.defaultController;
         }
         return this.owner;
     }

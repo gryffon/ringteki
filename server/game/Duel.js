@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const { Locations } = require('./Constants');
+const { Locations, EffectNames } = require('./Constants');
 
 class Duel {
     constructor(game, challenger, target, type) {
@@ -38,9 +38,9 @@ class Duel {
         this.bidFinished = true;
         let cards = [this.challenger, this.target].filter(card => card.location === Locations.PlayArea);
         let typeToEffect = {
-            military: 'modifyDuelMilitarySkill',
-            political: 'modifyDuelPoliticalSkill',
-            glory: 'modifyDuelGlory'
+            military: EffectNames.ModifyDuelMilitarySkill,
+            political: EffectNames.ModifyDuelPoliticalSkill,
+            glory: EffectNames.ModifyDuelGlory
         };
         _.each(cards, card => {
             this.source.untilEndOfDuel(ability => ({
