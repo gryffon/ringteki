@@ -30,10 +30,17 @@ const Durations = {
     UntilEndOfRound: 'untilEndOfRound',
     Persistent: 'persistent',
     Custom: 'custom'
+
+const Stages = {
+    Cost: 'cost',
+    Effect: 'effect',
+    PreTarget: 'pretarget',
+    Target: 'target'
 };
 
 module.exports = {
     Locations,
     Decks,
     Durations
+    Stages
 };

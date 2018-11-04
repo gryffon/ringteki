@@ -1,5 +1,7 @@
 const _ = require('underscore');
 
+const { Stages } = require('../Constants.js');
+
 class AbilityTargetRing {
     constructor(name, properties, ability) {
         this.name = name;
@@ -10,7 +12,7 @@ class AbilityTargetRing {
             if(this.name === 'target') {
                 contextCopy.ring = ring;
             }
-            if(context.stage === 'pretarget' && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
+            if(context.stage === Stages.PreTarget && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
                 return false;
             }
             return (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(contextCopy))) &&
@@ -55,7 +57,7 @@ class AbilityTargetRing {
         }
         let player = context.player;
         if(this.properties.player && this.properties.player === 'opponent') {
-            if(context.stage === 'pretarget') {
+            if(context.stage === Stages.PreTarget) {
                 targetResults.delayTargeting = this;
                 return;
             }
@@ -66,7 +68,7 @@ class AbilityTargetRing {
         if(this.properties.optional) {
             buttons.push({ text: 'No more targets', arg: 'noMoreTargets' });
         }
-        if(context.stage === 'pretarget') {
+        if(context.stage === Stages.PreTarget) {
             if(!targetResults.noCostsFirstButton) {
                 buttons.push({ text: 'Pay costs first', arg: 'costsFirst' });
             }
