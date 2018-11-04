@@ -20,7 +20,7 @@ const Locations = {
 
 const Decks = {
     ConflictDeck: 'conflict deck',
-    DynastyDeck: 'dynasty deck',
+    DynastyDeck: 'dynasty deck'
 };
 
 module.exports = {
