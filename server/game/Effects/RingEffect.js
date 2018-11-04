@@ -9,7 +9,7 @@ class RingEffect extends Effect {
     }
 
     getTargets() {
-        return _.filter(this.game.rings, ring => this.match(ring));
+        return _.filter(this.game.rings, ring => this.match(ring, this.context));
     }
 }
 

@@ -35,7 +35,10 @@ const Effects = {
     gainAbility: (abilityType, properties) => EffectBuilder.card.detached('gainAbility', {
         apply: (card, context) => {
             let ability;
-            if(abilityType === 'action') {
+            if(abilityType === 'persistent') {
+                ability = card.persistentEffect(properties);
+                return ability;
+            } else if(abilityType === 'action') {
                 ability = card.action(properties);
             } else {
                 ability = card.triggeredAbility(abilityType, properties);
@@ -51,7 +54,12 @@ const Effects = {
             return ability;
         },
         unapply: (card, context, ability) => {
-            if(abilityType === 'action') {
+            if(abilityType === 'persistent') {
+                if(ability.ref) {
+                    card.removeEffectFromEngine(ability.ref);
+                }
+                card.abilities.persistentEffects = card.abilities.persistentEffects.filter(a => a !== ability);
+            } else if(abilityType === 'action') {
                 card.abilities.actions = card.abilities.actions.filter(a => a !== ability);
             } else {
                 card.abilities.reactions = card.abilities.reactions.filter(a => a !== ability);
@@ -135,7 +143,7 @@ const Effects = {
     setMaxConflicts: (amount) => EffectBuilder.player.static('maxConflicts', amount),
     showTopConflictCard: () => EffectBuilder.player.static('showTopConflictCard'),
     // Conflict effects
-    contributeToConflict: (card) => EffectBuilder.conflict.static('contribute', card),
+    contributeToConflict: (card) => EffectBuilder.conflict.flexible('contribute', card),
     changeConflictSkillFunction: (func) => EffectBuilder.conflict.static('skillFunction', func), // TODO: Add this to lasting effect checks
     modifyConflictElementsToResolve: (value) => EffectBuilder.conflict.static('modifyConflictElementsToResolve', value), // TODO: Add this to lasting effect checks
     restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static('restrictNumberOfDefenders', value) // TODO: Add this to lasting effect checks

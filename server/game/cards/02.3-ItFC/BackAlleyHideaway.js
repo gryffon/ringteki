@@ -78,7 +78,6 @@ class BackAlleyHideaway extends DrawCard {
     setupCardAbilities(ability) {
         this.backAlleyActionLimit = ability.limit.perRound(1);
         this.persistentEffect({
-            match: this,
             effect: ability.effects.customDetachedCard(backAlleyPersistentEffect)
         });
         this.interrupt({

@@ -3,16 +3,15 @@ const DrawCard = require('../../drawcard.js');
 class BeastmasterMatriarch extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            effect: ability.effects.modifyMilitarySkill(() => this.getTwiceOpponentsClaimedRings())
+            effect: ability.effects.modifyMilitarySkill(card => this.getTwiceOpponentsClaimedRings(card.controller))
         });
     }
 
-    getTwiceOpponentsClaimedRings() {
-        if(!this.controller.opponent) {
+    getTwiceOpponentsClaimedRings(player) {
+        if(!player.opponent) {
             return 0;
         }
-        return 2 * this.controller.opponent.getClaimedRings().length;
+        return 2 * player.opponent.getClaimedRings().length;
     }
 }
 

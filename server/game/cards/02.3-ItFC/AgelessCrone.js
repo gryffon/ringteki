@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class AgelessCrone extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating(),
+            condition: context => context.source.isParticipating(),
             targetType: 'player',
             targetController: 'any',
             effect: ability.effects.increaseCost({

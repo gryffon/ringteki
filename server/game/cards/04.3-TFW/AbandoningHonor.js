@@ -3,8 +3,7 @@ const ProvinceCard = require('../../provincecard.js');
 class AbandoningHonor extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            condition: () => this.controller.role.hasTrait('fire'),
+            condition: context => context.player.role && context.player.role.hasTrait('fire'),
             effect: ability.effects.modifyProvinceStrength(2)
         });
 

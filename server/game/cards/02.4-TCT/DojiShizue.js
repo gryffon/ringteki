@@ -3,8 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class DojiShizue extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            condition: () => this.game.currentPhase === 'fate' && this.controller.imperialFavor !== '',
+            condition: context => this.game.currentPhase === 'fate' && context.player.imperialFavor !== '',
             effect: [
                 ability.effects.cardCannot('removeFate'),
                 ability.effects.cardCannot('discardFromPlay')

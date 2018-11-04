@@ -37,11 +37,15 @@ class Effect {
         this.location = properties.location || 'play area';
         this.effect = effect;
         this.targets = [];
-        this.context = game.getFrameworkContext(source.controller);
-        this.context.source = source;
-        this.effect.context = this.context;
+        this.refreshContext();
         this.effect.duration = this.duration;
         this.effect.isConditional = !!properties.condition;
+    }
+
+    refreshContext() {
+        this.context = this.game.getFrameworkContext(this.source.controller);
+        this.context.source = this.source;
+        this.effect.setContext(this.context);
     }
 
     isValidTarget(target) { // eslint-disable-line no-unused-vars
@@ -80,13 +84,13 @@ class Effect {
     }
 
     checkCondition(stateChanged) {
-        if(!this.condition() || (this.duration === 'persistent' && (this.source.isBlank() || this.source.facedown))) {
+        if(!this.condition(this.context) || (this.duration === 'persistent' && (this.source.isBlank() || this.source.facedown))) {
             stateChanged = this.targets.length > 0 || stateChanged;
             this.cancel();
             return stateChanged;
         } else if(_.isFunction(this.match)) {
             // Get any targets which are no longer valid
-            let invalidTargets = _.filter(this.targets, target => !this.match(target) || !this.isValidTarget(target));
+            let invalidTargets = _.filter(this.targets, target => !this.match(target, this.context) || !this.isValidTarget(target));
             // Remove invalid targets
             this.removeTargets(invalidTargets);
             stateChanged = stateChanged || invalidTargets.length > 0;
@@ -115,7 +119,7 @@ class Effect {
             source: this.source.name,
             targets: _.map(this.targets, target => target.name),
             active: this.duration !== 'persistent' || !this.source.isBlank(),
-            condition: this.condition(),
+            condition: this.condition(this.context),
             effect: this.effect.getDebugInfo()
         };
     }

@@ -4,7 +4,7 @@ class BloodOfOnnotangu extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: 'any',
-            condition: () => this.isConflictProvince(),
+            condition: context => context.source.isConflictProvince(),
             effect: ability.effects.playerCannot('spendFate')
         });
     }

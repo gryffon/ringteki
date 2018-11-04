@@ -20,7 +20,7 @@ class CostReducer {
             return false;
         }
 
-        return this.playingTypes.includes(playingType) && !!this.match(card) && this.checkTargetCondition(target);
+        return this.playingTypes.includes(playingType) && !!this.match(card, this.source) && this.checkTargetCondition(target);
     }
 
     checkTargetCondition(target) {
@@ -31,7 +31,7 @@ class CostReducer {
             return false;
         }
 
-        return this.targetCondition(target);
+        return this.targetCondition(target, this.source);
     }
 
     getAmount(card) {

@@ -81,7 +81,6 @@ class DrawCard extends BaseCard {
 
         this.printedKeywords.forEach(keyword => {
             this.persistentEffect({
-                match: this,
                 effect: AbilityDsl.effects.addKeyword(keyword)
             });
         });

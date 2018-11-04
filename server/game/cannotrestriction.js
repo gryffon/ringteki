@@ -20,10 +20,9 @@ class CannotRestriction {
         } else {
             this.type = properties.cannot;
             this.restriction = properties.restricts;
-            this.player = properties.player;
-            this.source = properties.source;
             this.params = properties.params;
         }
+        this.context = {};
     }
 
     isMatch(type, abilityContext) {
@@ -38,8 +37,8 @@ class CannotRestriction {
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
         }
-        let player = this.player || this.source && this.source.controller;
-        return checkRestrictions[this.restriction](context, player, this.source, this.params);
+        let player = this.player || this.context.source && this.context.source.controller;
+        return checkRestrictions[this.restriction](context, player, this.context.source, this.params);
     }
 }
 

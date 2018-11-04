@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class UtakuTetsuko extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isAttacking(),
+            condition: context => context.source.isAttacking(),
             targetType: 'player',
             targetController: 'opponent',
             effect: ability.effects.increaseCost({

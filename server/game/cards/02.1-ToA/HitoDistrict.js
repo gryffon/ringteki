@@ -5,7 +5,7 @@ class HitoDistrict extends DrawCard {
         this.persistentEffect({
             targetLocation: 'province',
             condition: () => this.game.isDuringConflict('political'),
-            match: card => card.isProvince && card.location === this.location,
+            match: (card, context) => card.isProvince && card.location === context.source.location,
             effect: ability.effects.cardCannot('initiateConflict')
         });
     }

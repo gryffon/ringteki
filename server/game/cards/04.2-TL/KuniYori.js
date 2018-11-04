@@ -4,6 +4,7 @@ class KuniYori extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: () => this.game.isDuringConflict('earth'),
+            match: card => card.type === 'creature',
             effect: ability.effects.modifyBothSkills(1)
         });
 

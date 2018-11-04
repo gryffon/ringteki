@@ -3,9 +3,9 @@ const DrawCard = require('../../drawcard.js');
 class SadaneStudent extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.air.isConsideredClaimed(this.controller) ||
-                this.game.rings.fire.isConsideredClaimed(this.controller)
+            condition: context => (
+                this.game.rings.air.isConsideredClaimed(context.player) ||
+                this.game.rings.fire.isConsideredClaimed(context.player)
             ),
             match: this,
             effect: ability.effects.modifyPoliticalSkill(2)

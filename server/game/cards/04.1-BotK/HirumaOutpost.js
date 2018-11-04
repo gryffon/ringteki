@@ -4,8 +4,7 @@ class HirumaOutpost extends DrawCard {
     setupCardAbilities(ability) {
         this.grantedAbilityLimits = {};
         this.persistentEffect({
-            condition: () => !this.controller.getProvinceCardInProvince(this.location).isBroken,
-            match: this,
+            condition: context => !context.player.getProvinceCardInProvince(context.source.location).isBroken,
             effect: ability.effects.gainAbility('reaction', {
                 title: 'Make opponent lose an honor',
                 when: {
