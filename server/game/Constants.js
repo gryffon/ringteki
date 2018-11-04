@@ -18,6 +18,12 @@ const Locations = {
     Role: 'role'
 };
 
+const Decks = {
+    ConflictDeck: 'conflict deck',
+    DynastyDeck: 'dynasty deck',
+};
+
 module.exports = {
-    Locations
+    Locations,
+    Decks
 };

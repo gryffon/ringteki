@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Decks } = require('../../Constants');
 
 class PillowBook extends DrawCard {
     setupCardAbilities(ability) {
@@ -14,7 +14,7 @@ class PillowBook extends DrawCard {
                     until: {
                         onCardMoved: event => event.card === topCard && event.originalLocation === Locations.ConflictDeck,
                         onConflictFinished: () => true,
-                        onDeckShuffled: event => event.player === context.player && event.deck === Locations.ConflictDeck
+                        onDeckShuffled: event => event.player === context.player && event.deck === Decks.ConflictDeck
                     },
                     effect: [
                         ability.effects.showTopConflictCard(),

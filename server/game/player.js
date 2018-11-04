@@ -12,7 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const { Locations } = require('./Constants');
+const { Locations, Decks } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -356,7 +356,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their conflict deck', this);
         }
-        this.game.emitEvent('onDeckShuffled', { player: this, deck: Locations.ConflictDeck });
+        this.game.emitEvent('onDeckShuffled', { player: this, deck: Decks.ConflictDeck });
         this.conflictDeck = _(this.conflictDeck.shuffle());
     }
 
@@ -367,7 +367,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their dynasty deck', this);
         }
-        this.game.emitEvent('onDeckShuffled', { player: this, deck: Locations.DynastyDeck });
+        this.game.emitEvent('onDeckShuffled', { player: this, deck: Decks.DynastyDeck });
         this.dynastyDeck = _(this.dynastyDeck.shuffle());
     }
 
