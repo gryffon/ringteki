@@ -12,6 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
+const { Locations } = require('./Constants');
 const provinceLocations = ['stronghold province', 'province 1', 'province 2', 'province 3', 'province 4'];
 
 class Player extends GameObject {
@@ -62,7 +63,7 @@ class Player extends GameObject {
         this.deck = {};
         this.costReducers = [];
         this.playableLocations = [
-            new PlayableLocation('playFromHand', this, 'hand'),
+            new PlayableLocation('playFromHand', this, Locations.Hand),
             new PlayableLocation('playFromProvince', this, 'province 1'),
             new PlayableLocation('playFromProvince', this, 'province 2'),
             new PlayableLocation('playFromProvince', this, 'province 3'),
@@ -303,13 +304,13 @@ class Player extends GameObject {
             this.deckRanOutOfCards('conflict');
             this.game.queueSimpleStep(() => {
                 for(let card of cards) {
-                    this.moveCard(card, 'hand');
+                    this.moveCard(card, Locations.Hand);
                 }
             });
             this.game.queueSimpleStep(() => this.drawCardsToHand(remainingCards));
         } else {
             for(let card of this.conflictDeck.toArray().slice(0, numCards)) {
-                this.moveCard(card, 'hand');
+                this.moveCard(card, Locations.Hand);
             }
         }
     }
@@ -590,7 +591,7 @@ class Player extends GameObject {
      */
     getSourceList(source) {
         switch(source) {
-            case 'hand':
+            case Locations.Hand:
                 return this.hand;
             case 'conflict deck':
                 return this.conflictDeck;
@@ -634,7 +635,7 @@ class Player extends GameObject {
      */
     updateSourceList(source, targetList) {
         switch(source) {
-            case 'hand':
+            case Locations.Hand:
                 this.hand = targetList;
                 break;
             case 'conflict deck':
@@ -701,7 +702,7 @@ class Player extends GameObject {
         }
 
         let display = 'a card';
-        if(!card.facedown && source !== 'hand' || ['play area', 'dynasty discard pile', 'conflict discard pile', 'removed from game'].includes(target)) {
+        if(!card.facedown && source !== Locations.Hand || ['play area', 'dynasty discard pile', 'conflict discard pile', 'removed from game'].includes(target)) {
             display = card;
         }
 
@@ -721,7 +722,7 @@ class Player extends GameObject {
         }
 
 
-        const conflictCardLocations = ['hand', 'conflict deck', 'conflict discard pile', 'removed from game'];
+        const conflictCardLocations = [Locations.Hand, 'conflict deck', 'conflict discard pile', 'removed from game'];
         const legalLocations = {
             stronghold: ['stronghold province'],
             role: ['role'],

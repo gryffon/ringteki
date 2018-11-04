@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
+const { Locations } = require('../Constants');
 
 class AbilityResolver extends BaseStepWithPipeline {
     constructor(game, context) {
@@ -114,7 +115,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         }
 
         // Increment limits (limits aren't used up on cards in hand)
-        if(this.context.ability.limit && this.context.source.location !== 'hand' &&
+        if(this.context.ability.limit && this.context.source.location !== Locations.Hand &&
            (!this.context.cardStateWhenInitiated || this.context.cardStateWhenInitiated.location === this.context.source.location)) {
             this.context.ability.limit.increment(this.context.player);
         }

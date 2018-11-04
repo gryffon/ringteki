@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class MeishodoWielder extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            location: 'any',
+            location: Locations.Any,
             condition: context => this.game.getFirstPlayer() === context.player,
             effect: ability.effects.reduceCost({
                 playingTypes: 'playFromProvince', match: (card, source) => card === source

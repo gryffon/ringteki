@@ -1,4 +1,5 @@
 const CardSelector = require('../CardSelector.js');
+const { Locations } = require('../Constants');
 
 class SelectCardCost {
     constructor(action, promptProperties) {
@@ -13,7 +14,8 @@ class SelectCardCost {
             return action.canAffect(card, context) && properties.cardCondition(card, context);
         };
 
-        let fullProperties = Object.assign({ location: 'any', controller: 'self' }, properties, { cardCondition: condition });
+        // TODO: Should this default to Any?
+        let fullProperties = Object.assign({ location: Locations.Any, controller: 'self' }, properties, { cardCondition: condition });
 
         return CardSelector.for(fullProperties);
     }

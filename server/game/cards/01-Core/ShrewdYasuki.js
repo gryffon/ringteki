@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class ShrewdYasuki extends DrawCard {
     setupCardAbilities() {
@@ -17,7 +18,7 @@ class ShrewdYasuki extends DrawCard {
                     cards: context.player.conflictDeck.first(2),
                     cardHandler: card => {
                         this.game.addMessage('{0} takes one card to their hand and puts the other on the bottom of their deck', context.player);
-                        context.player.moveCard(card, 'hand');
+                        context.player.moveCard(card, Locations.Hand);
                         this.game.queueSimpleStep(() => context.player.moveCard(context.player.conflictDeck.first(), 'conflict deck', { bottom: true }));
                     }
                 });

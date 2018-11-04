@@ -1,6 +1,7 @@
 const AbilityLimit = require('./abilitylimit.js');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
+const { Locations } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
@@ -34,7 +35,7 @@ class CardAbility extends ThenAbility {
 
     buildLocation(card, location) {
         const DefaultLocationForType = {
-            event: 'hand',
+            event: Locations.Hand,
             holding: 'province',
             province: 'province',
             role: 'role',

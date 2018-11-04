@@ -6,6 +6,8 @@ const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 const TriggeredAbility = require('./triggeredability');
 
+const { Locations } = require('./Constants');
+
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
         super(owner.game);
@@ -89,7 +91,7 @@ class BaseCard extends EffectSource {
      * is both in play and not blank.
      */
     persistentEffect(properties) {
-        const allowedLocations = ['any', 'play area', 'province'];
+        const allowedLocations = [Locations.Any, 'play area', 'province'];
         const defaultLocationForType = {
             province: 'province',
             holding: 'province',
@@ -124,7 +126,7 @@ class BaseCard extends EffectSource {
 
     applyAnyLocationPersistentEffects() {
         _.each(this.abilities.persistentEffects, effect => {
-            if(effect.location === 'any') {
+            if(effect.location === Locations.Any) {
                 this.addEffectToEngine(effect);
             }
         });
@@ -157,7 +159,7 @@ class BaseCard extends EffectSource {
             this.removeLastingEffects();
         }
         _.each(this.abilities.persistentEffects, effect => {
-            if(effect.location !== 'any') {
+            if(effect.location !== Locations.Any) {
                 if(activeLocations[effect.location].includes(to) && !activeLocations[effect.location].includes(from)) {
                     effect.ref = this.addEffectToEngine(effect);
                 } else if(!activeLocations[effect.location].includes(to) && activeLocations[effect.location].includes(from)) {
@@ -172,7 +174,7 @@ class BaseCard extends EffectSource {
 
         this.location = targetLocation;
 
-        if(['play area', 'conflict discard pile', 'dynasty discard pile', 'hand'].includes(targetLocation)) {
+        if(['play area', 'conflict discard pile', 'dynasty discard pile', Locations.Hand].includes(targetLocation)) {
             this.facedown = false;
         }
 

@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class WalkingTheWay extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            location: 'any',
+            location: Locations.Any,
             targetType: 'player',
             targetController: 'any',
             match: player => player.cardsInPlay.any(card => card.hasTrait('shugenja')),

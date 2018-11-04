@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const MulliganDynastyPrompt = require('./mulligandynastyprompt.js');
+const { Locations } = require('../../Constants');
 
 class MulliganConflictPrompt extends MulliganDynastyPrompt {
     completionCondition(player) {
@@ -23,7 +24,7 @@ class MulliganConflictPrompt extends MulliganDynastyPrompt {
     }
 
     cardCondition(card) {
-        return card.location === 'hand';
+        return card.location === Locations.Hand;
     }
 
     waitingPrompt() {

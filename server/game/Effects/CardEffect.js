@@ -1,11 +1,12 @@
 const Effect = require('./Effect.js');
+const { Locations } = require('../Constants');
 
 class CardEffect extends Effect {
     constructor(game, source, properties, effect) {
         if(!properties.match) {
             properties.match = (card, context) => card === context.source;
-            if(properties.location === 'any') {
-                properties.targetLocation = 'any';
+            if(properties.location === Locations.Any) {
+                properties.targetLocation = Locations.Any;
             } else if(['province', 'stronghold', 'holding'].includes(source.type)) {
                 properties.targetLocation = 'province';
             }
@@ -28,7 +29,7 @@ class CardEffect extends Effect {
     }
 
     getTargets() {
-        if(this.targetLocation === 'any') {
+        if(this.targetLocation === Locations.Any) {
             return this.game.allCards.filter(card => this.match(card, this.context));
         } else if(this.targetLocation === 'province') {
             let cards = this.game.allCards.filter(card =>

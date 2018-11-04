@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class ThePerfectGift extends DrawCard {
     setupCardAbilities() {
@@ -22,7 +23,7 @@ class ThePerfectGift extends DrawCard {
                             cards: opponentTopFour,
                             cardHandler: card => {
                                 this.game.addMessage('{0} chooses {1} to give {2}', context.player, card, otherPlayer);
-                                otherPlayer.moveCard(card, 'hand');
+                                otherPlayer.moveCard(card, Locations.Hand);
                                 otherPlayer.shuffleConflictDeck();
                             }
                         });
@@ -34,7 +35,7 @@ class ThePerfectGift extends DrawCard {
                     cards: myTopFour,
                     cardHandler: card => {
                         this.game.addMessage('{0} chooses {1} to give themself', context.player, card);
-                        context.player.moveCard(card, 'hand');
+                        context.player.moveCard(card, Locations.Hand);
                         context.player.shuffleConflictDeck();
                     }
                 }));

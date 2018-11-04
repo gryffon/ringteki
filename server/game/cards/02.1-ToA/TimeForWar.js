@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class TimeForWar extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class TimeForWar extends DrawCard {
             targets: {
                 weapon: {
                     cardType: 'attachment',
-                    location: ['conflict discard pile', 'hand'],
+                    location: ['conflict discard pile', Locations.Hand],
                     controller: 'self',
                     cardCondition: card => card.costLessThan(4) && card.hasTrait('weapon')
                 },

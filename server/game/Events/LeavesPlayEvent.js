@@ -1,5 +1,6 @@
 const Event = require('./Event.js');
 const MoveFateEvent = require('./MoveFateEvent.js');
+const { Locations } = require('../Constants');
 
 class LeavesPlayEvent extends Event {
     constructor(params, card, gameAction) {
@@ -40,7 +41,7 @@ class LeavesPlayEvent extends Event {
     preResolutionEffect() {
         this.cardStateWhenLeftPlay = this.card.createSnapshot();
         if(this.card.isAncestral() && this.isContingent) {
-            this.destination = 'hand';
+            this.destination = Locations.Hand;
             this.card.game.addMessage('{0} returns to {1}\'s hand due to its Ancestral keyword', this.card, this.card.owner);
         }
     }

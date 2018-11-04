@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { Locations } = require('../Constants');
 
 class ChosenDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -30,7 +31,7 @@ class ChosenDiscardAction extends PlayerAction {
                     mode: 'exactly',
                     numCards: amount,
                     ordered: true,
-                    location: 'hand',
+                    location: Locations.Hand,
                     controller: player === context.player ? 'self' : 'opponent',
                     onSelect: (player, cards) => {
                         this.cards[player.uuid] = cards;

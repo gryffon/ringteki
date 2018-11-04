@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const EventWindow = require('./EventWindow.js');
 const SimpleStep = require('../gamesteps/simplestep.js');
+const { Locations } = require('../Constants');
 
 class InitiateAbilityEventWindow extends EventWindow {
     constructor(game, events) {
@@ -14,7 +15,7 @@ class InitiateAbilityEventWindow extends EventWindow {
                 this.addEvent(this.game.getEvent('onCardPlayed', {
                     player: event.context.player,
                     card: event.card,
-                    originalLocation: 'hand', // TODO: this isn't true with Kyuden Isawa
+                    originalLocation: Locations.Hand, // TODO: this isn't true with Kyuden Isawa
                     playType: 'playFromHand'
                 }));
             }

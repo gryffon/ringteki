@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 const testOfSkillCost = function() {
     return {
@@ -53,7 +54,7 @@ class TestOfSkill extends DrawCard {
                 };
                 let takeCardHandler = card => {
                     this.game.addMessage('{0} adds {1} to their hand', context.player, card);
-                    context.player.moveCard(card, 'hand');
+                    context.player.moveCard(card, Locations.Hand);
                     return _.reject(matchingCards, c => c.uuid === card.uuid);
                 };
                 if(matchingCards.length === 0) {

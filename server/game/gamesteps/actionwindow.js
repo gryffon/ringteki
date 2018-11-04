@@ -1,4 +1,5 @@
 const UiPrompt = require('./uiprompt.js');
+const { Locations } = require('../Constants');
 
 class ActionWindow extends UiPrompt {
     constructor(game, title, windowName) {
@@ -94,7 +95,7 @@ class ActionWindow extends UiPrompt {
             this.game.promptForSelect(this.currentPlayer, {
                 source: 'Manual Action',
                 activePrompt: 'Which ability are you using?',
-                location: 'any',
+                location: Locations.Any,
                 controller: 'self',
                 cardCondition: card => !card.facedown,
                 onSelect: (player, card) => {

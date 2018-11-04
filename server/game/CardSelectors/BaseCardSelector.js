@@ -1,3 +1,5 @@
+const { Locations } = require('../Constants');
+
 class BaseCardSelector {
     constructor(properties) {
         this.cardCondition = properties.cardCondition;
@@ -25,7 +27,7 @@ class BaseCardSelector {
     }
 
     findPossibleCards(context) {
-        if(this.location.includes('any')) {
+        if(this.location.includes(Locations.Any)) {
             if(this.controller === 'self') {
                 return context.game.allCards.filter(card => card.controller === context.player);
             } else if(this.controller === 'opponent') {
@@ -72,7 +74,7 @@ class BaseCardSelector {
         if(this.controller === 'opponent' && card.controller !== context.player.opponent) {
             return false;
         }
-        if(!this.location.includes('any') && !this.location.includes(card.location)) {
+        if(!this.location.includes(Locations.Any) && !this.location.includes(card.location)) {
             return false;
         }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);
