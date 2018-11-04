@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class SteadfastSamurai extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class SteadfastSamurai extends DrawCard {
             },
             effect: 'stop him being discarded or losing fate in this phase',
             gameAction: ability.actions.cardLastingEffect({
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 effect: [
                     ability.effects.cardCannot('removeFate'),
                     ability.effects.cardCannot('discardFromPlay')

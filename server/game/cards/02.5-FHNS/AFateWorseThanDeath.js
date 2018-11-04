@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class AFateWorseThanDeath extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +14,7 @@ class AFateWorseThanDeath extends DrawCard {
                     ability.actions.removeFate(),
                     ability.actions.sendHome(),
                     ability.actions.cardLastingEffect({
-                        duration: 'untilEndOfPhase',
+                        duration: Durations.UntilEndOfPhase,
                         effect: ability.effects.blank()
                     })
                 ]

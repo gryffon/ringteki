@@ -83,8 +83,26 @@ const EffectNames = {
     RestrictNumberOfDefenders: 'restrictNumberOfDefenders'
 };
 
+const Durations = {
+    UntilEndOfDuel: 'untilEndOfDuel',
+    UntilEndOfConflict: 'untilEndOfConflict',
+    UntilEndOfPhase: 'untilEndOfPhase',
+    UntilEndOfRound: 'untilEndOfRound',
+    Persistent: 'persistent',
+    Custom: 'custom'
+};
+
+const Stages = {
+    Cost: 'cost',
+    Effect: 'effect',
+    PreTarget: 'pretarget',
+    Target: 'target'
+};
+
 module.exports = {
     Locations,
     Decks,
-    EffectNames
+    EffectNames,
+    Durations,
+    Stages
 };

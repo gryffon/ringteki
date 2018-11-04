@@ -6,7 +6,7 @@ const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 const TriggeredAbility = require('./triggeredability');
 
-const { Locations, EffectNames } = require('./Constants');
+const { Locations, EffectNames, Durations } = require('./Constants');
 
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
@@ -103,7 +103,7 @@ class BaseCard extends EffectSource {
             throw new Error(`'${location}' is not a supported effect location.`);
         }
 
-        this.abilities.persistentEffects.push(_.extend({ duration: 'persistent', location: location }, properties));
+        this.abilities.persistentEffects.push(_.extend({ duration: Durations.Persistent, location: location }, properties));
     }
 
     hasTrait(trait) {

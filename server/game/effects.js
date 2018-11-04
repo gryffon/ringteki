@@ -3,7 +3,8 @@ const _ = require('underscore');
 const AbilityLimit = require('./abilitylimit.js');
 const CannotRestriction = require('./cannotrestriction.js');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames } = require('./Constants');
+const { EffectNames, Durations } = require('./Constants');
+
 /* Types of effect
     1. Static effects - do something for a period
     2. Dynamic effects - like static, but what they do depends on the game state
@@ -35,7 +36,7 @@ const Effects = {
     gainAbility: (abilityType, properties) => EffectBuilder.card.detached(EffectNames.GainAbility, {
         apply: (card, context) => {
             let ability;
-            if(abilityType === 'persistent') {
+            if(abilityType === Durations.Persistent) {
                 ability = card.persistentEffect(properties);
                 return ability;
             } else if(abilityType === 'action') {
@@ -54,7 +55,7 @@ const Effects = {
             return ability;
         },
         unapply: (card, context, ability) => {
-            if(abilityType === 'persistent') {
+            if(abilityType === Durations.Persistent) {
                 if(ability.ref) {
                     card.removeEffectFromEngine(ability.ref);
                 }

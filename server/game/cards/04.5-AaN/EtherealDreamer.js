@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class EtherealDreamer extends DrawCard {
     setupCardAbilities(ability) {
@@ -14,7 +15,7 @@ class EtherealDreamer extends DrawCard {
             effect: 'give herself +2{1}/+2{2} while the {0} is contested',
             effectArgs: ['military', 'political'],
             gameAction: ability.actions.cardLastingEffect(context => ({
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 condition: () => context.ring.contested,
                 effect: ability.effects.modifyBothSkills(2)
             }))
