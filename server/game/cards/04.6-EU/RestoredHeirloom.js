@@ -9,7 +9,7 @@ class RestoredHeirloom extends DrawCard {
                 onResolveRingElement: (event, context) => event.ring.element === 'water' && event.player === context.player
             },
             effect: 'replace the water ring with putting Restored Heirloom into play',
-            location: [Locations.Hand,'conflict discard pile'],
+            location: [Locations.Hand,Locations.ConflictDiscardPile],
             target: {
                 cardType: 'character',
                 controller: 'self'

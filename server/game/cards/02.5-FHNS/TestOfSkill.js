@@ -49,7 +49,7 @@ class TestOfSkill extends DrawCard {
                     cardsToDiscard = cardsToDiscard.concat(matchingCards);
                     this.game.addMessage('{0} discards {1}', context.player, cardsToDiscard);
                     _.each(cardsToDiscard, card => {
-                        context.player.moveCard(card, 'conflict discard pile');
+                        context.player.moveCard(card, Locations.ConflictDiscardPile);
                     });
                 };
                 let takeCardHandler = card => {

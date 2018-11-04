@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class IkomaEiji extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +12,7 @@ class IkomaEiji extends DrawCard {
             gameAction: ability.actions.putIntoPlay(context => ({
                 promptForSelect: {
                     cardType: 'character',
-                    location: ['province', 'dynasty discard pile'],
+                    location: ['province', Locations.DynastyDiscardPile],
                     controller: 'self',
                     cardCondition: card => card.hasTrait('bushi') && card.costLessThan(4),
                     message: '{0} puts {1} into play with {2}\'s ability',

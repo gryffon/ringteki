@@ -21,7 +21,7 @@ class ShrineMaiden extends DrawCard {
                 });
 
                 _.each(toDiscard, card => {
-                    context.player.moveCard(card, 'conflict discard pile');
+                    context.player.moveCard(card, Locations.ConflictDiscardPile);
                 });
 
                 if(toHand.length && toDiscard.length) {

@@ -597,9 +597,9 @@ class Player extends GameObject {
                 return this.conflictDeck;
             case Locations.DynastyDeck:
                 return this.dynastyDeck;
-            case 'conflict discard pile':
+            case Locations.ConflictDiscardPile:
                 return this.conflictDiscardPile;
-            case 'dynasty discard pile':
+            case Locations.DynastyDiscardPile:
                 return this.dynastyDiscardPile;
             case 'removed from game':
                 return this.removedFromGame;
@@ -644,10 +644,10 @@ class Player extends GameObject {
             case Locations.DynastyDeck:
                 this.dynastyDeck = targetList;
                 break;
-            case 'conflict discard pile':
+            case Locations.ConflictDiscardPile:
                 this.conflictDiscardPile = targetList;
                 break;
-            case 'dynasty discard pile':
+            case Locations.DynastyDiscardPile:
                 this.dynastyDiscardPile = targetList;
                 break;
             case 'removed from game':
@@ -702,7 +702,7 @@ class Player extends GameObject {
         }
 
         let display = 'a card';
-        if(!card.facedown && source !== Locations.Hand || ['play area', 'dynasty discard pile', 'conflict discard pile', 'removed from game'].includes(target)) {
+        if(!card.facedown && source !== Locations.Hand || ['play area', Locations.DynastyDiscardPile, Locations.ConflictDiscardPile, 'removed from game'].includes(target)) {
             display = card;
         }
 
@@ -722,13 +722,13 @@ class Player extends GameObject {
         }
 
 
-        const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, 'conflict discard pile', 'removed from game'];
+        const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, 'removed from game'];
         const legalLocations = {
             stronghold: ['stronghold province'],
             role: ['role'],
             province: [...provinceLocations, 'province deck'],
-            holding: [...provinceLocations, Locations.DynastyDeck, 'dynasty discard pile', 'removed from game'],
-            character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, 'dynasty discard pile', 'play area'],
+            holding: [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, 'removed from game'],
+            character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, 'play area'],
             event: [...conflictCardLocations, 'being played'],
             attachment: [...conflictCardLocations, 'play area']
         };
@@ -876,7 +876,7 @@ class Player extends GameObject {
             // This is also used by Back-Alley Hideaway when it is sacrificed. This won't trigger any leaves play effects
             card.attachments.each(attachment => {
                 attachment.leavesPlay();
-                attachment.owner.moveCard(attachment, attachment.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+                attachment.owner.moveCard(attachment, attachment.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
             });
 
             card.leavesPlay();
@@ -908,14 +908,14 @@ class Player extends GameObject {
             targetPile.push(card);
         } else if([Locations.ConflictDeck, Locations.DynastyDeck].includes(targetLocation) && !options.bottom) {
             targetPile.unshift(card);
-        } else if(['conflict discard pile', 'dynasty discard pile', 'removed from game'].includes(targetLocation)) {
+        } else if([Locations.ConflictDiscardPile, Locations.DynastyDiscardPile, 'removed from game'].includes(targetLocation)) {
             // new cards go on the top of the discard pile
             targetPile.unshift(card);
         } else if(targetPile) {
             targetPile.push(card);
         }
         /*
-        if(['conflict discard pile', 'dynasty discard pile'].includes(targetLocation)) {
+        if([Locations.ConflictDiscardPile, Locations.DynastyDiscardPile].includes(targetLocation)) {
             this.game.raiseEvent('onCardPlaced', { card: card, location: targetLocation });
         }
         */

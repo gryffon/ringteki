@@ -11,7 +11,7 @@ class TimeForWar extends DrawCard {
             targets: {
                 weapon: {
                     cardType: 'attachment',
-                    location: ['conflict discard pile', Locations.Hand],
+                    location: [Locations.ConflictDiscardPile, Locations.Hand],
                     controller: 'self',
                     cardCondition: card => card.costLessThan(4) && card.hasTrait('weapon')
                 },

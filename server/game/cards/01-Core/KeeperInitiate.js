@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class KeeperInitiate extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class KeeperInitiate extends DrawCard {
                 onClaimRing: (event, context) => event.player === context.player && context.player.role &&
                                                  event.conflict.elements.some(element => context.player.role.hasTrait(element))
             },
-            location: ['province', 'dynasty discard pile'],
+            location: ['province', Locations.DynastyDiscardPile],
             gameAction: ability.actions.putIntoPlay(),
             then: {
                 gameAction: ability.actions.placeFate()

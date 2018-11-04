@@ -7,7 +7,7 @@ class TogashiMitsu extends DrawCard {
             title: 'Play a monk, kiho or tattoo card from discard',
             condition: context => context.source.isParticipating(),
             target: {
-                location: 'conflict discard pile',
+                location: Locations.ConflictDiscardPile,
                 controller: 'self',
                 cardCondition: card => card.hasTrait('monk') || card.hasTrait('kiho') || card.hasTrait('tattoo'),
                 gameAction: ability.actions.playCard({

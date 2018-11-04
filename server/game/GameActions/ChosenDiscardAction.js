@@ -46,7 +46,7 @@ class ChosenDiscardAction extends PlayerAction {
     getEvent(player, context) {
         return super.createEvent('onCardsDiscardedFromHand', { player: player, cards: this.cards[player.uuid], context: context }, event => {
             for(let card of event.cards) {
-                player.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+                player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
             }
         });
     }

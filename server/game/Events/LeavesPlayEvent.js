@@ -11,7 +11,7 @@ class LeavesPlayEvent extends Event {
         this.options = params.options || {};
 
         if(!this.destination) {
-            this.destination = this.card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
+            this.destination = this.card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile;
         }
     }
 
@@ -24,7 +24,7 @@ class LeavesPlayEvent extends Event {
                 if(attachment.location === 'play area') {
                     contingentEvents.push(new LeavesPlayEvent({
                         order: this.order - 1,
-                        destination: attachment.isDynasty ? 'dynasty discard pile' : 'conflict discard pile',
+                        destination: attachment.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile,
                         condition: () => attachment.parent === this.card,
                         isContingent: true
                     }, attachment));

@@ -174,7 +174,7 @@ class BaseCard extends EffectSource {
 
         this.location = targetLocation;
 
-        if(['play area', 'conflict discard pile', 'dynasty discard pile', Locations.Hand].includes(targetLocation)) {
+        if(['play area', Locations.ConflictDiscardPile, Locations.DynastyDiscardPile, Locations.Hand].includes(targetLocation)) {
             this.facedown = false;
         }
 

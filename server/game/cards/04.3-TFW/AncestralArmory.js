@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class AncestralArmory extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -8,9 +9,9 @@ class AncestralArmory extends DrawCard {
             target: {
                 activePrompt: 'Choose a weapon attachment from your conflict discard pile',
                 cardCondition: card => card.hasTrait('weapon'),
-                location: ['conflict discard pile'],
+                location: [Locations.ConflictDiscardPile],
                 controller: 'self',
-                gameAction: ability.actions.returnToHand({ location: 'conflict discard pile' }) // revisit implementation once returnToHand game action is rewritten.
+                gameAction: ability.actions.returnToHand({ location: Locations.ConflictDiscardPile }) // revisit implementation once returnToHand game action is rewritten.
             }
         });
     }

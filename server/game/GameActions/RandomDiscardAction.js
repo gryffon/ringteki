@@ -27,7 +27,7 @@ class RandomDiscardAction extends PlayerAction {
             let handler = (player, cards = []) => {
                 cards = cards.concat(event.cards.filter(card => !cards.includes(card)));
                 for(const card of cards) {
-                    player.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+                    player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
                 }
                 return true;
             };
@@ -47,7 +47,7 @@ class RandomDiscardAction extends PlayerAction {
                 });
             } else if(event.cards.length === 1) {
                 let card = event.cards[0];
-                player.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+                player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
             }
         });
     }

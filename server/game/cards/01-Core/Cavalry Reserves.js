@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class CavalryReserves extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +13,7 @@ class CavalryReserves extends DrawCard {
                 maxStat: () => 6,
                 numCards: 0,
                 cardType: 'character',
-                location: 'dynasty discard pile',
+                location: Locations.DynastyDiscardPile,
                 controller: 'self',
                 cardCondition: card => card.hasTrait('cavalry'),
                 gameAction: ability.actions.putIntoConflict()

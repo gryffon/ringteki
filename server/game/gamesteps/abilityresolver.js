@@ -131,7 +131,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             if(this.context.ability.isCardPlayed()) {
                 this.context.player.moveCard(this.context.source, 'being played');
                 this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeHandler());
-                this.game.queueSimpleStep(() => this.context.player.moveCard(this.context.source, 'conflict discard pile'));
+                this.game.queueSimpleStep(() => this.context.player.moveCard(this.context.source, Locations.ConflictDiscardPile));
             } else {
                 this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeHandler());
             }

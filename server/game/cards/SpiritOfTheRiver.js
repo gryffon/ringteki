@@ -1,4 +1,5 @@
 const DrawCard = require('../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class SpiritOfTheRiver extends DrawCard {
     constructor(facedownCard) {
@@ -20,7 +21,7 @@ class SpiritOfTheRiver extends DrawCard {
     }
 
     leavesPlay() {
-        this.owner.moveCard(this.facedownCard, 'dynasty discard pile');
+        this.owner.moveCard(this.facedownCard, Locations.DynastyDiscardPile);
         this.game.queueSimpleStep(() => {
             this.owner.removeCardFromPile(this);
             this.game.allCards = this.owner.removeCardByUuid(this.game.allCards, this.uuid);
