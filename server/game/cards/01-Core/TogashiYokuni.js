@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class TogashiYokuni extends DrawCard {
     setupCardAbilities(ability) {
@@ -20,7 +21,7 @@ class TogashiYokuni extends DrawCard {
                         newProps.max = ability.limit.repeatable(context.targetAbility.properties.max.max, context.targetAbility.properties.max.eventName);
                     }
                     return {
-                        duration: 'untilEndOfPhase',
+                        duration: Durations.UntilEndOfPhase,
                         effect: ability.effects.gainAbility(context.targetAbility.abilityType, Object.assign({}, context.targetAbility.properties, newProps))
                     };
                 })

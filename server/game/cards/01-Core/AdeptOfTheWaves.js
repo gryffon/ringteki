@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class AdeptOfTheWaves extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class AdeptOfTheWaves extends DrawCard {
             target: {
                 cardType: 'character',
                 gameAction: ability.actions.cardLastingEffect(() => ({
-                    duration: 'untilEndOfPhase',
+                    duration: Durations.UntilEndOfPhase,
                     condition: () => this.game.isDuringConflict('water'),
                     effect: ability.effects.addKeyword('covert')
                 }))

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class TheMountainDoesNotFall extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class TheMountainDoesNotFall extends DrawCard {
             target: {
                 cardType: 'character',
                 gameAction: ability.actions.cardLastingEffect(context => ({
-                    duration: 'untilEndOfPhase',
+                    duration: Durations.UntilEndOfPhase,
                     condition: () => context.target.isDefending(),
                     effect: ability.effects.doesNotBow()
                 }))

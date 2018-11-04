@@ -10,7 +10,6 @@ class AsahinaArtisan extends DrawCard {
                 cardType: 'character',
                 cardCondition: (card, context) => card !== context.source && card.isFaction('crane'),
                 gameAction: ability.actions.cardLastingEffect(() => ({
-                    duration: 'untilEndOfConflict',
                     effect: ability.effects.modifyPoliticalSkill(3)
                 }))
             },

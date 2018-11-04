@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class Ofushukai extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -16,7 +17,7 @@ class Ofushukai extends DrawCard {
                     gameAction: [
                         ability.actions.sendHome(),
                         ability.actions.cardLastingEffect({
-                            duration: 'untilEndOfPhase',
+                            duration: Durations.UntilEndOfPhase,
                             effect: ability.effects.cannotParticipateAsAttacker()
                         })
                     ]

@@ -23,7 +23,17 @@ const Decks = {
     DynastyDeck: 'dynasty deck'
 };
 
+const Durations = {
+    UntilEndOfDuel: 'untilEndOfDuel',
+    UntilEndOfConflict: 'untilEndOfConflict',
+    UntilEndOfPhase: 'untilEndOfPhase',
+    UntilEndOfRound: 'untilEndOfRound',
+    Persistent: 'persistent',
+    Custom: 'custom'
+};
+
 module.exports = {
     Locations,
-    Decks
+    Decks,
+    Durations
 };

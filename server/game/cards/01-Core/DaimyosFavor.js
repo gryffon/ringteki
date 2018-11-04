@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class DaimyosFavor extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class DaimyosFavor extends DrawCard {
             effect: 'reduce the cost of the next attachment they play on {1} by 1',
             effectArgs: context => context.source.parent,
             gameAction: ability.actions.playerLastingEffect(context => ({
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 effect: ability.effects.reduceCost({
                     playingTypes: 'playFromHand',
                     amount: 1,

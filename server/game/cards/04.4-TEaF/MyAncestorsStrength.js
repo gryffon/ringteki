@@ -34,7 +34,6 @@ class MyAncestorsStrength extends DrawCard {
                         }
                         return {
                             target: context.targets.shugenja,
-                            duration: 'untilEndOfConflict',
                             effect: effects
                         };
                     })

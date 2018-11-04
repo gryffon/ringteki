@@ -1,8 +1,9 @@
 const GameAction = require('./GameAction');
+const { Durations } = require('../Constants');
 
 class LastingEffectAction extends GameAction {
     setDefaultProperties() {
-        this.duration = 'untilEndOfConflict';
+        this.duration = Durations.UntilEndOfConflict;
         this.condition = null;
         this.until = null;
         this.effect = [];

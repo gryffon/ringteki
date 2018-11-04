@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const { Durations } = require('../Constants');
 
 const binaryCardEffects = [
     'blank',
@@ -97,10 +98,10 @@ class StaticEffect {
 
     hasLongerDuration(effect) {
         let durations = [
-            'untilEndOfDuel',
-            'untilEndOfConflict',
-            'untilEndOfPhase',
-            'untilEndOfRound'
+            Durations.UntilEndOfDuel,
+            Durations.UntilEndOfConflict,
+            Durations.UntilEndOfPhase,
+            Durations.UntilEndOfRound
         ];
         return durations.indexOf(this.duration) > durations.indexOf(effect.duration);
     }
