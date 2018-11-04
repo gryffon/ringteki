@@ -32,7 +32,7 @@ class LastingEffectCardAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== Locations.PlayArea && this.targetLocation !== 'province') {
+        if(card.location !== Locations.PlayArea && this.targetLocation !== Locations.Provinces) {
             return false;
         }
         if(!this.effect.some(effect => effect.effect.canBeApplied(card))) {

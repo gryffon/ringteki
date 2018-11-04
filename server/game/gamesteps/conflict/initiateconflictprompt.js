@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const UiPrompt = require('../uiprompt.js');
+const { Locations } = require('../../Constants');
 
 const capitalize = {
     military: 'Military',
@@ -158,13 +159,13 @@ class InitiateConflictPrompt extends UiPrompt {
 
     checkCardCondition(card) {
         if(card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken && card.checkRestrictions('initiateConflict', this.game.getFrameworkContext())) {
-            if(card.location === 'stronghold province' && _.size(this.game.allCards.filter(card => card.isProvince && card.isBroken && card.controller !== this.choosingPlayer)) < 3) {
+            if(card.location === Locations.StrongholdProvince && _.size(this.game.allCards.filter(card => card.isProvince && card.isBroken && card.controller !== this.choosingPlayer)) < 3) {
                 return false;
             }
             if(!this.conflict.conflictProvince || card === this.conflict.conflictProvince) {
                 return true;
             }
-        } else if(card.type === 'character' && card.location === 'play area') {
+        } else if(card.type === 'character' && card.location === Locations.PlayArea) {
             if(card.controller === this.choosingPlayer) {
                 if(card.canDeclareAsAttacker(this.conflict.conflictType)) {
                     return true;

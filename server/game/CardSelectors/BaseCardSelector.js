@@ -19,9 +19,9 @@ class BaseCardSelector {
         if(!Array.isArray(location)) {
             location = [location];
         }
-        let index = location.indexOf('province');
+        let index = location.indexOf(Locations.Provinces);
         if(index > -1) {
-            location.splice(index, 1, 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province');
+            location.splice(index, 1, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince);
         }
         return location;
     }

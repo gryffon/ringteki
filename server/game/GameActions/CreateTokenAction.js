@@ -10,7 +10,7 @@ class CreateTokenAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(!card.facedown || !['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location)) {
+        if(!card.facedown || ![Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
             return false;
         } else if(!context.game.isDuringConflict('military')) {
             return false;

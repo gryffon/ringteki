@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const AllPlayerPrompt = require('../allplayerprompt.js');
+const { Locations } = require('../../Constants');
 
 class MulliganDynastyPrompt extends AllPlayerPrompt {
     constructor(game) {
@@ -24,7 +25,7 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
     highlightSelectableCards() {
         _.each(this.game.getPlayers(), player => {
             if(!this.selectableCards[player.name]) {
-                this.selectableCards[player.name] = ['province 1', 'province 2', 'province 3', 'province 4'].map(location => player.getDynastyCardInProvince(location));
+                this.selectableCards[player.name] = [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].map(location => player.getDynastyCardInProvince(location));
             }
             player.setSelectableCards(this.selectableCards[player.name]);
         });
@@ -57,7 +58,7 @@ class MulliganDynastyPrompt extends AllPlayerPrompt {
     }
 
     cardCondition(card) {
-        return card.isDynasty && ['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location);
+        return card.isDynasty && [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location);
     }
 
     waitingPrompt() {

@@ -16,7 +16,7 @@ class AppealingToTheFortunes extends ProvinceCard {
             target: {
                 cardType: 'character',
                 controller: 'self',
-                location: ['province', Locations.Hand],
+                location: [Locations.Provinces, Locations.Hand],
                 gameAction: ability.actions.putIntoPlay()
             }
         });

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class KaiuInventor extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,11 +7,11 @@ class KaiuInventor extends DrawCard {
             title: 'Add an additional ability use to a holding',
             target: {
                 cardType: 'holding',
-                location: 'province',
+                location: Locations.Provinces,
                 controller: 'self',
                 gameAction: ability.actions.cardLastingEffect({
                     duration: 'untilEndOfPhase',
-                    targetLocation: 'province',
+                    targetLocation: Locations.Provinces,
                     effect: ability.effects.increaseLimitOnAbilities(1)
                 })
             },

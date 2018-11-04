@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class DaidojiNerishma extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class DaidojiNerishma extends DrawCard {
             title: 'Flip a card faceup',
             target: {
                 controller: 'self',
-                location: 'province',
+                location: Locations.Provinces,
                 cardCondition: card => card.isDynasty && card.facedown,
                 gameAction: ability.actions.flipDynasty()
             }

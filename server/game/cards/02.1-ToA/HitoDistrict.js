@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class HitoDistrict extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetLocation: 'province',
+            targetLocation: Locations.Provinces,
             condition: () => this.game.isDuringConflict('political'),
             match: (card, context) => card.isProvince && card.location === context.source.location,
             effect: ability.effects.cardCannot('initiateConflict')

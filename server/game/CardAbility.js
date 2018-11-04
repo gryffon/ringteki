@@ -36,10 +36,10 @@ class CardAbility extends ThenAbility {
     buildLocation(card, location) {
         const DefaultLocationForType = {
             event: Locations.Hand,
-            holding: 'province',
-            province: 'province',
+            holding: Locations.Provinces,
+            province: Locations.Provinces,
             role: 'role',
-            stronghold: 'stronghold province'
+            stronghold: Locations.StrongholdProvince
         };
 
         let defaultedLocation = location || DefaultLocationForType[card.getType()] || Locations.PlayArea;
@@ -48,9 +48,9 @@ class CardAbility extends ThenAbility {
             defaultedLocation = [defaultedLocation];
         }
 
-        if(defaultedLocation.some(location => location === 'province')) {
-            defaultedLocation = defaultedLocation.filter(location => location !== 'province');
-            defaultedLocation = defaultedLocation.concat(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']);
+        if(defaultedLocation.some(location => location === Locations.Provinces)) {
+            defaultedLocation = defaultedLocation.filter(location => location !== Locations.Provinces);
+            defaultedLocation = defaultedLocation.concat([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]);
         }
 
         return defaultedLocation;

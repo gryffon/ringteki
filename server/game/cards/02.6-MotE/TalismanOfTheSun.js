@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class TalismanOfTheSun extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,9 +12,9 @@ class TalismanOfTheSun extends DrawCard {
             handler: context => this.game.promptForSelect(context.player, {
                 context: context,
                 cardType: 'province',
-                location: 'province',
+                location: Locations.Provinces,
                 controller: 'self',
-                cardCondition: card => card !== this.game.currentConflict.conflictProvince && !card.isBroken && (card.location !== 'stronghold province' ||
+                cardCondition: card => card !== this.game.currentConflict.conflictProvince && !card.isBroken && (card.location !== Locations.StrongholdProvince ||
                                         _.size(this.game.provinceCards.filter(card => card.isBroken && card.controller === context.player)) > 2),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} moves the conflict to {1}', context.player, card);

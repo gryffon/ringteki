@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class MountaintopStatuary extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class MountaintopStatuary extends DrawCard {
                 onDynastyCardTurnedFaceup: (event, context) => event.card === context.source
             },
             effect: 'move it to their stronghold province',
-            gameAction: ability.actions.moveCard({ destination: 'stronghold province' })
+            gameAction: ability.actions.moveCard({ destination: Locations.StrongholdProvince })
         });
         this.action({
             title: 'Send a 2 or lower cost character home',

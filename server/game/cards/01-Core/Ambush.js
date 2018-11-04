@@ -12,7 +12,7 @@ class Ambush extends DrawCard {
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
                 cardType: 'character',
-                location: [Locations.Hand, 'province'],
+                location: [Locations.Hand, Locations.Provinces],
                 controller: 'self',
                 cardCondition: card => card.isFaction('scorpion'),
                 gameAction: ability.actions.putIntoConflict()

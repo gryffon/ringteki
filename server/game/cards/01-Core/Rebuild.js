@@ -6,7 +6,7 @@ class Rebuild extends DrawCard {
         this.action({
             title: 'Put a holding into play from your discard',
             cost: ability.costs.shuffleIntoDeck((card, context) =>
-                ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location) &&
+                [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince].includes(card.location) &&
                 !context.player.getProvinceCardInProvince(card.location).isBroken
             ),
             target: {

@@ -12,7 +12,7 @@ class SeppunIshikawa extends DrawCard {
         return this.game.allCards.reduce((sum, card) => {
             if(card !== source && card.controller === source.controller && card.hasTrait('imperial') && !card.facedown &&
                 (card.location === Locations.PlayArea || (card.isProvince && !card.isBroken) ||
-                (['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location) &&
+                ([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince].includes(card.location) &&
                  card.type === 'holding'))) {
                 return sum + 1;
             }

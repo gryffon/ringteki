@@ -91,11 +91,11 @@ class BaseCard extends EffectSource {
      * is both in play and not blank.
      */
     persistentEffect(properties) {
-        const allowedLocations = [Locations.Any, Locations.PlayArea, 'province'];
+        const allowedLocations = [Locations.Any, Locations.PlayArea, Locations.Provinces];
         const defaultLocationForType = {
-            province: 'province',
-            holding: 'province',
-            stronghold: 'province'
+            province: Locations.Provinces,
+            holding: Locations.Provinces,
+            stronghold: Locations.Provinces
         };
 
         let location = properties.location || defaultLocationForType[this.getType()] || Locations.PlayArea;
@@ -153,9 +153,9 @@ class BaseCard extends EffectSource {
     updateEffects(from = '', to = '') {
         const activeLocations = {
             'play area': [Locations.PlayArea],
-            'province': ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']
+            'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
         };
-        if(from === Locations.PlayArea || this.type === 'holding' && activeLocations['province'].includes(from) && !activeLocations['province'].includes(to)) {
+        if(from === Locations.PlayArea || this.type === 'holding' && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
             this.removeLastingEffects();
         }
         _.each(this.abilities.persistentEffects, effect => {
@@ -197,7 +197,7 @@ class BaseCard extends EffectSource {
         var menu = [];
 
         if(this.menu.isEmpty() || !this.game.manualMode ||
-                !['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province',Locations.PlayArea].includes(this.location)) {
+                ![Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince, Locations.PlayArea].includes(this.location)) {
             return undefined;
         }
 

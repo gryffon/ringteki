@@ -8,7 +8,7 @@ class FromTheShadows extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                location: ['province', Locations.Hand],
+                location: [Locations.Provinces, Locations.Hand],
                 controller: 'self',
                 cardCondition: (card) => card.hasTrait('shinobi'),
                 gameAction: ability.actions.putIntoConflict({ status: 'dishonored' })

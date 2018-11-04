@@ -1,5 +1,6 @@
 const Conflict = require('./conflict.js');
 const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
+const { Locations } = require('./Constants');
 
 class MenuCommands {
     static cardMenuClick(menuItem, game, player, card) {
@@ -61,7 +62,7 @@ class MenuCommands {
             case 'break':
                 game.addMessage('{0} {1} {2}', player, card.isBroken ? 'unbreaks' : 'breaks', card);
                 card.isBroken = card.isBroken ? false : true;
-                if(card.location === 'stronghold province' && card.isBroken) {
+                if(card.location === Locations.StrongholdProvince && card.isBroken) {
                     game.recordWinner(player.opponent, 'conquest');
                 }
                 break;

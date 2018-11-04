@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const BaseCard = require('./basecard.js');
+const { Locations } = require('./Constants');
 
 class ProvinceCard extends BaseCard {
     constructor(owner, cardData) {
@@ -64,7 +65,7 @@ class ProvinceCard extends BaseCard {
         this.isBroken = true;
         if(this.controller.opponent) {
             this.game.addMessage('{0} has broken {1}!', this.controller.opponent, this);
-            if(this.location === 'stronghold province') {
+            if(this.location === Locations.StrongholdProvince) {
                 this.game.recordWinner(this.controller.opponent, 'conquest');
             } else {
                 let dynastyCard = this.controller.getDynastyCardInProvince(this.location);

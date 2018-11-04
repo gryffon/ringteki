@@ -1,9 +1,10 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Locations } = require('../../Constants');
 
 class DemonstratingExcellence extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetLocation: 'province',
+            targetLocation: Locations.Provinces,
             condition: context => context.player.role && context.player.role.hasTrait('air'),
             effect: ability.effects.modifyProvinceStrength(2)
         });

@@ -12,7 +12,7 @@ class IkomaEiji extends DrawCard {
             gameAction: ability.actions.putIntoPlay(context => ({
                 promptForSelect: {
                     cardType: 'character',
-                    location: ['province', Locations.DynastyDiscardPile],
+                    location: [Locations.Provinces, Locations.DynastyDiscardPile],
                     controller: 'self',
                     cardCondition: card => card.hasTrait('bushi') && card.costLessThan(4),
                     message: '{0} puts {1} into play with {2}\'s ability',

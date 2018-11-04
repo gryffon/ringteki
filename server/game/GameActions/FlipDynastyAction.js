@@ -1,4 +1,6 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
+
 
 class FlipDynastyAction extends CardGameAction {
     setup() {
@@ -9,7 +11,7 @@ class FlipDynastyAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && card.isDynasty && card.facedown) {
+        if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location) && card.isDynasty && card.facedown) {
             return super.canAffect(card, context);
         }
         return false;

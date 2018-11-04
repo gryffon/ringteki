@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class AkodoToshiro extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class AkodoToshiro extends DrawCard {
                 ability.actions.cardLastingEffect({ effect: ability.effects.modifyMilitarySkill(5) }),
                 ability.actions.cardLastingEffect(() => ({
                     target: this.game.provinceCards,
-                    targetLocation: 'province',
+                    targetLocation: Locations.Provinces,
                     effect: ability.effects.cardCannot('break')
                 })),
                 ability.actions.delayedEffect(context => ({

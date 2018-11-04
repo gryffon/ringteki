@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class PeasantsAdvice extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class PeasantsAdvice extends DrawCard {
             cost: ability.costs.dishonor(() => true),
             target: {
                 cardType: 'province',
-                location: 'province',
+                location: Locations.Provinces,
                 gameAction: ability.actions.sequentialAction([
                     ability.actions.lookAt(),
                     ability.actions.returnToDeck(context => ({

@@ -13,7 +13,7 @@ const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
 const { Locations } = require('./Constants');
-const provinceLocations = ['stronghold province', 'province 1', 'province 2', 'province 3', 'province 4'];
+const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
     constructor(id, user, owner, game, clockdetails) {
@@ -64,10 +64,10 @@ class Player extends GameObject {
         this.costReducers = [];
         this.playableLocations = [
             new PlayableLocation('playFromHand', this, Locations.Hand),
-            new PlayableLocation('playFromProvince', this, 'province 1'),
-            new PlayableLocation('playFromProvince', this, 'province 2'),
-            new PlayableLocation('playFromProvince', this, 'province 3'),
-            new PlayableLocation('playFromProvince', this, 'province 4')
+            new PlayableLocation('playFromProvince', this, Locations.ProvinceOne),
+            new PlayableLocation('playFromProvince', this, Locations.ProvinceTwo),
+            new PlayableLocation('playFromProvince', this, Locations.ProvinceThree),
+            new PlayableLocation('playFromProvince', this, Locations.ProvinceFour)
         ];
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings
@@ -234,7 +234,7 @@ class Player extends GameObject {
      * @param {Function} predicate - DrawCard => Boolean
      */
     anyCardsInPlay(predicate) {
-        return this.game.allCards.any(card => card.controller === this && card.location === 'play area' && predicate(card));
+        return this.game.allCards.any(card => card.controller === this && card.location === Locations.PlayArea && predicate(card));
     }
 
     /**
@@ -242,7 +242,7 @@ class Player extends GameObject {
      * @param {Function} predicate  - DrawCard => Boolean
      */
     filterCardsInPlay(predicate) {
-        return this.game.allCards.filter(card => card.controller === this && card.location === 'play area' && predicate(card));
+        return this.game.allCards.filter(card => card.controller === this && card.location === Locations.PlayArea && predicate(card));
     }
 
     /**
@@ -251,7 +251,7 @@ class Player extends GameObject {
      */
     getNumberOfCardsInPlay(predicate) {
         return this.game.allCards.reduce((num, card) => {
-            if(card.controller === this && card.location === 'play area' && predicate(card)) {
+            if(card.controller === this && card.location === Locations.PlayArea && predicate(card)) {
                 return num + 1;
             }
 
@@ -603,17 +603,17 @@ class Player extends GameObject {
                 return this.dynastyDiscardPile;
             case 'removed from game':
                 return this.removedFromGame;
-            case 'play area':
+            case Locations.PlayArea:
                 return this.cardsInPlay;
-            case 'province 1':
+            case Locations.ProvinceOne:
                 return this.provinceOne;
-            case 'province 2':
+            case Locations.ProvinceTwo:
                 return this.provinceTwo;
-            case 'province 3':
+            case Locations.ProvinceThree:
                 return this.provinceThree;
-            case 'province 4':
+            case Locations.ProvinceFour:
                 return this.provinceFour;
-            case 'stronghold province':
+            case Locations.StrongholdProvince:
                 return this.strongholdProvince;
             case 'province deck':
                 return this.provinceDeck;
@@ -653,22 +653,22 @@ class Player extends GameObject {
             case 'removed from game':
                 this.removedFromGame = targetList;
                 break;
-            case 'play area':
+            case Locations.PlayArea:
                 this.cardsInPlay = targetList;
                 break;
-            case 'province 1':
+            case Locations.ProvinceOne:
                 this.provinceOne = targetList;
                 break;
-            case 'province 2':
+            case Locations.ProvinceTwo:
                 this.provinceTwo = targetList;
                 break;
-            case 'province 3':
+            case Locations.ProvinceThree:
                 this.provinceThree = targetList;
                 break;
-            case 'province 4':
+            case Locations.ProvinceFour:
                 this.provinceFour = targetList;
                 break;
-            case 'stronghold province':
+            case Locations.StrongholdProvince:
                 this.strongholdProvince = targetList;
                 break;
             case 'province deck':
@@ -702,7 +702,7 @@ class Player extends GameObject {
         }
 
         let display = 'a card';
-        if(!card.facedown && source !== Locations.Hand || ['play area', Locations.DynastyDiscardPile, Locations.ConflictDiscardPile, 'removed from game'].includes(target)) {
+        if(!card.facedown && source !== Locations.Hand || [Locations.PlayArea, Locations.DynastyDiscardPile, Locations.ConflictDiscardPile, 'removed from game'].includes(target)) {
             display = card;
         }
 
@@ -724,13 +724,13 @@ class Player extends GameObject {
 
         const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, 'removed from game'];
         const legalLocations = {
-            stronghold: ['stronghold province'],
+            stronghold: [Locations.StrongholdProvince],
             role: ['role'],
             province: [...provinceLocations, 'province deck'],
             holding: [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, 'removed from game'],
-            character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, 'play area'],
+            character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.PlayArea],
             event: [...conflictCardLocations, 'being played'],
-            attachment: [...conflictCardLocations, 'play area']
+            attachment: [...conflictCardLocations, Locations.PlayArea]
         };
 
         return legalLocations[card.type] && legalLocations[card.type].includes(location);
@@ -866,7 +866,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === 'play area' || (card.type === 'holding' && provinceLocations.includes(location))) {
+        if(location === Locations.PlayArea || (card.type === 'holding' && provinceLocations.includes(location))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;
@@ -881,7 +881,7 @@ class Player extends GameObject {
 
             card.leavesPlay();
             card.controller = this;
-        } else if(targetLocation === 'play area') {
+        } else if(targetLocation === Locations.PlayArea) {
             card.setDefaultController(this);
             card.controller = this;
             // This should only be called when an attachment is dragged into play

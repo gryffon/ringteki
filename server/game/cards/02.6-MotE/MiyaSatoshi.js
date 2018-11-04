@@ -22,7 +22,7 @@ class MiyaSatoshi extends DrawCard {
                 this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a card to discard',
                     context: context,
-                    location: 'province',
+                    location: Locations.Provinces,
                     controller: 'self',
                     cardCondition: card => card.isDynasty,
                     onSelect: (player, card) => {
