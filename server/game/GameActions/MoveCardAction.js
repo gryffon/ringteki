@@ -16,7 +16,7 @@ class MoveCardAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location === 'play area' || !card.controller.getSourceList(this.destination)) {
+        if(card.location === Locations.PlayArea || !card.controller.getSourceList(this.destination)) {
             return false;
         }
         return super.canAffect(card, context);

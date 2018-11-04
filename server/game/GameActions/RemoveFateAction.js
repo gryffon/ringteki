@@ -1,5 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const MoveFateEvent = require('../Events/MoveFateEvent');
+const { Locations } = require('../Constants');
 
 class RemoveFateAction extends CardGameAction {
     setDefaultProperties() {
@@ -22,7 +23,7 @@ class RemoveFateAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || card.fate === 0 || card.type !== 'character' || this.amount === 0) {
+        if(card.location !== Locations.PlayArea || card.fate === 0 || card.type !== 'character' || this.amount === 0) {
             return false;
         }
         return super.canAffect(card, context) && this.checkRecipient(context);

@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class LastingEffectCardAction extends CardGameAction {
     setDefaultProperties() {
@@ -31,7 +32,7 @@ class LastingEffectCardAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' && this.targetLocation !== 'province') {
+        if(card.location !== Locations.PlayArea && this.targetLocation !== 'province') {
             return false;
         }
         if(!this.effect.some(effect => effect.effect.canBeApplied(card))) {

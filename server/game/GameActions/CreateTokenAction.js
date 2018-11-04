@@ -1,5 +1,7 @@
 const CardGameAction = require('./CardGameAction');
 const DiscardFromPlayAction = require('./DiscardFromPlayAction');
+const { Locations } = require('../Constants');
+
 class CreateTokenAction extends CardGameAction {
     setup() {
         this.name = 'createToken';
@@ -22,7 +24,7 @@ class CreateTokenAction extends CardGameAction {
             card.owner.removeCardFromPile(card);
             context.refillProvince(card.owner, card.location);
             card.moveTo('spirit of the river');
-            card.owner.moveCard(token, 'play area');
+            card.owner.moveCard(token, Locations.PlayArea);
             if(context.player.isAttackingPlayer()) {
                 context.game.currentConflict.addAttacker(token);
             } else {

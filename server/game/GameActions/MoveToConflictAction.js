@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class MoveToConflictAction extends CardGameAction {
     setup() {
@@ -21,7 +22,7 @@ class MoveToConflictAction extends CardGameAction {
         } else if(!card.canParticipateAsDefender()) {
             return false;
         }
-        return card.location === 'play area';
+        return card.location === Locations.PlayArea;
     }
 
     getEvent(card, context) {

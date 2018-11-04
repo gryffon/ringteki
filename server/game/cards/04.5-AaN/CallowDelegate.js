@@ -9,7 +9,6 @@ class CallowDelegate extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                location: 'play area',
                 controller: 'self',
                 gameAction: ability.actions.honor()
             }

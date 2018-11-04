@@ -1,5 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
+const { Locations } = require('../Constants');
 
 class DiscardFromPlayAction extends CardGameAction {
     constructor(propertyFactory, isSacrifice = false) {
@@ -18,7 +19,7 @@ class DiscardFromPlayAction extends CardGameAction {
             if(!card.location.includes('province')) {
                 return false;
             }
-        } else if(card.location !== 'play area') {
+        } else if(card.location !== Locations.PlayArea) {
             return false;
         }
         return super.canAffect(card, context);

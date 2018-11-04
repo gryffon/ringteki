@@ -13,7 +13,7 @@ class CardEffect extends Effect {
         }
         super(game, source, properties, effect);
         this.targetController = properties.targetController || 'current';
-        this.targetLocation = properties.targetLocation || 'play area';
+        this.targetLocation = properties.targetLocation || Locations.PlayArea;
     }
 
     isValidTarget(target) {
@@ -35,7 +35,7 @@ class CardEffect extends Effect {
             let cards = this.game.allCards.filter(card =>
                 ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location));
             return cards.filter(card => this.match(card, this.context));
-        } else if(this.targetLocation === 'play area') {
+        } else if(this.targetLocation === Locations.PlayArea) {
             return this.game.findAnyCardsInPlay(card => this.match(card, this.context));
         }
         return this.game.allCards.filter(card => this.match(card, this.context) && card.location === this.targetLocation);

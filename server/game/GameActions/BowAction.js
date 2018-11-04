@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class BowAction extends CardGameAction {
     setup() {
@@ -9,7 +10,7 @@ class BowAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' && card.type !== 'stronghold' || card.bowed) {
+        if(card.location !== Locations.PlayArea && card.type !== 'stronghold' || card.bowed) {
             return false;
         }
         return super.canAffect(card, context);

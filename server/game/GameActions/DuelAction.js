@@ -1,6 +1,7 @@
 const CardGameAction = require('./CardGameAction');
 const Duel = require('../Duel.js');
 const DuelFlow = require('../gamesteps/DuelFlow.js');
+const { Locations } = require('../Constants');
 
 class DuelAction extends CardGameAction {
     setDefaultProperties() {
@@ -23,7 +24,7 @@ class DuelAction extends CardGameAction {
         if(!super.canAffect(card, context)) {
             return false;
         }
-        return this.challenger && !this.challenger.hasDash(this.type) && card.location === 'play area' && !card.hasDash(this.type);
+        return this.challenger && !this.challenger.hasDash(this.type) && card.location === Locations.PlayArea && !card.hasDash(this.type);
     }
 
     resolveDuel(winner, loser) {
@@ -37,7 +38,7 @@ class DuelAction extends CardGameAction {
     getEvent(card, context) {
         this.context = context;
         return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
-            if(this.challenger.location !== 'play area' || card.location !== 'play area') {
+            if(this.challenger.location !== Locations.PlayArea || card.location !== Locations.PlayArea) {
                 context.game.addMessage('The duel cannot proceed as one participant is no longer in play');
                 return;
             }

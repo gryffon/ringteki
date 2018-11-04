@@ -42,7 +42,7 @@ class CardAbility extends ThenAbility {
             stronghold: 'stronghold province'
         };
 
-        let defaultedLocation = location || DefaultLocationForType[card.getType()] || 'play area';
+        let defaultedLocation = location || DefaultLocationForType[card.getType()] || Locations.PlayArea;
 
         if(!Array.isArray(defaultedLocation)) {
             defaultedLocation = [defaultedLocation];

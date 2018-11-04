@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class DishonorAction extends CardGameAction {
     setup() {
@@ -9,7 +10,7 @@ class DishonorAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || card.type !== 'character' || card.isDishonored) {
+        if(card.location !== Locations.PlayArea || card.type !== 'character' || card.isDishonored) {
             return false;
         } else if(!card.isHonored && !card.checkRestrictions('becomeDishonored', context)) {
             return false;

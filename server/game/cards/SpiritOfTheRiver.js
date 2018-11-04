@@ -1,5 +1,5 @@
 const DrawCard = require('../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations } = require('../Constants');
 
 class SpiritOfTheRiver extends DrawCard {
     constructor(facedownCard) {

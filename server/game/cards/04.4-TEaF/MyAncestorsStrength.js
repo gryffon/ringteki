@@ -11,7 +11,6 @@ class MyAncestorsStrength extends DrawCard {
                     activePromptTitle: 'Choose a shugenja character',
                     cardType: 'character',
                     controller: 'self',
-                    location: 'play area',
                     cardCondition: card => card.hasTrait('shugenja') && card.isParticipating()
                 },
                 ancestor: {

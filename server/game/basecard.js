@@ -91,14 +91,14 @@ class BaseCard extends EffectSource {
      * is both in play and not blank.
      */
     persistentEffect(properties) {
-        const allowedLocations = [Locations.Any, 'play area', 'province'];
+        const allowedLocations = [Locations.Any, Locations.PlayArea, 'province'];
         const defaultLocationForType = {
             province: 'province',
             holding: 'province',
             stronghold: 'province'
         };
 
-        let location = properties.location || defaultLocationForType[this.getType()] || 'play area';
+        let location = properties.location || defaultLocationForType[this.getType()] || Locations.PlayArea;
         if(!allowedLocations.includes(location)) {
             throw new Error(`'${location}' is not a supported effect location.`);
         }
@@ -152,10 +152,10 @@ class BaseCard extends EffectSource {
 
     updateEffects(from = '', to = '') {
         const activeLocations = {
-            'play area': ['play area'],
+            'play area': [Locations.PlayArea],
             'province': ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']
         };
-        if(from === 'play area' || this.type === 'holding' && activeLocations['province'].includes(from) && !activeLocations['province'].includes(to)) {
+        if(from === Locations.PlayArea || this.type === 'holding' && activeLocations['province'].includes(from) && !activeLocations['province'].includes(to)) {
             this.removeLastingEffects();
         }
         _.each(this.abilities.persistentEffects, effect => {
@@ -174,7 +174,7 @@ class BaseCard extends EffectSource {
 
         this.location = targetLocation;
 
-        if(['play area', Locations.ConflictDiscardPile, Locations.DynastyDiscardPile, Locations.Hand].includes(targetLocation)) {
+        if([Locations.PlayArea, Locations.ConflictDiscardPile, Locations.DynastyDiscardPile, Locations.Hand].includes(targetLocation)) {
             this.facedown = false;
         }
 
@@ -197,7 +197,7 @@ class BaseCard extends EffectSource {
         var menu = [];
 
         if(this.menu.isEmpty() || !this.game.manualMode ||
-                !['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province','play area'].includes(this.location)) {
+                !['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province',Locations.PlayArea].includes(this.location)) {
             return undefined;
         }
 
@@ -206,7 +206,7 @@ class BaseCard extends EffectSource {
         }
 
         menu.push({ command: 'click', text: 'Select Card' });
-        if(this.location === 'play area' || this.isProvince || this.isStronghold) {
+        if(this.location === Locations.PlayArea || this.isProvince || this.isStronghold) {
             menu = menu.concat(this.menu.value());
         }
 

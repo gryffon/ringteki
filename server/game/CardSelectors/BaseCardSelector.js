@@ -15,7 +15,7 @@ class BaseCardSelector {
     }
 
     buildLocation(property) {
-        let location = property || 'play area';
+        let location = property || Locations.PlayArea;
         if(!Array.isArray(location)) {
             location = [location];
         }
@@ -43,7 +43,7 @@ class BaseCardSelector {
         if(this.controller !== 'opponent') {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.getSourceList(location).toArray();
-                if(location === 'play area') {
+                if(location === Locations.PlayArea) {
                     return array.concat(cards, attachments.filter(card => card.controller === context.player));
                 }
                 return array.concat(cards);
@@ -52,7 +52,7 @@ class BaseCardSelector {
         if(this.controller !== 'self' && context.player.opponent) {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.opponent.getSourceList(location).toArray();
-                if(location === 'play area') {
+                if(location === Locations.PlayArea) {
                     return array.concat(cards, attachments.filter(card => card.controller === context.player.opponent));
                 }
                 return array.concat(cards);

@@ -139,7 +139,7 @@ class DrawCard extends BaseCard {
 
     anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (
-            card.location === 'play area' &&
+            card.location === Locations.PlayArea &&
             card.name === this.name &&
             card !== this &&
             (card.owner === player || card.controller === player || card.owner === this.owner)
@@ -429,7 +429,7 @@ class DrawCard extends BaseCard {
     }
 
     getActions(player, location = this.location) {
-        if(location === 'play area') {
+        if(location === Locations.PlayArea) {
             return super.getActions();
         }
         let actions = [];
@@ -500,12 +500,12 @@ class DrawCard extends BaseCard {
 
     canDeclareAsAttacker(conflictType = this.game.currentConflict.conflictType) {
         return (this.allowGameAction('declareAsAttacker') && this.canParticipateAsAttacker(conflictType) &&
-                this.location === 'play area' && !this.bowed);
+                this.location === Locations.PlayArea && !this.bowed);
     }
 
     canDeclareAsDefender(conflictType = this.game.currentConflict.conflictType) {
         return (this.allowGameAction('declareAsDefender') && this.canParticipateAsDefender(conflictType) &&
-                this.location === 'play area' && !this.bowed && !this.covert);
+                this.location === Locations.PlayArea && !this.bowed && !this.covert);
     }
 
     canParticipateAsAttacker(conflictType = this.game.currentConflict.conflictType) {
@@ -527,7 +527,7 @@ class DrawCard extends BaseCard {
     }
 
     getModifiedController() {
-        if(this.location === 'play area') {
+        if(this.location === Locations.PlayArea) {
             return this.mostRecentEffect('takeControl') || this.defaultController;
         }
         return this.owner;

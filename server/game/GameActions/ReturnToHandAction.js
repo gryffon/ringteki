@@ -4,7 +4,7 @@ const { Locations } = require('../Constants');
 
 class ReturnToHandAction extends CardGameAction {
     setDefaultProperties() {
-        this.location = 'play area';
+        this.location = Locations.PlayArea;
     }
 
     setup() {
@@ -22,7 +22,7 @@ class ReturnToHandAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        if(this.location === 'play area') {
+        if(this.location === Locations.PlayArea) {
             return new LeavesPlayEvent({ context: context, destination: Locations.Hand }, card, this);
         }
         return super.createEvent('onMoveCard', { card: card, context: context }, () => card.owner.moveCard(card, Locations.Hand));

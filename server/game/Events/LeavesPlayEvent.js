@@ -21,7 +21,7 @@ class LeavesPlayEvent extends Event {
         if(this.card.attachments) {
             this.card.attachments.each(attachment => {
                 // we only need to add events for attachments that are in play.
-                if(attachment.location === 'play area') {
+                if(attachment.location === Locations.PlayArea) {
                     contingentEvents.push(new LeavesPlayEvent({
                         order: this.order - 1,
                         destination: attachment.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile,
