@@ -41,7 +41,7 @@ class TestOfSkill extends DrawCard {
             cannotBeMirrored: true,
             effect: 'take cards into their hand',
             handler: context => {
-                let [matchingCards, cardsToDiscard] = _.partition(context.costs.reveal, card => card.type === context.costs.testOfSkillCost && card.location === 'conflict deck');
+                let [matchingCards, cardsToDiscard] = _.partition(context.costs.reveal, card => card.type === context.costs.testOfSkillCost && card.location === Locations.ConflictDeck);
                 //Handle situations where card is played from deck, such as with pillow book
                 matchingCards = _.reject(matchingCards, c=> c.uuid === context.source.uuid);
 

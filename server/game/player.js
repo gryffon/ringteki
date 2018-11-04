@@ -356,7 +356,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their conflict deck', this);
         }
-        this.game.emitEvent('onDeckShuffled', { player: this, deck: 'conflict deck' });
+        this.game.emitEvent('onDeckShuffled', { player: this, deck: Locations.ConflictDeck });
         this.conflictDeck = _(this.conflictDeck.shuffle());
     }
 
@@ -367,7 +367,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their dynasty deck', this);
         }
-        this.game.emitEvent('onDeckShuffled', { player: this, deck: 'dynasty deck' });
+        this.game.emitEvent('onDeckShuffled', { player: this, deck: Locations.DynastyDeck });
         this.dynastyDeck = _(this.dynastyDeck.shuffle());
     }
 
@@ -593,9 +593,9 @@ class Player extends GameObject {
         switch(source) {
             case Locations.Hand:
                 return this.hand;
-            case 'conflict deck':
+            case Locations.ConflictDeck:
                 return this.conflictDeck;
-            case 'dynasty deck':
+            case Locations.DynastyDeck:
                 return this.dynastyDeck;
             case 'conflict discard pile':
                 return this.conflictDiscardPile;
@@ -638,10 +638,10 @@ class Player extends GameObject {
             case Locations.Hand:
                 this.hand = targetList;
                 break;
-            case 'conflict deck':
+            case Locations.ConflictDeck:
                 this.conflictDeck = targetList;
                 break;
-            case 'dynasty deck':
+            case Locations.DynastyDeck:
                 this.dynastyDeck = targetList;
                 break;
             case 'conflict discard pile':
@@ -722,13 +722,13 @@ class Player extends GameObject {
         }
 
 
-        const conflictCardLocations = [Locations.Hand, 'conflict deck', 'conflict discard pile', 'removed from game'];
+        const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, 'conflict discard pile', 'removed from game'];
         const legalLocations = {
             stronghold: ['stronghold province'],
             role: ['role'],
             province: [...provinceLocations, 'province deck'],
-            holding: [...provinceLocations, 'dynasty deck', 'dynasty discard pile', 'removed from game'],
-            character: [...provinceLocations, ...conflictCardLocations, 'dynasty deck', 'dynasty discard pile', 'play area'],
+            holding: [...provinceLocations, Locations.DynastyDeck, 'dynasty discard pile', 'removed from game'],
+            character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, 'dynasty discard pile', 'play area'],
             event: [...conflictCardLocations, 'being played'],
             attachment: [...conflictCardLocations, 'play area']
         };
@@ -899,14 +899,14 @@ class Player extends GameObject {
         card.moveTo(targetLocation);
 
         if(provinceLocations.includes(targetLocation)) {
-            if(['dynasty deck', 'province deck'].includes(location)) {
+            if([Locations.DynastyDeck, 'province deck'].includes(location)) {
                 card.facedown = true;
             }
             if(!this.takenDynastyMulligan && card.isDynasty) {
                 card.facedown = false;
             }
             targetPile.push(card);
-        } else if(['conflict deck', 'dynasty deck'].includes(targetLocation) && !options.bottom) {
+        } else if([Locations.ConflictDeck, Locations.DynastyDeck].includes(targetLocation) && !options.bottom) {
             targetPile.unshift(card);
         } else if(['conflict discard pile', 'dynasty discard pile', 'removed from game'].includes(targetLocation)) {
             // new cards go on the top of the discard pile
@@ -917,12 +917,6 @@ class Player extends GameObject {
         /*
         if(['conflict discard pile', 'dynasty discard pile'].includes(targetLocation)) {
             this.game.raiseEvent('onCardPlaced', { card: card, location: targetLocation });
-        }
-        */
-        // Replace a card which has been played, put into play or discarded from a province
-        /*
-        if(card.isDynasty && provinceLocations.includes(location) && targetLocation !== 'dynasty deck') {
-            this.replaceDynastyCard(location);
         }
         */
     }

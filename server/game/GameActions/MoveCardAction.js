@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class MoveCardAction extends CardGameAction {
     setDefaultProperties() {
@@ -31,9 +32,9 @@ class MoveCardAction extends CardGameAction {
             }
             context.player.moveCard(card, this.destination);
             if(this.shuffle) {
-                if(this.destination === 'conflict deck') {
+                if(this.destination === Locations.ConflictDeck) {
                     context.player.shuffleConflictDeck();
-                } else if(this.destination === 'dynasty deck') {
+                } else if(this.destination === Locations.DynastyDeck) {
                     context.player.shuffleDynastyDeck();
                 }
             } else if(this.faceup) {

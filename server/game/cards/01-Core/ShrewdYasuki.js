@@ -19,7 +19,7 @@ class ShrewdYasuki extends DrawCard {
                     cardHandler: card => {
                         this.game.addMessage('{0} takes one card to their hand and puts the other on the bottom of their deck', context.player);
                         context.player.moveCard(card, Locations.Hand);
-                        this.game.queueSimpleStep(() => context.player.moveCard(context.player.conflictDeck.first(), 'conflict deck', { bottom: true }));
+                        this.game.queueSimpleStep(() => context.player.moveCard(context.player.conflictDeck.first(), Locations.ConflictDeck, { bottom: true }));
                     }
                 });
             }
