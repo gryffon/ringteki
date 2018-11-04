@@ -725,7 +725,7 @@ class Player extends GameObject {
         const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, Locations.RemovedFromGame];
         const legalLocations = {
             stronghold: [Locations.StrongholdProvince],
-            role: ['role'],
+            role: [Locations.Role],
             province: [...provinceLocations, Locations.ProvinceDeck],
             holding: [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame],
             character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.PlayArea],

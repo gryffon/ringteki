@@ -38,7 +38,7 @@ class CardAbility extends ThenAbility {
             event: Locations.Hand,
             holding: Locations.Provinces,
             province: Locations.Provinces,
-            role: 'role',
+            role: Locations.Role,
             stronghold: Locations.StrongholdProvince
         };
 

@@ -14,7 +14,8 @@ const Locations = {
     StrongholdProvince: 'stronghold province',
     ProvinceDeck: 'province deck',
     RemovedFromGame: 'removed from game',
-    BeingPlayed: 'being played'
+    BeingPlayed: 'being played',
+    Role: 'role'
 };
 
 module.exports = {

@@ -55,7 +55,7 @@ class SetupPhase extends Phase {
         _.each(this.game.getPlayers(), player => {
             player.moveCard(player.stronghold, Locations.StrongholdProvince);
             if(player.role) {
-                player.role.moveTo('role');
+                player.role.moveTo(Locations.Role);
             }
         });
     }
