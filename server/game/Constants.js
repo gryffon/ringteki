@@ -23,7 +23,15 @@ const Decks = {
     DynastyDeck: 'dynasty deck'
 };
 
+const Stages = {
+    Cost: 'cost',
+    Effect: 'effect',
+    PreTarget: 'pretarget',
+    Target: 'target'
+};
+
 module.exports = {
     Locations,
-    Decks
+    Decks,
+    Stages
 };

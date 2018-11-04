@@ -2,7 +2,7 @@ const _ = require('underscore');
 
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
-const { Locations } = require('../Constants');
+const { Locations, Stages } = require('../Constants');
 
 class AbilityResolver extends BaseStepWithPipeline {
     constructor(game, context) {
@@ -39,7 +39,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.context.stage = 'pretarget';
+        this.context.stage = Stages.PreTarget;
         if(!this.context.ability.cannotTargetFirst) {
             this.targetResults = this.context.ability.resolveTargets(this.context);
         }
@@ -61,7 +61,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             cancelled: false,
             canCancel: this.canCancel
         };
-        this.context.stage = 'costs';
+        this.context.stage = Stages.Cost;
         this.context.ability.resolveCosts(this.context, this.canPayResults);
     }
 
@@ -93,7 +93,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.context.stage = 'target';
+        this.context.stage = Stages.Target;
 
 
         if(!this.context.ability.hasLegalTargets(this.context)) {
@@ -142,7 +142,7 @@ class AbilityResolver extends BaseStepWithPipeline {
     }
 
     executeHandler() {
-        this.context.stage = 'effect';
+        this.context.stage = Stages.Effect;
         this.context.ability.executeHandler(this.context);
     }
 }
