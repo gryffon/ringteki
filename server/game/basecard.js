@@ -6,7 +6,7 @@ const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 const TriggeredAbility = require('./triggeredability');
 
-const { Locations } = require('./Constants');
+const { Locations, EffectNames } = require('./Constants');
 
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
@@ -108,20 +108,20 @@ class BaseCard extends EffectSource {
 
     hasTrait(trait) {
         trait = trait.toLowerCase();
-        return this.traits.includes(trait) || this.getEffects('addTrait').includes(trait);
+        return this.traits.includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);
     }
 
     getTraits() {
-        let traits = this.traits.concat(this.getEffects('addTrait'));
+        let traits = this.traits.concat(this.getEffects(EffectNames.AddTrait));
         return _.uniq(traits);
     }
 
     isFaction(faction) {
         faction = faction.toLowerCase();
         if(faction === 'neutral') {
-            return this.printedFaction === faction && !this.anyEffect('addFaction');
+            return this.printedFaction === faction && !this.anyEffect(EffectNames.AddFaction);
         }
-        return this.printedFaction === faction || this.getEffects('addFaction').includes(faction);
+        return this.printedFaction === faction || this.getEffects(EffectNames.AddFaction).includes(faction);
     }
 
     applyAnyLocationPersistentEffects() {
@@ -190,7 +190,7 @@ class BaseCard extends EffectSource {
     }
 
     getModifiedLimitMax(max) {
-        return this.sumEffects('increaseLimitOnAbilities') + max;
+        return this.sumEffects(EffectNames.IncreaseLimitOnAbilities) + max;
     }
 
     getMenu() {
@@ -234,7 +234,7 @@ class BaseCard extends EffectSource {
     }
 
     isBlank() {
-        return this.anyEffect('blank');
+        return this.anyEffect(EffectNames.Blank);
     }
 
     getPrintedFaction() {
@@ -279,11 +279,11 @@ class BaseCard extends EffectSource {
     }
 
     readiesDuringReadyPhase() {
-        return !this.anyEffect('doesNotReady');
+        return !this.anyEffect(EffectNames.DoesNotReady);
     }
 
     hideWhenFacedown() {
-        return !this.anyEffect('canBeSeenWhenFacedown');
+        return !this.anyEffect(EffectNames.CanBeSeenWhenFacedown);
     }
 
     createSnapshot() {

@@ -2,6 +2,7 @@ const _ = require('underscore');
 const GameObject = require('./GameObject');
 const Player = require('./player.js');
 const Settings = require('../settings.js');
+const { EffectNames } = require('./Constants');
 
 class Conflict extends GameObject {
     constructor(game, attackingPlayer, defendingPlayer, ring = null, conflictProvince = null) {
@@ -31,7 +32,7 @@ class Conflict extends GameObject {
     }
 
     get maxAllowedDefenders() {
-        let effects = this.getEffects('restrictNumberOfDefenders');
+        let effects = this.getEffects(EffectNames.RestrictNumberOfDefenders);
         return effects.length === 0 ? -1 : Math.min(...effects);
     }
 
@@ -91,7 +92,7 @@ class Conflict extends GameObject {
     }
 
     get elementsToResolve() {
-        return this.sumEffects('modifyConflictElementsToResolve') + 1;
+        return this.sumEffects(EffectNames.ModifyConflictElementsToResolve) + 1;
     }
 
     switchType() {
@@ -180,7 +181,7 @@ class Conflict extends GameObject {
         if(predicate) {
             return characters.filter(predicate).length;
         }
-        return characters.length + player.sumEffects('additionalCharactersInConflict');
+        return characters.length + player.sumEffects(EffectNames.AdditionalCharactersInConflict);
     }
 
     hasMoreParticipants(player, predicate) {
@@ -200,7 +201,7 @@ class Conflict extends GameObject {
             return stateChanged;
         }
 
-        let additionalCharacters = this.getEffects('contribute');
+        let additionalCharacters = this.getEffects(EffectNames.ContributeToConflict);
         let additionalAttackers = additionalCharacters.filter(card => card.controller === this.attackingPlayer);
         let additionalDefenders = additionalCharacters.filter(card => card.controller === this.defendingPlayer);
         this.attackerSkill = this.calculateSkillFor(this.attackers.concat(additionalAttackers)) + this.attackingPlayer.skillModifier;
@@ -215,7 +216,7 @@ class Conflict extends GameObject {
     }
 
     calculateSkillFor(cards) {
-        let skillFunction = this.mostRecentEffect('skillFunction') || (card => card.getSkill(this.conflictType));
+        let skillFunction = this.mostRecentEffect(EffectNames.ChangeConflictSkillFunction) || (card => card.getSkill(this.conflictType));
         return cards.reduce((sum, card) => {
             if(card.bowed || !card.allowGameAction('countForResolution')) {
                 return sum;

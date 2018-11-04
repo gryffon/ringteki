@@ -1,14 +1,15 @@
 const _ = require('underscore');
+const { EffectNames } = require('../Constants');
 
 const binaryCardEffects = [
-    'blank',
-    'canBeSeenWhenFacedown',
-    'cannotParticipateAsAttacker',
-    'cannotParticipateAsDefender',
-    'abilityRestrictions',
-    'doesNotBow',
-    'doesNotReady',
-    'showTopConflictCard'
+    EffectNames.Blank,
+    EffectNames.CanBeSeenWhenFacedown,
+    EffectNames.CannotParticipateAsAttacker,
+    EffectNames.CannotParticipateAsDefender,
+    EffectNames.AbilityRestrictions,
+    EffectNames.DoesNotBow,
+    EffectNames.DoesNotReady,
+    EffectNames.ShowTopConflictCard
 ];
 
 const hasDash = {
@@ -27,19 +28,19 @@ const hasDash = {
 };
 
 const conflictingEffects = {
-    modifyBaseMilitarySkill: card => card.effects.filter(effect => effect.type === 'setBaseMilitarySkill'),
-    modifyBasePoliticalSkill: card => card.effects.filter(effect => effect.type === 'setBasePoliticalSkill'),
-    modifyGlory: card => card.effects.filter(effect => effect.type === 'setGlory'),
-    modifyMilitarySkill: card => card.effects.filter(effect => effect.type === 'setMilitarySkill'),
-    modifyMilitarySkillMultiplier: card => card.effects.filter(effect => effect.type === 'setMilitarySkill'),
-    modifyPoliticalSkill: card => card.effects.filter(effect => effect.type === 'setPoliticalSkill'),
-    modifyPoliticalSkillMultiplier: card => card.effects.filter(effect => effect.type === 'setPoliticalSkill'),
-    setBaseMilitarySkill: card => card.effects.filter(effect => effect.type === 'setMilitarySkill'),
-    setBasePoliticalSkill: card => card.effects.filter(effect => effect.type === 'setPoliticalSkill'),
+    modifyBaseMilitarySkill: card => card.effects.filter(effect => effect.type === EffectNames.SetBaseMilitarySkill),
+    modifyBasePoliticalSkill: card => card.effects.filter(effect => effect.type === EffectNames.SetBasePoliticalSkill),
+    modifyGlory: card => card.effects.filter(effect => effect.type === EffectNames.SetGlory),
+    modifyMilitarySkill: card => card.effects.filter(effect => effect.type === EffectNames.SetMilitarySkill),
+    modifyMilitarySkillMultiplier: card => card.effects.filter(effect => effect.type === EffectNames.SetMilitarySkill),
+    modifyPoliticalSkill: card => card.effects.filter(effect => effect.type === EffectNames.SetPoliticalSkill),
+    modifyPoliticalSkillMultiplier: card => card.effects.filter(effect => effect.type === EffectNames.SetPoliticalSkill),
+    setBaseMilitarySkill: card => card.effects.filter(effect => effect.type === EffectNames.SetMilitarySkill),
+    setBasePoliticalSkill: card => card.effects.filter(effect => effect.type === EffectNames.SetPoliticalSkill),
     setMaxConflicts: (player, value) =>
-        player.mostRecentEffect('setMaxConflicts') === value ? [_.last(player.effects.filter(effect => effect.type === 'setMaxConflicts'))] : [],
+        player.mostRecentEffect(EffectNames.SetMaxConflicts) === value ? [_.last(player.effects.filter(effect => effect.type === EffectNames.SetMaxConflicts))] : [],
     takeControl: (card, player) =>
-        card.mostRecentEffect('takeControl') === player ? [_.last(card.effects.filter(effect => effect.type === 'takeControl'))] : []
+        card.mostRecentEffect(EffectNames.TakeControl) === player ? [_.last(card.effects.filter(effect => effect.type === EffectNames.TakeControl))] : []
 };
 
 class StaticEffect {
@@ -89,8 +90,8 @@ class StaticEffect {
             let matchingEffects = conflictingEffects[type](target, this.value);
             return matchingEffects.every(effect => this.hasLongerDuration(effect) || effect.isConditional);
         }
-        if(type === 'modifyBothSkills') {
-            return this.checkConflictingEffects('modifyMilitarySkill', target) || this.checkConflictingEffects('modifyPoliticalSkill', target);
+        if(type === EffectNames.ModifyBothSkills) {
+            return this.checkConflictingEffects(EffectNames.ModifyMilitarySkill, target) || this.checkConflictingEffects(EffectNames.ModifyPoliticalSkill, target);
         }
         return true;
     }

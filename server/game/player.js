@@ -12,7 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const { Locations, Decks } = require('./Constants');
+const { Locations, Decks, EffectNames } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -385,7 +385,7 @@ class Player extends GameObject {
      */
 
     getConflictOpportunities(type = 'total') {
-        let maxConflicts = this.mostRecentEffect('maxConflicts');
+        let maxConflicts = this.mostRecentEffect(EffectNames.SetMaxConflicts);
         if(maxConflicts) {
             return Math.max(0, maxConflicts - this.game.getConflicts(this).length);
         }
@@ -470,7 +470,7 @@ class Player extends GameObject {
     }
 
     getAlternateFatePools(playingType, card) {
-        let effects = this.getEffects('alternateFatePool');
+        let effects = this.getEffects(EffectNames.AlternateFatePool);
         return effects.filter(match => match(card) && match(card).fate > 0).map(match => match(card));
     }
 
@@ -779,11 +779,11 @@ class Player extends GameObject {
     }
 
     get gloryModifier() {
-        return this.getEffects('gloryModifier').reduce((total, value) => total + value, 0);
+        return this.getEffects(EffectNames.ChangePlayerGloryModifier).reduce((total, value) => total + value, 0);
     }
 
     get skillModifier() {
-        return this.getEffects('conflictSkillModifier').reduce((total, value) => total + value, 0);
+        return this.getEffects(EffectNames.ChangePlayerSkillModifier).reduce((total, value) => total + value, 0);
     }
 
     modifyFate(amount) {
@@ -1024,7 +1024,7 @@ class Player extends GameObject {
     }
 
     isTopConflictCardShown() {
-        return this.anyEffect('showTopConflictCard');
+        return this.anyEffect(EffectNames.ShowTopConflictCard);
     }
 
     /**

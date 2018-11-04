@@ -36,6 +36,8 @@ const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
 const MenuCommands = require('./MenuCommands');
 const SpiritOfTheRiver = require('./cards/SpiritOfTheRiver');
 
+const { EffectNames } = require('./Constants');
+
 class Game extends EventEmitter {
     constructor(details, options = {}) {
         super();
@@ -967,7 +969,7 @@ class Game extends EventEmitter {
      * @param {DrawCard} card
      */
     takeControl(player, card) {
-        if(card.controller === player || !card.allowGameAction('takeControl')) {
+        if(card.controller === player || !card.checkRestrictions(EffectNames.TakeControl)) {
             return;
         }
         card.controller.removeCardFromPile(card);
