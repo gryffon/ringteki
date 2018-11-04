@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class DelayedEffectAction extends CardGameAction {
     setDefaultProperties() {
@@ -15,7 +16,7 @@ class DelayedEffectAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area') {
+        if(card.location !== Locations.PlayArea) {
             return false;
         }
         return super.canAffect(card, context);

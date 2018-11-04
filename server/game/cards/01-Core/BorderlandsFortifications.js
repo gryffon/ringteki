@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class BorderlandsFortifications extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Switch this card with another',
             target: {
-                location: 'province',
+                location: Locations.Provinces,
                 controller: 'self',
                 cardCondition: card => card.isDynasty
             },

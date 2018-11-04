@@ -1,6 +1,7 @@
 const AbilityLimit = require('./abilitylimit.js');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
+const { Locations } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
@@ -34,22 +35,22 @@ class CardAbility extends ThenAbility {
 
     buildLocation(card, location) {
         const DefaultLocationForType = {
-            event: 'hand',
-            holding: 'province',
-            province: 'province',
-            role: 'role',
-            stronghold: 'stronghold province'
+            event: Locations.Hand,
+            holding: Locations.Provinces,
+            province: Locations.Provinces,
+            role: Locations.Role,
+            stronghold: Locations.StrongholdProvince
         };
 
-        let defaultedLocation = location || DefaultLocationForType[card.getType()] || 'play area';
+        let defaultedLocation = location || DefaultLocationForType[card.getType()] || Locations.PlayArea;
 
         if(!Array.isArray(defaultedLocation)) {
             defaultedLocation = [defaultedLocation];
         }
 
-        if(defaultedLocation.some(location => location === 'province')) {
-            defaultedLocation = defaultedLocation.filter(location => location !== 'province');
-            defaultedLocation = defaultedLocation.concat(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']);
+        if(defaultedLocation.some(location => location === Locations.Provinces)) {
+            defaultedLocation = defaultedLocation.filter(location => location !== Locations.Provinces);
+            defaultedLocation = defaultedLocation.concat([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]);
         }
 
         return defaultedLocation;

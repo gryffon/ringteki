@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class AsahinaTakako extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetLocation: 'province',
+            targetLocation: Locations.Provinces,
             match: card => card.isDynasty && card.facedown,
             effect: ability.effects.canBeSeenWhenFacedown()
         });
@@ -12,7 +13,7 @@ class AsahinaTakako extends DrawCard {
             title: 'Discard a card or switch with another card',
             target: {
                 cardType: ['character', 'holding'],
-                location: 'province',
+                location: Locations.Provinces,
                 controller: 'self',
                 gameAction: ability.actions.chooseAction(context => ({
                     messages: { 'Discard': '{0} chooses to discard {1}' },
@@ -24,7 +25,7 @@ class AsahinaTakako extends DrawCard {
                             promptForSelect: {
                                 activePromptTitle: 'Choose a card to switch with',
                                 cardType: ['character', 'holding'],
-                                location: 'province',
+                                location: Locations.Provinces,
                                 controller: 'self',
                                 message: '{0} switches {1} in {2} and {3} in {4}',
                                 messageArgs: card => [

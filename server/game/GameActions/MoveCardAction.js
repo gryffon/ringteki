@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class MoveCardAction extends CardGameAction {
     setDefaultProperties() {
@@ -15,7 +16,7 @@ class MoveCardAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location === 'play area' || !card.controller.getSourceList(this.destination)) {
+        if(card.location === Locations.PlayArea || !card.controller.getSourceList(this.destination)) {
             return false;
         }
         return super.canAffect(card, context);
@@ -26,14 +27,14 @@ class MoveCardAction extends CardGameAction {
             if(this.switch) {
                 let otherCard = card.controller.getDynastyCardInProvince(this.destination);
                 context.player.moveCard(otherCard, card.location);
-            } else if(['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location)) {
+            } else if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
                 event.context.refillProvince(context.player, card.location);
             }
             context.player.moveCard(card, this.destination);
             if(this.shuffle) {
-                if(this.destination === 'conflict deck') {
+                if(this.destination === Locations.ConflictDeck) {
                     context.player.shuffleConflictDeck();
-                } else if(this.destination === 'dynasty deck') {
+                } else if(this.destination === Locations.DynastyDeck) {
                     context.player.shuffleDynastyDeck();
                 }
             } else if(this.faceup) {

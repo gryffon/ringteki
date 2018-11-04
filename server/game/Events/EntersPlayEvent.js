@@ -1,4 +1,5 @@
 const Event = require('./Event.js');
+const { Locations } = require('../Constants');
 
 class EntersPlayEvent extends Event {
     constructor(params, card, fate, status, gameAction) {
@@ -27,7 +28,7 @@ class EntersPlayEvent extends Event {
             this.card.dishonor();
         }
 
-        this.context.player.moveCard(this.card, 'play area');
+        this.context.player.moveCard(this.card, Locations.PlayArea);
 
         if(this.intoConflict) {
             if(this.context.player.isAttackingPlayer()) {

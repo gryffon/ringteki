@@ -3,6 +3,7 @@ const _ = require('underscore');
 const Phase = require('./phase.js');
 const SimpleStep = require('./simplestep.js');
 const DynastyActionWindow = require('./dynasty/dynastyactionwindow.js');
+const { Locations } = require('../Constants');
 
 /*
 I Dynasty Phase
@@ -34,7 +35,7 @@ class DynastyPhase extends Phase {
     flipDynastyCards () {
         _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
             let revealedCards = [];
-            for(let province of ['province 1', 'province 2', 'province 3', 'province 4']) {
+            for(let province of [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour]) {
                 let card = player.getDynastyCardInProvince(province);
                 if(card && card.facedown) {
                     this.game.applyGameAction(null, { flipDynasty: card });

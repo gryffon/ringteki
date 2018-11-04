@@ -1,9 +1,10 @@
 const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
+const { Locations } = require('../Constants');
 
 class ReturnToDeckAction extends CardGameAction {
     setDefaultProperties() {
-        this.location = 'play area';
+        this.location = Locations.PlayArea;
         this.ignoreLocation = false;
         this.bottom = false;
         this.shuffle = false;
@@ -24,8 +25,8 @@ class ReturnToDeckAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        let destination = card.isDynasty ? 'dynasty deck' : 'conflict deck';
-        if(card.location === 'play area') {
+        let destination = card.isDynasty ? Locations.DynastyDeck : Locations.ConflictDeck;
+        if(card.location === Locations.PlayArea) {
             return new LeavesPlayEvent({ context: context, destination: destination, options: { bottom: this.bottom, shuffle: this.shuffle } }, card, this);
         }
         return super.createEvent('onMoveCard', { card: card, context: context }, event => {
@@ -34,7 +35,7 @@ class ReturnToDeckAction extends CardGameAction {
             }
             card.owner.moveCard(card, destination, { bottom: this.bottom });
             if(this.shuffle) {
-                if(destination === 'dynasty deck') {
+                if(destination === Locations.DynastyDeck) {
                     card.owner.shuffleDynastyDeck();
                 } else {
                     card.owner.shuffleConflictDeck();

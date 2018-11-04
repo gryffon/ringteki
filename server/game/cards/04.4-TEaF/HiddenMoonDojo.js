@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const PlayCharacterAction = require('../../playcharacteraction.js');
+const { Locations } = require('../../Constants');
 
 class HiddenMoonDojoPlayAction extends PlayCharacterAction {
     meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
@@ -13,7 +14,7 @@ class HiddenMoonDojoPlayAction extends PlayCharacterAction {
 class HiddenMoonDojo extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetLocation: 'province',
+            targetLocation: Locations.Provinces,
             match: (card, context) => card.isDynasty && !card.facedown && context.player.areLocationsAdjacent(context.source.location, card.location),
             effect: ability.effects.gainPlayAction(HiddenMoonDojoPlayAction)
         });
@@ -23,7 +24,7 @@ class HiddenMoonDojo extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             gameAction: ability.actions.flipDynasty({
                 promptForSelect: {
-                    location: 'province',
+                    location: Locations.Provinces,
                     controller: 'self',
                     cardCondition: (card, context) => context.player.areLocationsAdjacent(context.source.location, card.location)
                 }

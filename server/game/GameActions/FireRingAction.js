@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class FireRingAction extends CardGameAction {
     constructor(propertyFactory) {
@@ -37,7 +38,7 @@ class FireRingAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || card.type !== 'character') {
+        if(card.location !== Locations.PlayArea || card.type !== 'character') {
             return false;
         } else if(this.name !== '') {
             return super.canAffect(card, context);

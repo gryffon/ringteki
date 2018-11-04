@@ -1,3 +1,5 @@
+const { Locations } = require('../Constants');
+
 class BaseCardSelector {
     constructor(properties) {
         this.cardCondition = properties.cardCondition;
@@ -13,19 +15,19 @@ class BaseCardSelector {
     }
 
     buildLocation(property) {
-        let location = property || 'play area';
+        let location = property || Locations.PlayArea;
         if(!Array.isArray(location)) {
             location = [location];
         }
-        let index = location.indexOf('province');
+        let index = location.indexOf(Locations.Provinces);
         if(index > -1) {
-            location.splice(index, 1, 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province');
+            location.splice(index, 1, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince);
         }
         return location;
     }
 
     findPossibleCards(context) {
-        if(this.location.includes('any')) {
+        if(this.location.includes(Locations.Any)) {
             if(this.controller === 'self') {
                 return context.game.allCards.filter(card => card.controller === context.player);
             } else if(this.controller === 'opponent') {
@@ -41,7 +43,7 @@ class BaseCardSelector {
         if(this.controller !== 'opponent') {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.getSourceList(location).toArray();
-                if(location === 'play area') {
+                if(location === Locations.PlayArea) {
                     return array.concat(cards, attachments.filter(card => card.controller === context.player));
                 }
                 return array.concat(cards);
@@ -50,7 +52,7 @@ class BaseCardSelector {
         if(this.controller !== 'self' && context.player.opponent) {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.opponent.getSourceList(location).toArray();
-                if(location === 'play area') {
+                if(location === Locations.PlayArea) {
                     return array.concat(cards, attachments.filter(card => card.controller === context.player.opponent));
                 }
                 return array.concat(cards);
@@ -72,7 +74,7 @@ class BaseCardSelector {
         if(this.controller === 'opponent' && card.controller !== context.player.opponent) {
             return false;
         }
-        if(!this.location.includes('any') && !this.location.includes(card.location)) {
+        if(!this.location.includes(Locations.Any) && !this.location.includes(card.location)) {
             return false;
         }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);

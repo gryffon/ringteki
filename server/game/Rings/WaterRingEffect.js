@@ -1,4 +1,5 @@
 const BaseAbility = require('../baseability.js');
+const { Locations } = require('../Constants');
 
 class WaterRingEffect extends BaseAbility {
     constructor(optional = true) {
@@ -8,7 +9,7 @@ class WaterRingEffect extends BaseAbility {
                 source: 'Water Ring',
                 buttons: optional ? [{ text: 'Don\'t resolve', arg: 'dontResolve' }] : [],
                 cardType: 'character',
-                cardCondition: (card, context) => card.location === 'play area' && ((card.fate === 0 && card.allowGameAction('bow', context)) || card.bowed)
+                cardCondition: (card, context) => card.location === Locations.PlayArea && ((card.fate === 0 && card.allowGameAction('bow', context)) || card.bowed)
             }
         });
         this.cannotTargetFirst = true;

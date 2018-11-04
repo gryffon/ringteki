@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 const testOfSkillCost = function() {
     return {
@@ -40,7 +41,7 @@ class TestOfSkill extends DrawCard {
             cannotBeMirrored: true,
             effect: 'take cards into their hand',
             handler: context => {
-                let [matchingCards, cardsToDiscard] = _.partition(context.costs.reveal, card => card.type === context.costs.testOfSkillCost && card.location === 'conflict deck');
+                let [matchingCards, cardsToDiscard] = _.partition(context.costs.reveal, card => card.type === context.costs.testOfSkillCost && card.location === Locations.ConflictDeck);
                 //Handle situations where card is played from deck, such as with pillow book
                 matchingCards = _.reject(matchingCards, c=> c.uuid === context.source.uuid);
 
@@ -48,12 +49,12 @@ class TestOfSkill extends DrawCard {
                     cardsToDiscard = cardsToDiscard.concat(matchingCards);
                     this.game.addMessage('{0} discards {1}', context.player, cardsToDiscard);
                     _.each(cardsToDiscard, card => {
-                        context.player.moveCard(card, 'conflict discard pile');
+                        context.player.moveCard(card, Locations.ConflictDiscardPile);
                     });
                 };
                 let takeCardHandler = card => {
                     this.game.addMessage('{0} adds {1} to their hand', context.player, card);
-                    context.player.moveCard(card, 'hand');
+                    context.player.moveCard(card, Locations.Hand);
                     return _.reject(matchingCards, c => c.uuid === card.uuid);
                 };
                 if(matchingCards.length === 0) {

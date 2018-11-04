@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class NezumiInfiltrator extends DrawCard {
     setupCardAbilities(ability) {
@@ -27,11 +28,11 @@ class NezumiInfiltrator extends DrawCard {
                 },
                 choices: {
                     'Raise attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
-                        targetLocation: 'province',
+                        targetLocation: Locations.Provinces,
                         effect: ability.effects.modifyProvinceStrength(1)
                     })),
                     'Lower attacked province\'s strength by 1': ability.actions.cardLastingEffect(() => ({
-                        targetLocation: 'province',
+                        targetLocation: Locations.Provinces,
                         effect: (
                             this.game.currentConflict.conflictProvince.getStrength() > 1 ?
                                 ability.effects.modifyProvinceStrength(-1) : []

@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const EventRegistrar = require('./eventregistrar.js');
+const { Locations } = require('./Constants');
 
 class EffectEngine {
     constructor(game) {
@@ -40,7 +41,7 @@ class EffectEngine {
     }
 
     checkDelayedEffects(events) {
-        this.delayedEffects = this.delayedEffects.filter(effect => !effect.target || effect.target.type === 'player' || effect.target.location === 'play area');
+        this.delayedEffects = this.delayedEffects.filter(effect => !effect.target || effect.target.type === 'player' || effect.target.location === Locations.PlayArea);
         let effectsToTrigger = this.delayedEffects.filter(effect => effect.checkEffect(events));
         if(effectsToTrigger.length > 0) {
             this.game.openSimultaneousEffectWindow(effectsToTrigger.map(effect => ({

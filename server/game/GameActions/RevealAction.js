@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class RevealAction extends CardGameAction {
     setDefaultProperties() {
@@ -14,7 +15,7 @@ class RevealAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        let testLocations = ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province','play area'];
+        let testLocations = [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince, Locations.PlayArea];
         if(!card.facedown && testLocations.includes(card.location)) {
             return false;
         }

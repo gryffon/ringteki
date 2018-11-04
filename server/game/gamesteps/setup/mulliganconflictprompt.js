@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const MulliganDynastyPrompt = require('./mulligandynastyprompt.js');
+const { Locations } = require('../../Constants');
 
 class MulliganConflictPrompt extends MulliganDynastyPrompt {
     completionCondition(player) {
@@ -23,7 +24,7 @@ class MulliganConflictPrompt extends MulliganDynastyPrompt {
     }
 
     cardCondition(card) {
-        return card.location === 'hand';
+        return card.location === Locations.Hand;
     }
 
     waitingPrompt() {
@@ -42,7 +43,7 @@ class MulliganConflictPrompt extends MulliganDynastyPrompt {
             } else {
                 this.game.addMessage('{0} has kept all conflict cards', player);
             }
-            _.each(['province 1', 'province 2', 'province 3', 'province 4'], location => {
+            _.each([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour], location => {
                 let card = player.getDynastyCardInProvince(location);
                 if(card) {
                     card.facedown = true;

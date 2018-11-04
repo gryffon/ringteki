@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class DiscardStatusAction extends CardGameAction {
     setup() {
@@ -8,7 +9,7 @@ class DiscardStatusAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || !card.isHonored && !card.isDishonored) {
+        if(card.location !== Locations.PlayArea || !card.isHonored && !card.isDishonored) {
             return false;
         }
         return super.canAffect(card, context);

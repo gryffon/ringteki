@@ -4,6 +4,7 @@ const SimpleStep = require('./simplestep.js');
 const MulliganDynastyPrompt = require('./setup/mulligandynastyprompt.js');
 const MulliganConflictPrompt = require('./setup/mulliganconflictprompt.js');
 const SetupProvincesPrompt = require('./setup/setupprovincesprompt.js');
+const { Locations } = require('../Constants');
 
 class SetupPhase extends Phase {
     constructor(game) {
@@ -52,16 +53,16 @@ class SetupPhase extends Phase {
 
     attachStronghold() {
         _.each(this.game.getPlayers(), player => {
-            player.moveCard(player.stronghold, 'stronghold province');
+            player.moveCard(player.stronghold, Locations.StrongholdProvince);
             if(player.role) {
-                player.role.moveTo('role');
+                player.role.moveTo(Locations.Role);
             }
         });
     }
 
     fillProvinces() {
         _.each(this.game.getPlayers(), player => {
-            for(let province of ['province 1', 'province 2', 'province 3', 'province 4']) {
+            for(let province of [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour]) {
                 let card = player.dynastyDeck.first();
                 if(card) {
                     player.moveCard(card, province);

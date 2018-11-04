@@ -5,6 +5,7 @@ const DrawCard = require('./drawcard.js');
 const ProvinceCard = require('./provincecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 const RoleCard = require('./rolecard.js');
+const { Locations } = require('./Constants');
 
 class Deck {
     constructor(data) {
@@ -28,7 +29,7 @@ class Deck {
         this.eachRepeatedCard(this.data.conflictCards, cardData => {
             if(cardData && ['conflict'].includes(cardData.side)) {
                 var conflictCard = this.createCard(DrawCard, player, cardData);
-                conflictCard.location = 'conflict deck';
+                conflictCard.location = Locations.ConflictDeck;
                 result.conflictCards.push(conflictCard);
             }
         });
@@ -37,7 +38,7 @@ class Deck {
         this.eachRepeatedCard(this.data.dynastyCards, cardData => {
             if(cardData && ['dynasty'].includes(cardData.side)) {
                 var dynastyCard = this.createCard(DrawCard, player, cardData);
-                dynastyCard.location = 'dynasty deck';
+                dynastyCard.location = Locations.DynastyDeck;
                 result.dynastyCards.push(dynastyCard);
             }
         });
@@ -45,7 +46,7 @@ class Deck {
         this.eachRepeatedCard(this.data.provinceCards, cardData => {
             if(cardData && cardData.type === 'province') {
                 var provinceCard = this.createCard(ProvinceCard, player, cardData);
-                provinceCard.location = 'province deck';
+                provinceCard.location = Locations.ProvinceDeck;
                 result.provinceCards.push(provinceCard);
             }
         });

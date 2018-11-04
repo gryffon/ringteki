@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class YogoKikuyo extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class YogoKikuyo extends DrawCard {
                                                             event.card.controller === context.player.opponent
             },
             cost: ability.costs.putSelfIntoPlay(),
-            location: 'hand',
+            location: Locations.Hand,
             effect: 'cancel the effects of {1}',
             effectArgs: context => context.event.card,
             handler: context => context.cancel()

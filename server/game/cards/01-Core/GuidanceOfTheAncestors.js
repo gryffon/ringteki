@@ -1,10 +1,11 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class GuidanceOfTheAncestors extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Play this from the discard pile',
-            location: 'conflict discard pile',
+            location: Locations.ConflictDiscardPile,
             gameAction: ability.actions.playCard()
         });
     }

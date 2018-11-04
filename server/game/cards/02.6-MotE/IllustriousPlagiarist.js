@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class IllustriousPlagiarist extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class IllustriousPlagiarist extends DrawCard {
             title: 'Copy action abilty of opponent\'s top event',
             condition: context => context.player.opponent,
             target: {
-                location: 'conflict discard pile',
+                location: Locations.ConflictDiscardPile,
                 controller: 'opponent',
                 cardCondition: (card, context) => card === context.player.opponent.conflictDiscardPile.find(card => card.type === 'event') &&
                                                   card.abilities.actions.length > 0,

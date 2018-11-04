@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const EventRegistrar = require('../../eventregistrar.js');
+const { Locations } = require('../../Constants');
 
 class SoshiShadowshaper extends DrawCard {
     setupCardAbilities(ability) {
@@ -24,7 +25,7 @@ class SoshiShadowshaper extends DrawCard {
     }
 
     onCharacterEntersPlay(event) {
-        if(event.originalLocation === 'hand') {
+        if(event.originalLocation === Locations.Hand) {
             this.charactersPlayedThisPhase.push(event.card);
         }
     }

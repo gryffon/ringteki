@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class OfferTestimony extends DrawCard {
     setupCardAbilities(ability) {
@@ -26,7 +27,7 @@ class OfferTestimony extends DrawCard {
                     promptForSelect: {
                         activePromptTitle: 'Choose a card to reveal',
                         player: context.player,
-                        location: 'hand',
+                        location: Locations.Hand,
                         controller: 'self'
                     }
                 })),
@@ -36,7 +37,7 @@ class OfferTestimony extends DrawCard {
                     promptForSelect: {
                         activePromptTitle: 'Choose a card to reveal',
                         player: context.player.opponent,
-                        location: 'hand',
+                        location: Locations.Hand,
                         controller: 'opponent'
                     }
                 })),

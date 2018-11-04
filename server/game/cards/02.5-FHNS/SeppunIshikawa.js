@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class SeppunIshikawa extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,8 +11,8 @@ class SeppunIshikawa extends DrawCard {
     getImperialCardsInPlay(source) {
         return this.game.allCards.reduce((sum, card) => {
             if(card !== source && card.controller === source.controller && card.hasTrait('imperial') && !card.facedown &&
-                (card.location === 'play area' || (card.isProvince && !card.isBroken) ||
-                (['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'].includes(card.location) &&
+                (card.location === Locations.PlayArea || (card.isProvince && !card.isBroken) ||
+                ([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince].includes(card.location) &&
                  card.type === 'holding'))) {
                 return sum + 1;
             }

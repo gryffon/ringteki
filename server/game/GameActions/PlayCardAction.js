@@ -1,5 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const AbilityResolver = require('../gamesteps/abilityresolver');
+const { Locations } = require('../Constants');
 
 class PlayCardResolver extends AbilityResolver {
     constructor(game, context, playGameAction, gameActionContext) {
@@ -29,7 +30,7 @@ class PlayCardAction extends CardGameAction {
     setDefaultProperties() {
         this.resetOnCancel = false;
         this.postHandler = () => true;
-        this.location = 'hand';
+        this.location = Locations.Hand;
         this.action = null;
     }
 

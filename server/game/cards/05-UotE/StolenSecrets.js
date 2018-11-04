@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class StolenSecrets extends DrawCard {
     setupCardAbilities(ability) {
@@ -20,14 +21,14 @@ class StolenSecrets extends DrawCard {
     stealCard(card, remainingCards, context) {
         card.owner.removeCardFromPile(card);
         card.controller = context.player;
-        card.moveTo('removed from game');
+        card.moveTo(Locations.RemovedFromGame);
         context.player.removedFromGame.unshift(card);
         context.source.lastingEffect(ability => ({
             until: {
-                onCardMoved: event => event.card === card && event.originalLocation === 'removed from game'
+                onCardMoved: event => event.card === card && event.originalLocation === Locations.RemovedFromGame
             },
             match: card,
-            effect: ability.effects.canPlayFromOwn('removed from game', [card])
+            effect: ability.effects.canPlayFromOwn(Locations.RemovedFromGame, [card])
         }));
         if(remainingCards.length > 1) {
             this.rearrangePrompt(context, remainingCards, [], 'Which card do you want to be on top?');

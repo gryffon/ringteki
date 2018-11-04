@@ -1,4 +1,5 @@
 const UiPrompt = require('./uiprompt.js');
+const { Locations } = require('../Constants');
 
 class ActionWindow extends UiPrompt {
     constructor(game, title, windowName) {
@@ -39,7 +40,7 @@ class ActionWindow extends UiPrompt {
             }
         }
         this.game.promptWithHandlerMenu(player, {
-            activePromptTitle: (card.location === 'play area' ? 'Choose an ability:' : 'Play ' + card.name + ':'),
+            activePromptTitle: (card.location === Locations.PlayArea ? 'Choose an ability:' : 'Play ' + card.name + ':'),
             source: card,
             choices: legalActions.map(action => action.title).concat('Cancel'),
             handlers: legalActions.map(action => (() => this.game.resolveAbility(action.createContext(player)))).concat(() => true)
@@ -94,7 +95,7 @@ class ActionWindow extends UiPrompt {
             this.game.promptForSelect(this.currentPlayer, {
                 source: 'Manual Action',
                 activePrompt: 'Which ability are you using?',
-                location: 'any',
+                location: Locations.Any,
                 controller: 'self',
                 cardCondition: card => !card.facedown,
                 onSelect: (player, card) => {

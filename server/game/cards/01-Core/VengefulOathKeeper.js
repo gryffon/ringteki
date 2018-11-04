@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class VengefulOathkeeper extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class VengefulOathkeeper extends DrawCard {
                 afterConflict: (event, context) => event.conflict.loser === context.player &&
                                                    event.conflict.conflictType === 'military'
             },
-            location: 'hand',
+            location: Locations.Hand,
             gameAction: ability.actions.putIntoPlay()
         });
     }

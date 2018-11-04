@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class AttachAction extends CardGameAction {
     setDefaultProperties() {
@@ -16,7 +17,7 @@ class AttachAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(!context || !context.player || !card || card.location !== 'play area') {
+        if(!context || !context.player || !card || card.location !== Locations.PlayArea) {
             return false;
         } else if(this.attachmentChosenOnResolution) {
             return super.canAffect(card, context);
@@ -42,12 +43,12 @@ class AttachAction extends CardGameAction {
 
     getEvent(card, context) {
         return super.createEvent('onCardAttached', { card: this.attachment, parent: card, context: context }, event => {
-            if(event.card.location === 'play area') {
+            if(event.card.location === Locations.PlayArea) {
                 event.card.parent.removeAttachment(event.card);
             } else {
                 event.card.controller.removeCardFromPile(event.card);
                 event.card.new = true;
-                event.card.moveTo('play area');
+                event.card.moveTo(Locations.PlayArea);
             }
             event.parent.attachments.push(event.card);
             event.card.parent = event.parent;

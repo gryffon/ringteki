@@ -5,6 +5,8 @@ const DelayedEffect = require('./DelayedEffect.js');
 const GameObject = require('./GameObject');
 const TerminalCondition = require('./TerminalCondition.js');
 
+const { Locations } = require('./Constants');
+
 // This class is inherited by Ring and BaseCard and also represents Framework effects
 
 class EffectSource extends GameObject {
@@ -18,7 +20,7 @@ class EffectSource extends GameObject {
      */
     untilEndOfDuel(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfDuel', location: 'any' }, properties));
+        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfDuel', location: Locations.Any }, properties));
     }
 
     /**
@@ -27,7 +29,7 @@ class EffectSource extends GameObject {
      */
     untilEndOfConflict(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfConflict', location: 'any' }, properties));
+        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfConflict', location: Locations.Any }, properties));
     }
 
     /**
@@ -35,7 +37,7 @@ class EffectSource extends GameObject {
      */
     untilEndOfPhase(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfPhase', location: 'any' }, properties));
+        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfPhase', location: Locations.Any }, properties));
     }
 
     /**
@@ -43,7 +45,7 @@ class EffectSource extends GameObject {
      */
     untilEndOfRound(propertyFactory) {
         var properties = propertyFactory(AbilityDsl);
-        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfRound', location: 'any' }, properties));
+        this.addEffectToEngine(Object.assign({ duration: 'untilEndOfRound', location: Locations.Any }, properties));
     }
 
     /**
@@ -52,7 +54,7 @@ class EffectSource extends GameObject {
      */
     lastingEffect(propertyFactory) {
         let properties = propertyFactory(AbilityDsl);
-        this.addEffectToEngine(Object.assign({ duration: 'custom', location: 'any' }, properties));
+        this.addEffectToEngine(Object.assign({ duration: 'custom', location: Locations.Any }, properties));
     }
 
     /**

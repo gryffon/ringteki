@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class ShrineMaiden extends DrawCard {
     setupCardAbilities(ability) {
@@ -16,11 +17,11 @@ class ShrineMaiden extends DrawCard {
                 });
 
                 _.each(toHand, card => {
-                    context.player.moveCard(card, 'hand');
+                    context.player.moveCard(card, Locations.Hand);
                 });
 
                 _.each(toDiscard, card => {
-                    context.player.moveCard(card, 'conflict discard pile');
+                    context.player.moveCard(card, Locations.ConflictDiscardPile);
                 });
 
                 if(toHand.length && toDiscard.length) {

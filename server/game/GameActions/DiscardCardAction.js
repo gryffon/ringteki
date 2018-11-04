@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations } = require('../Constants');
 
 class DiscardCardAction extends CardGameAction {
     setup() {
@@ -25,7 +26,7 @@ class DiscardCardAction extends CardGameAction {
                 if(card.location.includes('province')) {
                     event.context.refillProvince(card.controller, card.location);
                 }
-                card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+                card.controller.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
             }
         })];
     }
@@ -35,7 +36,7 @@ class DiscardCardAction extends CardGameAction {
             if(card.location.includes('province')) {
                 event.context.refillProvince(card.controller, card.location);
             }
-            card.controller.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+            card.controller.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
         });
     }
 }

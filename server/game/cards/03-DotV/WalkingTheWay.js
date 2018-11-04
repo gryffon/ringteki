@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class WalkingTheWay extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            location: 'any',
+            location: Locations.Any,
             targetType: 'player',
             targetController: 'any',
             match: player => player.cardsInPlay.any(card => card.hasTrait('shugenja')),
@@ -22,13 +23,13 @@ class WalkingTheWay extends DrawCard {
                     activePromptTitle: 'Choose a card to replace with ' + cardFromDeck.name,
                     context: context,
                     cardType: ['holding', 'character'],
-                    location: 'province',
+                    location: Locations.Provinces,
                     controller: 'self',
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} discards {1}, replacing it with {2}', player, card, cardFromDeck);
                         player.moveCard(cardFromDeck, card.location);
                         cardFromDeck.facedown = false;
-                        player.moveCard(card, 'dynasty discard pile');
+                        player.moveCard(card, Locations.DynastyDiscardPile);
                         player.shuffleDynastyDeck();
                         return true;
                     }
