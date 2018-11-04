@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Durations } = require('../../Constants');
 
 class IllustriousPlagiarist extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class IllustriousPlagiarist extends DrawCard {
                 cardCondition: (card, context) => card === context.player.opponent.conflictDiscardPile.find(card => card.type === 'event') &&
                                                   card.abilities.actions.length > 0,
                 gameAction: ability.actions.cardLastingEffect(context => ({
-                    duration: 'untilEndOfPhase',
+                    duration: Durations.UntilEndOfPhase,
                     target: context.source,
                     effect: context.target.abilities.actions.map(action => {
                         // We need to keep the old abilityIdentifier and ignore additional event costs

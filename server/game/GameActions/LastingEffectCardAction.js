@@ -1,9 +1,9 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, Durations } = require('../Constants');
 
 class LastingEffectCardAction extends CardGameAction {
     setDefaultProperties() {
-        this.duration = 'untilEndOfConflict';
+        this.duration = Durations.UntilEndOfConflict;
         this.condition = null;
         this.until = null;
         this.effect = [];

@@ -23,6 +23,14 @@ const Decks = {
     DynastyDeck: 'dynasty deck'
 };
 
+const Durations = {
+    UntilEndOfDuel: 'untilEndOfDuel',
+    UntilEndOfConflict: 'untilEndOfConflict',
+    UntilEndOfPhase: 'untilEndOfPhase',
+    UntilEndOfRound: 'untilEndOfRound',
+    Persistent: 'persistent',
+    Custom: 'custom'
+
 const Stages = {
     Cost: 'cost',
     Effect: 'effect',
@@ -33,5 +41,6 @@ const Stages = {
 module.exports = {
     Locations,
     Decks,
+    Durations
     Stages
 };

@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const { Locations } = require('../Constants');
+const { Locations, Durations } = require('../Constants');
 
 /**
  * Represents a card based effect applied to one or more targets.
@@ -85,7 +85,7 @@ class Effect {
     }
 
     checkCondition(stateChanged) {
-        if(!this.condition(this.context) || (this.duration === 'persistent' && (this.source.isBlank() || this.source.facedown))) {
+        if(!this.condition(this.context) || (this.duration === Durations.Persistent && (this.source.isBlank() || this.source.facedown))) {
             stateChanged = this.targets.length > 0 || stateChanged;
             this.cancel();
             return stateChanged;
@@ -119,7 +119,7 @@ class Effect {
         return {
             source: this.source.name,
             targets: _.map(this.targets, target => target.name),
-            active: this.duration !== 'persistent' || !this.source.isBlank(),
+            active: this.duration !== Durations.Persistent || !this.source.isBlank(),
             condition: this.condition(this.context),
             effect: this.effect.getDebugInfo()
         };

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class SecludedShrine extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +12,7 @@ class SecludedShrine extends DrawCard {
                 mode: 'ring',
                 ringCondition: () => true,
                 gameAction: ability.actions.ringLastingEffect(context => ({
-                    duration: 'untilEndOfPhase',
+                    duration: Durations.UntilEndOfPhase,
                     effect: ability.effects.considerRingAsClaimed(player => player === context.player)
                 }))
             },

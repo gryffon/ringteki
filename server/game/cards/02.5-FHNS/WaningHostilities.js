@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class WaningHostilities extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +10,7 @@ class WaningHostilities extends DrawCard {
             },
             effect: 'limit both players to a single conflict this turn',
             gameAction: ability.actions.playerLastingEffect({
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 targetController: 'any',
                 effect: ability.effects.setMaxConflicts(1)
             })

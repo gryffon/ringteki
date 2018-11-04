@@ -1,4 +1,5 @@
 const StrongholdCard = require('../../strongholdcard.js');
+const { Durations } = require('../../Constants');
 
 class IsawaMoriSeido extends StrongholdCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class IsawaMoriSeido extends StrongholdCard {
             target: {
                 cardType: 'character',
                 gameAction: ability.actions.cardLastingEffect({
-                    duration: 'untilEndOfPhase',
+                    duration: Durations.UntilEndOfPhase,
                     effect: ability.effects.modifyGlory(2)
                 })
             },

@@ -6,7 +6,6 @@ class MenacingIronWarrior extends DrawCard {
             title: 'Disable abilities of weaker military characters',
             condition: context => this.game.isDuringConflict('military') && context.source.isParticipating(),
             gameAction: ability.actions.cardLastingEffect(context => ({
-                duration: 'untilEndOfConflict',
                 target: this.game.currentConflict.getCharacters(context.player.opponent).filter(card => card.getMilitarySkill() <= context.source.getMilitarySkill() && card !== context.source),
                 effect: ability.effects.cardCannot('triggerAbilities')
             })),
