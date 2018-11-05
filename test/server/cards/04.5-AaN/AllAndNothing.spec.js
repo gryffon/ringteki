@@ -80,7 +80,7 @@ describe('All and Nothing', function() {
                 expect(this.isawaKaede.isHonored).toBe(true);
                 expect(this.player1).toHavePrompt('Fire Ring');
             });
-            
+
             it('should trigger when the player resolves the void effect using Taryu Jiai', function() {
                 this.initiateConflict({
                     type: 'political',
