@@ -88,6 +88,18 @@ describe('Game Of Sadane', function() {
                 this.player2.clickCard(this.kakitaBlade);
                 expect(this.player2.honor).toBe(10);
             });
+
+            it('should do nothing if the duel is a tie', function () {
+                this.player2.clickCard('game-of-sadane');
+                this.player2.clickCard(this.savvyPolitician);
+                this.player2.clickCard(this.prodigyOfTheWaves);
+                this.player1.clickPrompt('2');
+                this.player2.clickPrompt('3');
+                expect(this.savvyPolitician.isHonored).toBe(false);
+                expect(this.savvyPolitician.isDishonored).toBe(false);
+                expect(this.prodigyOfTheWaves.isHonored).toBe(false);
+                expect(this.prodigyOfTheWaves.isDishonored).toBe(false);
+            });
         });
     });
 });
