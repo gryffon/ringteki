@@ -6,7 +6,6 @@ describe('All and Nothing', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['isawa-kaede', 'seeker-of-knowledge'],
-                        // hand: ['all-and-nothing', 'all-and-nothing']
                         hand: ['all-and-nothing', 'all-and-nothing', 'taryu-jiai']
                     },
                     player2: {
