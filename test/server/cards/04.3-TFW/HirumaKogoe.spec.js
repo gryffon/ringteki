@@ -54,6 +54,25 @@ describe('Hiruma Kogoe', function () {
                 this.player2.clickPrompt('3');
                 expect(this.fan.location).toBe('hand');
             });
+
+            describe('if there are exactly 2 cards in deck', function () {
+                beforeEach(function () {
+                    for(var i = this.player1.conflictDeck.length - 1; i >= 0; i--) {
+                        this.player1.moveCard(this.player1.conflictDeck[i], 'hand');
+                    }
+                    this.player1.moveCard(this.reprieve, 'conflict deck');
+                    this.player1.moveCard(this.fan, 'conflict deck');
+                });
+
+                it('should not prompt for the second card', function () {
+                    this.player2.player.honor = 11;
+                    this.nextPhase();
+                    this.player1.clickCard(this.kogoe);
+                    expect(this.player1).toHavePrompt('Which card do you want to be on top?');
+                    this.player1.clickPrompt(this.fan.name);
+                    expect(this.player1).not.toHavePrompt('Which card do you want to be the second card?');
+                });
+            });
         });
     });
 });
