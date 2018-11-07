@@ -106,8 +106,6 @@ describe('Infiltrator', function() {
                     expect(this.player2.fate).toBe(0);
                 });
             });
-
-            
         });
     });
 });
