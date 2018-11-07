@@ -98,6 +98,31 @@ describe('Void Fist', function() {
                 expect(this.togashiMitsu.bowed).toBe(true);
                 expect(this.togashiMitsu.inConflict).toBe(false);
             });
+
+            it('should not trigger once the \'card played count\' has reset after the conflict has ended', function () {
+                this.player2.pass();
+                this.player1.clickCard('banzai');
+                this.togashiMitsu = this.player1.clickCard('togashi-mitsu');
+                this.player1.clickPrompt('Done');
+                this.player2.pass();
+                this.player1.clickCard('togashi-mitsu');
+                this.player1.clickCard('centipede-tattoo');
+                this.player1.clickCard('togashi-mitsu');
+                this.noMoreActions();
+                this.player1.clickCard('void-fist');
+                expect(this.player1).toHavePrompt('Initiate an action');
+                this.togashiMitsu.bowed = false;
+                this.bayushiLiar.bowed = false;
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: ['bayushi-liar'],
+                    defenders: ['togashi-mitsu'],
+                    ring: 'water'
+                });
+                this.player1.clickCard('void-fist');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
         });
     });
 });
