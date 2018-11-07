@@ -8,7 +8,7 @@ class KitsukiInvestigator extends DrawCard {
                                   context.player.opponent && context.player.opponent.hand.size() > 0,
             cost: ability.costs.payFateToRing(),
             effect: 'reveal {1}\'s hand and discard a card from it',
-            effectArgs: context => [context.player.opponent, context.player.opponent.hand.sortBy(card => card.name)],
+            effectArgs: context => context.player.opponent,
             gameAction: [
                 ability.actions.lookAt(context => ({
                     target: context.player.opponent.hand.sortBy(card => card.name)
