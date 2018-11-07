@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class OfferTestimony extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,13 +9,13 @@ class OfferTestimony extends DrawCard {
             targets: {
                 myCharacter: {
                     cardType: 'character',
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: (card, context) => card.isParticipating() && card.allowGameAction('bow', context)
                 },
                 oppCharacter: {
-                    player: 'opponent',
+                    player: Players.Opponent,
                     cardType: 'character',
-                    controller: 'opponent',
+                    controller: Players.Opponent,
                     cardCondition: (card, context) => card.isParticipating() && card.allowGameAction('bow', context)
                 }
             },
@@ -28,7 +28,7 @@ class OfferTestimony extends DrawCard {
                         activePromptTitle: 'Choose a card to reveal',
                         player: context.player,
                         location: Locations.Hand,
-                        controller: 'self'
+                        controller: Players.Self
                     }
                 })),
                 ability.actions.reveal(context => ({
@@ -38,7 +38,7 @@ class OfferTestimony extends DrawCard {
                         activePromptTitle: 'Choose a card to reveal',
                         player: context.player.opponent,
                         location: Locations.Hand,
-                        controller: 'opponent'
+                        controller: Players.Opponent
                     }
                 })),
                 ability.actions.bow(context => {

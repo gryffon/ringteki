@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const CardSelector = require('../CardSelector.js');
-const { Stages } = require('../Constants.js');
+const { Stages, Players } = require('../Constants.js');
 
 class AbilityTargetCard {
     constructor(name, properties, ability) {
@@ -69,7 +69,7 @@ class AbilityTargetCard {
             playerProp = playerProp(context);
         }
         let player = context.player;
-        if(playerProp === 'opponent') {
+        if(playerProp === Players.Opponent) {
             if(context.stage === Stages.PreTarget) {
                 targetResults.delayTargeting = this;
                 return;

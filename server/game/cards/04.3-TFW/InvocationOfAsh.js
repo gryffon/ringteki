@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class InvocationOfAsh extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class InvocationOfAsh extends DrawCard {
             cost: ability.costs.payHonor(1),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.attach(context => ({ attachment: context.source }))
             },
             then: context => ({

@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Players } = require('../../Constants');
 
 class MeditationsOnTheTao extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class MeditationsOnTheTao extends ProvinceCard {
             condition: context => context.source.isConflictProvince(),
             target: {
                 cardType: 'character',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 cardCondition: card => card.isAttacking(),
                 gameAction: ability.actions.removeFate()
             }

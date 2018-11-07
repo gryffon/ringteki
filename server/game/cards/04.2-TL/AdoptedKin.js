@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class AdoptedKin extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class AdoptedKin extends DrawCard {
             condition: context => !!context.source.parent,
             match: (card, context) => card !== context.source && card.getType() === 'attachment' && context.source.parent === card.parent,
             effect: ability.effects.addKeyword('ancestral'),
-            targetController: 'any'
+            targetController: Players.Any
         });
     }
 

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class ShosuroMiyako extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,14 +11,14 @@ class ShosuroMiyako extends DrawCard {
             },
             target: {
                 mode: 'select',
-                player: 'opponent',
+                player: Players.Opponent,
                 choices: {
                     'Discard at random': ability.actions.discardAtRandom(),
                     'Dishonor a character': ability.actions.dishonor(context => ({
                         promptForSelect: {
                             activePromptTitle: 'Choose a character to dishonor',
                             player: context.player.opponent,
-                            controller: 'opponent',
+                            controller: Players.Opponent,
                             message: '{0} chooses to dishonor {1}',
                             messageArgs: card => [context.player.opponent, card]
                         }

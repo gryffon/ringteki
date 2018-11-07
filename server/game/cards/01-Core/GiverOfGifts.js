@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class GiverOfGifts extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,11 +7,11 @@ class GiverOfGifts extends DrawCard {
             title: 'Move an attachment',
             target: {
                 cardType: 'attachment',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.attach(context => ({
                     attachment: context.target,
                     promptForSelect: {
-                        controller: 'self',
+                        controller: Players.Self,
                         cardCondition: card => card !== context.target.parent,
                         message: '{0} moves {1} to {2}',
                         messageArgs: card => [context.player, context.target, card]

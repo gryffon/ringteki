@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class MasterOfTheSwiftWaves extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,14 +10,14 @@ class MasterOfTheSwiftWaves extends DrawCard {
                 characterInConflict: {
                     activePromptTitle: 'Choose a participating character to send home',
                     cardType: 'character',
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: card => card.isParticipating()
                 },
                 characterAtHome: {
                     dependsOn: 'characterInConflict',
                     activePromptTitle: 'Choose a character to move to the conflict',
                     cardType: 'character',
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: card => !card.isParticipating(),
                     gameAction: ability.actions.jointAction([
                         ability.actions.sendHome(context => ({ target: context.targets.characterInConflict })),

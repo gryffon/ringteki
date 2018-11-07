@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class SoulBeyondReproach extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class SoulBeyondReproach extends DrawCard {
             title: 'Honor a character, then honor it again',
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.honor()
             },
             then: context => ({

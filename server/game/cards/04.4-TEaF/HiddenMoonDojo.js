@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 const PlayCharacterAction = require('../../playcharacteraction.js');
-const { Locations } = require('../../Constants');
 const _ = require('underscore');
+const { Locations, Players } = require('../../Constants');
 
 class HiddenMoonDojoPlayAction extends PlayCharacterAction {
     meetsRequirements(context, ignoredRequirements = []) {
@@ -23,7 +23,7 @@ class HiddenMoonDojo extends DrawCard {
             gameAction: ability.actions.flipDynasty({
                 promptForSelect: {
                     location: Locations.Provinces,
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: (card, context) => context.player.areLocationsAdjacent(context.source.location, card.location)
                 }
             })

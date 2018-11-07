@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class FuSuiDisciple extends DrawCard {
     setupCardAbilities(ability) {
@@ -15,7 +16,7 @@ class FuSuiDisciple extends DrawCard {
                 },
                 character: {
                     dependsOn: 'player',
-                    player: context => context.selects.player.choice === 'Me' ? 'self' : 'opponent',
+                    player: context => context.selects.player.choice === 'Me' ? Players.Self : Players.Opponent,
                     activePromptTitle: 'Choose a character to be honored or dishonored',
                     cardType: 'character',
                     cardCondition: (card, context) => {

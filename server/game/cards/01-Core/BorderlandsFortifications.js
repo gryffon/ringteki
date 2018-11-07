@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class BorderlandsFortifications extends DrawCard {
     setupCardAbilities() {
@@ -7,7 +7,7 @@ class BorderlandsFortifications extends DrawCard {
             title: 'Switch this card with another',
             target: {
                 location: Locations.Provinces,
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isDynasty
             },
             effect: 'swap it with {1}',

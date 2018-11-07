@@ -1,4 +1,5 @@
 const StrongholdCard = require('../../strongholdcard.js');
+const { Players } = require('../../Constants');
 
 class GoldenPlainsOutpost extends StrongholdCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class GoldenPlainsOutpost extends StrongholdCard {
             condition: () => this.game.isDuringConflict('military'),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.hasTrait('cavalry'),
                 gameAction: ability.actions.moveToConflict()
             }

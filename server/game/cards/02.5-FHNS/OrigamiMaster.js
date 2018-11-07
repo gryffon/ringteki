@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class OrigamiMaster extends DrawCard {
     setupCardAbilities() {
@@ -7,7 +8,7 @@ class OrigamiMaster extends DrawCard {
             condition: context => context.source.isHonored,
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: (card, context) => card.isDishonored || card.allowGameAction('becomeHonored', context)
             },
             effect: 'move an honor token to {0}',

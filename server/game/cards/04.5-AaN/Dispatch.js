@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class Dispatch extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class Dispatch extends DrawCard {
             target: {
                 cardType: 'character',
                 cardCondition: card => card.isFaction('unicorn'),
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: [ability.actions.sendHome(), ability.actions.moveToConflict()]
             }
         });

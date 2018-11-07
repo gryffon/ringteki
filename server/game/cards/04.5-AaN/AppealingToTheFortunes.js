@@ -1,5 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class AppealingToTheFortunes extends ProvinceCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -15,7 +15,7 @@ class AppealingToTheFortunes extends ProvinceCard {
             },
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 location: [Locations.Provinces, Locations.Hand],
                 gameAction: ability.actions.putIntoPlay()
             }

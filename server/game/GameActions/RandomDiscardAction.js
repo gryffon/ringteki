@@ -1,5 +1,5 @@
 const PlayerAction = require('./PlayerAction');
-const { Locations } = require('../Constants');
+const { Locations, Players } = require('../Constants');
 
 class RandomDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -39,7 +39,7 @@ class RandomDiscardAction extends PlayerAction {
                     optional: true,
                     ordered: true,
                     location: Locations.Hand,
-                    controller: 'self',
+                    controller: Players.Self,
                     source: context.source,
                     cardCondition: card => event.cards.includes(card),
                     onSelect: handler,

@@ -12,7 +12,6 @@ class Ofushukai extends DrawCard {
                 printedAbility: false,
                 target: {
                     cardType: 'character',
-                    controller: 'any',
                     cardCondition: card => card.isParticipating(),
                     gameAction: [
                         ability.actions.sendHome(),
