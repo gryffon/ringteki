@@ -1,6 +1,7 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
+const { Phases } = require('./Constants');
 
 class PlayCharacterAction extends BaseAction {
     constructor(card) {
@@ -13,7 +14,7 @@ class PlayCharacterAction extends BaseAction {
     }
 
     meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
-        if(!ignoredRequirements.includes('phase') && context.game.currentPhase === 'dynasty') {
+        if(!ignoredRequirements.includes('phase') && context.game.currentPhase === Phases.Dynasty) {
             return 'phase';
         }
         if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, 'playFromHand')) {

@@ -3,6 +3,8 @@ const SelectCardCost = require('./SelectCardCost.js');
 const SelfCost = require('./SelfCost.js');
 const SpecificCardCost = require('./SpecificCardCost.js');
 
+const { TargetModes } = require('../Constants');
+
 class CostBuilder {
     constructor(action, titles = {}) {
         this.action = action;
@@ -42,7 +44,7 @@ class CostBuilder {
      */
     selectMultiple(number, condition = () => true) {
         return new SelectCardCost(this.action, {
-            mode: 'exactly',
+            mode: TargetModes.Exactly,
             numCards: number,
             activePromptTitle: this.titles.selectMultiple(number),
             cardCondition: condition

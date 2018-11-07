@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, TargetModes } = require('../../Constants');
 
 class ShosuroMiyako extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +10,7 @@ class ShosuroMiyako extends DrawCard {
                                                   event.card.type === 'character' && context.player.opponent
             },
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 player: Players.Opponent,
                 choices: {
                     'Discard at random': ability.actions.discardAtRandom(),

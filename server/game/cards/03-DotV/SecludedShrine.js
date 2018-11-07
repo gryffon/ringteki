@@ -1,15 +1,15 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations } = require('../../Constants');
+const { Durations, TargetModes, Phases } = require('../../Constants');
 
 class SecludedShrine extends DrawCard {
     setupCardAbilities(ability) {
         this.reaction({
             title: 'Count a ring as claimed',
             when: {
-                onPhaseStarted: event => event.phase === 'conflict'
+                onPhaseStarted: event => event.phase === Phases.Conflict
             },
             target: {
-                mode: 'ring',
+                mode: TargetModes.Ring,
                 ringCondition: () => true,
                 gameAction: ability.actions.ringLastingEffect(context => ({
                     duration: Durations.UntilEndOfPhase,

@@ -4,7 +4,7 @@ const SimpleStep = require('./simplestep.js');
 const ActionWindow = require('./actionwindow.js');
 const EndRoundPrompt = require('./regroup/endroundprompt.js');
 const GameActions = require('../GameActions/GameActions');
-const { Locations, Players } = require('../Constants');
+const { Locations, Players, Phases } = require('../Constants');
 
 /*
 V Regroup Phase
@@ -19,7 +19,7 @@ V Regroup Phase
 
 class RegroupPhase extends Phase {
     constructor(game) {
-        super(game, 'regroup');
+        super(game, Phases.Regroup);
         this.initialise([
             new ActionWindow(this.game, 'Action Window', 'regroup'),
             new SimpleStep(game, () => this.readyCards()),

@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Phases } = require('../../Constants');
 
 class PeasantsAdvice extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'look at a province and return its dynasty card to deck',
-            phase: 'conflict',
+            phase: Phases.Conflict,
             cost: ability.costs.dishonor(() => true),
             target: {
                 cardType: 'province',

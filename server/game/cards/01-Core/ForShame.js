@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, TargetModes } = require('../../Constants');
 
 class ForShame extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +13,7 @@ class ForShame extends DrawCard {
                     cardCondition: card => card.isParticipating()
                 },
                 select: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     dependsOn: 'character',
                     player: Players.Opponent,
                     choices: {

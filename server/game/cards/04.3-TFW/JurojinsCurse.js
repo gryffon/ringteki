@@ -1,17 +1,18 @@
 const DrawCard = require('../../drawcard.js');
 const FatePhase = require('../../gamesteps/fatephase.js');
+const { Phases } = require('../../Constants');
 
 class JurojinsCurse extends DrawCard {
     setupCardAbilities(ability) {
         this.forcedInterrupt({
             title: 'Resolve a second fate phase',
             when: {
-                onPhaseEnded: (event, context) => event.phase === 'fate' && !context.source.parent.bowed
+                onPhaseEnded: (event, context) => event.phase === Phases.Fate && !context.source.parent.bowed
             },
             effect: 'resolve a second fate phase after this',
             handler: context => context.source.delayedEffect(() => ({
                 when: {
-                    onPhaseEnded: event => event.phase === 'fate'
+                    onPhaseEnded: event => event.phase === Phases.Fate
                 },
                 context: context,
                 handler: () => {

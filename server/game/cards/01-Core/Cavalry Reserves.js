@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, TargetModes } = require('../../Constants');
 
 class CavalryReserves extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class CavalryReserves extends DrawCard {
             title: 'Put Cavalry into play from your discard',
             condition: () => this.game.isDuringConflict('military'),
             target: {
-                mode: 'maxStat',
+                mode: TargetModes.MaxStat,
                 activePromptTitle: 'Choose characters',
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,

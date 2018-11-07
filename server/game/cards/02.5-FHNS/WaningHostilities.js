@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, Players } = require('../../Constants');
+const { Durations, Players, Phases } = require('../../Constants');
 
 class WaningHostilities extends DrawCard {
     setupCardAbilities(ability) {
         this.reaction({
             title: 'Both players may only declare 1 conflict opportunity this turn',
             when: {
-                onPhaseStarted: event => event.phase === 'conflict'
+                onPhaseStarted: event => event.phase === Phases.Conflict
             },
             effect: 'limit both players to a single conflict this turn',
             gameAction: ability.actions.playerLastingEffect({

@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, TargetModes } = require('../../Constants');
 
 class CourtGames extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class CourtGames extends DrawCard {
             condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'political',
             max: ability.limit.perConflict(1),
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 choices: {
                     'Honor a friendly character': ability.actions.honor(context => ({
                         promptForSelect: {

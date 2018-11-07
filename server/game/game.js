@@ -36,7 +36,7 @@ const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
 const MenuCommands = require('./MenuCommands');
 const SpiritOfTheRiver = require('./cards/SpiritOfTheRiver');
 
-const { EffectNames } = require('./Constants');
+const { EffectNames, Phases } = require('./Constants');
 
 class Game extends EventEmitter {
     constructor(details, options = {}) {
@@ -365,7 +365,7 @@ class Game extends EventEmitter {
         }
 
         // If it's not the conflict phase and the ring hasn't been claimed, flip it
-        if(this.currentPhase !== 'conflict' && !ring.claimed) {
+        if(this.currentPhase !== Phases.Conflict && !ring.claimed) {
             ring.flipConflictType();
         }
     }

@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, Players } = require('../../Constants');
+const { Durations, Players, TargetModes } = require('../../Constants');
 
 class SoshiAoi extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class SoshiAoi extends DrawCard {
                     controller: Players.Self
                 },
                 select: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     dependsOn: 'character',
                     choices: {
                         'Give +1/+0 and the Bushi trait': ability.actions.cardLastingEffect(context => ({

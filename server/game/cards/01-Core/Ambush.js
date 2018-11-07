@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, TargetModes } = require('../../Constants');
 
 class Ambush extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class Ambush extends DrawCard {
             target: {
                 activePromptTitle: 'Choose up to two characters',
                 numCards: 2,
-                mode: 'maxStat',
+                mode: TargetModes.MaxStat,
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
                 cardType: 'character',

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class IdeTrader extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class IdeTrader extends DrawCard {
             multipleTrigger: false,
             limit: ability.limit.perConflict(1),
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 choices: {
                     'Gain 1 fate': ability.actions.gainFate(),
                     'Draw 1 card': ability.actions.draw()

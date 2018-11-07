@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations } = require('../../Constants');
+const { Durations, TargetModes } = require('../../Constants');
 
 class TogashiYokuni extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class TogashiYokuni extends DrawCard {
             title: 'Copy another character\'s ability',
             target: {
                 activePromptTitle: 'Select a character to copy from',
-                mode: 'ability',
+                mode: TargetModes.Ability,
                 cardType: 'character',
                 cardCondition: (card, context) => card !== context.source,
                 gameAction: ability.actions.cardLastingEffect(context => {

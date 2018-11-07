@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class BackhandedCompliment extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Select a player to lose an honor and draw a card',
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 choices:  {
                     'Me': [ability.actions.loseHonor(context => ({ target: context.player })), ability.actions.draw()],
                     'My Opponent': [ability.actions.loseHonor(), ability.actions.draw(context => ({ target: context.player.opponent }))]

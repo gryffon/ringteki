@@ -2,7 +2,7 @@ const _ = require('underscore');
 const Phase = require('./phase.js');
 const ActionWindow = require('./actionwindow.js');
 const SimpleStep = require('./simplestep.js');
-const { Players } = require('../Constants');
+const { Players, Phases } = require('../Constants');
 
 /*
 IV Fate Phase
@@ -16,7 +16,7 @@ IV Fate Phase
 
 class FatePhase extends Phase {
     constructor(game) {
-        super(game, 'fate');
+        super(game, Phases.Fate);
         this.initialise([
             new SimpleStep(game, () => this.discardCharactersWithNoFate()),
             new SimpleStep(game, () => this.removeFateFromCharacters()),

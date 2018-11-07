@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { TargetModes } = require('../../Constants');
 
 class ShamefulDisplay extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class ShamefulDisplay extends ProvinceCard {
             title: 'Dishonor/Honor two characters',
             condition: context => context.source.isConflictProvince(),
             target: {
-                mode: 'exactly',
+                mode: TargetModes.Exactly,
                 numCards: 2,
                 activePromptTitle: 'Select two characters',
                 cardCondition: card => card.isParticipating(),

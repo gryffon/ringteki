@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, TargetModes } = require('../../Constants');
 
 class ALegionOfOne extends DrawCard {
     setupCardAbilities(ability) {
@@ -21,7 +21,7 @@ class ALegionOfOne extends DrawCard {
                 if(context.secondResolution) {
                     return {
                         target: {
-                            mode: 'select',
+                            mode: TargetModes.Select,
                             choices: {
                                 'Remove 1 fate for no effect': ability.actions.removeFate({target: context.target }),
                                 'Done': () => true
@@ -33,7 +33,7 @@ class ALegionOfOne extends DrawCard {
                 }
                 return {
                     target: {
-                        mode: 'select',
+                        mode: TargetModes.Select,
                         choices: {
                             'Remove 1 fate to resolve this ability again': ability.actions.removeFate({target: context.target }),
                             'Done': () => true
