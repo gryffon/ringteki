@@ -1,5 +1,5 @@
 const PlayerAction = require('./PlayerAction');
-const { Locations } = require('../Constants');
+const { Locations, Players } = require('../Constants');
 
 class ChosenDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -32,7 +32,7 @@ class ChosenDiscardAction extends PlayerAction {
                     numCards: amount,
                     ordered: true,
                     location: Locations.Hand,
-                    controller: player === context.player ? 'self' : 'opponent',
+                    controller: player === context.player ? Players.Self : Players.Opponent,
                     onSelect: (player, cards) => {
                         this.cards[player.uuid] = cards;
                         context.game.addMessage('{0} discards {1}', player, cards);

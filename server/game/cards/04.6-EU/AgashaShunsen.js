@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class AgashaShunsen extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class AgashaShunsen extends DrawCard {
             cost: ability.costs.returnRings(),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.attach(context => {
                     let attachAction = ability.actions.attach();
                     let checkCard = card => {

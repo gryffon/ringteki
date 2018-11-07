@@ -46,9 +46,8 @@ class StolenSecrets extends DrawCard {
                 if(promptCards.length > 1) {
                     this.rearrangePrompt(context, promptCards, orderedCards, 'Which card do you want to be the second card?');
                     return;
-                } else if(promptCards.length === 1) {
-                    orderedCards.push(promptCards[0]);
                 }
+                orderedCards.push(promptCards[0]);
                 context.player.opponent.conflictDeck.splice(0, 3, ...orderedCards);
             }
         });

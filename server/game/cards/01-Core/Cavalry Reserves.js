@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class CavalryReserves extends DrawCard {
     setupCardAbilities(ability) {
@@ -14,7 +14,7 @@ class CavalryReserves extends DrawCard {
                 numCards: 0,
                 cardType: 'character',
                 location: Locations.DynastyDiscardPile,
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.hasTrait('cavalry'),
                 gameAction: ability.actions.putIntoConflict()
             }

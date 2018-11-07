@@ -1,5 +1,5 @@
 const StrongholdCard = require('../../strongholdcard.js');
-const { Durations } = require('../../Constants');
+const { Durations, Players } = require('../../Constants');
 
 class KyudenBayushi extends StrongholdCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class KyudenBayushi extends StrongholdCard {
             cost: ability.costs.bowSelf(),
             target: {
                 cardtype: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isDishonored,
                 gameAction: [
                     ability.actions.ready(),

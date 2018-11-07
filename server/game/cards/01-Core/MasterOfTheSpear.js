@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class MasterOfTheSpear extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,9 +7,9 @@ class MasterOfTheSpear extends DrawCard {
             title: 'Send home character',
             condition: () => this.isAttacking(),
             target: {
-                player: 'opponent',
+                player: Players.Opponent,
                 activePromptTitle: 'Choose a character to send home',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 gameAction: ability.actions.sendHome()
             }
         });

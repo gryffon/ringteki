@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations } = require('../../Constants');
+const { Durations, Players } = require('../../Constants');
 
 class MasterOfGiseiToshi extends DrawCard {
     setupCardAbilities(ability) {
@@ -15,7 +15,7 @@ class MasterOfGiseiToshi extends DrawCard {
             effect: 'prevent non-spell events from being played while {0} is contested',
             gameAction: ability.actions.playerLastingEffect(context => ({
                 duration: Durations.UntilEndOfPhase,
-                targetController: 'any',
+                targetController: Players.Any,
                 condition: () => this.game.currentConflict && this.game.currentConflict.ring === context.ring,
                 effect: ability.effects.playerCannot({
                     cannot: 'play',

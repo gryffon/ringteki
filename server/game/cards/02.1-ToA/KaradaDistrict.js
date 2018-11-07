@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class KaradaDistrict extends DrawCard {
     setupCardAbilities(ability) {
@@ -16,7 +17,7 @@ class KaradaDistrict extends DrawCard {
                         activePromptTitle: 'Choose a character to attach ' + context.target.name + ' to',
                         context: context,
                         cardType: 'character',
-                        controller: 'self',
+                        controller: Players.Self,
                         gameAction: ability.actions.attach({ attachment: context.target }),
                         onSelect: (player, card) => {
                             this.game.addMessage('{0} attaches {1} to {2}', player, context.target, card);

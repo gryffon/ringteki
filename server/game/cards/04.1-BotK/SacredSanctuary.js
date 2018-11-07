@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Players } = require('../../Constants');
 
 class SacredSanctuary extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -9,7 +10,7 @@ class SacredSanctuary extends ProvinceCard {
             },
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.hasTrait('monk'),
                 gameAction: [
                     ability.actions.ready(),

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class BentensTouch extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +10,7 @@ class BentensTouch extends DrawCard {
             target: {
                 cardType: 'character',
                 activePromptTitle: 'Choose a character to honor',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.honor()
             }

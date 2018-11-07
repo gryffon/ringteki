@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class EvenTheOdds extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class EvenTheOdds extends DrawCard {
             condition: context => this.game.isDuringConflict() && this.game.currentConflict.hasMoreParticipants(context.player.opponent),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: [
                     ability.actions.moveToConflict(),
                     ability.actions.honor(context => ({ target: context.target.hasTrait('commander') ? context.target : [] }))

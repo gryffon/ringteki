@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class InsolentRival extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +13,7 @@ class InsolentRival extends DrawCard {
             condition: () => this.isParticipating(),
             target: {
                 cardtype: 'character',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.duel(context => ({
                     type: 'military',
@@ -23,10 +24,8 @@ class InsolentRival extends DrawCard {
         });
     }
     resolutionHandler(context, winner, loser) {
-        if(loser) {
-            this.game.addMessage('{0} wins the duel, and dishonors {1}', winner, loser);
-            this.game.applyGameAction(context, { dishonor: loser });
-        }
+        this.game.addMessage('{0} wins the duel, and dishonors {1}', winner, loser);
+        this.game.applyGameAction(context, { dishonor: loser });
     }
 }
 

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class RadiantOrator extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +13,7 @@ class RadiantOrator extends DrawCard {
             ),
             target: {
                 cardType: 'character',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 gameAction: ability.actions.sendHome()
             }
         });
