@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class IdeMessenger extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class IdeMessenger extends DrawCard {
             cost: ability.costs.payFate(1),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.moveToConflict()
             }
         });

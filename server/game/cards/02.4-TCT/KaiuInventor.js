@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Durations } = require('../../Constants');
+const { Locations, Durations, Players } = require('../../Constants');
 
 class KaiuInventor extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class KaiuInventor extends DrawCard {
             target: {
                 cardType: 'holding',
                 location: Locations.Provinces,
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.cardLastingEffect({
                     duration: Durations.UntilEndOfRound,
                     targetLocation: Locations.Provinces,

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class IdeTadaji extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,13 +9,13 @@ class IdeTadaji extends DrawCard {
             targets: {
                 myChar: {
                     cardType: 'character',
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: card => !card.bowed && card.costLessThan(3),
                     gameAction: ability.actions.moveToConflict()
                 },
                 oppChar: {
                     cardType: 'character',
-                    controller: 'opponent',
+                    controller: Players.Opponent,
                     cardCondition: card => !card.bowed && card.costLessThan(3),
                     gameAction: ability.actions.moveToConflict()
                 }

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class WayOfTheCrane extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class WayOfTheCrane extends DrawCard {
             title: 'Honor a character',
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isFaction('crane'),
                 gameAction: ability.actions.honor()
             }

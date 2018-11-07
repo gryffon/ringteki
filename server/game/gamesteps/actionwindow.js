@@ -1,5 +1,5 @@
 const UiPrompt = require('./uiprompt.js');
-const { Locations } = require('../Constants');
+const { Locations, Players } = require('../Constants');
 
 class ActionWindow extends UiPrompt {
     constructor(game, title, windowName) {
@@ -33,7 +33,7 @@ class ActionWindow extends UiPrompt {
             return false;
         } else if(legalActions.length === 1) {
             let action = legalActions[0];
-            let targetPrompts = action.targets.some(target => target.properties.player !== 'opponent');
+            let targetPrompts = action.targets.some(target => target.properties.player !== Players.Opponent);
             if(!this.currentPlayer.optionSettings.confirmOneClick || action.cost.some(cost => cost.promptsPlayer) || targetPrompts) {
                 this.game.resolveAbility(action.createContext(player));
                 return true;
@@ -96,7 +96,7 @@ class ActionWindow extends UiPrompt {
                 source: 'Manual Action',
                 activePrompt: 'Which ability are you using?',
                 location: Locations.Any,
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => !card.facedown,
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} uses {1}\'s ability', player, card);

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class FightOn extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -7,7 +8,7 @@ class FightOn extends DrawCard {
             condition: context => context.player.isDefendingPlayer(),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.bowed,
                 gameAction: [ability.actions.ready(), ability.actions.moveToConflict()]
             },

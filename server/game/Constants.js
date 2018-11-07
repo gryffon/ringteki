@@ -99,10 +99,17 @@ const Stages = {
     Target: 'target'
 };
 
+const Players = {
+    Self: 'self',
+    Opponent: 'opponent',
+    Any: 'any'
+};
+
 module.exports = {
     Locations,
     Decks,
     EffectNames,
     Durations,
-    Stages
+    Stages,
+    Players
 };

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class DojiChallenger extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class DojiChallenger extends DrawCard {
             condition: context => context.source.isAttacking(),
             target: {
                 cardType: 'character',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 gameAction: ability.actions.moveToConflict()
             }
         });

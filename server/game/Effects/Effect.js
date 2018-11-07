@@ -18,7 +18,7 @@ const { Locations, Durations } = require('../Constants');
  * location         - location where the source of this effect needs to be for
  *                    the effect to be active. Defaults to 'play area'.
  * targetController - string that determines which player's cards are targeted.
- *                    Can be 'current' (default), 'opponent' or 'any'. For player
+ *                    Can be 'self' (default), 'opponent' or 'any'. For player
  *                    effects it determines which player(s) are affected.
  * targetLocation   - string that determines the location of cards that can be
  *                    applied by the effect. Can be 'play area' (default),

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class FavorableGround extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class FavorableGround extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: [ability.actions.sendHome(), ability.actions.moveToConflict()]
             }
         });

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class SecludedTemple extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,9 +10,9 @@ class SecludedTemple extends DrawCard {
                                                     context.player.cardsInPlay.size() < context.player.opponent.cardsInPlay.size()
             },
             target: {
-                player: 'opponent',
+                player: Players.Opponent,
                 activePromptTitle: 'Choose a character to remove a fate from',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 gameAction: ability.actions.removeFate()
             }
         });

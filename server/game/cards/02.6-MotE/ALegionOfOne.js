@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class ALegionOfOne extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class ALegionOfOne extends DrawCard {
             condition: () => this.game.isDuringConflict('military'),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: (card, context) =>
                     card.isParticipating() &&
                     this.game.currentConflict.getNumberOfParticipantsFor(context.player) === 1,
