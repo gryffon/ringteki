@@ -1,13 +1,11 @@
 const DrawCard = require('../../drawcard.js');
 const PlayCharacterAction = require('../../playcharacteraction.js');
+const _ = require('underscore');
 const { Locations, Players } = require('../../Constants');
 
 class HiddenMoonDojoPlayAction extends PlayCharacterAction {
-    meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
-        if(ignoredRequirements.includes('location')) {
-            return super.meetsRequirements(context, ignoredRequirements);
-        }
-        return super.meetsRequirements(context, ignoredRequirements.concat('location'));
+    meetsRequirements(context, ignoredRequirements = []) {
+        return super.meetsRequirements(context, _.uniq(ignoredRequirements.concat('location')));
     }
 }
 
