@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class BustlingAcademy extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class BustlingAcademy extends DrawCard {
             condition: context => context.player.cardsInPlay.any(card => card.hasTrait('scholar')) && context.player.opponent,
             target: {
                 location: Locations.Provinces,
-                cardType: ['character','holding'],
+                cardType: [CardTypes.Character,CardTypes.Holding],
                 gameAction: [
                     ability.actions.discardCard(),
                     ability.actions.refillFaceup(context => ({

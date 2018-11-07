@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class HurricanePunch extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class HurricanePunch extends DrawCard {
             effect: 'grant 2 military skill to {0} and draw a card',
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating() && card.hasTrait('monk'),
                 gameAction: ability.actions.cardLastingEffect(() => ({
                     effect: ability.effects.modifyMilitarySkill(2)

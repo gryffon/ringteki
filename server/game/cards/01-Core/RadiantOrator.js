@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class RadiantOrator extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class RadiantOrator extends DrawCard {
                 context.player.opponent.cardsInPlay.reduce((oppTotal, card) => oppTotal + (card.isParticipating() && !card.bowed ? card.getGlory() : 0), 0)
             ),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 gameAction: ability.actions.sendHome()
             }

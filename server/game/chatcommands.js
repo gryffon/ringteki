@@ -1,7 +1,7 @@
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
 const HonorBidPrompt = require('./gamesteps/honorbidprompt.js');
-const { Locations } = require('./Constants');
+const { Locations, CardTypes } = require('./Constants');
 
 class ChatCommands {
     constructor(game) {
@@ -126,7 +126,7 @@ class ChatCommands {
                 activePromptTitle: 'Select cards to move into the conflict',
                 waitingPromptTitle: 'Waiting for opponent to choose cards to move',
                 cardCondition: card => card.location === Locations.PlayArea && card.controller === player && !card.inConflict,
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 numCards: 0,
                 multiSelect: true,
                 onSelect: (p, cards) => {
@@ -150,7 +150,7 @@ class ChatCommands {
                 activePromptTitle: 'Select a card to send home',
                 waitingPromptTitle: 'Waiting for opponent to send home',
                 cardCondition: card => card.location === Locations.PlayArea && card.controller === player && card.inConflict,
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 onSelect: (p, card) => {
                     //send home card
                     this.game.currentConflict.removeFromConflict(card);

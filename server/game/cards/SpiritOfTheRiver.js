@@ -1,5 +1,5 @@
 const DrawCard = require('../drawcard.js');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class SpiritOfTheRiver extends DrawCard {
     constructor(facedownCard) {
@@ -13,7 +13,7 @@ class SpiritOfTheRiver extends DrawCard {
             political: null,
             side: 'dynasty',
             text: '',
-            type: 'character',
+            type: CardTypes.Character,
             traits: ['spirit', 'cavalry'],
             unicity: false
         });

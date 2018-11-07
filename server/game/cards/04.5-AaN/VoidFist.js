@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const EventRegistrar = require('../../eventregistrar.js');
+const { CardTypes } = require('../../Constants');
 
 class VoidFist extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class VoidFist extends DrawCard {
             title: 'Bow and send a character home',
             condition: context => this.cardsPlayedThisConflict[context.player.uuid] >= 2,
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) =>
                     card.isParticipating() && this.game.currentConflict.getCharacters(context.player).some(myCard =>
                         myCard.hasTrait('monk') && myCard.militarySkill >= card.militarySkill

@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class IronMine extends DrawCard {
     setupCardAbilities(ability) {
         this.wouldInterrupt({
             title: 'Prevent a character from leaving play',
             when: {
-                onCardLeavesPlay: (event, context) => event.card.controller === context.player && event.card.type === 'character' &&
+                onCardLeavesPlay: (event, context) => event.card.controller === context.player && event.card.type === CardTypes.Character &&
                                                       context.source.allowGameAction('sacrifice', context)
             },
             effect: 'prevent {1} from leaving play',

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class HirumaAmbusher extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class HirumaAmbusher extends DrawCard {
                 'onCharacterEntersPlay': (event, context) => event.card === context.source && context.source.isDefending()
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.cardLastingEffect({
                     effect: ability.effects.cardCannot('triggerAbilities')
                 })

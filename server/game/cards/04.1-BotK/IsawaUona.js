@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class IsawaUona extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +10,7 @@ class IsawaUona extends DrawCard {
             },
             target: {
                 activePromptTitle: 'Choose a character',
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Any,
                 cardCondition: card => card.isParticipating() && !card.isUnique(),
                 gameAction: ability.actions.bow()

@@ -1,5 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class FeastOrFamine extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -9,13 +9,13 @@ class FeastOrFamine extends ProvinceCard {
                 onBreakProvince: (event, context) => event.card === context.source
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 gameAction: ability.actions.placeFate(context => ({
                     origin: context.target,
                     amount: context.target.fate,
                     promptForSelect: {
-                        cardType: 'character',
+                        cardType: CardTypes.Character,
                         controller: Players.Self,
                         cardCondition: card => card.fate === 0,
                         message: '{0} moves {1} fate from {2} to {3}',

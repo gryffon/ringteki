@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class TaryuJiai extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,14 +10,14 @@ class TaryuJiai extends DrawCard {
                 myShugenja: {
                     activePromptTitle: 'Choose a friendly shugenja',
                     controller: Players.Self,
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     cardCondition: card => card.hasTrait('shugenja')
                 },
                 oppShugenja: {
                     dependsOn: 'myShugenja',
                     activePromptTitle: 'Choose an opposing shugenja',
                     controller: Players.Opponent,
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     cardCondition: card => card.hasTrait('shugenja'),
                     gameAction: ability.actions.duel(context => ({
                         type: 'glory',

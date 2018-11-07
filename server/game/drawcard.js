@@ -10,7 +10,7 @@ const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 
-const { Locations, EffectNames, Players } = require('./Constants');
+const { Locations, EffectNames, Players, CardTypes } = require('./Constants');
 
 const ValidKeywords = [
     'ancestral',
@@ -52,7 +52,7 @@ class DrawCard extends BaseCard {
             { command: 'control', text: 'Give control' }
         ]);
 
-        if(cardData.type === 'character') {
+        if(cardData.type === CardTypes.Character) {
             this.abilities.reactions.push(new CourtesyAbility(this.game, this));
             this.abilities.reactions.push(new PrideAbility(this.game, this));
             this.abilities.reactions.push(new SincerityAbility(this.game, this));
@@ -386,7 +386,7 @@ class DrawCard extends BaseCard {
      * Opponent cards only, specific factions, etc) for this card.
      */
     canAttach(card, context) { // eslint-disable-line no-unused-vars
-        return card && card.getType() === 'character' && this.getType() === 'attachment';
+        return card && card.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
     }
 
     canPlay(context, type = 'play') {
@@ -433,7 +433,7 @@ class DrawCard extends BaseCard {
             return super.getActions();
         }
         let actions = [];
-        if(this.type === 'character') {
+        if(this.type === CardTypes.Character) {
             if(player.getDuplicateInPlay(this)) {
                 actions.push(new DuplicateUniqueAction(this));
             } else if(this.isDynasty && location !== Locations.Hand) {
@@ -441,7 +441,7 @@ class DrawCard extends BaseCard {
             } else {
                 actions.push(new PlayCharacterAction(this));
             }
-        } else if(this.type === 'attachment') {
+        } else if(this.type === CardTypes.Attachment) {
             actions.push(new PlayAttachmentAction(this));
         }
         return actions.concat(this.abilities.playActions, super.getActions());

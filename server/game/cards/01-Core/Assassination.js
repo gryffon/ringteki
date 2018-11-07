@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class Assassination extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class Assassination extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.payHonor(3),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.costLessThan(3),
                 gameAction: ability.actions.discardFromPlay()
             },

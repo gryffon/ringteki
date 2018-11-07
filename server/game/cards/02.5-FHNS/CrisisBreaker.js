@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class CrisisBreaker extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +13,7 @@ class CrisisBreaker extends DrawCard {
                 return false;
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.hasTrait('berserker'),
                 gameAction: [ability.actions.ready(), ability.actions.moveToConflict()]

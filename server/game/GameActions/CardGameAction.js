@@ -1,6 +1,6 @@
 const GameAction = require('./GameAction');
 const CardSelector = require('../CardSelector');
-const { Stages } = require('../Constants.js');
+const { Stages, CardTypes } = require('../Constants.js');
 
 class CardGameAction extends GameAction {
     constructor(propertyFactory) {
@@ -10,7 +10,7 @@ class CardGameAction extends GameAction {
     }
 
     setup() {
-        this.targetType = ['character', 'attachment', 'holding', 'event', 'stronghold', 'province', 'role'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role];
     }
 
     hasLegalTarget(context) {

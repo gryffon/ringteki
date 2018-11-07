@@ -1,4 +1,5 @@
 const StrongholdCard = require('../../strongholdcard.js');
+const { CardTypes } = require('../../Constants');
 
 class ShizukaToshi extends StrongholdCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class ShizukaToshi extends StrongholdCard {
             condition: () => this.game.isDuringConflict('political'),
             cost: ability.costs.bowSelf(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating() && card.politicalSkill <= 2,
                 gameAction: ability.actions.bow()
             }

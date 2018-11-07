@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class Sabotage extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +9,7 @@ class Sabotage extends DrawCard {
             target: {
                 location: Locations.Provinces,
                 controller: Players.Opponent,
-                cardType: ['character','holding'],
+                cardType: [CardTypes.Character,CardTypes.Holding],
                 gameAction: ability.actions.discardCard()
             }
         });

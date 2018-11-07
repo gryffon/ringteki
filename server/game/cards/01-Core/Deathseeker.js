@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class Deathseeker extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +11,7 @@ class Deathseeker extends DrawCard {
             },
             cost: ability.costs.sacrificeSelf(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: (card, context) => (card.fate > 0 ? card.allowGameAction('removeFate', context) : card.allowGameAction('discardFromPlay', context))
             },

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class MantraOfEarth extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class MantraOfEarth extends DrawCard {
                 onConflictDeclared: (event, context) => event.ring.hasElement('earth') && event.conflict.attackingPlayer === context.player.opponent
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.hasTrait('monk') || card.attachments.any(card => card.hasTrait('monk')),
                 gameAction: ability.actions.cardLastingEffect({
                     effect: ability.effects.cardCannot({

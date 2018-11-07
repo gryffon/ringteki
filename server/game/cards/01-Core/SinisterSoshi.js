@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class SinisterSoshi extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class SinisterSoshi extends DrawCard {
             title: 'Give a character -2/-2',
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyBothSkills(-2) })
             },

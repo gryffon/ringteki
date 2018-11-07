@@ -1,10 +1,10 @@
 const DrawCard = require('../../drawcard.js');
-const { Phases } = require('../../Constants');
+const { Phases, CardTypes } = require('../../Constants');
 
 class KuniLaboratory extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: card => card.getType() === 'character',
+            match: card => card.getType() === CardTypes.Character,
             effect: ability.effects.modifyBothSkills(1)
         });
 

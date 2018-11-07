@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class RevealAction extends CardGameAction {
     setDefaultProperties() {
@@ -24,7 +24,7 @@ class RevealAction extends CardGameAction {
 
     getEvent(card, context) {
         let eventName = 'onCardRevealed';
-        if(card.type === 'province') {
+        if(card.type === CardTypes.Province) {
             eventName = 'onProvinceRevealed';
         }
         return super.createEvent(eventName, { card, context }, event => {

@@ -4,7 +4,7 @@ const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
 const GameActions = require('../../GameActions/GameActions');
 const ThenAbility = require('../../ThenAbility');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 const backAlleyPersistentEffect = {
     apply: card => {
@@ -84,7 +84,7 @@ class BackAlleyHideaway extends DrawCard {
         this.interrupt({
             title: 'Place character in Hideaway',
             when: {
-                onCardLeavesPlay: (event, context) => event.card.isFaction('scorpion') && event.card.type === 'character' &&
+                onCardLeavesPlay: (event, context) => event.card.isFaction('scorpion') && event.card.type === CardTypes.Character &&
                                                       event.card.controller === context.player
             },
             effect: 'move {1} into hiding',

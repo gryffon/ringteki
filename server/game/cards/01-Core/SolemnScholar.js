@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class SolemnScholar extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class SolemnScholar extends DrawCard {
             title: 'Bow an attacking character',
             condition: context => this.game.rings.earth.isConsideredClaimed(context.player),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isAttacking(),
                 gameAction: ability.actions.bow()
             }

@@ -2,7 +2,7 @@ const _ = require('underscore');
 const Phase = require('./phase.js');
 const ActionWindow = require('./actionwindow.js');
 const SimpleStep = require('./simplestep.js');
-const { Players, Phases } = require('../Constants');
+const { Players, Phases, CardTypes } = require('../Constants');
 
 /*
 IV Fate Phase
@@ -42,7 +42,7 @@ class FatePhase extends Phase {
             activePromptTitle: 'Choose character to discard\n(or click Done to discard all characters with no fate)',
             waitingPromptTitle: 'Waiting for opponent to discard characters with no fate',
             cardCondition: card => cardsToDiscard.includes(card),
-            cardType: 'character',
+            cardType: CardTypes.Character,
             controller: Players.Self,
             buttons: [{ text: 'Done', arg: 'cancel' }],
             onSelect: (player, card) => {

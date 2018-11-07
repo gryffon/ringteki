@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class DiscardStatusAction extends CardGameAction {
     setup() {
         this.name = 'discardStatus';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'discard {0}\'s status token';
     }
 

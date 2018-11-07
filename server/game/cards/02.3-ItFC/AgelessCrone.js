@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class AgelessCrone extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +9,7 @@ class AgelessCrone extends DrawCard {
             targetController: Players.Any,
             effect: ability.effects.increaseCost({
                 amount: 1,
-                match: card => card.type === 'event'
+                match: card => card.type === CardTypes.Event
             })
         });
     }

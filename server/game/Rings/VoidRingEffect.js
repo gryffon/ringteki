@@ -1,4 +1,5 @@
 const BaseAbility = require('../baseability.js');
+const { CardTypes } = require('../Constants');
 
 class VoidRingEffect extends BaseAbility {
     constructor(optional = true) {
@@ -7,7 +8,7 @@ class VoidRingEffect extends BaseAbility {
                 activePromptTitle: 'Choose character to remove fate from',
                 source: 'Void Ring',
                 buttons: optional ? [{ text: 'Don\'t resolve', arg: 'dontResolve' }] : [],
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.allowGameAction('removeFate', context)
             }
         });

@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class MoveToConflictAction extends CardGameAction {
     setup() {
         this.name = 'moveToConflict';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'move {0} into the conflict';
     }
 

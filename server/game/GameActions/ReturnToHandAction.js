@@ -1,6 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class ReturnToHandAction extends CardGameAction {
     setDefaultProperties() {
@@ -9,7 +9,7 @@ class ReturnToHandAction extends CardGameAction {
 
     setup() {
         this.name = 'returnToHand';
-        this.targetType = ['character', 'attachment'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment];
         this.effectMsg = 'return {0} to their hand';
         this.cost = 'returning {0} to their hand';
     }

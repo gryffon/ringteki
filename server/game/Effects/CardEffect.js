@@ -1,5 +1,5 @@
 const Effect = require('./Effect.js');
-const { Locations, Players } = require('../Constants');
+const { Locations, Players, CardTypes } = require('../Constants');
 
 class CardEffect extends Effect {
     constructor(game, source, properties, effect) {
@@ -7,7 +7,7 @@ class CardEffect extends Effect {
             properties.match = (card, context) => card === context.source;
             if(properties.location === Locations.Any) {
                 properties.targetLocation = Locations.Any;
-            } else if(['province', 'stronghold', 'holding'].includes(source.type)) {
+            } else if([CardTypes.Province, CardTypes.Stronghold, CardTypes.Holding].includes(source.type)) {
                 properties.targetLocation = Locations.Provinces;
             }
         }

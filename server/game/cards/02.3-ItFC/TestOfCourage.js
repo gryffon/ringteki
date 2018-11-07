@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class TestOfCourage extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class TestOfCourage extends DrawCard {
             title: 'Move a character into conflict',
             condition: context => context.player.opponent && context.player.showBid < context.player.opponent.showBid,
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.isFaction('lion'),
                 gameAction: ability.actions.moveToConflict()

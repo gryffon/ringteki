@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class YoungRumormonger extends DrawCard {
     setupCardAbilities() {
@@ -9,7 +10,7 @@ class YoungRumormonger extends DrawCard {
                 onCardDishonored: event => event.gameAction.name === 'dishonor'
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card !== context.event.card && card.controller === context.event.card.controller &&
                                                   card.allowGameAction(context.event.gameAction.name, context)
             },

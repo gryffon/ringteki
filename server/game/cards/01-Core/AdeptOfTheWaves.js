@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations } = require('../../Constants');
+const { Durations, CardTypes } = require('../../Constants');
 
 class AdeptOfTheWaves extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Grant Covert to a character',
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.cardLastingEffect(() => ({
                     duration: Durations.UntilEndOfPhase,
                     condition: () => this.game.isDuringConflict('water'),
