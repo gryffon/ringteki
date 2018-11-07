@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class MatsuSeventhLegion extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: context => context.source.isAttacking(),
             match: card => card.hasTrait('courtier'),
-            targetController: 'opponent',
+            targetController: Players.Opponent,
             effect: ability.effects.cardCannot('declareAsDefender')});
     }
 }

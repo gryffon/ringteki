@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class DisguisedProtector extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -11,7 +12,7 @@ class DisguisedProtector extends DrawCard {
                     effect: ability.effects.changePlayerSkillModifier(context.player.showBid)
                 })),
                 ability.actions.playerLastingEffect(context => ({
-                    targetController: 'opponent',
+                    targetController: Players.Opponent,
                     effect: ability.effects.changePlayerSkillModifier(context.player.opponent.showBid)
                 }))
             ]

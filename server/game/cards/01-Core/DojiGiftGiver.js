@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class DojiGiftGiver extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,9 +8,9 @@ class DojiGiftGiver extends DrawCard {
             cost: ability.costs.giveFateToOpponent(1),
             condition: context => context.source.isParticipating() && context.player.opponent,
             target: {
-                player: 'opponent',
+                player: Players.Opponent,
                 cardType: 'character',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.bow()
             }

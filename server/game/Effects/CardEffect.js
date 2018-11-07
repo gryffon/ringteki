@@ -1,5 +1,5 @@
 const Effect = require('./Effect.js');
-const { Locations } = require('../Constants');
+const { Locations, Players } = require('../Constants');
 
 class CardEffect extends Effect {
     constructor(game, source, properties, effect) {
@@ -12,7 +12,7 @@ class CardEffect extends Effect {
             }
         }
         super(game, source, properties, effect);
-        this.targetController = properties.targetController || 'current';
+        this.targetController = properties.targetController || Players.Self;
         this.targetLocation = properties.targetLocation || Locations.PlayArea;
     }
 
@@ -23,8 +23,8 @@ class CardEffect extends Effect {
         }
         return (
             target.allowGameAction('applyEffect', this.context) &&
-            (this.targetController !== 'current' || target.controller === this.source.controller) &&
-            (this.targetController !== 'opponent' || target.controller !== this.source.controller)
+            (this.targetController !== Players.Self || target.controller === this.source.controller) &&
+            (this.targetController !== Players.Opponent || target.controller !== this.source.controller)
         );
     }
 

@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-const { Stages } = require('../Constants.js');
+const { Stages, Players } = require('../Constants.js');
 
 class AbilityTargetRing {
     constructor(name, properties, ability) {
@@ -56,7 +56,7 @@ class AbilityTargetRing {
             return;
         }
         let player = context.player;
-        if(this.properties.player && this.properties.player === 'opponent') {
+        if(this.properties.player && this.properties.player === Players.Opponent) {
             if(context.stage === Stages.PreTarget) {
                 targetResults.delayTargeting = this;
                 return;

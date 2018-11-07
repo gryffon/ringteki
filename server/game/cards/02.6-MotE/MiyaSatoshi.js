@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class MiyaSatoshi extends DrawCard {
     setupCardAbilities() {
@@ -23,7 +23,7 @@ class MiyaSatoshi extends DrawCard {
                     activePromptTitle: 'Choose a card to discard',
                     context: context,
                     location: Locations.Provinces,
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: card => card.isDynasty,
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} chooses to discard {1}, and puts {2} faceup in its place', player, card, firstImperial);

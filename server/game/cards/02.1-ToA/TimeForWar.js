@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class TimeForWar extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,13 +12,13 @@ class TimeForWar extends DrawCard {
                 weapon: {
                     cardType: 'attachment',
                     location: [Locations.ConflictDiscardPile, Locations.Hand],
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: card => card.costLessThan(4) && card.hasTrait('weapon')
                 },
                 bushi: {
                     dependsOn: 'weapon',
                     cardType: 'character',
-                    controller: 'self',
+                    controller: Players.Self,
                     cardCondition: card => card.hasTrait('bushi'),
                     gameAction: ability.actions.attach(context => ({ attachment: context.targets.weapon }))
                 }

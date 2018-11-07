@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class ShinjoSaddle extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class ShinjoSaddle extends DrawCard {
             title: 'Move to another character',
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.attach(context => ({ attachment: context.source }))
             }
         });
