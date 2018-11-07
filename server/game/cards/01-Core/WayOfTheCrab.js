@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class WayOfTheCrab extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +14,7 @@ class WayOfTheCrab extends DrawCard {
                     player: context.player.opponent,
                     activePromptTitle: 'Choose a character to sacrifice',
                     cardType: 'character',
-                    controller: 'opponent',
+                    controller: Players.Opponent,
                     message: '{0} sacrifices {1} to {2}',
                     messageArgs: card => [context.player.opponent, card, context.source]
                 }

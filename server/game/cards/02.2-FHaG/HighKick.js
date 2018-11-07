@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class HighKick extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class HighKick extends DrawCard {
             cost: ability.costs.bow(card => card.hasTrait('monk') && card.isParticipating()),
             target: {
                 cardType: 'character',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: [
                     ability.actions.bow(),

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class ClarityOfPurpose extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class ClarityOfPurpose extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: [
                     ability.actions.cardLastingEffect({
                         condition: () => this.game.isDuringConflict('political'),

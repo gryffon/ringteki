@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class Ambush extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +13,7 @@ class Ambush extends DrawCard {
                 maxStat: () => 6,
                 cardType: 'character',
                 location: [Locations.Hand, Locations.Provinces],
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isFaction('scorpion'),
                 gameAction: ability.actions.putIntoConflict()
             }

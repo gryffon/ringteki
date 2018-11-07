@@ -1,12 +1,11 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class WalkingTheWay extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             location: Locations.Any,
-            targetType: 'player',
-            targetController: 'any',
+            targetController: Players.Any,
             match: player => player.cardsInPlay.any(card => card.hasTrait('shugenja')),
             effect: ability.effects.reduceCost({ playingTypes: 'playFromHand', match: (card, source) => card === source })
         });
@@ -24,7 +23,7 @@ class WalkingTheWay extends DrawCard {
                     context: context,
                     cardType: ['holding', 'character'],
                     location: Locations.Provinces,
-                    controller: 'self',
+                    controller: Players.Self,
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} discards {1}, replacing it with {2}', player, card, cardFromDeck);
                         player.moveCard(cardFromDeck, card.location);

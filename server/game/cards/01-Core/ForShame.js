@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class ForShame extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,13 +9,13 @@ class ForShame extends DrawCard {
             targets: {
                 character: {
                     cardType: 'character',
-                    controller: 'opponent',
+                    controller: Players.Opponent,
                     cardCondition: card => card.isParticipating()
                 },
                 select: {
                     mode: 'select',
                     dependsOn: 'character',
-                    player: 'opponent',
+                    player: Players.Opponent,
                     choices: {
                         'Dishonor this character': ability.actions.dishonor(context => ({ target: context.targets.character })),
                         'Bow this character': ability.actions.bow(context => ({ target: context.targets.character }))

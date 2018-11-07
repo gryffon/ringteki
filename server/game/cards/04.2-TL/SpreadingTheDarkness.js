@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class SpreadingTheDarkness extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class SpreadingTheDarkness extends DrawCard {
             cost: ability.costs.payHonor(2),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect({
                     effect: [

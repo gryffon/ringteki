@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class RestoredHeirloom extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class RestoredHeirloom extends DrawCard {
             location: [Locations.Hand,Locations.ConflictDiscardPile],
             target: {
                 cardType: 'character',
-                controller: 'self'
+                controller: Players.Self
             },
             handler: context => {
                 context.cancel();

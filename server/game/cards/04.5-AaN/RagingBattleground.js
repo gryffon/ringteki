@@ -9,7 +9,6 @@ class RagingBattleground extends ProvinceCard {
             },
             target: {
                 cardType: 'character',
-                controller: 'any',
                 cardCondition: card => !card.isUnique() && card.getFate() < 1,
                 gameAction: ability.actions.discardFromPlay()
             }

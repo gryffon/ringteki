@@ -10,7 +10,7 @@ const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 
-const { Locations, EffectNames } = require('./Constants');
+const { Locations, EffectNames, Players } = require('./Constants');
 
 const ValidKeywords = [
     'ancestral',
@@ -376,7 +376,7 @@ class DrawCard extends BaseCard {
         this.persistentEffect({
             condition: properties.condition || (() => true),
             match: (card, context) => card === this.parent && (!properties.match || properties.match(card, context)),
-            targetController: 'any',
+            targetController: Players.Any,
             effect: properties.effect
         });
     }
@@ -414,7 +414,7 @@ class DrawCard extends BaseCard {
             this.game.promptForSelect(this.controller, {
                 activePromptTitle: 'Choose an attachment to discard',
                 waitingPromptTitle: 'Waiting for opponent to choose an attachment to discard',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.parent === this && card.isRestricted(),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);

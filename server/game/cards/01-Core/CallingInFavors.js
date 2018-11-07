@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class CallingInFavors extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class CallingInFavors extends DrawCard {
             cost: ability.costs.dishonor(() => true),
             target: {
                 cardType: 'attachment',
-                controller: 'opponent'
+                controller: Players.Opponent
             },
             effect: 'take control of {0}',
             handler: context => {

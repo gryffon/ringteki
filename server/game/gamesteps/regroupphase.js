@@ -4,7 +4,7 @@ const SimpleStep = require('./simplestep.js');
 const ActionWindow = require('./actionwindow.js');
 const EndRoundPrompt = require('./regroup/endroundprompt.js');
 const GameActions = require('../GameActions/GameActions');
-const { Locations } = require('../Constants');
+const { Locations, Players } = require('../Constants');
 
 /*
 V Regroup Phase
@@ -67,7 +67,7 @@ class RegroupPhase extends Phase {
                 activePromptTitle: 'Select dynasty cards to discard',
                 waitingPromptTitle: 'Waiting for opponent to discard dynasty cards',
                 location: Locations.Provinces,
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => cardsOnUnbrokenProvinces.includes(card),
                 onSelect: (player, cards) => {
                     cardsToDiscard = cardsToDiscard.concat(cards);

@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Players } = require('../../Constants');
 
 class BrothersGiftDojo extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -9,7 +10,7 @@ class BrothersGiftDojo extends ProvinceCard {
             cost: ability.costs.payHonor(1),
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.sendHome()
             }

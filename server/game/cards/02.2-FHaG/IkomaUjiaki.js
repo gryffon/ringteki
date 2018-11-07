@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class IkomaUjiaki extends DrawCard {
     setupCardAbilities(ability) {
@@ -29,7 +29,7 @@ class IkomaUjiaki extends DrawCard {
                         activePrompt: 'Choose up to 2 characters',
                         cardType: 'character',
                         location: Locations.Provinces,
-                        controller: 'self',
+                        controller: Players.Self,
                         context: context,
                         optional: true,
                         cardCondition: card => !card.facedown && card.allowGameAction('putIntoConflict', context),

@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const SelectChoice = require('./SelectChoice.js');
-const { Stages } = require('../Constants.js');
+const { Stages, Players } = require('../Constants.js');
 
 class AbilityTargetSelect {
     constructor(name, properties, ability) {
@@ -70,7 +70,7 @@ class AbilityTargetSelect {
             return;
         }
         let player = context.player;
-        if(this.properties.player && this.properties.player === 'opponent') {
+        if(this.properties.player && this.properties.player === Players.Opponent) {
             if(context.stage === Stages.PreTarget) {
                 targetResults.delayTargeting = this;
                 return;
@@ -89,7 +89,7 @@ class AbilityTargetSelect {
                 }
             });
         });
-        if(this.properties.player !== 'opponent' && context.stage === Stages.PreTarget) {
+        if(this.properties.player !== Players.Opponent && context.stage === Stages.PreTarget) {
             if(!targetResults.noCostsFirstButton) {
                 choices.push('Pay costs first');
                 handlers.push(() => targetResults.payCostsFirst = true);

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class CallowDelegate extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -9,7 +10,7 @@ class CallowDelegate extends DrawCard {
             },
             target: {
                 cardType: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 gameAction: ability.actions.honor()
             }
         });

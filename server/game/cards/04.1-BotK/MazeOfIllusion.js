@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class MazeOfIllusion extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class MazeOfIllusion extends DrawCard {
             condition: context => this.game.isDuringConflict() && context.player.opponent,
             target: {
                 cardType: 'character',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: [ability.actions.bow(), ability.actions.dishonor()]
             },

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class CourtOfDeception extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class CourtOfDeception extends DrawCard {
             condition: context => context.player.honor <= 6,
             target: {
                 cardtype: 'character',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isDishonored && !card.isParticipating(),
                 gameAction: ability.actions.discardStatusToken()
             }
