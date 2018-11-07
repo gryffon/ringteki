@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, TargetModes } = require('../../Constants');
 
 class DeceptiveOffer extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class DeceptiveOffer extends DrawCard {
                     cardCondition: card => card.isParticipating()
                 },
                 select: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     dependsOn: 'character',
                     player: Players.Opponent,
                     choices: {

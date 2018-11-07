@@ -3,7 +3,7 @@ const _ = require('underscore');
 const Phase = require('./phase.js');
 const SimpleStep = require('./simplestep.js');
 const DynastyActionWindow = require('./dynasty/dynastyactionwindow.js');
-const { Locations } = require('../Constants');
+const { Locations, Phases } = require('../Constants');
 
 /*
 I Dynasty Phase
@@ -18,7 +18,7 @@ I Dynasty Phase
 
 class DynastyPhase extends Phase {
     constructor(game) {
-        super(game, 'dynasty');
+        super(game, Phases.Dynasty);
         this.initialise([
             new SimpleStep(game, () => this.beginDynasty()),
             new SimpleStep(game, () => this.flipDynastyCards()),

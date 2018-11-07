@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class WindsweptYurt extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Gain 2 fate or 2 honor',
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 choices: {
                     'Each player gains 2 fate': ability.actions.gainFate(context => ({
                         amount: 2,

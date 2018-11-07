@@ -1,15 +1,15 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, Players } = require('../../Constants');
+const { Durations, Players, TargetModes, Phases } = require('../../Constants');
 
 class MasterOfGiseiToshi extends DrawCard {
     setupCardAbilities(ability) {
         this.reaction({
             title: 'Prevent non-spell events from being played while contesting a ring',
             when: {
-                onPhaseStarted: event => event.phase === 'conflict'
+                onPhaseStarted: event => event.phase === Phases.Conflict
             },
             target: {
-                mode: 'ring',
+                mode: TargetModes.Ring,
                 ringCondition: () => true
             },
             effect: 'prevent non-spell events from being played while {0} is contested',

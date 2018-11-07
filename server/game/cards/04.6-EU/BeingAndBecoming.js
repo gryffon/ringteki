@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class BeingAndBecoming extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class BeingAndBecoming extends DrawCard {
             title: 'Move each fate from an unclaimed ring to attached character',
             cost: ability.costs.bowParent(),
             target: {
-                mode: 'ring',
+                mode: TargetModes.Ring,
                 activePromptTitle: 'Choose an unclaimed ring to move fate from',
                 ringCondition: ring => ring.isUnclaimed() && ring.fate > 0,
                 gameAction: ability.actions.placeFate(context => ({

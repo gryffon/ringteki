@@ -1,5 +1,5 @@
 const PlayerAction = require('./PlayerAction');
-const { Locations, Players } = require('../Constants');
+const { Locations, Players, TargetModes } = require('../Constants');
 
 class ChosenDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -28,7 +28,7 @@ class ChosenDiscardAction extends PlayerAction {
                 context.game.promptForSelect(player, {
                     activePromptTitle: 'Choose ' + (amount === 1 ? 'a card' : (amount + ' cards')) + ' to discard',
                     context: context,
-                    mode: 'exactly',
+                    mode: TargetModes.Exactly,
                     numCards: amount,
                     ordered: true,
                     location: Locations.Hand,

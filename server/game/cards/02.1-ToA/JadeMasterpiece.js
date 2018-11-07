@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class JadeMasterpiece extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class JadeMasterpiece extends DrawCard {
             title: 'Move a fate to an unclaimed ring',
             cost: ability.costs.bowSelf(),
             target: {
-                mode: 'ring',
+                mode: TargetModes.Ring,
                 activePromptTitle: 'Choose an unclaimed ring to move fate from',
                 ringCondition: ring => ring.isUnclaimed() && ring.fate > 0,
                 gameAction: ability.actions.placeFateOnRing(context => ({

@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Decks } = require('../../Constants');
+const { Locations, Decks, Phases } = require('../../Constants');
 
 class ArtisanAcademy extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Make top card of conflict deck playable',
-            phase: 'conflict',
+            phase: Phases.Conflict,
             condition: context => context.player.conflictDeck.size() > 0,
             effect: 'reveal the top card of their conflict deck',
             gameAction: ability.actions.playerLastingEffect(context => {
@@ -14,7 +14,7 @@ class ArtisanAcademy extends DrawCard {
                     duration: 'lastingEffect',
                     until: {
                         onCardMoved: event => event.card === topCard && event.originalLocation === Locations.ConflictDeck,
-                        onPhaseEnded: event => event.phase === 'conflict',
+                        onPhaseEnded: event => event.phase === Phases.Conflict,
                         onDeckShuffled: event => event.player === context.player && event.deck === Decks.ConflictDeck
                     },
                     effect: [

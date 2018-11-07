@@ -4,6 +4,8 @@ const ActionWindow = require('./actionwindow.js');
 const HonorBidPrompt = require('./honorbidprompt.js');
 const GameActions = require('../GameActions/GameActions');
 
+const { Phases } = require('../Constants');
+
 /*
 II Draw Phase
 2.1 Draw phase begins.
@@ -17,7 +19,7 @@ II Draw Phase
 
 class DrawPhase extends Phase {
     constructor(game) {
-        super(game, 'draw');
+        super(game, Phases.Draw);
         this.initialise([
             new SimpleStep(game, () => this.displayHonorBidPrompt()),
             new SimpleStep(game, () => this.drawConflictCards()),

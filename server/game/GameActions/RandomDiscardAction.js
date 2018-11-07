@@ -1,5 +1,5 @@
 const PlayerAction = require('./PlayerAction');
-const { Locations, Players } = require('../Constants');
+const { Locations, Players, TargetModes } = require('../Constants');
 
 class RandomDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -34,7 +34,7 @@ class RandomDiscardAction extends PlayerAction {
             if(event.cards.length > 1) {
                 player.game.promptForSelect(player, {
                     activePromptTitle: 'Choose order for random discard',
-                    mode: 'upTo',
+                    mode: TargetModes.UpTo,
                     numCards: event.cards.length,
                     optional: true,
                     ordered: true,

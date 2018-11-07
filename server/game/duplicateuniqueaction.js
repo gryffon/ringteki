@@ -1,4 +1,5 @@
 const BaseAction = require('./BaseAction');
+const { Phases } = require('./Constants');
 
 class DuplicateUniqueAction extends BaseAction {
     constructor(card) {
@@ -11,7 +12,7 @@ class DuplicateUniqueAction extends BaseAction {
             return 'facedown';
         }
 
-        if(!ignoredRequirements.includes('phase') && this.card.game.currentPhase !== 'dynasty') {
+        if(!ignoredRequirements.includes('phase') && this.card.game.currentPhase !== Phases.Dynasty) {
             return 'phase';
         }
 

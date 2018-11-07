@@ -2,7 +2,7 @@ const AbilityTargetAbility = require('./AbilityTargets/AbilityTargetAbility.js')
 const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
-const { Stages } = require('./Constants.js');
+const { Stages, TargetModes } = require('./Constants.js');
 
 /**
  * Base class representing an ability that can be done by the player. This
@@ -73,11 +73,11 @@ class BaseAbility {
         } else {
             properties.gameAction = [];
         }
-        if(properties.mode === 'select') {
+        if(properties.mode === TargetModes.Select) {
             return new AbilityTargetSelect(name, properties, this);
-        } else if(properties.mode === 'ring') {
+        } else if(properties.mode === TargetModes.Ring) {
             return new AbilityTargetRing(name, properties, this);
-        } else if(properties.mode === 'ability') {
+        } else if(properties.mode === TargetModes.Ability) {
             return new AbilityTargetAbility(name, properties, this);
         }
         return new AbilityTargetCard(name, properties, this);

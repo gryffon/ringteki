@@ -105,11 +105,32 @@ const Players = {
     Any: 'any'
 };
 
+const TargetModes = {
+    Ring: 'ring',
+    Select: 'select',
+    Ability: 'ability',
+    Exactly: 'exactly',
+    MaxStat: 'maxStat',
+    Single: 'single',
+    Unlimited: 'unlimited',
+    UpTo: 'upTo'
+};
+
+const Phases = {
+    Dynasty: 'dynasty',
+    Draw: 'draw',
+    Conflict: 'conflict',
+    Fate: 'fate',
+    Regroup: 'regroup'
+};
+
 module.exports = {
     Locations,
     Decks,
     EffectNames,
     Durations,
     Stages,
-    Players
+    Players,
+    TargetModes,
+    Phases
 };

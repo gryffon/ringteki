@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class BayushiKachiko extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +13,7 @@ class BayushiKachiko extends DrawCard {
             },
             then: context => ({
                 target: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     activePromptTitle: 'Do you want to bow ' + context.target.name + '?',
                     choices: {
                         'Yes': ability.actions.bow({ target: context.target }),

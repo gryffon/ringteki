@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Phases } = require('../../Constants');
 
 class KuniLaboratory extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class KuniLaboratory extends DrawCard {
         this.forcedReaction({
             title: 'After the conflict phase begins',
             when: {
-                onPhaseStarted: event => event.phase === 'conflict'
+                onPhaseStarted: event => event.phase === Phases.Conflict
             },
             effect: 'lose an honor',
             gameAction: ability.actions.loseHonor(context => ({ target: context.player }))
