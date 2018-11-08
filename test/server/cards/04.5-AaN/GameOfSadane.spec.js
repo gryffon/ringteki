@@ -1,7 +1,7 @@
 describe('Game Of Sadane', function() {
-    integration(function () {
-        describe('when a character leaves play during the duel', function () {
-            beforeEach(function () {
+    integration(function() {
+        describe('when a character leaves play during the duel', function() {
+            beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
@@ -30,7 +30,7 @@ describe('Game Of Sadane', function() {
                 this.player2.clickPrompt('2');
             });
 
-            it('the winner should still be honored', function () {
+            it('the winner should still be honored', function() {
                 expect(this.dojiWhisperer.location).toBe('play area');
                 expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
                 expect(this.dojiWhisperer.isHonored).toBeTruthy();
@@ -126,7 +126,7 @@ describe('Game Of Sadane', function() {
                 expect(this.player2.honor).toBe(10);
             });
 
-            it('should do nothing if the duel is a tie', function () {
+            it('should do nothing if the duel is a tie', function() {
                 this.player2.clickCard('game-of-sadane');
                 this.player2.clickCard(this.savvyPolitician);
                 this.player2.clickCard(this.prodigyOfTheWaves);

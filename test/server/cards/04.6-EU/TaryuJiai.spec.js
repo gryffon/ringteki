@@ -1,7 +1,7 @@
 describe('Taryu Jiai', function() {
-    integration(function () {
-        describe('when a character leaves play during the duel', function () {
-            beforeEach(function () {
+    integration(function() {
+        describe('when a character leaves play during the duel', function() {
+            beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
@@ -38,7 +38,7 @@ describe('Taryu Jiai', function() {
                 this.player2.clickPrompt('1');
             });
 
-            it('the duel should successfuly resolve and the winner prompted to resolve a ring effect', function () {
+            it('the duel should successfuly resolve and the winner prompted to resolve a ring effect', function() {
                 expect(this.yogoOutcast.location).toBe('dynasty discard pile');
                 expect(this.player1).toHavePrompt('Choose a ring effect to resolve');
             });

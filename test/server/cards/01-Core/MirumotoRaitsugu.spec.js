@@ -1,7 +1,7 @@
 describe('Mirumoto Raitsugu', function() {
-    integration(function () {
-        describe('when a character leaves play during the duel', function () {
-            beforeEach(function () {
+    integration(function() {
+        describe('when a character leaves play during the duel', function() {
+            beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
@@ -28,7 +28,7 @@ describe('Mirumoto Raitsugu', function() {
                 this.player2.clickPrompt('2');
             });
 
-            it('the duel should successfully resolve, but have no effect', function () {
+            it('the duel should successfully resolve, but have no effect', function() {
                 expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
@@ -102,7 +102,7 @@ describe('Mirumoto Raitsugu', function() {
                 expect(this.dojiWhisperer.location).toBe('dynasty discard pile');
             });
 
-            it('should remove a fate from the loser if they have fate', function () {
+            it('should remove a fate from the loser if they have fate', function() {
                 this.dojiWhisperer.fate = 1;
                 this.noMoreActions();
                 this.initiateConflict({

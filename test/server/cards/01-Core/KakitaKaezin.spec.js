@@ -1,7 +1,7 @@
-describe('Kakita Kaezin', function () {
-    integration(function () {
-        describe('when a character leaves play during the duel', function () {
-            beforeEach(function () {
+describe('Kakita Kaezin', function() {
+    integration(function() {
+        describe('when a character leaves play during the duel', function() {
+            beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
@@ -29,7 +29,7 @@ describe('Kakita Kaezin', function () {
                 this.player2.clickPrompt('2');
             });
 
-            it('the duel should still successfully resolve', function () {
+            it('the duel should still successfully resolve', function() {
                 expect(this.kakitaKaezin.inConflict).toBe(true);
                 expect(this.dojiWhisperer.inConflict).toBe(false);
                 expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
@@ -38,7 +38,7 @@ describe('Kakita Kaezin', function () {
             });
         });
 
-        describe('Kakita Kaezin\'s ability', function () {
+        describe('Kakita Kaezin\'s ability', function() {
             beforeEach(function () {
                 this.setupTest({
                     phase: 'conflict',
@@ -53,10 +53,9 @@ describe('Kakita Kaezin', function () {
                 this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
                 this.matsuBerserker = this.player2.findCardByName('matsu-berserker');
                 this.akodoGunso = this.player2.findCardByName('akodo-gunso');
-                
             });
 
-            it('should not trigger if he is not participating', function () {
+            it('should not trigger if he is not participating', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.dojiWhisperer],
@@ -67,7 +66,7 @@ describe('Kakita Kaezin', function () {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
-            it('should not trigger if there is no defender', function () {
+            it('should not trigger if there is no defender', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.kakitaKaezin, this.dojiWhisperer],
@@ -78,7 +77,7 @@ describe('Kakita Kaezin', function () {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
-            it('should trigger if he is participating as well as an opponent\'s character', function () {
+            it('should trigger if he is participating as well as an opponent\'s character', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.kakitaKaezin],
@@ -89,7 +88,7 @@ describe('Kakita Kaezin', function () {
                 expect(this.player2).toHavePrompt('Kakita Kaezin');
             });
 
-            it('should allow the opponent to choose a target of the duel', function () {
+            it('should allow the opponent to choose a target of the duel', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.kakitaKaezin],
@@ -102,7 +101,7 @@ describe('Kakita Kaezin', function () {
                 expect(this.player2).toBeAbleToSelect(this.akodoGunso);
             });
 
-            it('should send all other characters home if Kakita Kaezin wins', function () {
+            it('should send all other characters home if Kakita Kaezin wins', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.kakitaKaezin, this.dojiWhisperer],
@@ -120,7 +119,7 @@ describe('Kakita Kaezin', function () {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
-            it('should send Kakita Kaezin home if Kakita Kaezin loses', function () {
+            it('should send Kakita Kaezin home if Kakita Kaezin loses', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.kakitaKaezin, this.dojiWhisperer],

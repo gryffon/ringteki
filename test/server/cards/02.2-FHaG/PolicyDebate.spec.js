@@ -1,7 +1,7 @@
 describe('Policy Debate', function() {
-    integration(function () {
-        describe('when a character leaves play during the duel', function () {
-            beforeEach(function () {
+    integration(function() {
+        describe('when a character leaves play during the duel', function() {
+            beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
@@ -30,7 +30,7 @@ describe('Policy Debate', function() {
                 this.player2.clickPrompt('2');
             });
 
-            it('the duel should successfully resolve, but have no effect', function () {
+            it('the duel should successfully resolve, but have no effect', function() {
                 expect(this.dojiWhisperer.location).toBe('play area');
                 expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
                 expect(this.player2).not.toHavePrompt('Policy Debate');
