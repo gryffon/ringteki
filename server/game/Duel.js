@@ -7,9 +7,7 @@ class Duel {
         this.type = type;
         this.source = game.getFrameworkContext().source;
         this.challenger = challenger;
-        this.challengerTotal = this.getSkillTotal(challenger);
         this.target = target;
-        this.targetTotal = this.getSkillTotal(target);
         this.bidFinished = false;
     }
 
@@ -54,15 +52,15 @@ class Duel {
     determineResult() {
         let challengerTotal = this.getSkillTotal(this.challenger);
         let targetTotal = this.getSkillTotal(this.target);
-        if(this.challengerTotal === '-') {
-            if(this.targetTotal !== '-' && this.targetTotal > 0) {
+        if(challengerTotal === '-') {
+            if(targetTotal !== '-' && targetTotal > 0) {
                 // Challenger dead, target alive
                 this.winner = this.target;
             }
             // Both dead
-        } else if(this.targetTotal === '-') {
+        } else if(targetTotal === '-') {
             // Challenger alive, target dead
-            if(this.challengerTotal > 0) {
+            if(challengerTotal > 0) {
                 this.winner = this.challenger;
             }
         } else if(challengerTotal > targetTotal) {
