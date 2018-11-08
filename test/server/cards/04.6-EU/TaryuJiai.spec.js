@@ -1,5 +1,49 @@
 describe('Taryu Jiai', function() {
-    integration(function() {
+    integration(function () {
+        describe('when a character leaves play during the duel', function () {
+            beforeEach(function () {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['soshi-illusionist','bayushi-shoju'],
+                        hand: ['taryu-jiai']
+                    },
+                    player2: {
+                        honor: 10,
+                        inPlay: ['yogo-outcast']
+                    }
+                });
+                this.soshiIllusionist = this.player1.findCardByName('soshi-illusionist');
+                this.bayushiShoju = this.player1.findCardByName('bayushi-shoju');
+                this.taryuJiai = this.player1.findCardByName('taryu-jiai');
+                this.yogoOutcast = this.player2.findCardByName('yogo-outcast');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.soshiIllusionist, this.bayushiShoju],
+                    defenders: [this.yogoOutcast],
+                    type: 'political'
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.bayushiShoju);
+                this.player1.clickCard(this.yogoOutcast);
+                this.player2.pass();
+                this.player1.clickCard(this.bayushiShoju);
+                this.player1.clickCard(this.yogoOutcast);
+                this.player2.pass();
+                this.player1.clickCard(this.taryuJiai);
+                this.player1.clickCard(this.soshiIllusionist);
+                this.player1.clickCard(this.yogoOutcast);
+                this.player1.clickPrompt('2');
+                this.player2.clickPrompt('1');
+            });
+
+            it('the duel should successfuly resolve and the winner prompted to resolve a ring effect', function () {
+                expect(this.yogoOutcast.location).toBe('dynasty discard pile');
+                expect(this.player1).toHavePrompt('Choose a ring effect to resolve');
+            });
+        });
+
         describe('Taryu Jiai\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
