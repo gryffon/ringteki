@@ -1,5 +1,43 @@
 describe('Policy Debate', function() {
-    integration(function() {
+    integration(function () {
+        describe('when a character leaves play during the duel', function () {
+            beforeEach(function () {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['doji-whisperer'],
+                        hand: ['policy-debate']
+                    },
+                    player2: {
+                        honor: 11,
+                        inPlay: ['obstinate-recruit']
+                    }
+                });
+                this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
+                this.policyDebate = this.player1.findCardByName('policy-debate');
+                this.obstinateRecruit = this.player2.findCardByName('obstinate-recruit');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.dojiWhisperer],
+                    defenders: [this.obstinateRecruit]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.policyDebate);
+                this.player1.clickCard(this.dojiWhisperer);
+                this.player1.clickCard(this.obstinateRecruit);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('2');
+            });
+
+            it('the duel should successfully resolve, but have no effect', function () {
+                expect(this.dojiWhisperer.location).toBe('play area');
+                expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
+                expect(this.player2).not.toHavePrompt('Policy Debate');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+        });
+
         describe('when used during a conflict', function() {
             beforeEach(function() {
                 this.setupTest({
