@@ -1,6 +1,6 @@
 describe('Game Of Sadane', function() {
     integration(function () {
-        fdescribe('when a character leaves play during the duel', function () {
+        describe('when a character leaves play during the duel', function () {
             beforeEach(function () {
                 this.setupTest({
                     phase: 'conflict',
