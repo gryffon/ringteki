@@ -8,7 +8,7 @@ class BustlingAcademy extends DrawCard {
             condition: context => context.player.cardsInPlay.any(card => card.hasTrait('scholar')) && context.player.opponent,
             target: {
                 location: Locations.Provinces,
-                cardType: [CardTypes.Character,CardTypes.Holding],
+                cardType: [CardTypes.Character, CardTypes.Holding],
                 gameAction: [
                     ability.actions.discardCard(),
                     ability.actions.refillFaceup(context => ({
