@@ -69,6 +69,29 @@ class Ring extends React.Component {
         return true;
     }
 
+    getRingInfo() {
+        if(!this.props.ring.claimed && !this.props.ring.contested) {
+            return (
+                <div className='ring-info'>
+                    Unclaimed
+                </div>
+            );
+        }
+        return (
+            <div className='ring-info' >
+                { this.getIcon() }
+                { this.props.ring.claimed ? ' Claimed: ' + this.props.ring.claimedBy : ' Contested' }
+            </div>
+        );
+    }
+
+    getIcon() {
+        if(this.props.ring.conflictType === 'military') {
+            return (<span className='icon-military'><span className='hide-text'>military</span></span>);
+        }
+        return (<span className='icon-political'><span className='hide-text'>political</span></span>);
+    }
+
     render() {
 
         let className = 'ring ' + this.props.size;
@@ -82,9 +105,7 @@ class Ring extends React.Component {
                 <img className={ className } title={ this.props.ring.element } src={ '/img/' + this.props.ring.conflictType + '-' + this.props.ring.element + '.png' } />
                 { this.showCounters() ? <CardCounters counters={ this.getCountersForRing(this.props.ring.element) } /> : null }
             </div>
-            <div className={ this.props.ring.claimedBy.length > 12 ? 'ring-info-xs ' : 'ring-info ' } >
-                { this.props.ring.claimed ? 'Claimed: ' + this.props.ring.claimedBy : this.props.ring.contested ? 'Contested' : 'Unclaimed' }
-            </div>
+            { this.getRingInfo() }
             { this.showMenu() ? <CardMenu menu={ this.props.ring.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
         </div>);
     }
