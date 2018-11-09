@@ -1,4 +1,5 @@
 const BaseCardSelector = require('./BaseCardSelector.js');
+const { CardTypes } = require('../Constants');
 
 class SingleCardSelector extends BaseCardSelector {
     constructor(properties) {
@@ -9,7 +10,7 @@ class SingleCardSelector extends BaseCardSelector {
 
     defaultActivePromptTitle() {
         if(this.cardType.length === 1) {
-            if(this.cardType[0] === 'attachment') {
+            if(this.cardType[0] === CardTypes.Attachment) {
                 return 'Choose an attachment';
             }
             return 'Choose a ' + this.cardType[0];

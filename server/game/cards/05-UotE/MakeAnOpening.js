@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class MakeAnOpening extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -12,8 +13,8 @@ class MakeAnOpening extends DrawCard {
                 context.player.opponent.showBid &&
                 context.player.showBid !== context.player.opponent.showBid,
             target: {
-                cardType: 'character',
-                controller: 'opponent',
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
                 cardCondition: card =>
                     card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(context => ({

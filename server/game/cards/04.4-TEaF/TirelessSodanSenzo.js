@@ -3,8 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class TirelessSodanSenzo extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating() && this.game.currentConflict.loser === this.controller,
-            match: this,
+            condition: context => context.source.isParticipating() && this.game.currentConflict.loser === context.player,
             effect: ability.effects.doesNotBow()
         });
     }

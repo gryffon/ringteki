@@ -451,6 +451,21 @@ class PlayerInteractionWrapper {
         this.checkUnserializableGameState();
     }
 
+    chooseCardInPrompt(cardName, controlName) {
+
+        var currentPrompt = this.player.currentPrompt();
+
+        let promptControl = _.find(currentPrompt.controls, control => control.name.toLowerCase() === controlName.toLowerCase());
+
+        if(!promptControl) {
+            throw new Error(`Couldn't click card "${cardName}" for ${this.player.name} - unable to find control "${controlName}". Current prompt is:\n${this.formatPrompt()}`);
+        }
+
+        this.game.menuButton(this.player.name, cardName, promptControl.uuid, promptControl.method);
+        this.game.continue();
+        this.checkUnserializableGameState();
+    }
+
     clickCard(card, location = 'any', side) {
         if(_.isString(card)) {
             card = this.findCardByName(card, location, side);

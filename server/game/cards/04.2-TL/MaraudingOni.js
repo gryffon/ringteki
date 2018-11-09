@@ -3,7 +3,6 @@ const DrawCard = require('../../drawcard.js');
 class MaraudingOni extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
             effect: [
                 ability.effects.cardCannot('honor'),
                 ability.effects.cardCannot('dishonor')

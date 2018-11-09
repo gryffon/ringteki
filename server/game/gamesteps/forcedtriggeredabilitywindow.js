@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const BaseStep = require('./basestep.js');
 const TriggeredAbilityWindowTitles = require('./triggeredabilitywindowtitles.js');
+const { Locations } = require('../Constants');
 
 class ForcedTriggeredAbilityWindow extends BaseStep {
     constructor(game, abilityType, window, eventsToExclude = []) {
@@ -64,7 +65,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     }
 
     getPromptForSelectProperties() {
-        return Object.assign({ location: 'any' }, this.getPromptProperties());
+        return Object.assign({ location: Locations.Any }, this.getPromptProperties());
     }
 
     getPromptProperties() {
@@ -96,7 +97,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
         return [...map.entries()].map(([source, targets]) => ({
             type: 'targeting',
             source: source.getShortSummary(),
-            targets: targets.map(target => target.getShortSummary())
+            targets: targets.map(target => target.getShortSummaryForControls(this.currentPlayer))
         }));
     }
 

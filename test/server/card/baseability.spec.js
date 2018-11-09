@@ -1,6 +1,7 @@
-const BaseAbility = require('../../../server/game/baseability.js');
-
 const _ = require('underscore');
+
+const BaseAbility = require('../../../server/game/baseability.js');
+const { Stages } = require('../../../server/game/Constants.js');
 
 describe('BaseAbility', function () {
     beforeEach(function () {
@@ -208,10 +209,7 @@ describe('BaseAbility', function () {
             this.card2.checkRestrictions.and.returnValue(true);
             this.card2.getType.and.returnValue('holding');
             let game = { allCards: _([this.card1, this.card2]) };
-            game.getCurrentAbilityContext = () => {
-                return { source: 'framework', card: null, stage: 'framework' };
-            };
-            this.context = { game: game, stage: 'target', targets: {} };
+            this.context = { game: game, stage: Stages.Target, targets: {} };
             this.context.copy = () => this.context;
         });
 

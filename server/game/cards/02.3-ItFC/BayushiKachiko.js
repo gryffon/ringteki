@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes, CardTypes } = require('../../Constants');
 
 class BayushiKachiko extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,13 +7,13 @@ class BayushiKachiko extends DrawCard {
             title: 'Send a character home',
             condition: context => this.game.isDuringConflict('political') && context.source.isParticipating(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.politicalSkill < context.source.politicalSkill,
                 gameAction: ability.actions.sendHome()
             },
             then: context => ({
                 target: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     activePromptTitle: 'Do you want to bow ' + context.target.name + '?',
                     choices: {
                         'Yes': ability.actions.bow({ target: context.target }),

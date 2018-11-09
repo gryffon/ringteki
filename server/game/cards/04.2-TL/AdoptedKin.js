@@ -1,12 +1,13 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class AdoptedKin extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.getType() === 'attachment' && this.parent,
-            match: card => card !== this && card.getType() === 'attachment' && this.parent === card.parent,
+            condition: context => !!context.source.parent,
+            match: (card, context) => card !== context.source && card.getType() === CardTypes.Attachment && context.source.parent === card.parent,
             effect: ability.effects.addKeyword('ancestral'),
-            targetController: 'any'
+            targetController: Players.Any
         });
     }
 

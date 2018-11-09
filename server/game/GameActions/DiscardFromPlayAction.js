@@ -1,5 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
+const { Locations, CardTypes } = require('../Constants');
 
 class DiscardFromPlayAction extends CardGameAction {
     constructor(propertyFactory, isSacrifice = false) {
@@ -10,15 +11,15 @@ class DiscardFromPlayAction extends CardGameAction {
     }
 
     setup() {
-        this.targetType = ['character', 'attachment', 'holding'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding];
     }
 
     canAffect(card, context) {
-        if(card.type === 'holding') {
+        if(card.type === CardTypes.Holding) {
             if(!card.location.includes('province')) {
                 return false;
             }
-        } else if(card.location !== 'play area') {
+        } else if(card.location !== Locations.PlayArea) {
             return false;
         }
         return super.canAffect(card, context);

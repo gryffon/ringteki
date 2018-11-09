@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const EventRegistrar = require('./eventregistrar.js');
+const { Locations, Durations } = require('./Constants');
 
 class EffectEngine {
     constructor(game) {
@@ -16,7 +17,7 @@ class EffectEngine {
 
     add(effect) {
         this.effects.push(effect);
-        if(effect.duration === 'custom') {
+        if(effect.duration === Durations.Custom) {
             this.registerCustomDurationEvents(effect);
         }
         this.newEffect = true;
@@ -40,7 +41,7 @@ class EffectEngine {
     }
 
     checkDelayedEffects(events) {
-        this.delayedEffects = this.delayedEffects.filter(effect => !effect.target || effect.target.type === 'player' || effect.target.location === 'play area');
+        this.delayedEffects = this.delayedEffects.filter(effect => !effect.target || effect.target.type === 'player' || effect.target.location === Locations.PlayArea);
         let effectsToTrigger = this.delayedEffects.filter(effect => effect.checkEffect(events));
         if(effectsToTrigger.length > 0) {
             this.game.openSimultaneousEffectWindow(effectsToTrigger.map(effect => ({
@@ -53,12 +54,15 @@ class EffectEngine {
     checkTerminalConditions() {
         let effectsToTrigger = this.terminalConditions.filter(effect => effect.checkCondition());
         if(effectsToTrigger.length > 0) {
-            this.game.openThenEventWindow(effectsToTrigger.map(effect => effect.getEvent()));
+            let eventWindow = this.game.openThenEventWindow([]);
+            for(let effect of effectsToTrigger) {
+                eventWindow.addEvent(effect.getEvent());
+            }
         }
     }
 
     removeLastingEffects(card) {
-        this.unapplyAndRemove(effect => effect.match === card && effect.duration !== 'persistent');
+        this.unapplyAndRemove(effect => effect.match === card && effect.duration !== Durations.Persistent);
     }
 
     checkEffects(prevStateChanged = false, loops = 0) {
@@ -78,19 +82,19 @@ class EffectEngine {
     }
 
     onConflictFinished() {
-        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfConflict');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfConflict);
     }
 
     onDuelFinished() {
-        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfDuel');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfDuel);
     }
 
     onPhaseEnded() {
-        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfPhase');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfPhase);
     }
 
     onRoundEnded() {
-        this.newEffect = this.unapplyAndRemove(effect => effect.duration === 'untilEndOfRound');
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfRound);
     }
 
     registerCustomDurationEvents(effect) {
@@ -136,7 +140,7 @@ class EffectEngine {
         let matchingEffects = this.effects.filter(match);
         _.each(matchingEffects, effect => {
             effect.cancel();
-            if(effect.duration === 'custom') {
+            if(effect.duration === Durations.Custom) {
                 this.unregisterCustomDurationEvents(effect);
             }
         });

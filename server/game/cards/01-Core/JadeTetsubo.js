@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class JadeTetsubo extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class JadeTetsubo extends DrawCard {
             cost: ability.costs.bowSelf(),
             condition: context => context.source.parent.isParticipating(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.isParticipating() && card.militarySkill < context.source.parent.militarySkill,
                 gameAction: ability.actions.removeFate(context => ({
                     amount: context.target.fate,

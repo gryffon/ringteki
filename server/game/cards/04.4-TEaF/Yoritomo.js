@@ -3,8 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class Yoritomo extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            effect: ability.effects.modifyBothSkills(() => this.controller.fate)
+            effect: ability.effects.modifyBothSkills(card => card.controller.fate)
         });
     }
 }

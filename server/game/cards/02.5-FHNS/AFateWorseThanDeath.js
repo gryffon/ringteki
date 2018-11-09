@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations, CardTypes } = require('../../Constants');
 
 class AFateWorseThanDeath extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Bow, move home, dishonor, remove a fate and blank a character',
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: [
                     ability.actions.bow(),
@@ -13,7 +14,7 @@ class AFateWorseThanDeath extends DrawCard {
                     ability.actions.removeFate(),
                     ability.actions.sendHome(),
                     ability.actions.cardLastingEffect({
-                        duration: 'untilEndOfPhase',
+                        duration: Durations.UntilEndOfPhase,
                         effect: ability.effects.blank()
                     })
                 ]

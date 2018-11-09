@@ -1,9 +1,10 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations, CardTypes } = require('../Constants');
 
 class MoveToConflictAction extends CardGameAction {
     setup() {
         this.name = 'moveToConflict';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'move {0} into the conflict';
     }
 
@@ -21,7 +22,7 @@ class MoveToConflictAction extends CardGameAction {
         } else if(!card.canParticipateAsDefender()) {
             return false;
         }
-        return card.location === 'play area';
+        return card.location === Locations.PlayArea;
     }
 
     getEvent(card, context) {

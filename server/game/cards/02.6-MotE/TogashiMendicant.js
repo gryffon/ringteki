@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Phases } = require('../../Constants');
 
 class TogashiMendicant extends DrawCard {
     setupCardAbilities() {
         this.reaction({
             title: 'Rearrange top 3 cards of dynasty deck',
             when: {
-                onPhaseStarted: (event, context) => event.phase === 'fate' && context.player.dynastyDeck.size() > 0
+                onPhaseStarted: (event, context) => event.phase === Phases.Fate && context.player.dynastyDeck.size() > 0
             },
             effect: 'rearrange the top 3 cards of their dynasty deck',
             handler: context => this.togashiMendicantPrompt(context, context.player.dynastyDeck.first(3), [], 'Which card do you want to be on top?')

@@ -1,8 +1,9 @@
 const RingAction = require('./RingAction');
+const { Durations } = require('../Constants');
 
 class LastingEffectRingAction extends RingAction {
     setDefaultProperties() {
-        this.duration = 'untilEndOfConflict';
+        this.duration = Durations.UntilEndOfConflict;
         this.condition = null;
         this.until = null;
         this.effect = null;

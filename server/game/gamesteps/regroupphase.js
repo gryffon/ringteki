@@ -4,6 +4,7 @@ const SimpleStep = require('./simplestep.js');
 const ActionWindow = require('./actionwindow.js');
 const EndRoundPrompt = require('./regroup/endroundprompt.js');
 const GameActions = require('../GameActions/GameActions');
+const { Locations, Players, Phases } = require('../Constants');
 
 /*
 V Regroup Phase
@@ -18,7 +19,7 @@ V Regroup Phase
 
 class RegroupPhase extends Phase {
     constructor(game) {
-        super(game, 'regroup');
+        super(game, Phases.Regroup);
         this.initialise([
             new ActionWindow(this.game, 'Action Window', 'regroup'),
             new SimpleStep(game, () => this.readyCards()),
@@ -44,7 +45,7 @@ class RegroupPhase extends Phase {
     discardFromProvincesForPlayer(player) {
         let cardsToDiscard = [];
         let cardsOnUnbrokenProvinces = [];
-        _.each(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'], location => {
+        _.each([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince], location => {
             let provinceCard = player.getProvinceCardInProvince(location);
             let province = player.getSourceList(location);
             let dynastyCards = province.filter(card => card.isDynasty && !card.facedown);
@@ -65,8 +66,8 @@ class RegroupPhase extends Phase {
                 optional: true,
                 activePromptTitle: 'Select dynasty cards to discard',
                 waitingPromptTitle: 'Waiting for opponent to discard dynasty cards',
-                location: 'province',
-                controller: 'self',
+                location: Locations.Provinces,
+                controller: Players.Self,
                 cardCondition: card => cardsOnUnbrokenProvinces.includes(card),
                 onSelect: (player, cards) => {
                     cardsToDiscard = cardsToDiscard.concat(cards);
@@ -90,7 +91,7 @@ class RegroupPhase extends Phase {
         }
 
         this.game.queueSimpleStep(() => {
-            for(let location of ['province 1', 'province 2', 'province 3', 'province 4']) {
+            for(let location of [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour]) {
                 player.replaceDynastyCard(location);
             }
         });

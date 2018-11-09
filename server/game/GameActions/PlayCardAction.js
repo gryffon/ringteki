@@ -1,5 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const AbilityResolver = require('../gamesteps/abilityresolver');
+const { Locations, CardTypes } = require('../Constants');
 
 class PlayCardResolver extends AbilityResolver {
     constructor(game, context, playGameAction, gameActionContext) {
@@ -29,13 +30,13 @@ class PlayCardAction extends CardGameAction {
     setDefaultProperties() {
         this.resetOnCancel = false;
         this.postHandler = () => true;
-        this.location = 'hand';
+        this.location = Locations.Hand;
         this.action = null;
     }
 
     setup() {
         this.name = 'play';
-        this.targetType = ['character', 'attachment', 'event'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Event];
         this.effectMsg = 'play {0} as if it were in their hand';
     }
 

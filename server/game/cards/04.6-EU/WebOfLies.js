@@ -3,8 +3,7 @@ const ProvinceCard = require('../../provincecard.js');
 class WebOfLies extends ProvinceCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.persistentEffect({
-            match: this,
-            effect: ability.effects.modifyBaseProvinceStrength(() => this.controller.showBid * 2)
+            effect: ability.effects.modifyBaseProvinceStrength(card => card.controller.showBid * 2)
         });
     }
 }

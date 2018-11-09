@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { Locations } = require('../Constants');
 
 class DeckSearchAction extends PlayerAction {
     setDefaultProperties() {
@@ -43,7 +44,7 @@ class DeckSearchAction extends PlayerAction {
                     } else {
                         context.game.addMessage('{0} takes a card into their hand', player);
                     }
-                    player.moveCard(card, 'hand');
+                    player.moveCard(card, Locations.Hand);
                     player.shuffleConflictDeck();
                 }
             });

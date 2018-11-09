@@ -1,14 +1,16 @@
+const { CardTypes } = require('./Constants');
+
 const checkRestrictions = {
     copiesOfDiscardEvents: context =>
-        context.source.type === 'event' && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
+        context.source.type === CardTypes.Event && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
     copiesOfX: (context, player, source, params) => context.source.name === params,
-    events: context => context.source.type === 'event',
-    nonSpellEvents: context => context.source.type === 'event' && !context.source.hasTrait('spell'),
+    events: context => context.source.type === CardTypes.Event,
+    nonSpellEvents: context => context.source.type === CardTypes.Event && !context.source.hasTrait('spell'),
     opponentsCardEffects: (context, player) =>
-        (!context.ability || context.player && context.player === player.opponent && context.ability.isCardAbility()) &&
-        ['event', 'character', 'holding', 'attachment', 'stronghold', 'province', 'role'].includes(context.source.type),
+        context.player === player.opponent && (context.ability.isCardAbility() || !context.ability.isCardPlayed()) &&
+        [CardTypes.Event, CardTypes.Character, CardTypes.Holding, CardTypes.Attachment, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role].includes(context.source.type),
     opponentsEvents: (context, player) =>
-        context.player && context.player === player.opponent && context.source.type === 'event',
+        context.player && context.player === player.opponent && context.source.type === CardTypes.Event,
     opponentsRingEffects: (context, player) =>
         context.player && context.player === player.opponent && context.source.type === 'ring',
     source: (context, player, source) => context.source === source
@@ -20,10 +22,9 @@ class CannotRestriction {
         } else {
             this.type = properties.cannot;
             this.restriction = properties.restricts;
-            this.player = properties.player;
-            this.source = properties.source;
             this.params = properties.params;
         }
+        this.context = {};
     }
 
     isMatch(type, abilityContext) {
@@ -38,8 +39,8 @@ class CannotRestriction {
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
         }
-        let player = this.player || this.source && this.source.controller;
-        return checkRestrictions[this.restriction](context, player, this.source, this.params);
+        let player = this.player || this.context.source && this.context.source.controller;
+        return checkRestrictions[this.restriction](context, player, this.context.source, this.params);
     }
 }
 

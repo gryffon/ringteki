@@ -3,10 +3,9 @@ const DrawCard = require('../../drawcard.js');
 class MirumotoProdigy extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () =>
-                this.isAttacking() &&
+            condition: context =>
+                context.source.isAttacking() &&
                 this.game.currentConflict.getNumberOfParticipantsFor('attacker') === 1,
-            match: this,
             effect: ability.effects.restrictNumberOfDefenders(1)
         });
     }

@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
+const { Locations, Stages, CardTypes } = require('../Constants');
 
 class AbilityResolver extends BaseStepWithPipeline {
     constructor(game, context) {
@@ -29,7 +30,7 @@ class AbilityResolver extends BaseStepWithPipeline {
     }
 
     createSnapshot() {
-        if(['character', 'holding', 'attachment'].includes(this.context.source.getType())) {
+        if([CardTypes.Character, CardTypes.Holding, CardTypes.Attachment].includes(this.context.source.getType())) {
             this.context.cardStateWhenInitiated = this.context.source.createSnapshot();
         }
     }
@@ -38,7 +39,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.context.stage = 'pretarget';
+        this.context.stage = Stages.PreTarget;
         if(!this.context.ability.cannotTargetFirst) {
             this.targetResults = this.context.ability.resolveTargets(this.context);
         }
@@ -60,7 +61,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             cancelled: false,
             canCancel: this.canCancel
         };
-        this.context.stage = 'costs';
+        this.context.stage = Stages.Cost;
         this.context.ability.resolveCosts(this.context, this.canPayResults);
     }
 
@@ -92,7 +93,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.context.stage = 'target';
+        this.context.stage = Stages.Target;
 
 
         if(!this.context.ability.hasLegalTargets(this.context)) {
@@ -114,7 +115,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         }
 
         // Increment limits (limits aren't used up on cards in hand)
-        if(this.context.ability.limit && this.context.source.location !== 'hand' &&
+        if(this.context.ability.limit && this.context.source.location !== Locations.Hand &&
            (!this.context.cardStateWhenInitiated || this.context.cardStateWhenInitiated.location === this.context.source.location)) {
             this.context.ability.limit.increment(this.context.player);
         }
@@ -128,28 +129,20 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.context.ability.isTriggeredAbility()) {
             // If this is an event, move it to 'being played', and queue a step to send it to the discard pile after it resolves
             if(this.context.ability.isCardPlayed()) {
-                this.context.player.moveCard(this.context.source, 'being played');
+                this.context.player.moveCard(this.context.source, Locations.BeingPlayed);
                 this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeHandler());
-                this.game.queueSimpleStep(() => this.context.player.moveCard(this.context.source, 'conflict discard pile'));
+                this.game.queueSimpleStep(() => this.context.player.moveCard(this.context.source, Locations.ConflictDiscardPile));
             } else {
                 this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeHandler());
             }
         } else {
             this.executeHandler();
         }
-        this.game.queueSimpleStep(() => {
-            for(let player of this.game.getPlayersInFirstPlayerOrder()) {
-                for(let refill of this.context.provincesToRefill.filter(refill => refill.player === player)) {
-                    this.game.queueSimpleStep(() => {
-                        player.replaceDynastyCard(refill.location);
-                    });
-                }
-            }
-        });
+        this.game.queueSimpleStep(() => this.context.refill());
     }
 
     executeHandler() {
-        this.context.stage = 'effect';
+        this.context.stage = Stages.Effect;
         this.context.ability.executeHandler(this.context);
     }
 }

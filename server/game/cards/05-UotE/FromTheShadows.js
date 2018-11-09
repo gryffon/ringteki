@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class FromTheShadows extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,9 +7,9 @@ class FromTheShadows extends DrawCard {
             title: 'Put a shinobi character into the conflict from hand or a province, dishonored',
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
-                location: ['province', 'hand'],
-                controller: 'self',
+                cardType: CardTypes.Character,
+                location: [Locations.Provinces, Locations.Hand],
+                controller: Players.Self,
                 cardCondition: (card) => card.hasTrait('shinobi'),
                 gameAction: ability.actions.putIntoConflict({ status: 'dishonored' })
             }

@@ -1,14 +1,15 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class WalkingTheWay extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            location: 'any',
-            targetType: 'player',
-            targetController: 'any',
+            location: Locations.Any,
+            targetController: Players.Any,
             match: player => player.cardsInPlay.any(card => card.hasTrait('shugenja')),
-            effect: ability.effects.reduceCost({ playingTypes: 'playFromHand', match: card => card === this })
+            effect: ability.effects.reduceCost({ playingTypes: 'playFromHand', match: (card, source) => card === source })
         });
+
         this.action({
             title: 'Place a card from your deck faceup on a province',
             condition: context => context.player.dynastyDeck.size() > 0,
@@ -20,14 +21,14 @@ class WalkingTheWay extends DrawCard {
                 cardHandler: cardFromDeck => this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a card to replace with ' + cardFromDeck.name,
                     context: context,
-                    cardType: ['holding', 'character'],
-                    location: 'province',
-                    controller: 'self',
+                    cardType: [CardTypes.Holding, CardTypes.Character],
+                    location: Locations.Provinces,
+                    controller: Players.Self,
                     onSelect: (player, card) => {
                         this.game.addMessage('{0} discards {1}, replacing it with {2}', player, card, cardFromDeck);
                         player.moveCard(cardFromDeck, card.location);
                         cardFromDeck.facedown = false;
-                        player.moveCard(card, 'dynasty discard pile');
+                        player.moveCard(card, Locations.DynastyDiscardPile);
                         player.shuffleDynastyDeck();
                         return true;
                     }

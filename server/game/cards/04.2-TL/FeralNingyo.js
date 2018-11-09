@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class FeralNingyo extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Put into play',
             condition: () => this.game.isDuringConflict('water'),
-            location: 'hand',
+            location: Locations.Hand,
             gameAction: ability.actions.putIntoConflict(),
             then: () => ({
                 gameAction: ability.actions.delayedEffect({

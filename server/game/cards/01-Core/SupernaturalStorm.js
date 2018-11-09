@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class SupernaturalStorm extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class SupernaturalStorm extends DrawCard {
             title: 'Increase the skill of one character',
             condition: () => this.controller.cardsInPlay.any(card => card.hasTrait('shugenja')),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: ability.effects.modifyBothSkills(context.player.cardsInPlay.reduce((total, card) => total + (card.hasTrait('shugenja') ? 1 : 0), 0))

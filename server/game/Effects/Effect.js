@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const { Locations, Durations } = require('../Constants');
 
 /**
  * Represents a card based effect applied to one or more targets.
@@ -17,7 +18,7 @@ const _ = require('underscore');
  * location         - location where the source of this effect needs to be for
  *                    the effect to be active. Defaults to 'play area'.
  * targetController - string that determines which player's cards are targeted.
- *                    Can be 'current' (default), 'opponent' or 'any'. For player
+ *                    Can be 'self' (default), 'opponent' or 'any'. For player
  *                    effects it determines which player(s) are affected.
  * targetLocation   - string that determines the location of cards that can be
  *                    applied by the effect. Can be 'play area' (default),
@@ -34,12 +35,18 @@ class Effect {
         this.duration = properties.duration;
         this.until = properties.until || {};
         this.condition = properties.condition || (() => true);
-        this.location = properties.location || 'play area';
+        this.location = properties.location || Locations.PlayArea;
         this.effect = effect;
         this.targets = [];
-        this.effect.context = this.context = { game: game, source: source };
+        this.refreshContext();
         this.effect.duration = this.duration;
         this.effect.isConditional = !!properties.condition;
+    }
+
+    refreshContext() {
+        this.context = this.game.getFrameworkContext(this.source.controller);
+        this.context.source = this.source;
+        this.effect.setContext(this.context);
     }
 
     isValidTarget(target) { // eslint-disable-line no-unused-vars
@@ -78,13 +85,13 @@ class Effect {
     }
 
     checkCondition(stateChanged) {
-        if(!this.condition() || (this.duration === 'persistent' && (this.source.isBlank() || this.source.facedown))) {
+        if(!this.condition(this.context) || (this.duration === Durations.Persistent && (this.source.isBlank() || this.source.facedown))) {
             stateChanged = this.targets.length > 0 || stateChanged;
             this.cancel();
             return stateChanged;
         } else if(_.isFunction(this.match)) {
             // Get any targets which are no longer valid
-            let invalidTargets = _.filter(this.targets, target => !this.match(target) || !this.isValidTarget(target));
+            let invalidTargets = _.filter(this.targets, target => !this.match(target, this.context) || !this.isValidTarget(target));
             // Remove invalid targets
             this.removeTargets(invalidTargets);
             stateChanged = stateChanged || invalidTargets.length > 0;
@@ -112,8 +119,8 @@ class Effect {
         return {
             source: this.source.name,
             targets: _.map(this.targets, target => target.name),
-            active: this.duration !== 'persistent' || !this.source.isBlank(),
-            condition: this.condition(),
+            active: this.duration !== Durations.Persistent || !this.source.isBlank(),
+            condition: this.condition(this.context),
             effect: this.effect.getDebugInfo()
         };
     }

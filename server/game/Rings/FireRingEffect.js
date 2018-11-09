@@ -1,11 +1,12 @@
 const BaseAbility = require('../baseability.js');
+const { CardTypes } = require('../Constants');
 
 class FireRingEffect extends BaseAbility {
     constructor(optional = true) {
         super({
             target: {
                 activePromptTitle: 'Choose character to honor or dishonor',
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.allowGameAction('honor', context) || card.allowGameAction('dishonor', context),
                 buttons: optional ? [{ text: 'Don\'t resolve', arg: 'dontResolve' }] : []
             }

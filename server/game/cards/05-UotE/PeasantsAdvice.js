@@ -1,14 +1,15 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Phases, CardTypes } = require('../../Constants');
 
 class PeasantsAdvice extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'look at a province and return its dynasty card to deck',
-            phase: 'conflict',
+            phase: Phases.Conflict,
             cost: ability.costs.dishonor(() => true),
             target: {
-                cardType: 'province',
-                location: 'province',
+                cardType: CardTypes.Province,
+                location: Locations.Provinces,
                 gameAction: ability.actions.sequentialAction([
                     ability.actions.lookAt(),
                     ability.actions.returnToDeck(context => ({

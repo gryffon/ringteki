@@ -1,5 +1,42 @@
 describe('Game Of Sadane', function() {
     integration(function() {
+        describe('when a character leaves play during the duel', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['doji-whisperer'],
+                        hand: ['game-of-sadane']
+                    },
+                    player2: {
+                        honor: 11,
+                        inPlay: ['obstinate-recruit']
+                    }
+                });
+                this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
+                this.gameOfSadane = this.player1.findCardByName('game-of-sadane');
+                this.obstinateRecruit = this.player2.findCardByName('obstinate-recruit');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.dojiWhisperer],
+                    defenders: [this.obstinateRecruit]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.gameOfSadane);
+                this.player1.clickCard(this.dojiWhisperer);
+                this.player1.clickCard(this.obstinateRecruit);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('2');
+            });
+
+            it('the winner should still be honored', function() {
+                expect(this.dojiWhisperer.location).toBe('play area');
+                expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
+                expect(this.dojiWhisperer.isHonored).toBeTruthy();
+            });
+        });
+
         describe('when used during a conflict', function() {
             beforeEach(function() {
                 this.setupTest({
@@ -87,6 +124,18 @@ describe('Game Of Sadane', function() {
                 expect(this.player2).toBeAbleToSelect(this.kakitaBlade);
                 this.player2.clickCard(this.kakitaBlade);
                 expect(this.player2.honor).toBe(10);
+            });
+
+            it('should do nothing if the duel is a tie', function() {
+                this.player2.clickCard('game-of-sadane');
+                this.player2.clickCard(this.savvyPolitician);
+                this.player2.clickCard(this.prodigyOfTheWaves);
+                this.player1.clickPrompt('2');
+                this.player2.clickPrompt('3');
+                expect(this.savvyPolitician.isHonored).toBe(false);
+                expect(this.savvyPolitician.isDishonored).toBe(false);
+                expect(this.prodigyOfTheWaves.isHonored).toBe(false);
+                expect(this.prodigyOfTheWaves.isDishonored).toBe(false);
             });
         });
     });

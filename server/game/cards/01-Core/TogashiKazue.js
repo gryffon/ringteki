@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
+const { CardTypes } = require('../../Constants');
 
 class PlayTogashiKazueAsAttachment extends PlayAttachmentAction {
     constructor(card) {
@@ -8,14 +9,14 @@ class PlayTogashiKazueAsAttachment extends PlayAttachmentAction {
     }
 
     canResolveTargets(context) {
-        context.source.type = 'attachment';
+        context.source.type = CardTypes.Attachment;
         let result = super.canResolveTargets(context);
-        context.source.type = 'character';
+        context.source.type = CardTypes.Character;
         return result;
     }
 
     resolveTargets(context) {
-        context.source.type = 'attachment';
+        context.source.type = CardTypes.Attachment;
         return super.resolveTargets(context);
     }
 }
@@ -25,10 +26,10 @@ class TogashiKazue extends DrawCard {
         this.abilities.playActions.push(new PlayTogashiKazueAsAttachment(this));
         this.action({
             title: 'Steal a fate',
-            condition: context => context.source.type === 'attachment' && context.source.parent.isParticipating(),
+            condition: context => context.source.type === CardTypes.Attachment && context.source.parent.isParticipating(),
             printedAbility: false,
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.isParticipating() && card !== context.source.parent,
                 gameAction: ability.actions.removeFate(context => ({ recipient: context.source.parent }))
             },
@@ -38,7 +39,7 @@ class TogashiKazue extends DrawCard {
     }
 
     leavesPlay() {
-        this.type = 'character';
+        this.type = CardTypes.Character;
         super.leavesPlay();
     }
 }

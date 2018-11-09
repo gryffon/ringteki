@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class TheMirrorsGaze extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class TheMirrorsGaze extends DrawCard {
             when: {
                 onAbilityResolved: (event, context) => {
                     let ability = event.context.ability;
-                    if(event.initiateEvent.cancelled || event.card.type !== 'event' || ability.cannotBeMirrored) {
+                    if(event.initiateEvent.cancelled || event.card.type !== CardTypes.Event || ability.cannotBeMirrored) {
                         return false;
                     } else if(event.context.player !== context.player.opponent || context.player.isAbilityAtMax(ability.maxIdentifier)) {
                         return false;

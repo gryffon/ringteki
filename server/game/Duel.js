@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const { Locations, EffectNames } = require('./Constants');
 
 class Duel {
     constructor(game, challenger, target, type) {
@@ -6,14 +7,12 @@ class Duel {
         this.type = type;
         this.source = game.getFrameworkContext().source;
         this.challenger = challenger;
-        this.challengerTotal = this.getSkillTotal(challenger);
         this.target = target;
-        this.targetTotal = this.getSkillTotal(target);
         this.bidFinished = false;
     }
 
     getSkillTotal(card) {
-        if(card.location === 'play area') {
+        if(card.location === Locations.PlayArea) {
             if(this.type === 'military') {
                 return card.getMilitarySkill(this.bidFinished);
             } else if(this.type === 'political') {
@@ -26,7 +25,7 @@ class Duel {
     }
 
     isInvolved(card) {
-        return (card === this.challenger || card === this.target) && card.location === 'play area';
+        return (card === this.challenger || card === this.target) && card.location === Locations.PlayArea;
     }
 
     getTotalsForDisplay() {
@@ -35,11 +34,11 @@ class Duel {
 
     modifyDuelingSkill() {
         this.bidFinished = true;
-        let cards = [this.challenger, this.target].filter(card => card.location === 'play area');
+        let cards = [this.challenger, this.target].filter(card => card.location === Locations.PlayArea);
         let typeToEffect = {
-            military: 'modifyDuelMilitarySkill',
-            political: 'modifyDuelPoliticalSkill',
-            glory: 'modifyDuelGlory'
+            military: EffectNames.ModifyDuelMilitarySkill,
+            political: EffectNames.ModifyDuelPoliticalSkill,
+            glory: EffectNames.ModifyDuelGlory
         };
         _.each(cards, card => {
             this.source.untilEndOfDuel(ability => ({
@@ -53,15 +52,15 @@ class Duel {
     determineResult() {
         let challengerTotal = this.getSkillTotal(this.challenger);
         let targetTotal = this.getSkillTotal(this.target);
-        if(this.challengerTotal === '-') {
-            if(this.targetTotal !== '-' && this.targetTotal > 0) {
+        if(challengerTotal === '-') {
+            if(targetTotal !== '-' && targetTotal > 0) {
                 // Challenger dead, target alive
                 this.winner = this.target;
             }
             // Both dead
-        } else if(this.targetTotal === '-') {
+        } else if(targetTotal === '-') {
             // Challenger alive, target dead
-            if(this.challengerTotal > 0) {
+            if(challengerTotal > 0) {
                 this.winner = this.challenger;
             }
         } else if(challengerTotal > targetTotal) {

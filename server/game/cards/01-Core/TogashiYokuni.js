@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations, TargetModes, CardTypes } = require('../../Constants');
 
 class TogashiYokuni extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,8 +7,8 @@ class TogashiYokuni extends DrawCard {
             title: 'Copy another character\'s ability',
             target: {
                 activePromptTitle: 'Select a character to copy from',
-                mode: 'ability',
-                cardType: 'character',
+                mode: TargetModes.Ability,
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card !== context.source,
                 gameAction: ability.actions.cardLastingEffect(context => {
                     let newProps = { printedAbility: false, abilityIdentifier: context.targetAbility.abilityIdentifier };
@@ -20,7 +21,7 @@ class TogashiYokuni extends DrawCard {
                         newProps.max = ability.limit.repeatable(context.targetAbility.properties.max.max, context.targetAbility.properties.max.eventName);
                     }
                     return {
-                        duration: 'untilEndOfPhase',
+                        duration: Durations.UntilEndOfPhase,
                         effect: ability.effects.gainAbility(context.targetAbility.abilityType, Object.assign({}, context.targetAbility.properties, newProps))
                     };
                 })

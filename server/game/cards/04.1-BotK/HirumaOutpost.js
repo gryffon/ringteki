@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class HirumaOutpost extends DrawCard {
     setupCardAbilities(ability) {
         this.grantedAbilityLimits = {};
         this.persistentEffect({
-            condition: () => !this.controller.getProvinceCardInProvince(this.location).isBroken,
-            match: this,
+            condition: context => !context.player.getProvinceCardInProvince(context.source.location).isBroken,
             effect: ability.effects.gainAbility('reaction', {
                 title: 'Make opponent lose an honor',
                 when: {
@@ -14,7 +14,7 @@ class HirumaOutpost extends DrawCard {
                             return false;
                         }
                         let card = context.player.getDynastyCardInProvince(event.conflict.conflictProvince.location);
-                        return !card || card.facedown || card.type !== 'holding';
+                        return !card || card.facedown || card.type !== CardTypes.Holding;
                     }
                 },
                 gameAction: ability.actions.loseHonor()

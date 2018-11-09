@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class BreachOfEtiquette extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class BreachOfEtiquette extends DrawCard {
             condition: () => this.game.isDuringConflict('political'),
             effect: 'force honor loss on players when their non-courtier characters use abilities during this conflict',
             gameAction: ability.actions.playerLastingEffect(context => ({
-                targetController: 'any',
+                targetController: Players.Any,
                 effect: ability.effects.customDetachedPlayer({
                     apply: player => context.source.delayedEffect(ability => ({
                         target: player,
@@ -15,7 +16,7 @@ class BreachOfEtiquette extends DrawCard {
                         context: context,
                         when: {
                             onCardAbilityTriggered: event =>
-                                event.player === player && event.card.type === 'character' && !event.card.hasTrait('courtier')
+                                event.player === player && event.card.type === CardTypes.Character && !event.card.hasTrait('courtier')
                         },
                         gameAction: ability.actions.loseHonor(),
                         message: '{1} loses 1 honor due to {0}',

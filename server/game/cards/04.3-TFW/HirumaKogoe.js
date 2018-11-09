@@ -23,9 +23,8 @@ class HirumaKogoe extends DrawCard {
                 if(promptCards.length > 1) {
                     this.hirumaKogoePrompt(context, promptCards, orderedCards, 'Which card do you want to be the second card?');
                     return;
-                } else if(promptCards.length === 1) {
-                    orderedCards.push(promptCards[0]);
                 }
+                orderedCards.push(promptCards[0]);
                 context.player.conflictDeck.splice(0, 3, ...orderedCards);
             }
         });

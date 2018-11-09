@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class ShikshaScout extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.persistentEffect({
-            condition: () => this.isParticipating(),
+            condition: context => context.source.isParticipating(),
             effect: ability.effects.additionalCharactersInConflict(1)
         });
     }

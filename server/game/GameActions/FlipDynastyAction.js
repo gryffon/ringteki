@@ -1,15 +1,17 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations, CardTypes } = require('../Constants');
+
 
 class FlipDynastyAction extends CardGameAction {
     setup() {
         this.name = 'reveal';
-        this.targetType = ['character', 'holding'];
+        this.targetType = [CardTypes.Character, CardTypes.Holding];
         this.effectMsg = 'reveal the facedown card in {1}';
         this.effectArgs = () => this.target[0].location;
     }
 
     canAffect(card, context) {
-        if(['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location) && card.isDynasty && card.facedown) {
+        if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location) && card.isDynasty && card.facedown) {
             return super.canAffect(card, context);
         }
         return false;

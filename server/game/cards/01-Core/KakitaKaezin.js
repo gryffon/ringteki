@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class KakitaKaezin extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,9 +7,9 @@ class KakitaKaezin extends DrawCard {
             title: 'Duel an opposing character',
             condition: context => context.source.isParticipating(),
             target: {
-                player: 'opponent',
+                player: Players.Opponent,
                 activePromptTitle: 'Choose a character to duel with Kaezin',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.duel(context => ({
                     type: 'military',
@@ -23,7 +24,7 @@ class KakitaKaezin extends DrawCard {
         if(winner === context.source) {
             this.game.addMessage('{0} wins the duel, and sends all characters except {0} and {1} home', winner, loser);
             this.game.applyGameAction(context, { sendHome: this.game.currentConflict.getParticipants(card => ![winner, loser].includes(card)) });
-        } else if(loser === context.source) {
+        } else {
             this.game.addMessage('{0} loses the duel, and is sent home', loser);
             this.game.applyGameAction(context, { sendHome: loser });
         }

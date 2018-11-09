@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const EventRegistrar = require('../../eventregistrar.js');
+const { Locations, Phases, CardTypes } = require('../../Constants');
 
 class SoshiShadowshaper extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,10 +10,10 @@ class SoshiShadowshaper extends DrawCard {
 
         this.action({
             title: 'Return a character to owner\'s hand',
-            phase: 'conflict',
+            phase: Phases.Conflict,
             cost: ability.costs.payHonor(1),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.costLessThan(3) && this.charactersPlayedThisPhase.includes(card),
                 gameAction: ability.actions.returnToHand()
             }
@@ -24,7 +25,7 @@ class SoshiShadowshaper extends DrawCard {
     }
 
     onCharacterEntersPlay(event) {
-        if(event.originalLocation === 'hand') {
+        if(event.originalLocation === Locations.Hand) {
             this.charactersPlayedThisPhase.push(event.card);
         }
     }

@@ -8,6 +8,8 @@ const ConflictActionWindow = require('./conflictactionwindow.js');
 const InitiateConflictPrompt = require('./initiateconflictprompt.js');
 const SelectDefendersPrompt = require('./selectdefendersprompt.js');
 
+const { Players, CardTypes } = require('../../Constants');
+
 /**
 Conflict Resolution
 3.2 Declare Conflict
@@ -131,8 +133,8 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.game.promptForSelect(this.conflict.attackingPlayer, {
                 activePromptTitle: 'Choose covert target for ' + source.name,
                 buttons: [{ text: 'No Target', arg: 'cancel' }],
-                cardType: 'character',
-                controller: 'opponent',
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
                 source: 'Choose Covert',
                 cardCondition: card => card.canBeBypassedByCovert(context),
                 onSelect: (player, card) => {

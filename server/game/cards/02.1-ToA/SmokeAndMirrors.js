@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class SmokeAndMirrors extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,8 +9,8 @@ class SmokeAndMirrors extends DrawCard {
             target: {
                 activePromptTitle: 'Choose characters',
                 numCards: 0,
-                cardType: 'character',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 cardCondition: card => card.hasTrait('shinobi'),
                 gameAction: ability.actions.sendHome()
             }

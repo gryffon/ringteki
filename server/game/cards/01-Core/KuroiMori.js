@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const ProvinceCard = require('../../provincecard.js');
+const { TargetModes } = require('../../Constants');
 
 class KuroiMori extends ProvinceCard {
     setupCardAbilities() {
@@ -7,8 +8,7 @@ class KuroiMori extends ProvinceCard {
             title: 'Switch the conflict type or ring',
             condition: context => context.source.isConflictProvince(),
             target: {
-                player: 'self',
-                mode: 'select',
+                mode: TargetModes.Select,
                 choices: {
                     'Switch the contested ring': () => _.any(this.game.rings, ring => ring.isUnclaimed()),
                     'Switch the conflict type': () => true

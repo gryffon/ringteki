@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const EventRegistrar = require('../../eventregistrar.js');
+const { Locations, CardTypes } = require('../../Constants');
 
 class HidaKisada extends DrawCard {
     setupCardAbilities() {
@@ -10,9 +11,9 @@ class HidaKisada extends DrawCard {
 
     onCardAbilityInitiatedOtherEffects(event) {
         if(this.canCancel && event.context.ability.abilityType === 'action' && !event.context.ability.cannotBeCancelled && event.context.player !== this.controller) {
-            if(!event.cancelled && this.location === 'play area' && !this.isBlank() && !this.game.conflictRecord.some(conflict => conflict.winner === this.controller.opponent)) {
+            if(!event.cancelled && this.location === Locations.PlayArea && !this.isBlank() && !this.game.conflictRecord.some(conflict => conflict.winner === this.controller.opponent)) {
                 event.cancel();
-                this.game.addMessage('{0} attempts to initiate {1}{2}, but {3} cancels it', event.context.player, event.card, event.card.type === 'event' ? '' : '\'s ability', this);
+                this.game.addMessage('{0} attempts to initiate {1}{2}, but {3} cancels it', event.context.player, event.card, event.card.type === CardTypes.Event ? '' : '\'s ability', this);
             }
             this.canCancel = false;
         }

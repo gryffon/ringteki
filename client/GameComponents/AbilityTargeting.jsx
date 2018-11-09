@@ -4,7 +4,7 @@ import _ from 'underscore';
 
 class AbilityTargeting extends React.Component {
     onMouseOver(event, card) {
-        if(card && this.props.onMouseOver) {
+        if(card && !card.facedown && this.props.onMouseOver) {
             this.props.onMouseOver(card);
         }
     }
@@ -22,7 +22,7 @@ class AbilityTargeting extends React.Component {
                 onMouseOver={ event => this.onMouseOver(event, card) }>
                 <img className='target-card-image vertical'
                     alt={ card.name }
-                    src={ '/img/cards/' + (!card.facedown ? (card.id + '.jpg') : 'cardback.jpg') } />
+                    src={ '/img/cards/' + (card.id ? card.id : (card.isDynasty ? 'dynasty' : card.isConflict ? 'conflict' : 'province') + 'cardback') + '.jpg' } />
             </div>);
     }
 

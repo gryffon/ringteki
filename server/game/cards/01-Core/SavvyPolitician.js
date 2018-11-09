@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class SavvyPolitician extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class SavvyPolitician extends DrawCard {
                 'onCardHonored': (event, context) => event.card === context.source
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.honor()
             }
         });

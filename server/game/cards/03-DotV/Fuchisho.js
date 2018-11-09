@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class Fushicho extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,9 +9,9 @@ class Fushicho extends DrawCard {
                 onCardLeavesPlay: (event, context) => event.card === context.source
             },
             target: {
-                cardType: 'character',
-                location: 'dynasty discard pile',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                location: Locations.DynastyDiscardPile,
+                controller: Players.Self,
                 cardCondition: card => card.isFaction('phoenix'),
                 gameAction: ability.actions.putIntoPlay({ fate: 1 })
             }

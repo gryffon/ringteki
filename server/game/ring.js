@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const EffectSource = require('./EffectSource');
+const { EffectNames } = require('./Constants');
 
 class Ring extends EffectSource {
     constructor(game, element, type) {
@@ -25,7 +26,7 @@ class Ring extends EffectSource {
     }
 
     isConsideredClaimed(player = null) {
-        let check = player => (this.getEffects('considerAsClaimed').some(match => match(player)) || this.claimedBy === player.name);
+        let check = player => (this.getEffects(EffectNames.ConsiderRingAsClaimed).some(match => match(player)) || this.claimedBy === player.name);
         if(player) {
             return check(player);
         }
@@ -37,7 +38,7 @@ class Ring extends EffectSource {
     }
 
     canDeclare(player) {
-        return !this.getEffects('cannotDeclare').some(match => match(player)) && !this.claimed;
+        return !this.getEffects(EffectNames.CannotDeclare).some(match => match(player)) && !this.claimed;
     }
 
     isUnclaimed() {
@@ -53,7 +54,7 @@ class Ring extends EffectSource {
     }
 
     getElements() {
-        return _.uniq(this.getEffects('addElement').concat([this.element]));
+        return _.uniq(this.getEffects(EffectNames.AddElement).concat([this.element]));
     }
 
     hasElement(element) {
@@ -121,7 +122,7 @@ class Ring extends EffectSource {
     }
 
     getShortSummary() {
-        return Object.assign(super.getShortSummary(), { element: this.element });
+        return Object.assign(super.getShortSummary(), { element: this.element, conflictType: this.conflictType });
     }
 }
 

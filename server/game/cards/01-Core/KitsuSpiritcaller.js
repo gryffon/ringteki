@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players } = require('../../Constants');
 
 class KitsuSpiritcaller extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,8 +9,8 @@ class KitsuSpiritcaller extends DrawCard {
             cost: ability.costs.bowSelf(),
             target: {
                 activePrompt: 'Choose a character from a discard pile',
-                location: ['dynasty discard pile', 'conflict discard pile'],
-                controller: 'self',
+                location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile],
+                controller: Players.Self,
                 gameAction: ability.actions.putIntoConflict()
             },
             effect: 'call {0} back from the dead until the end of the conflict',

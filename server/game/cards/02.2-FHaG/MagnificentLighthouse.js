@@ -1,12 +1,13 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
+const { Locations, TargetModes } = require('../../Constants');
 
 class MagnificentLighthouse extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Look at top 3 cards',
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 activePromptTitle: 'Choose which deck to look at:',
                 choices: {
                     'Dynasty Deck': context => context.player.opponent && context.player.opponent.dynastyDeck.size() > 0,
@@ -23,7 +24,7 @@ class MagnificentLighthouse extends DrawCard {
                     topThree = context.player.opponent.conflictDeck.first(3);
                 }
                 let messages = ['{0} places a card on the bottom of the deck', '{0} chooses to discard {1}'];
-                let destinations = [topThree[0].isDynasty ? 'dynasty deck bottom' : 'conflict deck bottom', topThree[0].isDynasty ? 'dynasty discard pile' : 'conflict discard pile'];
+                let destinations = [topThree[0].isDynasty ? 'dynasty deck bottom' : 'conflict deck bottom', topThree[0].isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile];
                 let choices = [];
                 let handlers = [];
                 let cardHandler = card => {

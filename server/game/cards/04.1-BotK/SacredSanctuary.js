@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class SacredSanctuary extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -8,8 +9,8 @@ class SacredSanctuary extends ProvinceCard {
                 onConflictDeclared: (event, context) => event.conflict.conflictProvince === context.source
             },
             target: {
-                cardType: 'character',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 cardCondition: card => card.hasTrait('monk'),
                 gameAction: [
                     ability.actions.ready(),
@@ -17,13 +18,12 @@ class SacredSanctuary extends ProvinceCard {
                         condition: () => this.game.isDuringConflict(),
                         effect: ability.effects.doesNotBow()
                     }),
-                    ability.actions.cardLastingEffect(context => ({
+                    ability.actions.cardLastingEffect({
                         effect: ability.effects.cardCannot({
                             cannot: 'bow',
-                            restricts: 'opponentsCardEffects',
-                            player: context.player
+                            restricts: 'opponentsCardEffects'
                         })
-                    }))
+                    })
                 ]
             },
             effect: 'prevent opponents\' actions from bowing {0} and stop it bowing at the end of the conflict'

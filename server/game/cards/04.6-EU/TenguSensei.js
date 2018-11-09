@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class TenguSensei extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +12,7 @@ class TenguSensei extends DrawCard {
             effectArgs: context => context.event.context.target,
             gameAction: ability.actions.cardLastingEffect(context => ({
                 target: context.event.context.target,
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 effect: ability.effects.cardCannot('declareAsAttacker')
             }))
         });

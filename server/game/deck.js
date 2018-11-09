@@ -5,6 +5,7 @@ const DrawCard = require('./drawcard.js');
 const ProvinceCard = require('./provincecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 const RoleCard = require('./rolecard.js');
+const { Locations, CardTypes } = require('./Constants');
 
 class Deck {
     constructor(data) {
@@ -28,7 +29,7 @@ class Deck {
         this.eachRepeatedCard(this.data.conflictCards, cardData => {
             if(cardData && ['conflict'].includes(cardData.side)) {
                 var conflictCard = this.createCard(DrawCard, player, cardData);
-                conflictCard.location = 'conflict deck';
+                conflictCard.location = Locations.ConflictDeck;
                 result.conflictCards.push(conflictCard);
             }
         });
@@ -37,21 +38,21 @@ class Deck {
         this.eachRepeatedCard(this.data.dynastyCards, cardData => {
             if(cardData && ['dynasty'].includes(cardData.side)) {
                 var dynastyCard = this.createCard(DrawCard, player, cardData);
-                dynastyCard.location = 'dynasty deck';
+                dynastyCard.location = Locations.DynastyDeck;
                 result.dynastyCards.push(dynastyCard);
             }
         });
 
         this.eachRepeatedCard(this.data.provinceCards, cardData => {
-            if(cardData && cardData.type === 'province') {
+            if(cardData && cardData.type === CardTypes.Province) {
                 var provinceCard = this.createCard(ProvinceCard, player, cardData);
-                provinceCard.location = 'province deck';
+                provinceCard.location = Locations.ProvinceDeck;
                 result.provinceCards.push(provinceCard);
             }
         });
 
         this.eachRepeatedCard(this.data.stronghold, cardData => {
-            if(cardData && cardData.type === 'stronghold') {
+            if(cardData && cardData.type === CardTypes.Stronghold) {
                 var strongholdCard = this.createCard(StrongholdCard, player, cardData);
                 strongholdCard.location = '';
                 result.stronghold = strongholdCard;
@@ -59,7 +60,7 @@ class Deck {
         });
 
         this.eachRepeatedCard(this.data.role, cardData => {
-            if(cardData && cardData.type === 'role') {
+            if(cardData && cardData.type === CardTypes.Role) {
                 var roleCard = this.createCard(RoleCard, player, cardData);
                 result.role = roleCard;
             }

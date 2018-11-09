@@ -36,6 +36,8 @@ const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
 const MenuCommands = require('./MenuCommands');
 const SpiritOfTheRiver = require('./cards/SpiritOfTheRiver');
 
+const { EffectNames, Phases } = require('./Constants');
+
 class Game extends EventEmitter {
     constructor(details, options = {}) {
         super();
@@ -363,7 +365,7 @@ class Game extends EventEmitter {
         }
 
         // If it's not the conflict phase and the ring hasn't been claimed, flip it
-        if(this.currentPhase !== 'conflict' && !ring.claimed) {
+        if(this.currentPhase !== Phases.Conflict && !ring.claimed) {
             ring.flipConflictType();
         }
     }
@@ -967,7 +969,7 @@ class Game extends EventEmitter {
      * @param {DrawCard} card
      */
     takeControl(player, card) {
-        if(card.controller === player || !card.allowGameAction('takeControl')) {
+        if(card.controller === player || !card.checkRestrictions(EffectNames.TakeControl)) {
             return;
         }
         card.controller.removeCardFromPile(card);
@@ -979,6 +981,13 @@ class Game extends EventEmitter {
                 this.currentConflict.addAttacker(card);
             } else {
                 this.currentConflict.addDefender(card);
+            }
+        }
+        for(let effect of card.abilities.persistentEffects) {
+            if(effect.ref) {
+                for(let e of effect.ref) {
+                    e.refreshContext();
+                }
             }
         }
         this.checkGameState(true);

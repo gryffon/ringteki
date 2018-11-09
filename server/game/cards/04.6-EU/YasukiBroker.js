@@ -1,10 +1,11 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class YasukiBroker extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating(),
-            match: card => card.getType() === 'character',
+            condition: context => context.source.isParticipating(),
+            match: card => card.getType() === CardTypes.Character,
             effect: [
                 ability.effects.addKeyword('courtesy'),
                 ability.effects.addKeyword('sincerity')

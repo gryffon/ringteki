@@ -1,5 +1,39 @@
 describe('Insolent Rival', function() {
     integration(function() {
+        describe('when a character leaves play during the duel', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['insolent-rival']
+                    },
+                    player2: {
+                        honor: 11,
+                        inPlay: ['obstinate-recruit']
+                    }
+                });
+                this.insolentRival = this.player1.findCardByName('insolent-rival');
+                this.obstinateRecruit = this.player2.findCardByName('obstinate-recruit');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.insolentRival],
+                    defenders: [this.obstinateRecruit]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.insolentRival);
+                this.player1.clickCard(this.obstinateRecruit);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('2');
+            });
+
+            it('the duel should successfully resolve, but have no effect', function() {
+                expect(this.insolentRival.location).toBe('play area');
+                expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+        });
+
         describe('Insolent Rival\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({

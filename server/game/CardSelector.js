@@ -4,10 +4,12 @@ const SingleCardSelector = require('./CardSelectors/SingleCardSelector');
 const UnlimitedCardSelector = require('./CardSelectors/UnlimitedCardSelector');
 const UpToXCardSelector = require('./CardSelectors/UpToXCardSelector');
 
+const { TargetModes, CardTypes } = require('./Constants');
+
 const defaultProperties = {
     numCards: 1,
     cardCondition: () => true,
-    cardType: ['attachment', 'character', 'event', 'holding', 'stronghold', 'role', 'province'],
+    cardType: [CardTypes.Attachment, CardTypes.Character, CardTypes.Event, CardTypes.Holding, CardTypes.Stronghold, CardTypes.Role, CardTypes.Province],
     multiSelect: false
 };
 
@@ -40,13 +42,13 @@ class CardSelector {
         }
 
         if(properties.maxStat) {
-            properties.mode = 'maxStat';
+            properties.mode = TargetModes.MaxStat;
         } else if(properties.numCards === 1 && !properties.multiSelect) {
-            properties.mode = 'single';
+            properties.mode = TargetModes.Single;
         } else if(properties.numCards === 0) {
-            properties.mode = 'unlimited';
+            properties.mode = TargetModes.Unlimited;
         } else {
-            properties.mode = 'upTo';
+            properties.mode = TargetModes.UpTo;
         }
 
         return properties;

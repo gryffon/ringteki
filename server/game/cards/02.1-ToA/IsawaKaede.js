@@ -3,19 +3,17 @@ const DrawCard = require('../../drawcard.js');
 class IsawaKaede extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
             effect: ability.effects.immunity({
-                restricts: 'opponentsRingEffects',
-                source: this
+                restricts: 'opponentsRingEffects'
             })
         });
         this.persistentEffect({
-            condition: () => this.isAttacking(),
+            condition: context => context.source.isAttacking(),
             match: ring => ring.contested,
             effect: ability.effects.addElement('void')
         });
         this.persistentEffect({
-            condition: () => this.isAttacking() && this.game.currentConflict.winner === this.controller,
+            condition: context => context.source.isAttacking() && this.game.currentConflict.winner === context.player,
             effect: ability.effects.modifyConflictElementsToResolve(5)
         });
     }

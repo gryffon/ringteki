@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { CardTypes } = require('../../Constants');
 
 class GuardiansOfTheSeikitsu extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class GuardiansOfTheSeikitsu extends ProvinceCard {
                 onProvinceRevealed: (event, context) => event.card === context.source
             },
             gameAction: ability.actions.bow(() => ({
-                target: this.game.findAnyCardsInPlay(card => card.getType() === 'character' && card.costLessThan(3))
+                target: this.game.findAnyCardsInPlay(card => card.getType() === CardTypes.Character && card.costLessThan(3))
             }))
         });
     }

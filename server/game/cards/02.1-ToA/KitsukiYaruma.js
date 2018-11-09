@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, CardTypes } = require('../../Constants');
 
 class KitsukiYaruma extends DrawCard {
     setupCardAbilities() {
@@ -8,8 +9,8 @@ class KitsukiYaruma extends DrawCard {
                 onCharacterEntersPlay: (event, context) => event.card === context.source
             },
             target: {
-                cardType: 'province',
-                location: 'province',
+                cardType: CardTypes.Province,
+                location: Locations.Provinces,
                 cardCondition: card => !card.isBroken && !card.facedown
             },
             effect: 'turn {0} facedown',

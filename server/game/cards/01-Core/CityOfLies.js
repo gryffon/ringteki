@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations, CardTypes } = require('../../Constants');
 
 class CityOfLies extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,8 +7,8 @@ class CityOfLies extends DrawCard {
             title: 'Reduce cost of next event by 1',
             effect: 'reduce the cost of their next event by 1',
             gameAction: ability.actions.playerLastingEffect({
-                duration: 'untilEndOfPhase',
-                effect: ability.effects.reduceNextPlayedCardCost(1, card => card.type === 'event')
+                duration: Durations.UntilEndOfPhase,
+                effect: ability.effects.reduceNextPlayedCardCost(1, card => card.type === CardTypes.Event)
             })
         });
     }

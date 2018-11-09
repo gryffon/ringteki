@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class DiscouragePursuit extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class DiscouragePursuit extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.dishonor(card => card.hasTrait('shinobi')),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(() => ({
                     effect: ability.effects.modifyMilitarySkill(-4)

@@ -6,8 +6,7 @@ describe('All and Nothing', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['isawa-kaede', 'seeker-of-knowledge'],
-                        hand: ['all-and-nothing', 'all-and-nothing']
-                        // hand: ['all-and-nothing', 'all-and-nothing', 'taryu-jiai']
+                        hand: ['all-and-nothing', 'all-and-nothing', 'taryu-jiai']
                     },
                     player2: {
                         inPlay: ['miya-mystic']
@@ -80,7 +79,7 @@ describe('All and Nothing', function() {
                 expect(this.isawaKaede.isHonored).toBe(true);
                 expect(this.player1).toHavePrompt('Fire Ring');
             });
-            /*
+
             it('should trigger when the player resolves the void effect using Taryu Jiai', function() {
                 this.initiateConflict({
                     type: 'political',
@@ -90,12 +89,12 @@ describe('All and Nothing', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard('taryu-jiai');
-                expect(this.player1).toHavePrompt('Taryu Jiai');
+                expect(this.player1).toHavePrompt('Choose a friendly shugenja');
                 this.player1.clickCard('isawa-kaede');
                 this.player1.clickCard(this.miyaMystic);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
-                expect(this.player1).toHavePrompt('Taryu Jiai');
+                expect(this.player1).toHavePrompt('Choose a ring effect to resolve');
                 this.player1.clickRing('void');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect('all-and-nothing');
@@ -106,7 +105,7 @@ describe('All and Nothing', function() {
                 this.isawaKaede = this.player1.clickCard('isawa-kaede');
                 this.player1.clickPrompt('Honor Isawa Kaede');
                 expect(this.isawaKaede.isHonored).toBe(true);
-            });*/
+            });
         });
     });
 });

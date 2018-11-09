@@ -1,5 +1,6 @@
 const BaseAbility = require('./baseability.js');
 const EffectSource = require('./EffectSource.js');
+const { Stages } = require('./Constants.js');
 
 class AbilityContext {
     constructor(properties) {
@@ -11,7 +12,7 @@ class AbilityContext {
         this.targets = properties.targets || {};
         this.rings = properties.rings || {};
         this.selects = properties.selects || {};
-        this.stage = properties.stage || 'effect';
+        this.stage = properties.stage || Stages.Effect;
         this.target = null;
         this.select = null;
         this.ring = null;
@@ -28,6 +29,16 @@ class AbilityContext {
 
     refillProvince(player, location) {
         this.provincesToRefill.push({ player, location });
+    }
+
+    refill() {
+        for(let player of this.game.getPlayersInFirstPlayerOrder()) {
+            for(let refill of this.provincesToRefill.filter(refill => refill.player === player)) {
+                this.game.queueSimpleStep(() => {
+                    player.replaceDynastyCard(refill.location);
+                });
+            }
+        }
     }
 
     getProps() {

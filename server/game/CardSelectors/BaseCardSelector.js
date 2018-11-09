@@ -1,10 +1,12 @@
+const { Locations, Players } = require('../Constants');
+
 class BaseCardSelector {
     constructor(properties) {
         this.cardCondition = properties.cardCondition;
         this.cardType = properties.cardType;
         this.optional = properties.optional;
         this.location = this.buildLocation(properties.location);
-        this.controller = properties.controller || 'any';
+        this.controller = properties.controller || Players.Any;
         this.checkTarget = properties.targets;
 
         if(!Array.isArray(properties.cardType)) {
@@ -13,22 +15,22 @@ class BaseCardSelector {
     }
 
     buildLocation(property) {
-        let location = property || 'play area';
+        let location = property || Locations.PlayArea;
         if(!Array.isArray(location)) {
             location = [location];
         }
-        let index = location.indexOf('province');
+        let index = location.indexOf(Locations.Provinces);
         if(index > -1) {
-            location.splice(index, 1, 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province');
+            location.splice(index, 1, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince);
         }
         return location;
     }
 
     findPossibleCards(context) {
-        if(this.location.includes('any')) {
-            if(this.controller === 'self') {
+        if(this.location.includes(Locations.Any)) {
+            if(this.controller === Players.Self) {
                 return context.game.allCards.filter(card => card.controller === context.player);
-            } else if(this.controller === 'opponent') {
+            } else if(this.controller === Players.Opponent) {
                 return context.game.allCards.filter(card => card.controller === context.player.opponent);
             }
             return context.game.allCards.toArray();
@@ -38,19 +40,19 @@ class BaseCardSelector {
             attachments = attachments.concat(...context.player.opponent.cardsInPlay.map(card => card.attachments.toArray()));
         }
         let possibleCards = [];
-        if(this.controller !== 'opponent') {
+        if(this.controller !== Players.Opponent) {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.getSourceList(location).toArray();
-                if(location === 'play area') {
+                if(location === Locations.PlayArea) {
                     return array.concat(cards, attachments.filter(card => card.controller === context.player));
                 }
                 return array.concat(cards);
             }, possibleCards);
         }
-        if(this.controller !== 'self' && context.player.opponent) {
+        if(this.controller !== Players.Self && context.player.opponent) {
             possibleCards = this.location.reduce((array, location) => {
                 let cards = context.player.opponent.getSourceList(location).toArray();
-                if(location === 'play area') {
+                if(location === Locations.PlayArea) {
                     return array.concat(cards, attachments.filter(card => card.controller === context.player.opponent));
                 }
                 return array.concat(cards);
@@ -66,13 +68,13 @@ class BaseCardSelector {
         if(this.checkTarget && !card.checkRestrictions('target', context)) {
             return false;
         }
-        if(this.controller === 'self' && card.controller !== context.player) {
+        if(this.controller === Players.Self && card.controller !== context.player) {
             return false;
         }
-        if(this.controller === 'opponent' && card.controller !== context.player.opponent) {
+        if(this.controller === Players.Opponent && card.controller !== context.player.opponent) {
             return false;
         }
-        if(!this.location.includes('any') && !this.location.includes(card.location)) {
+        if(!this.location.includes(Locations.Any) && !this.location.includes(card.location)) {
             return false;
         }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);

@@ -1,4 +1,5 @@
 const CardSelector = require('../CardSelector.js');
+const { Stages } = require('../Constants.js');
 
 class AbilityTargetAbility {
     constructor(name, properties, ability) {
@@ -19,7 +20,7 @@ class AbilityTargetAbility {
             return abilities.some(ability => {
                 let contextCopy = context.copy();
                 contextCopy.targetAbility = ability;
-                if(context.stage === 'pretarget' && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
+                if(context.stage === Stages.PreTarget && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
                     return false;
                 }
                 return properties.cardCondition(card, contextCopy) &&
@@ -58,7 +59,7 @@ class AbilityTargetAbility {
         }
         let buttons = [];
         let waitingPromptTitle = '';
-        if(context.stage === 'pretarget') {
+        if(context.stage === Stages.PreTarget) {
             buttons.push({ text: 'Cancel', arg: 'cancel' });
             if(context.ability.abilityType === 'action') {
                 waitingPromptTitle = 'Waiting for opponent to take an action or pass';

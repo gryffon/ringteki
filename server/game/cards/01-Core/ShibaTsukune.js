@@ -1,12 +1,13 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
+const { Phases } = require('../../Constants');
 
 class ShibaTsukune extends DrawCard {
     setupCardAbilities() {
         this.interrupt({
             title: 'Resolve 2 rings',
             when : {
-                onPhaseEnded: event => event.phase === 'conflict'
+                onPhaseEnded: event => event.phase === Phases.Conflict
             },
             effect: 'resolve up to 2 ring effects',
             handler: context => this.game.promptForRingSelect(context.player, {

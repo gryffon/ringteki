@@ -1,13 +1,14 @@
 const AbilityLimit = require('./abilitylimit.js');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
+const { Locations, CardTypes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
         super(game, card, properties);
 
         this.title = properties.title;
-        this.limit = properties.limit || AbilityLimit.perRound(1);
+        this.limit = properties.limit || AbilityLimit.default();
         this.limit.registerEvents(game);
         this.limit.card = card;
         this.abilityCost = this.cost;
@@ -27,29 +28,29 @@ class CardAbility extends ThenAbility {
             this.card.owner.registerAbilityMax(this.maxIdentifier, this.max);
         }
 
-        if(card.getType() === 'event') {
+        if(card.getType() === CardTypes.Event) {
             this.cost = this.cost.concat(Costs.payReduceableFateCost('playFromHand'), Costs.playLimited());
         }
     }
 
     buildLocation(card, location) {
         const DefaultLocationForType = {
-            event: 'hand',
-            holding: 'province',
-            province: 'province',
-            role: 'role',
-            stronghold: 'stronghold province'
+            event: Locations.Hand,
+            holding: Locations.Provinces,
+            province: Locations.Provinces,
+            role: Locations.Role,
+            stronghold: Locations.StrongholdProvince
         };
 
-        let defaultedLocation = location || DefaultLocationForType[card.getType()] || 'play area';
+        let defaultedLocation = location || DefaultLocationForType[card.getType()] || Locations.PlayArea;
 
         if(!Array.isArray(defaultedLocation)) {
             defaultedLocation = [defaultedLocation];
         }
 
-        if(defaultedLocation.some(location => location === 'province')) {
-            defaultedLocation = defaultedLocation.filter(location => location !== 'province');
-            defaultedLocation = defaultedLocation.concat(['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']);
+        if(defaultedLocation.some(location => location === Locations.Provinces)) {
+            defaultedLocation = defaultedLocation.filter(location => location !== Locations.Provinces);
+            defaultedLocation = defaultedLocation.concat([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]);
         }
 
         return defaultedLocation;
@@ -60,7 +61,7 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities(context) || this.card.type === 'event' && !this.card.canPlay(context)) {
+        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context)) {
             return 'cannotTrigger';
         }
 
@@ -76,7 +77,7 @@ class CardAbility extends ThenAbility {
     }
 
     isInValidLocation(context) {
-        return this.card.type === 'event' ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
+        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
     }
 
     displayMessage(context) {
@@ -92,7 +93,7 @@ class CardAbility extends ThenAbility {
             return;
         }
         // Player1 plays Assassination
-        let messageArgs = [context.player, context.source.type === 'event' ? ' plays ' : ' uses ', context.source];
+        let messageArgs = [context.player, context.source.type === CardTypes.Event ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
             if(cost.action && cost.action.cost) {
                 let card = context.costs[cost.action.name];
@@ -143,7 +144,7 @@ class CardAbility extends ThenAbility {
     }
 
     isCardPlayed() {
-        return this.card.getType() === 'event';
+        return this.card.getType() === CardTypes.Event;
     }
 
     isTriggeredAbility() {

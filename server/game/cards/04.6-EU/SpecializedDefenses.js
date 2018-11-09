@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class SpecializedDefenses extends DrawCard {
     setupCardAbilities(ability) {
@@ -16,7 +17,7 @@ class SpecializedDefenses extends DrawCard {
             effectArgs: context => context.game.currentConflict.conflictProvince,
             gameAction: ability.actions.cardLastingEffect(() => ({
                 target: this.game.currentConflict.conflictProvince,
-                targetLocation: 'province',
+                targetLocation: Locations.Provinces,
                 effect: ability.effects.modifyProvinceStrengthMultiplier(2)
             }))
         });

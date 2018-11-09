@@ -26,7 +26,7 @@ class TerminalCondition {
     }
 
     checkCondition() {
-        return this.condition() && (!this.event || this.event.cancelled);
+        return this.condition(this.context) && (!this.event || this.event.cancelled);
     }
 
     getEvent() {
@@ -37,6 +37,7 @@ class TerminalCondition {
             return this.getEventFunc();
         } else if(this.gameAction) {
             this.event = this.gameAction.getEvent(this.target, this.context);
+            this.game.queueSimpleStep(() => this.context.refill());
             return this.event;
         }
     }

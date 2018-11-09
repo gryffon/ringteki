@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, TargetModes } = require('../../Constants');
 
 class Levy extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,8 +7,8 @@ class Levy extends DrawCard {
             title: 'Take an honor or a fate from your opponent',
             condition: context => context.player.opponent,
             target: {
-                player: 'opponent',
-                mode: 'select',
+                player: Players.Opponent,
+                mode: TargetModes.Select,
                 choices: {
                     'Give your opponent 1 fate': ability.actions.takeFate(),
                     'Give your opponent 1 honor': ability.actions.takeHonor()

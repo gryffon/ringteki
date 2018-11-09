@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class ShinjoAltansarnai extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,9 +10,9 @@ class ShinjoAltansarnai extends DrawCard {
             },
             target: {
                 activePromptTitle: 'Choose a character to discard',
-                cardType: 'character',
-                player: 'opponent',
-                controller: 'opponent',
+                cardType: CardTypes.Character,
+                player: Players.Opponent,
+                controller: Players.Opponent,
                 gameAction: ability.actions.discardFromPlay()
             }
         });

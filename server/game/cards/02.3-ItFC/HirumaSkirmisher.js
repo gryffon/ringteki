@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class HirumaSkirmisher extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +10,7 @@ class HirumaSkirmisher extends DrawCard {
             },
             effect: 'give itself Covert until the end of the phase',
             gameAction: ability.actions.cardLastingEffect({
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 effect: ability.effects.addKeyword('covert')
             })
         });

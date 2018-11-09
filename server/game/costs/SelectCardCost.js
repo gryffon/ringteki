@@ -1,4 +1,5 @@
 const CardSelector = require('../CardSelector.js');
+const { Locations, Players } = require('../Constants');
 
 class SelectCardCost {
     constructor(action, promptProperties) {
@@ -13,7 +14,7 @@ class SelectCardCost {
             return action.canAffect(card, context) && properties.cardCondition(card, context);
         };
 
-        let fullProperties = Object.assign({ location: 'any', controller: 'self' }, properties, { cardCondition: condition });
+        let fullProperties = Object.assign({ location: Locations.Any, controller: Players.Self }, properties, { cardCondition: condition });
 
         return CardSelector.for(fullProperties);
     }

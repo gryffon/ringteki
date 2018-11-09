@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class WrittenInTheStars extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Place or take fate from rings',
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 choices: {
                     'Place one fate on each unclaimed ring with no fate': ability.actions.placeFateOnRing(() => ({
                         target: Object.values(this.game.rings).filter(ring => ring.isUnclaimed() && ring.fate === 0)

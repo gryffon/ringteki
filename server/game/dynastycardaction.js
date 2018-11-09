@@ -1,6 +1,7 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
+const { Phases } = require('./Constants');
 
 class DynastyCardAction extends BaseAction {
     constructor(card) {
@@ -17,7 +18,7 @@ class DynastyCardAction extends BaseAction {
             return 'facedown';
         } else if(!ignoredRequirements.includes('player') && context.player !== this.card.controller) {
             return 'player';
-        } else if(!ignoredRequirements.includes('phase') && context.game.currentPhase !== 'dynasty') {
+        } else if(!ignoredRequirements.includes('phase') && context.game.currentPhase !== Phases.Dynasty) {
             return 'phase';
         } else if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(this.card, 'playFromProvince')) {
             return 'location';
