@@ -147,10 +147,10 @@ describe('Blackmail', function() {
                 this.player2.clickPrompt('Pass');
             });
 
-            it('should be usable after blackmailing, even if it were used by its previous controller', function() {
+            it('should not be usable after blackmailing if it were used by its previous controller', function() {
                 expect(this.soshiIllusionist.bowed).toBe(true);
                 this.player1.clickCard(this.dojiGiftGiver);
-                expect(this.player2).toHavePrompt('Choose a character');
+                expect(this.player2).not.toHavePrompt('Choose a character');
             });
         });
 
