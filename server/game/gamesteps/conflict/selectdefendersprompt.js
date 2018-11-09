@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const UiPrompt = require('../uiprompt.js');
+const { CardTypes } = require('../../Constants');
 
 const capitalize = {
     military: 'Military',
@@ -52,7 +53,7 @@ class SelectDefendersPrompt extends UiPrompt {
     checkCardCondition(card) {
 
         return (
-            card.getType() === 'character' &&
+            card.getType() === CardTypes.Character &&
             card.controller === this.player &&
             card.canDeclareAsDefender(this.conflict.conflictType)
         );

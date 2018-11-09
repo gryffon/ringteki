@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class EmbraceTheVoid extends DrawCard {
     setupCardAbilities() {
@@ -15,7 +16,7 @@ class EmbraceTheVoid extends DrawCard {
     }
 
     canPlay(context) {
-        if(!context.player.cardsInPlay.any(card => card.getType() === 'character' && card.hasTrait('shugenja'))) {
+        if(!context.player.cardsInPlay.any(card => card.getType() === CardTypes.Character && card.hasTrait('shugenja'))) {
             return false;
         }
 

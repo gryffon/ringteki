@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class RestoredHeirloom extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +11,7 @@ class RestoredHeirloom extends DrawCard {
             effect: 'replace the water ring with putting Restored Heirloom into play',
             location: [Locations.Hand,Locations.ConflictDiscardPile],
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Self
             },
             handler: context => {

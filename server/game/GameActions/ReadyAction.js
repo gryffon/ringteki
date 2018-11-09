@@ -1,10 +1,10 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class ReadyAction extends CardGameAction {
     setup() {
         this.name = 'ready';
-        this.targetType = ['character', 'attachment', 'stronghold'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Stronghold];
         this.effectMsg = 'ready {0}';
         this.cost = 'readying {0}';
     }

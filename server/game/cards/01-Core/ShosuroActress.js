@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class ShosuroActress extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class ShosuroActress extends DrawCard {
             title: 'Put an opponent\'s character into play',
             cost: ability.costs.sacrificeSelf(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 location: [Locations.ConflictDiscardPile, Locations.DynastyDiscardPile],
                 controller: Players.Opponent,
                 cardCondition: card => card.costLessThan(4) && !card.hasTrait('shinobi'),

@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, TargetModes } = require('../../Constants');
+const { Players, TargetModes, CardTypes } = require('../../Constants');
 
 class ALegionOfOne extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class ALegionOfOne extends DrawCard {
             title: 'Give a solitary character +3/+0',
             condition: () => this.game.isDuringConflict('military'),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: (card, context) =>
                     card.isParticipating() &&

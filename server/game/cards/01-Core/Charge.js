@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class Charge extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class Charge extends DrawCard {
             title: 'Put a character into play from a province',
             condition: () => this.game.currentConflict && this.game.currentConflict.conflictType === 'military',
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 location: Locations.Provinces,
                 controller: Players.Self,
                 gameAction: ability.actions.putIntoConflict()

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class FormalInvitation extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class FormalInvitation extends DrawCard {
     }
 
     canAttach(card, context) {
-        if(card.getType() === 'character' && card.getGlory() < 2) {
+        if(card.getType() === CardTypes.Character && card.getGlory() < 2) {
             return false;
         }
 

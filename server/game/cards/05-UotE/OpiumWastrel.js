@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class OpiumWastrel extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class OpiumWastrel extends DrawCard {
                 onCharacterEntersPlay: (event, context) => event.card === context.source && this.game.isDuringConflict()
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect({
                     effect: ability.effects.setGlory(0)

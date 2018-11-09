@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class IuchiWayfinder extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +13,7 @@ class IuchiWayfinder extends DrawCard {
                 chatMessage: true,
                 promptForSelect: {
                     activePromptTitle: 'Choose a province to look at',
-                    cardType: 'province',
+                    cardType: CardTypes.Province,
                     location: Locations.Provinces,
                     controller: Players.Opponent
                 }

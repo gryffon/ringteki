@@ -6,7 +6,7 @@ const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 const TriggeredAbility = require('./triggeredability');
 
-const { Locations, EffectNames, Durations } = require('./Constants');
+const { Locations, EffectNames, Durations, CardTypes } = require('./Constants');
 
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
@@ -142,9 +142,9 @@ class BaseCard extends EffectSource {
 
     updateAbilityEvents(from, to) {
         _.each(this.abilities.reactions, reaction => {
-            if((reaction.location.includes(to) || this.type === 'event' && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
+            if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
-            } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === 'event' && to === Locations.ConflictDeck)) {
+            } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === CardTypes.Event && to === Locations.ConflictDeck)) {
                 reaction.unregisterEvents();
             }
         });
@@ -155,7 +155,7 @@ class BaseCard extends EffectSource {
             'play area': [Locations.PlayArea],
             'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
         };
-        if(from === Locations.PlayArea || this.type === 'holding' && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
+        if(from === Locations.PlayArea || this.type === CardTypes.Holding && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
             this.removeLastingEffects();
         }
         _.each(this.abilities.persistentEffects, effect => {

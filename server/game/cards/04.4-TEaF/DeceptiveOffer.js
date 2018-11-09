@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, TargetModes } = require('../../Constants');
+const { Players, TargetModes, CardTypes } = require('../../Constants');
 
 class DeceptiveOffer extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class DeceptiveOffer extends DrawCard {
             title: 'Increase a character\'s military and political skill or take an honor from your opponent',
             targets: {
                 character: {
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     controller: Players.Self,
                     cardCondition: card => card.isParticipating()
                 },

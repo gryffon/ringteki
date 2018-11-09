@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class ForceOfTheRiver extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class ForceOfTheRiver extends DrawCard {
                 label: 'Sprits of the River',
                 name: 'Sprits of the River',
                 facedown: false,
-                type: 'character'
+                type: CardTypes.Character
             },
             gameAction: ability.actions.createToken(context => ({
                 target: [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].map(

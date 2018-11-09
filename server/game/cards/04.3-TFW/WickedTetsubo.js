@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { TargetModes } = require('../../Constants');
+const { TargetModes, CardTypes } = require('../../Constants');
 
 class WickedTetsubo extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +9,7 @@ class WickedTetsubo extends DrawCard {
             targets: {
                 character: {
                     activePromptTitle: 'Choose a defending character',
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     cardCondition: card => card.isDefending()
                 },
                 effect: {

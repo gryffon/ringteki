@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class KakitaYoshi extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +13,7 @@ class KakitaYoshi extends DrawCard {
                 ability.actions.playerLastingEffect({
                     effect: ability.effects.reduceCost({
                         amount: 2,
-                        match: card => card.type === 'event'
+                        match: card => card.type === CardTypes.Event
                     })
                 })
             ]

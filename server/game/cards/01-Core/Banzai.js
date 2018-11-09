@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { TargetModes } = require('../../Constants');
+const { TargetModes, CardTypes } = require('../../Constants');
 
 class Banzai extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class Banzai extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             max: ability.limit.perConflict(1),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(() => ({
                     effect: ability.effects.modifyMilitarySkill(2)

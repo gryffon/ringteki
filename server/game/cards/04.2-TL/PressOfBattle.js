@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class PressOfBattle extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class PressOfBattle extends DrawCard {
                                  this.game.currentConflict.hasMoreParticipants(context.player),
             target: {
                 activePromptTitle: 'Choose a character',
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating() && !card.isUnique(),
                 gameAction: ability.actions.bow()
             }

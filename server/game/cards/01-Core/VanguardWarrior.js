@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class VanguardWarrior extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class VanguardWarrior extends DrawCard {
             title: 'Sacrifice to put fate on one character',
             cost: ability.costs.sacrificeSelf(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.placeFate()
             }
         });

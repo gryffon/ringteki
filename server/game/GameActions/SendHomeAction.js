@@ -1,9 +1,10 @@
 const CardGameAction = require('./CardGameAction');
+const { CardTypes } = require('../Constants');
 
 class SendHomeAction extends CardGameAction {
     setup() {
         this.name = 'sendHome';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'send {0} home';
     }
 

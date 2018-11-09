@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class Kamayari extends DrawCard {
     setupCardAbilities(ability) {
         this.reaction({
             title: 'Bow character who triggered ability',
             when: {
-                onCardAbilityTriggered: (event, context) => event.card.type === 'character' && context.source.parent.isParticipating()
+                onCardAbilityTriggered: (event, context) => event.card.type === CardTypes.Character && context.source.parent.isParticipating()
             },
             gameAction: ability.actions.bow(context => ({ target: context.event.card }))
         });

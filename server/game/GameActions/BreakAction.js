@@ -1,9 +1,10 @@
 const CardGameAction = require('./CardGameAction');
+const { CardTypes } = require('../Constants');
 
 class BreakAction extends CardGameAction {
     setup() {
         this.name = 'break';
-        this.targetType = ['province'];
+        this.targetType = [CardTypes.Province];
         this.effectMsg = 'break {0}';
         this.cost = 'breaking {0}';
     }

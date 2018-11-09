@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class ICanSwim extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class ICanSwim extends DrawCard {
             condition: context => context.player.opponent && context.player.showBid > context.player.opponent.showBid,
             cannotBeMirrored: true,
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating() && card.isDishonored,
                 gameAction: ability.actions.discardFromPlay()

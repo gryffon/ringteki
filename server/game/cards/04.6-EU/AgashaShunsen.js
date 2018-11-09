@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class AgashaShunsen extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,13 +8,13 @@ class AgashaShunsen extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.returnRings(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 gameAction: ability.actions.attach(context => {
                     let attachAction = ability.actions.attach();
                     let checkCard = card => {
                         attachAction.attachment = card;
-                        return card.getType() === 'attachment' && attachAction.canAffect(context.target, context) &&
+                        return card.getType() === CardTypes.Attachment && attachAction.canAffect(context.target, context) &&
                                context.costs.returnRing && card.costLessThan(context.costs.returnRing.length + 1);
                     };
                     let cancelHandler = () => {

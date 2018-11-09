@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players, TargetModes } = require('../../Constants');
+const { Locations, Players, TargetModes, CardTypes } = require('../../Constants');
 
 class IkomaUjiaki extends DrawCard {
     setupCardAbilities(ability) {
@@ -27,7 +27,7 @@ class IkomaUjiaki extends DrawCard {
                         mode: TargetModes.UpTo,
                         numCards: 2,
                         activePrompt: 'Choose up to 2 characters',
-                        cardType: 'character',
+                        cardType: CardTypes.Character,
                         location: Locations.Provinces,
                         controller: Players.Self,
                         context: context,

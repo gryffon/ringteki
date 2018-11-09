@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class Blackmail extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class Blackmail extends DrawCard {
             title: 'Take control of a character',
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: (card, context) => !card.anotherUniqueInPlay(context.player) && card.costLessThan(3),
                 gameAction: ability.actions.cardLastingEffect(context => ({

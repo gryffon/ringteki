@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class Rebuild extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +11,7 @@ class Rebuild extends DrawCard {
             ),
             target: {
                 activePromptTitle: 'Choose a holding to put into the province',
-                cardType: 'holding',
+                cardType: CardTypes.Holding,
                 location: Locations.DynastyDiscardPile,
                 controller: Players.Self
             },

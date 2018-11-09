@@ -1,5 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class SacredSanctuary extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -9,7 +9,7 @@ class SacredSanctuary extends ProvinceCard {
                 onConflictDeclared: (event, context) => event.conflict.conflictProvince === context.source
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.hasTrait('monk'),
                 gameAction: [

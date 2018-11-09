@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class WayOfTheLion extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class WayOfTheLion extends DrawCard {
             title: 'Double the base mil of a character',
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isFaction('lion') && card.getBaseMilitarySkill() > 0,
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: ability.effects.modifyBaseMilitarySkill(context.target.getBaseMilitarySkill())

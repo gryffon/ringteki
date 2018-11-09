@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class MantisTenkinja extends DrawCard {
     setupCardAbilities(ability) {
         this.interrupt({
             title: 'Reduce cost of next event',
             when: {
-                onResolveFateCost: (event, context) => event.card.type === 'event' && event.player === context.player
+                onResolveFateCost: (event, context) => event.card.type === CardTypes.Event && event.player === context.player
             },
             cost: ability.costs.payHonor(1),
             effect: 'reduce the cost of their next event by 1',

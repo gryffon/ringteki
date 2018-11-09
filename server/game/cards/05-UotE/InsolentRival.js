@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class InsolentRival extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class InsolentRival extends DrawCard {
             title: 'Challenge a participating character to a Military duel: dishonor the loser of the duel',
             condition: () => this.isParticipating(),
             target: {
-                cardtype: 'character',
+                cardtype: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.duel(context => ({

@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class Outwit extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Send a character home.',
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: (card, context) => context.player.cardsInPlay.some(myCard => (
                     myCard.hasTrait('courtier') && myCard.isParticipating() &&
