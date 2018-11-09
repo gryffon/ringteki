@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Players } = require('../../Constants');
 
 class EndlessPlains extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -9,9 +10,9 @@ class EndlessPlains extends ProvinceCard {
             },
             cost: ability.costs.breakSelf(),
             target: {
-                player: 'opponent',
+                player: Players.Opponent,
                 activePromptTitle: 'Choose a character to discard',
-                controller: 'opponent',
+                controller: Players.Opponent,
                 cardCondition: card => card.isAttacking(),
                 gameAction: ability.actions.discardFromPlay()
             }

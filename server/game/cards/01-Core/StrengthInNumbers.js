@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class StrengthInNumbers extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class StrengthInNumbers extends DrawCard {
             title: 'Send home defending character',
             condition: context => context.player.isAttackingPlayer(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card =>
                     card.isDefending() &&
                     card.getGlory() <= this.game.currentConflict.getNumberOfParticipantsFor('attacker'),

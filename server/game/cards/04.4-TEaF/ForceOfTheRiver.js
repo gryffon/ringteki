@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, CardTypes } = require('../../Constants');
 
 class ForceOfTheRiver extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,10 +12,10 @@ class ForceOfTheRiver extends DrawCard {
                 label: 'Sprits of the River',
                 name: 'Sprits of the River',
                 facedown: false,
-                type: 'character'
+                type: CardTypes.Character
             },
             gameAction: ability.actions.createToken(context => ({
-                target: ['province 1', 'province 2', 'province 3', 'province 4'].map(
+                target: [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].map(
                     location => context.player.getDynastyCardInProvince(location)
                 ).filter(card => card.facedown)
             }))

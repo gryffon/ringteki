@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class KarmicTwist extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,13 +7,13 @@ class KarmicTwist extends DrawCard {
             title: 'Move fate from a non-unique character',
             target: {
                 activePromptTitle: 'Choose a donor character',
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => !card.isUnique(),
                 gameAction: ability.actions.removeFate(context => ({
                     amount: context.target.fate,
                     promptForSelect: {
                         activePromptTitle: 'Choose a recipient character',
-                        cardType: 'character',
+                        cardType: CardTypes.Character,
                         cardCondition: (card, context) => !card.isUnique() && card.fate === 0 && card.controller === context.target.controller,
                         customHandler: (card, action) => {
                             action.recipient = card;

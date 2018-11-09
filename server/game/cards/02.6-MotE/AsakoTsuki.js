@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class AsakoTsuki extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class AsakoTsuki extends DrawCard {
                 onClaimRing: event => event.conflict && event.conflict.hasElement('water')
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.hasTrait('scholar'),
                 gameAction: ability.actions.honor()
             }

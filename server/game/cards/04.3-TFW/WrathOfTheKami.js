@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class WrathOfTheKami extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class WrathOfTheKami extends DrawCard {
             effect: 'add 1 to the province strength',
             gameAction: ability.actions.cardLastingEffect(() => ({
                 target: this.game.currentConflict.conflictProvince,
-                targetLocation: 'province',
+                targetLocation: Locations.Provinces,
                 effect: ability.effects.modifyProvinceStrength(1)
             }))
         });

@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class CunningMagistrate extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating(),
-            match: card => card.isParticipating() && card.isDishonored && card !== this,
-            targetController: 'any',
+            condition: context => context.source.isParticipating(),
+            match: (card, context) => card.isDishonored && card !== context.source,
+            targetController: Players.Any,
             effect: ability.effects.cardCannot('countForResolution')
         });
     }

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class NorthernWallSensei extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,8 +7,8 @@ class NorthernWallSensei extends DrawCard {
             title: 'Grant immunity to events',
             condition: context => context.source.isParticipating(),
             target: {
-                cardType: 'character',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 cardCondition: card => card.isParticipating() && card.attachments.size() > 0,
                 gameAction: ability.actions.cardLastingEffect({
                     effect: ability.effects.immunity({ restricts: 'events' })

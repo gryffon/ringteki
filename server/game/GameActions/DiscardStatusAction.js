@@ -1,14 +1,15 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations, CardTypes } = require('../Constants');
 
 class DiscardStatusAction extends CardGameAction {
     setup() {
         this.name = 'discardStatus';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'discard {0}\'s status token';
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || !card.isHonored && !card.isDishonored) {
+        if(card.location !== Locations.PlayArea || !card.isHonored && !card.isDishonored) {
             return false;
         }
         return super.canAffect(card, context);

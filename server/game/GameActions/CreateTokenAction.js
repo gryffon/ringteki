@@ -1,14 +1,16 @@
 const CardGameAction = require('./CardGameAction');
 const DiscardFromPlayAction = require('./DiscardFromPlayAction');
+const { Locations, CardTypes } = require('../Constants');
+
 class CreateTokenAction extends CardGameAction {
     setup() {
         this.name = 'createToken';
-        this.targetType = ['character', 'holding'];
+        this.targetType = [CardTypes.Character, CardTypes.Holding];
         this.effectMsg = 'create a token';
     }
 
     canAffect(card, context) {
-        if(!card.facedown || !['province 1', 'province 2', 'province 3', 'province 4'].includes(card.location)) {
+        if(!card.facedown || ![Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
             return false;
         } else if(!context.game.isDuringConflict('military')) {
             return false;
@@ -22,7 +24,7 @@ class CreateTokenAction extends CardGameAction {
             card.owner.removeCardFromPile(card);
             context.refillProvince(card.owner, card.location);
             card.moveTo('spirit of the river');
-            card.owner.moveCard(token, 'play area');
+            card.owner.moveCard(token, Locations.PlayArea);
             if(context.player.isAttackingPlayer()) {
                 context.game.currentConflict.addAttacker(token);
             } else {

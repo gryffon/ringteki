@@ -1,20 +1,19 @@
 const DrawCard = require('../../drawcard.js');
 const PlayCharacterAction = require('../../playcharacteraction.js');
+const _ = require('underscore');
+const { Locations, Players } = require('../../Constants');
 
 class HiddenMoonDojoPlayAction extends PlayCharacterAction {
-    meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
-        if(ignoredRequirements.includes('location')) {
-            return super.meetsRequirements(context, ignoredRequirements);
-        }
-        return super.meetsRequirements(context, ignoredRequirements.concat('location'));
+    meetsRequirements(context, ignoredRequirements = []) {
+        return super.meetsRequirements(context, _.uniq(ignoredRequirements.concat('location')));
     }
 }
 
 class HiddenMoonDojo extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetLocation: 'province',
-            match: card => card.isDynasty && !card.facedown && this.controller.areLocationsAdjacent(this.location, card.location),
+            targetLocation: Locations.Provinces,
+            match: (card, context) => card.isDynasty && !card.facedown && context.player.areLocationsAdjacent(context.source.location, card.location),
             effect: ability.effects.gainPlayAction(HiddenMoonDojoPlayAction)
         });
 
@@ -23,8 +22,8 @@ class HiddenMoonDojo extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             gameAction: ability.actions.flipDynasty({
                 promptForSelect: {
-                    location: 'province',
-                    controller: 'self',
+                    location: Locations.Provinces,
+                    controller: Players.Self,
                     cardCondition: (card, context) => context.player.areLocationsAdjacent(context.source.location, card.location)
                 }
             })

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class MasterAlchemist extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class MasterAlchemist extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 activePromptTitle: 'Choose a character to honor or dishonor',
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.fireRingEffect()
             }
         });

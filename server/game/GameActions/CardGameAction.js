@@ -1,5 +1,6 @@
 const GameAction = require('./GameAction');
 const CardSelector = require('../CardSelector');
+const { Stages, CardTypes } = require('../Constants.js');
 
 class CardGameAction extends GameAction {
     constructor(propertyFactory) {
@@ -9,18 +10,18 @@ class CardGameAction extends GameAction {
     }
 
     setup() {
-        this.targetType = ['character', 'attachment', 'holding', 'event', 'stronghold', 'province', 'role'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role];
     }
 
     hasLegalTarget(context) {
         let result = super.hasLegalTarget(context);
         if(this.promptForSelect) {
             let contextCopy = context.copy();
-            contextCopy.stage = 'effect';
+            contextCopy.stage = Stages.Effect;
             return this.getSelector().hasEnoughTargets(contextCopy);
         } else if(this.promptWithHandlerMenu && !this.promptWithHandlerMenu.customHandler) {
             let contextCopy = context.copy();
-            contextCopy.stage = 'effect';
+            contextCopy.stage = Stages.Effect;
             return this.promptWithHandlerMenu.cards.some(card => this.canAffect(card, contextCopy));
         }
         return result;

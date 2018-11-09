@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const { Locations, EffectNames } = require('./Constants');
 
 class Duel {
     constructor(game, challenger, target, type) {
@@ -13,7 +14,7 @@ class Duel {
     }
 
     getSkillTotal(card) {
-        if(card.location === 'play area') {
+        if(card.location === Locations.PlayArea) {
             if(this.type === 'military') {
                 return card.getMilitarySkill(this.bidFinished);
             } else if(this.type === 'political') {
@@ -26,7 +27,7 @@ class Duel {
     }
 
     isInvolved(card) {
-        return (card === this.challenger || card === this.target) && card.location === 'play area';
+        return (card === this.challenger || card === this.target) && card.location === Locations.PlayArea;
     }
 
     getTotalsForDisplay() {
@@ -35,11 +36,11 @@ class Duel {
 
     modifyDuelingSkill() {
         this.bidFinished = true;
-        let cards = [this.challenger, this.target].filter(card => card.location === 'play area');
+        let cards = [this.challenger, this.target].filter(card => card.location === Locations.PlayArea);
         let typeToEffect = {
-            military: 'modifyDuelMilitarySkill',
-            political: 'modifyDuelPoliticalSkill',
-            glory: 'modifyDuelGlory'
+            military: EffectNames.ModifyDuelMilitarySkill,
+            political: EffectNames.ModifyDuelPoliticalSkill,
+            glory: EffectNames.ModifyDuelGlory
         };
         _.each(cards, card => {
             this.source.untilEndOfDuel(ability => ({

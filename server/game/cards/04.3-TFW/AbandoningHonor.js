@@ -1,10 +1,10 @@
 const ProvinceCard = require('../../provincecard.js');
+const { CardTypes } = require('../../Constants');
 
 class AbandoningHonor extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            condition: () => this.controller.role.hasTrait('fire'),
+            condition: context => context.player.role && context.player.role.hasTrait('fire'),
             effect: ability.effects.modifyProvinceStrength(2)
         });
 
@@ -14,7 +14,7 @@ class AbandoningHonor extends ProvinceCard {
                 onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
             },
             target: {
-                cardtype: 'character',
+                cardtype: CardTypes.Character,
                 cardCondition: card => card.isDishonored,
                 gameAction: ability.actions.discardFromPlay()
             }

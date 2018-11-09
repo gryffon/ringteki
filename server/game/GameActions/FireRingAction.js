@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations, CardTypes } = require('../Constants');
 
 class FireRingAction extends CardGameAction {
     constructor(propertyFactory) {
@@ -8,7 +9,7 @@ class FireRingAction extends CardGameAction {
 
     setup() {
         this.name = 'fireRingEffect';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'change {0}\'s personal honor';
     }
 
@@ -37,7 +38,7 @@ class FireRingAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' || card.type !== 'character') {
+        if(card.location !== Locations.PlayArea || card.type !== CardTypes.Character) {
             return false;
         } else if(this.name !== '') {
             return super.canAffect(card, context);

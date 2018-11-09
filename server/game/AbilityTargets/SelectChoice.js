@@ -1,3 +1,5 @@
+const { TargetModes } = require('../Constants');
+
 class SelectChoice {
     constructor(choice) {
         this.choice = choice;
@@ -8,7 +10,7 @@ class SelectChoice {
             id: this.choice,
             label: this.choice,
             name: this.choice,
-            type: 'select'
+            type: TargetModes.Select
         };
     }
 }

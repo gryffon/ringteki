@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations, Players, TargetModes, CardTypes } = require('../../Constants');
 
 class SoshiAoi extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,22 +8,22 @@ class SoshiAoi extends DrawCard {
             cost: ability.costs.payHonor(1),
             targets: {
                 character: {
-                    cardType: 'character',
-                    controller: 'self'
+                    cardType: CardTypes.Character,
+                    controller: Players.Self
                 },
                 select: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     dependsOn: 'character',
                     choices: {
                         'Give +1/+0 and the Bushi trait': ability.actions.cardLastingEffect(context => ({
                             target: context.targets.character,
-                            duration: 'untilEndOfPhase',
+                            duration: Durations.UntilEndOfPhase,
                             effect: [ability.effects.modifyMilitarySkill(1),
                                 ability.effects.addTrait('bushi')]
                         })),
                         'Give +0/+1 and the Courtier trait': ability.actions.cardLastingEffect(context => ({
                             target: context.targets.character,
-                            duration: 'untilEndOfPhase',
+                            duration: Durations.UntilEndOfPhase,
                             effect: [ability.effects.modifyPoliticalSkill(1),
                                 ability.effects.addTrait('courtier')]
                         }))

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class ItinerantPhilosopher extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,8 +8,8 @@ class ItinerantPhilosopher extends DrawCard {
             condition: context => context.source.isParticipating(),
             cost: ability.costs.discardImperialFavor(),
             target: {
-                cardType: 'character',
-                controller: 'opponent',
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating() && card.attachments.size() > 0,
                 gameAction: ability.actions.bow()
             }

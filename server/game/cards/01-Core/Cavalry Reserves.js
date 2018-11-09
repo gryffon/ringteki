@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, TargetModes, CardTypes } = require('../../Constants');
 
 class CavalryReserves extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,14 +7,14 @@ class CavalryReserves extends DrawCard {
             title: 'Put Cavalry into play from your discard',
             condition: () => this.game.isDuringConflict('military'),
             target: {
-                mode: 'maxStat',
+                mode: TargetModes.MaxStat,
                 activePromptTitle: 'Choose characters',
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
                 numCards: 0,
-                cardType: 'character',
-                location: 'dynasty discard pile',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                location: Locations.DynastyDiscardPile,
+                controller: Players.Self,
                 cardCondition: card => card.hasTrait('cavalry'),
                 gameAction: ability.actions.putIntoConflict()
             }

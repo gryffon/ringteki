@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const BaseCard = require('./basecard.js');
+const { Locations, EffectNames } = require('./Constants');
 
 class ProvinceCard extends BaseCard {
     constructor(owner, cardData) {
@@ -16,12 +17,12 @@ class ProvinceCard extends BaseCard {
     }
 
     getStrength() {
-        if(this.anyEffect('setProvinceStrength')) {
-            return this.mostRecentEffect('setProvinceStrength');
+        if(this.anyEffect(EffectNames.SetProvinceStrength)) {
+            return this.mostRecentEffect(EffectNames.SetProvinceStrength);
         }
 
-        let strength = this.baseStrength + this.sumEffects('modifyProvinceStrength') + this.getDynastyOrStrongholdCardModifier();
-        return this.getEffects('modifyProvinceStrengthMultiplier').reduce((total, value) => total * value, strength);
+        let strength = this.baseStrength + this.sumEffects(EffectNames.ModifyProvinceStrength) + this.getDynastyOrStrongholdCardModifier();
+        return this.getEffects(EffectNames.ModifyProvinceStrengthMultiplier).reduce((total, value) => total * value, strength);
     }
 
     get baseStrength() {
@@ -29,10 +30,10 @@ class ProvinceCard extends BaseCard {
     }
 
     getBaseStrength() {
-        if(this.anyEffect('setBaseProvinceStrength')) {
-            return this.mostRecentEffect('setBaseProvinceStrength');
+        if(this.anyEffect(EffectNames.SetBaseProvinceStrength)) {
+            return this.mostRecentEffect(EffectNames.SetBaseProvinceStrength);
         }
-        return this.sumEffects('modifyBaseProvinceStrength') + (parseInt(this.cardData.strength) ? parseInt(this.cardData.strength) : 0);
+        return this.sumEffects(EffectNames.ModifyBaseProvinceStrength) + (parseInt(this.cardData.strength) ? parseInt(this.cardData.strength) : 0);
     }
 
     getDynastyOrStrongholdCardModifier() {
@@ -64,7 +65,7 @@ class ProvinceCard extends BaseCard {
         this.isBroken = true;
         if(this.controller.opponent) {
             this.game.addMessage('{0} has broken {1}!', this.controller.opponent, this);
-            if(this.location === 'stronghold province') {
+            if(this.location === Locations.StrongholdProvince) {
                 this.game.recordWinner(this.controller.opponent, 'conquest');
             } else {
                 let dynastyCard = this.controller.getDynastyCardInProvince(this.location);

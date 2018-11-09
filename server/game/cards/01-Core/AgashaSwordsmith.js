@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class AgashaSwordsmith extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class AgashaSwordsmith extends DrawCard {
             effect: 'look at the top five cards of their deck',
             gameAction: ability.actions.deckSearch({
                 amount: 5,
-                cardCondition: card => card.type === 'attachment'
+                cardCondition: card => card.type === CardTypes.Attachment
             })
         });
     }

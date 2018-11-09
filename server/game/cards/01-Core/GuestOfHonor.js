@@ -1,14 +1,14 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class GuestOfHonor extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating(),
-            targetController: 'opponent',
+            condition: context => context.source.isParticipating(),
+            targetController: Players.Opponent,
             effect: ability.effects.playerCannot({
                 cannot: 'play',
-                restricts: 'events',
-                source: this
+                restricts: 'events'
             })
         });
     }

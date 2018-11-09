@@ -3,14 +3,13 @@ const DrawCard = require('../../drawcard.js');
 class UtakuInfantry extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating(),
-            match: this,
-            effect: ability.effects.modifyBothSkills(() => this.getNoOfUnicornCharacters())
+            condition: context => context.source.isParticipating(),
+            effect: ability.effects.modifyBothSkills(card => this.getNoOfUnicornCharacters(card.controller))
         });
     }
 
-    getNoOfUnicornCharacters() {
-        return this.controller.cardsInPlay.filter(card => card.isParticipating() && card.isFaction('unicorn')).length;
+    getNoOfUnicornCharacters(player) {
+        return player.cardsInPlay.filter(card => card.isParticipating() && card.isFaction('unicorn')).length;
     }
 }
 

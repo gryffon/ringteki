@@ -3,11 +3,10 @@ const DrawCard = require('../../drawcard.js');
 class ThirdTowerGuard extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.earth.isConsideredClaimed(this.controller) ||
-                this.game.rings.water.isConsideredClaimed(this.controller)
+            condition: context => (
+                this.game.rings.earth.isConsideredClaimed(context.player) ||
+                this.game.rings.water.isConsideredClaimed(context.player)
             ),
-            match: this,
             effect: ability.effects.modifyMilitarySkill(2)
         });
     }

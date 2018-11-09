@@ -1,13 +1,14 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations, CardTypes } = require('../../Constants');
 
 class TheMountainDoesNotFall extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Choose a character to not bow when defending',
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.cardLastingEffect(context => ({
-                    duration: 'untilEndOfPhase',
+                    duration: Durations.UntilEndOfPhase,
                     condition: () => context.target.isDefending(),
                     effect: ability.effects.doesNotBow()
                 }))

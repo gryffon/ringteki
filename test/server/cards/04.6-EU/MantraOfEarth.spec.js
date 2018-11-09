@@ -7,7 +7,7 @@ describe('Mantra of Earth', function () {
                     player2: {
                         provinces: ['kuroi-mori'],
                         inPlay: ['child-of-the-plains', 'togashi-initiate'],
-                        hand: ['spreading-the-darkness', 'mantra-of-earth']
+                        hand: ['spreading-the-darkness', 'mantra-of-earth','tattooed-wanderer']
                     },
                     player1: {
                         inPlay: ['solemn-scholar'],
@@ -15,7 +15,13 @@ describe('Mantra of Earth', function () {
                     }
                 });
                 this.mantra = this.player2.findCardByName('mantra-of-earth', 'hand');
+                this.tatooedWanderer = this.player2.findCardByName('tattooed-wanderer', 'hand');
+                this.childOfThePlains = this.player2.findCardByName('child-of-the-plains');
                 this.togashi = this.player2.findCardByName('togashi-initiate');
+                this.player1.pass();
+                this.player2.clickCard(this.tatooedWanderer);
+                this.player2.clickPrompt('Play Tattooed Wanderer as an attachment');
+                this.player2.clickCard(this.childOfThePlains);
                 this.noMoreActions();
             });
 
@@ -29,6 +35,20 @@ describe('Mantra of Earth', function () {
                 this.player2.clickCard(this.mantra);
                 expect(this.player2).toBeAbleToSelect(this.togashi);
                 this.player2.clickCard(this.togashi);
+                this.player2.clickPrompt('Done');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should be able to target a character with a monk attachment', function () {
+                this.initiateConflict({
+                    ring: 'earth',
+                    attackers: ['solemn-scholar']
+                });
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.mantra);
+                this.player2.clickCard(this.mantra);
+                expect(this.player2).toBeAbleToSelect(this.childOfThePlains);
+                this.player2.clickCard(this.childOfThePlains);
                 this.player2.clickPrompt('Done');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });

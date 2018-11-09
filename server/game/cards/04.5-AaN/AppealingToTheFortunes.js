@@ -1,10 +1,10 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class AppealingToTheFortunes extends ProvinceCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.persistentEffect({
-            match: this,
-            condition: () => this.controller.role.hasTrait('void'),
+            condition: context => context.player.role && context.player.role.hasTrait('void'),
             effect: ability.effects.modifyProvinceStrength(2)
         });
 
@@ -14,9 +14,9 @@ class AppealingToTheFortunes extends ProvinceCard {
                 onBreakProvince: (event, context) => event.card === context.source
             },
             target: {
-                cardType: 'character',
-                controller: 'self',
-                location: ['province', 'hand'],
+                cardType: CardTypes.Character,
+                controller: Players.Self,
+                location: [Locations.Provinces, Locations.Hand],
                 gameAction: ability.actions.putIntoPlay()
             }
         });

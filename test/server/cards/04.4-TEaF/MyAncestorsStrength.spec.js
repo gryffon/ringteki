@@ -8,7 +8,7 @@ describe('My Ancestors Strength', function() {
                         fate: 1,
                         inPlay: ['fearsome-mystic', 'asako-diplomat'],
                         hand: ['my-ancestor-s-strength'],
-                        dynastyDiscard: ['fushicho', 'naive-student']
+                        dynastyDiscard: ['fushicho', 'naive-student','isawa-uona']
                     },
                     player2: {
                         inPlay: ['moto-nergui']
@@ -33,7 +33,7 @@ describe('My Ancestors Strength', function() {
                 expect(this.fearsomeMystic.politicalSkill).toBe(6);
             });
 
-            it('should allow you to swap base dash skill values when a shugenja is participating', function() {
+            it('should allow you to swap with a base dash military skill value', function() {
                 this.initiateConflict({
                     type: 'political',
                     ring: 'earth',
@@ -47,6 +47,22 @@ describe('My Ancestors Strength', function() {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 expect(this.fearsomeMystic.hasDash('military')).toBeTruthy();
                 expect(this.fearsomeMystic.politicalSkill).toBe(2);
+            });
+
+            it('should allow you to swap with a base dash political skill value', function () {
+                this.initiateConflict({
+                    type: 'political',
+                    ring: 'earth',
+                    attackers: ['fearsome-mystic'],
+                    defenders: ['moto-nergui']
+                });
+                this.player2.pass();
+                this.player1.clickCard('my-ancestor-s-strength');
+                this.fearsomeMystic = this.player1.clickCard('fearsome-mystic');
+                this.player1.clickCard('isawa-uona');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.fearsomeMystic.militarySkill).toBe(2);
+                expect(this.fearsomeMystic.hasDash('politial')).toBeTruthy();
             });
 
             it('should not trigger if a shugenja is not participating in the conflict', function() {

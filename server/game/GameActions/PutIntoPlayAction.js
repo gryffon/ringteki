@@ -1,5 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const EntersPlayEvent = require('../Events/EntersPlayEvent');
+const { Locations, CardTypes } = require('../Constants');
 
 class PutIntoPlayAction extends CardGameAction {
     constructor(propertyFactory, intoConflict = true) {
@@ -14,7 +15,7 @@ class PutIntoPlayAction extends CardGameAction {
 
     setup() {
         this.name = this.intoConflict ? 'putIntoConflict' : 'putIntoPlay';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'put {0} into play' + (this.intoConflict ? ' in the conflict' : '');
         this.cost = 'putting {0} into play';
     }
@@ -24,7 +25,7 @@ class PutIntoPlayAction extends CardGameAction {
             return false;
         } else if(!context.player || card.anotherUniqueInPlay(context.player)) {
             return false;
-        } else if(card.location === 'play area' || card.facedown) {
+        } else if(card.location === Locations.PlayArea || card.facedown) {
             return false;
         } else if(this.intoConflict) {
             // There is no current conflict, or no context (cards must be put into play by a player, not a framework event)

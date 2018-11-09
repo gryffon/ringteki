@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Locations, CardTypes } = require('../../Constants');
 
 class BorderFortress extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -6,8 +7,8 @@ class BorderFortress extends ProvinceCard {
             title: 'Reveal a province',
             condition: context => context.source.isConflictProvince(),
             target: {
-                cardType: 'province',
-                location: 'province',
+                cardType: CardTypes.Province,
+                location: Locations.Provinces,
                 cardCondition: card => card.facedown,
                 gameAction: ability.actions.reveal({ chatMessage: true })
             },

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class HidaTomonatsu extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,8 +10,8 @@ class HidaTomonatsu extends DrawCard {
             },
             cost: ability.costs.sacrificeSelf(),
             target: {
-                cardType: 'character',
-                controller: 'opponent',
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
                 cardCondition: card => card.isAttacking() && !card.isUnique(),
                 gameAction: ability.actions.returnToDeck()
             }

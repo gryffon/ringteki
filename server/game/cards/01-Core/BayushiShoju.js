@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class BayushiShoju extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,8 +8,8 @@ class BayushiShoju extends DrawCard {
             limit: ability.limit.perRound(2),
             condition: context => context.source.isParticipating() && this.game.currentConflict.conflictType === 'political',
             target: {
-                cardType: 'character',
-                controller: 'opponent',
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: [

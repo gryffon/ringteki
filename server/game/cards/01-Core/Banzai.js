@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes, CardTypes } = require('../../Constants');
 
 class Banzai extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class Banzai extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             max: ability.limit.perConflict(1),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(() => ({
                     effect: ability.effects.modifyMilitarySkill(2)
@@ -18,7 +19,7 @@ class Banzai extends DrawCard {
                 if(context.secondResolution) {
                     return {
                         target: {
-                            mode: 'select',
+                            mode: TargetModes.Select,
                             choices: {
                                 'Lose 1 honor for no effect': ability.actions.loseHonor({target: context.player }),
                                 'Done': () => true
@@ -30,7 +31,7 @@ class Banzai extends DrawCard {
                 }
                 return {
                     target: {
-                        mode: 'select',
+                        mode: TargetModes.Select,
                         choices: {
                             'Lose 1 honor to resolve this ability again': ability.actions.loseHonor({target: context.player }),
                             'Done': () => true

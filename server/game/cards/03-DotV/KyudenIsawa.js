@@ -1,4 +1,5 @@
 const StrongholdCard = require('../../strongholdcard.js');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class KyudenIsawa extends StrongholdCard {
     setupCardAbilities(ability) {
@@ -10,15 +11,15 @@ class KyudenIsawa extends StrongholdCard {
             gameAction: ability.actions.playCard(context => ({
                 promptForSelect: {
                     activePromptTitle: 'Choose a spell event',
-                    cardType: 'event',
-                    controller: 'self',
-                    location: 'conflict discard pile',
+                    cardType: CardTypes.Event,
+                    controller: Players.Self,
+                    location: Locations.ConflictDiscardPile,
                     cardCondition: card => card.hasTrait('spell')
                 },
                 resetOnCancel: true,
                 postHandler: card => {
                     context.game.addMessage('{0} is removed from the game by {1}\'s ability', card, context.source);
-                    context.player.moveCard(card, 'removed from game');
+                    context.player.moveCard(card, Locations.RemovedFromGame);
                 }
             }))
         });

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class SpreadingTheDarkness extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,19 +8,18 @@ class SpreadingTheDarkness extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.payHonor(2),
             target: {
-                cardType: 'character',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 cardCondition: card => card.isParticipating(),
-                gameAction: ability.actions.cardLastingEffect(context => ({
+                gameAction: ability.actions.cardLastingEffect({
                     effect: [
                         ability.effects.modifyMilitarySkill(4),
                         ability.effects.cardCannot({
                             cannot: 'target',
-                            restricts: 'opponentsCardEffects',
-                            player: context.player
+                            restricts: 'opponentsCardEffects'
                         })
                     ]
-                }))
+                })
             },
             effect: 'give {0} +4{1} and prevent them from being targeted by opponent\'s abilities',
             effectArgs: () => 'military'

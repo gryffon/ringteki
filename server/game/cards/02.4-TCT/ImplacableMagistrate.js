@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class ImplacableMagistrate extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isAttacking(),
-            match: card => card.isParticipating() && !card.isHonored && card !== this,
-            targetController: 'any',
+            condition: context => context.source.isAttacking(),
+            match: (card, context) => !card.isHonored && card !== context.source,
+            targetController: Players.Any,
             effect: ability.effects.cardCannot('countForResolution')
         });
     }

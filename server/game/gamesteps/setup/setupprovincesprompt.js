@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const AllPlayerPrompt = require('../allplayerprompt.js');
+const { Locations } = require('../../Constants');
 
 class SetupProvincesPrompt extends AllPlayerPrompt {
     constructor(game) {
@@ -92,7 +93,7 @@ class SetupProvincesPrompt extends AllPlayerPrompt {
         this.strongholdProvince[player.uuid].inConflict = false;
         this.clickedDone[player.uuid] = true;
         this.game.addMessage('{0} has placed their provinces', player);
-        player.moveCard(this.strongholdProvince[player.uuid], 'stronghold province');
+        player.moveCard(this.strongholdProvince[player.uuid], Locations.StrongholdProvince);
         let provinces = this.selectedCards[player.uuid].concat(_.shuffle(this.selectableCards[player.uuid]));
         for(let i = 1; i < 5; i++) {
             player.moveCard(provinces[i - 1], 'province ' + i.toString());

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { TargetModes } = require('../../Constants');
 
 class AllAndNothing extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class AllAndNothing extends DrawCard {
                 onResolveRingElement: (event, context) => event.ring.element === 'void' && event.player === context.player
             },
             target: {
-                mode: 'ring',
+                mode: TargetModes.Ring,
                 ringCondition: (ring, context) => context.event.physicalRing ? ring !== context.event.physicalRing : ring.element !== 'void'
             },
             effect: 'resolve {0} effect instead of the void effect',

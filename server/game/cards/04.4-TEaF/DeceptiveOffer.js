@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, TargetModes, CardTypes } = require('../../Constants');
 
 class DeceptiveOffer extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,18 +7,17 @@ class DeceptiveOffer extends DrawCard {
             title: 'Increase a character\'s military and political skill or take an honor from your opponent',
             targets: {
                 character: {
-                    cardType: 'character',
-                    controller: 'self',
+                    cardType: CardTypes.Character,
+                    controller: Players.Self,
                     cardCondition: card => card.isParticipating()
                 },
                 select: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     dependsOn: 'character',
-                    player: 'opponent',
+                    player: Players.Opponent,
                     choices: {
                         'Allow your opponent\'s character to gain military and political skill': ability.actions.cardLastingEffect(context => ({
                             target: context.targets.character,
-                            duration: 'untilEndOfConflict',
                             effect: ability.effects.modifyBothSkills(2)
                         })),
                         'Give your opponent 1 honor': ability.actions.takeHonor()

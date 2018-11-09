@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class MyAncestorsStrength extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -8,17 +9,16 @@ class MyAncestorsStrength extends DrawCard {
             targets: {
                 shugenja: {
                     activePromptTitle: 'Choose a shugenja character',
-                    cardType: 'character',
-                    controller: 'self',
-                    location: 'play area',
+                    cardType: CardTypes.Character,
+                    controller: Players.Self,
                     cardCondition: card => card.hasTrait('shugenja') && card.isParticipating()
                 },
                 ancestor: {
                     dependsOn: 'shugenja',
                     activePromptTitle: 'Choose a character to copy from',
-                    cardType: 'character',
-                    location: 'dynasty discard pile',
-                    controller: 'self',
+                    cardType: CardTypes.Character,
+                    location: Locations.DynastyDiscardPile,
+                    controller: Players.Self,
                     gameAction: ability.actions.cardLastingEffect(context => {
                         let effects = [];
                         let ancestor = context.targets.ancestor;
@@ -34,7 +34,6 @@ class MyAncestorsStrength extends DrawCard {
                         }
                         return {
                             target: context.targets.shugenja,
-                            duration: 'untilEndOfConflict',
                             effect: effects
                         };
                     })

@@ -1,4 +1,5 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations, CardTypes } = require('../Constants');
 
 class RevealAction extends CardGameAction {
     setDefaultProperties() {
@@ -14,7 +15,7 @@ class RevealAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        let testLocations = ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province','play area'];
+        let testLocations = [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince, Locations.PlayArea];
         if(!card.facedown && testLocations.includes(card.location)) {
             return false;
         }
@@ -23,7 +24,7 @@ class RevealAction extends CardGameAction {
 
     getEvent(card, context) {
         let eventName = 'onCardRevealed';
-        if(card.type === 'province') {
+        if(card.type === CardTypes.Province) {
             eventName = 'onProvinceRevealed';
         }
         return super.createEvent(eventName, { card, context }, event => {

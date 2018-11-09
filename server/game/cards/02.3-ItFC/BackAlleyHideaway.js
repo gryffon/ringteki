@@ -4,6 +4,7 @@ const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
 const GameActions = require('../../GameActions/GameActions');
 const ThenAbility = require('../../ThenAbility');
+const { Locations, CardTypes } = require('../../Constants');
 
 const backAlleyPersistentEffect = {
     apply: card => {
@@ -16,7 +17,7 @@ const backAlleyPersistentEffect = {
     unapply: card => {
         card.attachments.each(character => {
             // move all attachments to the correct discard pile
-            character.owner.moveCard(character, character.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+            character.owner.moveCard(character, character.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
             // remove any added playActions
             character.abilities.playActions = _.reject(character.abilities.playActions, action => action.title === 'Play this character from Back-Alley Hideaway');
         });
@@ -78,13 +79,12 @@ class BackAlleyHideaway extends DrawCard {
     setupCardAbilities(ability) {
         this.backAlleyActionLimit = ability.limit.perRound(1);
         this.persistentEffect({
-            match: this,
             effect: ability.effects.customDetachedCard(backAlleyPersistentEffect)
         });
         this.interrupt({
             title: 'Place character in Hideaway',
             when: {
-                onCardLeavesPlay: (event, context) => event.card.isFaction('scorpion') && event.card.type === 'character' &&
+                onCardLeavesPlay: (event, context) => event.card.isFaction('scorpion') && event.card.type === CardTypes.Character &&
                                                       event.card.controller === context.player
             },
             effect: 'move {1} into hiding',

@@ -1,11 +1,11 @@
 const ProvinceCard = require('../../provincecard.js');
+const { Locations, CardTypes } = require('../../Constants');
 
 class SeekingtheTruth extends ProvinceCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            match: this,
-            targetLocation: 'province',
-            condition: () => this.controller.role.hasTrait('water'),
+            targetLocation: Locations.Provinces,
+            condition: context => context.player.role && context.player.role.hasTrait('water'),
             effect: ability.effects.modifyProvinceStrength(2)
         });
 
@@ -15,7 +15,7 @@ class SeekingtheTruth extends ProvinceCard {
                 onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isDefending(),
                 gameAction: ability.actions.sendHome()
             }

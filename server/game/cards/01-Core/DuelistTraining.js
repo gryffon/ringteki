@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const GameActions = require('../../GameActions/GameActions');
+const { Players, CardTypes } = require('../../Constants');
 
 class DuelistTraining extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,8 +11,8 @@ class DuelistTraining extends DrawCard {
                 condition: context => context.source.isParticipating(),
                 printedAbility: false,
                 target: {
-                    cardType: 'character',
-                    controller: 'opponent',
+                    cardType: CardTypes.Character,
+                    controller: Players.Opponent,
                     cardCondition: card => card.isParticipating(),
                     gameAction: ability.actions.duel(context => ({
                         type: 'military',

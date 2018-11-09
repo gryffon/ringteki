@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { Locations, Players, TargetModes } = require('../Constants');
 
 class ChosenDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -27,11 +28,11 @@ class ChosenDiscardAction extends PlayerAction {
                 context.game.promptForSelect(player, {
                     activePromptTitle: 'Choose ' + (amount === 1 ? 'a card' : (amount + ' cards')) + ' to discard',
                     context: context,
-                    mode: 'exactly',
+                    mode: TargetModes.Exactly,
                     numCards: amount,
                     ordered: true,
-                    location: 'hand',
-                    controller: player === context.player ? 'self' : 'opponent',
+                    location: Locations.Hand,
+                    controller: player === context.player ? Players.Self : Players.Opponent,
                     onSelect: (player, cards) => {
                         this.cards[player.uuid] = cards;
                         context.game.addMessage('{0} discards {1}', player, cards);
@@ -45,7 +46,7 @@ class ChosenDiscardAction extends PlayerAction {
     getEvent(player, context) {
         return super.createEvent('onCardsDiscardedFromHand', { player: player, cards: this.cards[player.uuid], context: context }, event => {
             for(let card of event.cards) {
-                player.moveCard(card, card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile');
+                player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
             }
         });
     }

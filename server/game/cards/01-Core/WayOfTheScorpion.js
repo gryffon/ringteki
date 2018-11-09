@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class WayOfTheScorpion extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Dishonor a participating character',
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating() && !card.isFaction('scorpion'),
                 gameAction: ability.actions.dishonor()
             }

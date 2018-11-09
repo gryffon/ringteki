@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class HidaGuardian extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class HidaGuardian extends DrawCard {
             title: 'Give a character a bonus for each holding',
             condition: context => context.source.isParticipating(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.isParticipating() && card !== context.source,
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: ability.effects.modifyBothSkills(2 * context.player.getNumberOfHoldingsInPlay())

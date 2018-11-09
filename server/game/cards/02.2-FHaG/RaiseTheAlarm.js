@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class RaiseTheAlarm extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +14,7 @@ class RaiseTheAlarm extends DrawCard {
             then: context => ({
                 handler: () => {
                     let card = context.player.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location);
-                    if(card.type === 'character' && card.allowGameAction('putIntoConflict', context)) {
+                    if(card.type === CardTypes.Character && card.allowGameAction('putIntoConflict', context)) {
                         this.game.addMessage('{0} is revealed and brought into the conflict!', card);
                         ability.actions.putIntoConflict().resolve(card, context);
                     } else {

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class ShiotomeEncampment extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +12,7 @@ class ShiotomeEncampment extends DrawCard {
                         ring.isConflictType('military')
                 ),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.hasTrait('cavalry'),
                 gameAction: ability.actions.ready()
             }

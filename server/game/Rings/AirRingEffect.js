@@ -1,10 +1,11 @@
 const BaseAbility = require('../baseability.js');
+const { TargetModes } = require('../Constants');
 
 class AirRingEffect extends BaseAbility {
     constructor(optional = true) {
         super({
             target: {
-                mode: 'select',
+                mode: TargetModes.Select,
                 activePromptTitle: 'Choose an effect to resolve',
                 source: 'Air Ring',
                 choices: {

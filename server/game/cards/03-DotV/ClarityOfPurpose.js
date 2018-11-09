@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class ClarityOfPurpose extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,20 +7,19 @@ class ClarityOfPurpose extends DrawCard {
             title: 'Character cannot be bowed and doesn\'t bow during political conflicts',
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 gameAction: [
                     ability.actions.cardLastingEffect({
                         condition: () => this.game.isDuringConflict('political'),
                         effect: ability.effects.doesNotBow()
                     }),
-                    ability.actions.cardLastingEffect(context => ({
+                    ability.actions.cardLastingEffect({
                         effect: ability.effects.cardCannot({
                             cannot: 'bow',
-                            restricts: 'opponentsCardEffects',
-                            player: context.player
+                            restricts: 'opponentsCardEffects'
                         })
-                    }))
+                    })
                 ]
             },
             effect: 'prevent opponents\' actions from bowing {0} and stop it bowing at the end of a political conflict'

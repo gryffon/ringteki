@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class IkomaIkehata extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,9 +10,8 @@ class IkomaIkehata extends DrawCard {
             },
             target: {
                 activePromptTitle: 'Choose a character to honor',
-                cardType: 'character',
-                controller: 'self',
-                cardcondition: card => !card.isHonored,
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 gameAction: ability.actions.honor()
             },
             gameAction: ability.actions.draw()

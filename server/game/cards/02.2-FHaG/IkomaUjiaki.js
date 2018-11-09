@@ -1,5 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, TargetModes, CardTypes } = require('../../Constants');
 
 class IkomaUjiaki extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,14 +8,14 @@ class IkomaUjiaki extends DrawCard {
         this.action({
             title: 'Put 2 characters into play',
             cost: ability.costs.discardImperialFavor(),
-            condition: context => context.source.isParticipating() && ['province 1', 'province 2', 'province 3', 'province 4'].some(location => {
+            condition: context => context.source.isParticipating() && [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].some(location => {
                 let card = context.player.getDynastyCardInProvince(location);
                 return card && card.facedown;
             }),
             effect: 'to reveal all their facedown dynasty cards',
             handler: context => {
                 let revealedCards = [];
-                _.each(['province 1', 'province 2', 'province 3', 'province 4'], location => {
+                _.each([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour], location => {
                     let card = context.player.getDynastyCardInProvince(location);
                     if(card && card.facedown) {
                         revealedCards.push(card);
@@ -23,12 +24,12 @@ class IkomaUjiaki extends DrawCard {
                 });
                 if(revealedCards.length > 0) {
                     this.game.promptForSelect(context.player, {
-                        mode: 'upTo',
+                        mode: TargetModes.UpTo,
                         numCards: 2,
                         activePrompt: 'Choose up to 2 characters',
-                        cardType: 'character',
-                        location: 'province',
-                        controller: 'self',
+                        cardType: CardTypes.Character,
+                        location: Locations.Provinces,
+                        controller: Players.Self,
                         context: context,
                         optional: true,
                         cardCondition: card => !card.facedown && card.allowGameAction('putIntoConflict', context),

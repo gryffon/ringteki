@@ -1,15 +1,16 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, TargetModes } = require('../../Constants');
 
 class StagingGround extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Flip up to 2 dynasty cards',
             target: {
-                mode: 'upTo',
+                mode: TargetModes.UpTo,
                 numCards: 2,
                 activePromptTitle: 'Choose up to 2 cards',
-                location: 'province',
-                controller: 'self',
+                location: Locations.Provinces,
+                controller: Players.Self,
                 gameAction: ability.actions.flipDynasty()
             }
         });

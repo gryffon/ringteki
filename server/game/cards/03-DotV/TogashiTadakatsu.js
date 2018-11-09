@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class TogashiTadakatsu extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            targetController: 'any',
+            targetController: Players.Any,
             effect: ability.effects.playerCannot('chooseConflictRing')
         });
     }

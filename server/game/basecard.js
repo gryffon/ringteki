@@ -6,6 +6,8 @@ const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 const TriggeredAbility = require('./triggeredability');
 
+const { Locations, EffectNames, Durations, CardTypes } = require('./Constants');
+
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
         super(owner.game);
@@ -89,42 +91,42 @@ class BaseCard extends EffectSource {
      * is both in play and not blank.
      */
     persistentEffect(properties) {
-        const allowedLocations = ['any', 'play area', 'province'];
+        const allowedLocations = [Locations.Any, Locations.PlayArea, Locations.Provinces];
         const defaultLocationForType = {
-            province: 'province',
-            holding: 'province',
-            stronghold: 'province'
+            province: Locations.Provinces,
+            holding: Locations.Provinces,
+            stronghold: Locations.Provinces
         };
 
-        let location = properties.location || defaultLocationForType[this.getType()] || 'play area';
+        let location = properties.location || defaultLocationForType[this.getType()] || Locations.PlayArea;
         if(!allowedLocations.includes(location)) {
             throw new Error(`'${location}' is not a supported effect location.`);
         }
 
-        this.abilities.persistentEffects.push(_.extend({ duration: 'persistent', location: location }, properties));
+        this.abilities.persistentEffects.push(_.extend({ duration: Durations.Persistent, location: location }, properties));
     }
 
     hasTrait(trait) {
         trait = trait.toLowerCase();
-        return this.traits.includes(trait) || this.getEffects('addTrait').includes(trait);
+        return this.traits.includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);
     }
 
     getTraits() {
-        let traits = this.traits.concat(this.getEffects('addTrait'));
+        let traits = this.traits.concat(this.getEffects(EffectNames.AddTrait));
         return _.uniq(traits);
     }
 
     isFaction(faction) {
         faction = faction.toLowerCase();
         if(faction === 'neutral') {
-            return this.printedFaction === faction && !this.anyEffect('addFaction');
+            return this.printedFaction === faction && !this.anyEffect(EffectNames.AddFaction);
         }
-        return this.printedFaction === faction || this.getEffects('addFaction').includes(faction);
+        return this.printedFaction === faction || this.getEffects(EffectNames.AddFaction).includes(faction);
     }
 
     applyAnyLocationPersistentEffects() {
         _.each(this.abilities.persistentEffects, effect => {
-            if(effect.location === 'any') {
+            if(effect.location === Locations.Any) {
                 this.addEffectToEngine(effect);
             }
         });
@@ -140,9 +142,9 @@ class BaseCard extends EffectSource {
 
     updateAbilityEvents(from, to) {
         _.each(this.abilities.reactions, reaction => {
-            if((reaction.location.includes(to) || this.type === 'event' && to === 'conflict deck') && !reaction.location.includes(from)) {
+            if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
-            } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === 'event' && to === 'conflict deck')) {
+            } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === CardTypes.Event && to === Locations.ConflictDeck)) {
                 reaction.unregisterEvents();
             }
         });
@@ -150,14 +152,14 @@ class BaseCard extends EffectSource {
 
     updateEffects(from = '', to = '') {
         const activeLocations = {
-            'play area': ['play area'],
-            'province': ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province']
+            'play area': [Locations.PlayArea],
+            'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
         };
-        if(from === 'play area' || this.type === 'holding' && activeLocations['province'].includes(from) && !activeLocations['province'].includes(to)) {
+        if(from === Locations.PlayArea || this.type === CardTypes.Holding && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
             this.removeLastingEffects();
         }
         _.each(this.abilities.persistentEffects, effect => {
-            if(effect.location !== 'any') {
+            if(effect.location !== Locations.Any) {
                 if(activeLocations[effect.location].includes(to) && !activeLocations[effect.location].includes(from)) {
                     effect.ref = this.addEffectToEngine(effect);
                 } else if(!activeLocations[effect.location].includes(to) && activeLocations[effect.location].includes(from)) {
@@ -172,7 +174,7 @@ class BaseCard extends EffectSource {
 
         this.location = targetLocation;
 
-        if(['play area', 'conflict discard pile', 'dynasty discard pile', 'hand'].includes(targetLocation)) {
+        if([Locations.PlayArea, Locations.ConflictDiscardPile, Locations.DynastyDiscardPile, Locations.Hand].includes(targetLocation)) {
             this.facedown = false;
         }
 
@@ -188,14 +190,14 @@ class BaseCard extends EffectSource {
     }
 
     getModifiedLimitMax(max) {
-        return this.sumEffects('increaseLimitOnAbilities') + max;
+        return this.sumEffects(EffectNames.IncreaseLimitOnAbilities) + max;
     }
 
     getMenu() {
         var menu = [];
 
         if(this.menu.isEmpty() || !this.game.manualMode ||
-                !['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province','play area'].includes(this.location)) {
+                ![Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince, Locations.PlayArea].includes(this.location)) {
             return undefined;
         }
 
@@ -204,7 +206,7 @@ class BaseCard extends EffectSource {
         }
 
         menu.push({ command: 'click', text: 'Select Card' });
-        if(this.location === 'play area' || this.isProvince || this.isStronghold) {
+        if(this.location === Locations.PlayArea || this.isProvince || this.isStronghold) {
             menu = menu.concat(this.menu.value());
         }
 
@@ -232,7 +234,7 @@ class BaseCard extends EffectSource {
     }
 
     isBlank() {
-        return this.anyEffect('blank');
+        return this.anyEffect(EffectNames.Blank);
     }
 
     getPrintedFaction() {
@@ -277,11 +279,11 @@ class BaseCard extends EffectSource {
     }
 
     readiesDuringReadyPhase() {
-        return !this.anyEffect('doesNotReady');
+        return !this.anyEffect(EffectNames.DoesNotReady);
     }
 
     hideWhenFacedown() {
-        return !this.anyEffect('canBeSeenWhenFacedown');
+        return !this.anyEffect(EffectNames.CanBeSeenWhenFacedown);
     }
 
     createSnapshot() {

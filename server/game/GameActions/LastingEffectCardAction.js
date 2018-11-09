@@ -1,8 +1,9 @@
 const CardGameAction = require('./CardGameAction');
+const { Locations, Durations } = require('../Constants');
 
 class LastingEffectCardAction extends CardGameAction {
     setDefaultProperties() {
-        this.duration = 'untilEndOfConflict';
+        this.duration = Durations.UntilEndOfConflict;
         this.condition = null;
         this.until = null;
         this.effect = [];
@@ -31,7 +32,7 @@ class LastingEffectCardAction extends CardGameAction {
     }
 
     canAffect(card, context) {
-        if(card.location !== 'play area' && this.targetLocation !== 'province') {
+        if(card.location !== Locations.PlayArea && this.targetLocation !== Locations.Provinces) {
             return false;
         }
         if(!this.effect.some(effect => effect.effect.canBeApplied(card))) {

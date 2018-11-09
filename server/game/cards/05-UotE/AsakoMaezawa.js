@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class AsakoMaezawa extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +12,7 @@ class AsakoMaezawa extends DrawCard {
                 context.player.opponent.cardsInPlay.reduce((oppTotal, card) => oppTotal + (card.isParticipating() && !card.bowed ? card.getGlory() : 0), 0)
             ),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: ability.effects.modifyBasePoliticalSkill(context.target.getBasePoliticalSkill())

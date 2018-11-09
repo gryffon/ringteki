@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class GraspOfEarth extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +14,7 @@ class GraspOfEarth extends DrawCard {
                     effect: ability.effects.cardCannot('moveToConflict')
                 })),
                 ability.actions.playerLastingEffect({
-                    targetController: 'opponent',
+                    targetController: Players.Opponent,
                     effect: ability.effects.playerCannot({
                         cannot: 'playCharacter'
                     })

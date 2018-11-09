@@ -3,10 +3,10 @@ const DrawCard = require('../../drawcard.js');
 class ImpulsiveNovice extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => (
-                this.game.rings.fire.isConsideredClaimed(this.controller) ||
-                this.game.rings.void.isConsideredClaimed(this.controller)),
-            match: this,
+            condition: context => (
+                this.game.rings.fire.isConsideredClaimed(context.player) ||
+                this.game.rings.void.isConsideredClaimed(context.player)
+            ),
             effect: ability.effects.modifyBothSkills(1)
         });
     }

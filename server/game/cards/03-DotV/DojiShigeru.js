@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class DojiShigeru extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class DojiShigeru extends DrawCard {
             title: 'Opponent discards a card',
             limit: ability.limit.unlimitedPerConflict(),
             when: {
-                onCardPlayed: (event, context) => event.player === context.player.opponent && event.card.type === 'event' &&
+                onCardPlayed: (event, context) => event.player === context.player.opponent && event.card.type === CardTypes.Event &&
                                                   context.source.isParticipating()
             },
             gameAction: ability.actions.chosenDiscard()

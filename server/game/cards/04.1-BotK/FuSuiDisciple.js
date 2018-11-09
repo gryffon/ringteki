@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, TargetModes, CardTypes } = require('../../Constants');
 
 class FuSuiDisciple extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class FuSuiDisciple extends DrawCard {
             title: 'Honor or dishonor a character controlled by a player with the air ring',
             targets: {
                 player: {
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     activePromptTitle: 'Choose a player',
                     choices: {
                         'Me': context => context.game.rings.air.isConsideredClaimed(context.player),
@@ -15,9 +16,9 @@ class FuSuiDisciple extends DrawCard {
                 },
                 character: {
                     dependsOn: 'player',
-                    player: context => context.selects.player.choice === 'Me' ? 'self' : 'opponent',
+                    player: context => context.selects.player.choice === 'Me' ? Players.Self : Players.Opponent,
                     activePromptTitle: 'Choose a character to be honored or dishonored',
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     cardCondition: (card, context) => {
                         let player = context.selects.player.choice === 'Me' ? context.player : context.player.opponent;
                         return !card.isHonored && !card.isDishonored && card.controller === player;
@@ -25,7 +26,7 @@ class FuSuiDisciple extends DrawCard {
                 },
                 effect: {
                     dependsOn: 'character',
-                    mode: 'select',
+                    mode: TargetModes.Select,
                     choices: {
                         'Honor this character': ability.actions.honor(context => ({ target: context.targets.character })),
                         'Dishonor this character': ability.actions.dishonor(context => ({ target: context.targets.character }))

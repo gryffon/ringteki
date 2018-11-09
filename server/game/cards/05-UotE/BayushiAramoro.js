@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class BayushiAramoro extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,8 +8,8 @@ class BayushiAramoro extends DrawCard {
             cost: ability.costs.dishonorSelf(),
             condition: context => context.source.isParticipating() && this.game.currentConflict.conflictType === 'military',
             target: {
-                cardType: 'character',
-                controller: 'opponent',
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: [

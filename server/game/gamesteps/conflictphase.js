@@ -4,6 +4,8 @@ const Conflict = require('../conflict.js');
 const ActionWindow = require('./actionwindow.js');
 const GameActions = require('../GameActions/GameActions');
 
+const { Phases } = require('../Constants');
+
 /*
 III Conflict Phase
 3.1 Conflict phase begins.
@@ -24,7 +26,7 @@ III Conflict Phase
 
 class ConflictPhase extends Phase {
     constructor(game) {
-        super(game, 'conflict');
+        super(game, Phases.Conflict);
         this.initialise([
             new SimpleStep(this.game, () => this.beginPhase()),
             new ActionWindow(this.game, 'Action Window', 'preConflict'),

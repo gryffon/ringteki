@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
+const { EffectNames } = require('./Constants');
 
 class GameObject {
     constructor(game, name) {
@@ -48,7 +49,7 @@ class GameObject {
 
 
     checkRestrictions(actionType, context) {
-        return !this.getEffects('abilityRestrictions').some(restriction => restriction.isMatch(actionType, context));
+        return !this.getEffects(EffectNames.AbilityRestrictions).some(restriction => restriction.isMatch(actionType, context));
     }
 
     isUnique() {

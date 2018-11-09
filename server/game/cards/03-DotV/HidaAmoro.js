@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class HidaAmoro extends DrawCard {
     setupCardAbilities(ability) {
@@ -14,7 +15,7 @@ class HidaAmoro extends DrawCard {
                 promptForSelect: {
                     player: context.event.conflict.attackingPlayer,
                     activePromptTitle: 'Choose a character to sacrifice',
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     cardCondition: card => card.controller === context.event.conflict.attackingPlayer,
                     message: '{0} sacrifices {1} to {2}',
                     messageArgs: card => [context.player.opponent, card, context.source]

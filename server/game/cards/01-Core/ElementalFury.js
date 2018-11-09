@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { TargetModes } = require('../../Constants');
 
 class ElementalFury extends ProvinceCard {
     setupCardAbilities() {
@@ -9,7 +10,7 @@ class ElementalFury extends ProvinceCard {
             },
             target: {
                 ringCondition: ring => ring.isUnclaimed(),
-                mode: 'ring'
+                mode: TargetModes.Ring
             },
             effect: 'change the conflict ring to {0}',
             handler: context => this.game.currentConflict.switchElement(context.ring.element)

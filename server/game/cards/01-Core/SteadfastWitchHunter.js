@@ -1,13 +1,14 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class SteadfastWitchHunter extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Ready character',
-            cost: ability.costs.sacrifice(card => card.getType() === 'character'),
+            cost: ability.costs.sacrifice(card => card.getType() === CardTypes.Character),
             target: {
                 activePromptTitle: 'Choose a character to ready',
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.ready()
             }
         });

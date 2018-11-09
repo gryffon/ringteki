@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, TargetModes, CardTypes } = require('../../Constants');
 
 class ALegionOfOne extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,8 +7,8 @@ class ALegionOfOne extends DrawCard {
             title: 'Give a solitary character +3/+0',
             condition: () => this.game.isDuringConflict('military'),
             target: {
-                cardType: 'character',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 cardCondition: (card, context) =>
                     card.isParticipating() &&
                     this.game.currentConflict.getNumberOfParticipantsFor(context.player) === 1,
@@ -20,7 +21,7 @@ class ALegionOfOne extends DrawCard {
                 if(context.secondResolution) {
                     return {
                         target: {
-                            mode: 'select',
+                            mode: TargetModes.Select,
                             choices: {
                                 'Remove 1 fate for no effect': ability.actions.removeFate({target: context.target }),
                                 'Done': () => true
@@ -32,7 +33,7 @@ class ALegionOfOne extends DrawCard {
                 }
                 return {
                     target: {
-                        mode: 'select',
+                        mode: TargetModes.Select,
                         choices: {
                             'Remove 1 fate to resolve this ability again': ability.actions.removeFate({target: context.target }),
                             'Done': () => true

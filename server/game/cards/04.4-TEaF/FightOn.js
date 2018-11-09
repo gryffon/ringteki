@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class FightOn extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -6,9 +7,8 @@ class FightOn extends DrawCard {
             title: 'Ready character and move to conflict',
             condition: context => context.player.isDefendingPlayer(),
             target: {
-                cardType: 'character',
-                location: 'play area',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 cardCondition: card => card.bowed,
                 gameAction: [ability.actions.ready(), ability.actions.moveToConflict()]
             },

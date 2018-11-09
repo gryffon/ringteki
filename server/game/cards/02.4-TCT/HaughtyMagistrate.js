@@ -1,11 +1,13 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class HaughtyMagistrate extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isAttacking(),
-            match: card => card.isParticipating() && card.getGlory() < this.getGlory() && card !== this,
-            targetController: 'any',
+            condition: context => context.source.isAttacking(),
+            match: (card, context) =>
+                card.getGlory() < context.source.getGlory() && card !== context.source,
+            targetController: Players.Any,
             effect: ability.effects.cardCannot('countForResolution')
         });
     }

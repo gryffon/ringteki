@@ -26,7 +26,7 @@ class TerminalCondition {
     }
 
     checkCondition() {
-        return this.condition() && (!this.event || this.event.cancelled);
+        return this.condition(this.context) && (!this.event || this.event.cancelled);
     }
 
     getEvent() {

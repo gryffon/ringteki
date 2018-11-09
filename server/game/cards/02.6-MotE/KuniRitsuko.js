@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class KuniRitsuko extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class KuniRitsuko extends DrawCard {
                 afterConflict: (event, context) => event.conflict.winner === context.player && context.source.isDefending()
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isAttacking(),
                 gameAction: ability.actions.removeFate()
             }

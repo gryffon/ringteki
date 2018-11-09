@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class CallowDelegate extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -8,9 +9,8 @@ class CallowDelegate extends DrawCard {
                 onCardLeavesPlay: (event, context) => event.card === context.source
             },
             target: {
-                cardType: 'character',
-                location: 'play area',
-                controller: 'self',
+                cardType: CardTypes.Character,
+                controller: Players.Self,
                 gameAction: ability.actions.honor()
             }
         });

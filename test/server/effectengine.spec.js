@@ -1,6 +1,7 @@
 const _ = require('underscore');
 
 const EffectEngine = require('../../server/game/effectengine.js');
+const { Stages } = require('../../server/game/Constants.js');
 
 xdescribe('EffectEngine', function () {
     beforeEach(function () {
@@ -12,7 +13,7 @@ xdescribe('EffectEngine', function () {
         this.gameSpy.getPlayers.and.returnValue([]);
         this.gameSpy.allCards = _([this.handCard, this.playAreaCard, this.discardedCard]);
 
-        this.effectSpy = jasmine.createSpyObj('effect', ['addTargets', 'getTargets', 'isInActiveLocation', 'reapply', 'removeTarget', 'cancel', 'setActive']);
+        this.effectSpy = jasmine.createSpyObj(Stages.Effect, ['addTargets', 'getTargets', 'isInActiveLocation', 'reapply', 'removeTarget', 'cancel', 'setActive']);
         this.effectSpy.isInActiveLocation.and.returnValue(true);
         this.effectSpy.targetLocation = 'play area';
         this.effectSpy.match = () => true;
@@ -471,7 +472,7 @@ xdescribe('EffectEngine', function () {
             this.effectSpy.until = {
                 foo: jasmine.createSpy('listener')
             };
-            this.effectSpy2 = jasmine.createSpyObj('effect', ['addTargets', 'getTargets', 'isInActiveLocation', 'reapply', 'removeTarget', 'cancel', 'setActive']);
+            this.effectSpy2 = jasmine.createSpyObj(Stages.Effect, ['addTargets', 'getTargets', 'isInActiveLocation', 'reapply', 'removeTarget', 'cancel', 'setActive']);
             this.effectSpy2.isInActiveLocation.and.returnValue(true);
             this.effectSpy2.targetLocation = 'play area';
             this.effectSpy2.duration = 'custom';

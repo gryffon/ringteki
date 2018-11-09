@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 
 class DisdainfulRemark extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class DisdainfulRemark extends DrawCard {
             effectArgs: context => context.player.opponent.hand.size(),
             gameAction: ability.actions.cardLastingEffect(context => ({
                 target: this.game.currentConflict.conflictProvince,
-                targetLocation: 'province',
+                targetLocation: Locations.Provinces,
                 effect: ability.effects.modifyProvinceStrength(context.player.opponent.hand.size())
             }))
         });

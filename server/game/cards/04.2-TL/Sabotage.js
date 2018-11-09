@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class Sabotage extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,9 +7,9 @@ class Sabotage extends DrawCard {
             condition: () => this.game.isDuringConflict('military'),
             title: 'Discard a card in a province',
             target: {
-                location: 'province',
-                controller: 'opponent',
-                cardType: ['character','holding'],
+                location: Locations.Provinces,
+                controller: Players.Opponent,
+                cardType: [CardTypes.Character,CardTypes.Holding],
                 gameAction: ability.actions.discardCard()
             }
         });

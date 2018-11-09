@@ -1,14 +1,15 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class AgelessCrone extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isParticipating(),
+            condition: context => context.source.isParticipating(),
             targetType: 'player',
-            targetController: 'any',
+            targetController: Players.Any,
             effect: ability.effects.increaseCost({
                 amount: 1,
-                match: card => card.type === 'event'
+                match: card => card.type === CardTypes.Event
             })
         });
     }

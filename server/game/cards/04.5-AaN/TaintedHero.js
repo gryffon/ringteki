@@ -1,9 +1,9 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations, CardTypes } = require('../../Constants');
 
 class TaintedHero extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.persistentEffect({
-            match: this,
             effect: [
                 ability.effects.cardCannot('declareAsAttacker'),
                 ability.effects.cardCannot('declareAsDefender')
@@ -12,10 +12,10 @@ class TaintedHero extends DrawCard {
 
         this.action({
             title: 'Make text box blank',
-            cost: ability.costs.sacrifice(card => card.getType() === 'character'),
+            cost: ability.costs.sacrifice(card => card.getType() === CardTypes.Character),
             gameAction: ability.actions.cardLastingEffect({
                 match: this,
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 effect: ability.effects.blank()
             })
         });

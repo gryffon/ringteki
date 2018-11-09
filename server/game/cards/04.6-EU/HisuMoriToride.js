@@ -1,4 +1,5 @@
 const StrongholdCard = require('../../strongholdcard.js');
+const { Durations } = require('../../Constants');
 
 class HisuMoriToride extends StrongholdCard {
     setupCardAbilities(ability) {
@@ -11,7 +12,7 @@ class HisuMoriToride extends StrongholdCard {
             },
             cost: [ability.costs.bowSelf(), ability.costs.sacrifice(card => card.hasTrait('cavalry'))],
             gameAction: ability.actions.playerLastingEffect({
-                duration: 'untilEndOfPhase',
+                duration: Durations.UntilEndOfPhase,
                 effect: ability.effects.additionalConflict('military')
             })
         });

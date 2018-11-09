@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class UtakuTetsuko extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: () => this.isAttacking(),
+            condition: context => context.source.isAttacking(),
             targetType: 'player',
-            targetController: 'opponent',
+            targetController: Players.Opponent,
             effect: ability.effects.increaseCost({
                 amount: 1,
                 playingType: 'playFromHand'

@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
+const { CardTypes } = require('../../Constants');
 
 class PlayTattooedWandererAsAttachment extends PlayAttachmentAction {
     constructor(card) {
@@ -8,14 +9,14 @@ class PlayTattooedWandererAsAttachment extends PlayAttachmentAction {
     }
 
     canResolveTargets(context) {
-        context.source.type = 'attachment';
+        context.source.type = CardTypes.Attachment;
         let result = super.canResolveTargets(context);
-        context.source.type = 'character';
+        context.source.type = CardTypes.Character;
         return result;
     }
 
     resolveTargets(context) {
-        context.source.type = 'attachment';
+        context.source.type = CardTypes.Attachment;
         return super.resolveTargets(context);
     }
 }
@@ -29,7 +30,7 @@ class TattooedWanderer extends DrawCard {
     }
 
     leavesPlay() {
-        this.type = 'character';
+        this.type = CardTypes.Character;
         super.leavesPlay();
     }
 }

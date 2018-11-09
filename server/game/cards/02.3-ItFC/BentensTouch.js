@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players, CardTypes } = require('../../Constants');
 
 class BentensTouch extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,9 +8,9 @@ class BentensTouch extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.bow(card => card.isFaction('phoenix') && card.hasTrait('shugenja')),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 activePromptTitle: 'Choose a character to honor',
-                controller: 'self',
+                controller: Players.Self,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.honor()
             }

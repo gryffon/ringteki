@@ -1,6 +1,7 @@
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
 const HonorBidPrompt = require('./gamesteps/honorbidprompt.js');
+const { Locations, CardTypes } = require('./Constants');
 
 class ChatCommands {
     constructor(game) {
@@ -88,7 +89,7 @@ class ChatCommands {
         this.game.promptForSelect(player, {
             activePromptTitle: 'Select a card to honor',
             waitingPromptTitle: 'Waiting for opponent to honor',
-            cardCondition: card => card.location === 'play area' && card.controller === player,
+            cardCondition: card => card.location === Locations.PlayArea && card.controller === player,
             onSelect: (p, card) => {
                 //honor card
                 card.honor();
@@ -103,7 +104,7 @@ class ChatCommands {
         this.game.promptForSelect(player, {
             activePromptTitle: 'Select a card to dishonor',
             waitingPromptTitle: 'Waiting for opponent to dishonor',
-            cardCondition: card => card.location === 'play area' && card.controller === player,
+            cardCondition: card => card.location === Locations.PlayArea && card.controller === player,
             onSelect: (p, card) => {
                 //dishonor card
                 card.dishonor();
@@ -124,8 +125,8 @@ class ChatCommands {
             this.game.promptForSelect(player, {
                 activePromptTitle: 'Select cards to move into the conflict',
                 waitingPromptTitle: 'Waiting for opponent to choose cards to move',
-                cardCondition: card => card.location === 'play area' && card.controller === player && !card.inConflict,
-                cardType: 'character',
+                cardCondition: card => card.location === Locations.PlayArea && card.controller === player && !card.inConflict,
+                cardType: CardTypes.Character,
                 numCards: 0,
                 multiSelect: true,
                 onSelect: (p, cards) => {
@@ -148,8 +149,8 @@ class ChatCommands {
             this.game.promptForSelect(player, {
                 activePromptTitle: 'Select a card to send home',
                 waitingPromptTitle: 'Waiting for opponent to send home',
-                cardCondition: card => card.location === 'play area' && card.controller === player && card.inConflict,
-                cardType: 'character',
+                cardCondition: card => card.location === Locations.PlayArea && card.controller === player && card.inConflict,
+                cardType: CardTypes.Character,
                 onSelect: (p, card) => {
                     //send home card
                     this.game.currentConflict.removeFromConflict(card);
@@ -188,7 +189,7 @@ class ChatCommands {
         this.game.promptForSelect(player, {
             activePromptTitle: 'Select a card',
             waitingPromptTitle: 'Waiting for opponent to set token',
-            cardCondition: card => (card.location === 'play area' || card.location === 'plot') && card.controller === player,
+            cardCondition: card => (card.location === Locations.PlayArea || card.location === 'plot') && card.controller === player,
             onSelect: (p, card) => {
                 var numTokens = card.tokens[token] || 0;
 
@@ -218,7 +219,7 @@ class ChatCommands {
         this.game.promptForSelect(player, {
             activePromptTitle: 'Select a card',
             waitingPromptTitle: 'Waiting for opponent to set fate',
-            cardCondition: card => (card.location === 'play area') && card.controller === player,
+            cardCondition: card => (card.location === Locations.PlayArea) && card.controller === player,
             onSelect: (p, card) => {
 
                 card.modifyFate(num);
@@ -235,7 +236,7 @@ class ChatCommands {
         this.game.promptForSelect(player, {
             activePromptTitle: 'Select a card',
             waitingPromptTitle: 'Waiting for opponent to set fate',
-            cardCondition: card => (card.location === 'play area') && card.controller === player,
+            cardCondition: card => (card.location === Locations.PlayArea) && card.controller === player,
             onSelect: (p, card) => {
 
                 card.modifyFate(-num);

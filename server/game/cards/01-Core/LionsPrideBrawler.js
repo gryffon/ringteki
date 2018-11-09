@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class LionsPrideBrawler extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class LionsPrideBrawler extends DrawCard {
             title: 'Bow a character',
             condition: context => context.source.isAttacking(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.getMilitarySkill() <= context.source.getMilitarySkill(),
                 gameAction: ability.actions.bow()
             }
