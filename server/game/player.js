@@ -245,7 +245,7 @@ class Player extends GameObject {
         return this.game.allCards.filter(card => card.controller === this && card.location === Locations.PlayArea && predicate(card));
     }
 
-    hasComposure() { 
+    hasComposure() {
         return this.opponent && this.opponent.showBid > this.showBid;
     }
 
