@@ -8,21 +8,23 @@ xdescribe('Courtly Challenger', function() {
                         inPlay: ['courtly-challenger']
                     },
                     player2: {
-                        inPlay: ['mirumoto-raitsugu']
+                        inPlay: ['doomed-shugenja'],
+                        hand: ['policy-debate']
                     }
                 });
                 this.courtlyChallenger = this.player1.findCardByName('courtly-challenger');
-                this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
+                this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
+                this.policyDebate = this.player2.findCardByName('courtly-challenger');
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.studentOfWar],
-                    defenders: [this.mirumotoRaitsugu]
+                    defenders: [this.doomedShugenja]
                 });
             });
 
             it('should be honored after it wins a duel', function() {
-                this.courtlyChallenger.fate = 1;
-                this.player2.clickCard(this.mirumotoRaitsugu);
+                this.player2.clickCard(this.policyDebate);
+                this.player2.clickCard(this.doomedShugenja);
                 this.player2.clickCard(this.courtlyChallenger);
                 this.player1.clickPrompt('5');
                 this.player2.clickPrompt('1');
@@ -30,23 +32,14 @@ xdescribe('Courtly Challenger', function() {
             });
 
             it('should be dishonored after it loses a duel', function() {
-                this.courtlyChallenger.fate = 1;
-                this.player2.clickCard(this.mirumotoRaitsugu);
+                this.player2.clickCard(this.policyDebate);
+                this.player2.clickCard(this.doomedShugenja);
                 this.player2.clickCard(this.courtlyChallenger);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('5');
                 expect(this.courtlyChallenger.isDishonored).toBe(true);
             });
 
-            it('should be dishonored before duel effects are applied', function() {
-                let honorCount = this.player1.player.honor;
-                this.player2.clickCard(this.mirumotoRaitsugu);
-                this.player2.clickCard(this.courtlyChallenger);
-                this.player1.clickPrompt('1');
-                this.player2.clickPrompt('5');
-                expect(this.player1.player.honor).toBe(honorCount - 1);
-                expect(this.courtlyChallenger.location).toBe('dynasty discard pile');
-            });
         });
 
         describe('when the target leaves play during the duel', function() {
