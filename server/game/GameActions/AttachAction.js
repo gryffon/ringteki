@@ -52,7 +52,16 @@ class AttachAction extends CardGameAction {
             }
             event.parent.attachments.push(event.card);
             event.card.parent = event.parent;
-            event.card.controller = context.player;
+            if(event.card.controller !== context.player) {
+                event.card.controller = context.player;
+                for(let effect of event.card.abilities.persistentEffects) {
+                    if(effect.ref) {
+                        for(let e of effect.ref) {
+                            e.refreshContext();
+                        }
+                    }
+                }
+            }
         });
     }
 }

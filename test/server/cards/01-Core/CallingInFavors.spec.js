@@ -233,6 +233,34 @@ describe('Calling In Favors', function() {
                 expect(this.cloudTheMind.controller).toBe(this.player2.player);
             });
         });
+
+        describe('Calling in Favors and Writ of Authority', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['kitsu-spiritcaller'],
+                        hand: ['writ-of-authority'],
+                    },
+                    player2: {
+                        honor: 10,
+                        inPlay: ['bayushi-liar'],
+                        hand: ['calling-in-favors'],
+                    }
+                });
+
+                this.writOfAuthority = this.player1.playAttachment('writ-of-authority', 'kitsu-spiritcaller');
+            });
+
+            it('should be discarded if the new controller has less honor', function() {
+                this.player2.clickCard('calling-in-favors');
+                this.player2.clickCard(this.writOfAuthority);
+                this.bayushiLiar = this.player2.clickCard('bayushi-liar');
+                expect(this.bayushiLiar.isDishonored).toBe(true);
+                expect(this.writOfAuthority.location).toBe('conflict discard pile');
+            });
+        })
     });
 });
 
