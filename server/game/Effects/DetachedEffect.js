@@ -15,6 +15,15 @@ class DetachedEffect extends StaticEffect {
     unapply(target) {
         this.state[target.uuid] = this.unapplyFunc(target, this.context, this.state[target.uuid]);
     }
+
+    setContext(context) {
+        this.context = context;
+        for(let state of Object.values(this.state)) {
+            if(state.context) {
+                state.context = context;
+            }
+        }
+    }
 }
 
 module.exports = DetachedEffect;
