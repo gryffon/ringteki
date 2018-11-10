@@ -241,12 +241,12 @@ describe('Calling In Favors', function() {
                     player1: {
                         honor: 11,
                         inPlay: ['kitsu-spiritcaller'],
-                        hand: ['writ-of-authority'],
+                        hand: ['writ-of-authority']
                     },
                     player2: {
                         honor: 10,
                         inPlay: ['bayushi-liar'],
-                        hand: ['calling-in-favors'],
+                        hand: ['calling-in-favors']
                     }
                 });
 
@@ -260,7 +260,7 @@ describe('Calling In Favors', function() {
                 expect(this.bayushiLiar.isDishonored).toBe(true);
                 expect(this.writOfAuthority.location).toBe('conflict discard pile');
             });
-        })
+        });
     });
 });
 
