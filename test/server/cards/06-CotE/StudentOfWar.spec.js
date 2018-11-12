@@ -1,10 +1,10 @@
-xdescribe('Student of War', function() {
+describe('Student of War', function() {
     integration(function() {
         beforeEach(function() {
             this.setupTest({
                 phase: 'conflict',
                 player1: {
-                    inPlay: ['student-of-war'],
+                    inPlay: ['student-of-war']
                 },
                 player2: {
                     inPlay: ['mirumoto-raitsugu'],
@@ -14,7 +14,7 @@ xdescribe('Student of War', function() {
             this.studentOfWar = this.player1.findCardByName('student-of-war');
             this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
             this.banzai = this.player2.findCardByName('banzai');
-
+            this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.studentOfWar],
                 defenders: [this.mirumotoRaitsugu]
@@ -22,7 +22,6 @@ xdescribe('Student of War', function() {
         });
 
         it('should not lose fate if controller has composure', function() {
-            expect(this.player1.player.hasComposure()).toBe(true);
             this.studentOfWar.fate = 1;
             this.player2.clickCard(this.mirumotoRaitsugu);
             this.player2.clickCard(this.studentOfWar);
@@ -33,7 +32,6 @@ xdescribe('Student of War', function() {
         });
 
         it('should lose fate if controller loses composure before the duel resolution', function() {
-            expect(this.player1.player.hasComposure()).toBe(true);
             this.studentOfWar.fate = 1;
             this.player2.clickCard(this.banzai);
             this.player2.clickCard(this.mirumotoRaitsugu);
@@ -48,7 +46,6 @@ xdescribe('Student of War', function() {
         });
 
         it('should not be discarded if controller has composure', function() {
-            expect(this.player1.player.hasComposure()).toBe(true);
             this.player2.clickCard(this.mirumotoRaitsugu);
             this.player2.clickCard(this.studentOfWar);
             this.player1.clickPrompt('1');
@@ -58,7 +55,6 @@ xdescribe('Student of War', function() {
         });
 
         it('should be discarded if controller loses composure before the duel resolution', function() {
-            expect(this.player1.player.hasComposure()).toBe(true);
             this.player2.clickCard(this.banzai);
             this.player2.clickCard(this.mirumotoRaitsugu);
             this.player2.clickPrompt('Done');
