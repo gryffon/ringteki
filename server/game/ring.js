@@ -122,7 +122,7 @@ class Ring extends EffectSource {
     }
 
     getShortSummary() {
-        return Object.assign(super.getShortSummary(), { element: this.element });
+        return Object.assign(super.getShortSummary(), { element: this.element, conflictType: this.conflictType });
     }
 }
 

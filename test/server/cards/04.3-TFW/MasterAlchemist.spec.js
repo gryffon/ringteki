@@ -63,5 +63,41 @@ describe('Master Alchemist', function() {
                 expect(sereneWarrior.isDishonored).toBe(true);
             });
         });
+
+        describe('interaction with{ Young Rumormonger', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['master-alchemist', 'togashi-mitsu']
+                    },
+                    player2: {
+                        inPlay: ['young-rumormonger', 'bayushi-liar']
+                    }
+                });
+
+                this.togashiMitsu = this.player1.findCardByName('togashi-mitsu');
+                this.togashiMitsu.isDishonored = true;
+                this.youngRumormonger = this.player2.findCardByName('young-rumormonger');
+
+                this.noMoreActions();
+
+                this.initiateConflict({
+                    attackers: [this.togashiMitsu]
+                });
+                this.player1.clickCard(this.youngRumormonger);
+                this.player2.clickPrompt('Done');
+
+                this.player2.pass();
+            });
+
+            it('should allow Young Rumormonger to redirect honor', function() {
+                this.masterAlchemist = this.player1.clickCard('master-alchemist');
+                expect(this.player1).toHavePrompt('Master Alchemist');
+                this.player1.clickCard(this.togashiMitsu);
+                this.player1.clickRing('fire');
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+            });
+        });
     });
 });
