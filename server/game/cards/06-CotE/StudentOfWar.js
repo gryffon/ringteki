@@ -2,8 +2,7 @@ const DrawCard = require('../../drawcard.js');
 
 class StudentOfWar extends DrawCard {
     setupCardAbilities(ability) {
-        this.persistentEffect({
-            condition: context => context.player.hasComposure(),
+        this.composure({
             effect: [
                 ability.effects.cardCannot('removeFate'),
                 ability.effects.cardCannot('discardFromPlay')
