@@ -9,24 +9,22 @@ class CourtlyChallenger extends DrawCard {
                     when: {
                         afterDuel: (event) => event.winner && event.winner === this
                     },
+                    multipleTrigger: true,
                     message: '{0} is honored due to winning a duel',
                     gameAction: ability.actions.honor(context => ({ target: context.source }))
-                })
-            ]
-        });
-        this.persistentEffect({
-            effect: [
+                }),
                 ability.effects.delayedEffect({
                     when: {
                         afterDuel: (event) => event.loser && event.loser === this
                     },
+                    multipleTrigger: true,
                     message: '{0} is dishonored due to losing a duel',
                     gameAction: ability.actions.dishonor(context => ({ target: context.source }))
                 })
             ]
         });
         this.action({
-            title: 'Challenge a participating character to a Political duel: the winner draws 2 cards',
+            title: 'Initiate a Political duel',
             condition: () => this.isParticipating(),
             target: {
                 cardtype: CardTypes.Character,
