@@ -1,4 +1,4 @@
-describe('Insolent Rival', function() {
+describe('Mirumoto Raitsugu', function() {
     integration(function() {
         describe('when a character leaves play during the duel', function() {
             beforeEach(function() {
@@ -6,73 +6,59 @@ describe('Insolent Rival', function() {
                     phase: 'conflict',
                     player1: {
                         honor: 11,
-                        inPlay: ['insolent-rival']
+                        inPlay: ['mirumoto-raitsugu']
                     },
                     player2: {
                         honor: 11,
                         inPlay: ['obstinate-recruit']
                     }
                 });
-                this.insolentRival = this.player1.findCardByName('insolent-rival');
+                this.mirumotoRaitsugu = this.player1.findCardByName('mirumoto-raitsugu');
                 this.obstinateRecruit = this.player2.findCardByName('obstinate-recruit');
+                this.obstinateRecruit.fate = 1;
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: [this.insolentRival],
+                    attackers: [this.mirumotoRaitsugu],
                     defenders: [this.obstinateRecruit]
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.insolentRival);
+                this.player1.clickCard(this.mirumotoRaitsugu);
                 this.player1.clickCard(this.obstinateRecruit);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('2');
             });
 
             it('the duel should successfully resolve, but have no effect', function() {
-                expect(this.insolentRival.location).toBe('play area');
                 expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
 
-        describe('Insolent Rival\'s ability', function() {
+        describe('Mirumoto Raitsugu\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['insolent-rival','bayushi-manipulator']
+                        inPlay: ['mirumoto-raitsugu','tattooed-wanderer']
                     },
                     player2: {
                         inPlay: ['doji-whisperer']
                     }
                 });
-                this.rival = this.player1.findCardByName('insolent-rival');
-                this.doji = this.player2.findCardByName('doji-whisperer');
-            });
-
-            it('should get +2 to both skills if honor bid is higher', function() {
-                this.player1.player.showBid = 5;
-                this.player2.player.showBid = 1;
-                this.game.checkGameState(true);
-                expect(this.rival.militarySkill).toBe(4);
-                expect(this.rival.politicalSkill).toBe(3);
-            });
-
-            it('should not get +2 to both skills if honor bid is lower', function() {
-                this.player1.player.showBid = 1;
-                this.player2.player.showBid = 5;
-                expect(this.rival.militarySkill).toBe(2);
-                expect(this.rival.politicalSkill).toBe(1);
+                this.mirumotoRaitsugu = this.player1.findCardByName('mirumoto-raitsugu');
+                this.tattooedWanderer = this.player1.findCardByName('tattooed-wanderer');
+                this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
             });
 
             it('should not trigger if he is not participating', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    attackers: ['bayushi-manipulator'],
+                    attackers: [this.tattooedWanderer],
                     defenders: []
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.rival);
+                this.player1.clickCard(this.mirumotoRaitsugu);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
@@ -80,11 +66,11 @@ describe('Insolent Rival', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    attackers: [this.rival],
+                    attackers: [this.mirumotoRaitsugu],
                     defenders: []
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.rival);
+                this.player1.clickCard(this.mirumotoRaitsugu);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
@@ -92,29 +78,46 @@ describe('Insolent Rival', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    attackers: [this.rival],
-                    defenders: ['doji-whisperer']
+                    attackers: [this.mirumotoRaitsugu],
+                    defenders: [this.dojiWhisperer]
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.rival);
-                expect(this.player1).toHavePrompt('Insolent Rival');
+                this.player1.clickCard(this.mirumotoRaitsugu);
+                expect(this.player1).toHavePrompt('Mirumoto Raitsugu');
             });
 
-            it('should dishonor the loser of the duel', function() {
+            it('should discard the loser of the duel if they have no fate', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    attackers: [this.rival],
-                    defenders: [this.doji]
+                    attackers: [this.mirumotoRaitsugu],
+                    defenders: [this.dojiWhisperer]
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.rival);
-                expect(this.player1).toBeAbleToSelect(this.doji);
-                this.player1.clickCard(this.doji);
-                this.player1.clickPrompt('5');
+                this.player1.clickCard(this.mirumotoRaitsugu);
+                expect(this.player1).toBeAbleToSelect(this.dojiWhisperer);
+                this.player1.clickCard(this.dojiWhisperer);
+                this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
-                this.player1.pass();
-                expect(this.doji.isDishonored).toBe(true);
+                expect(this.dojiWhisperer.location).toBe('dynasty discard pile');
+            });
+
+            it('should remove a fate from the loser if they have fate', function() {
+                this.dojiWhisperer.fate = 1;
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.mirumotoRaitsugu],
+                    defenders: [this.dojiWhisperer]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.mirumotoRaitsugu);
+                expect(this.player1).toBeAbleToSelect(this.dojiWhisperer);
+                this.player1.clickCard(this.dojiWhisperer);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+                expect(this.dojiWhisperer.location).toBe('play area');
+                expect(this.dojiWhisperer.fate).toBe(0);
             });
         });
     });
