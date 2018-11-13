@@ -79,7 +79,7 @@ describe('Courtly Challenger', function() {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
-        
+
         describe('Courtly Challenger\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
