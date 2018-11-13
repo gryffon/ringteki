@@ -40,7 +40,7 @@ class CourtlyChallenger extends DrawCard {
     }
     resolutionHandler(context, winner) {
         this.game.addMessage('{0} wins the duel - {1} draws 2 cards', winner, winner.controller);
-        this.game.applyGameAction(context, { draw: [winner.controller, winner.controller] });
+        this.game.actions.draw({ amount: 2 }).resolve(winner.controller, context);
     }
 }
 
