@@ -7,7 +7,7 @@ class CourtlyChallenger extends DrawCard {
             effect: [
                 ability.effects.delayedEffect({
                     when: {
-                        afterDuel: (event) => event.winner && event.winner === this
+                        afterDuel: (event, context) => event.winner && event.winner === context.source
                     },
                     multipleTrigger: true,
                     message: '{0} is honored due to winning a duel',
@@ -15,7 +15,7 @@ class CourtlyChallenger extends DrawCard {
                 }),
                 ability.effects.delayedEffect({
                     when: {
-                        afterDuel: (event) => event.loser && event.loser === this
+                        afterDuel: (event, context) => event.loser && event.loser === context.source
                     },
                     multipleTrigger: true,
                     message: '{0} is dishonored due to losing a duel',
@@ -25,7 +25,7 @@ class CourtlyChallenger extends DrawCard {
         });
         this.action({
             title: 'Initiate a Political duel',
-            condition: () => this.isParticipating(),
+            condition: context => context.source.isParticipating(),
             target: {
                 cardtype: CardTypes.Character,
                 controller: Players.Opponent,
@@ -40,7 +40,7 @@ class CourtlyChallenger extends DrawCard {
     }
     resolutionHandler(context, winner) {
         this.game.addMessage('{0} wins the duel - {1} draws 2 cards', winner, winner.controller);
-        this.game.applyGameAction(context, { draw: [winner.controller, winner.controller] });
+        this.game.actions.draw({ amount: 2 }).resolve(winner.controller, context);
     }
 }
 
