@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class MazeOfIllusion extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class MazeOfIllusion extends DrawCard {
             title: 'Dishonor and bow a character if your opponent can\'t guess your dial',
             condition: context => this.game.isDuringConflict() && context.player.opponent,
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: [ability.actions.bow(), ability.actions.dishonor()]

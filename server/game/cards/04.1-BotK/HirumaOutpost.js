@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class HirumaOutpost extends DrawCard {
     setupCardAbilities(ability) {
@@ -13,7 +14,7 @@ class HirumaOutpost extends DrawCard {
                             return false;
                         }
                         let card = context.player.getDynastyCardInProvince(event.conflict.conflictProvince.location);
-                        return !card || card.facedown || card.type !== 'holding';
+                        return !card || card.facedown || card.type !== CardTypes.Holding;
                     }
                 },
                 gameAction: ability.actions.loseHonor()

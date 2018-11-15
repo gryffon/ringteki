@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class WalkingTheWay extends DrawCard {
     setupCardAbilities(ability) {
@@ -21,7 +21,7 @@ class WalkingTheWay extends DrawCard {
                 cardHandler: cardFromDeck => this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose a card to replace with ' + cardFromDeck.name,
                     context: context,
-                    cardType: ['holding', 'character'],
+                    cardType: [CardTypes.Holding, CardTypes.Character],
                     location: Locations.Provinces,
                     controller: Players.Self,
                     onSelect: (player, card) => {

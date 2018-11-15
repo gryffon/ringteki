@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class KaradaDistrict extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,16 +7,16 @@ class KaradaDistrict extends DrawCard {
             title: 'Take control of an attachment',
             cost: ability.costs.giveFateToOpponent(1),
             target: {
-                cardType: 'attachment',
+                cardType: CardTypes.Attachment,
                 cardCondition: (card, context) => card.parent && card.parent.controller === context.player.opponent
             },
             effect: 'take control of {0}',
             handler: context => {
-                if(context.target.controller === context.player.opponent && context.player.cardsInPlay.any(card => card.type === 'character' && ability.actions.attach({ attachment: context.target }).canAffect(card, context))) {
+                if(context.target.controller === context.player.opponent && context.player.cardsInPlay.any(card => card.type === CardTypes.Character && ability.actions.attach({ attachment: context.target }).canAffect(card, context))) {
                     this.game.promptForSelect(context.player, {
                         activePromptTitle: 'Choose a character to attach ' + context.target.name + ' to',
                         context: context,
-                        cardType: 'character',
+                        cardType: CardTypes.Character,
                         controller: Players.Self,
                         gameAction: ability.actions.attach({ attachment: context.target }),
                         onSelect: (player, card) => {

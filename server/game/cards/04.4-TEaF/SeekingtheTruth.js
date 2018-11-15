@@ -1,5 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class SeekingtheTruth extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -15,7 +15,7 @@ class SeekingtheTruth extends ProvinceCard {
                 onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isDefending(),
                 gameAction: ability.actions.sendHome()
             }

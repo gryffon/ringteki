@@ -12,7 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const { Locations, Decks, EffectNames } = require('./Constants');
+const { Locations, Decks, EffectNames, CardTypes } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -264,7 +264,7 @@ class Player extends GameObject {
      */
     getNumberOfHoldingsInPlay() {
         return provinceLocations.reduce((n, province) => {
-            return this.getSourceList(province).filter(card => card.getType() === 'holding' && !card.facedown).length + n;
+            return this.getSourceList(province).filter(card => card.getType() === CardTypes.Holding && !card.facedown).length + n;
         }, 0);
     }
 
@@ -411,7 +411,7 @@ class Player extends GameObject {
         this.preparedDeck = preparedDeck;
         this.conflictDeck.each(card => {
             // register event reactions in case event-in-deck bluff window is enabled
-            if(card.type === 'event') {
+            if(card.type === CardTypes.Event) {
                 for(let reaction of card.abilities.reactions) {
                     reaction.registerEvents();
                 }
@@ -866,7 +866,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === Locations.PlayArea || (card.type === 'holding' && provinceLocations.includes(location))) {
+        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && provinceLocations.includes(location))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;
@@ -885,7 +885,7 @@ class Player extends GameObject {
             card.setDefaultController(this);
             card.controller = this;
             // This should only be called when an attachment is dragged into play
-            if(card.type === 'attachment') {
+            if(card.type === CardTypes.Attachment) {
                 this.promptForAttachment(card);
                 return;
             }

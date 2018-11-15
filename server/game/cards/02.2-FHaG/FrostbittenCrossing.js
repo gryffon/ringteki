@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { CardTypes } = require('../../Constants');
 
 class FrostbittenCrossing extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class FrostbittenCrossing extends ProvinceCard {
             title: 'Discard all attachments from a character',
             condition: context => context.source.isConflictProvince(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating()
             },
             effect: 'remove all attachments from {0}',

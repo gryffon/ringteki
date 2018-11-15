@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class YogoHiroue extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class YogoHiroue extends DrawCard {
             title: 'Move a character into the conflict',
             condition: context => context.source.isParticipating(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 gameAction: ability.actions.moveToConflict()
             },
             then: context => ({

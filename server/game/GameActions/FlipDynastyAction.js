@@ -1,11 +1,11 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 
 class FlipDynastyAction extends CardGameAction {
     setup() {
         this.name = 'reveal';
-        this.targetType = ['character', 'holding'];
+        this.targetType = [CardTypes.Character, CardTypes.Holding];
         this.effectMsg = 'reveal the facedown card in {1}';
         this.effectArgs = () => this.target[0].location;
     }

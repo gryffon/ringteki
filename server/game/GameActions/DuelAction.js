@@ -1,7 +1,7 @@
 const CardGameAction = require('./CardGameAction');
 const Duel = require('../Duel.js');
 const DuelFlow = require('../gamesteps/DuelFlow.js');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class DuelAction extends CardGameAction {
     setDefaultProperties() {
@@ -13,7 +13,7 @@ class DuelAction extends CardGameAction {
 
     setup() {
         this.name = 'duel';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'initiate a ' + this.type + ' duel between {1} and {0}';
         this.effectArgs = () => {
             return this.challenger;

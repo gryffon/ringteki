@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class ApprenticeEarthcaller extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class ApprenticeEarthcaller extends DrawCard {
             title: 'Set skill values to printed values',
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isAttacking() && card.attachments.size() === 0,
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     effect: [

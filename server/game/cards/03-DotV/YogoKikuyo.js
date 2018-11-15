@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class YogoKikuyo extends DrawCard {
     setupCardAbilities(ability) {
         this.wouldInterrupt({
             title: 'Cancel a spell',
             when: {
-                onCardAbilityInitiated: (event, context) => this.game.isDuringConflict() && event.card.type === 'event' &&
+                onCardAbilityInitiated: (event, context) => this.game.isDuringConflict() && event.card.type === CardTypes.Event &&
                                                             event.card.hasTrait('spell') &&
                                                             event.card.controller === context.player.opponent
             },

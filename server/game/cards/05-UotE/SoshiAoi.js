@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, Players, TargetModes } = require('../../Constants');
+const { Durations, Players, TargetModes, CardTypes } = require('../../Constants');
 
 class SoshiAoi extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class SoshiAoi extends DrawCard {
             cost: ability.costs.payHonor(1),
             targets: {
                 character: {
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     controller: Players.Self
                 },
                 select: {

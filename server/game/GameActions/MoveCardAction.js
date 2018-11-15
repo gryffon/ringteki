@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class MoveCardAction extends CardGameAction {
     setDefaultProperties() {
@@ -11,7 +11,7 @@ class MoveCardAction extends CardGameAction {
 
     setup() {
         this.name = 'move';
-        this.targetType = ['character', 'attachment', 'event', 'holding'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Event, CardTypes.Holding];
         this.effectMsg = 'move {0}';
     }
 

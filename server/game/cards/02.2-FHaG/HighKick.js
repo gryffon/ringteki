@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class HighKick extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class HighKick extends DrawCard {
             condition: () => this.game.isDuringConflict('military'),
             cost: ability.costs.bow(card => card.hasTrait('monk') && card.isParticipating()),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: [

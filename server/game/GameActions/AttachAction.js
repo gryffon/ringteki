@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class AttachAction extends CardGameAction {
     setDefaultProperties() {
@@ -9,7 +9,7 @@ class AttachAction extends CardGameAction {
 
     setup() {
         this.name = 'attach';
-        this.targetType = ['character'];
+        this.targetType = [CardTypes.Character];
         this.effectMsg = 'attach {1} to {0}';
         this.effectArgs = () => {
             return this.attachment;

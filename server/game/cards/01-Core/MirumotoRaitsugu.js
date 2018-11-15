@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class MirumotoRaitsugu extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class MirumotoRaitsugu extends DrawCard {
             title: 'Duel an opposing character',
             condition: context => context.source.isParticipating(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.duel(context => ({

@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { CardTypes } = require('../../Constants');
 
 class RiotInTheStreets extends ProvinceCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class RiotInTheStreets extends ProvinceCard {
             condition: context => context.source.isConflictProvince() &&
                                   context.player.getNumberOfCardsInPlay(card => card.hasTrait('bushi') && card.isParticipating()) >= 3,
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.bow()
             }

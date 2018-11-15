@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const EventRegistrar = require('../../eventregistrar.js');
+const { CardTypes } = require('../../Constants');
 
 class FireElementalGuard extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +11,7 @@ class FireElementalGuard extends DrawCard {
             title: 'Discard an attachment',
             condition: context => this.spellsPlayedThisConflict[context.player.name] > 2,
             target: {
-                cardType: 'attachment',
+                cardType: CardTypes.Attachment,
                 gameAction: ability.actions.discardFromPlay()
             }
         });

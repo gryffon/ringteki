@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class KanjoDistrict extends DrawCard {
     setupCardAbilities(ability) {
@@ -6,7 +7,7 @@ class KanjoDistrict extends DrawCard {
             title: 'Bow and send home a participating character',
             cost: ability.costs.discardImperialFavor(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: [ability.actions.bow(), ability.actions.sendHome()]
             },

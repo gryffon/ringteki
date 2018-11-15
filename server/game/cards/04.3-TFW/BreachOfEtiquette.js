@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class BreachOfEtiquette extends DrawCard {
     setupCardAbilities(ability) {
@@ -16,7 +16,7 @@ class BreachOfEtiquette extends DrawCard {
                         context: context,
                         when: {
                             onCardAbilityTriggered: event =>
-                                event.player === player && event.card.type === 'character' && !event.card.hasTrait('courtier')
+                                event.player === player && event.card.type === CardTypes.Character && !event.card.hasTrait('courtier')
                         },
                         gameAction: ability.actions.loseHonor(),
                         message: '{1} loses 1 honor due to {0}',

@@ -1,7 +1,7 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 const GameActions = require('../../GameActions/GameActions');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class ConsumedByFiveFires extends DrawCard {
     // TODO: need refactoring
@@ -32,7 +32,7 @@ class ConsumedByFiveFires extends DrawCard {
         }
         this.game.promptForSelect(context.player, {
             context: context,
-            cardType: 'character',
+            cardType: CardTypes.Character,
             cardCondition: card => card.location === Locations.PlayArea && card.fate > 0 && card.controller !== context.player && !_.keys(targets).includes(card.uuid),
             onSelect: (player, card) => {
                 let choices = _.range(1, Math.min(fateRemaining, card.fate) + 1);

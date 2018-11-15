@@ -4,12 +4,12 @@ const SingleCardSelector = require('./CardSelectors/SingleCardSelector');
 const UnlimitedCardSelector = require('./CardSelectors/UnlimitedCardSelector');
 const UpToXCardSelector = require('./CardSelectors/UpToXCardSelector');
 
-const { TargetModes } = require('./Constants');
+const { TargetModes, CardTypes } = require('./Constants');
 
 const defaultProperties = {
     numCards: 1,
     cardCondition: () => true,
-    cardType: ['attachment', 'character', 'event', 'holding', 'stronghold', 'role', 'province'],
+    cardType: [CardTypes.Attachment, CardTypes.Character, CardTypes.Event, CardTypes.Holding, CardTypes.Stronghold, CardTypes.Role, CardTypes.Province],
     multiSelect: false
 };
 

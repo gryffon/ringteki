@@ -5,13 +5,13 @@ const moment = require('moment');
 const RestrictedList = require('./RestrictedList');
 
 const officialRoles = {
-    crab: ['keeper-of-earth', 'seeker-of-earth'],
-    crane: ['seeker-of-air', 'keeper-of-air'],
-    dragon: ['seeker-of-fire', 'keeper-of-void'],
-    lion: ['keeper-of-fire', 'seeker-of-void'],
-    phoenix: ['keeper-of-water', 'seeker-of-air'],
-    scorpion: ['seeker-of-void', 'keeper-of-earth'],
-    unicorn: ['keeper-of-void', 'keeper-of-fire']
+    crab: ['keeper-of-water', 'seeker-of-earth'],
+    crane: ['seeker-of-fire', 'keeper-of-air'],
+    dragon: ['seeker-of-void', 'keeper-of-void'],
+    lion: ['keeper-of-earth', 'seeker-of-void'],
+    phoenix: ['keeper-of-air', 'seeker-of-air'],
+    scorpion: ['seeker-of-air', 'keeper-of-earth'],
+    unicorn: ['seeker-of-water', 'keeper-of-fire']
 };
 
 const openRoles = [

@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, CardTypes } = require('../../Constants');
 
 class OfferTestimony extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,13 +8,13 @@ class OfferTestimony extends DrawCard {
             condition: context => context.player.opponent && context.game.isDuringConflict('political'),
             targets: {
                 myCharacter: {
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     controller: Players.Self,
                     cardCondition: (card, context) => card.isParticipating() && card.allowGameAction('bow', context)
                 },
                 oppCharacter: {
                     player: Players.Opponent,
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     controller: Players.Opponent,
                     cardCondition: (card, context) => card.isParticipating() && card.allowGameAction('bow', context)
                 }

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class KaitoTempleProtector extends DrawCard {
     setupCardAbilities(ability) {
@@ -14,7 +15,7 @@ class KaitoTempleProtector extends DrawCard {
             title: 'Change base skills to match another character\'s',
             condition: context => context.source.isDefending(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.isParticipating() && card !== context.source,
                 gameAction: ability.actions.cardLastingEffect(context => {
                     let effects = [];

@@ -3,6 +3,8 @@ const _ = require('underscore');
 const ForcedTriggeredAbilityWindow = require('./forcedtriggeredabilitywindow.js');
 const TriggeredAbilityWindowTitles = require('./triggeredabilitywindowtitles.js');
 
+const { CardTypes } = require('../Constants');
+
 class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
     constructor(game, abilityType, window, eventsToExclude = []) {
         super(game, abilityType, window, eventsToExclude);
@@ -18,7 +20,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         // Show a bluff prompt if we're in Step 6, the player has the approriate setting, and there's an event for the other player
         return this.abilityType === 'cancelinterrupt' && player.timerSettings.events && _.any(this.events, event => (
             event.name === 'onCardAbilityInitiated' &&
-            event.card.type === 'event' && event.context.player !== player
+            event.card.type === CardTypes.Event && event.context.player !== player
         ));
     }
 

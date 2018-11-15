@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 const testOfSkillCost = function() {
     return {
@@ -9,7 +9,7 @@ const testOfSkillCost = function() {
             return true;
         },
         resolve: function(context, result = { resolved: false }) {
-            let choices = ['attachment', 'character', 'event'];
+            let choices = [CardTypes.Attachment, CardTypes.Character, CardTypes.Event];
             context.game.promptWithHandlerMenu(context.player, {
                 activePromptTitle: 'Select a card type',
                 context: context,

@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations } = require('../../Constants');
+const { Durations, CardTypes } = require('../../Constants');
 
 class Ofushukai extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -11,7 +11,7 @@ class Ofushukai extends DrawCard {
                 condition: context => context.source.isParticipating(),
                 printedAbility: false,
                 target: {
-                    cardType: 'character',
+                    cardType: CardTypes.Character,
                     cardCondition: card => card.isParticipating(),
                     gameAction: [
                         ability.actions.sendHome(),

@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
+const { CardTypes } = require('../../Constants');
 
 class PlayAncientMasterAsAttachment extends PlayAttachmentAction {
     constructor(card) {
@@ -8,14 +9,14 @@ class PlayAncientMasterAsAttachment extends PlayAttachmentAction {
     }
 
     canResolveTargets(context) {
-        context.source.type = 'attachment';
+        context.source.type = CardTypes.Attachment;
         let result = super.canResolveTargets(context);
-        context.source.type = 'character';
+        context.source.type = CardTypes.Character;
         return result;
     }
 
     resolveTargets(context) {
-        context.source.type = 'attachment';
+        context.source.type = CardTypes.Attachment;
         return super.resolveTargets(context);
     }
 }
@@ -26,8 +27,8 @@ class AncientMaster extends DrawCard {
         this.reaction({
             title: 'Search top 5 card for kiho or tattoo',
             when: {
-                onConflictDeclared: (event, context) => context.source.type === 'attachment' && context.source.parent.isAttacking(),
-                onDefendersDeclared: (event, context) => context.source.type === 'attachment' && context.source.parent.isDefending()
+                onConflictDeclared: (event, context) => context.source.type === CardTypes.Attachment && context.source.parent.isAttacking(),
+                onDefendersDeclared: (event, context) => context.source.type === CardTypes.Attachment && context.source.parent.isDefending()
             },
             printedAbility: false,
             effect: 'look at the top five cards of their deck',
@@ -39,7 +40,7 @@ class AncientMaster extends DrawCard {
     }
 
     leavesPlay() {
-        this.type = 'character';
+        this.type = CardTypes.Character;
         super.leavesPlay();
     }
 }

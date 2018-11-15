@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class ChasingTheSun extends DrawCard {
     setupCardAbilities() {
@@ -11,7 +11,7 @@ class ChasingTheSun extends DrawCard {
             effect: 'move the conflict to a different province',
             handler: context => this.game.promptForSelect(context.player, {
                 context: context,
-                cardType: 'province',
+                cardType: CardTypes.Province,
                 location: Locations.Provinces,
                 cardCondition: (card, context) => !card.isConflictProvince() && (card.location !== Locations.StrongholdProvince ||
                                                   _.size(this.game.provinceCards.filter(card => card.isBroken && card.controller === context.player.opponent)) > 2),

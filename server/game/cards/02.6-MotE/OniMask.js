@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class OniMask extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class OniMask extends DrawCard {
             cost: ability.costs.removeFateFromParent(),
             condition: () => this.game.isDuringConflict(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.blank() })
             },

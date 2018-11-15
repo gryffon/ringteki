@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class IsawaMasahiro extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class IsawaMasahiro extends DrawCard {
             condition: () => this.game.isDuringConflict('fire'),
             cost: ability.costs.bowSelf(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.costLessThan(3) && card.isParticipating(),
                 gameAction: ability.actions.discardFromPlay()
             }

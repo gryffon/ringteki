@@ -1,14 +1,14 @@
 const AbilityLimit = require('./abilitylimit.js');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations } = require('./Constants');
+const { Locations, CardTypes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
         super(game, card, properties);
 
         this.title = properties.title;
-        this.limit = properties.limit || AbilityLimit.perRound(1);
+        this.limit = properties.limit || AbilityLimit.default();
         this.limit.registerEvents(game);
         this.limit.card = card;
         this.abilityCost = this.cost;
@@ -28,7 +28,7 @@ class CardAbility extends ThenAbility {
             this.card.owner.registerAbilityMax(this.maxIdentifier, this.max);
         }
 
-        if(card.getType() === 'event') {
+        if(card.getType() === CardTypes.Event) {
             this.cost = this.cost.concat(Costs.payReduceableFateCost('playFromHand'), Costs.playLimited());
         }
     }
@@ -61,7 +61,7 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities(context) || this.card.type === 'event' && !this.card.canPlay(context)) {
+        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context)) {
             return 'cannotTrigger';
         }
 
@@ -77,7 +77,7 @@ class CardAbility extends ThenAbility {
     }
 
     isInValidLocation(context) {
-        return this.card.type === 'event' ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
+        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
     }
 
     displayMessage(context) {
@@ -93,7 +93,7 @@ class CardAbility extends ThenAbility {
             return;
         }
         // Player1 plays Assassination
-        let messageArgs = [context.player, context.source.type === 'event' ? ' plays ' : ' uses ', context.source];
+        let messageArgs = [context.player, context.source.type === CardTypes.Event ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
             if(cost.action && cost.action.cost) {
                 let card = context.costs[cost.action.name];
@@ -144,7 +144,7 @@ class CardAbility extends ThenAbility {
     }
 
     isCardPlayed() {
-        return this.card.getType() === 'event';
+        return this.card.getType() === CardTypes.Event;
     }
 
     isTriggeredAbility() {

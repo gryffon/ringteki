@@ -1,5 +1,5 @@
 const BaseAbility = require('../baseability.js');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class WaterRingEffect extends BaseAbility {
     constructor(optional = true) {
@@ -8,7 +8,7 @@ class WaterRingEffect extends BaseAbility {
                 activePromptTitle: 'Choose character to bow or unbow',
                 source: 'Water Ring',
                 buttons: optional ? [{ text: 'Don\'t resolve', arg: 'dontResolve' }] : [],
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.location === Locations.PlayArea && ((card.fate === 0 && card.allowGameAction('bow', context)) || card.bowed)
             }
         });

@@ -1,6 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class ReturnToDeckAction extends CardGameAction {
     setDefaultProperties() {
@@ -12,7 +12,7 @@ class ReturnToDeckAction extends CardGameAction {
 
     setup() {
         this.name = 'returnToDeck';
-        this.targetType = ['character', 'attachment', 'event', 'holding'];
+        this.targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Event, CardTypes.Holding];
         this.effectMsg = 'return {0} to the ' + (this.bottom ? 'bottom' : 'top') + ' of their deck';
         this.cost = this.shuffle ? 'reshuffling {0} into their deck' : 'returning {0} to their deck';
     }

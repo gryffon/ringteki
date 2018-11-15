@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class FallenInBattle extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +10,7 @@ class FallenInBattle extends DrawCard {
                                                    event.conflict.skillDifference >= 5
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.discardFromPlay()
             },

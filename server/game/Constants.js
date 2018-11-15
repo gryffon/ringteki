@@ -124,6 +124,16 @@ const Phases = {
     Regroup: 'regroup'
 };
 
+const CardTypes = {
+    Stronghold: 'stronghold',
+    Role: 'role',
+    Province: 'province',
+    Character: 'character',
+    Holding: 'holding',
+    Event: 'event',
+    Attachment: 'attachment'
+};
+
 module.exports = {
     Locations,
     Decks,
@@ -132,5 +142,6 @@ module.exports = {
     Stages,
     Players,
     TargetModes,
-    Phases
+    Phases,
+    CardTypes
 };

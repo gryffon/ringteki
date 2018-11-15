@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class TaintedKoku extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class TaintedKoku extends DrawCard {
                 onCardLeavesPlay: (event, context) => event.card === context.source.parent
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.controller === context.source.parent.controller && card !== context.source.parent,
                 gameAction: ability.actions.attach(context => ({ attachment: context.source }))
             }

@@ -1,11 +1,11 @@
 const CardGameAction = require('./CardGameAction');
 const DiscardFromPlayAction = require('./DiscardFromPlayAction');
-const { Locations } = require('../Constants');
+const { Locations, CardTypes } = require('../Constants');
 
 class CreateTokenAction extends CardGameAction {
     setup() {
         this.name = 'createToken';
-        this.targetType = ['character', 'holding'];
+        this.targetType = [CardTypes.Character, CardTypes.Holding];
         this.effectMsg = 'create a token';
     }
 

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class AsahinaArtisan extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +8,7 @@ class AsahinaArtisan extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.bowSelf(),
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: (card, context) => card !== context.source && card.isFaction('crane'),
                 gameAction: ability.actions.cardLastingEffect(() => ({
                     effect: ability.effects.modifyPoliticalSkill(3)

@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class ShinjoTatsuo extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Move this and another character to the conflict',
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: (card, context) => card !== context.source,
                 optional: true,

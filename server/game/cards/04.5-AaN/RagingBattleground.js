@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const { CardTypes } = require('../../Constants');
 
 class RagingBattleground extends ProvinceCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
@@ -8,7 +9,7 @@ class RagingBattleground extends ProvinceCard {
                 onProvinceRevealed: (event, context) => event.card === context.source
             },
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => !card.isUnique() && card.getFate() < 1,
                 gameAction: ability.actions.discardFromPlay()
             }

@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class MountaintopStatuary extends DrawCard {
     setupCardAbilities(ability) {
@@ -16,7 +16,7 @@ class MountaintopStatuary extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             condition: context => this.game.isDuringConflict() && this.game.currentConflict.conflictProvince.location === context.source.location,
             target: {
-                cardType: 'character',
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isAttacking() && card.costLessThan(3),
                 gameAction: ability.actions.sendHome()
             }

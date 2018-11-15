@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Phases } = require('../../Constants');
+const { Phases, CardTypes } = require('../../Constants');
 
 class MiyaMystic extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +8,7 @@ class MiyaMystic extends DrawCard {
             cost: ability.costs.sacrificeSelf(),
             phase: Phases.Conflict,
             target: {
-                cardType: 'attachment',
+                cardType: CardTypes.Attachment,
                 gameAction: ability.actions.discardFromPlay()
             }
         });
