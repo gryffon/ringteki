@@ -4,7 +4,7 @@ const { CardTypes } = require('../../Constants');
 class InDefenseOfRokugan extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
-            title: 'title',
+            title: 'Set an attacking character to 0 military skill',
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.sacrifice(card => card.type === CardTypes.Character && card.isDefending()),
             target: {
@@ -13,8 +13,7 @@ class InDefenseOfRokugan extends DrawCard {
                 gameAction: ability.actions.cardLastingEffect({
                     effect: ability.effects.setMilitarySkill(0)
                 })
-            },
-            effect: 'effect'
+            }
         });
     }
 }
