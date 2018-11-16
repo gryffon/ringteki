@@ -6,7 +6,7 @@ describe('Upholding Authority', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['matsu-berserker'],
-                        hand: ['banzai', 'banzai', 'charge', 'court-games']
+                        hand: ['banzai', 'banzai', 'banzai', 'charge', 'court-games']
                     },
                     player2: {
                         provinces: ['upholding-authority']
@@ -51,32 +51,42 @@ describe('Upholding Authority', function() {
 
             it('should ask the player how many cards to discard if the player picks a card with multiple copies', function() {
                 this.upholdingAuthority = this.player2.clickCard('upholding-authority');
-                this.banzai1 = this.player1.findCardByName('banzai');
-                this.player2.clickPrompt('Banzai! (2)');
+                this.player2.clickPrompt('Banzai! (3)');
                 expect(this.player2).toHavePrompt('Choose how many cards to discard');
                 expect(this.player2.currentButtons).toContain('0');
                 expect(this.player2.currentButtons).toContain('1');
                 expect(this.player2.currentButtons).toContain('2');
+                expect(this.player2.currentButtons).toContain('3');
             });
 
             it('should discard the correct number of cards if the player picks a card with multiple copies (0 chosen)', function() {
                 this.upholdingAuthority = this.player2.clickCard('upholding-authority');
-                this.banzai = this.player1.findCardByName('banzai');
-                this.player2.clickPrompt('Banzai! (2)');
+                this.banzaiCards = this.player1.filterCardsByName('banzai');
+                this.banzai1 = this.banzaiCards[0];
+                this.banzai2 = this.banzaiCards[1];
+                this.banzai3 = this.banzaiCards[2];
+                this.player2.clickPrompt('Banzai! (3)');
                 this.player2.clickPrompt('0');
-                expect(this.banzai.location).toBe('hand');
+                expect(this.banzai1.location).toBe('hand');
+                expect(this.banzai2.location).toBe('hand');
+                expect(this.banzai3.location).toBe('hand');
                 expect(this.player1).toHavePrompt('Break Upholding Authority');
                 expect(this.chat).toHaveBeenCalledWith('{0} chooses not to discard anything', this.player2.player);
             });
 
             it('should discard the correct number of cards if the player picks a card with multiple copies (1 chosen)', function() {
                 this.upholdingAuthority = this.player2.clickCard('upholding-authority');
-                this.banzai = this.player1.findCardByName('banzai');
-                this.player2.clickPrompt('Banzai! (2)');
+                this.banzaiCards = this.player1.filterCardsByName('banzai');
+                this.banzai1 = this.banzaiCards[0];
+                this.banzai2 = this.banzaiCards[1];
+                this.banzai3 = this.banzaiCards[2];
+                this.player2.clickPrompt('Banzai! (3)');
                 this.player2.clickPrompt('1');
-                expect(this.banzai.location).toBe('conflict discard pile');
+                expect(this.banzai1.location).toBe('conflict discard pile');
+                expect(this.banzai2.location).toBe('hand');
+                expect(this.banzai3.location).toBe('hand');
                 expect(this.player1).toHavePrompt('Break Upholding Authority');
-                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 1, 'y', this.banzai);
+                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 1, 'y', this.banzai1);
             });
 
             it('should discard the correct number of cards if the player picks a card with multiple copies (2 chosen)', function() {
@@ -84,12 +94,29 @@ describe('Upholding Authority', function() {
                 this.banzaiCards = this.player1.filterCardsByName('banzai');
                 this.banzai1 = this.banzaiCards[0];
                 this.banzai2 = this.banzaiCards[1];
-                this.player2.clickPrompt('Banzai! (2)');
+                this.banzai3 = this.banzaiCards[2];
+                this.player2.clickPrompt('Banzai! (3)');
                 this.player2.clickPrompt('2');
                 expect(this.banzai1.location).toBe('conflict discard pile');
                 expect(this.banzai2.location).toBe('conflict discard pile');
+                expect(this.banzai3.location).toBe('hand');
                 expect(this.player1).toHavePrompt('Break Upholding Authority');
                 expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 2, 'ies', this.banzai1);
+            });
+
+            it('should discard the correct number of cards if the player picks a card with multiple copies (3 chosen)', function() {
+                this.upholdingAuthority = this.player2.clickCard('upholding-authority');
+                this.banzaiCards = this.player1.filterCardsByName('banzai');
+                this.banzai1 = this.banzaiCards[0];
+                this.banzai2 = this.banzaiCards[1];
+                this.banzai3 = this.banzaiCards[2];
+                this.player2.clickPrompt('Banzai! (3)');
+                this.player2.clickPrompt('3');
+                expect(this.banzai1.location).toBe('conflict discard pile');
+                expect(this.banzai2.location).toBe('conflict discard pile');
+                expect(this.banzai3.location).toBe('conflict discard pile');
+                expect(this.player1).toHavePrompt('Break Upholding Authority');
+                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 3, 'ies', this.banzai1);
             });
         });
     });
