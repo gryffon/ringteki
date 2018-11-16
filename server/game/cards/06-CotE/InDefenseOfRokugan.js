@@ -14,7 +14,8 @@ class InDefenseOfRokugan extends DrawCard {
                     effect: ability.effects.setMilitarySkill(0)
                 })
             },
-            effect: 'set {0} to 0 military skill'
+            effect: 'set {0}\'s {1} skill to 0',
+            effectArgs: () => 'military'
         });
     }
 }
