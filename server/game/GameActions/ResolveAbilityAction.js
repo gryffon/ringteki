@@ -26,6 +26,7 @@ class ResolveAbilityAction extends CardAction {
     setDefaultProperties() {
         this.ability = null;
         this.secondResolution = false;
+        this.player = null;
     }
 
     setup() {
@@ -42,7 +43,7 @@ class ResolveAbilityAction extends CardAction {
 
     getEvent(card, context) {
         return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
-            let newContext = Object.assign(this.ability.createContext(context.player), {
+            let newContext = Object.assign(this.ability.createContext(this.player || context.player), {
                 isResolveAbility: true,
                 secondResolution: this.secondResolution
             });
