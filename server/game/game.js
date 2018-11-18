@@ -949,6 +949,7 @@ class Game extends EventEmitter {
         }, []);
         if(events.length > 0) {
             this.openEventWindow(events);
+            this.queueSimpleStep(() => context.refill());
         }
         return events;
     }
