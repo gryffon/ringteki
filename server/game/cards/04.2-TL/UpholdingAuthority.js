@@ -46,9 +46,8 @@ class UpholdingAuthority extends ProvinceCard {
             context.game.addMessage('{0} chooses not to discard anything', context.player);
             return;
         }
-        let targetCards = cards.splice(0, choice);
-        gameAction.setTarget(targetCards);
-        this.game.addMessage('{0} chooses to discard {1} cop{2} of {3}', context.player, choice, (choice === 1 ? 'y' : 'ies'), targetCards[0]);
+        gameAction.setTarget(cards.slice(0, choice));
+        this.game.addMessage('{0} chooses to discard {1} cop{2} of {3}', context.player, choice, (choice === 1 ? 'y' : 'ies'), cards[0]);
     }
 }
 
