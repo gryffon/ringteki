@@ -14,6 +14,7 @@ const { EffectNames, Durations } = require('./Constants');
 const Effects = {
     // Card effects
     addFaction: (faction) => EffectBuilder.card.static(EffectNames.AddFaction, faction),
+    addGloryToBothSkills: () => EffectBuilder.card.static(EffectNames.AddGloryToBothSkills),
     addGloryWhileDishonored: () => EffectBuilder.card.static(EffectNames.AddGloryWhileDishonored),
     addKeyword: (keyword) => EffectBuilder.card.static(EffectNames.AddKeyword, keyword),
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
