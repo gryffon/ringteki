@@ -10,7 +10,7 @@ class UpholdingAuthority extends ProvinceCard {
         this.interrupt({
             title: 'Look at opponent\'s hand and discard all copies of a card',
             when: {
-                onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
+                onBreakProvince: (event, context) => event.card === context.source && context.player.opponent && context.player.opponent.hand.size() > 0
             },
             effect: 'look at their opponent\'s hand and choose a card to be discarded',
             gameAction: ability.actions.discardCard(context => ({

@@ -119,5 +119,33 @@ describe('Upholding Authority', function() {
                 expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 3, 'ies', this.banzai1);
             });
         });
+
+        describe('Upholding Authority\'s ability when the opponent has zero cards in hand', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['matsu-berserker'],
+                        hand: []
+                    },
+                    player2: {
+                        provinces: ['upholding-authority']
+                    }
+                });
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: ['matsu-berserker'],
+                    defenders: [],
+                    jumpTo: 'afterConflict'
+                });
+            });
+
+            it('should not be able to be triggered', function() {
+                expect(this.player1.player.hand.size()).toBe(0);
+                expect(this.player2).not.toHavePrompt('Triggered Abilities');
+                this.upholdingAuthority = this.player2.clickCard('upholding-authority');
+            });
+        });
+
     });
 });
