@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const { PlayTypes } = require('./Constants');
 
 class CostReducer {
     constructor(game, source, properties) {
@@ -9,7 +10,7 @@ class CostReducer {
         this.match = properties.match || (() => true);
         this.targetCondition = properties.targetCondition;
         this.amount = properties.amount || 1;
-        this.playingTypes = properties.playingTypes ? (_.isArray(properties.playingTypes) ? properties.playingTypes : [properties.playingTypes]) : ['playFromHand'];
+        this.playingTypes = properties.playingTypes ? (_.isArray(properties.playingTypes) ? properties.playingTypes : [properties.playingTypes]) : [PlayTypes.PlayFromHand];
         if(this.limit) {
             this.limit.registerEvents(game);
         }

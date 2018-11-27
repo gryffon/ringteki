@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
 
 class HeightOfFashion extends DrawCard {
-    canPlay(context) {
+    canPlay(context, playType) {
         if(this.game.currentConflict) {
             return false;
         }
-        return super.canPlay(context);
+        return super.canPlay(context, playType);
     }
 }
 

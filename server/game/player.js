@@ -12,7 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const { Locations, Decks, EffectNames, CardTypes } = require('./Constants');
+const { Locations, Decks, EffectNames, CardTypes, PlayTypes } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -63,11 +63,11 @@ class Player extends GameObject {
         this.deck = {};
         this.costReducers = [];
         this.playableLocations = [
-            new PlayableLocation('playFromHand', this, Locations.Hand),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceOne),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceTwo),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceThree),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceFour)
+            new PlayableLocation(PlayTypes.PlayFromHand, this, Locations.Hand),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceOne),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceTwo),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceThree),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceFour)
         ];
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings
