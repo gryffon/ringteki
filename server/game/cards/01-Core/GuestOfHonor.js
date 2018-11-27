@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, PlayTypes } = require('../../Constants');
 
 class GuestOfHonor extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class GuestOfHonor extends DrawCard {
             condition: context => context.source.isParticipating(),
             targetController: Players.Opponent,
             effect: ability.effects.playerCannot({
-                cannot: 'play',
+                cannot: PlayTypes.PlayFromHand,
                 restricts: 'events'
             })
         });

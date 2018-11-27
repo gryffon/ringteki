@@ -134,6 +134,11 @@ const CardTypes = {
     Attachment: 'attachment'
 };
 
+const PlayTypes = {
+    PlayFromHand: 'playFromHand',
+    PlayFromProvince: 'playFromProvince'
+};
+
 module.exports = {
     Locations,
     Decks,
@@ -143,5 +148,6 @@ module.exports = {
     Players,
     TargetModes,
     Phases,
-    CardTypes
+    CardTypes,
+    PlayTypes
 };

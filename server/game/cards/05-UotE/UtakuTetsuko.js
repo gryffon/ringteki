@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, PlayTypes } = require('../../Constants');
 
 class UtakuTetsuko extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,7 +9,7 @@ class UtakuTetsuko extends DrawCard {
             targetController: Players.Opponent,
             effect: ability.effects.increaseCost({
                 amount: 1,
-                playingType: 'playFromHand'
+                playingType: PlayTypes.PlayFromHand
             })
         });
     }

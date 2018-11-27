@@ -20,11 +20,11 @@ class Infiltrator extends DrawCard {
         });
     }
 
-    canPlay(context) {
+    canPlay(context, playType) {
         if(!context.player.opponent || context.player.showBid <= context.player.opponent.showBid) {
             return false;
         }
-        return super.canPlay(context);
+        return super.canPlay(context, playType);
     }
 }
 
