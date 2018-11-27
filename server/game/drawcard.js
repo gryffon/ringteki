@@ -389,7 +389,7 @@ class DrawCard extends BaseCard {
         return card && card.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
     }
 
-    canPlay(context, type = 'play') {
+    canPlay(context, type) {
         return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context);
     }
 

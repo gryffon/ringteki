@@ -1,7 +1,7 @@
 const AbilityLimit = require('./abilitylimit.js');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes } = require('./Constants');
+const { Locations, CardTypes, PlayTypes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
@@ -29,7 +29,7 @@ class CardAbility extends ThenAbility {
         }
 
         if(card.getType() === CardTypes.Event) {
-            this.cost = this.cost.concat(Costs.payReduceableFateCost('playFromHand'), Costs.playLimited());
+            this.cost = this.cost.concat(Costs.payReduceableFateCost(PlayTypes.PlayFromHand), Costs.playLimited());
         }
     }
 
@@ -61,7 +61,7 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context)) {
+        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, PlayTypes.PlayFromHand)) {
             return 'cannotTrigger';
         }
 
@@ -77,7 +77,7 @@ class CardAbility extends ThenAbility {
     }
 
     isInValidLocation(context) {
-        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
+        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand) : this.location.includes(this.card.location);
     }
 
     displayMessage(context) {

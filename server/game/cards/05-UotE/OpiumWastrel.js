@@ -19,8 +19,8 @@ class OpiumWastrel extends DrawCard {
         });
     }
 
-    canPlay(context) {
-        return context.player.opponent && context.player.honor < context.player.opponent.honor && super.canPlay(context);
+    canPlay(context, playType) {
+        return context.player.opponent && context.player.honor < context.player.opponent.honor && super.canPlay(context, playType);
     }
 }
 

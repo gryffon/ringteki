@@ -10,12 +10,12 @@ class StolenBreath extends DrawCard {
         });
     }
 
-    canPlay(context) {
+    canPlay(context, playType) {
         if(this.game.isDuringConflict()) {
             return false;
         }
 
-        return super.canPlay(context);
+        return super.canPlay(context, playType);
     }
 }
 
