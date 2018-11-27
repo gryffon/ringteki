@@ -24,8 +24,12 @@ class InsolentRival extends DrawCard {
         });
     }
     resolutionHandler(context, winner, loser) {
-        this.game.addMessage('{0} wins the duel, and dishonors {1}', winner, loser);
-        this.game.applyGameAction(context, { dishonor: loser });
+        if(winner && loser) {
+            this.game.addMessage('{0} wins the duel, and dishonors {1}', winner, loser);
+            this.game.applyGameAction(context, { dishonor: loser });
+        } else {
+            this.game.addMessage('{0} wins the duel, but there is no loser of the duel', winner);
+        }
     }
 }
 
