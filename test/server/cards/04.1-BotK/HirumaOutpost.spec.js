@@ -9,12 +9,14 @@ describe('Hiruma Outpose', function() {
                         inPlay: ['matsu-berserker']
                     },
                     player2: {
+                        inPlay: ['borderlands-defender'],
                         dynastyDeck: ['hiruma-outpost', 'imperial-storehouse']
                     }
                 });
                 this.hirumaOutpost = this.player2.placeCardInProvince('hiruma-outpost');
                 this.imperialStorehouse = this.player2.placeCardInProvince('imperial-storehouse', 'province 2');
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 2');
+                this.borderlandsDefender = this.player2.findCardByName('borderlands-defender');
             });
 
             it('should trigger when an attack is declared against a province without a holding', function() {
@@ -47,6 +49,17 @@ describe('Hiruma Outpose', function() {
                     attackers: ['matsu-berserker']
                 });
                 expect(this.player2).toHavePrompt('Choose defenders');
+            });
+
+            it('should not trigger when the controller declares an attack', function() {
+                this.noMoreActions();
+                this.player1.clickPrompt('Pass Conflict');
+                this.player1.clickPrompt('Yes');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.borderlandsDefender]
+                });
+                expect(this.player1).toHavePrompt('Choose defenders');
             });
 
             it('shouldn\'t trigger when Hiruma Outpost is facedown', function() {
