@@ -26,6 +26,7 @@ const Decks = {
 const EffectNames = {
     AbilityRestrictions: 'abilityRestrictions',
     AddFaction: 'addFaction',
+    AddGloryToBothSkills: 'addGloryToBothSkills',
     AddGloryWhileDishonored: 'addGloryWhileDishonored',
     AddKeyword: 'addKeyword',
     AddTrait: 'addTrait',
