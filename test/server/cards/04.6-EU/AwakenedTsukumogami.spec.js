@@ -9,7 +9,7 @@ describe('Awakened Tsukumogami', function() {
                     },
                     player2: {
                         fate: 1,
-                        inPlay: ['awakened-tsukumogami', 'asako-azunami'],
+                        inPlay: ['awakened-tsukumogami', 'asako-azunami', 'awakened-tsukumogami'],
                         hand: ['against-the-waves', 'consumed-by-five-fires', 'the-mirror-s-gaze', 'daimyo-s-favor']
                     }
                 });
