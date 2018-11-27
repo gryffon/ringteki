@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, PlayTypes } = require('../../Constants');
 
 class IsawaTadaka extends DrawCard {
     setupCardAbilities(ability) {
@@ -7,7 +7,7 @@ class IsawaTadaka extends DrawCard {
             targetController: Players.Opponent,
             match: player => !this.game.rings.earth.isConsideredClaimed(player),
             effect: ability.effects.playerCannot({
-                cannot: 'play',
+                cannot: PlayTypes.PlayFromHand,
                 restricts: 'copiesOfDiscardEvents'
             })
         });

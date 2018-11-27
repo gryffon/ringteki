@@ -3,7 +3,7 @@ const _ = require('underscore');
 const AbilityLimit = require('./abilitylimit.js');
 const CannotRestriction = require('./cannotrestriction.js');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, Durations } = require('./Constants');
+const { EffectNames, Durations, PlayTypes } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -121,7 +121,7 @@ const Effects = {
     }),
     alternateFatePool: (match) => EffectBuilder.player.static(EffectNames.AlternateFatePool, match),
     canPlayFromOwn: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
-        apply: (player) => player.addPlayableLocation('playFromHand', player, location, cards),
+        apply: (player) => player.addPlayableLocation(PlayTypes.PlayFromHand, player, location, cards),
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static(EffectNames.ChangePlayerGloryModifier, value),

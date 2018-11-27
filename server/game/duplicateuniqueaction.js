@@ -1,5 +1,5 @@
 const BaseAction = require('./BaseAction');
-const { Phases } = require('./Constants');
+const { Phases, PlayTypes } = require('./Constants');
 
 class DuplicateUniqueAction extends BaseAction {
     constructor(card) {
@@ -16,7 +16,7 @@ class DuplicateUniqueAction extends BaseAction {
             return 'phase';
         }
 
-        if(!this.card.controller.isCardInPlayableLocation(this.card, 'playFromProvince') && !this.card.controller.isCardInPlayableLocation(this.card, 'playFromHand')) {
+        if(!this.card.controller.isCardInPlayableLocation(this.card, PlayTypes.PlayFromProvince) && !this.card.controller.isCardInPlayableLocation(this.card, PlayTypes.PlayFromHand)) {
             if(!ignoredRequirements.includes('location')) {
                 return 'location';
             }

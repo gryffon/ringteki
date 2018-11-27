@@ -8,12 +8,12 @@ class LiarsMask extends DrawCard {
         });
     }
 
-    canPlay(context) {
+    canPlay(context, playType) {
         if(context.player.honor > 6) {
             return false;
         }
 
-        return super.canPlay(context);
+        return super.canPlay(context, playType);
     }
 }
 

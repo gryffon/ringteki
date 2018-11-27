@@ -4,7 +4,7 @@ const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
 const GameActions = require('../../GameActions/GameActions');
 const ThenAbility = require('../../ThenAbility');
-const { Locations, CardTypes } = require('../../Constants');
+const { Locations, CardTypes, PlayTypes } = require('../../Constants');
 
 const backAlleyPersistentEffect = {
     apply: card => {
@@ -42,7 +42,7 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
         if(context.source.location !== 'backalley hideaway') {
             return 'location';
         }
-        if(!context.source.canPlay(context) || !context.source.parent.canTriggerAbilities(context)) {
+        if(!context.source.canPlay(context, PlayTypes.PlayFromProvince) || !context.source.parent.canTriggerAbilities(context)) {
             return 'cannotTrigger';
         }
         if(!this.canPayCosts(context)) {
@@ -63,7 +63,7 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
             player: context.player,
             card: context.source,
             originalLocation: 'backalley hideaway',
-            playType: 'playFromProvince'
+            playType: PlayTypes.PlayFromProvince
         });
         let window = context.game.openEventWindow([putIntoPlayEvent, cardPlayedEvent]);
         let thenAbility = new ThenAbility(context.game, this.backAlleyCard, { gameAction: GameActions.sacrifice({ target: this.backAlleyCard }) });

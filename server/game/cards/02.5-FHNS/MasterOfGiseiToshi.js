@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, Players, TargetModes, Phases } = require('../../Constants');
+const { Durations, Players, TargetModes, Phases, PlayTypes } = require('../../Constants');
 
 class MasterOfGiseiToshi extends DrawCard {
     setupCardAbilities(ability) {
@@ -18,7 +18,7 @@ class MasterOfGiseiToshi extends DrawCard {
                 targetController: Players.Any,
                 condition: () => this.game.currentConflict && this.game.currentConflict.ring === context.ring,
                 effect: ability.effects.playerCannot({
-                    cannot: 'play',
+                    cannot: PlayTypes.PlayFromHand,
                     restricts: 'nonSpellEvents'
                 })
             }))
