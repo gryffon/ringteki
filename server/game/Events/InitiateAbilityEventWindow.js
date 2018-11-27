@@ -2,7 +2,7 @@ const _ = require('underscore');
 
 const EventWindow = require('./EventWindow.js');
 const SimpleStep = require('../gamesteps/simplestep.js');
-const { Locations } = require('../Constants');
+const { Locations, PlayTypes } = require('../Constants');
 
 class InitiateAbilityEventWindow extends EventWindow {
     constructor(game, events) {
@@ -16,7 +16,7 @@ class InitiateAbilityEventWindow extends EventWindow {
                     player: event.context.player,
                     card: event.card,
                     originalLocation: Locations.Hand, // TODO: this isn't true with Kyuden Isawa
-                    playType: 'playFromHand'
+                    playType: PlayTypes.PlayFromHand
                 }));
             }
             if(event.context.ability.isTriggeredAbility()) {
