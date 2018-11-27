@@ -22,7 +22,8 @@ class ProvinceCard extends BaseCard {
         }
 
         let strength = this.baseStrength + this.sumEffects(EffectNames.ModifyProvinceStrength) + this.getDynastyOrStrongholdCardModifier();
-        return this.getEffects(EffectNames.ModifyProvinceStrengthMultiplier).reduce((total, value) => total * value, strength);
+        strength = this.getEffects(EffectNames.ModifyProvinceStrengthMultiplier).reduce((total, value) => total * value, strength);
+        return Math.max(0, strength);
     }
 
     get baseStrength() {
