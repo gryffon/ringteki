@@ -1,6 +1,7 @@
 const { CardTypes } = require('./Constants');
 
 const checkRestrictions = {
+    characters: context => context.source.type === CardTypes.Character,
     copiesOfDiscardEvents: context =>
         context.source.type === CardTypes.Event && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
     copiesOfX: (context, player, source, params) => context.source.name === params,
