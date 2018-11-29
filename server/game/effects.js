@@ -20,6 +20,8 @@ const Effects = {
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
     blank: () => EffectBuilder.card.static(EffectNames.Blank),
     canBeSeenWhenFacedown: () => EffectBuilder.card.static(EffectNames.CanBeSeenWhenFacedown),
+    cannotBidInDuels: num => EffectBuilder.card.static(EffectNames.CannotBidInDuels, num),
+    cannotHaveOtherRestrictedAttachments: card => EffectBuilder.card.static(EffectNames.CannotHaveOtherRestrictedAttachments, card),
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsAttacker, type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsDefender, type),
     cardCannot: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new CannotRestriction(properties)),
