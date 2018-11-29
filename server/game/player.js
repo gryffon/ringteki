@@ -245,6 +245,10 @@ class Player extends GameObject {
         return this.game.allCards.filter(card => card.controller === this && card.location === Locations.PlayArea && predicate(card));
     }
 
+    hasComposure() {
+        return this.opponent && this.opponent.showBid > this.showBid;
+    }
+
     /**
      * Returns the total number of characters and attachments controlled by this player which match the passed predicate
      * @param {Function} predicate - DrawCard => Int
