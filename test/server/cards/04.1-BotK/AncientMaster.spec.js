@@ -5,15 +5,19 @@ describe('Ancient Master', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['niten-master'],
+                        inPlay: ['niten-master','agasha-swordsmith'],
                         hand: ['ancient-master'],
                         conflictDeck: ['hurricane-punch', 'centipede-tattoo', 'mantra-of-fire', 'censure', 'ornate-fan'],
                         conflictDeckSize: 5
                     },
-                    player2: { }
+                    player2: {
+                        hand: ['assassination']
+                    }
                 });
                 this.nitenMaster = this.player1.findCardByName('niten-master');
                 this.ancientMaster = this.player1.findCardByName('ancient-master');
+                this.agashaSwordsmith = this.player1.findCardByName('agasha-swordsmith');
+                this.assassination = this.player2.findCardByName('assassination');
             });
 
             it('can be played as an attachment', function() {
@@ -69,6 +73,24 @@ describe('Ancient Master', function() {
                 });
                 expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should return to a character after it leaves play', function() {
+                this.chat = spyOn(this.game, 'addMessage');
+                this.player1.clickCard(this.ancientMaster);
+                this.player1.clickPrompt('Play Ancient Master as an attachment');
+                this.player1.clickCard(this.agashaSwordsmith);
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.agashaSwordsmith]
+                });
+                this.player1.clickPrompt('Pass');
+                this.player2.clickPrompt('Done');
+                expect(this.ancientMaster.getType()).toBe('attachment');
+                this.player2.clickCard(this.assassination);
+                this.player2.clickCard(this.agashaSwordsmith);
+                expect(this.ancientMaster.location).toBe('conflict discard pile');
+                expect(this.ancientMaster.getType()).toBe('character');
             });
         });
     });

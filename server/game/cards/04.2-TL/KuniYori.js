@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
-const { TargetModes } = require('../../Constants');
+const { CardTypes, TargetModes } = require('../../Constants');
 
 class KuniYori extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: () => this.game.isDuringConflict('earth'),
-            match: card => card.type === 'creature',
+            match: card => card.getType() === CardTypes.Character,
             effect: ability.effects.modifyBothSkills(1)
         });
 

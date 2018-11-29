@@ -475,7 +475,8 @@ class Player extends GameObject {
 
     getAlternateFatePools(playingType, card) {
         let effects = this.getEffects(EffectNames.AlternateFatePool);
-        return effects.filter(match => match(card) && match(card).fate > 0).map(match => match(card));
+        let alternateFatePools = effects.filter(match => match(card) && match(card).fate > 0).map(match => match(card));
+        return _.uniq(alternateFatePools);
     }
 
     getMinimumCost(playingType, card, target) {

@@ -7,7 +7,7 @@ describe('Heartless Intimidator', function () {
                     player1: {
                         honor: 6,
                         inPlay: ['heartless-intimidator'],
-                        hand: ['backhanded-compliment']
+                        hand: ['backhanded-compliment','policy-debate']
                     },
                     player2: {
                         honor: 10,
@@ -21,6 +21,8 @@ describe('Heartless Intimidator', function () {
                 this.backhand = this.player1.findCardByName('backhanded-compliment');
                 this.heartless = this.player1.findCardByName('heartless-intimidator');
                 this.yurt = this.player2.placeCardInProvince('windswept-yurt', 'province 1');
+                this.adeptOfShadows = this.player2.findCardByName('adept-of-shadows');
+                this.policyDebate = this.player1.findCardByName('policy-debate');
             });
 
             it('will not trigger for honor gains', function () {
@@ -40,6 +42,22 @@ describe('Heartless Intimidator', function () {
             it('will trigger from a honor loss caused by the opponent', function () {
                 this.player1.clickPrompt('Pass');
                 this.player2.clickCard('adept-of-shadows');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.heartless);
+            });
+
+            it('will trigger from an honor transfer', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.heartless],
+                    defenders: [this.adeptOfShadows]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.policyDebate);
+                this.player1.clickCard(this.heartless);
+                this.player1.clickCard(this.adeptOfShadows);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('2');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.heartless);
             });

@@ -12,6 +12,7 @@ describe('Asahina Takako', function() {
                 this.dojiChallenger = this.player1.placeCardInProvince('doji-challenger', 'province 1');
                 this.dojiChallenger.facedown = true;
                 this.dojiWhisperer = this.player1.placeCardInProvince('doji-whisperer', 'province 2');
+                this.dojiWhisperer.facedown = true;
             });
 
             it('should allow facedown cards to be seen', function() {
@@ -29,7 +30,25 @@ describe('Asahina Takako', function() {
                 expect(this.player2).toHavePrompt('Action Window');
             });
 
-            it('should allow switching two dynasty cards', function() {
+            it('should allow switching two dynasty cards (facedown)', function() {
+                expect(this.dojiChallenger.facedown).toBe(true);
+                expect(this.dojiWhisperer.facedown).toBe(true);
+                this.player1.clickCard('asahina-takako');
+                expect(this.player1).toHavePrompt('Choose a card');
+                this.player1.clickCard(this.dojiChallenger);
+                expect(this.player1).toHavePrompt('Select an action:');
+                this.player1.clickPrompt('Switch with another card');
+                this.player1.clickCard(this.dojiWhisperer);
+                expect(this.dojiChallenger.location).toBe('province 2');
+                expect(this.dojiWhisperer.location).toBe('province 1');
+                expect(this.player2).toHavePrompt('Action Window');
+            });
+
+            it('should allow switching two dynasty cards (faceup)', function() {
+                this.dojiChallenger.facedown = false;
+                this.dojiWhisperer.facedown = false;
+                expect(this.dojiChallenger.facedown).toBe(false);
+                expect(this.dojiWhisperer.facedown).toBe(false);
                 this.player1.clickCard('asahina-takako');
                 expect(this.player1).toHavePrompt('Choose a card');
                 this.player1.clickCard(this.dojiChallenger);

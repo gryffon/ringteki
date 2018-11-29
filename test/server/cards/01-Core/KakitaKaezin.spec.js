@@ -1,6 +1,6 @@
 describe('Kakita Kaezin', function() {
     integration(function() {
-        describe('when a character leaves play during the duel', function() {
+        describe('when the target leaves play during the duel', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
@@ -34,6 +34,57 @@ describe('Kakita Kaezin', function() {
                 expect(this.dojiWhisperer.inConflict).toBe(false);
                 expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
                 expect(this.akodoGunso.inConflict).toBe(false);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+        });
+
+        describe('when Kakita Kaezin leaves play during the duel', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['kakita-kaezin', 'doji-whisperer'],
+                        hand: ['writ-of-authority']
+                    },
+                    player2: {
+                        honor: 11,
+                        inPlay: ['bayushi-shoju', 'bayushi-liar']
+                    }
+                });
+                this.kakitaKaezin = this.player1.findCardByName('kakita-kaezin');
+                this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
+                this.writOfAuthority = this.player1.findCardByName('writ-of-authority');
+                this.bayushiShoju = this.player2.findCardByName('bayushi-shoju');
+                this.bayushiLiar = this.player2.findCardByName('bayushi-liar');
+
+                this.player1.clickCard(this.writOfAuthority);
+                this.player1.clickCard(this.kakitaKaezin);
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.kakitaKaezin, this.dojiWhisperer],
+                    defenders: [this.bayushiShoju, this.bayushiLiar],
+                    type: 'political'
+                });
+                this.player2.clickCard(this.bayushiShoju);
+                this.player2.clickCard(this.kakitaKaezin);
+                this.player1.pass();
+                this.player2.clickCard(this.bayushiShoju);
+                this.player2.clickCard(this.kakitaKaezin);
+                this.player1.clickCard(this.kakitaKaezin);
+                this.player2.clickCard(this.bayushiShoju);
+                this.spy = spyOn(this.game, 'addMessage');
+                this.player1.clickPrompt('2');
+                this.player2.clickPrompt('1');
+            });
+
+            it('the duel should still successfully resolve (wthout effect)', function() {
+                expect(this.player1.player.honor).toBe(10);
+                expect(this.player2.player.honor).toBe(12);
+                expect(this.kakitaKaezin.location).toBe('dynasty discard pile');
+                expect(this.dojiWhisperer.inConflict).toBe(true);
+                expect(this.bayushiShoju.inConflict).toBe(true);
+                expect(this.bayushiLiar.inConflict).toBe(true);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });

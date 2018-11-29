@@ -10,7 +10,7 @@ class UpholdingAuthority extends ProvinceCard {
         this.interrupt({
             title: 'Look at opponent\'s hand and discard all copies of a card',
             when: {
-                onBreakProvince: (event, context) => event.card === context.source && context.player.opponent
+                onBreakProvince: (event, context) => event.card === context.source && context.player.opponent && context.player.opponent.hand.size() > 0
             },
             effect: 'look at their opponent\'s hand and choose a card to be discarded',
             gameAction: ability.actions.discardCard(context => ({
@@ -46,7 +46,7 @@ class UpholdingAuthority extends ProvinceCard {
             context.game.addMessage('{0} chooses not to discard anything', context.player);
             return;
         }
-        gameAction.setTarget(cards.splice(0, choice));
+        gameAction.setTarget(cards.slice(0, choice));
         this.game.addMessage('{0} chooses to discard {1} cop{2} of {3}', context.player, choice, (choice === 1 ? 'y' : 'ies'), cards[0]);
     }
 }
