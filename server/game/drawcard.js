@@ -424,6 +424,13 @@ class DrawCard extends BaseCard {
                 source: 'Too many Restricted attachments'
             });
             return true;
+        } else if(this.anyEffect(EffectNames.CannotHaveOtherRestrictedAttachments)) {
+            let attachmentsToRemove = this.attachments.filter(card => card.isRestricted() && card !== this.mostRecentEffect(EffectNames.CannotHaveOtherRestrictedAttachments));
+            if(attachmentsToRemove.length > 0) {
+                this.game.addMessage('{0} is discarded from {1} as it is no longer legally attached', attachmentsToRemove, this);
+                this.game.applyGameAction(null, { discardFromPlay: attachmentsToRemove});
+                return true;
+            }
         }
         return false;
     }

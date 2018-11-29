@@ -1,6 +1,8 @@
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
 
+const { EffectNames } = require('../Constants');
+
 /**
 D. Duel Timing
 D.1 Duel begins.
@@ -18,10 +20,11 @@ class DuelFlow extends BaseStepWithPipeline {
     constructor(game, duel, costHandler, resolutionHandler) {
         super(game);
         this.duel = duel;
+        this.costHandler = costHandler;
         this.resolutionHandler = resolutionHandler;
         this.pipeline.initialise([
             new SimpleStep(this.game, () => this.game.checkGameState(true)),
-            new SimpleStep(this.game, () => this.game.promptForHonorBid('Choose your bid for the duel\n' + duel.getTotalsForDisplay(), costHandler)),
+            new SimpleStep(this.game, () => this.promptForHonorBid()),
             new SimpleStep(this.game, () => this.modifyDuelingSkill()),
             new SimpleStep(this.game, () => this.determineResults()),
             new SimpleStep(this.game, () => this.announceResult()),
@@ -29,6 +32,14 @@ class DuelFlow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.cleanUpDuel()),
             new SimpleStep(this.game, () => this.game.checkGameState(true))
         ]);
+    }
+
+    promptForHonorBid() {
+        let prohibtedBids = {};
+        for(const player of this.game.getPlayers()) {
+            prohibtedBids[player.uuid] = [...new Set(player.getEffects(EffectNames.CannotBidInDuels))];
+        }
+        this.game.promptForHonorBid('Choose your bid for the duel\n' + this.duel.getTotalsForDisplay(), this.costHandler, prohibtedBids);
     }
 
     modifyDuelingSkill() {

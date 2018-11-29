@@ -31,6 +31,8 @@ const EffectNames = {
     AddTrait: 'addTrait',
     Blank: 'blank',
     CanBeSeenWhenFacedown: 'canBeSeenWhenFacedown',
+    CannotBidInDuels: 'cannotBidInDuels',
+    CannotHaveOtherRestrictedAttachments: 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker: 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender: 'cannotParticipateAsDefender',
     CustomEffect: 'customEffect',
