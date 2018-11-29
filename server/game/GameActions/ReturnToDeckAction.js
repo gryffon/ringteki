@@ -34,7 +34,7 @@ class ReturnToDeckAction extends CardGameAction {
                 event.context.refillProvince(card.controller, card.location, context);
             }
             card.owner.moveCard(card, destination, { bottom: this.bottom });
-            if(this.shuffle) {
+            if(this.shuffle && (this.target.length === 0 || card === this.target[this.target.length - 1])) {
                 if(destination === Locations.DynastyDeck) {
                     card.owner.shuffleDynastyDeck();
                 } else {
