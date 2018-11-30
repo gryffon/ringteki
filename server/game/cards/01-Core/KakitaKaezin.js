@@ -24,7 +24,7 @@ class KakitaKaezin extends DrawCard {
         if(winner === context.source) {
             this.game.addMessage('{0} wins the duel, and sends all characters except {0} and {1} home', winner, loser);
             this.game.applyGameAction(context, { sendHome: this.game.currentConflict.getParticipants(card => ![winner, loser].includes(card)) });
-        } else {
+        } else if(loser === context.source) {
             this.game.addMessage('{0} loses the duel, and is sent home', loser);
             this.game.applyGameAction(context, { sendHome: loser });
         }
