@@ -38,7 +38,7 @@ class ResolveAbilityAction extends CardAction {
     }
 
     canAffect(card, context) {
-        let player = this.player || context.player
+        let player = this.player || context.player;
         if(!super.canAffect(card, context) || !this.ability || !this.secondResolution && player.isAbilityAtMax(this.ability.maxIdentifier)) {
             return false;
         }
