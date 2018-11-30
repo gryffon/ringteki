@@ -37,7 +37,14 @@ class ResolveAbilityAction extends CardAction {
     }
 
     canAffect(card, context) {
-        return this.ability && super.canAffect(card, context);
+        if(!super.canAffect(card, context) || !this.ability || !this.secondResolution && context.player.isAbilityAtMax(this.ability.maxIdentifier)) {
+            return false;
+        }
+        let newContext = this.ability.createContext(context.player);
+        if(this.ability.targets.length === 0) {
+            return this.ability.gameAction.length === 0 || this.ability.gameAction.some(action => action.hasLegalTarget(newContext));
+        }
+        return this.ability.canResolveTargets(newContext);
     }
 
     getEvent(card, context) {
