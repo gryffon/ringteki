@@ -20,7 +20,6 @@ const Effects = {
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
     blank: () => EffectBuilder.card.static(EffectNames.Blank),
     canBeSeenWhenFacedown: () => EffectBuilder.card.static(EffectNames.CanBeSeenWhenFacedown),
-    cannotBidInDuels: num => EffectBuilder.card.static(EffectNames.CannotBidInDuels, num),
     cannotHaveOtherRestrictedAttachments: card => EffectBuilder.card.static(EffectNames.CannotHaveOtherRestrictedAttachments, card),
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsAttacker, type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsDefender, type),
@@ -114,6 +113,7 @@ const Effects = {
     }),
     // Ring effects
     addElement: (element) => EffectBuilder.ring.static(EffectNames.AddElement, element),
+    cannotBidInDuels: num => EffectBuilder.player.static(EffectNames.CannotBidInDuels, num),
     cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclare, match), // TODO: Add this to lasting effect checks
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match), // TODO: Add this to lasting effect checks
     // Player effects
