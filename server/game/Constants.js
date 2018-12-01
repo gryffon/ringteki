@@ -55,6 +55,7 @@ const EffectNames = {
     ModifyPoliticalSkillMultiplier: 'modifyPoliticalSkillMultiplier',
     ModifyProvinceStrength: 'modifyProvinceStrength',
     ModifyProvinceStrengthMultiplier: 'modifyProvinceStrengthMultiplier',
+    MustBeChosen: 'mustBeChosen',
     SetBaseMilitarySkill: 'setBaseMilitarySkill',
     SetBasePoliticalSkill: 'setBasePoliticalSkill',
     SetBaseProvinceStrength: 'setBaseProvinceStrength',

@@ -45,6 +45,7 @@ const UiPrompt = require('./uiprompt.js');
  *                      target cards.
  * ordered            - an optional boolean indicating whether or not to display
  *                      the order of the selection during the prompt.
+ * mustSelect         - an array of cards which must be selected
  */
 class SelectCardPrompt extends UiPrompt {
     constructor(game, choosingPlayer, properties) {
@@ -76,6 +77,14 @@ class SelectCardPrompt extends UiPrompt {
         }
         this.selector = properties.selector || CardSelector.for(this.properties);
         this.selectedCards = [];
+        if(properties.mustSelect) {
+            if(this.selector.hasEnoughSelected(properties.mustSelect)) {
+                this.onlyMustSelectMayBeChosen = true;
+            } else {
+                this.selectedCards = properties.mustSelect;
+                this.cannotUnselectMustSelect = true;
+            }
+        }
         this.savePreviouslySelectedCards();
     }
 
@@ -173,8 +182,11 @@ class SelectCardPrompt extends UiPrompt {
     }
 
     checkCardCondition(card) {
-        // Always allow a card to be unselected
-        if(this.selectedCards.includes(card)) {
+        if(this.onlyMustSelectMayBeChosen && !this.properties.mustSelect.includes(card)) {
+            return false;
+        } else if(this.cannotUnselectMustSelect && this.properties.mustSelect.includes(card)) {
+            return false;
+        } else if(this.selectedCards.includes(card)) {
             return true;
         }
 
