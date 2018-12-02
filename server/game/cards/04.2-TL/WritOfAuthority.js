@@ -12,6 +12,6 @@ class WritOfAuthority extends DrawCard {
     }
 }
 
-WritOfAuthority.id = 'writ-of-authority'; //double check this before PR
+WritOfAuthority.id = 'writ-of-authority';
 
 module.exports = WritOfAuthority;
