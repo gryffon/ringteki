@@ -78,10 +78,10 @@ class SelectCardPrompt extends UiPrompt {
         this.selector = properties.selector || CardSelector.for(this.properties);
         this.selectedCards = [];
         if(properties.mustSelect) {
-            if(this.selector.hasEnoughSelected(properties.mustSelect)) {
+            if(this.selector.hasEnoughSelected(properties.mustSelect) && properties.mustSelect.length >= this.selector.numCards) {
                 this.onlyMustSelectMayBeChosen = true;
             } else {
-                this.selectedCards = properties.mustSelect;
+                this.selectedCards = [...properties.mustSelect];
                 this.cannotUnselectMustSelect = true;
             }
         }
@@ -116,6 +116,7 @@ class SelectCardPrompt extends UiPrompt {
     savePreviouslySelectedCards() {
         this.previouslySelectedCards = this.choosingPlayer.selectedCards;
         this.choosingPlayer.clearSelectedCards();
+        this.choosingPlayer.setSelectedCards(this.selectedCards);
     }
 
     continue() {
@@ -127,7 +128,7 @@ class SelectCardPrompt extends UiPrompt {
     }
 
     highlightSelectableCards() {
-        this.choosingPlayer.setSelectableCards(this.selector.getAllLegalTargets(this.context));
+        this.choosingPlayer.setSelectableCards(this.selector.findPossibleCards(this.context).filter(card => this.checkCardCondition(card)));
     }
 
     activeCondition(player) {
@@ -184,8 +185,6 @@ class SelectCardPrompt extends UiPrompt {
     checkCardCondition(card) {
         if(this.onlyMustSelectMayBeChosen && !this.properties.mustSelect.includes(card)) {
             return false;
-        } else if(this.cannotUnselectMustSelect && this.properties.mustSelect.includes(card)) {
-            return false;
         } else if(this.selectedCards.includes(card)) {
             return true;
         }
@@ -198,6 +197,8 @@ class SelectCardPrompt extends UiPrompt {
 
     selectCard(card) {
         if(this.selector.hasReachedLimit(this.selectedCards) && !this.selectedCards.includes(card)) {
+            return false;
+        } else if(this.cannotUnselectMustSelect && this.properties.mustSelect.includes(card)) {
             return false;
         }
 

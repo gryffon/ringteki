@@ -1,4 +1,4 @@
-const { CardTypes } = require('./Constants');
+const { CardTypes } = require('../Constants');
 
 const checkRestrictions = {
     characters: context => context.source.type === CardTypes.Character,
@@ -16,12 +16,13 @@ const checkRestrictions = {
         context.player && context.player === player.opponent && context.source.type === 'ring',
     source: (context, player, source) => context.source === source
 };
-class CannotRestriction {
+
+class Restriction {
     constructor(properties) {
         if(typeof properties === 'string') {
             this.type = properties;
         } else {
-            this.type = properties.cannot;
+            this.type = properties.type;
             this.restriction = properties.restricts;
             this.params = properties.params;
         }
@@ -36,7 +37,7 @@ class CannotRestriction {
         if(!this.restriction) {
             return true;
         } else if(!context) {
-            throw new Error('checkRestrictions called without a context');
+            throw new Error('checkCondition called without a context');
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
         }
@@ -45,4 +46,4 @@ class CannotRestriction {
     }
 }
 
-module.exports = CannotRestriction;
+module.exports = Restriction;

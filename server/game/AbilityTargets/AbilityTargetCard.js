@@ -92,8 +92,8 @@ class AbilityTargetCard {
                 waitingPromptTitle = 'Waiting for opponent';
             }
         }
-        let mustSelect = this.selector.findPossibleCards(context).filter(card => 
-            card.getEffects(EffectNames.MustBeChosen).some(effect => effect(context))
+        let mustSelect = this.selector.getAllLegalTargets(context).filter(card => 
+            card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
         );
         let promptProperties = {
             waitingPromptTitle: waitingPromptTitle,
