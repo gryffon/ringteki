@@ -97,7 +97,6 @@ describe('Hand to Hand', function() {
                     expect(this.player1).toBeAbleToSelect(this.reprieve);
                     this.player1.clickCard(this.reprieve);
                     expect(this.reprieve.location).toBe('conflict discard pile');
-                    expect(this.chat).toHaveBeenCalledWith('{0} cannot resolve {1}\'s ability again as there are no eligible targets', this.player2.player, this.handToHand);
                     expect(this.player2).toHavePrompt('Conflict Action Window');
                 });
 
@@ -107,7 +106,6 @@ describe('Hand to Hand', function() {
                     this.player1.clickCard(this.cloudTheMind);
                     expect(this.cloudTheMind.location).toBe('conflict discard pile');
                     this.player2.clickPrompt('No');
-                    expect(this.chat).toHaveBeenCalledWith('{0} chooses to not resolve {1}\'s ability again', this.player2.player, this.handToHand);
                     expect(this.fineKatana.location).toBe('play area');
                     expect(this.ornateFan.location).toBe('play area');
                     expect(this.cloudTheMind.location).toBe('conflict discard pile');
@@ -128,7 +126,6 @@ describe('Hand to Hand', function() {
                     this.player2.clickCard(this.ornateFan);
                     expect(this.ornateFan.location).toBe('conflict discard pile');
                     this.player1.clickPrompt('No');
-                    expect(this.chat).toHaveBeenCalledWith('{0} chooses to not resolve {1}\'s ability again', this.player1.player, this.handToHand);
                     expect(this.player2).toHavePrompt('Conflict Action Window');
                 });
             });
