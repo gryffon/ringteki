@@ -1,5 +1,4 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes } = require('../../Constants');
 
 class SocialPuppeteer extends DrawCard {
     setupCardAbilities(ability) {
@@ -9,8 +8,8 @@ class SocialPuppeteer extends DrawCard {
 
         this.action({
             title: 'Switch honor dials with opponent',
-            condition: context => 
-                context.source.isParticipating() && context.player.opponent && 
+            condition: context =>
+                context.source.isParticipating() && context.player.opponent &&
                 context.player.showBid !== context.player.opponent.showBid,
             effect: 'switch honor dials with {1}',
             effectArgs: context => context.player.opponent,

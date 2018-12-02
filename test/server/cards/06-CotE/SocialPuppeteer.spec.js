@@ -21,8 +21,8 @@ describe('Social Puppeteer', function() {
             this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
             this.agashaSwordsmith = this.player2.findCardByName('agasha-swordsmith');
             this.banzai = this.player2.findCardByName('banzai');
-            this.player1.player.showBid = 5
-            this.player2.player.showBid = 3
+            this.player1.player.showBid = 5;
+            this.player2.player.showBid = 3;
             this.noMoreActions();
         });
 

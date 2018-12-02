@@ -50,7 +50,7 @@ class CardGameAction extends GameAction {
             }
             let mustSelect = [];
             if(properties.targets) {
-                mustSelect = selector.getAllLegalTargets(context).filter(card => 
+                mustSelect = selector.getAllLegalTargets(context).filter(card =>
                     card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
                 );
             }
