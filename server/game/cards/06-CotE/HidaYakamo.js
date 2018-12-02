@@ -8,7 +8,7 @@ class HidaYakamo extends DrawCard {
         });
 
         this.persistentEffect({
-            condition: context => 
+            condition: context =>
                 context.player.opponent && context.player.honor < context.player.opponent.honor &&
                 this.game.isDuringConflict('military'),
             effect: ability.effects.doesNotBow()
