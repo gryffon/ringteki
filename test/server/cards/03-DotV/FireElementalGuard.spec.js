@@ -4,7 +4,7 @@ describe('Fire Elemental Guard', function() {
             this.setupTest({
                 phase: 'conflict',
                 player1: {
-                    inPlay: ['fire-elemental-guard', 'adept-of-the-waves'],
+                    inPlay: ['fire-elemental-guard'],
                     hand: ['fine-katana', 'embrace-the-void', 'against-the-waves', 'grasp-of-earth']
                 },
                 player2: {
@@ -14,7 +14,6 @@ describe('Fire Elemental Guard', function() {
             });
 
             this.fireElementalGuard = this.player1.findCardByName('fire-elemental-guard');
-            this.adeptOfTheWaves = this.player1.findCardByName('fire-elemental-guard');
 
             this.fineKatana = this.player1.findCardByName('fine-katana');
             this.embraceTheVoid = this.player1.findCardByName('embrace-the-void');
