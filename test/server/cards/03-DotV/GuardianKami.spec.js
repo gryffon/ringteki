@@ -20,7 +20,7 @@ describe('Guardian Kami', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.dojiWhisperer],
-                    defenders: [this.guardianKami],
+                    defenders: [this.guardianKami, this.guardianKami2],
                     ring: 'fire'
                 });
             });
