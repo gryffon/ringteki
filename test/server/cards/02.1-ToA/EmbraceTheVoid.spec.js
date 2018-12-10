@@ -32,6 +32,57 @@ describe('Embrace the Void', function() {
             });
         });
 
+        describe('Embrace the Void/Feast or Famine interaction', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        fate: 1,
+                        inPlay: ['prodigy-of-the-waves'],
+                        hand: ['embrace-the-void']
+                    },
+                    player2: {
+                        provinces: ['feast-or-famine'],
+                        inPlay: ['adept-of-the-waves']
+                    }
+                });
+                this.prodigyOfTheWaves = this.player1.findCardByName('prodigy-of-the-waves');
+                this.prodigyOfTheWaves.fate = 2;
+                this.embraceTheVoid = this.player1.findCardByName('embrace-the-void');
+
+                this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
+                this.feastOrFamine = this.player2.findCardByName('feast-or-famine');
+
+                this.player1.playAttachment(this.embraceTheVoid, this.prodigyOfTheWaves);
+                this.player2.pass();
+                this.player1.pass();
+                this.initiateConflict({
+                    attackers: [this.prodigyOfTheWaves],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.pass();
+            });
+
+            it('should give the fate to the player, not transfer it', function() {
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.feastOrFamine);
+                this.player2.clickCard(this.feastOrFamine);
+                expect(this.player2).toHavePrompt('Feast or Famine');
+                expect(this.player2).toBeAbleToSelect(this.prodigyOfTheWaves);
+                this.player2.clickCard(this.prodigyOfTheWaves);
+                expect(this.player2).toHavePrompt('Feast or Famine');
+                expect(this.player2).toBeAbleToSelect(this.adeptOfTheWaves);
+                this.player2.clickCard(this.adeptOfTheWaves);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.embraceTheVoid);
+                this.player1.clickCard(this.embraceTheVoid);
+                expect(this.player1.fate).toBe(3);
+                expect(this.prodigyOfTheWaves.fate).toBe(0);
+                expect(this.adeptOfTheWaves.fate).toBe(0);
+            });
+        });
+
         describe('Embrace the Void/Assassination interaction', function() {
             beforeEach(function() {
                 this.setupTest({
