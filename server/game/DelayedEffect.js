@@ -31,7 +31,7 @@ class DelayedEffect {
             if(!this.multipleTrigger) {
                 this.game.effectEngine.removeDelayedEffect(this);
             }
-            return matchingEvents.find(event => this.when[event.name](event));
+            return matchingEvents.find(event => this.when[event.name](event, this.context));
         }
         return false;
     }

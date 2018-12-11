@@ -106,6 +106,10 @@ class BaseCard extends EffectSource {
         this.abilities.persistentEffects.push(_.extend({ duration: Durations.Persistent, location: location }, properties));
     }
 
+    composure(properties) {
+        this.persistentEffect(Object.assign({ condition: context => context.player.hasComposure() }, properties));
+    }
+
     hasTrait(trait) {
         trait = trait.toLowerCase();
         return this.traits.includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);

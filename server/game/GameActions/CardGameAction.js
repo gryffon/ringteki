@@ -1,6 +1,6 @@
 const GameAction = require('./GameAction');
 const CardSelector = require('../CardSelector');
-const { Stages, CardTypes } = require('../Constants.js');
+const { Stages, CardTypes, EffectNames } = require('../Constants.js');
 
 class CardGameAction extends GameAction {
     constructor(propertyFactory) {
@@ -48,9 +48,16 @@ class CardGameAction extends GameAction {
             if(!properties.player) {
                 properties.player = context.player;
             }
+            let mustSelect = [];
+            if(properties.targets) {
+                mustSelect = selector.getAllLegalTargets(context).filter(card =>
+                    card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
+                );
+            }
             let defaultProperties = {
                 context: context,
                 selector: selector,
+                mustSelect: mustSelect,
                 onSelect: (player, cards) => {
                     this.setTarget(cards);
                     if(this.promptForSelect.message) {

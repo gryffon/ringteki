@@ -6,19 +6,9 @@ class TheMirrorsGaze extends DrawCard {
         this.reaction({
             title: 'Mirror an opponent\'s event',
             when: {
-                onAbilityResolved: (event, context) => {
-                    let ability = event.context.ability;
-                    if(event.initiateEvent.cancelled || event.card.type !== CardTypes.Event || ability.cannotBeMirrored) {
-                        return false;
-                    } else if(event.context.player !== context.player.opponent || context.player.isAbilityAtMax(ability.maxIdentifier)) {
-                        return false;
-                    }
-                    let newContext = event.context.ability.createContext(context.player);
-                    if(ability.targets.length === 0) {
-                        return ability.gameAction.length === 0 || ability.gameAction.some(action => action.hasLegalTarget(newContext));
-                    }
-                    return ability.canResolveTargets(context);
-                }
+                onAbilityResolved: (event, context) =>
+                    !event.initiateEvent.cancelled && event.card.type === CardTypes.Event &&
+                    !event.context.ability.cannotBeMirrored && event.context.player === context.player.opponent
             },
             gameAction: ability.actions.resolveAbility(context => ({
                 target: context.event.card,
