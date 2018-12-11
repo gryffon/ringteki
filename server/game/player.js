@@ -724,17 +724,24 @@ class Player extends GameObject {
 
 
         const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, Locations.RemovedFromGame];
+        const dynastyCardLocations = [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame];
         const legalLocations = {
             stronghold: [Locations.StrongholdProvince],
             role: [Locations.Role],
             province: [...provinceLocations, Locations.ProvinceDeck],
-            holding: [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame],
-            character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.PlayArea],
+            holding: dynastyCardLocations,
+            conflictCharacter: [...conflictCardLocations, Locations.PlayArea],
+            dynastyCharacter: [...dynastyCardLocations, Locations.PlayArea],
             event: [...conflictCardLocations, Locations.BeingPlayed],
             attachment: [...conflictCardLocations, Locations.PlayArea]
         };
 
-        return legalLocations[card.type] && legalLocations[card.type].includes(location);
+        let type = card.type;
+        if(type === 'character') {
+            type = card.isDynasty ? 'dynastyCharacter' : 'conflictCharacter';
+        }
+
+        return legalLocations[type] && legalLocations[type].includes(location);
     }
 
     /**

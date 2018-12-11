@@ -6,7 +6,7 @@ describe('Soshi Shadowshaper', function() {
                     phase: 'draw',
                     player1: {
                         inPlay: ['soshi-shadowshaper'],
-                        dynastyDeck: ['back-alley-hideaway'],
+                        dynastyDeck: ['hidden-moon-dojo'],
                         hand: ['adept-of-shadows']
                     },
                     player2: {
@@ -16,7 +16,7 @@ describe('Soshi Shadowshaper', function() {
                     }
                 });
                 this.soshiShadowshaper = this.player1.findCardByName('soshi-shadowshaper');
-                this.backalleyHideaway = this.player1.placeCardInProvince('back-alley-hideaway');
+                this.hiddenMoonDojo = this.player1.placeCardInProvince('hidden-moon-dojo');
                 this.yokuni = this.player2.placeCardInProvince('togashi-yokuni');
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
@@ -67,26 +67,13 @@ describe('Soshi Shadowshaper', function() {
             });
 
             it('should be able to \'see\' characters which left play before it arrived', function() {
+                this.player1.placeCardInProvince(this.soshiShadowshaper, 'province 2');
                 this.noMoreActions();
-                this.noMoreActions();
-                this.initiateConflict({
-                    attackers: ['soshi-shadowshaper'],
-                    defenders: []
-                });
-                this.player2.clickCard('assassination');
-                this.player2.clickCard(this.soshiShadowshaper);
-                expect(this.player1).toHavePrompt('Triggered Abilities');
-                expect(this.player1).toBeAbleToSelect(this.backalleyHideaway);
-                this.player1.clickCard(this.backalleyHideaway);
-                expect(this.soshiShadowshaper.location).toBe('backalley hideaway');
                 this.player1.pass();
                 this.tattooedWanderer = this.player2.playCharacterFromHand('tattooed-wanderer');
-                this.player2.clickPrompt('Conflict');
-                this.player1.clickCard(this.backalleyHideaway);
                 this.player1.clickCard(this.soshiShadowshaper);
                 this.player1.clickPrompt('0');
                 expect(this.soshiShadowshaper.location).toBe('play area');
-                expect(this.backalleyHideaway.location).toBe('dynasty discard pile');
                 this.player2.pass();
                 this.player1.clickCard(this.soshiShadowshaper);
                 expect(this.player1).toHavePrompt('Soshi Shadowshaper');
@@ -111,7 +98,6 @@ describe('Soshi Shadowshaper', function() {
                 this.player2.clickCard(this.yokuni);
                 expect(this.player2).toHavePrompt('Togashi Yokuni');
                 this.player2.clickCard(this.adeptOfShadows);
-                this.player1.pass();
                 expect(this.adeptOfShadows.location).toBe('hand');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });

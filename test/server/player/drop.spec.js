@@ -205,6 +205,7 @@ describe('Player', () => {
 
         describe('when dragging a card from the play area to the dynasty discard pile', function() {
             beforeEach(function() {
+                this.cardSpy.isDynasty = true;
                 this.player.cardsInPlay.push(this.cardSpy);
                 this.cardSpy.location = 'play area';
             });

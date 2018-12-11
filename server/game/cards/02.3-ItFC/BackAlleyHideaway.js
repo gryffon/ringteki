@@ -4,7 +4,7 @@ const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
 const GameActions = require('../../GameActions/GameActions');
 const ThenAbility = require('../../ThenAbility');
-const { Locations, CardTypes, PlayTypes } = require('../../Constants');
+const { Phases, Locations, CardTypes, PlayTypes } = require('../../Constants');
 
 const backAlleyPersistentEffect = {
     apply: card => {
@@ -39,6 +39,9 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
     }
 
     meetsRequirements(context = this.createContext()) {
+        if(context.game.currentPhase !== Phases.Dynasty) {
+            return 'phase';
+        }
         if(context.source.location !== 'backalley hideaway') {
             return 'location';
         }
