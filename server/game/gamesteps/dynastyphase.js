@@ -26,6 +26,12 @@ class DynastyPhase extends Phase {
         ]);
     }
 
+    createPhase() {
+        this.game.roundNumber++;
+        this.game.conflictRecord = [];
+        super.createPhase();
+    }
+
     beginDynasty() {
         _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
             player.beginDynasty();
