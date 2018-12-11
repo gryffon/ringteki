@@ -19,12 +19,12 @@ class MagnificentTriumph extends DrawCard {
                         ability.effects.modifyBothSkills(2),
                         ability.effects.cardCannot({
                             cannot: 'target',
-                            restricts: 'opponentsCardEffects'
+                            restricts: 'opponentsEvents'
                         })
                     ]
                 })
             },
-            effect: 'give {0} +2{1}, +2{2}, and prevent them from being targeted by opponent\'s abilities',
+            effect: 'give {0} +2{1}, +2{2}, and prevent them from being targeted by opponent\'s events',
             effectArgs: () => ['military', 'political']
         });
     }
