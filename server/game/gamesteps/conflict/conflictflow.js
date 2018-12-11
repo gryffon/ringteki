@@ -165,7 +165,8 @@ class ConflictFlow extends BaseStepWithPipeline {
         let events = [this.game.getEvent('onConflictDeclared', {
             conflict: this.conflict,
             type: this.conflict.conflictType,
-            ring: this.conflict.ring
+            ring: this.conflict.ring,
+            attackers: this.conflict.attackers.slice()
         })];
 
         let ring = this.conflict.ring;
@@ -226,7 +227,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.game.addMessage('{0} does not defend the conflict', this.conflict.defendingPlayer);
         }
 
-        this.game.raiseEvent('onDefendersDeclared', { conflict: this.conflict });
+        this.game.raiseEvent('onDefendersDeclared', { conflict: this.conflict, defenders: this.conflict.defenders.slice() });
     }
 
     openConflictActionWindow() {

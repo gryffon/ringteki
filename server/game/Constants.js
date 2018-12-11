@@ -42,6 +42,7 @@ const EffectNames = {
     DoesNotReady: 'doesNotReady',
     GainAbility: 'gainAbility',
     GainPlayAction: 'gainPlayAction',
+    HideWhenFaceUp: 'hideWhenFaceUp',
     IncreaseLimitOnAbilities: 'increaseLimitOnAbilities',
     ModifyBaseMilitarySkill: 'modifyBaseMilitarySkill',
     ModifyBasePoliticalSkill: 'modifyBasePoliticalSkill',

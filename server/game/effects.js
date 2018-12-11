@@ -78,6 +78,7 @@ const Effects = {
         },
         unapply: (card, context, playAction) => card.abilities.playActions = card.abilities.playActions.filter(action => action !== playAction)
     }),
+    hideWhenFaceUp: () => EffectBuilder.card.static(EffectNames.HideWhenFaceUp),
     immunity: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(properties)),
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseMilitarySkill, value),
