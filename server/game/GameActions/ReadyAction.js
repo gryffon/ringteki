@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class ReadyAction extends CardGameAction {
     setup() {
@@ -17,7 +17,7 @@ class ReadyAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onCardReadied', { card: card, context: context }, () => card.ready());
+        return super.createEvent(EventNames.OnCardReadied, { card: card, context: context }, () => card.ready());
     }
 }
 

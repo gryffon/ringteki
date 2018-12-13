@@ -7,7 +7,7 @@ class CourtOfDeception extends DrawCard {
             title: 'Discard a dishonored character\'s status token',
             condition: context => context.player.honor <= 6,
             target: {
-                cardtype: CardTypes.Character,
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.isDishonored && !card.isParticipating(),
                 gameAction: ability.actions.discardStatusToken()

@@ -1,6 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class ReturnToDeckAction extends CardGameAction {
     setDefaultProperties() {
@@ -29,7 +29,7 @@ class ReturnToDeckAction extends CardGameAction {
         if(card.location === Locations.PlayArea) {
             return new LeavesPlayEvent({ context: context, destination: destination, options: { bottom: this.bottom, shuffle: this.shuffle } }, card, this);
         }
-        return super.createEvent('onMoveCard', { card: card, context: context }, event => {
+        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, event => {
             if(card.location.includes('province')) {
                 event.context.refillProvince(card.controller, card.location, context);
             }

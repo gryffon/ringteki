@@ -3,7 +3,7 @@ const _ = require('underscore');
 const ForcedTriggeredAbilityWindow = require('./forcedtriggeredabilitywindow.js');
 const TriggeredAbilityWindowTitles = require('./triggeredabilitywindowtitles.js');
 
-const { CardTypes } = require('../Constants');
+const { CardTypes, EventNames, AbilityTypes } = require('../Constants');
 
 class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
     constructor(game, abilityType, window, eventsToExclude = []) {
@@ -18,8 +18,8 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
             return true;
         }
         // Show a bluff prompt if we're in Step 6, the player has the approriate setting, and there's an event for the other player
-        return this.abilityType === 'cancelinterrupt' && player.timerSettings.events && _.any(this.events, event => (
-            event.name === 'onCardAbilityInitiated' &&
+        return this.abilityType === AbilityTypes.WouldInterrupt && player.timerSettings.events && _.any(this.events, event => (
+            event.name === EventNames.OnCardAbilityInitiated &&
             event.card.type === CardTypes.Event && event.context.player !== player
         ));
     }
@@ -62,10 +62,10 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
             return true;
         }
         // remove any choices which involve the current player canceling their own abilities
-        if(this.abilityType === 'cancelinterrupt' && !this.currentPlayer.optionSettings.cancelOwnAbilities) {
+        if(this.abilityType === AbilityTypes.WouldInterrupt && !this.currentPlayer.optionSettings.cancelOwnAbilities) {
             this.choices = this.choices.filter(context => !(
                 context.player === this.currentPlayer &&
-                context.event.name === 'onCardAbilityInitiated' &&
+                context.event.name === EventNames.OnCardAbilityInitiated &&
                 context.event.context.player === this.currentPlayer
             ));
         }

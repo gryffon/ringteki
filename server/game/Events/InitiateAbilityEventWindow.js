@@ -2,17 +2,17 @@ const _ = require('underscore');
 
 const EventWindow = require('./EventWindow.js');
 const SimpleStep = require('../gamesteps/simplestep.js');
-const { Locations, PlayTypes } = require('../Constants');
+const { Locations, PlayTypes, EventNames, AbilityTypes } = require('../Constants');
 
 class InitiateAbilityEventWindow extends EventWindow {
     constructor(game, events) {
         super(game, events);
         _.each(this.events, event => {
-            if(event.name === 'onCardAbilityInitiated') {
+            if(event.name === EventNames.OnCardAbilityInitiated) {
                 this.initiateEvent = event;
             }
             if(event.context.ability.isCardPlayed() && !event.context.isResolveAbility) {
-                this.addEvent(this.game.getEvent('onCardPlayed', {
+                this.addEvent(this.game.getEvent(EventNames.OnCardPlayed, {
                     player: event.context.player,
                     card: event.card,
                     originalLocation: Locations.Hand, // TODO: this isn't true with Kyuden Isawa
@@ -20,17 +20,17 @@ class InitiateAbilityEventWindow extends EventWindow {
                 }));
             }
             if(event.context.ability.isTriggeredAbility()) {
-                this.addEvent(this.game.getEvent('onCardAbilityTriggered', { ability: event.context.ability, player: event.context.player, card: event.card }));
+                this.addEvent(this.game.getEvent(EventNames.OnCardAbilityTriggered, { ability: event.context.ability, player: event.context.player, card: event.card }));
             }
         });
     }
 
     initialise() {
         this.pipeline.initialise([
-            new SimpleStep(this.game, () => this.openWindow('cancelinterrupt')),
+            new SimpleStep(this.game, () => this.openWindow(AbilityTypes.WouldInterrupt)),
             new SimpleStep(this.game, () => this.checkForOtherEffects()),
             new SimpleStep(this.game, () => this.checkGameState()),
-            new SimpleStep(this.game, () => this.openWindow('reaction')), // Reactions to this event need to take place before the ability resolves
+            new SimpleStep(this.game, () => this.openWindow(AbilityTypes.Reaction)), // Reactions to this event need to take place before the ability resolves
             new SimpleStep(this.game, () => this.executeHandler())
         ]);
     }
@@ -41,7 +41,7 @@ class InitiateAbilityEventWindow extends EventWindow {
             super.executeHandler();
             return;
         }
-        this.game.raiseEvent('onAbilityResolved', { card: event.context.source, context: event.context, initiateEvent: event }, () => {
+        this.game.raiseEvent(EventNames.OnAbilityResolved, { card: event.context.source, context: event.context, initiateEvent: event }, () => {
             super.executeHandler();
         });
     }

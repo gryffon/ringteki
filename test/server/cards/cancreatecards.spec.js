@@ -11,7 +11,7 @@ const eventNames = [
     'onCardAbilityTriggered',
     'onSelectRingWithFate',
     'onConflictDeclared',
-    'onProvinceRevealed',
+    'onCardRevealed',
     'onDefendersDeclared',
     'afterConflict',
     'onBreakProvince',

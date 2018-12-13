@@ -1,5 +1,5 @@
 const RingAction = require('./RingAction');
-const { Durations } = require('../Constants');
+const { Durations, EventNames } = require('../Constants');
 
 class LastingEffectRingAction extends RingAction {
     setDefaultProperties() {
@@ -22,7 +22,7 @@ class LastingEffectRingAction extends RingAction {
             match: ring,
             until: this.until
         };
-        return super.createEvent('onEffectApplied', { ring: ring, context: context }, event => event.context.source[this.duration](() => properties));
+        return super.createEvent(EventNames.OnEffectApplied, { ring: ring, context: context }, event => event.context.source[this.duration](() => properties));
     }
 }
 

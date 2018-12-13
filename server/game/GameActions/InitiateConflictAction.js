@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class InitiateConflictAction extends PlayerAction {
     setDefaultProperties() {
@@ -28,7 +29,7 @@ class InitiateConflictAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onConflictInitiated', {
+        return super.createEvent(EventNames.OnConflictInitiated, {
             player: player,
             context: context
         }, () => context.game.initiateConflict(player, this.canPass));

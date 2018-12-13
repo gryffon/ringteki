@@ -1,4 +1,5 @@
 const RingAction = require('./RingAction');
+const { EventNames } = require('../Constants');
 
 class TakeFateRingAction extends RingAction {
     setup() {
@@ -16,7 +17,7 @@ class TakeFateRingAction extends RingAction {
     }
 
     getEvent(ring, context) {
-        return this.createEvent('onReturnRing', { ring: ring, context: context }, () => ring.resetRing());
+        return this.createEvent(EventNames.OnReturnRing, { ring: ring, context: context }, () => ring.resetRing());
     }
 }
 

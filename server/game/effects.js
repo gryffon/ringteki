@@ -116,7 +116,7 @@ const Effects = {
     // Ring effects
     addElement: (element) => EffectBuilder.ring.static(EffectNames.AddElement, element),
     cannotBidInDuels: num => EffectBuilder.player.static(EffectNames.CannotBidInDuels, num),
-    cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclare, match), // TODO: Add this to lasting effect checks
+    cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match), // TODO: Add this to lasting effect checks
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match), // TODO: Add this to lasting effect checks
     // Player effects
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible(EffectNames.AdditionalCharactersInConflict, amount),

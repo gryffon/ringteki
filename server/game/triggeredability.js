@@ -38,6 +38,7 @@ class TriggeredAbility extends CardAbility {
         super(game, card, properties);
         this.when = properties.when;
         this.abilityType = abilityType;
+        this.collectiveTrigger = !!properties.collectiveTrigger;
     }
 
     eventHandler(event, window) {

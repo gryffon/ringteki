@@ -1,6 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const LeavesPlayEvent = require('../Events/LeavesPlayEvent');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class ReturnToHandAction extends CardGameAction {
     setDefaultProperties() {
@@ -25,7 +25,7 @@ class ReturnToHandAction extends CardGameAction {
         if(this.location === Locations.PlayArea) {
             return new LeavesPlayEvent({ context: context, destination: Locations.Hand }, card, this);
         }
-        return super.createEvent('onMoveCard', { card: card, context: context }, () => card.owner.moveCard(card, Locations.Hand));
+        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => card.owner.moveCard(card, Locations.Hand));
     }
 }
 

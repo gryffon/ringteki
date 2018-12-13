@@ -9,7 +9,8 @@ const { Locations } = require('../Constants');
 class SetupPhase extends Phase {
     constructor(game) {
         super(game, 'setup');
-        this.initialise([
+        this.game.currentPhase = this.name;
+        this.pipeline.initialise([
             new SimpleStep(game, () => this.setupBegin()),
             new SimpleStep(game, () => this.chooseFirstPlayer()),
             new SimpleStep(game, () => this.attachStronghold()),
@@ -20,11 +21,6 @@ class SetupPhase extends Phase {
             new MulliganConflictPrompt(game),
             new SimpleStep(game, () => this.startGame())
         ]);
-    }
-
-    startPhase() {
-        // Don't raise any events without a determined first player
-        this.game.currentPhase = this.name;
     }
 
     setupBegin() {

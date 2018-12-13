@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class ModifyBidAction extends PlayerAction {
     setDefaultProperties() {
@@ -55,7 +56,7 @@ class ModifyBidAction extends PlayerAction {
             direction: this.direction,
             context: context
         };
-        return super.createEvent('onModifyBid', params, event => {
+        return super.createEvent(EventNames.OnModifyBid, params, event => {
             if(event.direction === 'increase') {
                 player.honorBidModifier += this.amount;
             } else {

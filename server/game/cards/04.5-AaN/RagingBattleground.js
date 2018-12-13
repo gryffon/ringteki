@@ -6,7 +6,7 @@ class RagingBattleground extends ProvinceCard {
         this.reaction({
             title: 'Choose a character to discard',
             when: {
-                onProvinceRevealed: (event, context) => event.card === context.source
+                onCardRevealed: (event, context) => event.card === context.source
             },
             target: {
                 cardType: CardTypes.Character,

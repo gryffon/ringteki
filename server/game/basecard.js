@@ -6,7 +6,7 @@ const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 const TriggeredAbility = require('./triggeredability');
 
-const { Locations, EffectNames, Durations, CardTypes } = require('./Constants');
+const { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } = require('./Constants');
 
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
@@ -59,23 +59,23 @@ class BaseCard extends EffectSource {
     }
 
     reaction(properties) {
-        this.triggeredAbility('reaction', properties);
+        this.triggeredAbility(AbilityTypes.Reaction, properties);
     }
 
     forcedReaction(properties) {
-        this.triggeredAbility('forcedreaction', properties);
+        this.triggeredAbility(AbilityTypes.ForcedReaction, properties);
     }
 
     wouldInterrupt(properties) {
-        this.triggeredAbility('cancelinterrupt', properties);
+        this.triggeredAbility(AbilityTypes.WouldInterrupt, properties);
     }
 
     interrupt(properties) {
-        this.triggeredAbility('interrupt', properties);
+        this.triggeredAbility(AbilityTypes.Interrupt, properties);
     }
 
     forcedInterrupt(properties) {
-        this.triggeredAbility('forcedinterrupt', properties);
+        this.triggeredAbility(AbilityTypes.ForcedInterrupt, properties);
     }
 
     /**
@@ -185,7 +185,7 @@ class BaseCard extends EffectSource {
         if(originalLocation !== targetLocation) {
             this.updateAbilityEvents(originalLocation, targetLocation);
             this.updateEffects(originalLocation, targetLocation);
-            this.game.emitEvent('onCardMoved', { card: this, originalLocation: originalLocation, newLocation: targetLocation });
+            this.game.emitEvent(EventNames.OnCardMoved, { card: this, originalLocation: originalLocation, newLocation: targetLocation });
         }
     }
 
