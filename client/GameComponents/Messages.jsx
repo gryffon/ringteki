@@ -39,6 +39,13 @@ class InnerMessages extends React.Component {
             'unicorn'
         ];
 
+        this.otherIcons = {
+            fate: { className: 'icon-fate', imageSrc: '/img/Fate.png' },
+            honor: { className: 'icon-honor', imageSrc: '/img/Honor.png' },
+            card: { className: 'icon-card', imageSrc: '/img/cards/conflictcardback.jpg' },
+            cards: { className: 'icon-card', imageSrc: '/img/cards/conflictcardback.jpg' }
+        };
+
         this.formatMessageText = this.formatMessageText.bind(this);
 
         this.emoji = new EmojiConvertor();
@@ -132,6 +139,10 @@ class InnerMessages extends React.Component {
             } else if(_.contains(this.iconsClan, fragment)) {
                 return (
                     <span className={ 'icon-clan-' + fragment } key={ index++ } ><span className='hide-text'>{ fragment }</span></span>
+                );
+            } else if(this.otherIcons[fragment]) {
+                return (
+                    <img className={ this.otherIcons[fragment].className } key={ index++ } src={ this.otherIcons[fragment].imageSrc }/>
                 );
             } else if(_.isString(fragment)) {
                 return this.emoji.replace_colons(fragment);

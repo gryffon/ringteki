@@ -575,14 +575,14 @@ class Game extends EventEmitter {
             });
 
             if(card) {
-                this.gameChat.addChatMessage('{0} {1}', player, card);
+                this.gameChat.addChatMessage(player, { message: this.gameChat.formatMessage('{0}', [card])});
 
                 return;
             }
         }
 
         if(!this.isSpectator(player) || !this.spectatorSquelch) {
-            this.gameChat.addChatMessage('{0} {1}', player, message);
+            this.gameChat.addChatMessage(player, message);
         }
     }
 

@@ -16,6 +16,14 @@ class Spectator {
     getRingSelectionState() {
         return {};
     }
+
+    getShortSummary() {
+        return {
+            name: this.name,
+            id: this.id,
+            type: 'spectator'
+        };
+    }
 }
 
 module.exports = Spectator;
