@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class AttachAction extends CardGameAction {
     setDefaultProperties() {
@@ -42,7 +42,7 @@ class AttachAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onCardAttached', { card: this.attachment, parent: card, context: context }, event => {
+        return super.createEvent(EventNames.OnCardAttached, { card: this.attachment, parent: card, context: context }, event => {
             if(event.card.location === Locations.PlayArea) {
                 event.card.parent.removeAttachment(event.card);
             } else {

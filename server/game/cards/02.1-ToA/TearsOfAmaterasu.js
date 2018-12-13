@@ -5,7 +5,7 @@ class TearsOfAmaterasu extends ProvinceCard {
         this.reaction({
             title: 'Gain fate equal to the number of attackers',
             when: {
-                onProvinceRevealed: (event, context) => event.card === context.source
+                onCardRevealed: (event, context) => event.card === context.source
             },
             gameAction: ability.actions.gainFate(() => ({
                 amount: this.game.currentConflict ? this.game.currentConflict.getNumberOfParticipantsFor('attacker') : 0

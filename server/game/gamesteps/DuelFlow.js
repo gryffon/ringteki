@@ -1,5 +1,6 @@
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
+const { EventNames } = require('../Constants');
 
 /**
 D. Duel Timing
@@ -44,18 +45,18 @@ class DuelFlow extends BaseStepWithPipeline {
         if(!this.duel.winner) {
             this.game.addMessage('The duel ends in a draw');
         }
-        this.game.raiseEvent('afterDuel', { duel: this.duel, winner: this.duel.winner, loser: this.duel.loser });
+        this.game.raiseEvent(EventNames.AfterDuel, { duel: this.duel, winner: this.duel.winner, loser: this.duel.loser });
     }
 
     applyDuelResults() {
         if(this.duel.winner) {
-            this.game.raiseEvent('onDuelResolution', { duel: this.duel }, () => this.resolutionHandler(this.duel.winner, this.duel.loser));
+            this.game.raiseEvent(EventNames.OnDuelResolution, { duel: this.duel }, () => this.resolutionHandler(this.duel.winner, this.duel.loser));
         }
     }
 
     cleanUpDuel() {
         this.game.currentDuel = null;
-        this.game.raiseEvent('onDuelFinished', { duel: this.duel });
+        this.game.raiseEvent(EventNames.OnDuelFinished, { duel: this.duel });
     }
 }
 

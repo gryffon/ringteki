@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const GameActions = require('../../GameActions/GameActions');
+const { EventNames, AbilityTypes } = require('../../Constants');
 
 class DisplayOfPower extends DrawCard {
     setupCardAbilities() {
@@ -10,7 +11,7 @@ class DisplayOfPower extends DrawCard {
             },
             cannotBeMirrored: true,
             effect: 'resolve and claim the ring when the ring effect resolves',
-            handler: context => this.game.once('onResolveConflictRing:cancelinterrupt', event => this.onResolveConflictRing(event, context))
+            handler: context => this.game.once(EventNames.OnResolveConflictRing + ':' + AbilityTypes.WouldInterrupt, event => this.onResolveConflictRing(event, context))
         });
     }
 
@@ -21,7 +22,7 @@ class DisplayOfPower extends DrawCard {
         this.game.addMessage('{0} cancels the ring effect and {1} may resolve it and then claims it', context.source, context.player);
         let ring = this.game.currentConflict.ring;
         event.window.addEvent(GameActions.resolveConflictRing().getEvent(ring, context));
-        event.window.addEvent(this.game.getEvent('onClaimRing', { player: this.controller, conflict: event.conflict }, () => ring.claimRing(context.player)));
+        event.window.addEvent(this.game.getEvent(EventNames.OnClaimRing, { player: this.controller, conflict: event.conflict }, () => ring.claimRing(context.player)));
         event.cancel();
     }
 }

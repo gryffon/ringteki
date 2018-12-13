@@ -36,7 +36,7 @@ const ConflictFlow = require('./gamesteps/conflict/conflictflow.js');
 const MenuCommands = require('./MenuCommands');
 const SpiritOfTheRiver = require('./cards/SpiritOfTheRiver');
 
-const { EffectNames, Phases } = require('./Constants');
+const { EffectNames, Phases, EventNames } = require('./Constants');
 
 class Game extends EventEmitter {
     constructor(details, options = {}) {
@@ -807,7 +807,7 @@ class Game extends EventEmitter {
      * @returns {undefined}
      */
     beginRound() {
-        this.raiseEvent('onBeginRound');
+        this.raiseEvent(EventNames.OnBeginRound);
         this.queueStep(new DynastyPhase(this));
         this.queueStep(new DrawPhase(this));
         this.queueStep(new ConflictPhase(this));

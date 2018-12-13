@@ -1,6 +1,6 @@
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
-const { Phases } = require('../Constants');
+const { Phases, EventNames } = require('../Constants');
 
 class Phase extends BaseStepWithPipeline {
     constructor(game, name) {
@@ -15,7 +15,7 @@ class Phase extends BaseStepWithPipeline {
     }
 
     startPhase() {
-        this.game.raiseEvent('onPhaseStarted', { phase: this.name }, () => {
+        this.game.raiseEvent(EventNames.OnPhaseStarted, { phase: this.name }, () => {
             this.game.currentPhase = this.name;
             if(this.name === Phases.Dynasty) {
                 this.game.roundNumber++;
@@ -28,7 +28,7 @@ class Phase extends BaseStepWithPipeline {
     }
 
     endPhase() {
-        this.game.raiseEvent('onPhaseEnded', { phase: this.name });
+        this.game.raiseEvent(EventNames.OnPhaseEnded, { phase: this.name });
         this.game.currentPhase = '';
     }
 }

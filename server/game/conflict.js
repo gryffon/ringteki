@@ -2,7 +2,7 @@ const _ = require('underscore');
 const GameObject = require('./GameObject');
 const Player = require('./player.js');
 const Settings = require('../settings.js');
-const { EffectNames } = require('./Constants');
+const { EffectNames, EventNames } = require('./Constants');
 
 class Conflict extends GameObject {
     constructor(game, attackingPlayer, defendingPlayer, ring = null, conflictProvince = null) {
@@ -270,7 +270,7 @@ class Conflict extends GameObject {
         }
         this.game.recordConflict(this);
         this.game.currentConflict = null;
-        this.game.raiseEvent('onConflictPass', { conflict: this });
+        this.game.raiseEvent(EventNames.OnConflictPass, { conflict: this });
         this.resetCards();
     }
 }

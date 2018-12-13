@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class TransferHonorAction extends PlayerAction {
     setDefaultProperties() {
@@ -24,7 +25,7 @@ class TransferHonorAction extends PlayerAction {
             amount: this.amount,
             afterBid: this.afterBid
         };
-        return super.createEvent('onTransferHonor', params, event => {
+        return super.createEvent(EventNames.OnTransferHonor, params, event => {
             event.player.modifyHonor(-event.amount);
             event.player.opponent.modifyHonor(event.amount);
         });

@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class RefillFaceupAction extends PlayerAction {
     setDefaultProperties() {
@@ -20,7 +21,7 @@ class RefillFaceupAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onRefillProvinceFaceup', { player, context }, () => {
+        return super.createEvent(EventNames.Unnamed, { player, context }, () => {
             if(player.replaceDynastyCard(this.location) !== false) {
                 context.game.queueSimpleStep(() => {
                     let card = player.getDynastyCardInProvince(this.location);

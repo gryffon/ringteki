@@ -1,4 +1,5 @@
 const RingAction = require('./RingAction');
+const { EventNames } = require('../Constants');
 
 class TakeFateRingAction extends RingAction {
     setDefaultProperties() {
@@ -16,7 +17,7 @@ class TakeFateRingAction extends RingAction {
     }
 
     getEvent(ring, context) {
-        return this.createEvent('onTakeRing', { ring: ring, context: context }, () => {
+        return this.createEvent(EventNames.OnTakeRing, { ring: ring, context: context }, () => {
             ring.claimRing(context.player);
             ring.contested = false;
             if(this.takeFate && context.player.checkRestrictions('takeFateFromRings', context)) {

@@ -6,7 +6,7 @@ class FloodedWaste extends ProvinceCard {
         this.reaction({
             title: 'Bow each attacking character',
             when: {
-                onProvinceRevealed: (event, context) => event.card === context.source
+                onCardRevealed: (event, context) => event.card === context.source
             },
             gameAction: ability.actions.bow(() => ({
                 target: this.game.findAnyCardsInPlay(card => card.getType() === CardTypes.Character && card.isAttacking())
