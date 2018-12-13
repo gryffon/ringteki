@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const { AbilityTypes } = require('../Constants');
 
 const EventToTitleFunc = {
     onCardAbilityInitiated: event => 'the effects of ' + event.card.name,
@@ -22,8 +23,7 @@ const AbilityTypeToWord = {
     interrupt: 'interrupt',
     reaction: 'reaction',
     forcedreaction: 'forced reaction',
-    forcedinterrupt: 'forced interrupt',
-    whenrevealed: 'when revealed'
+    forcedinterrupt: 'forced interrupt'
 };
 
 function FormatTitles(titles) {
@@ -50,7 +50,7 @@ const AbilityWindowTitles = {
             }
         }), string => string);
 
-        if(['forcedreaction', 'forcedinterrupt', 'whenrevealed'].includes(abilityType)) {
+        if(abilityType === AbilityTypes.ForcedReaction || abilityType === AbilityTypes.ForcedInterrupt) {
             if(titles.length > 0) {
                 return 'Choose ' + abilityWord + ' order for ' + FormatTitles(titles);
             }

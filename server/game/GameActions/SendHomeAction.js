@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { CardTypes } = require('../Constants');
+const { CardTypes, EventNames } = require('../Constants');
 
 class SendHomeAction extends CardGameAction {
     setup() {
@@ -16,7 +16,7 @@ class SendHomeAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onSendHome', { card: card, context: context }, () => context.game.currentConflict.removeFromConflict(card));
+        return super.createEvent(EventNames.OnSendHome, { card: card, context: context }, () => context.game.currentConflict.removeFromConflict(card));
     }
 }
 

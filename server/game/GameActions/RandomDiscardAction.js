@@ -1,5 +1,5 @@
 const PlayerAction = require('./PlayerAction');
-const { Locations, Players, TargetModes } = require('../Constants');
+const { Locations, Players, TargetModes, EventNames } = require('../Constants');
 
 class RandomDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -19,7 +19,7 @@ class RandomDiscardAction extends PlayerAction {
     getEvent(player, context) {
         let amount = Math.min(this.amount, player.hand.size());
         let cards = player.hand.shuffle().slice(0, amount);
-        return super.createEvent('onCardsDiscardedFromHand', { player: player, cards: cards, context: context }, event => {
+        return super.createEvent(EventNames.OnCardsDiscardedFromHand, { player: player, cards: cards, context: context }, event => {
             if(event.cards.length === 0) {
                 return;
             }

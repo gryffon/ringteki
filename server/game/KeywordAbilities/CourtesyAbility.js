@@ -1,8 +1,9 @@
 const TriggeredAbility = require('../triggeredability.js');
+const { AbilityTypes } = require('../Constants');
 
 class CourtesyAbility extends TriggeredAbility {
     constructor(game, card) {
-        super(game, card, 'forcedinterrupt', {
+        super(game, card, AbilityTypes.ForcedInterrupt, {
             when: {
                 onCardLeavesPlay: (event, context) => event.card === context.source &&
                                                       context.source.hasCourtesy()

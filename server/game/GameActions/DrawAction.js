@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class DrawAction extends PlayerAction {
     setDefaultProperties() {
@@ -20,7 +21,7 @@ class DrawAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onDrawCards', {
+        return super.createEvent(EventNames.OnCardsDrawn, {
             player: player,
             amount: this.amount,
             context: context

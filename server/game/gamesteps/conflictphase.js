@@ -4,7 +4,7 @@ const Conflict = require('../conflict.js');
 const ActionWindow = require('./actionwindow.js');
 const GameActions = require('../GameActions/GameActions');
 
-const { Phases } = require('../Constants');
+const { Phases, EventNames } = require('../Constants');
 
 /*
 III Conflict Phase
@@ -67,7 +67,7 @@ class ConflictPhase extends Phase {
         if(winner.opponent) {
             if(gloryTotals[0] === gloryTotals[1]) {
                 this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', gloryTotals[0]);
-                this.game.raiseEvent('onFavorGloryTied');
+                this.game.raiseEvent(EventNames.OnFavorGloryTied);
                 return;
             } else if(gloryTotals[0] < gloryTotals[1]) {
                 winner = winner.opponent;

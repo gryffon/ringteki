@@ -5,7 +5,7 @@ class NightRaid extends ProvinceCard {
         this.reaction({
             title: 'Force opponent to discard cards equal to the number of attackers',
             when: {
-                onProvinceRevealed: (event, context) => event.card === context.source
+                onCardRevealed: (event, context) => event.card === context.source
             },
             gameAction: ability.actions.chosenDiscard(() => ({
                 amount: this.game.currentConflict ? this.game.currentConflict.getNumberOfParticipantsFor('attacker') : 0

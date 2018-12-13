@@ -140,6 +140,79 @@ const PlayTypes = {
     PlayFromProvince: 'playFromProvince'
 };
 
+const EventNames = {
+    OnMoveFate: 'onMoveFate',
+    OnBeginRound: 'onBeginRound',
+    OnCharacterEntersPlay: 'onCharacterEntersPlay',
+    OnCardAbilityInitiated: 'onCardAbilityInitiated',
+    OnCardAbilityTriggered: 'onCardAbilityTriggered',
+    OnConflictInitiated: 'onConflictInitiated',
+    OnSelectRingWithFate: 'onSelectRingWithFate',
+    OnConflictDeclared: 'onConflictDeclared',
+    OnCardRevealed: 'onCardRevealed',
+    OnDefendersDeclared: 'onDefendersDeclared',
+    AfterConflict: 'afterConflict',
+    OnBreakProvince: 'onBreakProvince',
+    OnResolveConflictRing: 'onResolveConflictRing',
+    OnResolveRingElement: 'onResolveRingElement',
+    OnClaimRing: 'onClaimRing',
+    OnReturnHome: 'onReturnHome',
+    OnParticipantsReturnHome: 'onParticipantsReturnHome',
+    OnConflictFinished: 'onConflictFinished',
+    OnConflictPass: 'onConflictPass',
+    OnFavorGloryTied: 'onFavorGloryTied',
+    OnPlaceFateOnUnclaimedRings: 'onPlaceFateOnUnclaimedRings',
+    OnHonorDialsRevealed: 'onHonorDialsRevealed',
+    OnPhaseStarted: 'onPhaseStarted',
+    OnPhaseEnded: 'onPhaseEnded',
+    OnReturnRing: 'onReturnRing',
+    OnPassFirstPlayer: 'onPassFirstPlayer',
+    OnRoundEnded: 'onRoundEnded',
+    OnIncomeCollected: 'onIncomeCollected',
+    OnCardAttached: 'onCardAttached',
+    OnCardHonored: 'onCardHonored',
+    OnCardDishonored: 'onCardDishonored',
+    OnCardBowed: 'onCardBowed',
+    OnCardReadied: 'onCardReadied',
+    OnCardsDiscarded: 'onCardsDiscarded',
+    OnCardsDiscardedFromHand:'onCardsDiscardedFromHand',
+    OnCardLeavesPlay: 'onCardLeavesPlay',
+    OnMoveToConflict: 'onMoveToConflict',
+    OnSendHome: 'onSendHome',
+    OnCardPlayed: 'onCardPlayed',
+    OnDeckShuffled: 'onDeckShuffled',
+    AfterDuel: 'afterDuel',
+    OnDuelResolution: 'onDuelResolution',
+    OnDuelFinished: 'onDuelFinished',
+    OnDynastyCardTurnedFaceup: 'onDynastyCardTurnedFaceup',
+    OnTransferHonor: 'onTransferHonor',
+    OnPassDuringDynasty: 'onPassDuringDynasty',
+    OnModifyHonor: 'onModifyHonor',
+    OnAbilityResolved: 'onAbilityResolved',
+    OnResolveFateCost: 'onResolveFateCost',
+    OnCardMoved: 'onCardMoved',
+    OnDeckSearch: 'onDeckSearch',
+    OnEffectApplied: 'onEffectApplied',
+    OnDiscardFavor: 'onDiscardFavor',
+    OnCardStatusDiscarded: 'onCardStatusDiscarded',
+    OnCardsDrawn: 'onCardsDrawn',
+    OnLookAtCards: 'onLookAtCards',
+    OnModifyBid: 'onModifyBid',
+    OnModifyFate: 'onModifyFate',
+    OnSetHonorDial: 'onSetHonorDial',
+    OnTakeRing: 'onTakeRing',
+    Unnamed: 'unnamedEvent'
+};
+
+const AbilityTypes = {
+    WouldInterrupt: 'cancelinterrupt',
+    ForcedInterrupt: 'forcedinterrupt',
+    Interrupt: 'interrupt',
+    ForcedReaction: 'forcedreaction',
+    Reaction: 'reaction',
+    OtherEffects: 'OtherEffects'
+};
+
 module.exports = {
     Locations,
     Decks,
@@ -150,5 +223,7 @@ module.exports = {
     TargetModes,
     Phases,
     CardTypes,
-    PlayTypes
+    PlayTypes,
+    EventNames,
+    AbilityTypes
 };

@@ -2,7 +2,7 @@ const _ = require('underscore');
 const Phase = require('./phase.js');
 const ActionWindow = require('./actionwindow.js');
 const SimpleStep = require('./simplestep.js');
-const { Players, Phases, CardTypes } = require('../Constants');
+const { Players, Phases, CardTypes, EventNames } = require('../Constants');
 
 /*
 IV Fate Phase
@@ -63,7 +63,7 @@ class FatePhase extends Phase {
     }
 
     placeFateOnUnclaimedRings() {
-        this.game.raiseEvent('onPlaceFateOnUnclaimedRings', {}, () => {
+        this.game.raiseEvent(EventNames.OnPlaceFateOnUnclaimedRings, {}, () => {
             _.each(this.game.rings, ring => {
                 if(!ring.claimed) {
                     ring.modifyFate(1);

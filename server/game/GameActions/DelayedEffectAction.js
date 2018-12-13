@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, EventNames } = require('../Constants');
 
 class DelayedEffectAction extends CardGameAction {
     setDefaultProperties() {
@@ -31,7 +31,7 @@ class DelayedEffectAction extends CardGameAction {
             target: card,
             context: context
         };
-        return super.createEvent('onEffectApplied', { card: card, context: context }, event => event.context.source.delayedEffect(() => properties));
+        return super.createEvent(EventNames.OnEffectApplied, { card: card, context: context }, event => event.context.source.delayedEffect(() => properties));
     }
 }
 

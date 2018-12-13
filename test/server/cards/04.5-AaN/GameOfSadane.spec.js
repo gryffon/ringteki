@@ -119,11 +119,13 @@ describe('Game Of Sadane', function() {
                 this.player2.clickCard(this.prodigyOfTheWaves);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('3');
-                this.player2.pass();
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.kakitaBlade);
+                expect(this.player2).not.toBeAbleToSelect(this.savvyPolitician);
                 this.player2.clickCard(this.kakitaBlade);
                 expect(this.player2.honor).toBe(10);
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.savvyPolitician);
             });
 
             it('should do nothing if the duel is a tie', function() {

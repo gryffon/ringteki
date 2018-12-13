@@ -1,9 +1,9 @@
 const Event = require('./Event.js');
-const { CardTypes } = require('../Constants');
+const { CardTypes, EventNames } = require('../Constants');
 
 class MoveFateEvent extends Event {
     constructor(params, fate, origin, recipient, gameAction) {
-        super('onMoveFate', params);
+        super(EventNames.OnMoveFate, params);
         this.handler = this.moveFate;
         this.origin = origin;
         this.recipient = recipient;

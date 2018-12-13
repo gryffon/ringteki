@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, CardTypes } = require('../../Constants');
+const { Locations, CardTypes, EventNames } = require('../../Constants');
 
 class KitsukiYaruma extends DrawCard {
     setupCardAbilities() {
@@ -19,7 +19,7 @@ class KitsukiYaruma extends DrawCard {
                 if(context.target.isConflictProvince()) {
                     this.game.addMessage('{0} is immediately revealed again!', context.target);
                     context.target.inConflict = true;
-                    this.game.raiseEvent('onProvinceRevealed', { context: context, card: context.target });
+                    this.game.raiseEvent(EventNames.OnCardRevealed, { context: context, card: context.target });
                 } else {
                     context.target.facedown = true;
                 }

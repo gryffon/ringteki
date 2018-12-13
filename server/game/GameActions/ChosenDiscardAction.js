@@ -1,5 +1,5 @@
 const PlayerAction = require('./PlayerAction');
-const { Locations, Players, TargetModes } = require('../Constants');
+const { Locations, Players, TargetModes, EventNames } = require('../Constants');
 
 class ChosenDiscardAction extends PlayerAction {
     setDefaultProperties() {
@@ -44,7 +44,7 @@ class ChosenDiscardAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onCardsDiscardedFromHand', { player: player, cards: this.cards[player.uuid], context: context }, event => {
+        return super.createEvent(EventNames.OnCardsDiscardedFromHand, { player: player, cards: this.cards[player.uuid], context: context }, event => {
             for(let card of event.cards) {
                 player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
             }

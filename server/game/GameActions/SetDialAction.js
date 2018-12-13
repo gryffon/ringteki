@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class SetDialAction extends PlayerAction {
     setDefaultProperties() {
@@ -21,7 +22,7 @@ class SetDialAction extends PlayerAction {
             player: player,
             value: this.value
         };
-        return super.createEvent('onSetHonorDial', params, event => {
+        return super.createEvent(EventNames.OnSetHonorDial, params, event => {
             event.player.setShowBid(event.value);
         });
     }

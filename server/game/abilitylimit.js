@@ -1,3 +1,5 @@
+const { EventNames } = require('./Constants');
+
 class FixedAbilityLimit {
     constructor(max) {
         this.max = max;
@@ -61,7 +63,7 @@ class RepeatableAbilityLimit extends FixedAbilityLimit {
 
 class DefaultAbilityLimit extends RepeatableAbilityLimit {
     constructor() {
-        super(1, 'onRoundEnded');
+        super(1, EventNames.OnRoundEnded);
     }
 
     isAtMax() {
@@ -80,19 +82,19 @@ AbilityLimit.repeatable = function(max, eventName) {
 };
 
 AbilityLimit.perConflict = function(max) {
-    return new RepeatableAbilityLimit(max, 'onConflictFinished');
+    return new RepeatableAbilityLimit(max, EventNames.OnConflictFinished);
 };
 
 AbilityLimit.perPhase = function(max) {
-    return new RepeatableAbilityLimit(max, 'onPhaseEnded');
+    return new RepeatableAbilityLimit(max, EventNames.OnPhaseEnded);
 };
 
 AbilityLimit.perRound = function(max) {
-    return new RepeatableAbilityLimit(max, 'onRoundEnded');
+    return new RepeatableAbilityLimit(max, EventNames.OnRoundEnded);
 };
 
 AbilityLimit.unlimitedPerConflict = function() {
-    return new RepeatableAbilityLimit(Infinity, 'onConflictFinished');
+    return new RepeatableAbilityLimit(Infinity, EventNames.OnConflictFinished);
 };
 
 AbilityLimit.default = function() {

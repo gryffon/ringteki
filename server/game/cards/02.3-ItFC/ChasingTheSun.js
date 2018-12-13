@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
-const { Locations, CardTypes } = require('../../Constants');
+const { Locations, CardTypes, EventNames } = require('../../Constants');
 
 class ChasingTheSun extends DrawCard {
     setupCardAbilities() {
@@ -22,7 +22,7 @@ class ChasingTheSun extends DrawCard {
                     this.game.currentConflict.conflictProvince = card;
                     if(card.facedown) {
                         card.facedown = false;
-                        this.game.raiseEvent('onProvinceRevealed', { context: context, card: card });
+                        this.game.raiseEvent(EventNames.OnCardRevealed, { context: context, card: card });
                     }
                     return true;
                 }
