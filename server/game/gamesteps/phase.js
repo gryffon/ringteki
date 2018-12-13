@@ -1,6 +1,6 @@
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
-const { Phases, EventNames } = require('../Constants');
+const { EventNames } = require('../Constants');
 
 class Phase extends BaseStepWithPipeline {
     constructor(game, name) {
