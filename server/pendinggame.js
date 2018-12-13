@@ -18,6 +18,8 @@ class PendingGame {
         this.clocks = details.clocks;
         this.createdAt = new Date();
         this.gameChat = new GameChat();
+        this.node = null;
+        this.started = false;
     }
 
     // Getters

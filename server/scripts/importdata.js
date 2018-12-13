@@ -9,12 +9,12 @@ let db = monk('mongodb://127.0.0.1:27017/ringteki');
 let cardService = new CardService(db);
 let files = fs.readdirSync('fiveringdsdb-data/Pack');
 let totalCards = [];
-let packs = JSON.parse(fs.readFileSync('fiveringdsdb-data/Pack.json'));
-let types = JSON.parse(fs.readFileSync('fiveringdsdb-data/Type.json'));
-let clans = JSON.parse(fs.readFileSync('fiveringdsdb-data/Clan.json'));
+let packs = JSON.parse(fs.readFileSync('fiveringdsdb-data/Pack.json').toString());
+let types = JSON.parse(fs.readFileSync('fiveringdsdb-data/Type.json').toString());
+let clans = JSON.parse(fs.readFileSync('fiveringdsdb-data/Clan.json').toString());
 
 _.each(files, file => {
-    let card = JSON.parse(fs.readFileSync('fiveringdsdb-data/Card/' + file));
+    let card = JSON.parse(fs.readFileSync('fiveringdsdb-data/Card/' + file).toString());
 
     totalCards = totalCards.concat(card);
 });
