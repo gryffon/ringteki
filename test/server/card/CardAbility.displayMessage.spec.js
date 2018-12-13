@@ -9,10 +9,8 @@ describe('CardAbility displayMessage', function() {
         this.player = {
             name: 'Player 1'
         };
-        this.cardSpy = jasmine.createSpyObj('card', ['getType', 'getShortSummary']);
-        this.cardSummary = { name: 'card' };
+        this.cardSpy = jasmine.createSpyObj('card', ['getType']);
         this.cardSpy.type = 'event';
-        this.cardSpy.getShortSummary.and.returnValue(this.cardSummary);
     });
 
     describe('Assassinaton', function() {
