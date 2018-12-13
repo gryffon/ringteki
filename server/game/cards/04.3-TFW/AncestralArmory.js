@@ -7,7 +7,7 @@ class AncestralArmory extends DrawCard {
             title: 'Return a weapon attachment in your conflict discard pile to your hand',
             cost: ability.costs.sacrificeSelf(),
             target: {
-                activePrompt: 'Choose a weapon attachment from your conflict discard pile',
+                activePromptTitle: 'Choose a weapon attachment from your conflict discard pile',
                 cardCondition: card => card.hasTrait('weapon'),
                 location: [Locations.ConflictDiscardPile],
                 controller: Players.Self,

@@ -40,7 +40,7 @@ class CannotRestriction {
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
         }
-        let player = this.player || this.context.source && this.context.source.controller;
+        let player = this.context.player || this.context.source && this.context.source.controller;
         return checkRestrictions[this.restriction](context, player, this.context.source, this.params);
     }
 }
