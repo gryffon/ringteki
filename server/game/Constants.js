@@ -163,6 +163,7 @@ const EventNames = {
     OnFavorGloryTied: 'onFavorGloryTied',
     OnPlaceFateOnUnclaimedRings: 'onPlaceFateOnUnclaimedRings',
     OnHonorDialsRevealed: 'onHonorDialsRevealed',
+    OnPhaseCreated: 'onPhaseCreated',
     OnPhaseStarted: 'onPhaseStarted',
     OnPhaseEnded: 'onPhaseEnded',
     OnReturnRing: 'onReturnRing',
