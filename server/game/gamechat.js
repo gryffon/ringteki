@@ -1,6 +1,8 @@
 const _ = require('underscore');
 
+const GameObject = require('./GameObject');
 const Spectator = require('./spectator.js');
+const Player = require('./player.js');
 
 class GameChat {
     constructor() {
@@ -19,7 +21,7 @@ class GameChat {
         var argList = [];
 
         args = _.reduce(args, (argList, arg) => {
-            if(arg.type === 'player') {
+            if(arg instanceof Player) {
                 argList.push(arg.name);
             } else {
                 argList.push(arg);
@@ -57,9 +59,9 @@ class GameChat {
                 if(!_.isUndefined(arg) && !_.isNull(arg)) {
                     if(_.isArray(arg)) {
                         return this.formatArray(arg);
-                    } else if((arg.type === 'player') || arg instanceof Spectator) {
+                    } else if((arg instanceof Player) || (arg instanceof Spectator)) {
                         return { name: arg.user.username, emailHash: arg.user.emailHash, noAvatar: arg.user.settings.disableGravatar };
-                    } else if(arg.getShortSummary) {
+                    } else if(arg instanceof GameObject) {
                         return arg.getShortSummary();
                     }
                     return arg;

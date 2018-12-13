@@ -139,7 +139,6 @@ describe('Akodo Toturi 2', function() {
                         expect(this.player1).not.toHavePrompt('Conflict Action Window');
                     });
 
-                    /*
                     it('should not prevent playing a character from back-alley hideaway', function() {
                         expect(this.sinisterSoshi.location).toBe('backalley hideaway');
                         this.player2.clickCard(this.sinisterSoshi);
@@ -147,7 +146,6 @@ describe('Akodo Toturi 2', function() {
                         this.player2.clickPrompt('0');
                         expect(this.sinisterSoshi.location).toBe('play area');
                     });
-                    */
 
                     it('should prevent playing a card from Artisan Academy ', function() {
                         this.player2.moveCard(this.fineKatana2, 'conflict deck');
