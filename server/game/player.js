@@ -255,6 +255,16 @@ class Player extends GameObject {
     }
 
     /**
+     * Returns the total number of faceup non-stronghold province cards controlled by this player
+     * @param {Function} predicate (card) => return boolean
+     * */
+    getNumberOfFaceupProvinces(predicate) {
+        return provinceLocations.reduce((n, province) => {
+            return this.getSourceList(province).filter(card => card.getType() === CardTypes.Province && !card.facedown && predicate(card)).length + n;
+        }, 0);
+    }
+
+    /**
      * Returns the total number of characters and attachments controlled by this player which match the passed predicate
      * @param {Function} predicate - DrawCard => Int
      */
