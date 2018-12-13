@@ -134,9 +134,11 @@ describe('Ide Trader', function() {
                     player1: {
                         fate: 2,
                         inPlay: ['seppun-guardsman', 'ide-trader', 'shinjo-tatsuo'],
-                        hand: ['seal-of-the-dragon', 'way-of-the-dragon']
+                        hand: ['seal-of-the-dragon', 'way-of-the-dragon'],
+                        dynastyDiscard: ['favorable-ground']
                     }
                 });
+                this.favorableGround = this.player1.placeCardInProvince('favorable-ground');
                 this.ideTrader = this.player1.findCardByName('ide-trader');
                 this.sealOfTheDragon = this.player1.playAttachment('seal-of-the-dragon', this.ideTrader);
                 this.player2.pass();
@@ -147,6 +149,33 @@ describe('Ide Trader', function() {
                     defenders: []
                 });
                 this.player2.pass();
+            });
+
+            it('if they move separately, Ide Trader\'s ability should trigger twice', function() {
+                expect(this.ideTrader.attachments.toArray()).toContain(this.sealOfTheDragon);
+                expect(this.ideTrader.attachments.toArray()).toContain(this.wayOfTheDragon);
+                expect(this.player1.fate).toBe(0);
+                this.player1.clickCard(this.favorableGround);
+                this.player1.clickCard(this.ideTrader);
+                expect(this.ideTrader.inConflict).toBe(true);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.ideTrader);
+                this.player1.clickCard(this.ideTrader);
+                expect(this.player1).toHavePrompt('Ide Trader');
+                this.player1.clickPrompt('Gain 1 fate');
+                expect(this.player1.fate).toBe(1);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.pass();
+                this.shinjoTatsuo = this.player1.clickCard('shinjo-tatsuo');
+                expect(this.player1).toHavePrompt('Shinjo Tatsuo');
+                this.player1.clickPrompt('No More Targets');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.ideTrader);
+                this.player1.clickCard(this.ideTrader);
+                expect(this.player1).toHavePrompt('Ide Trader');
+                this.player1.clickPrompt('Gain 1 fate');
+                expect(this.player1.fate).toBe(2);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
             it('Ide Trader\'s ability should only trigger once', function() {
