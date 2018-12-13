@@ -126,7 +126,7 @@ describe('Karada District', function() {
             });
 
             describe('if the attachment has been used already this turn', function() {
-                it('should not be usable by the other player', function() {
+                it('should be usable by the other player', function() {
                     this.adeptOfTheWaves = this.player1.findCardByName('adept-of-the-waves');
                     this.oniMask = this.player1.playAttachment('oni-mask', 'adept-of-the-waves');
                     this.adeptOfTheWaves.fate = 1;
@@ -147,7 +147,7 @@ describe('Karada District', function() {
                     expect(this.miyaMystic.attachments.toArray()).toContain(this.oniMask);
                     this.player1.clickPrompt('Pass');
                     this.player2.clickCard(this.oniMask);
-                    expect(this.player2).not.toHavePrompt('Oni Mask');
+                    expect(this.player2).toHavePrompt('Oni Mask');
                 });
             });
 

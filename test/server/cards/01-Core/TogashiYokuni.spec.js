@@ -146,33 +146,14 @@ describe('Togashi Yokuni', function() {
                 });
             });
 
-            it('should allow Yokuni to return to hand and be played as a conflict char', function() {
+            it('should not allow Yokuni to return to hand and should discard him instead', function() {
                 this.adept = this.player1.playCharacterFromHand('adept-of-shadows');
                 this.player2.pass();
                 this.togashiYokuni = this.player1.clickCard('togashi-yokuni');
                 this.player1.clickCard(this.adept);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
-                expect(this.togashiYokuni.location).toBe('hand');
-                this.player2.pass();
-                this.player1.playCharacterFromHand(this.togashiYokuni);
-                expect(this.togashiYokuni.location).toBe('play area');
-            });
-
-            it('should not allow Yokuni to return to hand and use his ability again', function() {
-                this.adept = this.player1.playCharacterFromHand('adept-of-shadows');
-                this.player2.pass();
-                this.togashiYokuni = this.player1.clickCard('togashi-yokuni');
-                this.player1.clickCard(this.adept);
-                this.player2.pass();
-                this.player1.clickCard(this.togashiYokuni);
-                expect(this.togashiYokuni.location).toBe('hand');
-                this.player2.pass();
-                this.player1.playCharacterFromHand(this.togashiYokuni);
-                expect(this.togashiYokuni.location).toBe('play area');
-                this.player2.pass();
-                this.togashiYokuni = this.player1.clickCard('togashi-yokuni');
-                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.togashiYokuni.location).toBe('dynasty discard pile');
             });
         });
 

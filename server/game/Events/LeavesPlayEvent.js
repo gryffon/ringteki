@@ -50,6 +50,10 @@ class LeavesPlayEvent extends Event {
         if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(this.card.location)) {
             this.context.refillProvince(this.context.player, this.card.location);
         }
+        if(!this.card.owner.isLegalLocationForCard(this.card, this.destination)) {
+            this.card.game.addMessage('{0} is not a legal location for {1} and it is discarded', this.destination, this.card);
+            this.destination = this.card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
+        }
         this.card.owner.moveCard(this.card, this.destination, this.options);
         if(this.options.shuffle) {
             if(this.destination === Locations.DynastyDeck) {

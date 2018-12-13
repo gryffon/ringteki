@@ -38,6 +38,8 @@ describe('Player', function() {
             });
 
             it('should add the card to the player dynasty discard pile', function() {
+                this.card.isDynasty = true;
+                this.card.isConflict = false;
                 this.player.moveCard(this.card, 'dynasty discard pile');
                 expect(this.player.dynastyDiscardPile).toContain(this.card);
                 expect(this.card.location).toBe('dynasty discard pile');
