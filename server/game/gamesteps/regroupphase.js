@@ -4,7 +4,7 @@ const SimpleStep = require('./simplestep.js');
 const ActionWindow = require('./actionwindow.js');
 const EndRoundPrompt = require('./regroup/endroundprompt.js');
 const GameActions = require('../GameActions/GameActions');
-const { Locations, Players, Phases } = require('../Constants');
+const { Locations, Players, Phases, EventNames } = require('../Constants');
 
 /*
 V Regroup Phase
@@ -92,7 +92,10 @@ class RegroupPhase extends Phase {
 
         this.game.queueSimpleStep(() => {
             for(let location of [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour]) {
-                player.replaceDynastyCard(location);
+                this.game.queueSimpleStep(() => {
+                    player.replaceDynastyCard(location);
+                    return true;
+                });
             }
         });
     }
@@ -105,12 +108,12 @@ class RegroupPhase extends Phase {
         let firstPlayer = this.game.getFirstPlayer();
         let otherPlayer = this.game.getOtherPlayer(firstPlayer);
         if(otherPlayer) {
-            this.game.raiseEvent('onPassFirstPlayer', { player: otherPlayer }, () => this.game.setFirstPlayer(otherPlayer));
+            this.game.raiseEvent(EventNames.OnPassFirstPlayer, { player: otherPlayer }, () => this.game.setFirstPlayer(otherPlayer));
         }
     }
 
     roundEnded() {
-        this.game.raiseEvent('onRoundEnded');
+        this.game.raiseEvent(EventNames.OnRoundEnded);
     }
 
 }

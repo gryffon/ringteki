@@ -24,7 +24,9 @@ class PeasantsAdvice extends DrawCard {
                         }
                     }))
                 ])
-            }
+            },
+            effect: 'look at {1}\'s {2}',
+            effectArgs: context => [context.target.controller, context.target.location]
         });
     }
 }

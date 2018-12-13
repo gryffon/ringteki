@@ -28,8 +28,12 @@ class StolenSecrets extends DrawCard {
                 onCardMoved: event => event.card === card && event.originalLocation === Locations.RemovedFromGame
             },
             match: card,
-            effect: ability.effects.canPlayFromOwn(Locations.RemovedFromGame, [card])
+            effect: [
+                ability.effects.hideWhenFaceUp(),
+                ability.effects.canPlayFromOwn(Locations.RemovedFromGame, [card])
+            ]
         }));
+        this.game.checkGameState();
         if(remainingCards.length > 1) {
             this.rearrangePrompt(context, remainingCards, [], 'Which card do you want to be on top?');
         }

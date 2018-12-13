@@ -1,4 +1,5 @@
 const ActionWindow = require('../actionwindow.js');
+const { EventNames } = require('../../Constants');
 
 class DynastyActionWindow extends ActionWindow {
     constructor(game) {
@@ -18,10 +19,10 @@ class DynastyActionWindow extends ActionWindow {
         this.currentPlayer.passDynasty();
         if(!this.currentPlayer.opponent || !this.currentPlayer.opponent.passedDynasty) {
             this.game.addMessage('{0} is the first to pass, and gains 1 fate', this.currentPlayer);
-            this.game.raiseEvent('onPassDuringDynasty', { player: this.currentPlayer, firstToPass: true }, event => event.player.modifyFate(1));
+            this.game.raiseEvent(EventNames.OnPassDuringDynasty, { player: this.currentPlayer, firstToPass: true }, event => event.player.modifyFate(1));
         } else {
             this.game.addMessage('{0} passes', this.currentPlayer);
-            this.game.raiseEvent('onPassDuringDynasty', { player: this.currentPlayer, firstToPass: false });
+            this.game.raiseEvent(EventNames.OnPassDuringDynasty, { player: this.currentPlayer, firstToPass: false });
         }
         if(!this.currentPlayer.opponent || this.currentPlayer.opponent.passedDynasty) {
             this.complete();

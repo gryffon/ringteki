@@ -1,7 +1,7 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const AttachAction = require('./GameActions/AttachAction');
-const { Phases, PlayTypes } = require('./Constants');
+const { Phases, PlayTypes, EventNames } = require('./Constants');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card) {
@@ -33,7 +33,7 @@ class PlayAttachmentAction extends BaseAction {
     }
 
     executeHandler(context) {
-        let cardPlayedEvent = context.game.getEvent('onCardPlayed', {
+        let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
             originalLocation: context.source.location,

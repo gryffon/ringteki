@@ -1,6 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const AbilityResolver = require('../gamesteps/abilityresolver');
-const { Locations, CardTypes, PlayTypes } = require('../Constants');
+const { Locations, CardTypes, PlayTypes, EventNames } = require('../Constants');
 
 class PlayCardResolver extends AbilityResolver {
     constructor(game, context, playGameAction, gameActionContext) {
@@ -90,7 +90,7 @@ class PlayCardAction extends CardGameAction {
 
     getEvent(card, context) {
         let playContext = this.action.createContext(context.player);
-        return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
+        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
             context.game.queueStep(new PlayCardResolver(context.game, playContext, this, context));
         });
     }

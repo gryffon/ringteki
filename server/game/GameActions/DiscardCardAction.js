@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations } = require('../Constants');
+const { Locations, EventNames } = require('../Constants');
 
 class DiscardCardAction extends CardGameAction {
     setup() {
@@ -21,7 +21,7 @@ class DiscardCardAction extends CardGameAction {
         if(this.target.length === 0) {
             return [];
         }
-        return [this.createEvent('onCardsDiscarded', { player: this.target[0].controller, cards: this.target, context: context }, event => {
+        return [this.createEvent(EventNames.OnCardsDiscarded, { player: this.target[0].controller, cards: this.target, context: context }, event => {
             for(const card of event.cards) {
                 if(card.location.includes('province')) {
                     event.context.refillProvince(card.controller, card.location);
@@ -32,7 +32,7 @@ class DiscardCardAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onCardsDiscarded', { player: card.controller, cards: [card], context: context }, event => {
+        return super.createEvent(EventNames.OnCardsDiscarded, { player: card.controller, cards: [card], context: context }, event => {
             if(card.location.includes('province')) {
                 event.context.refillProvince(card.controller, card.location);
             }

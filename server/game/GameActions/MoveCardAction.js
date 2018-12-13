@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class MoveCardAction extends CardGameAction {
     setDefaultProperties() {
@@ -23,7 +23,7 @@ class MoveCardAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onMoveCard', { card: card, context: context }, event => {
+        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, event => {
             if(this.switch) {
                 let otherCard = card.controller.getDynastyCardInProvince(this.destination);
                 context.player.moveCard(otherCard, card.location);

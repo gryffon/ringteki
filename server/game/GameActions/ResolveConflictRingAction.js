@@ -1,5 +1,6 @@
 const RingAction = require('./RingAction');
 const ResolveElementAction = require('./ResolveElementAction');
+const { EventNames } = require('../Constants');
 
 class ResolveConflictRingAction extends RingAction {
     setDefaultProperties() {
@@ -19,7 +20,7 @@ class ResolveConflictRingAction extends RingAction {
         }
         let player = this.resolveAsAttacker ? context.player : context.game.currentConflict.attackingPlayer;
         let elements = ring.getElements();
-        return super.createEvent('onResolveConflictRing', { player: player, conflict: conflict, ring: ring, context: context }, () => {
+        return super.createEvent(EventNames.OnResolveConflictRing, { player: player, conflict: conflict, ring: ring, context: context }, () => {
             if(elements.length === 1 || (!this.resolveAsAttacker && conflict.elementsToResolve >= elements.length)) {
                 this.resolveRingEffects(player, elements, this.resolveAsAttacker);
             } else {

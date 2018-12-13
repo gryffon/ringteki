@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, AbilityTypes } = require('../../Constants');
 
 class HirumaOutpost extends DrawCard {
     setupCardAbilities(ability) {
         this.grantedAbilityLimits = {};
         this.persistentEffect({
             condition: context => !context.player.getProvinceCardInProvince(context.source.location).isBroken,
-            effect: ability.effects.gainAbility('reaction', {
+            effect: ability.effects.gainAbility(AbilityTypes.Reaction, {
                 title: 'Make opponent lose an honor',
                 when: {
                     onConflictDeclared: (event, context) => {

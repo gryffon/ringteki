@@ -8,7 +8,7 @@ class IdeTrader extends DrawCard {
             when: {
                 onMoveToConflict: (event, context) => context.source.isParticipating()
             },
-            multipleTrigger: false,
+            collectiveTrigger: true,
             limit: ability.limit.perConflict(1),
             target: {
                 mode: TargetModes.Select,

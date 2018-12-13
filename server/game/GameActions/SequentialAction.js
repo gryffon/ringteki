@@ -1,4 +1,5 @@
 const GameAction = require('./GameAction');
+const { EventNames } = require('../Constants');
 
 class SequentialAction extends GameAction {
     constructor(gameActions) {
@@ -39,7 +40,7 @@ class SequentialAction extends GameAction {
     }
 
     getEventArray(context) {
-        return [super.createEvent('unnamedEvent', {}, () => {
+        return [super.createEvent(EventNames.Unnamed, {}, () => {
             for(let action of this.gameActions) {
                 context.game.queueSimpleStep(() => action.preEventHandler(context));
                 context.game.queueSimpleStep(() => context.game.openEventWindow(action.getEventArray(context)));

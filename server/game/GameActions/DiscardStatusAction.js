@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class DiscardStatusAction extends CardGameAction {
     setup() {
@@ -16,7 +16,7 @@ class DiscardStatusAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onCardStatusDiscarded', { card: card, context: context }, () => {
+        return super.createEvent(EventNames.OnCardStatusDiscarded, { card: card, context: context }, () => {
             card.isHonored = false;
             card.isDishonored = false;
         });

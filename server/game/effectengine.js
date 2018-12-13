@@ -1,13 +1,13 @@
 const _ = require('underscore');
 
 const EventRegistrar = require('./eventregistrar.js');
-const { Locations, Durations } = require('./Constants');
+const { Locations, Durations, EventNames } = require('./Constants');
 
 class EffectEngine {
     constructor(game) {
         this.game = game;
         this.events = new EventRegistrar(game, this);
-        this.events.register(['onConflictFinished', 'onPhaseEnded', 'onRoundEnded', 'onDuelFinished']);
+        this.events.register([EventNames.OnConflictFinished, EventNames.OnPhaseEnded, EventNames.OnRoundEnded, EventNames.OnDuelFinished]);
         this.effects = [];
         this.delayedEffects = [];
         this.terminalConditions = [];
