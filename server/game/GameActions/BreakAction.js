@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { CardTypes } = require('../Constants');
+const { CardTypes, EventNames } = require('../Constants');
 
 class BreakAction extends CardGameAction {
     setup() {
@@ -18,7 +18,7 @@ class BreakAction extends CardGameAction {
 
     getEvent(card, context) {
         let params = { conflict: context.game.currentConflict, card: card, context: context };
-        return super.createEvent('onBreakProvince', params, () => card.breakProvince());
+        return super.createEvent(EventNames.OnBreakProvince, params, () => card.breakProvince());
     }
 }
 

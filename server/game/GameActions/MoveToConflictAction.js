@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class MoveToConflictAction extends CardGameAction {
     setup() {
@@ -26,7 +26,7 @@ class MoveToConflictAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onMoveToConflict', { card: card, context: context }, () => {
+        return super.createEvent(EventNames.OnMoveToConflict, { card: card, context: context }, () => {
             if(card.controller.isAttackingPlayer()) {
                 context.game.currentConflict.addAttacker(card);
             } else {

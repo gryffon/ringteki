@@ -8,7 +8,7 @@ const ConflictActionWindow = require('./conflictactionwindow.js');
 const InitiateConflictPrompt = require('./initiateconflictprompt.js');
 const SelectDefendersPrompt = require('./selectdefendersprompt.js');
 
-const { Players, CardTypes } = require('../../Constants');
+const { Players, CardTypes, EventNames } = require('../../Constants');
 
 /**
 Conflict Resolution
@@ -162,15 +162,16 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        let events = [this.game.getEvent('onConflictDeclared', {
+        let events = [this.game.getEvent(EventNames.OnConflictDeclared, {
             conflict: this.conflict,
             type: this.conflict.conflictType,
-            ring: this.conflict.ring
+            ring: this.conflict.ring,
+            attackers: this.conflict.attackers.slice()
         })];
 
         let ring = this.conflict.ring;
         if(ring.fate > 0) {
-            events.push(this.game.getEvent('onSelectRingWithFate', {
+            events.push(this.game.getEvent(EventNames.OnSelectRingWithFate, {
                 player: this.conflict.attackingPlayer,
                 conflict: this.conflict,
                 ring: ring,
@@ -186,7 +187,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         if(!this.conflict.isSinglePlayer) {
             this.conflict.conflictProvince.inConflict = true;
             if(this.conflict.conflictProvince.facedown) {
-                events.push(this.game.getEvent('onProvinceRevealed', {
+                events.push(this.game.getEvent(EventNames.OnCardRevealed, {
                     card: this.conflict.conflictProvince,
                     context: this.game.getFrameworkContext(this.conflict.attackingPlayer)
                 }, () => this.conflict.conflictProvince.facedown = false));
@@ -226,7 +227,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.game.addMessage('{0} does not defend the conflict', this.conflict.defendingPlayer);
         }
 
-        this.game.raiseEvent('onDefendersDeclared', { conflict: this.conflict });
+        this.game.raiseEvent(EventNames.OnDefendersDeclared, { conflict: this.conflict, defenders: this.conflict.defenders.slice() });
     }
 
     openConflictActionWindow() {
@@ -295,7 +296,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.conflict.conflictUnopposed = true;
         }
 
-        this.game.raiseEvent('afterConflict', { conflict: this.conflict });
+        this.game.raiseEvent(EventNames.AfterConflict, { conflict: this.conflict });
     }
 
     applyUnopposed() {
@@ -341,7 +342,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
         if(this.conflict.winner) {
-            this.game.raiseEvent('onClaimRing', { player: this.conflict.winner, conflict: this.conflict }, () => ring.claimRing(this.conflict.winner));
+            this.game.raiseEvent(EventNames.OnClaimRing, { player: this.conflict.winner, conflict: this.conflict }, () => ring.claimRing(this.conflict.winner));
         }
         //Do this lazily for now
         this.game.queueSimpleStep(() => {
@@ -369,12 +370,12 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         // Create a return home event for every bow event
         let returnHomeEvents = _.map(bowEvents, event => this.game.getEvent(
-            'onReturnHome',
+            EventNames.OnReturnHome,
             { conflict: this.conflict, bowEvent: event, card: event.card },
             () => this.conflict.removeFromConflict(event.card)
         ));
         let events = bowEvents.concat(returnHomeEvents);
-        events.push(this.game.getEvent('onParticipantsReturnHome', { returnHomeEvents: returnHomeEvents, conflict: this.conflict }));
+        events.push(this.game.getEvent(EventNames.OnParticipantsReturnHome, { returnHomeEvents: returnHomeEvents, conflict: this.conflict }));
         this.game.openEventWindow(events);
     }
 
@@ -384,7 +385,7 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         this.game.currentConflict = null;
-        this.game.raiseEvent('onConflictFinished', { conflict: this.conflict });
+        this.game.raiseEvent(EventNames.OnConflictFinished, { conflict: this.conflict });
         this.game.queueSimpleStep(() => this.resetCards());
     }
 }

@@ -1,5 +1,6 @@
 const AllPlayerPrompt = require('./allplayerprompt.js');
 const GameActions = require('../GameActions/GameActions');
+const { EventNames } = require('../Constants');
 
 class HonorBidPrompt extends AllPlayerPrompt {
     constructor(game, menuTitle, costHandler) {
@@ -21,7 +22,7 @@ class HonorBidPrompt extends AllPlayerPrompt {
         let completed = super.continue();
 
         if(completed) {
-            this.game.raiseEvent('onHonorDialsRevealed', {}, () => {
+            this.game.raiseEvent(EventNames.OnHonorDialsRevealed, {}, () => {
                 for(const player of this.game.getPlayers()) {
                     player.honorBidModifier = 0;
                     this.game.actions.setHonorDial({ value: this.bid[player.uuid]}).resolve(player, this.game.getFrameworkContext());

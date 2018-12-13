@@ -5,7 +5,9 @@ class SeekerOfEarth extends RoleCard {
         this.reaction({
             title: 'Gain 1 fate',
             when: {
-                onProvinceRevealed: (event, context) => event.card.controller === context.player && context.source.hasTrait(event.card.getElement())
+                onCardRevealed: (event, context) =>
+                    event.card.controller === context.player && event.card.isProvince &&
+                    context.source.hasTrait(event.card.getElement())
             },
             gameAction: ability.actions.gainFate()
         });

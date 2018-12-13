@@ -6,7 +6,7 @@ class WarDogMaster extends DrawCard {
         this.reaction({
             title: 'Gain a +X/+0 bonus',
             when: {
-                onConflictDeclared: (event, context) => context.source.isAttacking()
+                onConflictDeclared: (event, context) => event.attackers.includes(context.source)
             },
             cost: ability.costs.discardCardSpecific(context => context.player.dynastyDeck.first()),
             effect: 'give {0} a bonus of {1} to their military skill',

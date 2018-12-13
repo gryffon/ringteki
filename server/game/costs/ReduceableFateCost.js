@@ -1,9 +1,10 @@
 const ForcedTriggeredAbilityWindow = require('../gamesteps/forcedtriggeredabilitywindow.js');
+const { EventNames, AbilityTypes } = require('../Constants');
 
 class FateCostInterruptWindow extends ForcedTriggeredAbilityWindow {
     constructor(context, minCostReduction, result) {
         super(context.game);
-        this.abilityType = 'interrupt';
+        this.abilityType = AbilityTypes.Interrupt;
         this.currentPlayer = context.player;
         this.card = context.source;
         this.result = result;
@@ -48,8 +49,8 @@ class FateCostInterruptWindow extends ForcedTriggeredAbilityWindow {
 
     emitEvents() {
         this.choices = [];
-        let event = this.game.getEvent('onResolveFateCost', { card: this.card, player: this.currentPlayer });
-        this.game.emit('onResolveFateCost:interrupt', event, this);
+        let event = this.game.getEvent(EventNames.OnResolveFateCost, { card: this.card, player: this.currentPlayer });
+        this.game.emit(EventNames.OnResolveFateCost + ':' + AbilityTypes.Interrupt, event, this);
     }
 }
 

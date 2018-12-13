@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class HonorAction extends CardGameAction {
     setup() {
@@ -17,7 +17,7 @@ class HonorAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onCardHonored', { card, context }, event => event.card.honor());
+        return super.createEvent(EventNames.OnCardHonored, { card, context }, event => event.card.honor());
     }
 }
 

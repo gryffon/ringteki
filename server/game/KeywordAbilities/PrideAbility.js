@@ -1,9 +1,10 @@
 const TriggeredAbility = require('../triggeredability.js');
 const AbilityLimit = require('../abilitylimit');
+const { AbilityTypes } = require('../Constants');
 
 class PrideAbility extends TriggeredAbility {
     constructor(game, card) {
-        super(game, card, 'forcedreaction', {
+        super(game, card, AbilityTypes.ForcedReaction, {
             when: {
                 afterConflict: (event, context) => context.source.isParticipating() && context.source.hasPride() &&
                                                    ((event.conflict.winner === context.player && context.source.allowGameAction('honor', context)) ||

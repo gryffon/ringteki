@@ -1,6 +1,6 @@
 const CardGameAction = require('./CardGameAction');
 const DiscardFromPlayAction = require('./DiscardFromPlayAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class CreateTokenAction extends CardGameAction {
     setup() {
@@ -19,7 +19,7 @@ class CreateTokenAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
+        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
             let token = context.game.createToken(card);
             card.owner.removeCardFromPile(card);
             context.refillProvince(card.owner, card.location);

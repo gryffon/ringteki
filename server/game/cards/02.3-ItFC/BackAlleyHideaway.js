@@ -4,7 +4,7 @@ const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
 const GameActions = require('../../GameActions/GameActions');
 const ThenAbility = require('../../ThenAbility');
-const { Phases, Locations, CardTypes, PlayTypes } = require('../../Constants');
+const { Phases, Locations, CardTypes, PlayTypes, EventNames } = require('../../Constants');
 
 const backAlleyPersistentEffect = {
     apply: card => {
@@ -62,7 +62,7 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
         this.backAlleyCard.removeAttachment(context.source);
         context.source.parent = null;
         let putIntoPlayEvent = GameActions.putIntoPlay({ fate: context.chooseFate }).getEvent(context.source, context);
-        let cardPlayedEvent = context.game.getEvent('onCardPlayed', {
+        let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
             originalLocation: 'backalley hideaway',

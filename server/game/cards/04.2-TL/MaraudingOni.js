@@ -12,8 +12,8 @@ class MaraudingOni extends DrawCard {
         this.forcedReaction({
             title: 'Lose honor when declared as attacker or defender',
             when: {
-                onConflictDeclared: (event, context) => context.source.isAttacking(),
-                onDefendersDeclared: (event, context) => context.source.isDefending()
+                onConflictDeclared: (event, context) => event.attackers.includes(context.source),
+                onDefendersDeclared: (event, context) => event.defenders.includes(context.source)
             },
             effect: 'lose an honor',
             gameAction: ability.actions.loseHonor(context => ({ target: context.player })),

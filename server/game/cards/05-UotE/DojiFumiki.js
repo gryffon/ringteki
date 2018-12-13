@@ -7,7 +7,7 @@ class DojiFumiki extends DrawCard {
             title: 'Bow a dishonored character',
             condition: context => context.source.isParticipating(),
             target: {
-                cardtype: CardTypes.Character,
+                cardType: CardTypes.Character,
                 cardCondition: card => card.isDishonored && card.isParticipating(),
                 gameAction: ability.actions.bow()
             }

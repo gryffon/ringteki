@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class FireRingAction extends CardGameAction {
     constructor(propertyFactory) {
@@ -53,9 +53,9 @@ class FireRingAction extends CardGameAction {
     getEvent(card, context) {
         let action = this.map.get(card);
         if(action === 'honor') {
-            return super.createEvent('onCardHonored', { card: card, context: context }, () => card.honor());
+            return super.createEvent(EventNames.OnCardHonored, { card: card, context: context }, () => card.honor());
         } else if(action === 'dishonor') {
-            return super.createEvent('onCardDishonored', { card: card, context: context }, () => card.dishonor());
+            return super.createEvent(EventNames.OnCardDishonored, { card: card, context: context }, () => card.dishonor());
         }
     }
 }

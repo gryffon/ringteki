@@ -31,7 +31,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     }
 
     addChoice(context) {
-        if(!context.event.cancelled && !this.resolvedAbilities.some(resolved => resolved.ability === context.ability && resolved.event === context.event)) {
+        if(!context.event.cancelled && !this.resolvedAbilities.some(resolved => resolved.ability === context.ability && (context.ability.collectiveTrigger || resolved.event === context.event))) {
             this.choices.push(context);
         }
     }
@@ -122,7 +122,11 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     }
 
     promptBetweenEventCards(choices, addBackButton = true) {
-        if(_.uniq(choices, context => context.event.card).length === 1) {
+        if(choices[0].ability.collectiveTrigger) {
+            // This ability only triggers once for all events in this window
+            this.resolveAbility(choices[0]);
+            return;
+        } else if(_.uniq(choices, context => context.event.card).length === 1) {
             // The events which this ability can respond to only affect a single card
             this.promptBetweenEvents(choices, addBackButton);
             return;

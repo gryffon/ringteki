@@ -1,6 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
-
+const { Locations, CardTypes, EventNames } = require('../Constants');
 
 class FlipDynastyAction extends CardGameAction {
     setup() {
@@ -18,7 +17,7 @@ class FlipDynastyAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('onDynastyCardTurnedFaceup', { card: card, context: context }, () => {
+        return super.createEvent(EventNames.OnDynastyCardTurnedFaceup, { card: card, context: context }, () => {
             card.facedown = false;
         });
     }

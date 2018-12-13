@@ -135,7 +135,6 @@ describe('Policy Debate', function() {
                 this.player2.clickCard(this.prodigyOfTheWaves);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('3');
-                this.player2.clickPrompt('Supernatural Storm');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.kakitaBlade);
                 this.player2.clickCard(this.kakitaBlade);

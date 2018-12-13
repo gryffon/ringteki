@@ -9,7 +9,7 @@ class KakitaBlade extends DrawCard {
         this.reaction({
             title: 'Gain honor on duel win',
             when:{
-                onDuelResolution: (event, context) => event.duel.winner === context.source.parent
+                afterDuel: (event, context) => event.winner === context.source.parent
             },
             gameAction: ability.actions.gainHonor()
         });

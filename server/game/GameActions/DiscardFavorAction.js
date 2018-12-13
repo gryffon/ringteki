@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class DiscardFavorAction extends PlayerAction {
     setup() {
@@ -16,7 +17,7 @@ class DiscardFavorAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onDiscardFavor', { player: player, context: context }, () => player.loseImperialFavor());
+        return super.createEvent(EventNames.OnDiscardFavor, { player: player, context: context }, () => player.loseImperialFavor());
     }
 }
 

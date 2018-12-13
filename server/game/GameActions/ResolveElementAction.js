@@ -1,5 +1,6 @@
 const RingAction = require('./RingAction');
 const RingEffects = require('../RingEffects');
+const { EventNames } = require('../Constants');
 
 class ResolveElementAction extends RingAction {
     setDefaultProperties() {
@@ -24,7 +25,7 @@ class ResolveElementAction extends RingAction {
                 title: RingEffects.getRingName(ring.element) + ' Effect',
                 handler: () => context.game.openEventWindow(this.getEvent(ring, context, false))
             }));
-            return [super.createEvent('unnamedEvent', {}, () => context.game.openSimultaneousEffectWindow(effectObjects))];
+            return [super.createEvent(EventNames.Unnamed, {}, () => context.game.openSimultaneousEffectWindow(effectObjects))];
         }
         return super.getEventArray(context);
     }
@@ -37,7 +38,7 @@ class ResolveElementAction extends RingAction {
             player: context.player,
             ring: ring
         };
-        return super.createEvent('onResolveRingElement', params, () => {
+        return super.createEvent(EventNames.OnResolveRingElement, params, () => {
             context.game.resolveAbility(RingEffects.contextFor(context.player, ring.element, optional));
         });
     }
