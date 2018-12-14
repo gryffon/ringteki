@@ -47,7 +47,7 @@ class EventRegistrar {
      * @param {string} methodName An optional  name of the method to bind as a
      * handler. If not provided, the event name will be used as the method name.
      */
-    registerEvent(eventName, methodName) {
+    registerEvent(eventName, methodName = '') {
         let method = this.context[methodName || eventName];
 
         if(!method) {

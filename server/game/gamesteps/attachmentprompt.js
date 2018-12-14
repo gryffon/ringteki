@@ -21,6 +21,7 @@ class AttachmentPrompt extends UiPrompt {
                 return true;
             }
         });
+        return true;
     }
 }
 
