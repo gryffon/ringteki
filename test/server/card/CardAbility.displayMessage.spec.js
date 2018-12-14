@@ -62,7 +62,11 @@ describe('CardAbility displayMessage', function() {
         });
 
         it('should have a cost term as the fifth arg', function() {
-            expect(this.args[5][0].message[0]).toBe('losing 3 honor');
+            expect(this.args[5][0].message[0]).toBe('losing');
+            expect(this.args[5][0].message[1]).toBe(' ');
+            expect(this.args[5][0].message[2]).toBe('3');
+            expect(this.args[5][0].message[3]).toBe(' ');
+            expect(this.args[5][0].message[4]).toBe('honor');
         });
 
         it('should have \'to\' as the sixth arg', function() {
@@ -70,8 +74,9 @@ describe('CardAbility displayMessage', function() {
         });
 
         it('should have an effect term as the seventh arg', function() {
-            expect(this.args[7].message).toContain('discard ');
-            expect(this.args[7].message[1].message).toContain(this.target);
+            expect(this.args[7].message[0]).toBe('discard');
+            expect(this.args[7].message[1]).toBe(' ');
+            expect(this.args[7].message[2]).toBe(this.target);
         });
     });
 
@@ -120,8 +125,9 @@ describe('CardAbility displayMessage', function() {
         });
 
         it('should have a cost term as the fifth arg', function() {
-            expect(this.args[5][0].message).toContain('dishonoring ');
-            expect(this.args[5][0].message).toContain(this.courtier);
+            expect(this.args[5][0].message[0]).toBe('dishonoring');
+            expect(this.args[5][0].message[1]).toBe(' ');
+            expect(this.args[5][0].message[2]).toBe(this.courtier);
         });
 
         it('should have \'to\' as the sixth arg', function() {
@@ -129,8 +135,9 @@ describe('CardAbility displayMessage', function() {
         });
 
         it('should have an effect term as the seventh arg', function() {
-            expect(this.args[7].message).toContain('cancel ');
-            expect(this.args[7].message).toContain(this.eventToCancel);
+            expect(this.args[7].message[0]).toBe('cancel');
+            expect(this.args[7].message[1]).toBe(' ');
+            expect(this.args[7].message[2]).toBe(this.eventToCancel);
         });
     });
 
@@ -186,8 +193,9 @@ describe('CardAbility displayMessage', function() {
         });
 
         it('should have a cost term as the fifth arg', function() {
-            expect(this.args[5][0].message).toContain('bowing ');
-            expect(this.args[5][0].message).toContain(this.cardSpy);
+            expect(this.args[5][0].message[0]).toBe('bowing');
+            expect(this.args[5][0].message[1]).toBe(' ');
+            expect(this.args[5][0].message[2]).toBe(this.cardSpy);
         });
 
         it('should have \'to\' as the sixth arg', function() {
@@ -195,8 +203,15 @@ describe('CardAbility displayMessage', function() {
         });
 
         it('should have an effect term as the seventh arg', function() {
-            expect(this.args[7].message).toContain('take 1 honor from ');
-            expect(this.args[7].message[1].message).toContain(this.opponent);
+            expect(this.args[7].message[0]).toBe('take');
+            expect(this.args[7].message[1]).toBe(' ');
+            expect(this.args[7].message[2]).toBe('1');
+            expect(this.args[7].message[3]).toBe(' ');
+            expect(this.args[7].message[4]).toBe('honor');
+            expect(this.args[7].message[5]).toBe(' ');
+            expect(this.args[7].message[6]).toBe('from');
+            expect(this.args[7].message[7]).toBe(' ');
+            expect(this.args[7].message[8]).toBe(this.opponent);
         });
     });
 

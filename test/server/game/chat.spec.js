@@ -52,7 +52,7 @@ describe('Game', function() {
                 });
 
                 it('should add the chat messages', function() {
-                    expect(this.gameChat.addChatMessage).toHaveBeenCalledWith(jasmine.any(String), this.player, 'this is a message');
+                    expect(this.gameChat.addChatMessage).toHaveBeenCalledWith(this.player, 'this is a message');
                 });
             });
         });
@@ -74,7 +74,7 @@ describe('Game', function() {
                 });
 
                 it('should add it as a chat messages', function() {
-                    expect(this.gameChat.addChatMessage).toHaveBeenCalledWith(jasmine.any(String), this.player, '/this is a command');
+                    expect(this.gameChat.addChatMessage).toHaveBeenCalledWith(this.player, '/this is a command');
                 });
             });
 
@@ -86,7 +86,7 @@ describe('Game', function() {
                 });
 
                 it('should add the chat messages', function() {
-                    expect(this.gameChat.addChatMessage).toHaveBeenCalledWith(jasmine.any(String), this.player, 'this is a message');
+                    expect(this.gameChat.addChatMessage).toHaveBeenCalledWith(this.player, 'this is a message');
                 });
             });
         });
