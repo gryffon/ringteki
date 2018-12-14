@@ -142,7 +142,7 @@ class InnerMessages extends React.Component {
                 );
             } else if(this.otherIcons[fragment]) {
                 return (
-                    <img className={ this.otherIcons[fragment].className } key={ index++ } src={ this.otherIcons[fragment].imageSrc }/>
+                    <img className={ this.otherIcons[fragment].className } key={ index++ } title={ fragment } src={ this.otherIcons[fragment].imageSrc }/>
                 );
             } else if(_.isString(fragment)) {
                 return this.emoji.replace_colons(fragment);
