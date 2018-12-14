@@ -15,7 +15,7 @@ function loadFiles(directory) {
         return !fs.statSync(path.join(fullPath, file)).isDirectory();
     });
 
-    for(let file of files) {
+    for(let file of files.filter(filename => filename.endsWith('.js'))) {
         let card = require('./' + directory + '/' + file);
 
         cards[card.id] = card;

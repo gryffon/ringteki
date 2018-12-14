@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
-const BaseAbility = require('../../../server/game/baseability.js');
-const { Stages } = require('../../../server/game/Constants.js');
+const BaseAbility = require('../../../build/server/game/baseability.js');
+const { Stages } = require('../../../build/server/game/Constants.js');
 
 describe('BaseAbility', function () {
     beforeEach(function () {

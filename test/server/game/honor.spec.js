@@ -1,5 +1,5 @@
-const Game = require('../../../server/game/game.js');
-const Player = require('../../../server/game/player.js');
+const Game = require('../../../build/server/game/game.js');
+const Player = require('../../../build/server/game/player.js');
 
 xdescribe('Game', function() {
     beforeEach(function() {

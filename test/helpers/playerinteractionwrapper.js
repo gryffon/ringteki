@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const { matchCardByNameAndPack } = require('./cardutil.js');
-const { detectBinary } = require('../../server/util');
+const { detectBinary } = require('../../build/server/util');
 
 class PlayerInteractionWrapper {
     constructor(game, player) {

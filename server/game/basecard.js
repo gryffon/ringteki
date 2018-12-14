@@ -154,7 +154,7 @@ class BaseCard extends EffectSource {
         });
     }
 
-    updateEffects(from = '', to = '') {
+    updateEffects(from, to) {
         const activeLocations = {
             'play area': [Locations.PlayArea],
             'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]

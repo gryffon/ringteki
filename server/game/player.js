@@ -694,8 +694,8 @@ class Player extends GameObject {
     /**
      * Called when a player drags and drops a card from one location on the client to another
      * @param {String} cardId - the uuid of the dropped card
-     * @param {String} source
-     * @param {String} target
+     * @param source
+     * @param target
      */
     drop(cardId, source, target) {
         var sourceList = this.getSourceList(source);
@@ -864,7 +864,7 @@ class Player extends GameObject {
      * Moves a card from one location to another. This involves removing in from the list it's currently in, calling DrawCard.move (which changes
      * its location property), and then adding it to the list it should now be in
      * @param card BaseCard
-     * @param {String} targetLocation
+     * @param targetLocation
      * @param {Object} options
      */
     moveCard(card, targetLocation, options = {}) {
