@@ -48,7 +48,7 @@ class StaticEffect {
         this.type = type;
         this.value = value;
         this.context = null;
-        this.duration = '';
+        this.duration = null;
     }
 
     apply(target) {

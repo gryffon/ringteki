@@ -1,6 +1,6 @@
-const CardAbility = require('../../../server/game/CardAbility');
-const GameChat = require('../../../server/game/gamechat');
-const AbilityDsl = require('../../../server/game/abilitydsl');
+const CardAbility = require('../../../build/server/game/CardAbility');
+const GameChat = require('../../../build/server/game/gamechat');
+const AbilityDsl = require('../../../build/server/game/abilitydsl');
 
 describe('CardAbility displayMessage', function() {
     beforeEach(function() {

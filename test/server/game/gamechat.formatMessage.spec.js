@@ -1,4 +1,4 @@
-const GameChat = require('../../../server/game/gamechat.js');
+const GameChat = require('../../../build/server/game/gamechat.js');
 
 describe('GameChat', function() {
     beforeEach(function() {
