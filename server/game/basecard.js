@@ -41,7 +41,7 @@ class BaseCard extends EffectSource {
 
     /**
      * Create card abilities by calling subsequent methods with appropriate properties
-     * @param {AbilityDsl} ability - object containing limits, costs, effects, and game actions
+     * @param {Object} ability - AbilityDsl object containing limits, costs, effects, and game actions
      */
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }

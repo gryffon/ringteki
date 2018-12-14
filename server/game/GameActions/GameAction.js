@@ -1,4 +1,5 @@
 const Event = require('../Events/Event.js');
+const { EventNames } = require('../Constants');
 
 class GameAction {
     constructor(propertyFactory = {}) {
@@ -95,7 +96,7 @@ class GameAction {
     }
 
     getEvent(target, context) { // eslint-disable-line no-unused-vars
-        throw new Error('GameAction.getEvent called');
+        return this.createEvent(EventNames.Unnamed, {}, () => true);
     }
 
     getEventArray(context) {

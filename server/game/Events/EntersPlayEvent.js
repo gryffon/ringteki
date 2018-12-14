@@ -30,6 +30,7 @@ class EntersPlayEvent extends Event {
 
         this.context.player.moveCard(this.card, Locations.PlayArea);
 
+        //@ts-ignore
         if(this.intoConflict) {
             if(this.context.player.isAttackingPlayer()) {
                 this.context.game.currentConflict.addAttacker(this.card);

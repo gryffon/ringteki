@@ -70,6 +70,7 @@ class StaticEffect {
     setContext(context) {
         this.context = context;
         if(typeof this.value === 'object') {
+            // @ts-ignore
             this.value.context = context;
         }
     }

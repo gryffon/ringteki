@@ -24,7 +24,7 @@ class BaseAbility {
      * objects.
      * @param {Object} [properties.target] - optional property that specifies
      * the target of the ability.
-     * @param {GameAction[]} [properties.gameAction] - optional array of game actions
+     * @param [properties.gameAction] - GameAction[] optional array of game actions
      */
     constructor(properties) {
         this.gameAction = properties.gameAction || [];
