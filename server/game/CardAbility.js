@@ -100,7 +100,7 @@ class CardAbility extends ThenAbility {
                 if(card && card.facedown) {
                     card = 'a facedown card';
                 }
-                return { message: this.game.gameChat.getFormattedMessage(cost.action.cost, card) };
+                return { message: this.game.gameChat.formatMessage(cost.action.cost, [card]) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
@@ -138,7 +138,7 @@ class CardAbility extends ThenAbility {
             // to
             messageArgs.push(' to ');
             // discard Stoic Gunso
-            messageArgs.push({ message: this.game.gameChat.getFormattedMessage(effectMessage, ...effectArgs) });
+            messageArgs.push({ message: this.game.gameChat.formatMessage(effectMessage, effectArgs) });
         }
         this.game.addMessage('{0}{1}{2}{3}{4}{5}{6}', ...messageArgs);
     }
