@@ -48,7 +48,7 @@ class GameChat {
                     return output.concat(arg);
 
                 }
-            } else if(fragment) {
+            } else if(!argMatch && fragment) {
                 let splitFragment = fragment.split(' ');
                 let lastWord = splitFragment.pop();
                 return splitFragment.reduce((output, word) => {
