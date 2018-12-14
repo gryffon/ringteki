@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Players } = require('../../Constants');
 
 class MirumotoDaisho extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,7 +9,7 @@ class MirumotoDaisho extends DrawCard {
 
         this.persistentEffect({
             condition: context => this.game.currentDuel && this.game.currentDuel.isInvolved(context.source.parent),
-            targetController: 'opponent',
+            targetController: Players.Opponent,
             effect: [
                 ability.effects.cannotBidInDuels('1'),
                 ability.effects.cannotBidInDuels('5')

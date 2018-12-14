@@ -5,7 +5,6 @@ class AgelessCrone extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: context => context.source.isParticipating(),
-            targetType: 'player',
             targetController: Players.Any,
             effect: ability.effects.increaseCost({
                 amount: 1,
