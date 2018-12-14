@@ -52,7 +52,7 @@ class LeavesPlayEvent extends Event {
         }
         if(!this.card.owner.isLegalLocationForCard(this.card, this.destination)) {
             this.card.game.addMessage('{0} is not a legal location for {1} and it is discarded', this.destination, this.card);
-            this.destination = this.card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
+            this.destination = this.card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile;
         }
         this.card.owner.moveCard(this.card, this.destination, this.options);
         if(this.options.shuffle) {

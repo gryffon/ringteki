@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
-const cards = require('../../../server/game/cards');
-const AbilityDsl = require('../../../server/game/abilitydsl');
+const cards = require('../../../build/server/game/cards');
+const AbilityDsl = require('../../../build/server/game/abilitydsl');
 const eventNames = [
     'onMoveFate',
     'onBeginRound',
