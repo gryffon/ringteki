@@ -7,7 +7,7 @@ class IuchiDaiyu extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             target: {
                 gameAction: ability.actions.cardLastingEffect(context => ({
-                    effect: ability.effects.modifyMilitarySkill(context.player.opponent.getNumberOfFaceupProvinces())
+                    effect: ability.effects.modifyMilitarySkill(context.player.getNumberOfOpponentsFaceupProvinces())
                 }))
             },
             effect: 'give {0} +1{1} for each faceup non-stronghold province their opponent controls',
