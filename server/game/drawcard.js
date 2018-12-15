@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
-const BaseCard = require('./basecard.js');
+const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');

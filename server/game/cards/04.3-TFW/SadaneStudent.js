@@ -7,7 +7,6 @@ class SadaneStudent extends DrawCard {
                 this.game.rings.air.isConsideredClaimed(context.player) ||
                 this.game.rings.fire.isConsideredClaimed(context.player)
             ),
-            match: this,
             effect: ability.effects.modifyPoliticalSkill(2)
         });
     }

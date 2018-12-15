@@ -27,7 +27,7 @@ class CourtlyChallenger extends DrawCard {
             title: 'Initiate a Political duel',
             condition: context => context.source.isParticipating(),
             target: {
-                cardtype: CardTypes.Character,
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.duel(context => ({
