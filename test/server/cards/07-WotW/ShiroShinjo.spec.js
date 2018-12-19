@@ -3,7 +3,7 @@ describe('Shiro Shinjo', function() {
         describe('Shiro Shinjo\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'fate',
+                    phase: 'setup',
                     player1: {
                         stronghold: 'shiro-shinjo'
                     },
@@ -21,32 +21,23 @@ describe('Shiro Shinjo', function() {
             });
 
             it('should trigger when you collect fate in the dynasty phase', function() {
-                this.noMoreActions();
-                this.player1.clickPrompt('Done');
-                this.player2.clickPrompt('Done');
-                this.player2.clickPrompt('End Round');
-                this.player1.clickPrompt('End Round');
+                this.flow.keepDynasty();
+                this.flow.keepConflict();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.shiroShinjo);
             });
 
             it('should bow the stronghold', function() {
-                this.noMoreActions();
-                this.player1.clickPrompt('Done');
-                this.player2.clickPrompt('Done');
-                this.player2.clickPrompt('End Round');
-                this.player1.clickPrompt('End Round');
+                this.flow.keepDynasty();
+                this.flow.keepConflict();
                 this.player1.clickCard(this.shiroShinjo);
                 expect(this.shiroShinjo.bowed).toBe(true);
             });
 
             it('should give the player fate equal to the number of faceup provinces your opponent controls', function() {
                 let fate = this.player1.player.fate;
-                this.noMoreActions();
-                this.player1.clickPrompt('Done');
-                this.player2.clickPrompt('Done');
-                this.player2.clickPrompt('End Round');
-                this.player1.clickPrompt('End Round');
+                this.flow.keepDynasty();
+                this.flow.keepConflict();
                 this.player1.clickCard(this.shiroShinjo);
                 expect(this.player1.player.fate).toBe(fate + 6 + 3);
             });
