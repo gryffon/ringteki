@@ -17,10 +17,11 @@ class AbilityContext {
         this.select = null;
         this.ring = null;
         this.provincesToRefill = [];
+        this.secondResolution = false;
     }
 
     copy(newProps) {
-        let copy = new AbilityContext(Object.assign({}, this.getProps(), newProps));
+        let copy = new AbilityContext(Object.assign(this.getProps(), newProps));
         copy.target = this.target;
         copy.select = this.select;
         copy.ring = this.ring;

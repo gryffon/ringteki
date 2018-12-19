@@ -10,7 +10,7 @@ class HonestChallenger extends DrawCard {
             title: 'Initiate a military duel',
             condition: () => this.isParticipating(),
             target: {
-                cardtype: CardTypes.Character,
+                cardType: CardTypes.Character,
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.duel(context => ({
