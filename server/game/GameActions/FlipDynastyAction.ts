@@ -29,5 +29,3 @@ export class FlipDynastyAction extends CardGameAction {
         });
     }
 }
-
-module.exports = FlipDynastyAction;

@@ -8,7 +8,7 @@ export class PlayerAction extends GameAction {
     targetType = ['player'];
 
     defaultTargets(context: AbilityContext): Player[] {
-        return [context.player.opponent];
+        return context.player ? [context.player.opponent] : [];
     }
 
     checkEventCondition(event: any):boolean {

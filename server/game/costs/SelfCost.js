@@ -10,7 +10,7 @@ class SelfCost {
 
     resolve(context) {
         context.costs[this.action.name] = context.source;
-        this.action.setTarget(context.source);
+        this.action.properties = Object.assign(this.action.getProperties(context), { target: context.source });
     }
 
     payEvent(context) {

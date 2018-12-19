@@ -66,5 +66,3 @@ export class DuelAction extends CardGameAction {
         });
     }
 }
-
-module.exports = DuelAction;

@@ -1,6 +1,5 @@
 import { CardGameAction, CardActionProperties } from "./CardGameAction";
 
-import AbilityDsl = require('../abilitydsl');
 import { Locations, CardTypes, EventNames } from '../Constants';
 import AbilityContext = require("../AbilityContext");
 import BaseCard = require('../basecard');
@@ -42,10 +41,8 @@ export class CreateTokenAction extends CardGameAction {
                     onConflictFinished: () => true
                 },
                 message: '{1} returns to the deep',
-                gameAction: AbilityDsl.actions.discardFromPlay()
+                gameAction: context.game.actions.discardFromPlay()
             }));
         });
     }
 }
-
-module.exports = CreateTokenAction;

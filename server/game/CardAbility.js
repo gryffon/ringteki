@@ -95,12 +95,12 @@ class CardAbility extends ThenAbility {
         // Player1 plays Assassination
         let messageArgs = [context.player, context.source.type === CardTypes.Event ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
-            if(cost.action && cost.action.cost) {
+            if(cost.action) {
                 let card = context.costs[cost.action.name];
                 if(card && card.facedown) {
                     card = 'a facedown card';
                 }
-                return { message: this.game.gameChat.formatMessage(cost.action.cost, [card]) };
+                return { message: this.game.gameChat.formatMessage(...cost.action.getCostMessage(context)) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
@@ -118,9 +118,8 @@ class CardAbility extends ThenAbility {
             let gameActions = this.getGameActions(context).filter(gameAction => gameAction.hasLegalTarget(context));
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
-                effectMessage = gameActions[0].effectMsg;
+                [effectMessage, extraArgs] = gameActions[0].getEffectMessage(context);
                 effectArgs.push(gameActions[0].target);
-                extraArgs = gameActions[0].effectArgs;
             }
         } else {
             effectArgs.push(context.target || context.ring || context.source);

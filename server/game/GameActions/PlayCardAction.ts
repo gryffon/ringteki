@@ -1,6 +1,5 @@
 import AbilityContext = require('../AbilityContext');
 import AbilityResolver = require('../gamesteps/abilityresolver');
-import GameObject = require('../GameObject');
 import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
@@ -83,7 +82,7 @@ export class PlayCardAction extends CardGameAction {
 
     addEventsToArray(events: any[], context: AbilityContext): void {
         let properties = this.getProperties(context);
-        if((properties.target as GameObject[]).length === 0) {
+        if((properties.target as DrawCard[]).length === 0) {
             return;
         }
         let card = properties.target[0];

@@ -45,5 +45,3 @@ export class DiscardCardAction extends CardGameAction {
         return true;
     }
 }
-
-module.exports = DiscardCardAction;

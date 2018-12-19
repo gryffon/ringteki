@@ -57,7 +57,7 @@ export class PutIntoPlayAction extends CardGameAction {
     }
     
     getEvent(card: DrawCard, context: AbilityContext): Event {
-        let properties: PutIntoPlayProperties = this.getProperties(context);
-        return new EntersPlayEvent({ intoConflict: this.intoConflict, context: context }, card, properties.fate, properties.status, this);
+        let { fate, status } = this.getProperties(context) as PutIntoPlayProperties;
+        return new EntersPlayEvent({ intoConflict: this.intoConflict, context: context }, card, fate, status, this);
     }
 }

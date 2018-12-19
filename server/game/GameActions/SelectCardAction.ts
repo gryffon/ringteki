@@ -7,7 +7,7 @@ import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { CardTypes, Players, Locations, EffectNames } from '../Constants';
 import { GameAction } from './GameAction';
 
-interface SelectCardProperties extends CardActionProperties {
+export interface SelectCardProperties extends CardActionProperties {
     activePromptTitle?: string;
     player?: Players;
     cardType?: CardTypes;
@@ -21,7 +21,7 @@ interface SelectCardProperties extends CardActionProperties {
     selector?: BaseCardSelector;
 }
 
-class SelectCardAction extends CardGameAction {
+export class SelectCardAction extends CardGameAction {
     defaultProperties: SelectCardProperties = {
         cardCondition: () => true,
         gameAction: null
@@ -80,5 +80,3 @@ class SelectCardAction extends CardGameAction {
         context.game.promptForSelect(player, Object.assign(defaultProperties, properties));
     }
 }
-
-export = SelectCardAction;

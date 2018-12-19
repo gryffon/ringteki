@@ -36,7 +36,7 @@ class SelectCardCost {
                 } else {
                     context.costs[this.action.name + 'StateWhenChosen'] = cards.createSnapshot();
                 }
-                this.action.setTarget(cards);
+                this.action.properties = Object.assign(this.action.getProperties(context), { target: cards });
                 return true;
             },
             onCancel: () => result.cancelled = true

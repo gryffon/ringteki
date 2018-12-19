@@ -9,7 +9,7 @@ class ThenAbility extends BaseAbility {
         this.game = game;
         this.card = card;
         this.properties = properties;
-        this.handler = properties.handler || this.executeGameActionPrehandlers;
+        this.handler = properties.handler || this.executeGameActions;
         this.cannotTargetFirst = true;
     }
 
@@ -49,7 +49,7 @@ class ThenAbility extends BaseAbility {
         this.game.queueSimpleStep(() => this.game.checkGameState());
     }
 
-    newFunction(context) {
+    executeGameActions(context) {
         let events = [];
         let actions = this.getGameActions(context);
         let then = this.properties.then;
@@ -67,30 +67,6 @@ class ThenAbility extends BaseAbility {
                 }
             }
         });
-    }
-
-    executeGameActionPrehandlers(context) {
-        let actions = this.getGameActions(context);
-        for(const action of actions) {
-            this.game.queueSimpleStep(() => action.preEventHandler(context));
-        }
-        this.game.queueSimpleStep(() => this.executeGameActions(actions, context));
-    }
-
-    executeGameActions(actions, context) {
-        // Get any gameActions for this ability
-        // Get their events, and execute simultaneously
-        let events = actions.reduce((array, action) => array.concat(action.getEventArray(context)), []);
-        let then = this.properties.then;
-        if(then && typeof then === 'function') {
-            then = then(context);
-        }
-        if(events.length > 0) {
-            let window = this.openEventWindow(events);
-            if(then) {
-                window.addThenAbility(events, new ThenAbility(this.game, this.card, then), context);
-            }
-        }
     }
 
     openEventWindow(events) {

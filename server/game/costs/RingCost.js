@@ -19,7 +19,7 @@ class RingCost {
             ringCondition: this.ringCondition,
             onSelect: (player, ring) => {
                 context.costs[this.action.name] = ring;
-                this.action.setTarget(ring);
+                this.action.properties = Object.assign(this.action.getProperties(context), { target: ring });
                 return true;
             },
             onCancel: () => result.cancelled = true

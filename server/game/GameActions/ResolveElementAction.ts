@@ -7,16 +7,13 @@ import { EventNames } from '../Constants';
 
 export interface ResolveElementProperties extends RingActionProperties {
     optional?: boolean;
-    physicalRing: Ring;
+    physicalRing?: Ring;
 }
 
 export class ResolveElementAction extends RingAction {
     name = 'resolveElement';
     effect = 'resolve {0} effect';
-    defaultProperties: ResolveElementProperties = { 
-        optional: true,
-        physicalRing: null
-    };
+    defaultProperties: ResolveElementProperties = { optional: true };
     constructor(properties: ((context: AbilityContext) => ResolveElementProperties) | ResolveElementProperties) {
         super(properties);
     }
@@ -40,7 +37,7 @@ export class ResolveElementAction extends RingAction {
 
     getResolveElementEvent(ring: Ring, context: AbilityContext, optional: boolean): Event {
         let properties = this.getProperties(context) as ResolveElementProperties;
-        let physicalRing = properties.physicalRing;
+        let physicalRing = properties.physicalRing || ring;
         let player = context.player;
         return this.createEvent(EventNames.OnResolveRingElement, { ring, player, context, physicalRing, optional }, () => {
             context.game.resolveAbility(RingEffects.contextFor(context.player, ring.element, optional));

@@ -45,10 +45,10 @@ const CostBuilders = {
         selectMultiple: number => `Select ${number} cards to shuffle into deck`
     }),
     discardImperialFavor: () => new PlayerCost(GameActions.loseImperialFavor()),
-    giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate({ amount: amount })),
-    payHonor: (amount) => new PlayerCost(GameActions.loseHonor({ amount: amount })),
-    payFate: (amount) => new PlayerCost(GameActions.gainFate({ amount: -amount })),
-    payFateToRing: (amount, ringCondition) => new RingCost(GameActions.placeFateOnRing({ amount: amount }), ringCondition)
+    giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate({ amount })),
+    payHonor: (amount) => new PlayerCost(GameActions.loseHonor({ amount })),
+    payFate: (amount) => new PlayerCost(GameActions.loseFate({ amount })),
+    payFateToRing: (amount, ringCondition) => new RingCost(GameActions.placeFateOnRing({ amount }), ringCondition)
 };
 
 module.exports = CostBuilders;

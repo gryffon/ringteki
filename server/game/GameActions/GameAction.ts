@@ -61,7 +61,7 @@ export class GameAction {
     }
 
     hasLegalTarget(context: AbilityContext): boolean {
-        let properties = this.properties || this.propertyFactory(context);
+        let properties = this.getProperties(context);
         return (properties.target as GameObject[]).some(target => this.canAffect(target, context));
     }
 
@@ -81,7 +81,7 @@ export class GameAction {
         return event;
     }
 
-    resolve(target: GameObject, context: AbilityContext = target.game.getFrameworkContext()): void {
+    resolve(target: PlayerOrRingOrCard, context: AbilityContext = target.game.getFrameworkContext()): void {
         this.properties.target = target;
         let events = [];
         this.addEventsToArray(events, context);

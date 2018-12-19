@@ -22,17 +22,17 @@ export class RemoveFateAction extends CardGameAction {
     }
 
     getCostMessage(context: AbilityContext): [string, any[]] {
-        let properties: RemoveFateProperties = this.getProperties(context);
+        let properties = this.getProperties(context) as RemoveFateProperties;
         return ['removing {1} fate from {0}', [properties.amount]];
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
-        let properties: RemoveFateProperties = this.getProperties(context);
+        let properties = this.getProperties(context) as RemoveFateProperties;
         return ['remove {1} fate from {0}', [properties.amount]];
     }
 
     canAffect(card: BaseCard, context: AbilityContext): boolean {
-        let properties: RemoveFateProperties = this.getProperties(context);
+        let properties = this.getProperties(context) as RemoveFateProperties;
         if(properties.amount === 0 || card.location !== Locations.PlayArea || card.fate === 0) {
             return false;
         }
@@ -50,7 +50,7 @@ export class RemoveFateAction extends CardGameAction {
     }
     
     getEvent(card: BaseCard, context: AbilityContext): Event {
-        let properties: RemoveFateProperties = this.getProperties(context);
+        let properties = this.getProperties(context) as RemoveFateProperties;
         return new MoveFateEvent({ context: context }, properties.amount, card, properties.recipient, this);
     }
 }

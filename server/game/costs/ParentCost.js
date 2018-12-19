@@ -9,7 +9,7 @@ class ParentCost {
 
     resolve(context) {
         context.costs[this.action.name] = context.source.parent;
-        this.action.setTarget(context.source.parent);
+        this.action.properties = Object.assign(this.action.getProperties(context), { target: context.source.parent });
     }
 
     payEvent(context) {

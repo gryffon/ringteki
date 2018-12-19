@@ -22,16 +22,16 @@ export class PlaceFateAction extends CardGameAction {
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
-        let properties: PlaceFateProperties = this.getProperties(context);
-        return ['place {1} fate on {0}', [properties.amount]];
+        let { amount } = this.getProperties(context) as PlaceFateProperties;
+        return ['place {1} fate on {0}', [amount]];
     }
 
     canAffect(card: BaseCard, context: AbilityContext): boolean {
-        let properties: PlaceFateProperties = this.getProperties(context);
-        if(properties.amount === 0 || card.location !== Locations.PlayArea) {
+        let { amount, origin } = this.getProperties(context) as PlaceFateProperties;
+        if(amount === 0 || card.location !== Locations.PlayArea) {
             return false;
         }
-        return super.canAffect(card, context) && this.checkOrigin(properties.origin, context);
+        return super.canAffect(card, context) && this.checkOrigin(origin, context);
     }
 
     checkOrigin(origin: Player | Ring | DrawCard, context: AbilityContext): boolean {
@@ -47,7 +47,7 @@ export class PlaceFateAction extends CardGameAction {
     }
     
     getEvent(card: BaseCard, context: AbilityContext): Event {
-        let properties: PlaceFateProperties = this.getProperties(context);
-        return new MoveFateEvent({ context: context }, properties.amount, properties.origin, card, this);
+        let { amount, origin } = this.getProperties(context) as PlaceFateProperties;
+        return new MoveFateEvent({ context: context }, amount, origin, card, this);
     }
 }

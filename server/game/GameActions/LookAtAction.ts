@@ -44,5 +44,3 @@ export class LookAtAction extends CardGameAction {
         return true;
     }
 }
-
-module.exports = LookAtAction;

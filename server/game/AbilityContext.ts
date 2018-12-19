@@ -1,5 +1,4 @@
 import BaseAbility = require('./baseability.js');
-import BaseCard = require('./basecard');
 import EffectSource = require('./EffectSource.js');
 import Game = require('./game');
 import Player = require('./player');
@@ -8,27 +7,27 @@ import { Stages, Locations } from './Constants.js';
 
 interface AbilityContextProperties {
     game: Game;
-    source?: EffectSource;
+    source?: any;
     player?: Player;
     ability?: BaseAbility;
-    costs?: object;
-    targets?: object;
-    rings?: object;
-    selects?: object;
+    costs?: any;
+    targets?: any;
+    rings?: any;
+    selects?: any;
     stage?: Stages;
 }
 
 class AbilityContext {
     game: Game;
-    source: EffectSource;
+    source: any;
     player: Player;
     ability: BaseAbility;
-    costs: object;
-    targets: object;
-    rings: object;
-    selects: object;
+    costs: any;
+    targets: any;
+    rings: any;
+    selects: any;
     stage: Stages;
-    target: BaseCard | BaseCard[];
+    target: any;
     select: string;
     ring: Ring;
     provincesToRefill: any[] = [];

@@ -21,7 +21,7 @@ class SpecificCardCost {
         let card = this.cardFunc(context);
         context.costs[this.action.name] = card;
 
-        this.action.setTarget(card);
+        this.action.properties = Object.assign(this.action.getProperties(context), { target: card });
     }
 
     payEvent(context) {

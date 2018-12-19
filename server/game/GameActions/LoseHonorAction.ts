@@ -6,10 +6,11 @@ import { EventNames } from '../Constants';
 
 export interface LoseHonorProperties extends PlayerActionProperties {
     amount?: number;
+    dueToUnopposed?: boolean
 }
 
 export class LoseHonorAction extends PlayerAction {
-    defaultProperties: LoseHonorProperties = { amount: 1 };
+    defaultProperties: LoseHonorProperties = { amount: 1, dueToUnopposed: false };
 
     name = 'loseHonor';
     constructor(propertyFactory: LoseHonorProperties | ((context: AbilityContext) => LoseHonorProperties)) {
@@ -32,8 +33,8 @@ export class LoseHonorAction extends PlayerAction {
     }
 
     getEvent(player: Player, context: AbilityContext): Event {
-        let properties: LoseHonorProperties = this.getProperties(context);
-        return super.createEvent(EventNames.OnModifyHonor, { player: player, amount: properties.amount, context: context }, event => player.modifyHonor(-event.amount));
+        let { amount, dueToUnopposed } = this.getProperties(context) as LoseHonorProperties;
+        return super.createEvent(EventNames.OnModifyHonor, { player, context, amount, dueToUnopposed }, event => player.modifyHonor(-event.amount));
     }
 }
 

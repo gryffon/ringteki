@@ -3,7 +3,7 @@ import AbilityContext = require('../AbilityContext');
 import { GameAction, GameActionProperties } from './GameAction';
 import { Players } from '../Constants';
 
-interface MenuPromptProperties extends GameActionProperties {
+export interface MenuPromptProperties extends GameActionProperties {
     activePromptTitle: string;
     player?: Players;
     gameAction: GameAction;
@@ -11,7 +11,7 @@ interface MenuPromptProperties extends GameActionProperties {
     choiceHandler: (choice: string, displayMessage: boolean, action: GameAction) => void;
 }
 
-class MenuPromptAction extends GameAction {
+export class MenuPromptAction extends GameAction {
     constructor(properties: MenuPromptProperties | ((context: AbilityContext) => MenuPromptProperties)) {
         super(properties);
     }
@@ -49,5 +49,3 @@ class MenuPromptAction extends GameAction {
         context.game.promptWithHandlerMenu(player, Object.assign(properties, { context, choiceHandler }));
     }
 }
-
-export = MenuPromptAction;
