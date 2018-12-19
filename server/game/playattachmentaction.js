@@ -1,11 +1,12 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
+const GameActions = require('./GameActions/GameActions');
 const { Phases, PlayTypes, EventNames } = require('./Constants');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card) {
         super(card, [Costs.payTargetDependentFateCost('target', PlayTypes.PlayFromHand), Costs.playLimited()], {
-            gameAction: card.game.actions.attach(context => ({ attachment: context.source })),
+            gameAction: GameActions.attach(context => ({ attachment: context.source })),
             cardCondition: (card, context) => context.source.canPlayOn(card)
         });
         this.title = 'Play this attachment';

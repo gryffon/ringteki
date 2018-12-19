@@ -58,7 +58,7 @@ import { LoseFateProperties, LoseFateAction } from './LoseFateActions';
 
 const GameActions = {
     // card actions
-    attach: (propertyFactory: AttachActionProperties = {}) => new AttachAction(propertyFactory), // attachment
+    attach: (propertyFactory: AttachActionProperties | ((context: AbilityContext) => AttachActionProperties) = {}) => new AttachAction(propertyFactory), // attachment
     bow: (propertyFactory: BowActionProperties | ((context: AbilityContext) => BowActionProperties) = {}) => new BowAction(propertyFactory),
     break: (propertyFactory: BreakProperties | ((context: AbilityContext) => BreakProperties) = {}) => new BreakAction(propertyFactory),
     cardLastingEffect: (propertyFactory: LastingEffectCardProperties | ((context: AbilityContext) => LastingEffectCardProperties)) => new LastingEffectCardAction(propertyFactory),

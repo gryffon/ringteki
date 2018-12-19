@@ -81,11 +81,17 @@ export class GameAction {
         return event;
     }
 
-    resolve(target: PlayerOrRingOrCard, context: AbilityContext = target.game.getFrameworkContext()): void {
-        this.properties.target = target;
+    resolve(target: PlayerOrRingOrCard, context: AbilityContext): void {
+        this.setDefaultTarget(() => target);
         let events = [];
         this.addEventsToArray(events, context);
-        target.game.queueSimpleStep(() => target.game.openEventWindow(events));
+        context.game.queueSimpleStep(() => context.game.openEventWindow(events));
+    }
+
+    getEventArray(context) {
+        let events = [];
+        this.addEventsToArray(events, context);
+        return events;
     }
     
     checkEventCondition(event: Event): boolean { // eslint-disable-line no-unused-vars
