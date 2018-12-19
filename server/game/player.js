@@ -594,15 +594,16 @@ class Player extends GameObject {
             card.new = false;
         });
 
-        this.modifyFate(this.getTotalIncome());
-
-        this.game.raiseEvent(EventNames.OnIncomeCollected, { player: this });
-
         this.passedDynasty = false;
         this.limitedPlayed = 0;
         this.conflictOpportunities.military = 1;
         this.conflictOpportunities.political = 1;
         this.conflictOpportunities.total = 2;
+    }
+
+    collectFate() {
+        this.modifyFate(this.getTotalIncome());
+        this.game.raiseEvent(EventNames.OnFateCollected, { player: this });
     }
 
     showConflictDeck() {
