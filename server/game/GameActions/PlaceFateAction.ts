@@ -1,0 +1,53 @@
+import AbilityContext = require('../AbilityContext');
+import BaseCard = require('../basecard');
+import DrawCard = require('../drawcard');
+import Event = require('../Events/Event');
+import MoveFateEvent = require('../Events/MoveFateEvent');
+import Player = require('../player');
+import Ring = require('../ring');
+import { CardGameAction, CardActionProperties } from './CardGameAction';
+import { Locations, CardTypes }  from '../Constants';
+
+export interface PlaceFateProperties extends CardActionProperties {
+    amount?: number,
+    origin?: DrawCard | Player | Ring
+}
+
+export class PlaceFateAction extends CardGameAction {
+    name = 'placeFate';
+    targetType = [CardTypes.Character];
+    defaultProperties: PlaceFateProperties = { amount: 1 };
+    constructor(properties: ((context: AbilityContext) => PlaceFateProperties) | PlaceFateProperties) {
+        super(properties);
+    }
+
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let properties: PlaceFateProperties = this.getProperties(context);
+        return ['place {1} fate on {0}', [properties.amount]];
+    }
+
+    canAffect(card: BaseCard, context: AbilityContext): boolean {
+        let properties: PlaceFateProperties = this.getProperties(context);
+        if(properties.amount === 0 || card.location !== Locations.PlayArea) {
+            return false;
+        }
+        return super.canAffect(card, context) && this.checkOrigin(properties.origin, context);
+    }
+
+    checkOrigin(origin: Player | Ring | DrawCard, context: AbilityContext): boolean {
+        if(origin) {
+            if(origin.fate === 0) {
+                return false;
+            } else if(['player', 'ring'].includes(origin.type)) {
+                return true;
+            }
+            return origin.allowGameAction('removeFate', context);
+        }
+        return true;
+    }
+    
+    getEvent(card: BaseCard, context: AbilityContext): Event {
+        let properties: PlaceFateProperties = this.getProperties(context);
+        return new MoveFateEvent({ context: context }, properties.amount, properties.origin, card, this);
+    }
+}

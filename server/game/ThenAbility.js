@@ -49,6 +49,26 @@ class ThenAbility extends BaseAbility {
         this.game.queueSimpleStep(() => this.game.checkGameState());
     }
 
+    newFunction(context) {
+        let events = [];
+        let actions = this.getGameActions(context);
+        let then = this.properties.then;
+        if(then && typeof then === 'function') {
+            then = then(context);
+        }
+        for(const action of actions) {
+            this.game.queueSimpleStep(() => action.addEventsToArray(events, context));
+        }
+        this.game.queueSimpleStep(() => {
+            if(events.length > 0) {
+                let window = this.openEventWindow(events);
+                if(then) {
+                    window.addThenAbility(events, new ThenAbility(this.game, this.card, then), context);
+                }
+            }
+        });
+    }
+
     executeGameActionPrehandlers(context) {
         let actions = this.getGameActions(context);
         for(const action of actions) {

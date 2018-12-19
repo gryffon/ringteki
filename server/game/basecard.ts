@@ -31,6 +31,7 @@ class BaseCard extends EffectSource {
     abilities: any = { actions: [], reactions: [], persistentEffects: [], playActions: [] };
     traits: string[];
     printedFaction: string;
+    location: Locations;
 
     isProvince: boolean = false;
     isConflict: boolean = false;

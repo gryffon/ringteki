@@ -958,9 +958,9 @@ class Game extends EventEmitter {
         return new AbilityContext({ game: this, player: player });
     }
 
-    initiateConflict(player) {
+    initiateConflict(player, canPass) {
         this.currentConflict = new Conflict(this, player, player.opponent);
-        this.queueStep(new ConflictFlow(this, this.currentConflict));
+        this.queueStep(new ConflictFlow(this, this.currentConflict, canPass));
     }
 
     /**

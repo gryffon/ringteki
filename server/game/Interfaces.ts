@@ -112,7 +112,7 @@ interface TriggeredAbilityTargets {
     [propName: string]: TriggeredAbilityTarget & SubTarget & TriggeredAbilityTarget;
 };
 
-type WhenType = {
+export type WhenType = {
     [EventName in EventNames]?: (event: any, context?: TriggeredAbilityContext) => boolean;
 };
 
