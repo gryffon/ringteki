@@ -8,7 +8,8 @@ class ShinjoTrailblazer extends DrawCard {
                 onCardRevealed: (event, context) => event.card.isProvince && event.card.controller === context.source.controller.opponent && this.game.isDuringConflict()
             },
             gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyBothSkills(2) }),
-            effect: 'to give {0} +2military, +2political'
+            effect: 'to give {0} +2{1}, +2{2}',
+            effectArgs: () => ['military', 'political']
         });
     }
 }
