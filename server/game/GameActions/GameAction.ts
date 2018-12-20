@@ -62,12 +62,12 @@ export class GameAction {
 
     hasLegalTarget(context: AbilityContext): boolean {
         let properties = this.getProperties(context);
-        return (properties.target as GameObject[]).some(target => this.canAffect(target, context));
+        return (properties.target as PlayerOrRingOrCard[]).some(target => this.canAffect(target, context));
     }
 
     addEventsToArray(events: Event[], context: AbilityContext): void {
         let properties = this.getProperties(context);
-        for(const target of (properties.target as GameObject[]).filter(target => this.canAffect(target, context))) {
+        for(const target of (properties.target as PlayerOrRingOrCard[]).filter(target => this.canAffect(target, context))) {
             events.push(this.getEvent(target, context));
         }
     }

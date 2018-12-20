@@ -12,6 +12,6 @@ export class RingAction extends GameAction {
     }
 
     checkEventCondition(event: any):boolean {
-        return this.canAffect(event.player, event.context);
+        return this.canAffect(event.ring, event.context);
     }
 }

@@ -32,6 +32,8 @@ export class ResolveElementAction extends RingAction {
                 handler: () => context.game.openEventWindow(this.getResolveElementEvent(ring, context, false))
             }));
             events.push(this.createEvent(EventNames.Unnamed, {}, () => context.game.openSimultaneousEffectWindow(effectObjects)));
+        } else {
+            events.push(this.getEvent(target[0], context));
         }
     }
 

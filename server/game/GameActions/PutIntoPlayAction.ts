@@ -19,7 +19,7 @@ export class PutIntoPlayAction extends CardGameAction {
         fate: 0,
         status: 'ordinary'
     };
-    constructor(properties: ((context: AbilityContext) => PutIntoPlayProperties) | PutIntoPlayProperties, intoConflict = false) {
+    constructor(properties: ((context: AbilityContext) => PutIntoPlayProperties) | PutIntoPlayProperties, intoConflict = true) {
         super(properties);
         this.intoConflict = intoConflict;
     }

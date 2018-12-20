@@ -10,9 +10,9 @@ import { GameAction } from './GameAction';
 export interface SelectCardProperties extends CardActionProperties {
     activePromptTitle?: string;
     player?: Players;
-    cardType?: CardTypes;
+    cardType?: CardTypes | CardTypes[];
     controller?: Players;
-    location?: Locations;
+    location?: Locations | Locations[];
     cardCondition?: (card: BaseCard, context: AbilityContext) => boolean;
     targets?: boolean;
     message?: string;
@@ -45,11 +45,6 @@ export class SelectCardAction extends CardGameAction {
     canAffect(card, context) {
         let properties = this.getProperties(context);
         return properties.selector.canTarget(card, context);
-    }
-
-    hasLegalTarget(context: AbilityContext): boolean {
-        let properties = this.getProperties(context);
-        return properties.selector.hasEnoughTargets(context) && (properties.player !== Players.Opponent || !!context.player.opponent);
     }
 
     addEventsToWindow(events, context) {

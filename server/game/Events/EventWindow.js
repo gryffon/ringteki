@@ -52,14 +52,11 @@ class EventWindow extends BaseStepWithPipeline {
         return event;
     }
 
-    addThenAbility(events, ability, context, condition) {
+    addThenAbility(ability, context, condition) {
         if(!condition) {
             condition = event => !event.cancelled && (!event.gameAction || event.gameAction.fullyResolved(event));
         }
-        if(!Array.isArray(events)) {
-            events = [events];
-        }
-        this.thenAbilities.push({ events, ability, context, condition });
+        this.thenAbilities.push({ ability, context, condition });
     }
 
     setCurrentEventWindow() {
@@ -124,7 +121,7 @@ class EventWindow extends BaseStepWithPipeline {
 
     checkThenAbilities() {
         for(const thenAbility of this.thenAbilities) {
-            if(thenAbility.events.every(event => thenAbility.condition(event))) {
+            if(thenAbility.context.events.every(event => thenAbility.condition(event))) {
                 this.game.resolveAbility(thenAbility.ability.createContext(thenAbility.context.player));
             }
         }

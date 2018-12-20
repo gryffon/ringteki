@@ -9,6 +9,8 @@ export interface CardMenuProperties extends CardActionProperties {
     activePromptTitle?: string;
     player?: Players;
     cards: BaseCard[];
+    choices?: string[];
+    handlers?: Function[];
     message?: string;
     messageArgs?: (context: AbilityContext, action: GameAction) => any[];
     actionParameter?: string;
@@ -38,6 +40,9 @@ export class CardMenuAction extends CardGameAction {
 
     hasLegalTarget(context: AbilityContext): boolean {
         let properties = this.getProperties(context) as CardMenuProperties;
+        if(properties.choices) {
+            return true;
+        }
         return properties.cards.some(card => {
             properties.gameAction.properties[properties.actionParameter] = card;
             return properties.gameAction.hasLegalTarget(context);

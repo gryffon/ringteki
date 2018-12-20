@@ -39,7 +39,7 @@ class PlayCardResolver extends AbilityResolver {
 export interface PlayCardProperties extends CardActionProperties {
     resetOnCancel?: boolean;
     postHandler?: (card: DrawCard) => void;
-    location: Locations;
+    location?: Locations;
 }
 
 export class PlayCardAction extends CardGameAction {
