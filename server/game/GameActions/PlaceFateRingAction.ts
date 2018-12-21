@@ -26,16 +26,16 @@ export class PlaceFateRingAction extends RingAction {
         return ['place {1} fate on {0}', [properties.amount]];
     }
 
-    canAffect(ring: Ring, context: AbilityContext): boolean {
-        let properties: PlaceFateRingProperties = this.getProperties(context);
+    canAffect(ring: Ring, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties: PlaceFateRingProperties = this.getProperties(context, additionalProperties);
         if(properties.origin && (!properties.origin.checkRestrictions('spendFate', context) || properties.origin.fate === 0)) {
             return false;
         }
         return properties.amount > 0 && super.canAffect(ring, context);
     }
     
-    getEvent(ring: Ring, context: AbilityContext): Event {
-        let properties: PlaceFateRingProperties = this.getProperties(context);
+    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
+        let properties: PlaceFateRingProperties = this.getProperties(context, additionalProperties);
         return new MoveFateEvent({ context }, properties.amount, properties.origin, ring, this);
     }
 }

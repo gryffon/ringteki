@@ -22,8 +22,8 @@ export class AttachAction extends CardGameAction {
         return ['attach {1} to {0}', [properties.attachment]];
     }
 
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as AttachActionProperties;
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as AttachActionProperties;
         if(!context || !context.player || !card || card.location !== Locations.PlayArea) {
             return false;
         } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context)) {
@@ -32,8 +32,8 @@ export class AttachAction extends CardGameAction {
         return card.allowAttachment(properties.attachment) && super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as AttachActionProperties;
+    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as AttachActionProperties;
         return super.createEvent(EventNames.OnCardAttached, { card: properties.attachment, parent: card, context: context }, (event: any): void => {
             if(event.card.location === Locations.PlayArea) {
                 event.card.parent.removeAttachment(event.card);

@@ -12,7 +12,7 @@ export interface CardMenuProperties extends CardActionProperties {
     choices?: string[];
     handlers?: Function[];
     message?: string;
-    messageArgs?: (context: AbilityContext, action: GameAction) => any[];
+    messageArgs?: (card: BaseCard, action: GameAction) => any[];
     actionParameter?: string;
     gameAction: GameAction;
 }
@@ -30,27 +30,25 @@ export class CardMenuAction extends CardGameAction {
         super(properties);
     }
 
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as CardMenuProperties;
-        return properties.cards.some(c => {
-            properties.gameAction.properties[properties.actionParameter] = c;
-            return properties.gameAction.canAffect(card, context);
-        });
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as CardMenuProperties;
+        return properties.cards.some(c => 
+            properties.gameAction.canAffect(card, context, { [properties.actionParameter]: c })
+        );
     }
 
-    hasLegalTarget(context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as CardMenuProperties;
+    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as CardMenuProperties;
         if(properties.choices) {
             return true;
         }
-        return properties.cards.some(card => {
-            properties.gameAction.properties[properties.actionParameter] = card;
-            return properties.gameAction.hasLegalTarget(context);
-        });
+        return properties.cards.some(card =>
+            properties.gameAction.hasLegalTarget(context, { [properties.actionParameter]: card })
+        );
     }
 
-    addEventsToArray(events: any[], context: AbilityContext): void {
-        let properties = this.getProperties(context) as CardMenuProperties;
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+        let properties = this.getProperties(context, additionalProperties) as CardMenuProperties;
         if(properties.cards.length === 0 || properties.player === Players.Opponent && !context.player.opponent) {
             return;
         }
@@ -58,10 +56,9 @@ export class CardMenuAction extends CardGameAction {
         let defaultProperties = {
             context: context,
             cardHandler: (card: BaseCard): void => {
-                properties.gameAction.properties[properties.actionParameter] = card;
-                properties.gameAction.addEventsToArray(events, context);
+                properties.gameAction.addEventsToArray(events, context, { [properties.actionParameter]: card });
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(context, properties.gameAction))
+                    context.game.addMessage(properties.message, ...properties.messageArgs(card, properties.gameAction))
                 }
             }
         };

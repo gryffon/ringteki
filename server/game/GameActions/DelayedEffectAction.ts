@@ -28,8 +28,8 @@ export class DelayedEffectAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context);
+    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties);
         return super.createEvent(EventNames.OnEffectApplied, { card: card, context: context }, event => {
             event.context.source.delayedEffect(() => Object.assign(properties, { target: card, context: context }));
         });

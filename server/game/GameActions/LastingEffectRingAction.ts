@@ -16,8 +16,8 @@ export class LastingEffectRingAction extends RingAction {
         effect: []
     };
 
-    getEvent(ring: Ring, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as LastingEffectRingProperties;
+    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as LastingEffectRingProperties;
         return super.createEvent(EventNames.OnEffectApplied, { ring, context }, event => {
             event.context.source[properties.duration](() => Object.assign({ match: ring }, properties));
         });

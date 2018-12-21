@@ -22,8 +22,8 @@ export class ResolveConflictRingAction extends RingAction {
         return ['resolve {0}' + (properties.resolveAsAttacker ? '' : ' for the attacking player'),[]];
     }
     
-    getEvent(ring: Ring, context: AbilityContext): Event {
-        let properties: ResolveConflictRingProperties = this.getProperties(context);
+    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
+        let properties: ResolveConflictRingProperties = this.getProperties(context, additionalProperties);
         let conflict = context.game.currentConflict;
         if(!conflict && !properties.resolveAsAttacker) {
             return this.createEvent(EventNames.Unnamed, {}, () => true);

@@ -20,16 +20,16 @@ export class LastingEffectCardAction extends CardGameAction {
         super(properties);
     }
 
-    getProperties(context: AbilityContext): LastingEffectCardProperties {
-        let properties = super.getProperties(context) as LastingEffectCardProperties;
+    getProperties(context: AbilityContext, additionalProperties = {}): LastingEffectCardProperties {
+        let properties = super.getProperties(context, additionalProperties) as LastingEffectCardProperties;
         if(!Array.isArray(properties.effect)) {
             properties.effect = [properties.effect];
         }
         return properties;
     }
 
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        let properties = this.getProperties(context);
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
         if(card.location !== Locations.PlayArea && properties.targetLocation !== Locations.Provinces) {
             return false;
         }
@@ -40,8 +40,8 @@ export class LastingEffectCardAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context);
+    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties);
         return super.createEvent(EventNames.OnEffectApplied, { card, context }, event => {
             event.context.source[properties.duration](() => Object.assign({ match: card }, properties));
         });

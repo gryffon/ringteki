@@ -9,14 +9,14 @@ class UpholdingAuthority extends ProvinceCard {
 
         let gameAction = ability.actions.menuPrompt(context => ({
             activePromptTitle: 'Choose how many cards to discard',
-            choices: Array.from(Array(context.player.opponent.hand.filter(card => card.name === gameAction.properties.target).length), (x, i) => i + 1),
+            choices: properties => Array.from(Array(context.player.opponent.hand.filter(card => card.name === properties.target[0].name).length), (x, i) => i + 1),
             gameAction: ability.actions.discardCard(),
-            choiceHandler: (choice, displayMessage, action) => {
-                let chosenCard = gameAction.properties.target;
-                action.properties.target = context.player.opponent.hand.filter(card => card.name === chosenCard.name).slice(0, parseInt(choice));
+            choiceHandler: (choice, displayMessage, properties) => {
+                let chosenCard = properties.target[0];
                 if(displayMessage) {
                     this.game.addMessage('{0} chooses to discard {1} cop{2} of {3}', context.player, choice, (choice === 1 ? 'y' : 'ies'), chosenCard);
                 }
+                return { target: context.player.opponent.hand.filter(card => card.name === chosenCard.name).slice(0, parseInt(choice)) };
             }
         }));
 
@@ -30,7 +30,7 @@ class UpholdingAuthority extends ProvinceCard {
                 activePromptTitle: 'Choose a card to discard',
                 cards: context.player.opponent.hand.sortBy(card => card.name),
                 message: '{0} reveals their hand: {1}',
-                messageArgs: context => [context.player.opponent, context.player.opponent.hand.sortBy(card => card.name)],
+                messageArgs: () => [context.player.opponent, context.player.opponent.hand.sortBy(card => card.name)],
                 gameAction: gameAction,
                 choices: ['Don\'t discard anything'],
                 handlers: [() => context.game.addMessage('{0} chooses not to discard anything', context.player)]

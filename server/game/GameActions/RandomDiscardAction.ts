@@ -21,13 +21,13 @@ export class RandomDiscardAction extends PlayerAction {
         return ['make {0} discard {1} cards at random', [properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties: RandomDiscardProperties = this.getProperties(context);
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties: RandomDiscardProperties = this.getProperties(context, additionalProperties);
         return properties.amount > 0 && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties: RandomDiscardProperties = this.getProperties(context);
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties: RandomDiscardProperties = this.getProperties(context, additionalProperties);
         let amount = Math.min(properties.amount, player.hand.size());
         let cards = player.hand.shuffle().slice(0, amount);
         return super.createEvent(EventNames.OnCardsDiscardedFromHand, { player, cards, context }, event => {

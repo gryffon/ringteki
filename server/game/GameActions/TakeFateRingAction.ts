@@ -20,14 +20,14 @@ export class TakeFateRingAction extends RingAction {
         return ['take {1} fate from {0}', [properties.amount]];
     }
 
-    canAffect(ring: Ring, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as TakeFateRingProperties;
+    canAffect(ring: Ring, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as TakeFateRingProperties;
         return context.player.checkRestrictions('takeFateFromRings', context) &&
                ring.fate > 0 && properties.amount > 0 && super.canAffect(ring, context);
     }
     
-    getEvent(ring: Ring, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as TakeFateRingProperties;
+    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as TakeFateRingProperties;
         return new MoveFateEvent({ context }, properties.amount, ring, context.player, this);
     }
 }

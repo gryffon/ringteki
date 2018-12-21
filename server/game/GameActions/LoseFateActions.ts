@@ -21,13 +21,13 @@ export class LoseFateAction extends PlayerAction {
         return ['make {0} lose {1} fate', [properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties: LoseFateProperties = this.getProperties(context);
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties: LoseFateProperties = this.getProperties(context, additionalProperties);
         return properties.amount > 0 && player.fate > 0 && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties: LoseFateProperties = this.getProperties(context);
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties: LoseFateProperties = this.getProperties(context, additionalProperties);
         return super.createEvent(EventNames.OnModifyFate, { player: player, amount: properties.amount, context: context }, event => player.modifyFate(-event.amount));
     }
 }

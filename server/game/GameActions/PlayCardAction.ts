@@ -8,18 +8,19 @@ import { Locations, EventNames }  from '../Constants';
 class PlayCardResolver extends AbilityResolver {
     playGameAction: PlayCardAction;
     gameActionContext: AbilityContext;
+    gameActionProperties: any;
     cancelPressed: boolean;
-    constructor(game, context, playGameAction, gameActionContext) {
+    constructor(game, context, playGameAction, gameActionContext, gameActionProperties) {
         super(game, context);
         this.playGameAction = playGameAction;
         this.gameActionContext = gameActionContext;
+        this.gameActionProperties = gameActionProperties;
         this.cancelPressed = false;
     }
 
     payCosts() {
         if(this.cancelled || this.canPayResults.cancelled) {
-            let properties = this.playGameAction.getProperties(this.gameActionContext);
-            if(properties.resetOnCancel) {
+            if(this.gameActionProperties.resetOnCancel) {
                 this.playGameAction.cancelAction(this.gameActionContext);
                 this.cancelPressed = true;
             }
@@ -30,8 +31,7 @@ class PlayCardResolver extends AbilityResolver {
     initiateAbility() {
         super.initiateAbility();
         if(!this.cancelPressed) {
-            let properties = this.playGameAction.getProperties(this.gameActionContext);
-            this.game.queueSimpleStep(() => properties.postHandler(this.context.source));
+            this.game.queueSimpleStep(() => this.gameActionProperties.postHandler(this.context.source));
         }
     }
 }
@@ -54,12 +54,12 @@ export class PlayCardAction extends CardGameAction {
         super(properties);
     }
 
-    getProperties(context: AbilityContext): PlayCardProperties {
-        return super.getProperties(context) as PlayCardProperties;
+    getProperties(context: AbilityContext, additionalProperties = {}): PlayCardProperties {
+        return super.getProperties(context, additionalProperties) as PlayCardProperties;
     }
 
-    canAffect(card: DrawCard, context: AbilityContext): boolean {
-        let properties = this.getProperties(context);
+    canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
         if(!super.canAffect(card, context)) {
             return false;
         }
@@ -80,27 +80,27 @@ export class PlayCardAction extends CardGameAction {
         context.ability.executeHandler(context);
     }
 
-    addEventsToArray(events: any[], context: AbilityContext): void {
-        let properties = this.getProperties(context);
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+        let properties = this.getProperties(context, additionalProperties);
         if((properties.target as DrawCard[]).length === 0) {
             return;
         }
         let card = properties.target[0];
         let actions = this.getLegalActions(card.getActions(context.player, properties.location), context);
         if(actions.length === 1) {
-            events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player)));
+            events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), properties));
             return;
         }
         context.game.promptWithHandlerMenu(context.player, {
             source: card,
             choices: actions.map(action => action.title).concat(properties.resetOnCancel ? 'Cancel' : []),
-            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player)))).concat(() => this.cancelAction(context))
+            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), properties))).concat(() => this.cancelAction(context))
         });
     }
 
-    getPlayCardEvent(card: DrawCard, context: AbilityContext, actionContext: AbilityContext): Event {
+    getPlayCardEvent(card: DrawCard, context: AbilityContext, actionContext: AbilityContext, properties): Event {
         return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
-            context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context));
+            context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties));
         });        
     }
 }

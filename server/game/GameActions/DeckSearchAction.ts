@@ -27,8 +27,8 @@ export class DeckSearchAction extends PlayerAction {
         return [message, []];
     }
 
-    canAffect(player, context) {
-        let properties = this.getProperties(context) as DeckSearchProperties;
+    canAffect(player, context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;
         return properties.amount !== 0 && player.conflictDeck.size() > 0 && super.canAffect(player, context);
     }
 
@@ -36,10 +36,10 @@ export class DeckSearchAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player, context) {
-        let properties = this.getProperties(context) as DeckSearchProperties;
+    getEvent(player, context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;
         return super.createEvent(EventNames.OnDeckSearch, { player: player, amount: properties.amount, context: context }, () => {
-            let amount = this.properties > -1 ? properties.amount : player.conflictDeck.size();
+            let amount = properties.amount > -1 ? properties.amount : player.conflictDeck.size();
             context.game.promptWithHandlerMenu(player, {
                 activePromptTitle: 'Select a card to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand',
                 context: context,

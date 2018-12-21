@@ -25,13 +25,13 @@ export class GainFateAction extends PlayerAction {
         return ['gain {1} fate', [properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties: GainFateProperties = this.getProperties(context);
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties: GainFateProperties = this.getProperties(context, additionalProperties);
         return properties.amount > 0 && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties: GainFateProperties = this.getProperties(context);
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties: GainFateProperties = this.getProperties(context, additionalProperties);
         return super.createEvent(EventNames.OnModifyFate, { player: player, amount: properties.amount, context: context }, event => player.modifyFate(event.amount));
     }
 }

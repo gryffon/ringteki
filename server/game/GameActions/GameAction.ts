@@ -36,8 +36,8 @@ export class GameAction {
         return [];
     }
 
-    getProperties(context: AbilityContext): GameActionProperties {
-        let properties = Object.assign({ target: this.getDefaultTargets(context) }, this.defaultProperties, this.properties || this.propertyFactory(context));
+    getProperties(context: AbilityContext, additionalProperties = {}): GameActionProperties {
+        let properties = Object.assign({ target: this.getDefaultTargets(context) }, this.defaultProperties, this.properties || this.propertyFactory(context), additionalProperties);
         if(!Array.isArray(properties.target)) {
             properties.target = [properties.target];
         }
@@ -56,23 +56,23 @@ export class GameAction {
         this.getDefaultTargets = func;
     }
 
-    canAffect(target: any, context: AbilityContext): boolean {
+    canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
         return this.targetType.includes(target.type) && target.checkRestrictions(this.name, context);
     }
 
-    hasLegalTarget(context: AbilityContext): boolean {
-        let properties = this.getProperties(context);
+    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
         return (properties.target as PlayerOrRingOrCard[]).some(target => this.canAffect(target, context));
     }
 
-    addEventsToArray(events: Event[], context: AbilityContext): void {
-        let properties = this.getProperties(context);
+    addEventsToArray(events: Event[], context: AbilityContext, additionalProperties = {}): void {
+        let properties = this.getProperties(context, additionalProperties);
         for(const target of (properties.target as PlayerOrRingOrCard[]).filter(target => this.canAffect(target, context))) {
-            events.push(this.getEvent(target, context));
+            events.push(this.getEvent(target, context, additionalProperties));
         }
     }
 
-    getEvent(target: any, context: AbilityContext): Event {
+    getEvent(target: any, context: AbilityContext, additionalProperties = {}): Event {
         return this.createEvent(EventNames.Unnamed, { context }, () => true);
     }
 
@@ -88,9 +88,9 @@ export class GameAction {
         context.game.queueSimpleStep(() => context.game.openEventWindow(events));
     }
 
-    getEventArray(context) {
+    getEventArray(context, additionalProperties = {}) {
         let events = [];
-        this.addEventsToArray(events, context);
+        this.addEventsToArray(events, context, additionalProperties);
         return events;
     }
     

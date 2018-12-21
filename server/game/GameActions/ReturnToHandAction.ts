@@ -19,16 +19,16 @@ export class ReturnToHandAction extends CardGameAction {
         super(properties);
     }
 
-    canAffect(card: DrawCard, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as ReturnToHandProperties;
+    canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as ReturnToHandProperties;
         if(card.location !== properties.location) {
             return false;
         }
         return super.canAffect(card, context);
     }
     
-    getEvent(card: DrawCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as ReturnToHandProperties;
+    getEvent(card: DrawCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as ReturnToHandProperties;
         if(properties.location === Locations.PlayArea) {
             return new LeavesPlayEvent({ context: context, destination: Locations.Hand }, card, this);
         }

@@ -39,16 +39,16 @@ export class ReturnToDeckAction extends CardGameAction {
         return ['return {0} to the ' + (properties.bottom ? 'bottom' : 'top') + ' of their deck',[]];
     }
 
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as ReturnToDeckProperties;
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as ReturnToDeckProperties;
         if(!properties.ignoreLocation && card.location !== properties.location) {
             return false;
         }
         return super.canAffect(card, context);
     }
     
-    getEvent(card: DrawCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as ReturnToDeckProperties;
+    getEvent(card: DrawCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as ReturnToDeckProperties;
         let destination = card.isDynasty ? Locations.DynastyDeck : Locations.ConflictDeck;
         let target = properties.target as any[];
         if(card.location === Locations.PlayArea) {

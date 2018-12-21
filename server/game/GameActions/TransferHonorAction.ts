@@ -27,13 +27,13 @@ export class TransferHonorAction extends PlayerAction {
         return ['take {1} honor from {0}', [properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as TransferHonorProperties;
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as TransferHonorProperties;
         return player.opponent && properties.amount > 0 && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as TransferHonorProperties;
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as TransferHonorProperties;
         let params = {
             context: context,
             player: player,

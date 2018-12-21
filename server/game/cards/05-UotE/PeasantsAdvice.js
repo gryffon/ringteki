@@ -18,7 +18,8 @@ class PeasantsAdvice extends DrawCard {
                         cards: context.target.controller.getSourceList(context.target.location).filter(card => card.isDynasty && !card.facedown),
                         choices: ['Done'],
                         handlers: [() => this.game.addMessage('{0} chooses not to return a dynasty card to its owner\'s deck', context.player)],
-                        message: '{0} chooses to shuffle {2} into its owner\'s deck',
+                        message: '{0} chooses to shuffle {1} into its owner\'s deck',
+                        messageArgs: card => [context.player, card],
                         gameAction: AbilityDsl.actions.returnToDeck({
                             location: context.target.location,
                             shuffle: true

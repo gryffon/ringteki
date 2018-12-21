@@ -35,20 +35,25 @@ export class SelectCardAction extends CardGameAction {
         return ['choose a target for {0}',[]];
     }
 
-    getProperties(context) {
-        let properties = super.getProperties(context) as SelectCardProperties;
+    getProperties(context, additionalProperties = {}) {
+        let properties = super.getProperties(context, additionalProperties) as SelectCardProperties;
         let cardCondition = (card, context) => properties.gameAction.canAffect(card, context) && properties.cardCondition(card, context)
         properties.selector = CardSelector.for(Object.assign({}, properties, { cardCondition }));
         return properties;
     }
 
-    canAffect(card, context) {
-        let properties = this.getProperties(context);
+    canAffect(card, context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties);
         return properties.selector.canTarget(card, context);
     }
 
-    addEventsToWindow(events, context) {
-        let properties = this.getProperties(context);
+    hasLegalTarget(context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.selector.hasEnoughTargets(context);
+    }
+
+    addEventsToArray(events, context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties);
         if(!properties.selector.hasEnoughTargets(context) || properties.player === Players.Opponent && !context.player.opponent) {
             return;
         }
@@ -65,10 +70,9 @@ export class SelectCardAction extends CardGameAction {
             mustSelect: mustSelect,
             onSelect: (player, cards) => {
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(context, properties.gameAction));
+                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, properties.gameAction));
                 }
-                properties.gameAction.setDefaultTarget(() => cards);
-                properties.gameAction.addEventsToArray(events, context);
+                properties.gameAction.addEventsToArray(events, context, { target: cards });
                 return true;
             }
         };

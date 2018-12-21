@@ -19,16 +19,16 @@ export class ChosenDiscardAction extends PlayerAction {
         return ['make {0} discard {1} cards', [properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext) {
-        let properties = this.getProperties(context) as ChosenDiscardProperties;
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties) as ChosenDiscardProperties;
         if(player.hand.size() === 0 || properties.amount === 0) {
             return false;
         }
         return super.canAffect(player, context);
     }
 
-    addEventsToArray(events: any[], context: AbilityContext): void {
-        let properties = this.getProperties(context) as ChosenDiscardProperties;
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+        let properties = this.getProperties(context, additionalProperties) as ChosenDiscardProperties;
         for(let player of properties.target as Player[]) {
             let amount = Math.min(player.hand.size(), properties.amount);
             if(amount > 0) {

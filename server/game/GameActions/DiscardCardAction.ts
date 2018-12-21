@@ -13,8 +13,8 @@ export class DiscardCardAction extends CardGameAction {
     cost = 'discarding {0}';
     effect = 'discard {0}';
 
-    addEventsToArray(events: any[], context: AbilityContext): void {
-        let properties = this.getProperties(context);
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+        let properties = this.getProperties(context, additionalProperties);
         if((properties.target as GameObject[]).length === 0 ) {
             return;
         }

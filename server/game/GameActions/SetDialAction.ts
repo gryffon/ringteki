@@ -21,13 +21,13 @@ export class SetDialAction extends PlayerAction {
         return ['set {0}\'s dial to {1}', [properties.value]]
     }
 
-    canAffect(player, context) {
-        let properties = this.getProperties(context) as SetDialProperties;
+    canAffect(player, context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties) as SetDialProperties;
         return properties.value > 0 && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as SetDialProperties;
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as SetDialProperties;
         let value = properties.value;
         return super.createEvent(EventNames.OnSetHonorDial, { player, context, value }, event => {
             event.player.setShowBid(event.value);

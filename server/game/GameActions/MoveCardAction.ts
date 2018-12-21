@@ -29,8 +29,8 @@ export class MoveCardAction extends CardGameAction {
         return card.location !== Locations.PlayArea && super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as MoveCardProperties;
+    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as MoveCardProperties;
         return super.createEvent(EventNames.Unnamed, { card: card, context: context }, event => {
             if(properties.switch) {
                 let otherCard = card.controller.getDynastyCardInProvince(properties.destination);

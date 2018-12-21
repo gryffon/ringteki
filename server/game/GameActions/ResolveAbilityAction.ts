@@ -49,8 +49,8 @@ export class ResolveAbilityAction extends CardGameAction {
         return ['resolve {0}\'s {1} ability', [properties.ability.title]];
     }
 
-    canAffect(card: DrawCard, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as ResolveAbilityProperties;
+    canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as ResolveAbilityProperties;
         let ability = properties.ability;
         let player = properties.player || context.player;
         if(!super.canAffect(card, context) || !ability || !properties.secondResolution && player.isAbilityAtMax(ability.maxIdentifier)) {
@@ -63,8 +63,8 @@ export class ResolveAbilityAction extends CardGameAction {
         return ability.canResolveTargets(newContext);
     }
     
-    getEvent(card: DrawCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as ResolveAbilityProperties;
+    getEvent(card: DrawCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as ResolveAbilityProperties;
         return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
             let newContext = Object.assign(properties.ability.createContext(properties.player || context.player), {
                 isResolveAbility: true,

@@ -54,7 +54,7 @@ class EventWindow extends BaseStepWithPipeline {
 
     addThenAbility(ability, context, condition) {
         if(!condition) {
-            condition = event => !event.cancelled && (!event.gameAction || event.gameAction.fullyResolved(event));
+            condition = event => event.isFullyResolved(event);
         }
         this.thenAbilities.push({ ability, context, condition });
     }

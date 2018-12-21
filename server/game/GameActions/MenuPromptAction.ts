@@ -7,8 +7,8 @@ export interface MenuPromptProperties extends GameActionProperties {
     activePromptTitle: string;
     player?: Players;
     gameAction: GameAction;
-    choices: string[];
-    choiceHandler: (choice: string, displayMessage: boolean, action: GameAction) => void;
+    choices: string[] | ((properties: any) => string[]);
+    choiceHandler: (choice: string, displayMessage: boolean, properties: object) => object;
 }
 
 export class MenuPromptAction extends GameAction {
@@ -20,32 +20,44 @@ export class MenuPromptAction extends GameAction {
         return ['make a choice for {0}',[]];
     }
 
-    canAffect(target, context) {
-        let properties = this.getProperties(context) as MenuPromptProperties;
-        return properties.choices.some(choice => {
-            properties.choiceHandler(choice, false, properties.gameAction);
-            return properties.gameAction.canAffect(target, context);
+    getProperties(context, additionalProperties = {}): MenuPromptProperties {
+        let properties = super.getProperties(context, additionalProperties) as MenuPromptProperties;
+        if(typeof properties.choices === 'function') {
+            properties.choices = properties.choices(properties);
+        }
+        return properties;
+    }
+
+    canAffect(target, context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties);
+        return (properties.choices as string[]).some(choice => {
+            let childProperties = properties.choiceHandler(choice, false, properties);
+            return properties.gameAction.canAffect(target, context, childProperties);
         });
     }
 
-    hasLegalTarget(context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as MenuPromptProperties;
-        return properties.choices.some(choice => {
-            properties.choiceHandler(choice, false, properties.gameAction);
-            return properties.gameAction.hasLegalTarget(context);
+    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return (properties.choices as string[]).some(choice => {
+            let childProperties = properties.choiceHandler(choice, false, properties);
+            return properties.gameAction.hasLegalTarget(context, childProperties);
         });
     }
 
-    addEventsToArray(events, context) {
-        let properties = this.getProperties(context) as MenuPromptProperties;
+    addEventsToArray(events, context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties);
         if(properties.choices.length === 0 || properties.player === Players.Opponent && !context.player.oppoennt) {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
         let choiceHandler = choice => {
-            properties.choiceHandler(choice, true, properties.gameAction);
-            properties.gameAction.addEventsToArray(events, context);
+            let childProperties = properties.choiceHandler(choice, true, properties);
+            properties.gameAction.addEventsToArray(events, context, childProperties);
         }
-        context.game.promptWithHandlerMenu(player, Object.assign(properties, { context, choiceHandler }));
+        if(properties.choices.length === 1) {
+            choiceHandler(properties.choices[0]);
+            return;
+        }
+        context.game.promptWithHandlerMenu(player, Object.assign({}, properties, { context, choiceHandler }));
     }
 }

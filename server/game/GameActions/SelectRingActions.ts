@@ -27,19 +27,23 @@ export class SelectRingAction extends RingAction {
         return ['choose a ring for {0}',[]];
     }
 
-    canAffect(ring: Ring, context: AbilityContext): boolean {
-        let properties = super.getProperties(context) as SelectRingProperties;
+    canAffect(ring: Ring, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = super.getProperties(context, additionalProperties) as SelectRingProperties;
         if(properties.player === Players.Opponent && !context.player.opponent) {
             return false;
         }
         return super.canAffect(ring, context) && properties.ringCondition(ring, context);
     }
 
-    addEventsToWindow(events, context) {
-        let properties = super.getProperties(context) as SelectRingProperties;
+    hasLegalTarget(context, additionalProperties = {}) {
+        return Object.values(context.game.rings).some((ring: Ring) => this.canAffect(ring, context, additionalProperties));
+    }
+
+    addEventsToArray(events, context, additionalProperties = {}) {
+        let properties = super.getProperties(context, additionalProperties) as SelectRingProperties;
         if(properties.player === Players.Opponent && !context.player.opponent) {
             return;
-        } else if(Object.values(context.game.rings).some((ring: Ring): boolean => properties.ringCondition(ring, context))) {
+        } else if(!Object.values(context.game.rings).some((ring: Ring): boolean => properties.ringCondition(ring, context))) {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
@@ -47,10 +51,9 @@ export class SelectRingAction extends RingAction {
             context: context,
             onSelect: (player, ring) => {
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(context, properties.gameAction));
+                    context.game.addMessage(properties.message, ...properties.messageArgs(ring, properties.gameAction));
                 }
-                properties.gameAction.setDefaultTarget(() => ring);
-                properties.gameAction.addEventsToArray(events, context);
+                properties.gameAction.addEventsToArray(events, context, { target: ring });
                 return true;
             }
         };

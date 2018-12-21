@@ -32,21 +32,21 @@ export class ChooseGameAction extends GameAction {
         super(properties);
     }
 
-    getProperties(context: AbilityContext): ChooseActionPropertiesInternal {
-        let properties = super.getProperties(context) as ChooseActionProperties;
+    getProperties(context: AbilityContext, additionalProperties = {}): ChooseActionPropertiesInternal {
+        let properties = super.getProperties(context, additionalProperties) as ChooseActionProperties;
         for(const key of Object.keys(properties.choices)) {
             if(!Array.isArray(properties.choices[key])) {
                 properties.choices[key] = [properties.choices[key]] as GameAction[];
             }
             for(const action of properties.choices[key] as GameAction[]) {
-                action.setDefaultTarget(this.getDefaultTargets);
+                action.setDefaultTarget(() => properties.target);
             }
         }
         return properties as ChooseActionPropertiesInternal;
     }
 
-    hasLegalTarget(context: AbilityContext): boolean {
-        let properties = this.getProperties(context);
+    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
         return Object.values(properties.choices).some(
             (array: GameAction[]): boolean => array.some(
                 (gameAction: GameAction): boolean => gameAction.hasLegalTarget(context)
@@ -54,8 +54,8 @@ export class ChooseGameAction extends GameAction {
         );
     }
 
-    addEventsToArray(events: any[], context: AbilityContext): void {
-        let properties = this.getProperties(context);
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+        let properties = this.getProperties(context, additionalProperties);
         let activePromptTitle = properties.activePromptTitle;
         let choices = Object.keys(properties.choices);
         choices = choices.filter(key => (properties.choices[key]).some(action => action.hasLegalTarget(context)));
@@ -67,11 +67,17 @@ export class ChooseGameAction extends GameAction {
                 context.game.queueSimpleStep(() => gameAction.addEventsToArray(events, context));
             }
         }
+        if(choices.length < 2) {
+            if(choices.length === 1) {
+                choiceHandler(choices[0]);
+            }
+            return;
+        }
         context.game.promptWithHandlerMenu(context.player, { activePromptTitle, context, choices, choiceHandler });
     }
 
-    canAffect(target: any, context: AbilityContext): boolean {
-        let properties = this.getProperties(context);
+    canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
         return Object.values(properties.choices).some(
             array => array.some(
                 gameAction => gameAction.canAffect(target, context)

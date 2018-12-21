@@ -13,6 +13,7 @@ class Event {
         this.condition = (event) => true; // eslint-disable-line no-unused-vars
         this.order = 0;
         this.isContingent = false;
+        this.isFullyResolved = (event) => !event.cancelled;
 
         _.extend(this, params);
     }

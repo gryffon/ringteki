@@ -3,6 +3,7 @@ import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
 import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
+import { assertModuleDeclaration } from 'babel-types';
 
 export interface LoseHonorProperties extends PlayerActionProperties {
     amount?: number;
@@ -27,14 +28,15 @@ export class LoseHonorAction extends PlayerAction {
         return ['lose ' + properties.amount + ' honor', []];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties: LoseHonorProperties = this.getProperties(context);
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties: LoseHonorProperties = this.getProperties(context, additionalProperties);
         return properties.amount === 0 ? false : super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let { amount, dueToUnopposed } = this.getProperties(context) as LoseHonorProperties;
-        return super.createEvent(EventNames.OnModifyHonor, { player, context, amount, dueToUnopposed }, event => player.modifyHonor(-event.amount));
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let { amount, dueToUnopposed } = this.getProperties(context, additionalProperties) as LoseHonorProperties;
+        amount = -amount;
+        return super.createEvent(EventNames.OnModifyHonor, { player, context, amount, dueToUnopposed }, event => player.modifyHonor(event.amount));
     }
 }
 

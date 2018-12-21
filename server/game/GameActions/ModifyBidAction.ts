@@ -34,16 +34,16 @@ export class ModifyBidAction extends PlayerAction {
         return ['{1} their bid by {2}', [properties.direction, properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties: ModifyBidProperties = this.getProperties(context);
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties: ModifyBidProperties = this.getProperties(context, additionalProperties);
         if(properties.amount === 0 || properties.direction === Direction.Decrease && player.honorBid === 0) {
             return false;
         }
         return super.canAffect(player, context);
     }
 
-    addEventsToArray(events: any[], context: AbilityContext): void {
-        let properties: ModifyBidProperties = this.getProperties(context);
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+        let properties: ModifyBidProperties = this.getProperties(context, additionalProperties);
         if(properties.direction !== Direction.Prompt) {
             return super.addEventsToArray(events, context);
         }
@@ -69,13 +69,13 @@ export class ModifyBidAction extends PlayerAction {
         }
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties: ModifyBidProperties = this.getProperties(context);
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties: ModifyBidProperties = this.getProperties(context, additionalProperties);
         return this.getModifyBidEvent(player, context, properties);
     }
 
     getModifyBidEvent(player: Player, context: AbilityContext, properties) {
-        return super.createEvent(EventNames.OnModifyBid, Object.assign({ context }, properties), event => {
+        return super.createEvent(EventNames.OnModifyBid, Object.assign({ player, context }, properties), event => {
             if(event.direction === Direction.Increase) {
                 player.honorBidModifier += event.amount;
             } else {

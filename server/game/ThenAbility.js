@@ -57,7 +57,9 @@ class ThenAbility extends BaseAbility {
             then = then(context);
         }
         for(const action of actions) {
-            this.game.queueSimpleStep(() => action.addEventsToArray(context.events, context));
+            this.game.queueSimpleStep(() => {
+                action.addEventsToArray(context.events, context);
+            });
         }
         this.game.queueSimpleStep(() => {
             if(context.events.length > 0) {

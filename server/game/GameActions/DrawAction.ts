@@ -23,8 +23,8 @@ export class DrawAction extends PlayerAction {
         return ['draw ' + properties.amount + ' cards', []];
     }
     
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as DrawProperties;
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as DrawProperties;
         return properties.amount !== 0 && super.canAffect(player, context);
     }
 
@@ -32,8 +32,8 @@ export class DrawAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as DrawProperties;
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as DrawProperties;
         return super.createEvent(EventNames.OnCardsDrawn, {
             player: player,
             amount: properties.amount,

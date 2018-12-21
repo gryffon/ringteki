@@ -20,8 +20,8 @@ export class TakeRingAction extends RingAction {
         return ring.claimedBy !== context.player.name && super.canAffect(ring, context);
     }
     
-    getEvent(ring: Ring, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as TakeRingProperties;
+    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as TakeRingProperties;
         return this.createEvent(EventNames.OnTakeRing, { ring: ring, context: context }, () => {
             ring.claimRing(context.player);
             ring.contested = false;

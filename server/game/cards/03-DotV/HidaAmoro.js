@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, Players } = require('../../Constants');
 
 class HidaAmoro extends DrawCard {
     setupCardAbilities() {
@@ -13,7 +13,7 @@ class HidaAmoro extends DrawCard {
             effect: 'force {1} to sacrifice a character',
             effectArgs: context => context.event.conflict.attackingPlayer,
             gameAction: AbilityDsl.actions.selectCard(context => ({
-                player: context.event.conflict.attackingPlayer,
+                player: context.event.conflict.attackingPlayer === context.player ? Players.Self : Players.Opponent,
                 activePromptTitle: 'Choose a character to sacrifice',
                 cardType: CardTypes.Character,
                 cardCondition: card => card.controller === context.event.conflict.attackingPlayer,

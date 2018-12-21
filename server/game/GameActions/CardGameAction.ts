@@ -19,7 +19,16 @@ export class CardGameAction extends GameAction {
         return this.canAffect(event.card, event.context);
     }
 
-    canAffect(card: BaseCard, context: AbilityContext) {
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}) {
         return super.canAffect(card, context);
+    }
+
+    createEvent(eventName, params, handler) {
+        let event = super.createEvent(eventName, params, handler);
+        if(params.card) {
+            let card = params.card;
+            event.isFullyResolved = event => !event.cancelled && event.card === card;
+        }
+        return event;
     }
 }

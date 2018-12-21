@@ -11,7 +11,7 @@ class WayOfTheCrab extends DrawCard {
             effect: 'force {1} to sacrifice a character',
             effectArgs: context => context.player.opponent,
             gameAction: AbilityDsl.actions.selectCard(context => ({
-                player: context.player.opponent,
+                player: Players.Opponent,
                 activePromptTitle: 'Choose a character to sacrifice',
                 cardType: CardTypes.Character,
                 controller: Players.Opponent,

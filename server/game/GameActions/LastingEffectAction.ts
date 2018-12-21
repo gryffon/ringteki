@@ -22,13 +22,13 @@ export class LastingEffectAction extends GameAction {
         effect: []
     };
     
-    hasLegalTarget(context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as LastingEffectProperties;
+    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as LastingEffectProperties;
         return properties.effect.length > 0;
     }
 
-    addEventsToArray(events: any[], context: AbilityContext): void {
-        let properties = this.getProperties(context) as LastingEffectProperties;
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+        let properties = this.getProperties(context, additionalProperties) as LastingEffectProperties;
         events.push(super.createEvent(EventNames.OnEffectApplied, { context: context }, event => {
             event.context.source[properties.duration](() => properties)
         }));

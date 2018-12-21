@@ -27,8 +27,8 @@ export class RevealAction extends CardGameAction {
         return super.canAffect(card, context);
     }
     
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as RevealProperties;
+    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as RevealProperties;
         return super.createEvent(EventNames.OnCardRevealed, { card, context }, event => {
             if(properties.chatMessage) {
                 context.game.addMessage('{0} reveals {1} due to {2}', properties.player || context.player, card, context.source);

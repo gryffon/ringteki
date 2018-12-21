@@ -21,8 +21,8 @@ export class RefillFaceupAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as RefillFaceupProperties;
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as RefillFaceupProperties;
         return super.createEvent(EventNames.Unnamed, { player, context }, () => {
             if(player.replaceDynastyCard(properties.location) !== false) {
                 context.game.queueSimpleStep(() => {

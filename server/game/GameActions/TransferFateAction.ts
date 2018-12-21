@@ -26,13 +26,13 @@ export class TransferFateAction extends PlayerAction {
         return ['take {1} fate from {0}', [properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as TransferFateProperties;
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as TransferFateProperties;
         return player.opponent && properties.amount > 0 && player.fate >= properties.amount && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties = this.getProperties(context) as TransferFateProperties;
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties = this.getProperties(context, additionalProperties) as TransferFateProperties;
         return new MoveFateEvent({ context, player }, properties.amount, player, player.opponent, this);
     }
 }

@@ -21,8 +21,8 @@ export class GainHonorAction extends PlayerAction {
         return ['gain ' + properties.amount + ' honor', []];
     }
 
-    canAffect(player: Player, context: AbilityContext): boolean {
-        let properties: GainHonorProperties = this.getProperties(context);
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties: GainHonorProperties = this.getProperties(context, additionalProperties);
         return properties.amount === 0 ? false : super.canAffect(player, context);
     }
 
@@ -30,8 +30,8 @@ export class GainHonorAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        let properties: GainHonorProperties = this.getProperties(context);
+    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
+        let properties: GainHonorProperties = this.getProperties(context, additionalProperties);
         return super.createEvent(EventNames.OnModifyHonor, { player: player, amount: properties.amount, context: context }, event => player.modifyHonor(event.amount));
     }
 }

@@ -26,8 +26,8 @@ export class PlaceFateAction extends CardGameAction {
         return ['place {1} fate on {0}', [amount]];
     }
 
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        let { amount, origin } = this.getProperties(context) as PlaceFateProperties;
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let { amount, origin } = this.getProperties(context, additionalProperties) as PlaceFateProperties;
         if(amount === 0 || card.location !== Locations.PlayArea) {
             return false;
         }
@@ -46,8 +46,8 @@ export class PlaceFateAction extends CardGameAction {
         return true;
     }
     
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        let { amount, origin } = this.getProperties(context) as PlaceFateProperties;
+    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
+        let { amount, origin } = this.getProperties(context, additionalProperties) as PlaceFateProperties;
         return new MoveFateEvent({ context: context }, amount, origin, card, this);
     }
 }
