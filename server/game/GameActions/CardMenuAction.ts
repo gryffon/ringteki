@@ -39,9 +39,6 @@ export class CardMenuAction extends CardGameAction {
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as CardMenuProperties;
-        if(properties.choices) {
-            return true;
-        }
         return properties.cards.some(card =>
             properties.gameAction.hasLegalTarget(context, { [properties.actionParameter]: card })
         );
@@ -49,7 +46,8 @@ export class CardMenuAction extends CardGameAction {
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties) as CardMenuProperties;
-        if(properties.cards.length === 0 || properties.player === Players.Opponent && !context.player.opponent) {
+        let cards = properties.cards.filter(card => properties.gameAction.hasLegalTarget(context, { [properties.actionParameter]: card }));
+        if(cards.length === 0 || properties.player === Players.Opponent && !context.player.opponent) {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
@@ -62,6 +60,6 @@ export class CardMenuAction extends CardGameAction {
                 }
             }
         };
-        context.game.promptWithHandlerMenu(player, Object.assign(defaultProperties, properties));
+        context.game.promptWithHandlerMenu(player, Object.assign(defaultProperties, properties, { cards }))
     }
 }

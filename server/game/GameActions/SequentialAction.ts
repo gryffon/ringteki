@@ -23,8 +23,8 @@ export class SequentialAction extends GameAction {
     }
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
-        let properties = this.getProperties(context, additionalProperties);
-        return properties.gameActions.some(gameAction => gameAction.hasLegalTarget(context));
+        let { gameActions } = this.getProperties(context, additionalProperties);
+        return gameActions.some(gameAction => gameAction.hasLegalTarget(context));
     }
 
     canAffect(target: GameObject, context: AbilityContext, additionalProperties = {}): boolean {
@@ -35,11 +35,9 @@ export class SequentialAction extends GameAction {
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         for(const gameAction of properties.gameActions) {
-            context.game.queueSimpleStep(() => {
-                let events = [];
-                gameAction.addEventsToArray(events, context);
-                context.game.openEventWindow(events);
-            });
+            let events = [];
+            context.game.queueSimpleStep(() => gameAction.addEventsToArray(events, context));
+            context.game.queueSimpleStep(() => context.game.openEventWindow(events));
         }
     }
 }

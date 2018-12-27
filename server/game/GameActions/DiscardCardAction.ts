@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import GameObject = require('../GameObject');
 import Event = require('../Events/Event');
 
 export interface DiscardCardProperties extends CardActionProperties {
@@ -15,10 +14,11 @@ export class DiscardCardAction extends CardGameAction {
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        if((properties.target as GameObject[]).length === 0 ) {
+        let target = (properties.target as BaseCard[]).filter(card => this.canAffect(card, context, additionalProperties));
+        if(target.length === 0 ) {
             return;
         }
-        events.push(this.createEvent(EventNames.OnCardsDiscarded, { player: properties.target[0].controller, cards: properties.target, context: context }, event => {
+        events.push(this.createEvent(EventNames.OnCardsDiscarded, { player: target[0].controller, cards: target, context: context }, event => {
             for(const card of event.cards) {
                 if(card.location.includes('province')) {
                     event.context.refillProvince(card.controller, card.location);
@@ -38,10 +38,6 @@ export class DiscardCardAction extends CardGameAction {
     }
 
     checkEventCondition() {
-        return true;
-    }
-
-    fullyResolved() {
         return true;
     }
 }

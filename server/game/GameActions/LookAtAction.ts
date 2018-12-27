@@ -21,11 +21,12 @@ export class LookAtAction extends CardGameAction {
     }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
-        let properties = this.getProperties(context, additionalProperties);
-        if((properties.target as GameObject[]).length === 0) {
+        let { target } = this.getProperties(context, additionalProperties);
+        let cards = (target as BaseCard[]).filter(card => this.canAffect(card, context));
+        if(cards.length === 0) {
             return
         }
-        events.push(this.createEvent(EventNames.OnLookAtCards, { cards: properties.target, context: context }, event => {
+        events.push(this.createEvent(EventNames.OnLookAtCards, { cards, context }, event => {
             context.game.addMessage('{0} sees {1}', context.source, event.cards);
         }));
     }
@@ -37,10 +38,6 @@ export class LookAtAction extends CardGameAction {
     }
 
     checkEventCondition() {
-        return true;
-    }
-
-    fullyResolved() {
         return true;
     }
 }

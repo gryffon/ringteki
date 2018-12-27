@@ -100,7 +100,8 @@ class CardAbility extends ThenAbility {
                 if(card && card.facedown) {
                     card = 'a facedown card';
                 }
-                return { message: this.game.gameChat.formatMessage(...cost.action.getCostMessage(context)) };
+                let [format, args] = cost.action.getCostMessage(context);
+                return { message: this.game.gameChat.formatMessage(format, [card].concat(args)) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
