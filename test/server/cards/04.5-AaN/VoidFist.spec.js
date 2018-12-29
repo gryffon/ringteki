@@ -132,7 +132,7 @@ describe('Void Fist', function() {
                 this.seekerInitiate = this.player2.clickCard('seeker-initiate');
                 this.player2.clickPrompt('0');
                 this.player2.clickPrompt('Conflict');
-                this.player1.clickCard('fine-katana', this.togashiMitsu);
+                this.player1.playAttachment('fine-katana', this.togashiMitsu);
                 this.player2.pass();
                 this.voidFist = this.player1.clickCard('void-fist');
                 expect(this.player1).toHavePrompt('Void Fist');
