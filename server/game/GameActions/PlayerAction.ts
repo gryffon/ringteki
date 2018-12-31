@@ -11,7 +11,12 @@ export class PlayerAction extends GameAction {
         return context.player ? [context.player.opponent] : [];
     }
 
-    checkEventCondition(event: any):boolean {
-        return this.canAffect(event.player, event.context);
+    checkEventCondition(event: any, additionalProperties):boolean {
+        return this.canAffect(event.player, event.context, additionalProperties);
+    }
+
+    getEventProperties(event, player, context, additionalProperties = {}) {
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.player = player;
     }
 }

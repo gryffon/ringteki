@@ -5,11 +5,12 @@ import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 export interface DrawProperties extends PlayerActionProperties {
-    amount: number;
+    amount?: number;
 }
 
 export class DrawAction extends PlayerAction {
     name = 'draw';
+    eventName = EventNames.OnCardsDrawn;
 
     defaultProperties: DrawProperties = {
         amount: 1
@@ -32,12 +33,13 @@ export class DrawAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as DrawProperties;
-        return super.createEvent(EventNames.OnCardsDrawn, {
-            player: player,
-            amount: properties.amount,
-            context: context
-        }, event => player.drawCardsToHand(event.amount));
+    getEventProperties(event, player, context, additionalProperties) {
+        let { amount } = this.getProperties(context, additionalProperties) as DrawProperties;        
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.amount = amount;
+    }
+
+    eventHandler(event) {
+        event.player.drawCardsToHand(event.amount);
     }
 }

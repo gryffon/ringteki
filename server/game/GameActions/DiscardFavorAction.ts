@@ -9,6 +9,7 @@ export interface DiscardFavorProperties extends PlayerActionProperties {
 
 export class DiscardFavorAction extends PlayerAction {
     name = 'discardFavor';
+    eventName = EventNames.OnDiscardFavor;
     cost = 'discarding the Imperial Favor';
     effect = 'make {0} lose the Imperial Favor';
 
@@ -16,7 +17,7 @@ export class DiscardFavorAction extends PlayerAction {
         return player.imperialFavor && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnDiscardFavor, { player: player, context: context }, () => player.loseImperialFavor());
+    eventHandler(event) {
+        event.player.loseImperialFavor();
     }
 }

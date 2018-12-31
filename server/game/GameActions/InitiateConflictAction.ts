@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 export interface InitiateConflictProperties extends PlayerActionProperties {
@@ -10,6 +9,7 @@ export interface InitiateConflictProperties extends PlayerActionProperties {
 
 export class InitiateConflictAction extends PlayerAction {
     name = 'initiateConflict';
+    eventName = EventNames.OnConflictInitiated;
     effect = 'declare a new conflict';
     defaultProperties: InitiateConflictProperties = {
         canPass: true
@@ -34,11 +34,8 @@ export class InitiateConflictAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as InitiateConflictProperties;
-        return super.createEvent(EventNames.OnConflictInitiated, {
-            player: player,
-            context: context
-        }, () => context.game.initiateConflict(player, properties.canPass));
+    eventHandler(event, additionalProperties) {
+        let { canPass } = this.getProperties(event.context, additionalProperties) as InitiateConflictProperties;
+        event.context.game.initiateConflict(event.player, canPass)
     }
 }

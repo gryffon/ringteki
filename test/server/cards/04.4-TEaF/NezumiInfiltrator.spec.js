@@ -113,7 +113,8 @@ describe('Nezumi Infiltrator', function() {
                 this.player1.clickPrompt('0');
                 this.player1.clickPrompt('Conflict');
                 this.player1.clickCard(this.nezumi);
-                expect(this.sd.getStrength()).toBe(2);
+                expect(this.player1).not.toHavePromptButton('Lower attacked province\'s strength by 1');
+                expect(this.player1).toHavePromptButton('Raise attacked province\'s strength by 1');
             });
         });
 

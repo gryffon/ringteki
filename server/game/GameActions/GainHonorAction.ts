@@ -12,6 +12,7 @@ export class GainHonorAction extends PlayerAction {
     defaultProperties: GainHonorProperties = { amount: 1 };
 
     name: string = 'gainHonor';
+    eventName = EventNames.OnModifyHonor;
     constructor(propertyFactory: GainHonorProperties | ((context: AbilityContext) => GainHonorProperties)) {
         super(propertyFactory);
     }
@@ -30,8 +31,13 @@ export class GainHonorAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let properties: GainHonorProperties = this.getProperties(context, additionalProperties);
-        return super.createEvent(EventNames.OnModifyHonor, { player: player, amount: properties.amount, context: context }, event => player.modifyHonor(event.amount));
+    getEventProperties(event, player, context, additionalProperties) {
+        let { amount } = this.getProperties(context, additionalProperties) as GainHonorProperties;        
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.amount = amount;
+    }
+
+    eventHandler(event) {
+        event.player.modifyHonor(event.amount);
     }
 }

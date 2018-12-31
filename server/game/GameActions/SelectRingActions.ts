@@ -23,8 +23,9 @@ export class SelectRingAction extends RingAction {
         super(properties);
     }
 
-    getEffectMessage(): [string, any[]] {
-        return ['choose a ring for {0}',[]];
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let { target } = this.getProperties(context);
+        return ['choose a ring for {0}', [target]];
     }
 
     canAffect(ring: Ring, context: AbilityContext, additionalProperties = {}): boolean {

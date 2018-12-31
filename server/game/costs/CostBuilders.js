@@ -2,6 +2,7 @@ const CostBuilder = require('./CostBuilder.js');
 const GameActions = require('../GameActions/GameActions');
 const PlayerCost = require('./PlayerCost');
 const RingCost = require('./RingCost');
+const { Locations } = require('../Constants');
 
 const CostBuilders = {
     bow: new CostBuilder(GameActions.bow(), {
@@ -40,7 +41,7 @@ const CostBuilders = {
         select: 'Select card to sacrifice',
         selectMultiple: number => `Select ${number} cards to sacrifice`
     }),
-    shuffleIntoDeck: new CostBuilder(GameActions.returnToDeck({ shuffle: true, ignoreLocation: true }), {
+    shuffleIntoDeck: new CostBuilder(GameActions.moveCard({ destination: Locations.DynastyDeck, shuffle: true }), {
         select: 'Select a card to shuffle into deck',
         selectMultiple: number => `Select ${number} cards to shuffle into deck`
     }),

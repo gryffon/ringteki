@@ -12,13 +12,14 @@ export interface ResolveElementProperties extends RingActionProperties {
 
 export class ResolveElementAction extends RingAction {
     name = 'resolveElement';
+    eventName = EventNames.OnResolveRingElement;
     effect = 'resolve {0} effect';
     defaultProperties: ResolveElementProperties = { optional: true };
     constructor(properties: ((context: AbilityContext) => ResolveElementProperties) | ResolveElementProperties) {
         super(properties);
     }
 
-    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties: any = {}): void {
         let properties = this.getProperties(context, additionalProperties) as ResolveElementProperties;
         let target = properties.target as Ring[];
         if(target.length > 1) {
@@ -27,26 +28,26 @@ export class ResolveElementAction extends RingAction {
                 let bPriority = RingEffects.contextFor(context.player, b.element).ability.defaultPriority;
                 return context.player.firstPlayer ? aPriority - bPriority : bPriority - aPriority;
             });
+            additionalProperties.optional = false;
             let effectObjects = sortedRings.map(ring => ({
                 title: RingEffects.getRingName(ring.element) + ' Effect',
-                handler: () => context.game.openEventWindow(this.getResolveElementEvent(ring, context, properties, false))
+                handler: () => context.game.openEventWindow(this.getEvent(ring, context, additionalProperties))
             }));
-            events.push(this.createEvent(EventNames.Unnamed, {}, () => context.game.openSimultaneousEffectWindow(effectObjects)));
+            events.push(new Event(EventNames.Unnamed, {}, () => context.game.openSimultaneousEffectWindow(effectObjects)));
         } else {
             events.push(this.getEvent(target[0], context, additionalProperties));
         }
     }
 
-    getResolveElementEvent(ring: Ring, context: AbilityContext, properties, optional: boolean): Event {
-        let physicalRing = properties.physicalRing || ring;
-        let player = context.player;
-        return this.createEvent(EventNames.OnResolveRingElement, { ring, player, context, physicalRing, optional }, () => {
-            context.game.resolveAbility(RingEffects.contextFor(context.player, ring.element, optional));
-        });
+    getEventProperties(event, ring, context, additionalProperties) {
+        let { physicalRing, optional } = this.getProperties(context, additionalProperties) as ResolveElementProperties;
+        super.getEventProperties(event, ring, context, additionalProperties);
+        event.player = context.player;
+        event.physicalRing = physicalRing;
+        event.optional = optional;
     }
-    
-    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as ResolveElementProperties;
-        return this.getResolveElementEvent(ring, context, properties, properties.optional);
+
+    eventHandler(event) {
+        event.context.game.resolveAbility(RingEffects.contextFor(event.player, event.ring.element, event.optional));
     }
 }

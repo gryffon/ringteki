@@ -1,5 +1,5 @@
 import { CardGameAction, CardActionProperties} from './CardGameAction';
-import { CardTypes, Locations, EventNames } from '../Constants';
+import { CardTypes, Locations } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
 import Event = require('../Events/Event');
@@ -9,6 +9,7 @@ export interface MoveCardProperties extends CardActionProperties {
     switch?: boolean;
     shuffle?: boolean;
     faceup?: boolean;
+    bottom?: boolean;
 }
 
 export class MoveCardAction extends CardGameAction {
@@ -19,7 +20,8 @@ export class MoveCardAction extends CardGameAction {
         destination: null,
         switch: false,
         shuffle: false,
-        faceup: false
+        faceup: false,
+        bottom: false
     };
     constructor(properties: MoveCardProperties | ((context: AbilityContext) => MoveCardProperties)) {
         super(properties);
@@ -29,25 +31,27 @@ export class MoveCardAction extends CardGameAction {
         return card.location !== Locations.PlayArea && super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as MoveCardProperties;
-        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, event => {
-            if(properties.switch) {
-                let otherCard = card.controller.getDynastyCardInProvince(properties.destination);
-                context.player.moveCard(otherCard, card.location);
-            } else if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
-                event.context.refillProvince(context.player, card.location);
+    eventHandler(event, additionalProperties) {
+        let context = event.context;
+        let card = event.card;
+        event.cardStateWhenMoved = card.createSnapshot();
+        let properties = this.getProperties(context, additionalProperties) as MoveCardProperties;        
+        if(properties.switch) {
+            let otherCard = card.controller.getDynastyCardInProvince(properties.destination);
+            card.owner.moveCard(otherCard, card.location);
+        } else if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
+            event.context.refillProvince(card.owner, card.location);
+        }
+        card.owner.moveCard(card, properties.destination, { bottom: !!properties.bottom });
+        let target = properties.target;
+        if(properties.shuffle && (target.length === 0 || card === target[target.length - 1])) {
+            if(properties.destination === Locations.ConflictDeck) {
+                event.card.owner.shuffleConflictDeck();
+            } else if(properties.destination === Locations.DynastyDeck) {
+                event.card.owner.shuffleDynastyDeck();
             }
-            context.player.moveCard(card, properties.destination);
-            if(properties.shuffle) {
-                if(properties.destination === Locations.ConflictDeck) {
-                    context.player.shuffleConflictDeck();
-                } else if(properties.destination === Locations.DynastyDeck) {
-                    context.player.shuffleDynastyDeck();
-                }
-            } else if(properties.faceup) {
-                card.facedown = false;
-            }
-        });
+        } else if(properties.faceup) {
+            card.facedown = false;
+        }
     }
 }

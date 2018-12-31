@@ -11,6 +11,7 @@ export interface LastingEffectCardProperties extends LastingEffectGeneralPropert
 
 export class LastingEffectCardAction extends CardGameAction {
     name = 'applyLastingEffect';
+    eventName = EventNames.OnEffectApplied;
     effect = 'apply a lasting effect to {0}';
     defaultProperties: LastingEffectCardProperties = {
         duration: Durations.UntilEndOfConflict,
@@ -40,10 +41,8 @@ export class LastingEffectCardAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties);
-        return super.createEvent(EventNames.OnEffectApplied, { card, context }, event => {
-            event.context.source[properties.duration](() => Object.assign({ match: card }, properties));
-        });
+    eventHandler(event, additionalProperties) {
+        let properties = this.getProperties(event.context, additionalProperties);
+        event.context.source[properties.duration](() => Object.assign({ match: event.card }, properties));
     }
 }

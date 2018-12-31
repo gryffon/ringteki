@@ -9,6 +9,7 @@ export interface HonorProperties extends CardActionProperties {
 
 export class HonorAction extends CardGameAction {
     name = 'honor';
+    eventName = EventNames.OnCardHonored;
     targetType = [CardTypes.Character];
     cost = 'honoring {0}';
     effect = 'honor {0}';
@@ -22,7 +23,7 @@ export class HonorAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnCardHonored, { card, context }, event => event.card.honor());
+    eventHandler(event) {
+        event.card.honor();
     }
 }

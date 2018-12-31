@@ -6,18 +6,18 @@ class KarmicBalance extends DrawCard {
         this.action({
             title: 'Shuffle and draw 4 new conflict cards',
             gameAction: [
-                ability.actions.returnToDeck(context => ({
+                ability.actions.moveCard(context => ({
                     shuffle: true,
-                    ignoreLocation: true,
+                    destination: Locations.ConflictDeck,
                     target: context.player.conflictDiscardPile.union(context.player.hand.value())
                 })),
-                ability.actions.returnToDeck(context => ({
+                ability.actions.moveCard(context => ({
                     shuffle: true,
-                    ignoreLocation: true,
+                    destination: Locations.ConflictDeck,
                     target: context.player.opponent.conflictDiscardPile.union(context.player.opponent.hand.value())
                 })),
                 ability.actions.draw(context => ({ target: context.game.getPlayers(), amount: 4 })),
-                ability.actions.moveCard(context => ({ card: context.source, destination: Locations.RemovedFromGame }))
+                ability.actions.moveCard(context => ({ target: context.source, destination: Locations.RemovedFromGame }))
             ],
             effect: 'shuffle hand and discard pile into conflict deck and draw 4 cards'
         });

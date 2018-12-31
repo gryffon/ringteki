@@ -16,21 +16,34 @@ export interface LastingEffectProperties extends LastingEffectGeneralProperties 
 
 export class LastingEffectAction extends GameAction {
     name = 'applyLastingEffect';
+    eventName = EventNames.OnEffectApplied;
     effect = 'apply a lasting effect';
     defaultProperties: LastingEffectProperties = {
         duration: Durations.UntilEndOfConflict,
         effect: []
     };
+
+    getProperties(context: AbilityContext, additionalProperties = {}): LastingEffectProperties {
+        let properties = super.getProperties(context, additionalProperties) as LastingEffectProperties;
+        if(!Array.isArray(properties.effect)) {
+            properties.effect = [properties.effect];
+        }
+        return properties;
+    }
     
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
-        let properties = this.getProperties(context, additionalProperties) as LastingEffectProperties;
+        let properties = this.getProperties(context, additionalProperties);
         return properties.effect.length > 0;
     }
 
-    addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
-        let properties = this.getProperties(context, additionalProperties) as LastingEffectProperties;
-        events.push(super.createEvent(EventNames.OnEffectApplied, { context: context }, event => {
-            event.context.source[properties.duration](() => properties)
-        }));
+    addEventsToArray(events, context, additionalProperties) {
+        if(this.hasLegalTarget(context, additionalProperties)) {
+            events.push(this.getEvent(null, context, additionalProperties));
+        }
+    }
+
+    eventHandler(event, additionalProperties) {
+        let properties = this.getProperties(event.context, additionalProperties);
+        event.context.source[properties.duration](() => properties);
     }
 }

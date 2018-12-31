@@ -67,10 +67,7 @@ export class ChooseGameAction extends GameAction {
                 context.game.queueSimpleStep(() => gameAction.addEventsToArray(events, context));
             }
         }
-        if(choices.length < 2) {
-            if(choices.length === 1) {
-                choiceHandler(choices[0]);
-            }
+        if(choices.length === 0) {
             return;
         }
         context.game.promptWithHandlerMenu(context.player, { activePromptTitle, context, choices, choiceHandler });

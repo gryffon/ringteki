@@ -10,6 +10,7 @@ export interface LookAtProperties extends CardActionProperties {
 
 export class LookAtAction extends CardGameAction {
     name = 'lookAt';
+    eventName = EventNames.OnLookAtCards;
     effect = 'look at a facedown card';
     
     canAffect(card: BaseCard, context: AbilityContext) {
@@ -26,15 +27,29 @@ export class LookAtAction extends CardGameAction {
         if(cards.length === 0) {
             return
         }
-        events.push(this.createEvent(EventNames.OnLookAtCards, { cards, context }, event => {
-            context.game.addMessage('{0} sees {1}', context.source, event.cards);
-        }));
+        let event = this.createEvent();
+        this.updateEvent(event, cards, context, additionalProperties);
+        events.push(event);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnLookAtCards, { card: card, context: context }, () => {
-            context.game.addMessage('{0} sees {1}', context.source, card);
-        });
+    getEventProperties(event, cards, context, additionalProperties) {
+        if(!cards) {
+            cards = this.getProperties(context, additionalProperties).target;
+        }
+        if(!Array.isArray(cards)) {
+            cards = [cards];
+        }
+        event.cards = cards;
+        event.context = context;
+    }
+
+    eventHandler(event) {
+        let context = event.context;
+        context.game.addMessage('{0} sees {1}', context.source, event.cards);
+    }
+
+    eventFullyResolved(event) {
+        return !event.cancelled && event.name === this.eventName;
     }
 
     checkEventCondition() {

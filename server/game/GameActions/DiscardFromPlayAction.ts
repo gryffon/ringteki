@@ -1,15 +1,15 @@
 import AbilityContext = require("../AbilityContext");
 import BaseCard = require('../basecard');
-import LeavesPlayEvent = require('../Events/LeavesPlayEvent');
 
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations, CardTypes } from '../Constants';
+import { Locations, CardTypes, EventNames } from '../Constants';
 
 export interface DiscardFromPlayProperties extends CardActionProperties {
 }
 
 export class DiscardFromPlayAction extends CardGameAction {
     name = 'discardFromPlay';
+    eventName = EventNames.OnCardLeavesPlay;
     cost = 'sacrificing {0}';
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding];
 
@@ -20,8 +20,9 @@ export class DiscardFromPlayAction extends CardGameAction {
         }
     }
 
-    getEffectMessage(): [string, any[]] {
-        return[this.name === 'sacrifice' ? 'sacrifice {0}' : 'discard {0}', []];
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let properties = this.getProperties(context);
+        return[this.name === 'sacrifice' ? 'sacrifice {0}' : 'discard {0}', [properties.target]];
     }
 
     canAffect(card: BaseCard, context: AbilityContext) {
@@ -35,7 +36,11 @@ export class DiscardFromPlayAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): LeavesPlayEvent {
-        return new LeavesPlayEvent({ context: context }, card, this);
+    updateEvent(event, card, context, additionalProperties) {
+        this.updateLeavesPlayEvent(event, card, context, additionalProperties);
+    }
+
+    eventHandler(event) {
+        this.leavesPlayEventHandler(event);
     }
 }

@@ -2,18 +2,19 @@ const _ = require('underscore');
 const { EventNames } = require('../Constants');
 
 class Event {
-    constructor(name, params, handler, gameAction) {
+    constructor(name, params, handler) {
         this.name = name;
         this.cancelled = false;
         this.resolved = false;
         this.handler = handler;
-        this.gameAction = gameAction;
         this.context = null;
         this.window = null;
         this.condition = (event) => true; // eslint-disable-line no-unused-vars
         this.order = 0;
         this.isContingent = false;
         this.isFullyResolved = (event) => !event.cancelled;
+        this.createContingentEvents = () => [];
+        this.preResolutionEffect = () => true;
 
         _.extend(this, params);
     }
@@ -33,20 +34,8 @@ class Event {
         this.window = null;
     }
 
-    createContingentEvents() {
-        return [];
-    }
-
-    preResolutionEffect() {
-        return;
-    }
-
     checkCondition() {
         if(this.cancelled || this.resolved || this.name === EventNames.Unnamed) {
-            return;
-        }
-        if(this.gameAction && !this.gameAction.checkEventCondition(this)) {
-            this.cancel();
             return;
         }
         if(!this.condition(this)) {

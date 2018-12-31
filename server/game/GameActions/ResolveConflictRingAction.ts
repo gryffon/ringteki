@@ -12,6 +12,7 @@ export interface ResolveConflictRingProperties extends RingActionProperties {
 
 export class ResolveConflictRingAction extends RingAction {
     name = 'resolveRing';
+    eventName = EventNames.OnResolveConflictRing;
     defaultProperties: ResolveConflictRingProperties = { resolveAsAttacker: true };
     constructor(properties: ((context: AbilityContext) => ResolveConflictRingProperties) | ResolveConflictRingProperties) {
         super(properties);
@@ -19,24 +20,33 @@ export class ResolveConflictRingAction extends RingAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties: ResolveConflictRingProperties = this.getProperties(context);
-        return ['resolve {0}' + (properties.resolveAsAttacker ? '' : ' for the attacking player'),[]];
+        return ['resolve {0}' + (properties.resolveAsAttacker ? '' : ' for the attacking player'),[properties.target]];
     }
-    
-    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
+
+    getEventProperties(event, ring, context, additionalProperties) {
+        super.getEventProperties(event, ring, context, additionalProperties);
         let properties: ResolveConflictRingProperties = this.getProperties(context, additionalProperties);
         let conflict = context.game.currentConflict;
         if(!conflict && !properties.resolveAsAttacker) {
-            return this.createEvent(EventNames.Unnamed, {}, () => true);
+            event.name = EventNames.Unnamed;
+            return;
         }
-        let player = properties.resolveAsAttacker ? context.player : context.game.currentConflict.attackingPlayer;
-        let elements = ring.getElements();
-        return this.createEvent(EventNames.OnResolveConflictRing, { player: player, conflict: conflict, ring: ring, context: context }, () => {
-            if(elements.length === 1 || (!properties.resolveAsAttacker && conflict.elementsToResolve >= elements.length)) {
-                this.resolveRingEffects(player, elements, properties.resolveAsAttacker);
-            } else {
-                this.chooseElementsToResolve(player, elements, properties.resolveAsAttacker, conflict.elementsToResolve);
-            }
-        });
+        event.conflict = conflict;
+        event.player = properties.resolveAsAttacker ? context.player : conflict.attackingPlayer;
+    }
+
+    eventHandler(event, additionalProperties) {
+        if(event.name !== this.eventName) {
+            return;
+        }
+        let properties: ResolveConflictRingProperties = this.getProperties(event.context, additionalProperties);
+        let elements = event.ring.getElements();
+        let player = event.player
+        if(elements.length === 1 || (!properties.resolveAsAttacker && event.conflict.elementsToResolve >= elements.length)) {
+            this.resolveRingEffects(player, elements, properties.resolveAsAttacker);
+        } else {
+            this.chooseElementsToResolve(player, elements, properties.resolveAsAttacker, event.conflict.elementsToResolve);
+        }
     }
 
     chooseElementsToResolve(player, elements, optional, elementsToResolve, chosenElements = []) {

@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Players, CardTypes } = require('../../Constants');
+const { Players, CardTypes, Locations } = require('../../Constants');
 
 class AgashaShunsen extends DrawCard {
     setupCardAbilities() {
@@ -25,7 +25,8 @@ class AgashaShunsen extends DrawCard {
                 }))
             },
             effect: 'search their deck for an attachment costing {1} or less and attach it to {0}',
-            effectArgs: context => context.costs.returnRing.length
+            effectArgs: context => context.costs.returnRing.length,
+            gameAction: AbilityDsl.actions.shuffleDeck({ deck: Locations.ConflictDeck })
         });
     }
 }

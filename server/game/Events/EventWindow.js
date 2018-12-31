@@ -52,10 +52,7 @@ class EventWindow extends BaseStepWithPipeline {
         return event;
     }
 
-    addThenAbility(ability, context, condition) {
-        if(!condition) {
-            condition = event => event.isFullyResolved(event);
-        }
+    addThenAbility(ability, context, condition = event => event.isFullyResolved(event)) {
         this.thenAbilities.push({ ability, context, condition });
     }
 

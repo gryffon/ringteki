@@ -9,6 +9,7 @@ export interface BowActionProperties extends CardActionProperties {}
 
 export class BowAction extends CardGameAction {
     name = 'bow';
+    eventName = EventNames.OnCardBowed;
     cost = 'bowing {0}';
     effect = 'bow {0}';
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Stronghold];
@@ -20,7 +21,7 @@ export class BowAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard , context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnCardBowed, { card: card, context: context }, () => card.bow());
+    eventHandler(event) {
+        event.card.bow();
     }
 }

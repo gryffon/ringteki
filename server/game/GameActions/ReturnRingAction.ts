@@ -9,13 +9,14 @@ export interface ReturnRingProperties extends RingActionProperties {
 
 export class ReturnRingAction extends RingAction {
     name = 'returnRing';
+    eventName = EventNames.OnReturnRing;
     effect = 'return {0} to the unclaimed pool';
 
     canAffect(ring: Ring, context: AbilityContext): boolean {
         return !ring.isUnclaimed() && super.canAffect(ring, context);
     }
 
-    getEvent(ring: Ring, context: AbilityContext): Event {
-        return this.createEvent(EventNames.OnReturnRing, { ring: ring, context: context }, () => ring.resetRing());
+    eventHandler(event) {
+        event.ring.resetRing();
     }
 }

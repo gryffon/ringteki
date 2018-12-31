@@ -12,6 +12,7 @@ export class GainFateAction extends PlayerAction {
     defaultProperties: GainFateProperties = { amount: 1 };
 
     name = 'gainFate';
+    eventName = EventNames.OnModifyFate;
     constructor(propertyFactory: GainFateProperties | ((context: AbilityContext) => GainFateProperties)) {
         super(propertyFactory);
     }
@@ -22,7 +23,7 @@ export class GainFateAction extends PlayerAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties: GainFateProperties = this.getProperties(context);
-        return ['gain {1} fate', [properties.amount]];
+        return ['gain {0} fate', [properties.amount]];
     }
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
@@ -30,8 +31,13 @@ export class GainFateAction extends PlayerAction {
         return properties.amount > 0 && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let properties: GainFateProperties = this.getProperties(context, additionalProperties);
-        return super.createEvent(EventNames.OnModifyFate, { player: player, amount: properties.amount, context: context }, event => player.modifyFate(event.amount));
+    getEventProperties(event, player, context, additionalProperties) {
+        let { amount } = this.getProperties(context, additionalProperties) as GainFateProperties;        
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.amount = amount;
+    }
+
+    eventHandler(event) {
+        event.player.modifyFate(event.amount);
     }
 }

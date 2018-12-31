@@ -1,8 +1,7 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
-import { EventNames, Locations } from '../Constants';
+import { Locations } from '../Constants';
 
 export interface RefillFaceupProperties extends PlayerActionProperties {
     location: Locations;
@@ -21,17 +20,15 @@ export class RefillFaceupAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as RefillFaceupProperties;
-        return super.createEvent(EventNames.Unnamed, { player, context }, () => {
-            if(player.replaceDynastyCard(properties.location) !== false) {
-                context.game.queueSimpleStep(() => {
-                    let card = player.getDynastyCardInProvince(properties.location);
-                    if(card) {
-                        card.facedown = false;
-                    }
-                });
-            }
-        });
+    eventHandler(event, additionalProperties) {
+        let { location } = this.getProperties(event.context, additionalProperties) as RefillFaceupProperties;
+        if(event.player.replaceDynastyCard(location)) {
+            event.context.game.queueSimpleStep(() => {
+                let card = event.player.getDynastyCardInProvince(location);
+                if(card) {
+                    card.facedown = false;
+                }
+            });
+        }
     }
 }

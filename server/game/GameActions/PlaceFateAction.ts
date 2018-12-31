@@ -1,12 +1,9 @@
 import AbilityContext = require('../AbilityContext');
-import BaseCard = require('../basecard');
 import DrawCard = require('../drawcard');
-import Event = require('../Events/Event');
-import MoveFateEvent = require('../Events/MoveFateEvent');
 import Player = require('../player');
 import Ring = require('../ring');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations, CardTypes }  from '../Constants';
+import { Locations, CardTypes, EventNames }  from '../Constants';
 
 export interface PlaceFateProperties extends CardActionProperties {
     amount?: number,
@@ -15,6 +12,7 @@ export interface PlaceFateProperties extends CardActionProperties {
 
 export class PlaceFateAction extends CardGameAction {
     name = 'placeFate';
+    eventName = EventNames.OnMoveFate;
     targetType = [CardTypes.Character];
     defaultProperties: PlaceFateProperties = { amount: 1 };
     constructor(properties: ((context: AbilityContext) => PlaceFateProperties) | PlaceFateProperties) {
@@ -22,11 +20,11 @@ export class PlaceFateAction extends CardGameAction {
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
-        let { amount } = this.getProperties(context) as PlaceFateProperties;
-        return ['place {1} fate on {0}', [amount]];
+        let { amount, target } = this.getProperties(context) as PlaceFateProperties;
+        return ['place {1} fate on {0}', [target, amount]];
     }
 
-    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+    canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
         let { amount, origin } = this.getProperties(context, additionalProperties) as PlaceFateProperties;
         if(amount === 0 || card.location !== Locations.PlayArea) {
             return false;
@@ -45,9 +43,26 @@ export class PlaceFateAction extends CardGameAction {
         }
         return true;
     }
-    
-    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
+
+    getEventProperties(event, card, context, additionalProperties) {
         let { amount, origin } = this.getProperties(context, additionalProperties) as PlaceFateProperties;
-        return new MoveFateEvent({ context: context }, amount, origin, card, this);
+        event.fate = amount;
+        event.origin = origin;
+        event.context = context;
+        event.recipient = card;
+    }
+
+    checkEventCondition(event, additionalProperties) {
+        return this.moveFateEventCondition(event, additionalProperties);
+    }
+
+    eventFullyResolved(event, card, context, additionalProperties) {
+        let { amount, origin } = this.getProperties(context, additionalProperties) as PlaceFateProperties;
+        return !event.cancelled && event.name === this.eventName && 
+            event.fate === amount && event.origin === origin && event.recipient === card;
+    }
+
+    eventHandler(event) {
+        return this.moveFateEventHandler(event);
     }
 }

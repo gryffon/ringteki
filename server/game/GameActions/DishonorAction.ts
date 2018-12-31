@@ -9,6 +9,7 @@ export interface DishonorProperties extends CardActionProperties {
 
 export class DishonorAction extends CardGameAction {
     name = 'dishonor';
+    eventName = EventNames.OnCardDishonored;
     targetType = [CardTypes.Character];
     cost = 'dishonoring {0}';
     effect = 'dishonor {0}';
@@ -22,7 +23,7 @@ export class DishonorAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnCardDishonored, { card, context }, event => event.card.dishonor());
+    eventHandler(event) {
+        event.card.dishonor()
     }
 }

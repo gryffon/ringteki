@@ -1,7 +1,6 @@
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import BaseCard = require('../basecard');
 import AbilityContext = require('../AbilityContext');
-import Event = require('../Events/Event');
 import { CardTypes, EventNames } from '../Constants';
 
 export interface SendHomeProperties extends CardActionProperties {
@@ -9,6 +8,7 @@ export interface SendHomeProperties extends CardActionProperties {
 
 export class SendHomeAction extends CardGameAction {
     name = 'sendHome';
+    eventName = EventNames.OnSendHome;
     effect = 'send {0} home';
     targetType = [CardTypes.Character];
 
@@ -16,7 +16,7 @@ export class SendHomeAction extends CardGameAction {
         return super.canAffect(card, context) && card.isParticipating();
     }
 
-    getEvent(card: BaseCard , context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnSendHome, { card, context }, event => context.game.currentConflict.removeFromConflict(event.card));
+    eventHandler(event) {
+        event.context.game.currentConflict.removeFromConflict(event.card);
     }
 }

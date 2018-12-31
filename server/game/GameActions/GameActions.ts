@@ -51,11 +51,12 @@ import { SelectRingAction, SelectRingProperties } from './SelectRingActions';
 import { SendHomeAction, SendHomeProperties } from './SendHomeAction';
 import { SequentialAction } from './SequentialAction';
 import { SetDialAction, SetDialProperties } from './SetDialAction';
+import { ShuffleDeckAction, ShuffleDeckProperties } from './ShuffleDeckAction';
 import { TakeFateRingAction, TakeFateRingProperties } from './TakeFateRingAction';
 import { TakeRingAction, TakeRingProperties } from './TakeRingAction';
 import { TransferFateAction, TransferFateProperties } from './TransferFateAction';
 import { TransferHonorAction, TransferHonorProperties } from './TransferHonorAction';
-import { LoseFateProperties, LoseFateAction } from './LoseFateActions';
+import { LoseFateProperties, LoseFateAction } from './LoseFateAction';
 
 const GameActions = {
     // card actions
@@ -102,6 +103,7 @@ const GameActions = {
     playerLastingEffect: (propertyFactory: LastingEffectProperties | ((context: TriggeredAbilityContext) => LastingEffectProperties) ) => new LastingEffectAction(propertyFactory), // duration = 'untilEndOfConflict', effect, targetController, condition, until
     refillFaceup: (propertyFactory: RefillFaceupProperties | ((context: TriggeredAbilityContext) => RefillFaceupProperties)) => new RefillFaceupAction(propertyFactory), // location
     setHonorDial: (propertyFactory: SetDialProperties | ((context: TriggeredAbilityContext) => SetDialProperties)) => new SetDialAction(propertyFactory), // value
+    shuffleDeck: (propertyFactory: ShuffleDeckProperties | ((context: TriggeredAbilityContext) => ShuffleDeckProperties)) => new ShuffleDeckAction(propertyFactory),
     takeFate: (propertyFactory: TransferFateProperties | ((context: TriggeredAbilityContext) => TransferFateProperties) = {}) => new TransferFateAction(propertyFactory), // amount = 1
     takeHonor: (propertyFactory: TransferHonorProperties | ((context: TriggeredAbilityContext) => TransferHonorProperties) = {}) => new TransferHonorAction(propertyFactory), // amount = 1
     // ring actions

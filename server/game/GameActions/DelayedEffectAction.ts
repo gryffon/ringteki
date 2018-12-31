@@ -14,6 +14,7 @@ export interface DelayedEffectActionProperties extends CardActionProperties {
 
 export class DelayedEffectAction extends CardGameAction {
     name = 'applyDelayedEffect';
+    eventName = EventNames.OnEffectApplied;
     effect = 'apply a delayed effect to {0}';
 
     defaultProperties: DelayedEffectActionProperties;
@@ -28,10 +29,8 @@ export class DelayedEffectAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties);
-        return super.createEvent(EventNames.OnEffectApplied, { card: card, context: context }, event => {
-            event.context.source.delayedEffect(() => Object.assign(properties, { target: card, context: context }));
-        });
+    eventHandler(event, additionalProperties) {
+        let properties = this.getProperties(event.context, additionalProperties);
+        event.context.source.delayedEffect(() => Object.assign(properties, { target: event.card, context: event.context }));
     }
 }

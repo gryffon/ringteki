@@ -13,10 +13,11 @@ export class ChosenDiscardAction extends PlayerAction {
         amount: 1
     };
     name = 'discard';
+    eventName = EventNames.OnCardsDiscardedFromHand;
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as ChosenDiscardProperties;
-        return ['make {0} discard {1} cards', [properties.amount]];
+        return ['make {0} discard {1} cards', [properties.target, properties.amount]];
     }
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}) {
@@ -41,16 +42,25 @@ export class ChosenDiscardAction extends PlayerAction {
                     location: Locations.Hand,
                     controller: player === context.player ? Players.Self : Players.Opponent,
                     onSelect: (player, cards) => {
-                        events.push(super.createEvent(EventNames.OnCardsDiscardedFromHand, { player, cards, context }, event => {
-                            context.game.addMessage('{0} discards {1}', player, cards);
-                            for(let card of event.cards) {
-                                player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
-                            }
-                        }));
+                        let event = this.getEvent(player, context) as any;
+                        event.cards = cards;
+                        events.push(event);
                         return true;
                     }
                 });
             }
+        }
+    }
+
+    getEventProperties(event, player, context, additionalProperties) {
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.cards = [];
+    }
+
+    eventHandler(event) {
+        event.context.game.addMessage('{0} discards {1}', event.player, event.cards);
+        for(let card of event.cards) {
+            event.player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
         }
     }
 }

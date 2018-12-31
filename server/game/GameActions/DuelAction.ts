@@ -28,7 +28,7 @@ export class DuelAction extends CardGameAction {
 
     getEffectMessage(context): [string, any[]] {
         let properties = this.getProperties(context) as DuelProperties;
-        return ['initiate a ' + properties.type + ' duel between {1} and {0}', [properties.challenger]];
+        return ['initiate a ' + properties.type + ' duel between {1} and {0}', [properties.target, properties.challenger]];
     }
 
     canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
@@ -49,20 +49,20 @@ export class DuelAction extends CardGameAction {
         properties.costHandler(context, prompt);
     }
 
-    getEvent(card: DrawCard, context: AbilityContext, additionalProperties = {}): Event {
+    eventHandler(event, additionalProperties) {
+        let context = event.context;
+        let card = event.card;
         let properties = this.getProperties(context, additionalProperties) as DuelProperties;
-        return super.createEvent(EventNames.Unnamed, { card, context }, event => {
-            if(properties.challenger.location !== Locations.PlayArea || card.location !== Locations.PlayArea) {
-                context.game.addMessage('The duel cannot proceed as one participant is no longer in play');
-                return;
-            }
-            context.game.currentDuel = new Duel(context.game, properties.challenger, card, properties.type);
-            context.game.queueStep(new DuelFlow(
-                context.game, 
-                context.game.currentDuel, 
-                properties.costHandler ? prompt => this.honorCosts(prompt, event.context, additionalProperties) : null, 
-                (winner, loser) => this.resolveDuel(winner, loser, event.context, additionalProperties)
-            ));
-        });
+        if(properties.challenger.location !== Locations.PlayArea || card.location !== Locations.PlayArea) {
+            context.game.addMessage('The duel cannot proceed as one participant is no longer in play');
+            return;
+        }
+        context.game.currentDuel = new Duel(context.game, properties.challenger, card, properties.type);
+        context.game.queueStep(new DuelFlow(
+            context.game, 
+            context.game.currentDuel, 
+            properties.costHandler ? prompt => this.honorCosts(prompt, event.context, additionalProperties) : null, 
+            (winner, loser) => this.resolveDuel(winner, loser, event.context, additionalProperties)
+        ));
     }
 }

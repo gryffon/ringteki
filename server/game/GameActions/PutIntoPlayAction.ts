@@ -1,9 +1,7 @@
 import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
-import Event = require('../Events/Event');
-import EntersPlayEvent = require('../Events/EntersPlayEvent');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations, CardTypes }  from '../Constants';
+import { Locations, CardTypes, EventNames }  from '../Constants';
 
 export interface PutIntoPlayProperties extends CardActionProperties {
     fate?: number,
@@ -12,6 +10,7 @@ export interface PutIntoPlayProperties extends CardActionProperties {
 
 export class PutIntoPlayAction extends CardGameAction {
     name = 'putIntoPlay';
+    eventName = EventNames.OnCharacterEntersPlay;
     cost = 'putting {0} into play';
     targetType = [CardTypes.Character];
     intoConflict: boolean;
@@ -24,8 +23,9 @@ export class PutIntoPlayAction extends CardGameAction {
         this.intoConflict = intoConflict;
     }
 
-    getEffectMessage(): [string, any[]] {
-        return ['put {0} into play' + (this.intoConflict ? ' in the conflict' : ''), []];
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let { target } = this.getProperties(context);
+        return ['put {0} into play' + (this.intoConflict ? ' in the conflict' : ''), [target]];
     }
 
     canAffect(card: DrawCard, context: AbilityContext): boolean {
@@ -55,9 +55,40 @@ export class PutIntoPlayAction extends CardGameAction {
         }
         return true;
     }
-    
-    getEvent(card: DrawCard, context: AbilityContext, additionalProperties = {}): Event {
+
+    getEventProperties(event, card, context, additionalProperties) {
         let { fate, status } = this.getProperties(context, additionalProperties) as PutIntoPlayProperties;
-        return new EntersPlayEvent({ intoConflict: this.intoConflict, context: context }, card, fate, status, this);
+        super.getEventProperties(event, card, context, additionalProperties);
+        event.fate = fate;
+        event.status = status;
+        event.intoConflict = this.intoConflict;
+        event.originalLocation = card.location;      
+    }
+
+    eventHandler(event) {
+        if(event.card.location.includes('province')) {
+            event.context.refillProvince(event.card.controller, event.card.location);
+        }
+
+        event.card.new = true;
+        if(event.fate) {
+            event.card.fate = event.fate;
+        }
+
+        if(event.status === 'honored') {
+            event.card.honor();
+        } else if(event.status === 'dishonored') {
+            event.card.dishonor();
+        }
+
+        event.context.player.moveCard(event.card, Locations.PlayArea);
+
+        if(event.intoConflict) {
+            if(event.context.player.isAttackingPlayer()) {
+                event.context.game.currentConflict.addAttacker(event.card);
+            } else {
+                event.context.game.currentConflict.addDefender(event.card);
+            }
+        }
     }
 }

@@ -10,16 +10,15 @@ export interface LastingEffectRingProperties extends LastingEffectGeneralPropert
 
 export class LastingEffectRingAction extends RingAction {
     name = 'applyLastingEffect';
+    eventName = EventNames.OnEffectApplied;
     effect = 'apply a lasting effect';
     defaultProperties: LastingEffectRingProperties = {
         duration: Durations.UntilEndOfConflict,
         effect: []
     };
 
-    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as LastingEffectRingProperties;
-        return super.createEvent(EventNames.OnEffectApplied, { ring, context }, event => {
-            event.context.source[properties.duration](() => Object.assign({ match: ring }, properties));
-        });
+    eventHandler(event, additionalProperties) {
+        let properties = this.getProperties(event.context, additionalProperties) as LastingEffectRingProperties;
+        event.context.source[properties.duration](() => Object.assign({ match: event.ring }, properties));
     }
 }

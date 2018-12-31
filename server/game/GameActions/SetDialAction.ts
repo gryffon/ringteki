@@ -12,13 +12,14 @@ export class SetDialAction extends PlayerAction {
     defaultProperties: SetDialProperties = { value: 0 };
 
     name = 'setDial';
+    eventName = EventNames.OnSetHonorDial;
     constructor(propertyFactory: SetDialProperties | ((context: AbilityContext) => SetDialProperties)) {
         super(propertyFactory);
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as SetDialProperties;
-        return ['set {0}\'s dial to {1}', [properties.value]]
+        return ['set {0}\'s dial to {1}', [properties.target, properties.value]]
     }
 
     canAffect(player, context, additionalProperties = {}) {
@@ -26,11 +27,13 @@ export class SetDialAction extends PlayerAction {
         return properties.value > 0 && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as SetDialProperties;
-        let value = properties.value;
-        return super.createEvent(EventNames.OnSetHonorDial, { player, context, value }, event => {
-            event.player.setShowBid(event.value);
-        });
+    getEventProperties(event, player, context, additionalProperties) {
+        let { value } = this.getProperties(context, additionalProperties) as SetDialProperties;
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.value = value;
+    }
+
+    eventHandler(event) {
+        event.player.setShowBid(event.value);
     }
 }

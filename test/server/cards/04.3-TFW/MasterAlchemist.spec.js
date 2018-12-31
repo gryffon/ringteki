@@ -97,6 +97,7 @@ describe('Master Alchemist', function() {
                 expect(this.player1).toHavePrompt('Master Alchemist');
                 this.player1.clickCard(this.togashiMitsu);
                 this.player1.clickRing('fire');
+                this.player1.clickPrompt('Honor this character');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
             });
         });

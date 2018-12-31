@@ -31,8 +31,9 @@ export class SelectCardAction extends CardGameAction {
         super(properties);
     }
 
-    getEffectMessage(): [string, any[]] {
-        return ['choose a target for {0}',[]];
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let { target } = this.getProperties(context);
+        return ['choose a target for {0}', [target]];
     }
 
     getProperties(context, additionalProperties = {}) {

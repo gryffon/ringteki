@@ -11,7 +11,12 @@ export class RingAction extends GameAction {
         return context.game.currentConflict ? [context.game.currentConflict.ring] : []
     }
 
-    checkEventCondition(event: any):boolean {
-        return this.canAffect(event.ring, event.context);
+    checkEventCondition(event: any, additionalProperties = {}):boolean {
+        return this.canAffect(event.ring, event.context, additionalProperties);
+    }
+
+    getEventProperties(event, ring, context, additionalProperties) {
+        super.getEventProperties(event, ring, context, additionalProperties);
+        event.ring = ring;
     }
 }

@@ -16,8 +16,9 @@ export class MenuPromptAction extends GameAction {
         super(properties);
     }
 
-    getEffectMessage(): [string, any[]] {
-        return ['make a choice for {0}',[]];
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let { target } = this.getProperties(context);
+        return ['make a choice for {0}',[target]];
     }
 
     getProperties(context, additionalProperties = {}): MenuPromptProperties {

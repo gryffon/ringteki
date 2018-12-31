@@ -10,6 +10,7 @@ export interface TakeRingProperties extends RingActionProperties {
 
 export class TakeRingAction extends RingAction {
     name = 'takeFate';
+    eventName = EventNames.OnTakeRing;
     effect = 'take {0}';
     defaultProperties: TakeRingProperties = { takeFate: true };
     constructor(properties: ((context: AbilityContext) => TakeRingProperties) | TakeRingProperties) {
@@ -19,17 +20,18 @@ export class TakeRingAction extends RingAction {
     canAffect(ring: Ring, context: AbilityContext): boolean {
         return ring.claimedBy !== context.player.name && super.canAffect(ring, context);
     }
-    
-    getEvent(ring: Ring, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as TakeRingProperties;
-        return this.createEvent(EventNames.OnTakeRing, { ring: ring, context: context }, () => {
-            ring.claimRing(context.player);
-            ring.contested = false;
-            if(properties.takeFate && context.player.checkRestrictions('takeFateFromRings', context)) {
-                context.game.addMessage('{0} takes {1} fate from {2}', context.player, ring.fate, ring);
-                context.player.modifyFate(ring.fate);
-                ring.removeFate();
-            }
-        });
+
+    eventHandler(event, additionalProperties) {
+        let { takeFate } = this.getProperties(event.context, additionalProperties) as TakeRingProperties;
+        let ring = event.ring;
+        let context = event.context;
+        ring.claimRing(context.player);
+        ring.contested = false;
+        if(takeFate && context.player.checkRestrictions('takeFateFromRings', context)) {
+            context.game.addMessage('{0} takes {1} fate from {2}', context.player, ring.fate, ring);
+            context.player.modifyFate(ring.fate);
+            ring.removeFate();
+        }
+
     }
 }

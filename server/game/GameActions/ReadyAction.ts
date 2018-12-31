@@ -9,6 +9,7 @@ export interface ReadyProperties extends CardActionProperties {}
 
 export class ReadyAction extends CardGameAction {
     name = 'ready';
+    eventName = EventNames.OnCardReadied;
     cost = 'readying {0}';
     effect = 'ready {0}';
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Stronghold];
@@ -20,7 +21,7 @@ export class ReadyAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard , context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnCardReadied, { card: card, context: context }, () => card.ready());
+    eventHandler(event) {
+        event.card.ready();
     }
 }

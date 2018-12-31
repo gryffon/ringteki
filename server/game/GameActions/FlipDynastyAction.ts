@@ -9,11 +9,12 @@ export interface FlipDynastyProperties extends CardActionProperties {
 
 export class FlipDynastyAction extends CardGameAction {
     name = 'reveal';
+    eventName = EventNames.OnDynastyCardTurnedFaceup;
     targetType = [CardTypes.Character, CardTypes.Holding];
     
     getEffectMessage(context): [string, any[]] {
         let properties = this.getProperties(context);
-        return ['reveal the facedown card in {1}', [properties.target[0].location]];
+        return ['reveal the facedown card in {0}', [properties.target[0].location]];
     }
 
     canAffect(card: BaseCard, context: AbilityContext): boolean {
@@ -23,9 +24,7 @@ export class FlipDynastyAction extends CardGameAction {
         return false;
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnDynastyCardTurnedFaceup, { card: card, context: context }, () => {
-            card.facedown = false;
-        });
+    eventHandler(event) {
+        event.card.facedown = false;
     }
 }

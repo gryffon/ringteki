@@ -12,6 +12,7 @@ export interface RevealProperties extends CardActionProperties {
 
 export class RevealAction extends CardGameAction {
     name = 'reveal';
+    eventName = EventNames.OnCardRevealed;
     effect = 'reveal a card';
     cost = 'revealing {0}';
     defaultProperties: RevealProperties = { chatMessage: false };
@@ -26,14 +27,12 @@ export class RevealAction extends CardGameAction {
         }
         return super.canAffect(card, context);
     }
-    
-    getEvent(card: BaseCard, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as RevealProperties;
-        return super.createEvent(EventNames.OnCardRevealed, { card, context }, event => {
-            if(properties.chatMessage) {
-                context.game.addMessage('{0} reveals {1} due to {2}', properties.player || context.player, card, context.source);
-            }
-            event.card.facedown = false;
-        });
+
+    eventHandler(event, additionalProperties) {
+        let properties = this.getProperties(event.context, additionalProperties) as RevealProperties;
+        if(properties.chatMessage) {
+            event.context.game.addMessage('{0} reveals {1} due to {2}', properties.player || event.context.player, event.card, event.context.source);
+        }
+        event.card.facedown = false;
     }
 }

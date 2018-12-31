@@ -9,6 +9,7 @@ export interface DiscardStatusProperties extends CardActionProperties {
 
 export class DiscardStatusAction extends CardGameAction {
     name = 'discardStatus';
+    eventName = EventNames.OnCardStatusDiscarded;
     effect = 'discard {0}\'s status token';
     targetType = [CardTypes.Character];
 
@@ -19,10 +20,8 @@ export class DiscardStatusAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnCardStatusDiscarded, { card: card, context: context }, () => {
-            card.isHonored = false;
-            card.isDishonored = false;
-        });
+    eventHandler(event) {
+        event.card.isHonored = false;
+        event.card.isDishonored = false;
     }
 }

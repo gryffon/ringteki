@@ -88,19 +88,25 @@ export class PlayCardAction extends CardGameAction {
         let card = properties.target[0];
         let actions = this.getLegalActions(card.getActions(context.player, properties.location), context);
         if(actions.length === 1) {
-            events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), properties));
+            events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), additionalProperties));
             return;
         }
         context.game.promptWithHandlerMenu(context.player, {
             source: card,
             choices: actions.map(action => action.title).concat(properties.resetOnCancel ? 'Cancel' : []),
-            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), properties))).concat(() => this.cancelAction(context))
+            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), additionalProperties))).concat(() => this.cancelAction(context))
         });
     }
 
-    getPlayCardEvent(card: DrawCard, context: AbilityContext, actionContext: AbilityContext, properties): Event {
-        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
-            context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties));
-        });        
+    getPlayCardEvent(card: DrawCard, context: AbilityContext, actionContext: AbilityContext, additionalProperties): Event {
+        let properties = this.getProperties(context, additionalProperties);
+        let event = this.createEvent();
+        this.updateEvent(event, card, context, additionalProperties);
+        event.replaceHandler(() => context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties)));
+        return event;    
+    }
+
+    checkEventCondition() {
+        return true;
     }
 }

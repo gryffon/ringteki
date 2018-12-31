@@ -1,8 +1,6 @@
 import AbilityContext = require('../AbilityContext');
 import Event = require('../Events/Event.js');
-import EventWindow = require('../Events/EventWindow');
-import GameObject = require('../GameObject');
-import { EventNames } from '../Constants';
+import { CardTypes, EventNames } from '../Constants';
 
 import BaseCard = require('../basecard');
 import Ring = require ('../ring');
@@ -18,6 +16,7 @@ export class GameAction {
     propertyFactory: (context?: AbilityContext) => GameActionProperties;
     properties: GameActionProperties;
     targetType: string[] = [];
+    eventName = EventNames.Unnamed;
     name = '';
     cost = '';
     effect = '';
@@ -48,8 +47,9 @@ export class GameAction {
         return [this.cost, []];
     }
 
-    getEffectMessage(context: AbilityContext): [string, any[]] { // eslint-disable-line no-unused-vars
-        return [this.effect, []];
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let { target } = this.getProperties(context);
+        return [this.effect, [target]];
     }
 
     setDefaultTarget(func: (context: AbilityContext) => any): void {
@@ -62,23 +62,32 @@ export class GameAction {
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
-        return (properties.target as PlayerOrRingOrCard[]).some(target => this.canAffect(target, context));
+        return (properties.target as PlayerOrRingOrCard[]).some(target => this.canAffect(target, context, additionalProperties));
     }
 
     addEventsToArray(events: Event[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        for(const target of (properties.target as PlayerOrRingOrCard[]).filter(target => this.canAffect(target, context))) {
+        for(const target of (properties.target as PlayerOrRingOrCard[]).filter(target => this.canAffect(target, context, additionalProperties))) {
             events.push(this.getEvent(target, context, additionalProperties));
         }
     }
 
     getEvent(target: any, context: AbilityContext, additionalProperties = {}): Event {
-        return this.createEvent(EventNames.Unnamed, { context }, () => true);
+        let event = this.createEvent();
+        this.updateEvent(event, target, context, additionalProperties);
+        return event;
     }
 
-    createEvent(name: EventNames, params: object, handler: (event: any) => void): Event {
-        let event = new Event(name, params, handler, this);
-        return event;
+    updateEvent(event: Event, target: any, context: AbilityContext, additionalProperties = {}): void {
+        event.name = this.eventName;
+        this.getEventProperties(event, target, context, additionalProperties);
+        event.replaceHandler(event => this.eventHandler(event, additionalProperties));
+        event.isFullyResolved = () => this.eventFullyResolved(event, target, context, additionalProperties);
+        event.condition = () => this.checkEventCondition(event, additionalProperties);
+    }
+
+    createEvent(): Event {
+        return new Event(EventNames.Unnamed, {});;
     }
 
     resolve(target: PlayerOrRingOrCard, context: AbilityContext): void {
@@ -93,12 +102,45 @@ export class GameAction {
         this.addEventsToArray(events, context, additionalProperties);
         return events;
     }
+
+    getEventProperties(event: any, target: any, context: AbilityContext, additionalProperties = {}): void { // eslint-disable-line no-unused-vars
+        event.context = context;
+    }
+
+    eventHandler(event: any, additionalProperties = {}): void { // eslint-disable-line no-unused-vars
+    }
     
-    checkEventCondition(event: Event): boolean { // eslint-disable-line no-unused-vars
+    checkEventCondition(event: Event, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
         return true;
     }
 
-    fullyResolved(event: Event): boolean { // eslint-disable-line no-unused-vars
+    eventFullyResolved(event: Event, target: any, context: AbilityContext, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
+        return !event.cancelled && event.name === this.eventName;
+    }
+
+    moveFateEventCondition(event, additionalProperties) {
+        if(event.origin) {
+            if(event.origin.fate === 0) {
+                return false;
+            } else if(event.origin.type === CardTypes.Character && !event.origin.allowGameAction('removeFate', event.context)) {
+                return false;
+            }
+        }
+        if(event.recipient) {
+            if(event.recipient.type === CardTypes.Character && !event.recipient.allowGameAction('placeFate', event.context)) {
+                return false;
+            } 
+        }
         return true;
+    }
+
+    moveFateEventHandler(event) {
+        if(event.origin) {
+            event.fate = Math.min(event.fate, event.origin.fate);
+            event.origin.modifyFate(-event.fate);
+        }
+        if(event.recipient) {
+            event.recipient.modifyFate(event.fate);
+        }
     }
 }

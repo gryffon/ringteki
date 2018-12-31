@@ -1,8 +1,7 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
-import MoveFateEvent = require('../Events/MoveFateEvent');
+import { EventNames } from '../Constants';
 
 export interface TransferFateProperties extends PlayerActionProperties {
     amount?: number;
@@ -10,6 +9,7 @@ export interface TransferFateProperties extends PlayerActionProperties {
 
 export class TransferFateAction extends PlayerAction {
     name = 'takeFate';
+    eventName = EventNames.OnMoveFate;
     defaultProperties: TransferFateProperties = { amount: 1 };
 
     constructor(propertyFactory: TransferFateProperties | ((context: AbilityContext) => TransferFateProperties)) {
@@ -23,7 +23,7 @@ export class TransferFateAction extends PlayerAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as TransferFateProperties;
-        return ['take {1} fate from {0}', [properties.amount]];
+        return ['take {1} fate from {0}', [properties.target, properties.amount]];
     }
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
@@ -31,8 +31,19 @@ export class TransferFateAction extends PlayerAction {
         return player.opponent && properties.amount > 0 && player.fate >= properties.amount && super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as TransferFateProperties;
-        return new MoveFateEvent({ context, player }, properties.amount, player, player.opponent, this);
+    getEventProperties(event, player, context, additionalProperties) {
+        let { amount } = this.getProperties(context, additionalProperties) as TransferFateProperties;        
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.fate = amount;
+        event.origin = player;
+        event.recipient = player.opponent;
+    }
+
+    checkEventCondition(event, additionalProperties) {
+        return this.moveFateEventCondition(event, additionalProperties);
+    }
+
+    eventHandler(event) {
+        this.moveFateEventHandler(event);
     }
 }

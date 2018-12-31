@@ -1,24 +1,18 @@
 import AbilityContext = require('../AbilityContext');
-import BaseCard = require('../basecard');
 import DrawCard = require('../drawcard');
-import Event = require('../Events/Event');
-import LeavesPlayEvent = require('../Events/LeavesPlayEvent');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Locations, CardTypes, EventNames }  from '../Constants';
 
 export interface ReturnToDeckProperties extends CardActionProperties {
-    location?: Locations;
-    ignoreLocation?: boolean;
     bottom?: boolean;
     shuffle?: boolean;
 }
 
 export class ReturnToDeckAction extends CardGameAction {
     name = 'returnToDeck';
+    eventName = EventNames.OnCardLeavesPlay;
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Event, CardTypes.Holding];
     defaultProperties: ReturnToDeckProperties = {
-        location: Locations.PlayArea,
-        ignoreLocation: false,
         bottom: false,
         shuffle: false
      };
@@ -34,38 +28,33 @@ export class ReturnToDeckAction extends CardGameAction {
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as ReturnToDeckProperties;
         if(properties.shuffle) {
-            return['shuffle {0} into their deck', []]
+            return['shuffle {0} into their deck', [properties.target]]
         }
-        return ['return {0} to the ' + (properties.bottom ? 'bottom' : 'top') + ' of their deck',[]];
+        return ['return {0} to the ' + (properties.bottom ? 'bottom' : 'top') + ' of their deck', [properties.target]];
     }
 
-    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
-        let properties = this.getProperties(context, additionalProperties) as ReturnToDeckProperties;
-        if(!properties.ignoreLocation && card.location !== properties.location) {
-            return false;
-        }
-        return super.canAffect(card, context);
+    canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
+        return card.location === Locations.PlayArea && super.canAffect(card, context, additionalProperties);
     }
-    
-    getEvent(card: DrawCard, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as ReturnToDeckProperties;
-        let destination = card.isDynasty ? Locations.DynastyDeck : Locations.ConflictDeck;
-        let target = properties.target as any[];
-        if(card.location === Locations.PlayArea) {
-            return new LeavesPlayEvent({ context: context, destination: destination, options: { bottom: properties.bottom, shuffle: properties.shuffle } }, card, this);
+
+    updateEvent(event, card, context, additionalProperties) {
+        let { shuffle, target, bottom } = this.getProperties(context, additionalProperties) as ReturnToDeckProperties;
+        this.updateLeavesPlayEvent(event, card, context, additionalProperties);
+        event.destination = card.isDynasty ? Locations.DynastyDeck : Locations.ConflictDeck;
+        event.options = { bottom };
+        if(shuffle && (target.length === 0 || card === target[target.length - 1])) {
+            event.shuffle = true;
         }
-        return this.createEvent(EventNames.Unnamed, { card: card, context: context }, event => {
-            if(card.location.includes('province')) {
-                event.context.refillProvince(card.controller, card.location, context);
+    }
+
+    eventHandler(event) {
+        this.leavesPlayEventHandler(event);
+        if(event.shuffle) {
+            if(event.destination === Locations.DynastyDeck) {
+                event.card.owner.shuffleDynastyDeck();
+            } else if(event.destination === Locations.ConflictDeck) {
+                event.card.owner.shuffleConflictDeck();
             }
-            card.owner.moveCard(card, destination, { bottom: properties.bottom });
-            if(properties.shuffle && (target.length === 0 || card === target[target.length - 1])) {
-                if(destination === Locations.DynastyDeck) {
-                    card.owner.shuffleDynastyDeck();
-                } else {
-                    card.owner.shuffleConflictDeck();
-                }
-            }    
-        });
+        }
     }
 }

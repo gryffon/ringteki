@@ -2,11 +2,9 @@ import AbilityContext = require('../AbilityContext');
 import AbilityResolver = require('../gamesteps/abilityresolver');
 import CardAbility = require('../CardAbility');
 import DrawCard = require('../drawcard');
-import Event = require('../Events/Event');
 import Player = require('../player');
 import SimpleStep = require('../gamesteps/simplestep');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { EventNames }  from '../Constants';
 
 class NoCostsAbilityResolver extends AbilityResolver {
     initialise() {
@@ -46,7 +44,7 @@ export class ResolveAbilityAction extends CardGameAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as ResolveAbilityProperties;
-        return ['resolve {0}\'s {1} ability', [properties.ability.title]];
+        return ['resolve {0}\'s {1} ability', [properties.target, properties.ability.title]];
     }
 
     canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
@@ -62,15 +60,14 @@ export class ResolveAbilityAction extends CardGameAction {
         }
         return ability.canResolveTargets(newContext);
     }
-    
-    getEvent(card: DrawCard, context: AbilityContext, additionalProperties = {}): Event {
-        let properties = this.getProperties(context, additionalProperties) as ResolveAbilityProperties;
-        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
-            let newContext = Object.assign(properties.ability.createContext(properties.player || context.player), {
-                isResolveAbility: true,
-                secondResolution: properties.secondResolution
-            });
-            context.game.queueStep(new NoCostsAbilityResolver(context.game, newContext));
+
+    eventHandler(event, additionalProperties) {
+        let properties = this.getProperties(event.context, additionalProperties) as ResolveAbilityProperties;
+        let newContext = Object.assign(properties.ability.createContext(properties.player || event.context.player), {
+            isResolveAbility: true,
+            secondResolution: properties.secondResolution
         });
+        event.context.game.queueStep(new NoCostsAbilityResolver(event.context.game, newContext));
+
     }
 }

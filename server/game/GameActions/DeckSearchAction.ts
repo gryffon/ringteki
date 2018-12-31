@@ -11,6 +11,7 @@ export interface DeckSearchProperties extends PlayerActionProperties {
 
 export class DeckSearchAction extends PlayerAction {
     name = 'deckSearch';
+    eventName = EventNames.OnDeckSearch;
 
     defaultProperties: DeckSearchProperties = {
         amount: -1,
@@ -36,29 +37,35 @@ export class DeckSearchAction extends PlayerAction {
         return [context.player];
     }
 
-    getEvent(player, context, additionalProperties = {}) {
+    getEventProperties(event, player, context, additionalProperties) {
+        let { amount } = this.getProperties(context, additionalProperties) as DeckSearchProperties;        
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.amount = amount;
+    }
+
+    eventHandler(event, additionalProperties) {
+        let context = event.context;
+        let player = event.player;
         let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;
-        return super.createEvent(EventNames.OnDeckSearch, { player: player, amount: properties.amount, context: context }, () => {
-            let amount = properties.amount > -1 ? properties.amount : player.conflictDeck.size();
-            context.game.promptWithHandlerMenu(player, {
-                activePromptTitle: 'Select a card to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand',
-                context: context,
-                cards: player.conflictDeck.first(amount).filter(card => properties.cardCondition(card, context)),
-                choices: ['Take nothing'],
-                handlers: [() => {
-                    context.game.addMessage('{0} takes nothing', player);
-                    player.shuffleConflictDeck();
-                }],
-                cardHandler: card => {
-                    if(properties.reveal) {
-                        context.game.addMessage('{0} takes {1} and adds it to their hand', player, card);
-                    } else {
-                        context.game.addMessage('{0} takes a card into their hand', player);
-                    }
-                    player.moveCard(card, Locations.Hand);
-                    player.shuffleConflictDeck();
+        let amount = event.amount > -1 ? event.amount : player.conflictDeck.size();
+        context.game.promptWithHandlerMenu(player, {
+            activePromptTitle: 'Select a card to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand',
+            context: context,
+            cards: player.conflictDeck.first(amount).filter(card => properties.cardCondition(card, context)),
+            choices: ['Take nothing'],
+            handlers: [() => {
+                context.game.addMessage('{0} takes nothing', player);
+                player.shuffleConflictDeck();
+            }],
+            cardHandler: card => {
+                if(properties.reveal) {
+                    context.game.addMessage('{0} takes {1} and adds it to their hand', player, card);
+                } else {
+                    context.game.addMessage('{0} takes a card into their hand', player);
                 }
-            });
+                player.moveCard(card, Locations.Hand);
+                player.shuffleConflictDeck();
+            }
         });
     }
 }

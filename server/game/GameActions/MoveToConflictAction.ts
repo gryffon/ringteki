@@ -10,6 +10,7 @@ export interface MoveToConflictProperties extends CardActionProperties {
 
 export class MoveToConflictAction extends CardGameAction {
     name = 'moveToConflict';
+    eventName = EventNames.OnMoveToConflict;
     effect = 'move {0} into the conflict';
     targetType = [CardTypes.Character];
 
@@ -30,13 +31,11 @@ export class MoveToConflictAction extends CardGameAction {
         return card.location === Locations.PlayArea;
     }
 
-    getEvent(card: BaseCard , context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnMoveToConflict, { card, context }, () => {
-            if(card.controller.isAttackingPlayer()) {
-                context.game.currentConflict.addAttacker(card);
-            } else {
-                context.game.currentConflict.addDefender(card);
-            }
-        });
+    eventHandler(event) {
+        if(event.card.controller.isAttackingPlayer()) {
+            event.context.game.currentConflict.addAttacker(event.card);
+        } else {
+            event.context.game.currentConflict.addDefender(event.card);
+        }        
     }
 }

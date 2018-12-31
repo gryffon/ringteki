@@ -9,32 +9,43 @@ export interface DiscardCardProperties extends CardActionProperties {
 
 export class DiscardCardAction extends CardGameAction {
     name = 'discardCard';
+    eventName = EventNames.OnCardsDiscarded;
     cost = 'discarding {0}';
     effect = 'discard {0}';
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
-        let properties = this.getProperties(context, additionalProperties);
-        let target = (properties.target as BaseCard[]).filter(card => this.canAffect(card, context, additionalProperties));
-        if(target.length === 0 ) {
-            return;
+        let { target } = this.getProperties(context, additionalProperties);
+        let cards = (target as BaseCard[]).filter(card => this.canAffect(card, context));
+        if(cards.length === 0) {
+            return
         }
-        events.push(this.createEvent(EventNames.OnCardsDiscarded, { player: target[0].controller, cards: target, context: context }, event => {
-            for(const card of event.cards) {
-                if(card.location.includes('province')) {
-                    event.context.refillProvince(card.controller, card.location);
-                }
-                card.controller.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
-            }
-        }));
+        let event = this.createEvent();
+        this.updateEvent(event, cards, context, additionalProperties);
+        events.push(event);
     }
 
-    getEvent(card: BaseCard, context: AbilityContext): Event {
-        return super.createEvent(EventNames.OnCardsDiscarded, { player: card.controller, cards: [card], context: context }, event => {
+    getEventProperties(event, cards, context, additionalProperties) {
+        if(!cards) {
+            cards = this.getProperties(context, additionalProperties).target;
+        }
+        if(!Array.isArray(cards)) {
+            cards = [cards];
+        }
+        event.cards = cards;
+        event.context = context;
+    }
+
+    eventHandler(event) {
+        for(const card of event.cards) {
             if(card.location.includes('province')) {
                 event.context.refillProvince(card.controller, card.location);
             }
             card.controller.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
-        });
+        }
+    }
+
+    eventFullyResolved(event) {
+        return !event.cancelled && event.name === this.eventName;
     }
 
     checkEventCondition() {

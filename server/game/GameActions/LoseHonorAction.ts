@@ -14,6 +14,7 @@ export class LoseHonorAction extends PlayerAction {
     defaultProperties: LoseHonorProperties = { amount: 1, dueToUnopposed: false };
 
     name = 'loseHonor';
+    eventName = EventNames.OnModifyHonor;
     constructor(propertyFactory: LoseHonorProperties | ((context: AbilityContext) => LoseHonorProperties)) {
         super(propertyFactory);
     }
@@ -33,10 +34,15 @@ export class LoseHonorAction extends PlayerAction {
         return properties.amount === 0 ? false : super.canAffect(player, context);
     }
 
-    getEvent(player: Player, context: AbilityContext, additionalProperties = {}): Event {
-        let { amount, dueToUnopposed } = this.getProperties(context, additionalProperties) as LoseHonorProperties;
-        amount = -amount;
-        return super.createEvent(EventNames.OnModifyHonor, { player, context, amount, dueToUnopposed }, event => player.modifyHonor(event.amount));
+    getEventProperties(event, player, context, additionalProperties) {
+        let { amount, dueToUnopposed } = this.getProperties(context, additionalProperties) as LoseHonorProperties;        
+        super.getEventProperties(event, player, context, additionalProperties);
+        event.amount = -amount;
+        event.dueToUnopposed = dueToUnopposed;
+    }
+
+    eventHandler(event) {
+        event.player.modifyHonor(event.amount);
     }
 }
 

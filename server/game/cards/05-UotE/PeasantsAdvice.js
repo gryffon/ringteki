@@ -20,8 +20,8 @@ class PeasantsAdvice extends DrawCard {
                         handlers: [() => this.game.addMessage('{0} chooses not to return a dynasty card to its owner\'s deck', context.player)],
                         message: '{0} chooses to shuffle {1} into its owner\'s deck',
                         messageArgs: card => [context.player, card],
-                        gameAction: AbilityDsl.actions.returnToDeck({
-                            location: context.target.location,
+                        gameAction: AbilityDsl.actions.moveCard({
+                            destination: Locations.DynastyDeck,
                             shuffle: true
                         })
                     }))

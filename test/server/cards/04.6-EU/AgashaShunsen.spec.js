@@ -67,6 +67,7 @@ describe('Agasha Shunsen', function () {
                 this.player1.clickPrompt('Fine Katana');
                 this.fineKatana = this.player1.findCardByName('fine-katana');
                 expect(this.agashaShunsen.attachments.toArray()).toContain(this.fineKatana);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
             it('should still shuffle if no card is chosen to attach', function () {
