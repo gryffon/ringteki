@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class GloriousVictory extends DrawCard {
     setupCardAbilities(ability) {
