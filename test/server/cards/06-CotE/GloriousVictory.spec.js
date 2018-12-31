@@ -9,7 +9,7 @@ describe('Glorious Victory', function() {
                         hand: ['glorious-victory', 'captive-audience']
                     },
                     player2: {
-                        inPlay: ['adept-of-the-waves'], 
+                        inPlay: ['adept-of-the-waves'],
                         provinces: ['shameful-display', 'public-forum', 'endless-plains']
                     }
                 });
@@ -48,11 +48,11 @@ describe('Glorious Victory', function() {
                     attackers: [this.shinjoAltansarnai],
                     defenders: [],
                     jumpTo: 'afterConflict'
-                }); 
+                });
                 this.player1.clickPrompt('No');
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
-            });     
-                    
+            });
+
             it('should trigger when Endless Plains fires', function() {
                 this.initiateConflict({
                     type: 'military',
@@ -80,8 +80,8 @@ describe('Glorious Victory', function() {
                 expect(this.player1).toHavePrompt('Endless Plains');
                 this.player1.clickCard(this.shinjoAltansarnai);
                 expect(this.shinjoAltansarnai.location).toBe('dynasty discard pile');
-            });     
-                    
+            });
+
             it('should not trigger when Public Forum is triggered', function() {
                 this.initiateConflict({
                     type: 'military',
@@ -94,8 +94,8 @@ describe('Glorious Victory', function() {
                 expect(this.player2).toBeAbleToSelect(this.publicForum);
                 this.player2.clickCard(this.publicForum);
                 expect(this.player1).toHavePrompt('Air Ring');
-            }); 
-                
+            });
+
             it('should trigger when Public Forum is broken', function() {
                 this.initiateConflict({
                     type: 'military',
