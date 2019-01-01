@@ -39,15 +39,15 @@ export class ResolveElementAction extends RingAction {
         }
     }
 
-    getEventProperties(event, ring, context, additionalProperties) {
+    addPropertiesToEvent(event, ring: Ring, context: AbilityContext, additionalProperties): void {
         let { physicalRing, optional } = this.getProperties(context, additionalProperties) as ResolveElementProperties;
-        super.getEventProperties(event, ring, context, additionalProperties);
+        super.addPropertiesToEvent(event, ring, context, additionalProperties);
         event.player = context.player;
         event.physicalRing = physicalRing;
         event.optional = optional;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.context.game.resolveAbility(RingEffects.contextFor(event.player, event.ring.element, event.optional));
     }
 }

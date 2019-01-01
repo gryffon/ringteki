@@ -1,5 +1,4 @@
 import AbilityContext = require('../AbilityContext');
-import Event = require('../Events/Event');
 import { ResolveElementAction } from './ResolveElementAction';
 import Player = require('../player');
 import Ring = require('../ring');
@@ -23,8 +22,8 @@ export class ResolveConflictRingAction extends RingAction {
         return ['resolve {0}' + (properties.resolveAsAttacker ? '' : ' for the attacking player'),[properties.target]];
     }
 
-    getEventProperties(event, ring, context, additionalProperties) {
-        super.getEventProperties(event, ring, context, additionalProperties);
+    addPropertiesToEvent(event, ring: Ring, context: AbilityContext, additionalProperties): void {
+        super.addPropertiesToEvent(event, ring, context, additionalProperties);
         let properties: ResolveConflictRingProperties = this.getProperties(context, additionalProperties);
         let conflict = context.game.currentConflict;
         if(!conflict && !properties.resolveAsAttacker) {
@@ -35,7 +34,7 @@ export class ResolveConflictRingAction extends RingAction {
         event.player = properties.resolveAsAttacker ? context.player : conflict.attackingPlayer;
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         if(event.name !== this.eventName) {
             return;
         }
@@ -49,7 +48,7 @@ export class ResolveConflictRingAction extends RingAction {
         }
     }
 
-    chooseElementsToResolve(player, elements, optional, elementsToResolve, chosenElements = []) {
+    chooseElementsToResolve(player: Player, elements: string[], optional: boolean, elementsToResolve: number, chosenElements: string[] = []): void {
         if(elements.length === 0 || elementsToResolve === 0) {
             this.resolveRingEffects(player, chosenElements, optional);
             return;
@@ -91,7 +90,7 @@ export class ResolveConflictRingAction extends RingAction {
         });
     }
 
-    resolveRingEffects(player, elements, optional = true) {
+    resolveRingEffects(player: Player, elements: string[], optional: boolean = true): void {
         if(!Array.isArray(elements)) {
             elements = [elements];
         }

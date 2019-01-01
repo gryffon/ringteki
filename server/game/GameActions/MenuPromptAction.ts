@@ -21,7 +21,7 @@ export class MenuPromptAction extends GameAction {
         return ['make a choice for {0}',[target]];
     }
 
-    getProperties(context, additionalProperties = {}): MenuPromptProperties {
+    getProperties(context: AbilityContext, additionalProperties = {}): MenuPromptProperties {
         let properties = super.getProperties(context, additionalProperties) as MenuPromptProperties;
         if(typeof properties.choices === 'function') {
             properties.choices = properties.choices(properties);
@@ -29,7 +29,7 @@ export class MenuPromptAction extends GameAction {
         return properties;
     }
 
-    canAffect(target, context, additionalProperties = {}) {
+    canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         return (properties.choices as string[]).some(choice => {
             let childProperties = properties.choiceHandler(choice, false, properties);
@@ -45,9 +45,9 @@ export class MenuPromptAction extends GameAction {
         });
     }
 
-    addEventsToArray(events, context, additionalProperties = {}) {
+    addEventsToArray(events, context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        if(properties.choices.length === 0 || properties.player === Players.Opponent && !context.player.oppoennt) {
+        if(properties.choices.length === 0 || properties.player === Players.Opponent && !context.player.opponent) {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;

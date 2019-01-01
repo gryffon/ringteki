@@ -31,19 +31,19 @@ export class TransferFateAction extends PlayerAction {
         return player.opponent && properties.amount > 0 && player.fate >= properties.amount && super.canAffect(player, context);
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount } = this.getProperties(context, additionalProperties) as TransferFateProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.fate = amount;
         event.origin = player;
         event.recipient = player.opponent;
     }
 
-    checkEventCondition(event, additionalProperties) {
-        return this.moveFateEventCondition(event, additionalProperties);
+    checkEventCondition(event): boolean {
+        return this.moveFateEventCondition(event);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         this.moveFateEventHandler(event);
     }
 }

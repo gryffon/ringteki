@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 export interface GainHonorProperties extends PlayerActionProperties {
@@ -31,13 +30,13 @@ export class GainHonorAction extends PlayerAction {
         return [context.player];
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount } = this.getProperties(context, additionalProperties) as GainHonorProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.player.modifyHonor(event.amount);
     }
 }

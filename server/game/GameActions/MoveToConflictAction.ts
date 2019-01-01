@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties } from './CardGameAction';
 
 import BaseCard = require('../basecard');
 import AbilityContext = require('../AbilityContext');
-import Event = require('../Events/Event');
 import { Locations, CardTypes, EventNames } from '../Constants';
 
 export interface MoveToConflictProperties extends CardActionProperties {
@@ -31,7 +30,7 @@ export class MoveToConflictAction extends CardGameAction {
         return card.location === Locations.PlayArea;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         if(event.card.controller.isAttackingPlayer()) {
             event.context.game.currentConflict.addAttacker(event.card);
         } else {

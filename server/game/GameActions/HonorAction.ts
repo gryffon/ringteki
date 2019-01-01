@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { CardTypes, Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 
 export interface HonorProperties extends CardActionProperties {
 }
@@ -23,7 +22,7 @@ export class HonorAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.card.honor();
     }
 }

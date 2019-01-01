@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 export interface GainFateProperties extends PlayerActionProperties {
@@ -31,13 +30,13 @@ export class GainFateAction extends PlayerAction {
         return properties.amount > 0 && super.canAffect(player, context);
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount } = this.getProperties(context, additionalProperties) as GainFateProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.player.modifyFate(event.amount);
     }
 }

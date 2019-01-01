@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames, Locations, Players, TargetModes } from '../Constants';
 
 export interface RandomDiscardProperties extends PlayerActionProperties {
@@ -27,13 +26,13 @@ export class RandomDiscardAction extends PlayerAction {
         return properties.amount > 0 && super.canAffect(player, context);
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount } = this.getProperties(context, additionalProperties) as RandomDiscardProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         let player = event.player;
         let amount = Math.min(event.amount, player.hand.size());
         if(amount === 0) {

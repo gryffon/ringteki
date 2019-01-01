@@ -32,16 +32,16 @@ export class AttachAction extends CardGameAction {
         return card.allowAttachment(properties.attachment) && super.canAffect(card, context);
     }
     
-    checkEventCondition(event, additionalProperties) {
+    checkEventCondition(event, additionalProperties): boolean {
         return this.canAffect(event.parent, event.context, additionalProperties);
     }
 
-    eventFullyResolved(event, card, context, additionalProperties) {
+    isEventFullyResolved(event, card: DrawCard, context: AbilityContext, additionalProperties): boolean {
         let { attachment } = this.getProperties(context, additionalProperties) as AttachActionProperties;
         return event.parent === card && event.card === attachment && event.name === this.eventName && !event.cancelled;
     }
 
-    getEventProperties(event, card, context, additionalProperties) {
+    addPropertiesToEvent(event, card: DrawCard, context: AbilityContext, additionalProperties): void {
         let { attachment } = this.getProperties(context, additionalProperties) as AttachActionProperties;
         event.name = this.eventName;
         event.parent = card;
@@ -49,7 +49,7 @@ export class AttachAction extends CardGameAction {
         event.context = context;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         if(event.card.location === Locations.PlayArea) {
             event.card.parent.removeAttachment(event.card);
         } else {

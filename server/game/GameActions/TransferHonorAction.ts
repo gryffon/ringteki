@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 export interface TransferHonorProperties extends PlayerActionProperties {
@@ -33,14 +32,14 @@ export class TransferHonorAction extends PlayerAction {
         return player.opponent && properties.amount > 0 && super.canAffect(player, context);
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { afterBid, amount } = this.getProperties(context, additionalProperties) as TransferHonorProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
         event.afterBid = afterBid;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.player.modifyHonor(-event.amount);
         event.player.opponent.modifyHonor(event.amount);
     }

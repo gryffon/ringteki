@@ -23,16 +23,16 @@ export class CardGameAction extends GameAction {
         return super.canAffect(card, context, additionalProperties);
     }
 
-    getEventProperties(event, card, context, additionalProperties = {}) {
-        super.getEventProperties(event, card, context, additionalProperties);
+    addPropertiesToEvent(event, card: BaseCard, context: AbilityContext, additionalProperties = {}): void {
+        super.addPropertiesToEvent(event, card, context, additionalProperties);
         event.card = card;
     }
 
-    eventFullyResolved(event, card, context, additionalProperties) {
-        return event.card === card && super.eventFullyResolved(event, card, context, additionalProperties);
+    isEventFullyResolved(event, card: BaseCard, context: AbilityContext, additionalProperties): boolean {
+        return event.card === card && super.isEventFullyResolved(event, card, context, additionalProperties);
     }
 
-    updateLeavesPlayEvent(event, card, context, additionalProperties) {
+    updateLeavesPlayEvent(event, card: BaseCard, context: AbilityContext, additionalProperties): void {
         let properties = this.getProperties(context, additionalProperties) as any;
         super.updateEvent(event, card, context, additionalProperties);
         event.destination = properties.destination || card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile;
@@ -70,7 +70,7 @@ export class CardGameAction extends GameAction {
         }
     }
 
-    leavesPlayEventHandler(event) {
+    leavesPlayEventHandler(event): void {
         if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(event.card.location)) {
             event.context.refillProvince(event.context.player, event.card.location);
         }

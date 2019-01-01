@@ -76,7 +76,7 @@ export class PlayCardAction extends CardGameAction {
         });
     }
 
-    cancelAction(context) {
+    cancelAction(context: AbilityContext): void {
         context.ability.executeHandler(context);
     }
 
@@ -100,13 +100,13 @@ export class PlayCardAction extends CardGameAction {
 
     getPlayCardEvent(card: DrawCard, context: AbilityContext, actionContext: AbilityContext, additionalProperties): Event {
         let properties = this.getProperties(context, additionalProperties);
-        let event = this.createEvent();
+        let event = this.createEvent(card, context, additionalProperties);
         this.updateEvent(event, card, context, additionalProperties);
         event.replaceHandler(() => context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties)));
         return event;    
     }
 
-    checkEventCondition() {
+    checkEventCondition(): boolean {
         return true;
     }
 }

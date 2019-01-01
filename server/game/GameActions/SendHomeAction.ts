@@ -16,7 +16,7 @@ export class SendHomeAction extends CardGameAction {
         return super.canAffect(card, context) && card.isParticipating();
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.context.game.currentConflict.removeFromConflict(event.card);
     }
 }

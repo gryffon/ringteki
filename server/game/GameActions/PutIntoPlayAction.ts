@@ -56,16 +56,16 @@ export class PutIntoPlayAction extends CardGameAction {
         return true;
     }
 
-    getEventProperties(event, card, context, additionalProperties) {
+    addPropertiesToEvent(event, card: DrawCard, context: AbilityContext, additionalProperties): void {
         let { fate, status } = this.getProperties(context, additionalProperties) as PutIntoPlayProperties;
-        super.getEventProperties(event, card, context, additionalProperties);
+        super.addPropertiesToEvent(event, card, context, additionalProperties);
         event.fate = fate;
         event.status = status;
         event.intoConflict = this.intoConflict;
         event.originalLocation = card.location;      
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         if(event.card.location.includes('province')) {
             event.context.refillProvince(event.card.controller, event.card.location);
         }

@@ -36,24 +36,24 @@ export class SelectCardAction extends CardGameAction {
         return ['choose a target for {0}', [target]];
     }
 
-    getProperties(context, additionalProperties = {}) {
+    getProperties(context: AbilityContext, additionalProperties = {}): SelectCardProperties {
         let properties = super.getProperties(context, additionalProperties) as SelectCardProperties;
         let cardCondition = (card, context) => properties.gameAction.canAffect(card, context) && properties.cardCondition(card, context)
         properties.selector = CardSelector.for(Object.assign({}, properties, { cardCondition }));
         return properties;
     }
 
-    canAffect(card, context, additionalProperties = {}) {
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         return properties.selector.canTarget(card, context);
     }
 
-    hasLegalTarget(context, additionalProperties = {}) {
+    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         return properties.selector.hasEnoughTargets(context);
     }
 
-    addEventsToArray(events, context, additionalProperties = {}) {
+    addEventsToArray(events, context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         if(!properties.selector.hasEnoughTargets(context) || properties.player === Players.Opponent && !context.player.opponent) {
             return;

@@ -1,12 +1,13 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import { Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
-import BaseCard = require('../basecard');
+import DrawCard = require('../drawcard');
+import Player = require('../player');
 
 export interface DeckSearchProperties extends PlayerActionProperties {
     amount: number;
     reveal: boolean;
-    cardCondition: (card: BaseCard, context: AbilityContext) => boolean;
+    cardCondition: (card: DrawCard, context: AbilityContext) => boolean;
 }
 
 export class DeckSearchAction extends PlayerAction {
@@ -28,22 +29,22 @@ export class DeckSearchAction extends PlayerAction {
         return [message, []];
     }
 
-    canAffect(player, context, additionalProperties = {}) {
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;
         return properties.amount !== 0 && player.conflictDeck.size() > 0 && super.canAffect(player, context);
     }
 
-    defaultTargets(context) {
+    defaultTargets(context: AbilityContext): Player[] {
         return [context.player];
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount } = this.getProperties(context, additionalProperties) as DeckSearchProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let context = event.context;
         let player = event.player;
         let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;

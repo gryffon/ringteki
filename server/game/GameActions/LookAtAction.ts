@@ -2,8 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
-import GameObject = require('../GameObject');
 
 export interface LookAtProperties extends CardActionProperties {
 }
@@ -27,12 +25,12 @@ export class LookAtAction extends CardGameAction {
         if(cards.length === 0) {
             return
         }
-        let event = this.createEvent();
+        let event = this.createEvent(null, context, additionalProperties);
         this.updateEvent(event, cards, context, additionalProperties);
         events.push(event);
     }
 
-    getEventProperties(event, cards, context, additionalProperties) {
+    addPropertiesToEvent(event, cards, context: AbilityContext, additionalProperties): void {
         if(!cards) {
             cards = this.getProperties(context, additionalProperties).target;
         }
@@ -43,16 +41,16 @@ export class LookAtAction extends CardGameAction {
         event.context = context;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         let context = event.context;
         context.game.addMessage('{0} sees {1}', context.source, event.cards);
     }
 
-    eventFullyResolved(event) {
+    isEventFullyResolved(event): boolean {
         return !event.cancelled && event.name === this.eventName;
     }
 
-    checkEventCondition() {
+    checkEventCondition(): boolean {
         return true;
     }
 }

@@ -1,6 +1,5 @@
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 import Player = require('../player');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Locations, EventNames }  from '../Constants';
@@ -28,7 +27,7 @@ export class RevealAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let properties = this.getProperties(event.context, additionalProperties) as RevealProperties;
         if(properties.chatMessage) {
             event.context.game.addMessage('{0} reveals {1} due to {2}', properties.player || event.context.player, event.card, event.context.source);

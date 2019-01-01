@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties } from './CardGameAction';
 
 import BaseCard = require('../basecard');
 import AbilityContext = require('../AbilityContext');
-import Event = require('../Events/Event');
 import { Locations, CardTypes, EventNames } from '../Constants';
 
 export interface ReadyProperties extends CardActionProperties {}
@@ -21,7 +20,7 @@ export class ReadyAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.card.ready();
     }
 }

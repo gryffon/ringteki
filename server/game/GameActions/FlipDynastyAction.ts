@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { CardTypes, Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 
 export interface FlipDynastyProperties extends CardActionProperties {
 }
@@ -24,7 +23,7 @@ export class FlipDynastyAction extends CardGameAction {
         return false;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.card.facedown = false;
     }
 }

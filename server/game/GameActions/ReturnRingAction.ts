@@ -1,7 +1,6 @@
 import { RingAction, RingActionProperties} from './RingAction';
 import { EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
-import Event = require('../Events/Event');
 import Ring = require('../ring');
 
 export interface ReturnRingProperties extends RingActionProperties {
@@ -16,7 +15,7 @@ export class ReturnRingAction extends RingAction {
         return !ring.isUnclaimed() && super.canAffect(ring, context);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.ring.resetRing();
     }
 }

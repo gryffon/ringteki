@@ -1,9 +1,7 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
-import { assertModuleDeclaration } from 'babel-types';
 
 export interface LoseHonorProperties extends PlayerActionProperties {
     amount?: number;
@@ -34,14 +32,14 @@ export class LoseHonorAction extends PlayerAction {
         return properties.amount === 0 ? false : super.canAffect(player, context);
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount, dueToUnopposed } = this.getProperties(context, additionalProperties) as LoseHonorProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = -amount;
         event.dueToUnopposed = dueToUnopposed;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.player.modifyHonor(event.amount);
     }
 }

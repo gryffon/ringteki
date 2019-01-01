@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 
 export interface DiscardCardProperties extends CardActionProperties {
 }
@@ -19,12 +18,12 @@ export class DiscardCardAction extends CardGameAction {
         if(cards.length === 0) {
             return
         }
-        let event = this.createEvent();
+        let event = this.createEvent(null, context, additionalProperties);
         this.updateEvent(event, cards, context, additionalProperties);
         events.push(event);
     }
 
-    getEventProperties(event, cards, context, additionalProperties) {
+    addPropertiesToEvent(event, cards, context: AbilityContext, additionalProperties): void {
         if(!cards) {
             cards = this.getProperties(context, additionalProperties).target;
         }
@@ -35,7 +34,7 @@ export class DiscardCardAction extends CardGameAction {
         event.context = context;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         for(const card of event.cards) {
             if(card.location.includes('province')) {
                 event.context.refillProvince(card.controller, card.location);
@@ -44,11 +43,11 @@ export class DiscardCardAction extends CardGameAction {
         }
     }
 
-    eventFullyResolved(event) {
+    isEventFullyResolved(event): boolean {
         return !event.cancelled && event.name === this.eventName;
     }
 
-    checkEventCondition() {
+    checkEventCondition(): boolean {
         return true;
     }
 }

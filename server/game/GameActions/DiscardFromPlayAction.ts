@@ -25,7 +25,7 @@ export class DiscardFromPlayAction extends CardGameAction {
         return[this.name === 'sacrifice' ? 'sacrifice {0}' : 'discard {0}', [properties.target]];
     }
 
-    canAffect(card: BaseCard, context: AbilityContext) {
+    canAffect(card: BaseCard, context: AbilityContext): boolean {
         if(card.type === CardTypes.Holding) {
             if(!card.location.includes('province')) {
                 return false;
@@ -36,11 +36,11 @@ export class DiscardFromPlayAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    updateEvent(event, card, context, additionalProperties) {
+    updateEvent(event, card: BaseCard, context: AbilityContext, additionalProperties): void {
         this.updateLeavesPlayEvent(event, card, context, additionalProperties);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         this.leavesPlayEventHandler(event);
     }
 }

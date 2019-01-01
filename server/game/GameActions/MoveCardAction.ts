@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { CardTypes, Locations } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 
 export interface MoveCardProperties extends CardActionProperties {
     destination: Locations;
@@ -31,7 +30,7 @@ export class MoveCardAction extends CardGameAction {
         return card.location !== Locations.PlayArea && super.canAffect(card, context);
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let context = event.context;
         let card = event.card;
         event.cardStateWhenMoved = card.createSnapshot();

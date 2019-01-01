@@ -4,7 +4,6 @@ import { WhenType } from '../Interfaces';
 import { GameAction } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 
 export interface DelayedEffectActionProperties extends CardActionProperties {
     when: WhenType;
@@ -22,14 +21,14 @@ export class DelayedEffectAction extends CardGameAction {
         super(properties);
     }
 
-    canAffect(card: BaseCard, context: AbilityContext) {
+    canAffect(card: BaseCard, context: AbilityContext): boolean {
         if(card.location !== Locations.PlayArea) {
             return false;
         }
         return super.canAffect(card, context);
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let properties = this.getProperties(event.context, additionalProperties);
         event.context.source.delayedEffect(() => Object.assign(properties, { target: event.card, context: event.context }));
     }

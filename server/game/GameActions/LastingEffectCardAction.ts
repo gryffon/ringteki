@@ -2,7 +2,6 @@ import { CardGameAction } from './CardGameAction';
 import { Durations, Players, EventNames, Locations } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 import { LastingEffectGeneralProperties } from './LastingEffectAction';
 
 export interface LastingEffectCardProperties extends LastingEffectGeneralProperties {
@@ -41,7 +40,7 @@ export class LastingEffectCardAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let properties = this.getProperties(event.context, additionalProperties);
         event.context.source[properties.duration](() => Object.assign({ match: event.card }, properties));
     }

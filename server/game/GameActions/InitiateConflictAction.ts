@@ -30,11 +30,11 @@ export class InitiateConflictAction extends PlayerAction {
         return super.canAffect(player, context);
     }
 
-    defaultTargets(context) {
+    defaultTargets(context: AbilityContext): Player[] {
         return [context.player];
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let { canPass } = this.getProperties(event.context, additionalProperties) as InitiateConflictProperties;
         event.context.game.initiateConflict(event.player, canPass)
     }

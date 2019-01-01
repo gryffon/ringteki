@@ -17,12 +17,12 @@ export class ReturnToHandAction extends CardGameAction {
         return card.location === Locations.PlayArea && super.canAffect(card, context, additionalProperties);
     }
 
-    updateEvent(event, card, context, additionalProperties) {
+    updateEvent(event, card: DrawCard, context: AbilityContext, additionalProperties): void {
         this.updateLeavesPlayEvent(event, card, context, additionalProperties);
         event.destination = Locations.Hand;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         this.leavesPlayEventHandler(event);
     }
 }

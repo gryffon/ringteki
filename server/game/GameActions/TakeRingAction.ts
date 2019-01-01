@@ -1,5 +1,4 @@
 import AbilityContext = require('../AbilityContext');
-import Event = require('../Events/Event');
 import Ring = require('../ring');
 import { RingAction, RingActionProperties} from './RingAction';
 import { EventNames } from '../Constants';
@@ -21,7 +20,7 @@ export class TakeRingAction extends RingAction {
         return ring.claimedBy !== context.player.name && super.canAffect(ring, context);
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let { takeFate } = this.getProperties(event.context, additionalProperties) as TakeRingProperties;
         let ring = event.ring;
         let context = event.context;

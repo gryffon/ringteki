@@ -2,6 +2,7 @@ import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { CardTypes, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
+import ProvinceCard = require('../provincecard');
 
 export interface BreakProperties extends CardActionProperties {
 }
@@ -20,12 +21,12 @@ export class BreakAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    getEventProperties(event, card, context, additionalProperties) {
-        super.getEventProperties(event, card, context, additionalProperties);
+    addPropertiesToEvent(event, card: ProvinceCard, context: AbilityContext, additionalProperties): void {
+        super.addPropertiesToEvent(event, card, context, additionalProperties);
         event.conflict = context.game.currentConflict;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.card.breakProvince();
     }
 }

@@ -37,7 +37,7 @@ export class ReturnToDeckAction extends CardGameAction {
         return card.location === Locations.PlayArea && super.canAffect(card, context, additionalProperties);
     }
 
-    updateEvent(event, card, context, additionalProperties) {
+    updateEvent(event, card: DrawCard, context: AbilityContext, additionalProperties): void {
         let { shuffle, target, bottom } = this.getProperties(context, additionalProperties) as ReturnToDeckProperties;
         this.updateLeavesPlayEvent(event, card, context, additionalProperties);
         event.destination = card.isDynasty ? Locations.DynastyDeck : Locations.ConflictDeck;
@@ -47,7 +47,7 @@ export class ReturnToDeckAction extends CardGameAction {
         }
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         this.leavesPlayEventHandler(event);
         if(event.shuffle) {
             if(event.destination === Locations.DynastyDeck) {

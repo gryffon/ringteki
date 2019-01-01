@@ -1,7 +1,7 @@
 import AbilityContext = require('../AbilityContext');
 import Ring = require('../ring');
 import { RingAction, RingActionProperties } from './RingAction';
-import { Players, EffectNames } from '../Constants';
+import { Players } from '../Constants';
 import { GameAction } from './GameAction';
 
 export interface SelectRingProperties extends RingActionProperties {
@@ -36,11 +36,11 @@ export class SelectRingAction extends RingAction {
         return super.canAffect(ring, context) && properties.ringCondition(ring, context);
     }
 
-    hasLegalTarget(context, additionalProperties = {}) {
+    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         return Object.values(context.game.rings).some((ring: Ring) => this.canAffect(ring, context, additionalProperties));
     }
 
-    addEventsToArray(events, context, additionalProperties = {}) {
+    addEventsToArray(events, context: AbilityContext, additionalProperties = {}): void {
         let properties = super.getProperties(context, additionalProperties) as SelectRingProperties;
         if(properties.player === Players.Opponent && !context.player.opponent) {
             return;

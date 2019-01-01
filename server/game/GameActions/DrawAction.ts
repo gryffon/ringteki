@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties} from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 export interface DrawProperties extends PlayerActionProperties {
@@ -29,17 +28,17 @@ export class DrawAction extends PlayerAction {
         return properties.amount !== 0 && super.canAffect(player, context);
     }
 
-    defaultTargets(context: AbilityContext) {
+    defaultTargets(context: AbilityContext): Player[] {
         return [context.player];
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount } = this.getProperties(context, additionalProperties) as DrawProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.player.drawCardsToHand(event.amount);
     }
 }

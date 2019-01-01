@@ -61,7 +61,7 @@ export class ResolveAbilityAction extends CardGameAction {
         return ability.canResolveTargets(newContext);
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let properties = this.getProperties(event.context, additionalProperties) as ResolveAbilityProperties;
         let newContext = Object.assign(properties.ability.createContext(properties.player || event.context.player), {
             isResolveAbility: true,

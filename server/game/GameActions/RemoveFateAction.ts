@@ -48,7 +48,7 @@ export class RemoveFateAction extends CardGameAction {
         return true;
     }
 
-    getEventProperties(event, card, context, additionalProperties) {
+    addPropertiesToEvent(event, card: DrawCard, context: AbilityContext, additionalProperties): void {
         let { amount, recipient } = this.getProperties(context, additionalProperties) as RemoveFateProperties;
         event.fate = amount;
         event.recipient = recipient;
@@ -56,17 +56,17 @@ export class RemoveFateAction extends CardGameAction {
         event.context = context;
     }
 
-    checkEventCondition(event, additionalProperties) {
-        return this.moveFateEventCondition(event, additionalProperties);
+    checkEventCondition(event): boolean {
+        return this.moveFateEventCondition(event);
     }
 
-    eventFullyResolved(event, card, context, additionalProperties) {
+    isEventFullyResolved(event, card: DrawCard, context: AbilityContext, additionalProperties): boolean {
         let { amount, recipient } = this.getProperties(context, additionalProperties) as RemoveFateProperties;
         return !event.cancelled && event.name === this.eventName && 
             event.fate === amount && event.origin === card && event.recipient === recipient;
     }
     
-    eventHandler(event) {
+    eventHandler(event): void {
         this.moveFateEventHandler(event);
     }
 }

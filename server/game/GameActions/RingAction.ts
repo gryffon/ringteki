@@ -1,6 +1,6 @@
 import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
-import Ring = require('../player');
+import Ring = require('../ring');
 
 export interface RingActionProperties extends GameActionProperties {}
 
@@ -11,12 +11,12 @@ export class RingAction extends GameAction {
         return context.game.currentConflict ? [context.game.currentConflict.ring] : []
     }
 
-    checkEventCondition(event: any, additionalProperties = {}):boolean {
+    checkEventCondition(event: any, additionalProperties = {}): boolean {
         return this.canAffect(event.ring, event.context, additionalProperties);
     }
 
-    getEventProperties(event, ring, context, additionalProperties) {
-        super.getEventProperties(event, ring, context, additionalProperties);
+    addPropertiesToEvent(event, ring: Ring, context: AbilityContext, additionalProperties): void {
+        super.addPropertiesToEvent(event, ring, context, additionalProperties);
         event.ring = ring;
     }
 }

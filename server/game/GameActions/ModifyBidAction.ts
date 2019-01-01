@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 enum Direction {
@@ -76,14 +75,14 @@ export class ModifyBidAction extends PlayerAction {
         }
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { amount, direction } = this.getProperties(context, additionalProperties) as ModifyBidProperties;        
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
         event.direction = direction;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         if(event.direction === Direction.Increase) {
             event.player.honorBidModifier += event.amount;
         } else {

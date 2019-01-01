@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { CardTypes, Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
-import Event = require('../Events/Event');
 import Duel = require('../Duel');
 import DuelFlow = require('../gamesteps/DuelFlow');
 
@@ -26,7 +25,7 @@ export class DuelAction extends CardGameAction {
         super(properties);
     }
 
-    getEffectMessage(context): [string, any[]] {
+    getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as DuelProperties;
         return ['initiate a ' + properties.type + ' duel between {1} and {0}', [properties.target, properties.challenger]];
     }
@@ -49,7 +48,7 @@ export class DuelAction extends CardGameAction {
         properties.costHandler(context, prompt);
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let context = event.context;
         let card = event.card;
         let properties = this.getProperties(context, additionalProperties) as DuelProperties;

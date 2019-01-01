@@ -1,7 +1,6 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import Event = require('../Events/Event');
 import { EventNames } from '../Constants';
 
 export interface SetDialProperties extends PlayerActionProperties {
@@ -22,18 +21,18 @@ export class SetDialAction extends PlayerAction {
         return ['set {0}\'s dial to {1}', [properties.target, properties.value]]
     }
 
-    canAffect(player, context, additionalProperties = {}) {
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as SetDialProperties;
         return properties.value > 0 && super.canAffect(player, context);
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
         let { value } = this.getProperties(context, additionalProperties) as SetDialProperties;
-        super.getEventProperties(event, player, context, additionalProperties);
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.value = value;
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.player.setShowBid(event.value);
     }
 }

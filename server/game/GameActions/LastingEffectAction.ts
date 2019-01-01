@@ -36,13 +36,13 @@ export class LastingEffectAction extends GameAction {
         return properties.effect.length > 0;
     }
 
-    addEventsToArray(events, context, additionalProperties) {
+    addEventsToArray(events: any[], context: AbilityContext, additionalProperties): void {
         if(this.hasLegalTarget(context, additionalProperties)) {
             events.push(this.getEvent(null, context, additionalProperties));
         }
     }
 
-    eventHandler(event, additionalProperties) {
+    eventHandler(event, additionalProperties): void {
         let properties = this.getProperties(event.context, additionalProperties);
         event.context.source[properties.duration](() => properties);
     }

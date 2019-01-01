@@ -20,7 +20,7 @@ export class ChosenDiscardAction extends PlayerAction {
         return ['make {0} discard {1} cards', [properties.target, properties.amount]];
     }
 
-    canAffect(player: Player, context: AbilityContext, additionalProperties = {}) {
+    canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as ChosenDiscardProperties;
         if(player.hand.size() === 0 || properties.amount === 0) {
             return false;
@@ -52,12 +52,12 @@ export class ChosenDiscardAction extends PlayerAction {
         }
     }
 
-    getEventProperties(event, player, context, additionalProperties) {
-        super.getEventProperties(event, player, context, additionalProperties);
+    addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
+        super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.cards = [];
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.context.game.addMessage('{0} discards {1}', event.player, event.cards);
         for(let card of event.cards) {
             event.player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);

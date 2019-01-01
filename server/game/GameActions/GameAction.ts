@@ -73,21 +73,22 @@ export class GameAction {
     }
 
     getEvent(target: any, context: AbilityContext, additionalProperties = {}): Event {
-        let event = this.createEvent();
+        let event = this.createEvent(target, context, additionalProperties);
         this.updateEvent(event, target, context, additionalProperties);
         return event;
     }
 
     updateEvent(event: Event, target: any, context: AbilityContext, additionalProperties = {}): void {
         event.name = this.eventName;
-        this.getEventProperties(event, target, context, additionalProperties);
+        this.addPropertiesToEvent(event, target, context, additionalProperties);
         event.replaceHandler(event => this.eventHandler(event, additionalProperties));
-        event.isFullyResolved = () => this.eventFullyResolved(event, target, context, additionalProperties);
         event.condition = () => this.checkEventCondition(event, additionalProperties);
     }
 
-    createEvent(): Event {
-        return new Event(EventNames.Unnamed, {});;
+    createEvent(target: any, context: AbilityContext, additionalProperties): Event {
+        let event = new Event(EventNames.Unnamed, {});
+        event.isFullyResolved = () => this.isEventFullyResolved(event, target, context, additionalProperties);
+        return event;
     }
 
     resolve(target: PlayerOrRingOrCard, context: AbilityContext): void {
@@ -97,13 +98,13 @@ export class GameAction {
         context.game.queueSimpleStep(() => context.game.openEventWindow(events));
     }
 
-    getEventArray(context, additionalProperties = {}) {
+    getEventArray(context: AbilityContext, additionalProperties = {}): Event[] {
         let events = [];
         this.addEventsToArray(events, context, additionalProperties);
         return events;
     }
 
-    getEventProperties(event: any, target: any, context: AbilityContext, additionalProperties = {}): void { // eslint-disable-line no-unused-vars
+    addPropertiesToEvent(event: any, target: any, context: AbilityContext, additionalProperties = {}): void { // eslint-disable-line no-unused-vars
         event.context = context;
     }
 
@@ -114,11 +115,11 @@ export class GameAction {
         return true;
     }
 
-    eventFullyResolved(event: Event, target: any, context: AbilityContext, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
+    isEventFullyResolved(event: Event, target: any, context: AbilityContext, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
         return !event.cancelled && event.name === this.eventName;
     }
 
-    moveFateEventCondition(event, additionalProperties) {
+    moveFateEventCondition(event): boolean {
         if(event.origin) {
             if(event.origin.fate === 0) {
                 return false;
@@ -131,10 +132,10 @@ export class GameAction {
                 return false;
             } 
         }
-        return true;
+        return (!!event.origin || !!event.recipient);
     }
 
-    moveFateEventHandler(event) {
+    moveFateEventHandler(event): void {
         if(event.origin) {
             event.fate = Math.min(event.fate, event.origin.fate);
             event.origin.modifyFate(-event.fate);

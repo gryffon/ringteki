@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties } from './CardGameAction';
 
 import BaseCard = require('../basecard');
 import AbilityContext = require('../AbilityContext');
-import Event = require('../Events/Event');
 import { Locations, CardTypes, EventNames } from '../Constants';
 
 export interface BowActionProperties extends CardActionProperties {}
@@ -21,7 +20,7 @@ export class BowAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.card.bow();
     }
 }

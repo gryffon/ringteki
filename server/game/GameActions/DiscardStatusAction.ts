@@ -2,7 +2,6 @@ import { CardGameAction, CardActionProperties} from './CardGameAction';
 import { CardTypes, Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 
 export interface DiscardStatusProperties extends CardActionProperties {
 }
@@ -20,7 +19,7 @@ export class DiscardStatusAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         event.card.isHonored = false;
         event.card.isDishonored = false;
     }

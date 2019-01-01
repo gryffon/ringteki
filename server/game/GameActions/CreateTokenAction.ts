@@ -3,7 +3,6 @@ import { CardGameAction, CardActionProperties } from "./CardGameAction";
 import { Locations, CardTypes, EventNames } from '../Constants';
 import AbilityContext = require("../AbilityContext");
 import BaseCard = require('../basecard');
-import Event = require('../Events/Event');
 
 export interface CreateTokenProperties extends CardActionProperties {
 }
@@ -22,7 +21,7 @@ export class CreateTokenAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event) {
+    eventHandler(event): void {
         let context = event.context;
         let card = event.card;
         let token = context.game.createToken(card);
