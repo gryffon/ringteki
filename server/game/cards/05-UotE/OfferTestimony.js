@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Locations, Players, CardTypes } = require('../../Constants');
+const { Locations, Players, CardTypes, EventNames } = require('../../Constants');
 
 class OfferTestimony extends DrawCard {
     setupCardAbilities() {
@@ -37,7 +37,8 @@ class OfferTestimony extends DrawCard {
                     gameAction: AbilityDsl.actions.reveal(context => ({ chatMessage: true, player: context.player.opponent }))
                 }),
                 AbilityDsl.actions.bow(context => {
-                    let revealedCards = context.events.map(event => event.card);
+                    let events = context.events.filter(event => event.name === EventNames.OnCardRevealed);
+                    let revealedCards = events.map(event => event.card);
                     let lowestCost = Math.min(...revealedCards.map(card => card.getCost()).filter(number => Number.isInteger(number)));
                     let lowestCostPlayers = revealedCards.filter(card => card.getCost() === lowestCost).map(card => card.controller);
                     return { target: Object.values(context.targets).filter(card => lowestCostPlayers.includes(card.controller)) };
