@@ -1,4 +1,4 @@
-const AbilityResolver = require('../../../server/game/gamesteps/abilityresolver.js');
+const AbilityResolver = require('../../../build/server/game/gamesteps/abilityresolver.js');
 
 describe('AbilityResolver', function() {
     beforeEach(function() {

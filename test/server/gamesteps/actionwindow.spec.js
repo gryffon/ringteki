@@ -1,7 +1,7 @@
-const ActionWindow = require('../../../server/game/gamesteps/actionwindow.js');
-const Game = require('../../../server/game/game.js');
-const Player = require('../../../server/game/player.js');
-const Settings = require('../../../server/settings.js');
+const ActionWindow = require('../../../build/server/game/gamesteps/actionwindow.js');
+const Game = require('../../../build/server/game/game.js');
+const Player = require('../../../build/server/game/player.js');
+const Settings = require('../../../build/server/settings.js');
 
 describe('ActionWindow', function() {
     beforeEach(function() {

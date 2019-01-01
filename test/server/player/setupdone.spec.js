@@ -1,4 +1,4 @@
-const Player = require('../../../server/game/player.js');
+const Player = require('../../../build/server/game/player.js');
 
 function addCardsToHand(hand, number) {
     for(var i = 0; i < number; i++) {

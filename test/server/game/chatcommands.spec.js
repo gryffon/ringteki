@@ -1,4 +1,4 @@
-const ChatCommands = require('../../../server/game/chatcommands.js');
+const ChatCommands = require('../../../build/server/game/chatcommands.js');
 
 describe('ChatCommands', function() {
     beforeEach(function() {

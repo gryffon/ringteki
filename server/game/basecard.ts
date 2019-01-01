@@ -1,14 +1,42 @@
-const _ = require('underscore');
+import _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
-const CardAction = require('./cardaction.js');
 const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
-const TriggeredAbility = require('./triggeredability');
+import CardAction = require('./cardaction.js');
+import TriggeredAbility = require('./triggeredability');
+import AbilityContext = require('./AbilityContext');
+import Player = require('./player');
+import Game = require('./game');
 
-const { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } = require('./Constants');
+import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } from './Constants';
+import { ActionProps, TriggeredAbilityProps, PersistentEffectProps } from './Interfaces'; 
+
 
 class BaseCard extends EffectSource {
+    owner: Player;
+    controller: Player;
+    game: Game;
+    cardData;
+
+    id: string;
+    name: string;
+    inConflict: boolean = false;
+    type: CardTypes;
+    
+    tokens: object = {};
+    menu: _.Underscore<any> = _([]);
+    showPopup: boolean = false;
+    popupMenuText: string = '';
+    abilities: any = { actions: [], reactions: [], persistentEffects: [], playActions: [] };
+    traits: string[];
+    printedFaction: string;
+
+    isProvince: boolean = false;
+    isConflict: boolean = false;
+    isDynasty: boolean = false;
+    isStronghold: boolean = false;
+
     constructor(owner, cardData) {
         super(owner.game);
         this.owner = owner;
@@ -17,64 +45,49 @@ class BaseCard extends EffectSource {
 
         this.id = cardData.id;
         this.name = cardData.name;
-        this.inConflict = false;
-
         this.type = cardData.type;
-
-        this.tokens = {};
-        this.menu = _([]);
-
-        this.showPopup = false;
-        this.popupMenuText = '';
-
-        this.abilities = { actions: [], reactions: [], persistentEffects: [], playActions: [] };
         this.traits = cardData.traits || [];
-        this.setupCardAbilities(AbilityDsl);
-
         this.printedFaction = cardData.clan;
 
-        this.isProvince = false;
-        this.isConflict = false;
-        this.isDynasty = false;
-        this.isStronghold = false;
+        this.setupCardAbilities(AbilityDsl);
     }
 
     /**
      * Create card abilities by calling subsequent methods with appropriate properties
-     * @param {AbilityDsl} ability - object containing limits, costs, effects, and game actions
+     * @param {Object} ability - AbilityDsl object containing limits, costs, effects, and game actions
      */
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }
 
-    action(properties) {
+    action(properties: ActionProps): CardAction {
         var action = new CardAction(this.game, this, properties);
         this.abilities.actions.push(action);
         return action;
     }
 
-    triggeredAbility(abilityType, properties) {
+    triggeredAbility(abilityType: AbilityTypes, properties: TriggeredAbilityProps): TriggeredAbility {
         let reaction = new TriggeredAbility(this.game, this, abilityType, properties);
         this.abilities.reactions.push(reaction);
         return reaction;
     }
 
-    reaction(properties) {
+    reaction(properties: TriggeredAbilityProps): void {
         this.triggeredAbility(AbilityTypes.Reaction, properties);
     }
 
-    forcedReaction(properties) {
+    forcedReaction(properties: TriggeredAbilityProps): void {
         this.triggeredAbility(AbilityTypes.ForcedReaction, properties);
     }
 
-    wouldInterrupt(properties) {
+    wouldInterrupt(properties: TriggeredAbilityProps): void {
         this.triggeredAbility(AbilityTypes.WouldInterrupt, properties);
     }
 
-    interrupt(properties) {
+    interrupt(properties: TriggeredAbilityProps): void {
         this.triggeredAbility(AbilityTypes.Interrupt, properties);
     }
 
-    forcedInterrupt(properties) {
+    forcedInterrupt(properties: TriggeredAbilityProps): void {
         this.triggeredAbility(AbilityTypes.ForcedInterrupt, properties);
     }
 
@@ -82,7 +95,7 @@ class BaseCard extends EffectSource {
      * Defines a special play action that can occur when the card is outside the
      * play area (e.g. Lady-in-Waiting's dupe marshal ability)
      */
-    playAction(properties) {
+    playAction(properties): void {
         this.abilities.playActions.push(new CustomPlayAction(properties));
     }
 
@@ -90,7 +103,7 @@ class BaseCard extends EffectSource {
      * Applies an effect that continues as long as the card providing the effect
      * is both in play and not blank.
      */
-    persistentEffect(properties) {
+    persistentEffect(properties: PersistentEffectProps): void {
         const allowedLocations = [Locations.Any, Locations.PlayArea, Locations.Provinces];
         const defaultLocationForType = {
             province: Locations.Provinces,
@@ -106,17 +119,21 @@ class BaseCard extends EffectSource {
         this.abilities.persistentEffects.push(_.extend({ duration: Durations.Persistent, location: location }, properties));
     }
 
-    hasTrait(trait) {
+    composure(properties): void {
+        this.persistentEffect(Object.assign({ condition: context => context.player.hasComposure() }, properties));
+    }
+
+    hasTrait(trait: string): boolean {
         trait = trait.toLowerCase();
         return this.traits.includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);
     }
 
-    getTraits() {
+    getTraits(): string[] {
         let traits = this.traits.concat(this.getEffects(EffectNames.AddTrait));
         return _.uniq(traits);
     }
 
-    isFaction(faction) {
+    isFaction(faction: string): boolean {
         faction = faction.toLowerCase();
         if(faction === 'neutral') {
             return this.printedFaction === faction && !this.anyEffect(EffectNames.AddFaction);
@@ -124,7 +141,7 @@ class BaseCard extends EffectSource {
         return this.printedFaction === faction || this.getEffects(EffectNames.AddFaction).includes(faction);
     }
 
-    applyAnyLocationPersistentEffects() {
+    applyAnyLocationPersistentEffects(): void {
         _.each(this.abilities.persistentEffects, effect => {
             if(effect.location === Locations.Any) {
                 this.addEffectToEngine(effect);
@@ -132,7 +149,7 @@ class BaseCard extends EffectSource {
         });
     }
 
-    leavesPlay() {
+    leavesPlay(): void {
         this.tokens = {};
         _.each(this.abilities.actions, action => action.limit.reset());
         _.each(this.abilities.reactions, reaction => reaction.limit.reset());
@@ -140,7 +157,7 @@ class BaseCard extends EffectSource {
         this.inConflict = false;
     }
 
-    updateAbilityEvents(from, to) {
+    updateAbilityEvents(from: Locations, to: Locations) {
         _.each(this.abilities.reactions, reaction => {
             if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
@@ -150,7 +167,7 @@ class BaseCard extends EffectSource {
         });
     }
 
-    updateEffects(from = '', to = '') {
+    updateEffects(from: Locations, to: Locations) {
         const activeLocations = {
             'play area': [Locations.PlayArea],
             'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
@@ -169,7 +186,7 @@ class BaseCard extends EffectSource {
         });
     }
 
-    moveTo(targetLocation) {
+    moveTo(targetLocation: Locations) {
         let originalLocation = this.location;
 
         this.location = targetLocation;
@@ -185,11 +202,11 @@ class BaseCard extends EffectSource {
         }
     }
 
-    canTriggerAbilities(context) {
+    canTriggerAbilities(context: AbilityContext): boolean {
         return !this.facedown && (this.checkRestrictions('triggerAbilities', context) || !context.ability.isTriggeredAbility());
     }
 
-    getModifiedLimitMax(max) {
+    getModifiedLimitMax(max: number): number {
         return this.sumEffects(EffectNames.IncreaseLimitOnAbilities) + max;
     }
 
@@ -213,40 +230,40 @@ class BaseCard extends EffectSource {
         return menu;
     }
 
-    isConflictProvince() {
+    isConflictProvince(): boolean {
         return false;
     }
 
-    isAttacking() {
+    isAttacking(): boolean {
         return this.game.currentConflict && this.game.currentConflict.isAttacking(this);
     }
 
-    isDefending() {
+    isDefending(): boolean {
         return this.game.currentConflict && this.game.currentConflict.isDefending(this);
     }
 
-    isParticipating() {
+    isParticipating(): boolean {
         return this.game.currentConflict && this.game.currentConflict.isParticipating(this);
     }
 
-    isUnique() {
+    isUnique(): boolean{
         return this.cardData.unicity;
     }
 
-    isBlank() {
+    isBlank(): boolean {
         return this.anyEffect(EffectNames.Blank);
     }
 
-    getPrintedFaction() {
+    getPrintedFaction(): string {
         return this.cardData.clan;
     }
 
-    checkRestrictions(actionType, context = null) {
+    checkRestrictions(actionType, context: AbilityContext = null): boolean {
         return super.checkRestrictions(actionType, context) && this.controller.checkRestrictions(actionType, context);
     }
 
 
-    addToken(type, number = 1) {
+    addToken(type: string, number: number = 1): void {
         if(_.isUndefined(this.tokens[type])) {
             this.tokens[type] = 0;
         }
@@ -254,11 +271,11 @@ class BaseCard extends EffectSource {
         this.tokens[type] += number;
     }
 
-    hasToken(type) {
+    hasToken(type: string): boolean {
         return !!this.tokens[type];
     }
 
-    removeToken(type, number) {
+    removeToken(type: string, number: number): void {
         this.tokens[type] -= number;
 
         if(this.tokens[type] < 0) {
@@ -270,19 +287,19 @@ class BaseCard extends EffectSource {
         }
     }
 
-    getActions() {
+    getActions(): any[] {
         return this.abilities.actions.slice();
     }
 
-    getProvinceStrengthBonus() {
+    getProvinceStrengthBonus(): number {
         return 0;
     }
 
-    readiesDuringReadyPhase() {
+    readiesDuringReadyPhase(): boolean {
         return !this.anyEffect(EffectNames.DoesNotReady);
     }
 
-    hideWhenFacedown() {
+    hideWhenFacedown(): boolean {
         return !this.anyEffect(EffectNames.CanBeSeenWhenFacedown);
     }
 
@@ -332,4 +349,4 @@ class BaseCard extends EffectSource {
     }
 }
 
-module.exports = BaseCard;
+export = BaseCard;

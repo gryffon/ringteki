@@ -5,7 +5,6 @@ class TheStoneOfSorrows extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             condition: context => context.source.parent && !context.source.parent.bowed,
-            targetType: 'player',
             targetController: Players.Opponent,
             effect: ability.effects.playerCannot('takeFateFromRings')
         });

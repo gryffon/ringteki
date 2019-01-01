@@ -1,4 +1,4 @@
-const EventRegistrar = require('../../server/game/eventregistrar.js');
+const EventRegistrar = require('../../build/server/game/eventregistrar.js');
 
 describe('EventRegistrar', function () {
     beforeEach(function() {

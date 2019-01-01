@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const Player = require('../../../server/game/player.js');
+const Player = require('../../../build/server/game/player.js');
 
 describe('Player', () => {
     describe('drop()', function() {

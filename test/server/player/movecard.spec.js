@@ -1,6 +1,6 @@
 const _ = require('underscore');
-const Player = require('../../../server/game/player.js');
-const DrawCard = require('../../../server/game/drawcard.js');
+const Player = require('../../../build/server/game/player.js');
+const DrawCard = require('../../../build/server/game/drawcard.js');
 
 describe('Player', function() {
     describe('moveCard', function() {

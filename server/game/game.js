@@ -209,7 +209,7 @@ class Game extends EventEmitter {
      * Returns the card (i.e. character) with matching uuid from either players
      * 'in play' area.
      * @param {String} cardId
-     * @returns {DrawCard}
+     * @returns DrawCard
      */
     findAnyCardInPlayByUuid(cardId) {
         return _.reduce(this.getPlayers(), (card, player) => {
@@ -223,7 +223,7 @@ class Game extends EventEmitter {
     /**
      * Returns the card with matching uuid from anywhere in the game
      * @param {String} cardId
-     * @returns {BaseCard}
+     * @returns BaseCard
      */
     findAnyCardInAnyList(cardId) {
         return this.allCards.find(card => card.uuid === cardId);
@@ -674,8 +674,8 @@ class Game extends EventEmitter {
         this.queueStep(new SelectRingPrompt(this, player, properties));
     }
 
-    promptForHonorBid(activePromptTitle, costHandler) {
-        this.queueStep(new HonorBidPrompt(this, activePromptTitle, costHandler));
+    promptForHonorBid(activePromptTitle, costHandler, prohibitedBids) {
+        this.queueStep(new HonorBidPrompt(this, activePromptTitle, costHandler, prohibitedBids));
     }
 
     /**
@@ -875,7 +875,7 @@ class Game extends EventEmitter {
      * @returns {Event} - this allows the caller to track Event.resolved and
      * tell whether or not the handler resolved successfully
      */
-    raiseEvent(eventName, params = {}, handler) {
+    raiseEvent(eventName, params = {}, handler = () => true) {
         let event = this.getEvent(eventName, params, handler);
         this.openEventWindow([event]);
         return event;
@@ -889,7 +889,7 @@ class Game extends EventEmitter {
     /**
      * Creates an EventWindow which will open windows for each kind of triggered
      * ability which can respond any passed events, and execute their handlers.
-     * @param {Event[]} events
+     * @param events
      * @returns {EventWindow}
      */
     openEventWindow(events) {
@@ -967,7 +967,7 @@ class Game extends EventEmitter {
      * Changes the controller of a card in play to the passed player, and cleans
      * all the related stuff up (swapping sides in a conflic)
      * @param {Player} player
-     * @param {DrawCard} card
+     * @param card
      */
     takeControl(player, card) {
         if(card.controller === player || !card.checkRestrictions(EffectNames.TakeControl)) {
@@ -1133,7 +1133,6 @@ class Game extends EventEmitter {
             return {
                 name: player.name,
                 faction: player.faction.name || player.faction.value,
-                alliance: player.alliance ? player.alliance.name : undefined,
                 honor: player.getTotalHonor()
             };
         });

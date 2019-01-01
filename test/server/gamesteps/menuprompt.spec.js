@@ -1,5 +1,5 @@
-const MenuPrompt = require('../../../server/game/gamesteps/menuprompt.js');
-const Player = require('../../../server/game/player.js');
+const MenuPrompt = require('../../../build/server/game/gamesteps/menuprompt.js');
+const Player = require('../../../build/server/game/player.js');
 
 describe('the MenuPrompt', function() {
     beforeEach(function() {

@@ -27,6 +27,7 @@ class ResolveAbilityAction extends CardAction {
     setDefaultProperties() {
         this.ability = null;
         this.secondResolution = false;
+        this.player = null;
     }
 
     setup() {
@@ -38,12 +39,20 @@ class ResolveAbilityAction extends CardAction {
     }
 
     canAffect(card, context) {
-        return this.ability && super.canAffect(card, context);
+        let player = this.player || context.player;
+        if(!super.canAffect(card, context) || !this.ability || !this.secondResolution && player.isAbilityAtMax(this.ability.maxIdentifier)) {
+            return false;
+        }
+        let newContext = this.ability.createContext(player);
+        if(this.ability.targets.length === 0) {
+            return this.ability.gameAction.length === 0 || this.ability.gameAction.some(action => action.hasLegalTarget(newContext));
+        }
+        return this.ability.canResolveTargets(newContext);
     }
 
     getEvent(card, context) {
         return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
-            let newContext = Object.assign(this.ability.createContext(context.player), {
+            let newContext = Object.assign(this.ability.createContext(this.player || context.player), {
                 isResolveAbility: true,
                 secondResolution: this.secondResolution
             });
