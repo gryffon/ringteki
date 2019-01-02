@@ -100,6 +100,7 @@ describe('A Legion Of One', function() {
                 this.player1.clickCard(this.legion);
                 this.player1.clickCard(this.miyaMystic);
                 this.player1.clickPrompt('Remove 1 fate to resolve this ability again');
+                expect(this.miyaMystic.fate).toBe(0);
                 expect(this.player1).toHavePrompt('Choose a character');
                 expect(this.player1).toBeAbleToSelect(this.miyaMystic);
             });

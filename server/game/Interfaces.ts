@@ -1,8 +1,7 @@
 import AbilityContext = require('./AbilityContext');
 import TriggeredAbilityContext = require('./TriggeredAbilityContext');
-import GameAction = require('./GameActions/GameAction');
+import { GameAction } from './GameActions/GameAction';
 import Ring = require('./ring');
-import Event = require('./Events/Event');
 import BaseCard = require('./basecard');
 import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } from './Constants';
 
@@ -112,7 +111,7 @@ interface TriggeredAbilityTargets {
     [propName: string]: TriggeredAbilityTarget & SubTarget & TriggeredAbilityTarget;
 };
 
-type WhenType = {
+export type WhenType = {
     [EventName in EventNames]?: (event: any, context?: TriggeredAbilityContext) => boolean;
 };
 

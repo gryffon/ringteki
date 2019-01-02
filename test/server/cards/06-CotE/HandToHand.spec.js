@@ -78,7 +78,7 @@ describe('Hand to Hand', function() {
                     expect(this.player2).toHavePromptButton('Yes');
                     expect(this.player2).toHavePromptButton('No');
                     this.player2.clickPrompt('Yes');
-                    expect(this.chat).toHaveBeenCalledWith('{0} chooses to resolve {1}\'s ability again', this.player1.player, this.handToHand, null);
+                    expect(this.chat).toHaveBeenCalledWith('{0} chooses to resolve {1}\'s ability again', this.player1.player, this.handToHand, undefined);
                     expect(this.player2).toHavePrompt('Choose an attachment');
                     expect(this.player2).not.toBeAbleToSelect(this.fineKatana);
                     expect(this.player2).toBeAbleToSelect(this.ornateFan);

@@ -2,9 +2,13 @@ const GameChat = require('../../../build/server/game/gamechat.js');
 
 describe('GameChat', function() {
     beforeEach(function() {
+        this.bar = {
+            bar: 'baz',
+            getShortSummary: () => this.bar
+        };
         this.args = [
             'foo',
-            { bar: 'baz' }
+            this.bar
         ];
         this.chat = new GameChat();
     });

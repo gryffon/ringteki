@@ -36,7 +36,6 @@ class SelectCardCost {
                 } else {
                     context.costs[this.action.name + 'StateWhenChosen'] = cards.createSnapshot();
                 }
-                this.action.setTarget(cards);
                 return true;
             },
             onCancel: () => result.cancelled = true
@@ -46,7 +45,7 @@ class SelectCardCost {
     }
 
     payEvent(context) {
-        return this.action.getEventArray(context);
+        return this.action.getEventArray(context, { target: context.costs[this.action.name] });
     }
 }
 
