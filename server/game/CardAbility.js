@@ -1,10 +1,25 @@
 const AbilityLimit = require('./abilitylimit.js');
+const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, PlayTypes } = require('./Constants');
+const { Locations, CardTypes, PlayTypes, Players } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
+        if(properties.initiateDuel) {
+            if(properties.condition) {
+                let condition = properties.condition;
+                properties.condition = context => context.source.isParticipating() && condition(context);
+            } else {
+                properties.condition = context => context.source.isParticipating();
+            }
+            properties.target = {
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
+                cardCondition: card => card.isParticipating(),
+                gameAction: AbilityDsl.actions.duel(properties.initiateDuel)
+            };
+        }
         super(game, card, properties);
 
         this.title = properties.title;

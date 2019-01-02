@@ -7,7 +7,7 @@ import DuelFlow = require('../gamesteps/DuelFlow');
 
 export interface DuelProperties extends CardActionProperties {
     type: string;
-    challenger: DrawCard;
+    challenger?: DrawCard;
     resolutionHandler: (winner: DrawCard, loser: DrawCard) => void,
     costHandler?: (context: AbilityContext, prompt: any) => void
 }
@@ -18,20 +18,27 @@ export class DuelAction extends CardGameAction {
 
     defaultProperties: DuelProperties = {
         type: '',
-        challenger: null,
         resolutionHandler: () => true
     };
     constructor(properties: DuelProperties | ((context: AbilityContext) => DuelProperties)) {
         super(properties);
     }
 
+    getProperties(context: AbilityContext, additionalProperties = {}): DuelProperties {
+        let properties = super.getProperties(context, additionalProperties) as DuelProperties;
+        if(!properties.challenger) {
+            properties.challenger = context.source;
+        }
+        return properties;
+    }
+
     getEffectMessage(context: AbilityContext): [string, any[]] {
-        let properties = this.getProperties(context) as DuelProperties;
+        let properties = this.getProperties(context);
         return ['initiate a ' + properties.type + ' duel between {1} and {0}', [properties.target, properties.challenger]];
     }
 
     canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
-        let properties = this.getProperties(context, additionalProperties) as DuelProperties;
+        let properties = this.getProperties(context, additionalProperties);
         if(!super.canAffect(card, context)) {
             return false;
         }
@@ -39,19 +46,19 @@ export class DuelAction extends CardGameAction {
     }
 
     resolveDuel(winner: DrawCard, loser: DrawCard, context: AbilityContext, additionalProperties = {}): void {
-        let properties = this.getProperties(context, additionalProperties) as DuelProperties;
+        let properties = this.getProperties(context, additionalProperties);
         properties.resolutionHandler(winner, loser);
     }
 
     honorCosts(prompt, context: AbilityContext, additionalProperties = {}): void {
-        let properties = this.getProperties(context, additionalProperties) as DuelProperties;
+        let properties = this.getProperties(context, additionalProperties);
         properties.costHandler(context, prompt);
     }
 
     eventHandler(event, additionalProperties): void {
         let context = event.context;
         let card = event.card;
-        let properties = this.getProperties(context, additionalProperties) as DuelProperties;
+        let properties = this.getProperties(context, additionalProperties);
         if(properties.challenger.location !== Locations.PlayArea || card.location !== Locations.PlayArea) {
             context.game.addMessage('The duel cannot proceed as one participant is no longer in play');
             return;

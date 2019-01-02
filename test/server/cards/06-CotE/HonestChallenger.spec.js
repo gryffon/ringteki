@@ -91,6 +91,18 @@ describe('Honest Challenger', function() {
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
+            it('should not be able to be triggered if Honest Challenger is not participating', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    defenders: [this.mirumotoRaitsugu],
+                    type: 'military'
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.honestChallenger);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
             it('the winner of the duel should move a character from home to the conflict', function() {
                 this.noMoreActions();
                 this.initiateConflict({
