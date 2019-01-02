@@ -72,6 +72,26 @@ var customMatchers = {
                 return result;
             }
         };
+    },
+    toBeAbleToSelectRing: function() {
+        return {
+            compare: function(player, ring) {
+                if(_.isString(ring)) {
+                    ring = player.game.rings[ring];
+                }
+                let result = {};
+
+                result.pass = player.currentActionRingTargets.includes(ring);
+
+                if(result.pass) {
+                    result.message = `Expected ${ring.element} not to be selectable by ${player.name} but it was.`;
+                } else {
+                    result.message = `Expected ${ring.element} to be selectable by ${player.name} but it wasn't.`;
+                }
+
+                return result;
+            }
+        };
     }
 };
 
