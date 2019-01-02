@@ -51,14 +51,14 @@ describe('Glorious Victory', function() {
                 });
                 this.player1.clickPrompt('No');
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).toHavePrompt('Air Ring');
             });
 
             it('should trigger when Endless Plains fires', function() {
                 this.initiateConflict({
                     type: 'military',
                     province: this.endlessPlains,
-                    attackers: [this.shinjoAltansarnai],
-                    defenders: []
+                    attackers: [this.shinjoAltansarnai]
                 });
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.endlessPlains);
