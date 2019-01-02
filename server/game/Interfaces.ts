@@ -74,6 +74,11 @@ interface ActionTargets {
     [propName: string]: ActionTarget & SubTarget;
 };
 
+interface InitiateDuel {
+    type: string;
+    resolutionHandler: (winner: BaseCard) => void
+};
+
 interface AbilityProps {
     title: string;
     location?: Locations | Locations[];
@@ -82,6 +87,7 @@ interface AbilityProps {
     max?: any;
     target?: ActionTarget;
     targets?: ActionTargets;
+    initiateDuel?: InitiateDuel | ((context: AbilityContext) => InitiateDuel);
     cannotBeMirrored?: boolean;
     printedAbility?: boolean;
     cannotTargetFirst?: boolean;
