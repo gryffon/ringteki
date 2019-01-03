@@ -6,7 +6,7 @@ describe('Void Fist', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['togashi-mitsu'],
-                        hand: ['banzai', 'void-fist'],
+                        hand: ['banzai', 'void-fist', 'fine-katana', 'hurricane-punch'],
                         conflictDiscard: ['centipede-tattoo']
                     },
                     player2: {
@@ -122,6 +122,66 @@ describe('Void Fist', function() {
                 });
                 this.player1.clickCard('void-fist');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should be able to be played twice (Mitsu second) in the same conflict', function() {
+                this.player2.pass();
+                this.player1.clickCard('banzai');
+                this.togashiMitsu = this.player1.clickCard('togashi-mitsu');
+                this.player1.clickPrompt('Done');
+                this.seekerInitiate = this.player2.clickCard('seeker-initiate');
+                this.player2.clickPrompt('0');
+                this.player2.clickPrompt('Conflict');
+                this.player1.playAttachment('fine-katana', this.togashiMitsu);
+                this.player2.pass();
+                this.voidFist = this.player1.clickCard('void-fist');
+                expect(this.player1).toHavePrompt('Void Fist');
+                this.player1.clickCard(this.bayushiLiar);
+                expect(this.bayushiLiar.inConflict).toBe(false);
+                expect(this.bayushiLiar.bowed).toBe(true);
+                this.player2.pass();
+                this.player1.clickCard(this.togashiMitsu);
+                expect(this.player1).toHavePrompt('Togashi Mitsu');
+                this.player1.clickCard(this.voidFist);
+                expect(this.player1).toHavePrompt('Void Fist');
+                this.player1.clickCard(this.seekerInitiate);
+                expect(this.seekerInitiate.inConflict).toBe(false);
+                expect(this.seekerInitiate.bowed).toBe(true);
+            });
+
+            it('should be able to be played twice (Mitsu first) in the same conflict', function() {
+                for(const card of this.player1.player.conflictDeck.toArray()) {
+                    this.player1.moveCard(card, 'conflict discard pile');
+                }
+                this.voidFist = this.player1.findCardByName('void-fist');
+                this.player1.moveCard(this.voidFist, 'conflict discard pile');
+                this.player2.pass();
+                this.player1.clickCard('banzai');
+                this.togashiMitsu = this.player1.clickCard('togashi-mitsu');
+                this.player1.clickPrompt('Done');
+                this.seekerInitiate = this.player2.clickCard('seeker-initiate');
+                this.player2.clickPrompt('0');
+                this.player2.clickPrompt('Conflict');
+                this.player1.playAttachment('fine-katana', this.togashiMitsu);
+                this.player2.pass();
+                this.player1.clickCard(this.togashiMitsu);
+                expect(this.player1).toHavePrompt('Togashi Mitsu');
+                this.player1.clickCard(this.voidFist);
+                expect(this.player1).toHavePrompt('Void Fist');
+                this.player1.clickCard(this.bayushiLiar);
+                expect(this.bayushiLiar.inConflict).toBe(false);
+                expect(this.bayushiLiar.bowed).toBe(true);
+                expect(this.voidFist.location).toBe('conflict deck');
+                this.player2.pass();
+                this.player1.clickCard('hurricane-punch');
+                this.player1.clickCard(this.togashiMitsu);
+                expect(this.voidFist.location).toBe('hand');
+                this.player2.pass();
+                this.player1.clickCard(this.voidFist);
+                expect(this.player1).toHavePrompt('Void Fist');
+                this.player1.clickCard(this.seekerInitiate);
+                expect(this.seekerInitiate.inConflict).toBe(false);
+                expect(this.seekerInitiate.bowed).toBe(true);
             });
         });
     });
