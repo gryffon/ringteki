@@ -86,8 +86,8 @@ describe('Duty', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.forceOfTheRiver);
-                expect(this.imperialStorehouse.location).toBe('spirit of the river');
-                expect(this.favorableGround.location).toBe('spirit of the river');
+                expect(this.imperialStorehouse.location).toBe('removed from game');
+                expect(this.favorableGround.location).toBe('removed from game');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect('duty');
                 this.duty = this.player1.clickCard('duty');

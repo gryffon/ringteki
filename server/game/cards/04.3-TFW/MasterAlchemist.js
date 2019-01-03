@@ -10,7 +10,16 @@ class MasterAlchemist extends DrawCard {
             target: {
                 activePromptTitle: 'Choose a character to honor or dishonor',
                 cardType: CardTypes.Character,
-                gameAction: ability.actions.fireRingEffect()
+                gameAction: ability.actions.chooseAction({
+                    messages: {
+                        'Honor this character': '{0} chooses to honor {1}',
+                        'Dishonor this character': '{0} chooses to honor {1}'
+                    },
+                    choices: {
+                        'Honor this character': ability.actions.honor(),
+                        'Dishonor this character': ability.actions.dishonor()
+                    }
+                })
             }
         });
     }

@@ -29,9 +29,10 @@ class ShibaTsukune extends DrawCard {
                             },
                             onSelect: (player, secondRing) => {
                                 this.game.addMessage('{0} resolves {1}', player, [firstRing, secondRing]);
-                                let action = this.game.actions.resolveRingEffect();
-                                action.setTarget([firstRing, secondRing]);
-                                this.game.openThenEventWindow(action.getEventArray(this.game.getFrameworkContext(player)));
+                                let action = this.game.actions.resolveRingEffect({ target: [firstRing, secondRing]});
+                                let events = [];
+                                action.addEventsToArray(events, this.game.getFrameworkContext(player));
+                                this.game.openThenEventWindow(events);
                                 return true;
                             }
                         });

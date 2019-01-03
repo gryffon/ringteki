@@ -19,7 +19,7 @@ class Rebuild extends DrawCard {
             cannotBeMirrored: true,
             effect: 'replace it with {0}',
             handler: context => {
-                context.player.moveCard(context.target, context.costs.returnToDeckStateWhenChosen.location);
+                context.player.moveCard(context.target, context.costs.moveStateWhenChosen.location);
                 context.target.facedown = false;
             }
         });

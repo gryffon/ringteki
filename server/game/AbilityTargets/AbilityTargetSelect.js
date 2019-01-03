@@ -23,12 +23,6 @@ class AbilityTargetSelect {
         return !!this.properties.dependsOn || this.hasLegalTarget(context);
     }
 
-    resetGameActions() {
-        for(let action of this.properties.gameAction) {
-            action.reset();
-        }
-    }
-
     hasLegalTarget(context) {
         let keys = Object.keys(this.properties.choices);
         return keys.some(key => this.isChoiceLegal(key, context));
