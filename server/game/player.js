@@ -374,6 +374,7 @@ class Player extends GameObject {
         } else {
             this.moveCard(this.dynastyDeck.first(), location);
         }
+        return true;
     }
 
     /**

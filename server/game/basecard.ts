@@ -31,6 +31,7 @@ class BaseCard extends EffectSource {
     abilities: any = { actions: [], reactions: [], persistentEffects: [], playActions: [] };
     traits: string[];
     printedFaction: string;
+    location: Locations;
 
     isProvince: boolean = false;
     isConflict: boolean = false;
@@ -159,12 +160,14 @@ class BaseCard extends EffectSource {
 
     updateAbilityEvents(from: Locations, to: Locations) {
         _.each(this.abilities.reactions, reaction => {
+            reaction.limit.reset();
             if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
             } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === CardTypes.Event && to === Locations.ConflictDeck)) {
                 reaction.unregisterEvents();
             }
         });
+        _.each(this.abilities.actions, action => action.limit.reset());
     }
 
     updateEffects(from: Locations, to: Locations) {

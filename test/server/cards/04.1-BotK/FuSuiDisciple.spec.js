@@ -51,6 +51,7 @@ describe('Fu Sui Disciple', function() {
 
             it('should prompt to choose a player when both players have the air ring', function() {
                 this.player1.clickCard('know-the-world');
+                expect(this.player1).toHavePrompt('Choose a ring to return');
                 this.player1.clickRing('void');
                 this.player1.clickRing('air');
                 expect(this.game.rings.air.claimedBy).toBe(this.player1.player.name);

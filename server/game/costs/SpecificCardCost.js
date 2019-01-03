@@ -18,14 +18,11 @@ class SpecificCardCost {
     }
 
     resolve(context) {
-        let card = this.cardFunc(context);
-        context.costs[this.action.name] = card;
-
-        this.action.setTarget(card);
+        context.costs[this.action.name] = this.cardFunc(context);
     }
 
     payEvent(context) {
-        return this.action.getEventArray(context);
+        return this.action.getEventArray(context, { target: context.costs[this.action.name] });
     }
 }
 

@@ -9,11 +9,10 @@ class ParentCost {
 
     resolve(context) {
         context.costs[this.action.name] = context.source.parent;
-        this.action.setTarget(context.source.parent);
     }
 
     payEvent(context) {
-        return this.action.getEventArray(context);
+        return this.action.getEventArray(context, { target: context.source.parent });
     }
 }
 
