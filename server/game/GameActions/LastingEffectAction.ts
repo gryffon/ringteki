@@ -7,7 +7,7 @@ export interface LastingEffectGeneralProperties extends GameActionProperties {
     duration?: Durations;
     condition?: (context: AbilityContext) => boolean;
     until?: WhenType;
-    effect: any[];
+    effect: any;
 }
 
 export interface LastingEffectProperties extends LastingEffectGeneralProperties {

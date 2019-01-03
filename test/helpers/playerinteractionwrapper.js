@@ -316,6 +316,14 @@ class PlayerInteractionWrapper {
     }
 
     /**
+     * Lists rings selectable by the player during the action
+     * @return {Ring[]} - selectable rings
+     */
+    get currentActionRingTargets() {
+        return this.player.promptState.selectableRings;
+    }
+
+    /**
      * Lists cards currently selected by the player
      * @return {DrawCard[]} - selected cards
      */
