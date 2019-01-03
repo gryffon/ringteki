@@ -1,20 +1,24 @@
 {
-  "include": [
-    "server/**/*"
-  ],
-  "compilerOptions": {
-    "module": "es6",
+  "compilerOptions": { 
+    "module": "commonjs",
     "moduleResolution": "node",
-    "target": "es6",
+    "target": "es2017",
     "sourceMap": true,
     "outDir": "build",
     "allowJs": true,
     "checkJs": true,
     "lib": [
-      "es2017"
+      "es2017",
+      "dom"
     ]
   },
+  "include": [
+    "server/**/*",
+    "index.js"
+  ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "test/**/*",
+    "client/**/*"
   ]
 }

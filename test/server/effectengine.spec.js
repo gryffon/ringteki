@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
-const EffectEngine = require('../../server/game/effectengine.js');
-const { Stages } = require('../../server/game/Constants.js');
+const EffectEngine = require('../../build/server/game/effectengine.js');
+const { Stages } = require('../../build/server/game/Constants.js');
 
 xdescribe('EffectEngine', function () {
     beforeEach(function () {

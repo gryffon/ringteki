@@ -1,4 +1,4 @@
-const BaseCard = require('../../../server/game/basecard.js');
+const BaseCard = require('../../../build/server/game/basecard.js');
 
 describe('BaseCard', function () {
     beforeEach(function () {

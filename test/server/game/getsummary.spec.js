@@ -1,8 +1,8 @@
 const _ = require('underscore');
 
-const Game = require('../../../server/game/game.js');
-const Player = require('../../../server/game/player.js');
-const Spectator = require('../../../server/game/spectator.js');
+const Game = require('../../../build/server/game/game.js');
+const Player = require('../../../build/server/game/player.js');
+const Spectator = require('../../../build/server/game/spectator.js');
 
 describe('the Game', () => {
     var game = {};

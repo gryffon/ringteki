@@ -64,6 +64,8 @@ describe('Court Games', function () {
                 });
                 this.player2.clickCard('court-games', 'hand');
                 this.player2.clickPrompt('Honor a friendly character');
+                expect(this.player2).toHavePrompt('Court Games');
+                expect(this.player2).toBeAbleToSelect(this.tsuki);
                 this.player2.clickCard(this.tsuki);
                 expect(this.tsuki.isHonored).toBe(true);
                 expect(this.player1).toHavePrompt('Conflict Action Window');

@@ -9,6 +9,8 @@ class Duel {
         this.challenger = challenger;
         this.target = target;
         this.bidFinished = false;
+        this.winnner = null;
+        this.loser = null;
     }
 
     getSkillTotal(card) {
@@ -71,6 +73,9 @@ class Duel {
             // Both alive, target wins
             this.winner = this.target;
             this.loser = this.challenger;
+        }
+        if(this.loser && !this.loser.checkRestrictions('loseDuels')) {
+            this.loser = null;
         }
     }
 }

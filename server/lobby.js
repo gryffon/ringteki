@@ -24,6 +24,7 @@ class Lobby {
         this.deckService = options.deckService || new DeckService(options.db);
         this.cardService = options.cardService || new CardService(options.db);
         this.router = options.router || new GameRouter(this.config);
+        this.titleCardData = null;
 
         this.router.on('onGameClosed', this.onGameClosed.bind(this));
         this.router.on('onPlayerLeft', this.onPlayerLeft.bind(this));
@@ -205,7 +206,7 @@ class Lobby {
     broadcastUserList() {
         var now = moment();
 
-        if((now - this.lastUserBroadcast) / 1000 < 60) {
+        if((now.diff(this.lastUserBroadcast)) / 1000 < 60) {
             return;
         }
 

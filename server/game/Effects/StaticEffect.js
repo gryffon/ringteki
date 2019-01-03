@@ -48,7 +48,7 @@ class StaticEffect {
         this.type = type;
         this.value = value;
         this.context = null;
-        this.duration = '';
+        this.duration = null;
     }
 
     apply(target) {
@@ -70,6 +70,7 @@ class StaticEffect {
     setContext(context) {
         this.context = context;
         if(typeof this.value === 'object') {
+            // @ts-ignore
             this.value.context = context;
         }
     }
@@ -91,6 +92,9 @@ class StaticEffect {
             return matchingEffects.every(effect => this.hasLongerDuration(effect) || effect.isConditional);
         }
         if(type === EffectNames.ModifyBothSkills) {
+            return this.checkConflictingEffects(EffectNames.ModifyMilitarySkill, target) || this.checkConflictingEffects(EffectNames.ModifyPoliticalSkill, target);
+        }
+        if(type === EffectNames.AddGloryToBothSkills) {
             return this.checkConflictingEffects(EffectNames.ModifyMilitarySkill, target) || this.checkConflictingEffects(EffectNames.ModifyPoliticalSkill, target);
         }
         return true;

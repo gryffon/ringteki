@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const CardSelector = require('../CardSelector.js');
-const { Stages, Players } = require('../Constants.js');
+const { Stages, Players, EffectNames } = require('../Constants.js');
 
 class AbilityTargetCard {
     constructor(name, properties, ability) {
@@ -39,12 +39,6 @@ class AbilityTargetCard {
     canResolve(context) {
         // if this depends on another target, that will check hasLegalTarget already
         return !!this.properties.dependsOn || this.hasLegalTarget(context);
-    }
-
-    resetGameActions() {
-        for(let action of this.properties.gameAction) {
-            action.reset();
-        }
     }
 
     hasLegalTarget(context) {
@@ -92,11 +86,15 @@ class AbilityTargetCard {
                 waitingPromptTitle = 'Waiting for opponent';
             }
         }
+        let mustSelect = this.selector.getAllLegalTargets(context).filter(card =>
+            card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
+        );
         let promptProperties = {
             waitingPromptTitle: waitingPromptTitle,
             context: context,
             selector: this.selector,
             buttons: buttons,
+            mustSelect: mustSelect,
             onSelect: (player, card) => {
                 context.targets[this.name] = card;
                 if(this.name === 'target') {

@@ -11,7 +11,7 @@ class IkebanaArtisan extends DrawCard {
             effect: 'lose 1 fate rather than 1 honor for not defending the conflict',
             effectArgs: context => context.event.card,
             handler: context => {
-                context.event.window.addEvent(ability.actions.gainFate({player: context.player, amount: -1}).getEvent(context.player, context));
+                context.event.window.addEvent(ability.actions.loseFate({ amount: 1 }).getEvent(context.player, context));
                 context.cancel();
             }
         });

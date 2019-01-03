@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const { matchCardByNameAndPack } = require('./cardutil.js');
-const { detectBinary } = require('../../server/util');
+const { detectBinary } = require('../../build/server/util');
 
 class PlayerInteractionWrapper {
     constructor(game, player) {
@@ -313,6 +313,14 @@ class PlayerInteractionWrapper {
      */
     get currentActionTargets() {
         return this.player.promptState.selectableCards;
+    }
+
+    /**
+     * Lists rings selectable by the player during the action
+     * @return {Ring[]} - selectable rings
+     */
+    get currentActionRingTargets() {
+        return this.player.promptState.selectableRings;
     }
 
     /**
