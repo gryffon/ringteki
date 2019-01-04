@@ -36,6 +36,7 @@ export enum EffectNames {
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
+    CopyCharacter = 'copyCharacter',
     CustomEffect = 'customEffect',
     DelayedEffect = 'delayedEffect',
     DoesNotBow = 'doesNotBow',

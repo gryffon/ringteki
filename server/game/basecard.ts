@@ -20,7 +20,7 @@ class BaseCard extends EffectSource {
     cardData;
 
     id: string;
-    name: string;
+    printedName: string;
     inConflict: boolean = false;
     type: CardTypes;
     
@@ -45,12 +45,21 @@ class BaseCard extends EffectSource {
         this.cardData = cardData;
 
         this.id = cardData.id;
-        this.name = cardData.name;
+        this.printedName = cardData.name;
         this.type = cardData.type;
         this.traits = cardData.traits || [];
         this.printedFaction = cardData.clan;
 
         this.setupCardAbilities(AbilityDsl);
+    }
+
+    get name(): string {
+        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+        return copyEffect ? copyEffect.name : this.printedName;
+    }
+
+    set name(name: string) {
+        this.printedName = name;
     }
 
     /**
@@ -126,12 +135,13 @@ class BaseCard extends EffectSource {
 
     hasTrait(trait: string): boolean {
         trait = trait.toLowerCase();
-        return this.traits.includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);
+        return this.getTraits().includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);
     }
 
     getTraits(): string[] {
-        let traits = this.traits.concat(this.getEffects(EffectNames.AddTrait));
-        return _.uniq(traits);
+        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+        let traits = copyEffect ? copyEffect.traits : this.traits;
+        return _.uniq(traits.concat(this.getEffects(EffectNames.AddTrait)));
     }
 
     isFaction(faction: string): boolean {
