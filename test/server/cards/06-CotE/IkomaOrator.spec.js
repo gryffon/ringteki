@@ -17,6 +17,8 @@ describe('Ikoma Orator', function() {
                 this.ikomaOrator = this.player1.findCardByName('ikoma-orator');
                 this.bayushiLiar = this.player2.findCardByName('bayushi-liar');
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 1');
+                this.assassination = this.player1.clickCard('assassination');
+                this.banzai = this.player1.clickCard('banzai');
 
                 this.noMoreActions();
 
@@ -38,7 +40,7 @@ describe('Ikoma Orator', function() {
             describe('when controller has less honor', function() {
                 it('should have base political skill', function() {
                     this.player2.pass();
-                    this.player1.clickCard('assassination');
+                    this.player1.clickCard(this.assassination);
                     this.player1.clickCard(this.bayushiLiar);
                     expect(this.player1.player.honor < this.player2.player.honor).toBe(true);
                     expect(this.ikomaOrator.getPoliticalSkill()).toBe(this.ikomaOrator.getBasePoliticalSkill());
@@ -48,12 +50,12 @@ describe('Ikoma Orator', function() {
             describe('when controller has equal honor', function() {
                 it('should have base political skill', function() {
                     this.player2.pass();
-                    this.player1.clickCard('banzai');
+                    this.player1.clickCard(this.banzai);
                     this.player1.clickCard(this.ikomaOrator);
-                    expect(this.player1).toHavePrompt('Lose 1 honor to resolve this ability again');
+                    this.player1.clickPrompt('Lose 1 honor to resolve this ability again');
                     this.player1.clickCard(this.ikomaOrator);
                     this.player1.clickPrompt('Done');
-                    expect(this.player1.player.honor).toBe(this.player2.player.honor);
+                    expect(this.player1.player.honor === this.player2.player.honor).toBe(true);
                     expect(this.ikomaOrator.getPoliticalSkill()).toBe(this.ikomaOrator.getBasePoliticalSkill());
                 });
             });
