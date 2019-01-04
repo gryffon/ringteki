@@ -16,15 +16,13 @@ describe('Ikoma Orator', function() {
                 });
                 this.ikomaOrator = this.player1.findCardByName('ikoma-orator');
                 this.bayushiLiar = this.player2.findCardByName('bayushi-liar');
-                this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 1');
-                this.assassination = this.player1.clickCard('assassination');
-                this.banzai = this.player1.clickCard('banzai');
+                this.assassination = this.player1.findCardByName('assassination');
+                this.banzai = this.player1.findCardByName('banzai');
 
                 this.noMoreActions();
 
                 this.initiateConflict({
                     type: 'political',
-                    province: this.shamefulDisplay,
                     attackers: [this.ikomaOrator],
                     defenders: [this.bayushiLiar]
                 });
