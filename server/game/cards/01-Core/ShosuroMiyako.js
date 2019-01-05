@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, TargetModes, CardTypes } = require('../../Constants');
+const { Players, TargetModes, CardTypes, PlayTypes } = require('../../Constants');
 
 class ShosuroMiyako extends DrawCard {
     setupCardAbilities(ability) {
         this.reaction({
             title: 'Opponent discards or dishonors',
             when: {
-                onCardPlayed: (event, context) => event.player === context.player && event.playType === 'playFromHand' &&
+                onCardPlayed: (event, context) => event.player === context.player && event.playType === PlayTypes.PlayFromHand &&
                                                   event.card.type === CardTypes.Character && context.player.opponent
             },
             target: {

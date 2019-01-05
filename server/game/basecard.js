@@ -6,7 +6,7 @@ const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
 const TriggeredAbility = require('./triggeredability');
 
-const { Locations, EffectNames, Durations, CardTypes } = require('./Constants');
+const { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } = require('./Constants');
 
 class BaseCard extends EffectSource {
     constructor(owner, cardData) {
@@ -59,23 +59,23 @@ class BaseCard extends EffectSource {
     }
 
     reaction(properties) {
-        this.triggeredAbility('reaction', properties);
+        this.triggeredAbility(AbilityTypes.Reaction, properties);
     }
 
     forcedReaction(properties) {
-        this.triggeredAbility('forcedreaction', properties);
+        this.triggeredAbility(AbilityTypes.ForcedReaction, properties);
     }
 
     wouldInterrupt(properties) {
-        this.triggeredAbility('cancelinterrupt', properties);
+        this.triggeredAbility(AbilityTypes.WouldInterrupt, properties);
     }
 
     interrupt(properties) {
-        this.triggeredAbility('interrupt', properties);
+        this.triggeredAbility(AbilityTypes.Interrupt, properties);
     }
 
     forcedInterrupt(properties) {
-        this.triggeredAbility('forcedinterrupt', properties);
+        this.triggeredAbility(AbilityTypes.ForcedInterrupt, properties);
     }
 
     /**
@@ -142,12 +142,14 @@ class BaseCard extends EffectSource {
 
     updateAbilityEvents(from, to) {
         _.each(this.abilities.reactions, reaction => {
+            reaction.limit.reset();
             if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
             } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === CardTypes.Event && to === Locations.ConflictDeck)) {
                 reaction.unregisterEvents();
             }
         });
+        _.each(this.abilities.actions, action => action.limit.reset());
     }
 
     updateEffects(from = '', to = '') {
@@ -181,7 +183,7 @@ class BaseCard extends EffectSource {
         if(originalLocation !== targetLocation) {
             this.updateAbilityEvents(originalLocation, targetLocation);
             this.updateEffects(originalLocation, targetLocation);
-            this.game.emitEvent('onCardMoved', { card: this, originalLocation: originalLocation, newLocation: targetLocation });
+            this.game.emitEvent(EventNames.OnCardMoved, { card: this, originalLocation: originalLocation, newLocation: targetLocation });
         }
     }
 
@@ -303,7 +305,7 @@ class BaseCard extends EffectSource {
 
         // This is my facedown card, but I'm not allowed to look at it
         // OR This is not my card, and it's either facedown or hidden from me
-        if(isActivePlayer ? this.facedown && this.hideWhenFacedown() : (this.facedown || hideWhenFaceup)) {
+        if(isActivePlayer ? this.facedown && this.hideWhenFacedown() : (this.facedown || hideWhenFaceup || this.anyEffect(EffectNames.HideWhenFaceUp))) {
             let state = {
                 controller: this.controller.name,
                 facedown: true,

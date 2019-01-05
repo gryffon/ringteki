@@ -1,10 +1,10 @@
 const Event = require('./Event.js');
 const MoveFateEvent = require('./MoveFateEvent.js');
-const { Locations } = require('../Constants');
+const { Locations, EventNames } = require('../Constants');
 
 class LeavesPlayEvent extends Event {
     constructor(params, card, gameAction) {
-        super('onCardLeavesPlay', params);
+        super(EventNames.OnCardLeavesPlay, params);
         this.handler = this.leavesPlay;
         this.gameAction = gameAction;
         this.card = card;
@@ -49,6 +49,10 @@ class LeavesPlayEvent extends Event {
     leavesPlay() {
         if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(this.card.location)) {
             this.context.refillProvince(this.context.player, this.card.location);
+        }
+        if(!this.card.owner.isLegalLocationForCard(this.card, this.destination)) {
+            this.card.game.addMessage('{0} is not a legal location for {1} and it is discarded', this.destination, this.card);
+            this.destination = this.card.isDynasty ? 'dynasty discard pile' : 'conflict discard pile';
         }
         this.card.owner.moveCard(this.card, this.destination, this.options);
         if(this.options.shuffle) {

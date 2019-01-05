@@ -1,13 +1,13 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases } = require('./Constants');
+const { Phases, PlayTypes, EventNames } = require('./Constants');
 
 class DynastyCardAction extends BaseAction {
     constructor(card) {
         super(card, [
-            Costs.chooseFate('playFromProvince'),
-            Costs.payReduceableFateCost('playFromProvince'),
+            Costs.chooseFate(PlayTypes.PlayFromProvince),
+            Costs.payReduceableFateCost(PlayTypes.PlayFromProvince),
             Costs.playLimited()
         ]);
         this.title = 'Play this character';
@@ -20,9 +20,9 @@ class DynastyCardAction extends BaseAction {
             return 'player';
         } else if(!ignoredRequirements.includes('phase') && context.game.currentPhase !== Phases.Dynasty) {
             return 'phase';
-        } else if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(this.card, 'playFromProvince')) {
+        } else if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(this.card, PlayTypes.PlayFromProvince)) {
             return 'location';
-        } else if(!ignoredRequirements.includes('cannotTrigger') && !this.card.canPlay(context)) {
+        } else if(!ignoredRequirements.includes('cannotTrigger') && !this.card.canPlay(context, PlayTypes.PlayFromProvince)) {
             return 'cannotTrigger';
         } else if(this.card.anotherUniqueInPlay(context.player)) {
             return 'unique';
@@ -36,11 +36,11 @@ class DynastyCardAction extends BaseAction {
 
     executeHandler(context) {
         let enterPlayEvent = GameActions.putIntoPlay({ fate: context.chooseFate }).getEvent(context.source, context);
-        let cardPlayedEvent = context.game.getEvent('onCardPlayed', {
+        let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
             originalLocation: context.source.location,
-            playType: 'playFromProvince'
+            playType: PlayTypes.PlayFromProvince
         });
         context.game.openEventWindow([enterPlayEvent, cardPlayedEvent]);
     }

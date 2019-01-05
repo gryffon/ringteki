@@ -4,7 +4,7 @@ const DrawCard = require('../../drawcard.js');
 const DynastyCardAction = require('../../dynastycardaction.js');
 const GameActions = require('../../GameActions/GameActions');
 const ThenAbility = require('../../ThenAbility');
-const { Locations, CardTypes } = require('../../Constants');
+const { Phases, Locations, CardTypes, PlayTypes, EventNames } = require('../../Constants');
 
 const backAlleyPersistentEffect = {
     apply: card => {
@@ -39,10 +39,13 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
     }
 
     meetsRequirements(context = this.createContext()) {
+        if(context.game.currentPhase !== Phases.Dynasty) {
+            return 'phase';
+        }
         if(context.source.location !== 'backalley hideaway') {
             return 'location';
         }
-        if(!context.source.canPlay(context) || !context.source.parent.canTriggerAbilities(context)) {
+        if(!context.source.canPlay(context, PlayTypes.PlayFromProvince) || !context.source.parent.canTriggerAbilities(context)) {
             return 'cannotTrigger';
         }
         if(!this.canPayCosts(context)) {
@@ -59,11 +62,11 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
         this.backAlleyCard.removeAttachment(context.source);
         context.source.parent = null;
         let putIntoPlayEvent = GameActions.putIntoPlay({ fate: context.chooseFate }).getEvent(context.source, context);
-        let cardPlayedEvent = context.game.getEvent('onCardPlayed', {
+        let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
             originalLocation: 'backalley hideaway',
-            playType: 'playFromProvince'
+            playType: PlayTypes.PlayFromProvince
         });
         let window = context.game.openEventWindow([putIntoPlayEvent, cardPlayedEvent]);
         let thenAbility = new ThenAbility(context.game, this.backAlleyCard, { gameAction: GameActions.sacrifice({ target: this.backAlleyCard }) });

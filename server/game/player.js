@@ -12,7 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const { Locations, Decks, EffectNames, CardTypes } = require('./Constants');
+const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -63,11 +63,11 @@ class Player extends GameObject {
         this.deck = {};
         this.costReducers = [];
         this.playableLocations = [
-            new PlayableLocation('playFromHand', this, Locations.Hand),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceOne),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceTwo),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceThree),
-            new PlayableLocation('playFromProvince', this, Locations.ProvinceFour)
+            new PlayableLocation(PlayTypes.PlayFromHand, this, Locations.Hand),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceOne),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceTwo),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceThree),
+            new PlayableLocation(PlayTypes.PlayFromProvince, this, Locations.ProvinceFour)
         ];
         this.abilityMaxByIdentifier = {}; // This records max limits for abilities
         this.promptedActionWindows = user.promptedActionWindows || { // these flags represent phase settings
@@ -356,7 +356,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their conflict deck', this);
         }
-        this.game.emitEvent('onDeckShuffled', { player: this, deck: Decks.ConflictDeck });
+        this.game.emitEvent(EventNames.OnDeckShuffled, { player: this, deck: Decks.ConflictDeck });
         this.conflictDeck = _(this.conflictDeck.shuffle());
     }
 
@@ -367,7 +367,7 @@ class Player extends GameObject {
         if(this.name !== 'Dummy Player') {
             this.game.addMessage('{0} is shuffling their dynasty deck', this);
         }
-        this.game.emitEvent('onDeckShuffled', { player: this, deck: Decks.DynastyDeck });
+        this.game.emitEvent(EventNames.OnDeckShuffled, { player: this, deck: Decks.DynastyDeck });
         this.dynastyDeck = _(this.dynastyDeck.shuffle());
     }
 
@@ -471,7 +471,8 @@ class Player extends GameObject {
 
     getAlternateFatePools(playingType, card) {
         let effects = this.getEffects(EffectNames.AlternateFatePool);
-        return effects.filter(match => match(card) && match(card).fate > 0).map(match => match(card));
+        let alternateFatePools = effects.filter(match => match(card) && match(card).fate > 0).map(match => match(card));
+        return _.uniq(alternateFatePools);
     }
 
     getMinimumCost(playingType, card, target) {
@@ -480,8 +481,8 @@ class Player extends GameObject {
         let alternateFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0);
         let triggeredCostReducers = 0;
         let fakeWindow = { addChoice: () => triggeredCostReducers++ };
-        let fakeEvent = this.game.getEvent('onResolveFateCost', { card: card, player: this });
-        this.game.emit('onResolveFateCost:interrupt', fakeEvent, fakeWindow);
+        let fakeEvent = this.game.getEvent(EventNames.OnResolveFateCost, { card: card, player: this });
+        this.game.emit(EventNames.OnResolveFateCost + ':' + AbilityTypes.Interrupt, fakeEvent, fakeWindow);
         return Math.max(reducedCost - triggeredCostReducers - alternateFate, 0);
     }
 
@@ -568,7 +569,7 @@ class Player extends GameObject {
 
         this.modifyFate(this.getTotalIncome());
 
-        this.game.raiseEvent('onIncomeCollected', { player: this });
+        this.game.raiseEvent(EventNames.OnIncomeCollected, { player: this });
 
         this.passedDynasty = false;
         this.limitedPlayed = 0;
@@ -723,17 +724,24 @@ class Player extends GameObject {
 
 
         const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, Locations.RemovedFromGame];
+        const dynastyCardLocations = [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame];
         const legalLocations = {
             stronghold: [Locations.StrongholdProvince],
             role: [Locations.Role],
             province: [...provinceLocations, Locations.ProvinceDeck],
-            holding: [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame],
-            character: [...provinceLocations, ...conflictCardLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.PlayArea],
+            holding: dynastyCardLocations,
+            conflictCharacter: [...conflictCardLocations, Locations.PlayArea],
+            dynastyCharacter: [...dynastyCardLocations, Locations.PlayArea],
             event: [...conflictCardLocations, Locations.BeingPlayed],
             attachment: [...conflictCardLocations, Locations.PlayArea]
         };
 
-        return legalLocations[card.type] && legalLocations[card.type].includes(location);
+        let type = card.type;
+        if(type === 'character') {
+            type = card.isDynasty ? 'dynastyCharacter' : 'conflictCharacter';
+        }
+
+        return legalLocations[type] && legalLocations[type].includes(location);
     }
 
     /**
@@ -914,11 +922,6 @@ class Player extends GameObject {
         } else if(targetPile) {
             targetPile.push(card);
         }
-        /*
-        if([Locations.ConflictDiscardPile, Locations.DynastyDiscardPile].includes(targetLocation)) {
-            this.game.raiseEvent('onCardPlaced', { card: card, location: targetLocation });
-        }
-        */
     }
 
     /**

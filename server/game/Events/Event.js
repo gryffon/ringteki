@@ -1,4 +1,5 @@
 const _ = require('underscore');
+const { EventNames } = require('../Constants');
 
 class Event {
     constructor(name, params, handler, gameAction) {
@@ -40,7 +41,7 @@ class Event {
     }
 
     checkCondition() {
-        if(this.cancelled || this.resolved || this.name === 'unnamedEvent') {
+        if(this.cancelled || this.resolved || this.name === EventNames.Unnamed) {
             return;
         }
         if(this.gameAction && !this.gameAction.checkEventCondition(this)) {

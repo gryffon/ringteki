@@ -147,10 +147,10 @@ describe('Blackmail', function() {
                 this.player2.clickPrompt('Pass');
             });
 
-            it('should not be usable after blackmailing if it were used by its previous controller', function() {
+            it('should be usable after blackmailing if it were used by its previous controller', function() {
                 expect(this.soshiIllusionist.bowed).toBe(true);
                 this.player1.clickCard(this.dojiGiftGiver);
-                expect(this.player2).not.toHavePrompt('Choose a character');
+                expect(this.player2).toHavePrompt('Choose a character');
             });
         });
 
@@ -180,6 +180,34 @@ describe('Blackmail', function() {
 
             it('should only have one instance of the constant ability in effect', function() {
                 expect(this.yogoOutcast.getPoliticalSkill()).toBe(3);
+            });
+        });
+
+        describe('Blackmail interaction with Obstinate Recruit', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['obstinate-recruit']
+                    },
+                    player2: {
+                        honor: 10,
+                        hand: ['blackmail']
+                    }
+                });
+                this.obstinateRecruit = this.player1.findCardByName('obstinate-recruit');
+                this.noMoreActions();
+            });
+
+            it('should discard Obstinate Recruit when Blackmailed', function() {
+                this.initiateConflict({
+                    attackers: [this.obstinateRecruit],
+                    defenders: []
+                });
+                this.player2.clickCard('blackmail');
+                this.player2.clickCard(this.obstinateRecruit);
+                expect(this.obstinateRecruit.location).toBe('dynasty discard pile');
             });
         });
     });

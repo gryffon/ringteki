@@ -1,6 +1,7 @@
 const CardAction = require('./CardGameAction');
 const AbilityResolver = require('../gamesteps/abilityresolver.js');
 const SimpleStep = require('../gamesteps/simplestep.js');
+const { EventNames } = require('../Constants');
 
 class NoCostsAbilityResolver extends AbilityResolver {
     initialise() {
@@ -41,7 +42,7 @@ class ResolveAbilityAction extends CardAction {
     }
 
     getEvent(card, context) {
-        return super.createEvent('unnamedEvent', { card: card, context: context }, () => {
+        return super.createEvent(EventNames.Unnamed, { card: card, context: context }, () => {
             let newContext = Object.assign(this.ability.createContext(context.player), {
                 isResolveAbility: true,
                 secondResolution: this.secondResolution

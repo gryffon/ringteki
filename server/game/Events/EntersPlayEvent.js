@@ -1,9 +1,9 @@
 const Event = require('./Event.js');
-const { Locations } = require('../Constants');
+const { Locations, EventNames } = require('../Constants');
 
 class EntersPlayEvent extends Event {
     constructor(params, card, fate, status, gameAction) {
-        super('onCharacterEntersPlay', params);
+        super(EventNames.OnCharacterEntersPlay, params);
         this.handler = this.entersPlay;
         this.card = card;
         this.fate = fate;

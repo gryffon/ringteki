@@ -7,7 +7,7 @@ class KyudenBayushi extends StrongholdCard {
             title: 'Ready a dishonored character',
             cost: ability.costs.bowSelf(),
             target: {
-                cardtype: CardTypes.Character,
+                cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.isDishonored,
                 gameAction: [

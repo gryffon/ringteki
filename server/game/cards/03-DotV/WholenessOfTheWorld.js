@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 
 class WholenessOfTheWorld extends DrawCard {
-    setupCardAbilities() {
+    setupCardAbilities(ability) {
         this.wouldInterrupt({
             title: 'Keep a claimed ring',
             when: {
@@ -10,7 +10,8 @@ class WholenessOfTheWorld extends DrawCard {
             cannotBeMirrored: true,
             effect: 'prevent {1} from returning to the unclaimed pool',
             effectArgs: context => context.event.ring,
-            handler: context => context.cancel()
+            handler: context => context.cancel(),
+            max: ability.limit.perRound(1)
         });
     }
 }

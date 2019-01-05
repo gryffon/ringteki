@@ -106,7 +106,7 @@ describe('Calling In Favors', function() {
             });
 
             describe('if the attachment has been used already this turn', function() {
-                it('should not be usable by the other player', function() {
+                it('should be usable by the other player', function() {
                     this.adeptOfTheWaves = this.player1.findCardByName('adept-of-the-waves');
                     this.oniMask = this.player1.playAttachment('oni-mask', 'adept-of-the-waves');
                     this.adeptOfTheWaves.fate = 1;
@@ -127,7 +127,7 @@ describe('Calling In Favors', function() {
                     expect(this.miyaMystic.attachments.toArray()).toContain(this.oniMask);
                     this.player1.clickPrompt('Pass');
                     this.player2.clickCard(this.oniMask);
-                    expect(this.player2).not.toHavePrompt('Oni Mask');
+                    expect(this.player2).toHavePrompt('Oni Mask');
                 });
             });
 
@@ -231,6 +231,34 @@ describe('Calling In Favors', function() {
                 expect(this.soshiIllusionist.isDishonored).toBe(true);
                 expect(this.soshiIllusionist.attachments.toArray()).toContain(this.cloudTheMind);
                 expect(this.cloudTheMind.controller).toBe(this.player2.player);
+            });
+        });
+
+        describe('Calling in Favors and Writ of Authority', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        honor: 11,
+                        inPlay: ['kitsu-spiritcaller'],
+                        hand: ['writ-of-authority']
+                    },
+                    player2: {
+                        honor: 10,
+                        inPlay: ['bayushi-liar'],
+                        hand: ['calling-in-favors']
+                    }
+                });
+
+                this.writOfAuthority = this.player1.playAttachment('writ-of-authority', 'kitsu-spiritcaller');
+            });
+
+            it('should be discarded if the new controller has less honor', function() {
+                this.player2.clickCard('calling-in-favors');
+                this.player2.clickCard(this.writOfAuthority);
+                this.bayushiLiar = this.player2.clickCard('bayushi-liar');
+                expect(this.bayushiLiar.isDishonored).toBe(true);
+                expect(this.writOfAuthority.location).toBe('conflict discard pile');
             });
         });
     });

@@ -3,7 +3,7 @@ const _ = require('underscore');
 const AbilityLimit = require('./abilitylimit.js');
 const CannotRestriction = require('./cannotrestriction.js');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, Durations } = require('./Constants');
+const { EffectNames, Durations, PlayTypes } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -76,6 +76,7 @@ const Effects = {
         },
         unapply: (card, context, playAction) => card.abilities.playActions = card.abilities.playActions.filter(action => action !== playAction)
     }),
+    hideWhenFaceUp: () => EffectBuilder.card.static(EffectNames.HideWhenFaceUp),
     immunity: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new CannotRestriction(properties)),
     increaseLimitOnAbilities: (amount) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, amount),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseMilitarySkill, value),
@@ -111,7 +112,7 @@ const Effects = {
     }),
     // Ring effects
     addElement: (element) => EffectBuilder.ring.static(EffectNames.AddElement, element),
-    cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclare, match), // TODO: Add this to lasting effect checks
+    cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match), // TODO: Add this to lasting effect checks
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match), // TODO: Add this to lasting effect checks
     // Player effects
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible(EffectNames.AdditionalCharactersInConflict, amount),
@@ -121,7 +122,7 @@ const Effects = {
     }),
     alternateFatePool: (match) => EffectBuilder.player.static(EffectNames.AlternateFatePool, match),
     canPlayFromOwn: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
-        apply: (player) => player.addPlayableLocation('playFromHand', player, location, cards),
+        apply: (player) => player.addPlayableLocation(PlayTypes.PlayFromHand, player, location, cards),
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static(EffectNames.ChangePlayerGloryModifier, value),

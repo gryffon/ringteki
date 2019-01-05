@@ -1,6 +1,7 @@
 const { CardTypes } = require('./Constants');
 
 const checkRestrictions = {
+    characters: context => context.source.type === CardTypes.Character,
     copiesOfDiscardEvents: context =>
         context.source.type === CardTypes.Event && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
     copiesOfX: (context, player, source, params) => context.source.name === params,
@@ -39,7 +40,7 @@ class CannotRestriction {
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
         }
-        let player = this.player || this.context.source && this.context.source.controller;
+        let player = this.context.player || this.context.source && this.context.source.controller;
         return checkRestrictions[this.restriction](context, player, this.context.source, this.params);
     }
 }

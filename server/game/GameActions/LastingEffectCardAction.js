@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, Durations } = require('../Constants');
+const { Locations, Durations, EventNames } = require('../Constants');
 
 class LastingEffectCardAction extends CardGameAction {
     setDefaultProperties() {
@@ -50,7 +50,7 @@ class LastingEffectCardAction extends CardGameAction {
             targetLocation: this.targetLocation,
             until: this.until
         };
-        return super.createEvent('onEffectApplied', { card: card, context: context }, event => event.context.source[this.duration](() => properties));
+        return super.createEvent(EventNames.OnEffectApplied, { card: card, context: context }, event => event.context.source[this.duration](() => properties));
     }
 }
 

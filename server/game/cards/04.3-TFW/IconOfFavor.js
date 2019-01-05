@@ -8,7 +8,6 @@ class IconOfFavor extends DrawCard {
         });
         this.reaction({
             title: 'Honor attached character',
-            event: 'honor attached character',
             when: {
                 afterConflict: (event, context) =>
                     event.conflict.elements.some(element => element === 'fire') &&

@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class ModifyFateAction extends PlayerAction {
     setDefaultProperties() {
@@ -24,7 +25,7 @@ class ModifyFateAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onModifyFate', { player: player, amount: this.amount, context: context }, () => player.modifyFate(this.amount));
+        return super.createEvent(EventNames.OnModifyFate, { player: player, amount: this.amount, context: context }, () => player.modifyFate(this.amount));
     }
 }
 

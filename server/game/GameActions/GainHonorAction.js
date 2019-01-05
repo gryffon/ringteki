@@ -1,4 +1,5 @@
 const PlayerAction = require('./PlayerAction');
+const { EventNames } = require('../Constants');
 
 class GainHonorAction extends PlayerAction {
     setDefaultProperties() {
@@ -20,7 +21,7 @@ class GainHonorAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onModifyHonor', { player: player, amount: this.amount, context: context }, event => player.modifyHonor(event.amount));
+        return super.createEvent(EventNames.OnModifyHonor, { player: player, amount: this.amount, context: context }, event => player.modifyHonor(event.amount));
     }
 }
 

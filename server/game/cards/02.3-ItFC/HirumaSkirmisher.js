@@ -6,7 +6,7 @@ class HirumaSkirmisher extends DrawCard {
         this.reaction({
             title: 'Gain covert until end of phase',
             when: {
-                'onCharacterEntersPlay': (event, context) => event.card === context.source
+                onCharacterEntersPlay: (event, context) => event.card === context.source
             },
             effect: 'give itself Covert until the end of the phase',
             gameAction: ability.actions.cardLastingEffect({

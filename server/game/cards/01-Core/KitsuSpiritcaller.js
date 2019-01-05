@@ -8,7 +8,7 @@ class KitsuSpiritcaller extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             cost: ability.costs.bowSelf(),
             target: {
-                activePrompt: 'Choose a character from a discard pile',
+                activePromptTitle: 'Choose a character from a discard pile',
                 location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile],
                 controller: Players.Self,
                 gameAction: ability.actions.putIntoConflict()

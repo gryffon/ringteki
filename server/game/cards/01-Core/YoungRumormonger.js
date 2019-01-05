@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, EventNames } = require('../../Constants');
 
 class YoungRumormonger extends DrawCard {
     setupCardAbilities() {
@@ -12,10 +12,10 @@ class YoungRumormonger extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: (card, context) => card !== context.event.card && card.controller === context.event.card.controller &&
-                                                  card.allowGameAction(context.event.name === 'onCardHonored' ? 'honor' : 'dishonor', context)
+                                                  card.allowGameAction(context.event.name === EventNames.OnCardHonored ? 'honor' : 'dishonor', context)
             },
             effect: '{1} {0} instead of {2}',
-            effectArgs: context => [context.event.name === 'onCardHonored' ? 'honor' : 'dishonor', context.event.card],
+            effectArgs: context => [context.event.name === EventNames.OnCardHonored ? 'honor' : 'dishonor', context.event.card],
             handler: context => context.event.card = context.target
         });
     }

@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
 const EventRegistrar = require('../../eventregistrar.js');
-const { Locations, Phases, CardTypes } = require('../../Constants');
+const { Locations, Phases, CardTypes, EventNames } = require('../../Constants');
 
 class SoshiShadowshaper extends DrawCard {
     setupCardAbilities(ability) {
         this.charactersPlayedThisPhase = [];
         this.eventRegistrar = new EventRegistrar(this.game, this);
-        this.eventRegistrar.register(['onPhaseStarted', 'onCharacterEntersPlay']);
+        this.eventRegistrar.register([EventNames.OnPhaseStarted, EventNames.OnCharacterEntersPlay]);
 
         this.action({
             title: 'Return a character to owner\'s hand',

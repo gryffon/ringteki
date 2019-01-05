@@ -1,14 +1,14 @@
 const AbilityLimit = require('./abilitylimit.js');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes } = require('./Constants');
+const { Locations, CardTypes, PlayTypes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
         super(game, card, properties);
 
         this.title = properties.title;
-        this.limit = properties.limit || AbilityLimit.default();
+        this.limit = properties.limit || AbilityLimit.perRound(1);
         this.limit.registerEvents(game);
         this.limit.card = card;
         this.abilityCost = this.cost;
@@ -29,7 +29,7 @@ class CardAbility extends ThenAbility {
         }
 
         if(card.getType() === CardTypes.Event) {
-            this.cost = this.cost.concat(Costs.payReduceableFateCost('playFromHand'), Costs.playLimited());
+            this.cost = this.cost.concat(Costs.payReduceableFateCost(PlayTypes.PlayFromHand), Costs.playLimited());
         }
     }
 
@@ -61,7 +61,7 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context)) {
+        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, PlayTypes.PlayFromHand)) {
             return 'cannotTrigger';
         }
 
@@ -77,7 +77,7 @@ class CardAbility extends ThenAbility {
     }
 
     isInValidLocation(context) {
-        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, 'playFromHand') : this.location.includes(this.card.location);
+        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand) : this.location.includes(this.card.location);
     }
 
     displayMessage(context) {
@@ -100,7 +100,7 @@ class CardAbility extends ThenAbility {
                 if(card && card.facedown) {
                     card = 'a facedown card';
                 }
-                return { message: this.game.gameChat.getFormattedMessage(cost.action.cost, card) };
+                return { message: this.game.gameChat.formatMessage(cost.action.cost, [card]) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
@@ -138,7 +138,7 @@ class CardAbility extends ThenAbility {
             // to
             messageArgs.push(' to ');
             // discard Stoic Gunso
-            messageArgs.push({ message: this.game.gameChat.getFormattedMessage(effectMessage, ...effectArgs) });
+            messageArgs.push({ message: this.game.gameChat.formatMessage(effectMessage, effectArgs) });
         }
         this.game.addMessage('{0}{1}{2}{3}{4}{5}{6}', ...messageArgs);
     }

@@ -6,7 +6,7 @@ class HirumaAmbusher extends DrawCard {
         this.reaction({
             title: 'Disable a character',
             when: {
-                'onCharacterEntersPlay': (event, context) => event.card === context.source && context.source.isDefending()
+                onCharacterEntersPlay: (event, context) => event.card === context.source && context.source.isDefending()
             },
             target: {
                 cardType: CardTypes.Character,

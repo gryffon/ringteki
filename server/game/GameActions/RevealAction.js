@@ -1,5 +1,5 @@
 const CardGameAction = require('./CardGameAction');
-const { Locations, CardTypes } = require('../Constants');
+const { Locations, EventNames } = require('../Constants');
 
 class RevealAction extends CardGameAction {
     setDefaultProperties() {
@@ -23,11 +23,7 @@ class RevealAction extends CardGameAction {
     }
 
     getEvent(card, context) {
-        let eventName = 'onCardRevealed';
-        if(card.type === CardTypes.Province) {
-            eventName = 'onProvinceRevealed';
-        }
-        return super.createEvent(eventName, { card, context }, event => {
+        return super.createEvent(EventNames.OnCardRevealed, { card, context }, event => {
             if(this.chatMessage) {
                 context.game.addMessage('{0} reveals {1} due to {2}', this.player || context.player, card, context.source);
             }

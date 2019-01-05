@@ -5,7 +5,7 @@ class Pilgrimage extends ProvinceCard {
     setupCardAbilities() {
         this.eventRegistrar = new EventRegistrar(this.game, this);
         this.eventRegistrar.register([{
-            'onResolveConflictRingOtherEffects': 'cancelRingEffect',
+            'onResolveConflictRing:OtherEffects': 'cancelRingEffect',
             'onResolveRingElement:cancelinterrupt': 'cancelRingEffect'
         }]);
     }

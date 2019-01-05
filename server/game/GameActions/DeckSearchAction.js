@@ -1,5 +1,5 @@
 const PlayerAction = require('./PlayerAction');
-const { Locations } = require('../Constants');
+const { Locations, EventNames } = require('../Constants');
 
 class DeckSearchAction extends PlayerAction {
     setDefaultProperties() {
@@ -27,7 +27,7 @@ class DeckSearchAction extends PlayerAction {
     }
 
     getEvent(player, context) {
-        return super.createEvent('onDeckSearch', { player: player, amount: this.amount, context: context }, () => {
+        return super.createEvent(EventNames.OnDeckSearch, { player: player, amount: this.amount, context: context }, () => {
             let amount = this.amount > -1 ? this.amount : player.conflictDeck.size();
             context.game.promptWithHandlerMenu(player, {
                 activePromptTitle: 'Select a card to ' + (this.reveal ? 'reveal and ' : '') + 'put in your hand',
