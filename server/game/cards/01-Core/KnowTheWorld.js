@@ -1,27 +1,25 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class KnowTheWorld extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Switch a claimed ring with an unclaimed one',
             effect: 'switch a claimed ring with an unclaimed one',
-            gameAction: ability.actions.jointAction([
-                ability.actions.returnRing(context => ({
-                    promptForSelect: {
-                        activePromptTitle: 'Choose a ring to return',
-                        ringCondition: ring => ring.claimedBy === context.player.name,
-                        message: '{0} returns {1}',
-                        messageArgs: ring => [context.player, ring]
-                    }
+            gameAction: AbilityDsl.actions.jointAction([
+                AbilityDsl.actions.selectRing(context => ({
+                    activePromptTitle: 'Choose a ring to return',
+                    ringCondition: ring => ring.claimedBy === context.player.name,
+                    message: '{0} returns {1}',
+                    messageArgs: ring => [context.player, ring],
+                    gameAction: AbilityDsl.actions.returnRing()
                 })),
-                ability.actions.takeRing(context => ({
-                    takeFate: true,
-                    promptForSelect: {
-                        activePromptTitle: 'Choose a ring to take',
-                        ringCondition: ring => ring.isUnclaimed(),
-                        message: '{0} takes {1}',
-                        messageArgs: ring => [context.player, ring]
-                    }
+                AbilityDsl.actions.selectRing(context => ({
+                    activePromptTitle: 'Choose a ring to take',
+                    ringCondition: ring => ring.isUnclaimed(),
+                    message: '{0} takes {1}',
+                    messageArgs: ring => [context.player, ring],
+                    gameAction: AbilityDsl.actions.takeRing({ takeFate: true })
                 }))
             ])
         });

@@ -1,10 +1,25 @@
 const AbilityLimit = require('./abilitylimit.js');
+const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, PlayTypes } = require('./Constants');
+const { Locations, CardTypes, PlayTypes, Players } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
+        if(properties.initiateDuel) {
+            if(properties.condition) {
+                let condition = properties.condition;
+                properties.condition = context => context.source.isParticipating() && condition(context);
+            } else {
+                properties.condition = context => context.source.isParticipating();
+            }
+            properties.target = {
+                cardType: CardTypes.Character,
+                controller: Players.Opponent,
+                cardCondition: card => card.isParticipating(),
+                gameAction: AbilityDsl.actions.duel(properties.initiateDuel)
+            };
+        }
         super(game, card, properties);
 
         this.title = properties.title;
@@ -95,12 +110,13 @@ class CardAbility extends ThenAbility {
         // Player1 plays Assassination
         let messageArgs = [context.player, context.source.type === CardTypes.Event ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
-            if(cost.action && cost.action.cost) {
+            if(cost.action) {
                 let card = context.costs[cost.action.name];
                 if(card && card.facedown) {
                     card = 'a facedown card';
                 }
-                return { message: this.game.gameChat.formatMessage(cost.action.cost, [card]) };
+                let [format, args] = cost.action.getCostMessage(context);
+                return { message: this.game.gameChat.formatMessage(format, [card].concat(args)) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
@@ -118,9 +134,7 @@ class CardAbility extends ThenAbility {
             let gameActions = this.getGameActions(context).filter(gameAction => gameAction.hasLegalTarget(context));
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
-                effectMessage = gameActions[0].effectMsg;
-                effectArgs.push(gameActions[0].target);
-                extraArgs = gameActions[0].effectArgs;
+                [effectMessage, extraArgs] = gameActions[0].getEffectMessage(context);
             }
         } else {
             effectArgs.push(context.target || context.ring || context.source);

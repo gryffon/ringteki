@@ -64,7 +64,7 @@ describe('Togashi Yokuni', function() {
                 this.player1.clickCard(this.togashiYokuni);
                 expect(this.player1).toHavePrompt('Togashi Yokuni');
                 this.player1.clickCard(this.togashiYokuni);
-                this.player1.clickPrompt('Honor Togashi Yokuni');
+                this.player1.clickPrompt('Honor this character');
                 expect(this.togashiYokuni.isHonored).toBe(true);
             });
 

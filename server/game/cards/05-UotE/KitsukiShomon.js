@@ -17,7 +17,8 @@ class KitsukiShomon extends DrawCard {
                 context.event.card = context.source;
                 let thenAbility = new ThenAbility(this.game, this, { gameAction: ability.actions.ready() });
                 let condition = event => !event.cancelled && event.card === context.source;
-                context.event.window.addThenAbility([context.event], thenAbility, context, condition);
+                context.events = [context.event];
+                context.event.window.addThenAbility(thenAbility, context, condition);
             }
         });
     }

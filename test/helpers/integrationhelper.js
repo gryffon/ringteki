@@ -72,6 +72,26 @@ var customMatchers = {
                 return result;
             }
         };
+    },
+    toBeAbleToSelectRing: function() {
+        return {
+            compare: function(player, ring) {
+                if(_.isString(ring)) {
+                    ring = player.game.rings[ring];
+                }
+                let result = {};
+
+                result.pass = player.currentActionRingTargets.includes(ring);
+
+                if(result.pass) {
+                    result.message = `Expected ${ring.element} not to be selectable by ${player.name} but it was.`;
+                } else {
+                    result.message = `Expected ${ring.element} to be selectable by ${player.name} but it wasn't.`;
+                }
+
+                return result;
+            }
+        };
     }
 };
 
@@ -116,13 +136,16 @@ global.integration = function(definitions) {
                 this.player2.selectDeck(deckBuilder.customDeck(options.player2));
 
                 this.startGame();
-                //Setup phase
-                this.selectFirstPlayer(this.player1);
 
-                this.selectStrongholdProvinces({
-                    player1: options.player1.strongholdProvince,
-                    player2: options.player2.strongholdProvince
-                });
+                //Setup phase
+                if(!options.skipAutoSetup) {
+                    this.selectFirstPlayer(this.player1);
+
+                    this.selectStrongholdProvinces({
+                        player1: options.player1.strongholdProvince,
+                        player2: options.player2.strongholdProvince
+                    });
+                }
 
                 if(options.phase !== 'setup') {
                     if(['draw', 'fate', 'regroup'].includes(options.phase)) {
@@ -164,8 +187,10 @@ global.integration = function(definitions) {
                 this.player1.conflictDiscard = options.player1.conflictDiscard;
                 this.player2.conflictDiscard = options.player2.conflictDiscard;
                 //Dynsaty deck related
-                this.player1.provinces = options.player1.provinces;
-                this.player2.provinces = options.player2.provinces;
+                if(!options.skipAutoSetup) {
+                    this.player1.provinces = options.player1.provinces;
+                    this.player2.provinces = options.player2.provinces;
+                }
                 for(const location of ['province 1', 'province 2', 'province 3', 'province 4']) {
                     this.player1.player.replaceDynastyCard(location);
                     this.player2.player.replaceDynastyCard(location);

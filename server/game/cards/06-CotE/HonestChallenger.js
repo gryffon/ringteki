@@ -6,19 +6,13 @@ class HonestChallenger extends DrawCard {
         this.composure({
             effect: ability.effects.modifyMilitarySkill(2)
         });
+
         this.action({
             title: 'Initiate a military duel',
-            condition: () => this.isParticipating(),
-            target: {
-                cardType: CardTypes.Character,
-                controller: Players.Opponent,
-                cardCondition: card => card.isParticipating(),
-                gameAction: ability.actions.duel(context => ({
-                    type: 'military',
-                    challenger: context.source,
-                    resolutionHandler: (winner) => this.resolutionHandler(context, winner)
-                }))
-            }
+            initiateDuel: context => ({
+                type: 'military',
+                resolutionHandler: (winner) => this.resolutionHandler(context, winner)
+            })
         });
     }
     resolutionHandler(context, winner) {

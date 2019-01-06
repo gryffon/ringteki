@@ -1,8 +1,7 @@
 import AbilityContext = require('./AbilityContext');
 import TriggeredAbilityContext = require('./TriggeredAbilityContext');
-import GameAction = require('./GameActions/GameAction');
+import { GameAction } from './GameActions/GameAction';
 import Ring = require('./ring');
-import Event = require('./Events/Event');
 import BaseCard = require('./basecard');
 import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } from './Constants';
 
@@ -75,6 +74,11 @@ interface ActionTargets {
     [propName: string]: ActionTarget & SubTarget;
 };
 
+interface InitiateDuel {
+    type: string;
+    resolutionHandler: (winner: BaseCard) => void
+};
+
 interface AbilityProps {
     title: string;
     location?: Locations | Locations[];
@@ -83,6 +87,7 @@ interface AbilityProps {
     max?: any;
     target?: ActionTarget;
     targets?: ActionTargets;
+    initiateDuel?: InitiateDuel | ((context: AbilityContext) => InitiateDuel);
     cannotBeMirrored?: boolean;
     printedAbility?: boolean;
     cannotTargetFirst?: boolean;
@@ -112,7 +117,7 @@ interface TriggeredAbilityTargets {
     [propName: string]: TriggeredAbilityTarget & SubTarget & TriggeredAbilityTarget;
 };
 
-type WhenType = {
+export type WhenType = {
     [EventName in EventNames]?: (event: any, context?: TriggeredAbilityContext) => boolean;
 };
 

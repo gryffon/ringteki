@@ -943,9 +943,9 @@ class Game extends EventEmitter {
         }
         let actionPairs = Object.entries(actions);
         let events = actionPairs.reduce((array, [action, cards]) => {
-            let gameAction = GameActions[action]();
-            gameAction.setTarget(cards);
-            return array.concat(gameAction.getEventArray(context));
+            let gameAction = GameActions[action]({ target: cards });
+            gameAction.addEventsToArray(array, context);
+            return array;
         }, []);
         if(events.length > 0) {
             this.openEventWindow(events);
@@ -958,9 +958,9 @@ class Game extends EventEmitter {
         return new AbilityContext({ game: this, player: player });
     }
 
-    initiateConflict(player) {
+    initiateConflict(player, canPass) {
         this.currentConflict = new Conflict(this, player, player.opponent);
-        this.queueStep(new ConflictFlow(this, this.currentConflict));
+        this.queueStep(new ConflictFlow(this, this.currentConflict, canPass));
     }
 
     /**

@@ -7,7 +7,7 @@ class Duty extends DrawCard {
             title: 'Cancel honor loss',
             when: {
                 onModifyHonor: (event, context) =>
-                    event.player === context.player && event.amount <= -context.player.honor && event.context.stage === Stages.Effect,
+                    event.player === context.player && -event.amount >= context.player.honor && event.context.stage === Stages.Effect,
                 onTransferHonor: (event, context) =>
                     event.player === context.player && event.amount >= context.player.honor && event.context.stage === Stages.Effect
             },

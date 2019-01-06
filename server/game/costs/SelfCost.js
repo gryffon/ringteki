@@ -10,11 +10,10 @@ class SelfCost {
 
     resolve(context) {
         context.costs[this.action.name] = context.source;
-        this.action.setTarget(context.source);
     }
 
     payEvent(context) {
-        return this.action.getEventArray(context);
+        return this.action.getEventArray(context, { target: context.source });
     }
 }
 

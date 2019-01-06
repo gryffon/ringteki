@@ -9,11 +9,10 @@ class PlayerCost {
 
     resolve(context) {
         context.costs[this.action.name] = context.player;
-        this.action.setTarget(context.player);
     }
 
     payEvent(context) {
-        return this.action.getEventArray(context);
+        return this.action.getEventArray(context, { target: context.player });
     }
 }
 
