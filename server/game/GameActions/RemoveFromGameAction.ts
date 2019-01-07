@@ -12,11 +12,7 @@ export class RemoveFromGameAction extends CardGameAction {
     eventName = EventNames.OnCardLeavesPlay;
     cost = 'removing {0} from the game';
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding];
-
-    getEffectMessage(context: AbilityContext): [string, any[]] {
-        let properties = this.getProperties(context);
-        return['remove {0} from the game', [properties.target]];
-    }
+    effect = 'remove {0} from the game'
 
     canAffect(card: BaseCard, context: AbilityContext): boolean {
         if(card.type === CardTypes.Holding) {
@@ -35,7 +31,6 @@ export class RemoveFromGameAction extends CardGameAction {
     }
 
     eventHandler(event): void {
-        event.destination = Locations.RemovedFromGame;
         this.leavesPlayEventHandler(event);
     }
 }
