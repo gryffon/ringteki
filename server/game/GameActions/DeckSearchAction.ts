@@ -5,9 +5,9 @@ import DrawCard = require('../drawcard');
 import Player = require('../player');
 
 export interface DeckSearchProperties extends PlayerActionProperties {
-    amount: number;
-    reveal: boolean;
-    cardCondition: (card: DrawCard, context: AbilityContext) => boolean;
+    amount?: number;
+    reveal?: boolean;
+    cardCondition?: (card: DrawCard, context: AbilityContext) => boolean;
 }
 
 export class DeckSearchAction extends PlayerAction {
