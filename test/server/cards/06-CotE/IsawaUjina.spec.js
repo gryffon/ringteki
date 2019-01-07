@@ -5,7 +5,7 @@ describe('Isawa Ujina', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['isawa-ujina', 'adept-of-the-waves', 'fushicho'],
+                        inPlay: ['isawa-ujina', 'adept-of-the-waves', 'fushicho', 'isawa-kaede'],
                         hand: ['know-the-world', 'know-the-world']
                     },
                     player2: {
@@ -18,6 +18,7 @@ describe('Isawa Ujina', function() {
                 let knowTheWorlds = this.player1.filterCardsByName('know-the-world');
                 this.knowTheWorld1 = knowTheWorlds[0];
                 this.knowTheWorld2 = knowTheWorlds[1];
+                this.isawaKaede = this.player1.findCardByName('isawa-kaede');
 
                 this.callowDelegate = this.player2.findCardByName('callow-delegate');
                 this.dojiChallenger = this.player2.findCardByName('doji-challenger');
@@ -52,6 +53,22 @@ describe('Isawa Ujina', function() {
                 expect(this.player1).toHavePrompt('Isawa Ujina');
             });
 
+            it('should trigger when Isawa Kaede is attacking', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.isawaKaede],
+                    defenders: [this.callowDelegate],
+                    ring: 'air'
+                });
+                this.noMoreActions();
+                this.player1.clickPrompt('No');
+                expect(this.player1).toHavePrompt('Resolve Ring Effect');
+                expect(this.player1).toBeAbleToSelectRing('air');
+                expect(this.player1).toBeAbleToSelectRing('void');
+                this.player1.clickPrompt('Don\'t Resolve the Conflict Ring');
+                expect(this.player1).toHavePrompt('Isawa Ujina');
+            });
+
             describe('when triggered', function() {
                 beforeEach(function() {
                     this.noMoreActions();
@@ -69,6 +86,7 @@ describe('Isawa Ujina', function() {
                 it('should only be able to target a character with no fate', function() {
                     expect(this.player1).toHavePrompt('Isawa Ujina');
                     expect(this.player1).toBeAbleToSelect(this.isawaUjina);
+                    expect(this.player1).toBeAbleToSelect(this.isawaKaede);
                     expect(this.player1).toBeAbleToSelect(this.callowDelegate);
                     expect(this.player1).toBeAbleToSelect(this.dojiChallenger);
                     expect(this.player1).not.toBeAbleToSelect(this.dojiHotaru);
