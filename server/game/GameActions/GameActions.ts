@@ -39,6 +39,7 @@ import { RandomDiscardAction, RandomDiscardProperties } from './RandomDiscardAct
 import { ReadyAction, ReadyProperties } from './ReadyAction';
 import { RefillFaceupAction, RefillFaceupProperties } from './RefillFaceupAction';
 import { RemoveFateAction, RemoveFateProperties } from './RemoveFateAction';
+import { RemoveFromGameAction, RemoveFromGameProperties } from './RemoveFromGameAction';
 import { ResolveAbilityAction, ResolveAbilityProperties } from './ResolveAbilityAction';
 import { ResolveConflictRingAction, ResolveConflictRingProperties } from './ResolveConflictRingAction';
 import { ResolveElementAction, ResolveElementProperties } from './ResolveElementAction';
@@ -82,6 +83,7 @@ const GameActions = {
     putIntoPlay: (propertyFactory: PutIntoPlayProperties | ((context: TriggeredAbilityContext) => PutIntoPlayProperties) = {}) => new PutIntoPlayAction(propertyFactory, false), // fate = 0, status = ordinary
     ready: (propertyFactory: ReadyProperties | ((context: TriggeredAbilityContext) => ReadyProperties) = {}) => new ReadyAction(propertyFactory),
     removeFate: (propertyFactory: RemoveFateProperties | ((context: TriggeredAbilityContext) => RemoveFateProperties) = {}) => new RemoveFateAction(propertyFactory), // amount = 1, recipient
+    removeFromGame: (propertyFactory: RemoveFromGameProperties | ((context: TriggeredAbilityContext) => RemoveFromGameProperties) = {}) => new RemoveFromGameAction(propertyFactory),
     resolveAbility: (propertyFactory: ResolveAbilityProperties | ((context: TriggeredAbilityContext) => ResolveAbilityProperties)) => new ResolveAbilityAction(propertyFactory), // ability
     returnToDeck: (propertyFactory: ReturnToDeckProperties | ((context: TriggeredAbilityContext) => ReturnToDeckProperties) = {}) => new ReturnToDeckAction(propertyFactory), // bottom = false
     returnToHand: (propertyFactory: ReturnToHandProperties | ((context: TriggeredAbilityContext) => ReturnToHandProperties) = {}) => new ReturnToHandAction(propertyFactory),
