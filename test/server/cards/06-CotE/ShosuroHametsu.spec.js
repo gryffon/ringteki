@@ -30,7 +30,7 @@ describe('Shosuro Hametsu', function() {
                 expect(this.player1).not.toHavePromptButton('Backhanded Compliment');
             });
 
-            it('should put the card in the player\'s hand, and display message with card name', function() {
+            it('should put the card in the player\'s hand', function() {
                 let handsize = this.player1.player.hand.size();
                 this.player1.clickCard(this.shosuroHametsu);
                 this.player1.clickPrompt('Fiery Madness');
