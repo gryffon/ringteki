@@ -2,7 +2,7 @@ const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 
 class ShosuroHametsu extends DrawCard {
-    setupCardAbilities(AbilityDsl) {
+    setupCardAbilities() {
         this.action({
             title: 'Search conflict deck for a poison card',
             cost: AbilityDsl.costs.payHonor(1),
