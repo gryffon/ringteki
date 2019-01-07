@@ -34,12 +34,12 @@ describe('Ide Negotiator', function() {
                 expect(this.player1).not.toHavePromptButton('Decrease bid by 1');
             });
 
-            it('should only prompt to decrease if current bid is 1', function() {
-                this.player1.clickPrompt('1');
+            it('should only prompt to decrease if current bid is 5', function() {
+                this.player1.clickPrompt('5');
                 this.player2.clickPrompt('3');
                 this.player1.clickCard(this.ideNegotiator);
-                expect(this.player1).toHavePromptButton('Increase bid by 1');
-                expect(this.player1).not.toHavePromptButton('Decrease bid by 1');
+                expect(this.player1).not.toHavePromptButton('Increase bid by 1');
+                expect(this.player1).toHavePromptButton('Decrease bid by 1');
             });
 
             it('should increase the bid by 1 if chosen', function() {

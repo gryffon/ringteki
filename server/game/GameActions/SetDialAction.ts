@@ -23,7 +23,7 @@ export class SetDialAction extends PlayerAction {
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as SetDialProperties;
-        return properties.value > 0 && super.canAffect(player, context);
+        return properties.value > 0 && properties.value < 6 && super.canAffect(player, context);
     }
 
     addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
