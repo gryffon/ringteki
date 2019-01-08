@@ -35,7 +35,7 @@ export class CardGameAction extends GameAction {
     updateLeavesPlayEvent(event, card: BaseCard, context: AbilityContext, additionalProperties): void {
         let properties = this.getProperties(context, additionalProperties) as any;
         super.updateEvent(event, card, context, additionalProperties);
-        event.destination = properties.destination || card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile;
+        event.destination = properties.destination || (card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
         event.preResolutionEffect = () => {
             event.cardStateWhenLeftPlay = event.card.createSnapshot();
             if(event.card.isAncestral() && event.isContingent) {

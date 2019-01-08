@@ -566,6 +566,17 @@ class PlayerInteractionWrapper {
     }
 
     /**
+     * Player's action of passing a conflict
+     */
+    passConflict() {
+        if(!this.hasPrompt('Initiate Conflict')) {
+            throw new Error(`${this.name} can't pass their conflict, because they are not being prompted to declare one`);
+        }
+        this.clickPrompt('Pass Conflict');
+        this.clickPrompt('Yes');
+    }
+
+    /**
      * Selects a stronghold province at the beginning of the game
      * @param {!String} card - the province to select
      */
