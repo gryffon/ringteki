@@ -17,7 +17,7 @@ class DaringChallenger extends DrawCard {
         });
     }
     resolutionHandler(context, winner) {
-        this.game.addMessage('1 Fate is placed on {0} due to winning the duel', winner);
+        this.game.addMessage('1 fate is placed on {0} due to winning the duel', winner);
         this.game.actions.placeFate().resolve(winner, context);
     }
 }
