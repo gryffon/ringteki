@@ -1,5 +1,6 @@
 const ProvinceCard = require('../../provincecard.js');
 const AbilityDsl = require('../../abilitydsl');
+const { Players, CardTypes } = require('../../Constants');
 
 class KikuMatsuri extends ProvinceCard {
     setupCardAbilities() {
@@ -7,11 +8,15 @@ class KikuMatsuri extends ProvinceCard {
             title: 'Honor a character home from each side',
             targets: {
                 myCharacter: {
-                    cardCondition: (card, context) => card.isParticipating() && card.controller === context.player,
+                    cardType: CardTypes.Character,
+                    controller: Players.Self,
+                    cardCondition: card => card.isParticipating(),
                     gameAction: AbilityDsl.actions.honor()
                 },
                 oppCharacter: {
-                    cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent,
+                    cardType: CardTypes.Character,
+                    controller: Players.Opponent,
+                    cardCondition: card => card.isParticipating(),
                     gameAction: AbilityDsl.actions.honor()
                 }
             },
