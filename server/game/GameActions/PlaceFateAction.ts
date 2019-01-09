@@ -4,7 +4,6 @@ import Player = require('../player');
 import Ring = require('../ring');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Locations, CardTypes, EventNames }  from '../Constants';
-import abilitylimit from '../abilitylimit';
 
 export interface PlaceFateProperties extends CardActionProperties {
     amount?: number,
