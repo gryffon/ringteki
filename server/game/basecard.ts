@@ -9,7 +9,7 @@ import AbilityContext = require('./AbilityContext');
 import Player = require('./player');
 import Game = require('./game');
 
-import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } from './Constants';
+import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, Players } from './Constants';
 import { ActionProps, TriggeredAbilityProps, PersistentEffectProps } from './Interfaces'; 
 
 
@@ -209,8 +209,18 @@ class BaseCard extends EffectSource {
         return !this.facedown && (this.checkRestrictions('triggerAbilities', context) || !context.ability.isTriggeredAbility());
     }
 
-    getModifiedLimitMax(max: number): number {
-        return this.sumEffects(EffectNames.IncreaseLimitOnAbilities) + max;
+    getModifiedLimitMax(player: Player, max): number {
+        let effects = this.effects.filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
+        return effects.reduce((total, effect) => {
+            if(effect.value === Players.Self && effect.context.player === player) {
+                return total + 1;
+            } else if(effect.value === Players.Opponent && effect.context.player.opponent === player) {
+                return total + 1;
+            } else if(effect.value === Players.Any) {
+                return total + 1;
+            }
+            return total;
+        }, max);
     }
 
     getMenu() {

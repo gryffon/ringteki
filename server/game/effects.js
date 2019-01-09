@@ -3,7 +3,7 @@ const _ = require('underscore');
 const AbilityLimit = require('./abilitylimit.js');
 const Restriction = require('./Effects/restriction.js');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, Durations, PlayTypes } = require('./Constants');
+const { EffectNames, Durations, PlayTypes, Players } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -80,7 +80,7 @@ const Effects = {
     }),
     hideWhenFaceUp: () => EffectBuilder.card.static(EffectNames.HideWhenFaceUp),
     immunity: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(properties)),
-    increaseLimitOnAbilities: (amount) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, amount),
+    increaseLimitOnAbilities: (playerConstant = Players.Self) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, playerConstant),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseMilitarySkill, value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBasePoliticalSkill, value),
     modifyBaseProvinceStrength: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseProvinceStrength, value),
