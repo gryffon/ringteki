@@ -1,13 +1,17 @@
 const DrawCard = require('../../drawcard.js');
 const { Players } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class BayushiYojiro extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: context => context.source.isParticipating(),
             targetController: Players.Any,
             match: card => card.isParticipating(),
-            effect: ability.effects.cardCannot('affectedByHonor')
+            effect: [
+                AbilityDsl.effects.honorStatusDoesNotModifySkill(),
+                AbilityDsl.effects.honorStatusDoesNotAffectLeavePlay()
+            ]
         });
     }
 }

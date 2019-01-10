@@ -1,9 +1,11 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class ShosuroSadako extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
-            effect: ability.effects.addGloryWhileDishonored()
+            condition: context => context.source.isDishonored,
+            effect: AbilityDsl.effects.honorStatusReverseModifySkill()
         });
     }
 }
