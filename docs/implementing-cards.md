@@ -528,7 +528,7 @@ this.action({
         gameAction: ability.actions.cardLastingEffect({
             duration: 'untilEndOfPhase',
             targetLocation: 'province',
-            effect: ability.effects.increaseLimitOnAbilities(1)
+            effect: ability.effects.increaseLimitOnAbilities()
         })
     },
     effect: 'add an additional use to each of {0}\'s abilities'
