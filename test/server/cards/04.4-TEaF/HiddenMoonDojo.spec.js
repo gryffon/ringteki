@@ -1,6 +1,6 @@
 ﻿describe('Hidden Moon Dōjō', function() {
     integration(function() {
-        describe('Hidden Moon Dōjōo\'s ability', function() {
+        describe('Hidden Moon Dōjō\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
