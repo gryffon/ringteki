@@ -9,6 +9,10 @@ describe('Kyuden Isawa', function() {
                         inPlay: ['adept-of-the-waves'],
                         hand: ['against-the-waves', 'walking-the-way'],
                         dynastyDeck: ['asako-tsuki']
+                    },
+                    player2: {
+                        inPlay: ['doji-whisperer'],
+                        hand: ['voice-of-honor', 'way-of-the-crane']
                     }
                 });
                 this.asakoTsuki = this.player1.placeCardInProvince('asako-tsuki');
@@ -20,10 +24,10 @@ describe('Kyuden Isawa', function() {
                 this.player2.pass();
                 this.againstTheWaves = this.player1.clickCard('against-the-waves');
                 this.adeptOfTheWaves = this.player1.clickCard('adept-of-the-waves');
-                this.player2.pass();
             });
 
             it('should let you play a spell from the discard pile, and remove it from the game', function() {
+                this.player2.pass();
                 expect(this.adeptOfTheWaves.bowed).toBe(true);
                 this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
                 expect(this.player1).toHavePrompt('Choose a spell event');
@@ -35,6 +39,7 @@ describe('Kyuden Isawa', function() {
             });
 
             it('should not allow you to play a spell when you don\'t have enough fate', function() {
+                this.player2.pass();
                 this.player1.fate = 0;
                 expect(this.adeptOfTheWaves.bowed).toBe(true);
                 this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
@@ -42,6 +47,7 @@ describe('Kyuden Isawa', function() {
             });
 
             it('should pass priority', function() {
+                this.player2.pass();
                 this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
                 this.player1.clickCard(this.againstTheWaves);
                 this.player1.clickCard(this.adeptOfTheWaves);
@@ -49,6 +55,7 @@ describe('Kyuden Isawa', function() {
             });
 
             it('should allow you to cancel and choose a different spell', function() {
+                this.player2.pass();
                 this.walkingTheWay = this.player1.clickCard('walking-the-way');
                 this.player1.clickPrompt('Adept of the Waves (3)');
                 this.player1.clickCard(this.asakoTsuki);
@@ -63,6 +70,22 @@ describe('Kyuden Isawa', function() {
                 expect(this.player1).toBeAbleToSelect(this.walkingTheWay);
                 this.player1.clickCard(this.walkingTheWay);
                 expect(this.player1).toHavePrompt('Walking the Way');
+            });
+
+            it('should remove the spell from the game if it is cancelled', function() {
+                this.player2.clickCard('way-of-the-crane');
+                this.dojiWhisperer = this.player2.clickCard('doji-whisperer');
+                expect(this.dojiWhisperer.isHonored).toBe(true);
+                this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
+                this.player1.clickCard(this.againstTheWaves);
+                expect(this.player1).toHavePrompt('Against the Waves');
+                this.player1.clickCard(this.adeptOfTheWaves);
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect('voice-of-honor');
+                this.player2.clickCard('voice-of-honor');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.adeptOfTheWaves.bowed).toBe(true);
+                expect(this.againstTheWaves.location).toBe('removed from game');
             });
         });
 

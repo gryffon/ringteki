@@ -21,7 +21,7 @@ class PlayCardResolver extends AbilityResolver {
     initiateAbility() {
         super.initiateAbility();
         if(!this.cancelPressed) {
-            this.game.queueSimpleStep(() => this.playGameAction.postHandler(this.context.source));
+            this.game.queueSimpleStep(() => this.playGameAction.postHandler(this.context));
         }
     }
 }
