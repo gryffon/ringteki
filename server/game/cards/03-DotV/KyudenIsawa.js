@@ -17,7 +17,8 @@ class KyudenIsawa extends StrongholdCard {
                     cardCondition: card => card.hasTrait('spell')
                 },
                 resetOnCancel: true,
-                postHandler: card => {
+                postHandler: spellContext => {
+                    let card = spellContext.source;
                     context.game.addMessage('{0} is removed from the game by {1}\'s ability', card, context.source);
                     context.player.moveCard(card, Locations.RemovedFromGame);
                 }
