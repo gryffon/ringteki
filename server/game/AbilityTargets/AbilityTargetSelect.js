@@ -23,12 +23,6 @@ class AbilityTargetSelect {
         return !!this.properties.dependsOn || this.hasLegalTarget(context);
     }
 
-    resetGameActions() {
-        for(let action of this.properties.gameAction) {
-            action.reset();
-        }
-    }
-
     hasLegalTarget(context) {
         let keys = Object.keys(this.properties.choices);
         return keys.some(key => this.isChoiceLegal(key, context));
@@ -69,8 +63,12 @@ class AbilityTargetSelect {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
             return;
         }
+        let playerProp = this.properties.player;
+        if(typeof playerProp === 'function') {
+            playerProp = playerProp(context);
+        }
         let player = context.player;
-        if(this.properties.player && this.properties.player === Players.Opponent) {
+        if(playerProp === Players.Opponent) {
             if(context.stage === Stages.PreTarget) {
                 targetResults.delayTargeting = this;
                 return;
@@ -89,7 +87,7 @@ class AbilityTargetSelect {
                 }
             });
         });
-        if(this.properties.player !== Players.Opponent && context.stage === Stages.PreTarget) {
+        if(playerProp !== Players.Opponent && context.stage === Stages.PreTarget) {
             if(!targetResults.noCostsFirstButton) {
                 choices.push('Pay costs first');
                 handlers.push(() => targetResults.payCostsFirst = true);

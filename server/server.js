@@ -31,6 +31,7 @@ class Server {
         let db = monk(config.dbPath);
         this.userService = new UserService(db);
         this.isDeveloping = isDeveloping;
+        // @ts-ignore
         this.server = http.Server(app);
     }
 

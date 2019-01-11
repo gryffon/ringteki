@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const { matchCardByNameAndPack } = require('./cardutil.js');
-const { detectBinary } = require('../../server/util');
+const { detectBinary } = require('../../build/server/util');
 
 class PlayerInteractionWrapper {
     constructor(game, player) {
@@ -316,6 +316,14 @@ class PlayerInteractionWrapper {
     }
 
     /**
+     * Lists rings selectable by the player during the action
+     * @return {Ring[]} - selectable rings
+     */
+    get currentActionRingTargets() {
+        return this.player.promptState.selectableRings;
+    }
+
+    /**
      * Lists cards currently selected by the player
      * @return {DrawCard[]} - selected cards
      */
@@ -555,6 +563,17 @@ class PlayerInteractionWrapper {
             throw new Error(`${this.name} can't pass, because they don't have priority`);
         }
         this.clickPrompt('Pass');
+    }
+
+    /**
+     * Player's action of passing a conflict
+     */
+    passConflict() {
+        if(!this.hasPrompt('Initiate Conflict')) {
+            throw new Error(`${this.name} can't pass their conflict, because they are not being prompted to declare one`);
+        }
+        this.clickPrompt('Pass Conflict');
+        this.clickPrompt('Yes');
     }
 
     /**

@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
-const BaseAbility = require('../../../server/game/baseability.js');
-const { Stages } = require('../../../server/game/Constants.js');
+const BaseAbility = require('../../../build/server/game/baseability.js');
+const { Stages } = require('../../../build/server/game/Constants.js');
 
 describe('BaseAbility', function () {
     beforeEach(function () {
@@ -255,12 +255,14 @@ describe('BaseAbility', function () {
             this.target1 = { target: 1, mode: 'single', location: 'any' };
             this.target2 = { target: 2, mode: 'single', location: 'any' };
 
-            this.card1 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType']);
+            this.card1 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType', 'getEffects']);
             this.card1.checkRestrictions.and.returnValue(true);
             this.card1.getType.and.returnValue('character');
-            this.card2 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType']);
+            this.card1.getEffects.and.returnValue([]);
+            this.card2 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType', 'getEffects']);
             this.card2.checkRestrictions.and.returnValue(true);
             this.card2.getType.and.returnValue('character');
+            this.card2.getEffects.and.returnValue([]);
 
             this.targetResults = {};
 
@@ -274,8 +276,8 @@ describe('BaseAbility', function () {
 
         it('should prompt the player to select each target', function() {
             this.ability.resolveTargets(this.context, this.targetResults);
-            expect(this.gameSpy.promptForSelect).toHaveBeenCalledWith(this.player, { target: 1, onSelect: jasmine.any(Function), onCancel: jasmine.any(Function), selector: jasmine.any(Object), context: this.context, waitingPromptTitle: jasmine.any(String), buttons: jasmine.any(Array), onMenuCommand: jasmine.any(Function), mode: 'single', location: 'any', gameAction: [] });
-            expect(this.gameSpy.promptForSelect).toHaveBeenCalledWith(this.player, { target: 1, onSelect: jasmine.any(Function), onCancel: jasmine.any(Function), selector: jasmine.any(Object), context: this.context, waitingPromptTitle: jasmine.any(String), buttons: jasmine.any(Array), onMenuCommand: jasmine.any(Function), mode: 'single', location: 'any', gameAction: [] });
+            expect(this.gameSpy.promptForSelect).toHaveBeenCalledWith(this.player, { target: 1, onSelect: jasmine.any(Function), onCancel: jasmine.any(Function), selector: jasmine.any(Object), mustSelect: jasmine.any(Array), context: this.context, waitingPromptTitle: jasmine.any(String), buttons: jasmine.any(Array), onMenuCommand: jasmine.any(Function), mode: 'single', location: 'any', gameAction: [] });
+            expect(this.gameSpy.promptForSelect).toHaveBeenCalledWith(this.player, { target: 2, onSelect: jasmine.any(Function), onCancel: jasmine.any(Function), selector: jasmine.any(Object), mustSelect: jasmine.any(Array), context: this.context, waitingPromptTitle: jasmine.any(String), buttons: jasmine.any(Array), onMenuCommand: jasmine.any(Function), mode: 'single', location: 'any', gameAction: [] });
         });
 
         xdescribe('the select prompt', function() {

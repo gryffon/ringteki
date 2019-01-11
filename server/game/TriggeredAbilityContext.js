@@ -13,8 +13,7 @@ class TriggeredAbilityContext extends AbilityContext {
 
     getProps() {
         let props = super.getProps();
-        props.event = this.event;
-        return props;
+        return Object.assign(props, { event: this.event });
     }
 
     cancel() {

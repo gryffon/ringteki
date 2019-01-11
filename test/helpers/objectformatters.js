@@ -3,9 +3,9 @@
 
 const _ = require('underscore');
 
-const BaseCard = require('../../server/game/basecard.js');
-const Game = require('../../server/game/game.js');
-const Player = require('../../server/game/player.js');
+const BaseCard = require('../../build/server/game/basecard.js');
+const Game = require('../../build/server/game/game.js');
+const Player = require('../../build/server/game/player.js');
 
 // Add custom toString methods for better Jasmine output
 function formatObject(...keys) {

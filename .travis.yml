@@ -12,6 +12,8 @@ addons:
     - gcc-4.9
     - g++-4.9
     - libzmq-dev
+before_install:
+  - npm install -g typescript
 script:
   - npm test
   - npm run lint

@@ -1,8 +1,9 @@
 const ProvinceCard = require('../../provincecard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Players, CardTypes } = require('../../Constants');
 
 class FeastOrFamine extends ProvinceCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.interrupt({
             title: 'Move fate from an opposing character',
             when: {
@@ -11,16 +12,16 @@ class FeastOrFamine extends ProvinceCard {
             target: {
                 cardType: CardTypes.Character,
                 controller: Players.Opponent,
-                gameAction: ability.actions.placeFate(context => ({
-                    origin: context.target,
-                    amount: context.target.fate,
-                    promptForSelect: {
-                        cardType: CardTypes.Character,
-                        controller: Players.Self,
-                        cardCondition: card => card.fate === 0,
-                        message: '{0} moves {1} fate from {2} to {3}',
-                        messageArgs: card => [context.player, context.target.fate, context.target, card]
-                    }
+                gameAction: AbilityDsl.actions.selectCard(context => ({
+                    cardType: CardTypes.Character,
+                    controller: Players.Self,
+                    cardCondition: card => card.fate === 0,
+                    message: '{0} moves {1} fate from {2} to {3}',
+                    messageArgs: card => [context.player, context.target.fate, context.target, card],
+                    gameAction: AbilityDsl.actions.placeFate({
+                        origin: context.target,
+                        amount: context.target.fate
+                    })
                 }))
             },
             effect: 'move all fate from {0} to a character they control'

@@ -7,7 +7,6 @@ class BattleMaidenRecruit extends DrawCard {
                 this.game.rings.water.isConsideredClaimed(context.player) ||
                 this.game.rings.void.isConsideredClaimed(context.player)
             ),
-            match: this,
             effect: ability.effects.modifyMilitarySkill(2)
         });
     }

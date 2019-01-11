@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-const ForcedTriggeredAbilityWindow = require('../../../server/game/gamesteps/forcedtriggeredabilitywindow.js');
+const ForcedTriggeredAbilityWindow = require('../../../build/server/game/gamesteps/forcedtriggeredabilitywindow.js');
 
 xdescribe('ForcedTriggeredAbilityWindow', function() {
     beforeEach(function() {

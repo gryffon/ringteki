@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
-const BaseCard = require('./basecard.js');
+const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
@@ -233,6 +233,8 @@ class DrawCard extends BaseCard {
 
         // get base mill skill + effect modifiers
         let skill = this.sumEffects(EffectNames.ModifyMilitarySkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBaseMilitarySkill();
+        // apply any addGlory effects
+        skill += this.anyEffect(EffectNames.AddGloryToBothSkills) ? this.getGlory() : 0;
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.military_bonus);
@@ -263,6 +265,8 @@ class DrawCard extends BaseCard {
 
         // get base pol skill + effect modifiers
         let skill = this.sumEffects(EffectNames.ModifyPoliticalSkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBasePoliticalSkill();
+        // apply any addGlory effects
+        skill += this.anyEffect(EffectNames.AddGloryToBothSkills) ? this.getGlory() : 0;
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.political_bonus);
@@ -301,13 +305,16 @@ class DrawCard extends BaseCard {
     }
 
     getSkillFromGlory() {
-        if(!this.allowGameAction('affectedByHonor')) {
+        if(this.anyEffect(EffectNames.HonorStatusDoesNotModifySkill)) {
             return 0;
         }
         if(this.isHonored) {
+            if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
+                return 0 - this.getGlory();
+            }
             return this.getGlory();
         } else if(this.isDishonored) {
-            if(this.anyEffect(EffectNames.AddGloryWhileDishonored)) {
+            if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
                 return this.getGlory();
             }
             return 0 - this.getGlory();
@@ -424,6 +431,13 @@ class DrawCard extends BaseCard {
                 source: 'Too many Restricted attachments'
             });
             return true;
+        } else if(this.anyEffect(EffectNames.CannotHaveOtherRestrictedAttachments)) {
+            let attachmentsToRemove = this.attachments.filter(card => card.isRestricted() && card !== this.mostRecentEffect(EffectNames.CannotHaveOtherRestrictedAttachments));
+            if(attachmentsToRemove.length > 0) {
+                this.game.addMessage('{0} is discarded from {1} as it is no longer legally attached', attachmentsToRemove, this);
+                this.game.applyGameAction(null, { discardFromPlay: attachmentsToRemove});
+                return true;
+            }
         }
         return false;
     }
@@ -472,10 +486,10 @@ class DrawCard extends BaseCard {
             this.game.currentConflict.removeFromConflict(this);
         }
 
-        if(this.isDishonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
+        if(this.isDishonored && !this.anyEffect(EffectNames.HonorStatusDoesNotAffectLeavePlay)) {
             this.game.addMessage('{0} loses 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.loseHonor().getEvent(this.controller, this.game.getFrameworkContext()));
-        } else if(this.isHonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
+        } else if(this.isHonored && !this.anyEffect(EffectNames.HonorStatusDoesNotAffectLeavePlay)) {
             this.game.addMessage('{0} gains 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.gainHonor().getEvent(this.controller, this.game.getFrameworkContext()));
         }

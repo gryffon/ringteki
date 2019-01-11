@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-const Effects = require('../../../server/game/effects.js');
+const Effects = require('../../../build/server/game/effects.js');
 
 xdescribe('Effects.dynamicMilitarySkill', function() {
     beforeEach(function() {

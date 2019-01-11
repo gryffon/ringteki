@@ -3,10 +3,11 @@ const GameActions = require('../GameActions/GameActions');
 const { EventNames } = require('../Constants');
 
 class HonorBidPrompt extends AllPlayerPrompt {
-    constructor(game, menuTitle, costHandler) {
+    constructor(game, menuTitle, costHandler, prohibitedBids = {}) {
         super(game);
         this.menuTitle = menuTitle || 'Choose a bid';
         this.costHandler = costHandler;
+        this.prohibitedBids = prohibitedBids;
         this.bid = {};
     }
 
@@ -54,17 +55,13 @@ class HonorBidPrompt extends AllPlayerPrompt {
     }
 
 
-    activePrompt() {
+    activePrompt(player) {
+        let prohibitedBids = this.prohibitedBids[player.uuid] || [];
+        let buttons = ['1', '2', '3', '4', '5'].filter(num => !prohibitedBids.includes(num));
         return {
             promptTitle: 'Honor Bid',
             menuTitle: this.menuTitle,
-            buttons: [
-                { text: '1', arg: '1' },
-                { text: '2', arg: '2' },
-                { text: '3', arg: '3' },
-                { text: '4', arg: '4' },
-                { text: '5', arg: '5' }
-            ]
+            buttons: buttons.map(num => ({ text: num, arg: num }))
         };
     }
 

@@ -7,7 +7,7 @@ class ContingencyPlan extends DrawCard {
             when: {
                 onHonorDialsRevealed: () => true
             },
-            gameAction: ability.actions.modifyBid({ promptPlayer: true })
+            gameAction: ability.actions.modifyBid({ direction: 'prompt' })
         });
     }
 }

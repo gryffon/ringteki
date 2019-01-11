@@ -11,6 +11,7 @@ describe('Rebuild', function() {
                     hand: ['fine-katana']
                 }
             });
+            this.rebuild = this.player1.findCardByName('rebuild');
             this.imperialStorehouse = this.player1.placeCardInProvince('imperial-storehouse');
             this.seppunGuardsman = this.player1.placeCardInProvince('seppun-guardsman', 'province 2');
             this.otomoCourtier = this.player1.placeCardInProvince('otomo-courtier', 'province 3');
