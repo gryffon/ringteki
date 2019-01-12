@@ -10,7 +10,6 @@ class InitiateAbilityEventWindow extends EventWindow {
         _.each(this.events, event => {
             if(event.name === EventNames.OnCardAbilityInitiated) {
                 this.initiateEvent = event;
-                event.context.initiateEvent = event;
             }
             if(event.context.ability.isCardPlayed() && !event.context.isResolveAbility) {
                 this.addEvent(this.game.getEvent(EventNames.OnCardPlayed, {
