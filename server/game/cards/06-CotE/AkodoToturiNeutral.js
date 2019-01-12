@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 const { Players, PlayTypes } = require('../../Constants');
 
-class AkodoToturiNeutral extends DrawCard {
+class AkodoToturi2 extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Prevent each player playing cards from hand',
@@ -19,6 +19,6 @@ class AkodoToturiNeutral extends DrawCard {
     }
 }
 
-AkodoToturiNeutral.id = 'akodo-toturi-neutral';
+AkodoToturi2.id = 'akodo-toturi-neutral';
 
-module.exports = AkodoToturiNeutral;
+module.exports = AkodoToturi2;
