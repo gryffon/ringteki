@@ -1,6 +1,6 @@
-﻿describe('Hidden Moon Dōjō', function() {
+describe('Hidden Moon Dojo', function() {
     integration(function() {
-        describe('Hidden Moon Dōjō\'s ability', function() {
+        describe('Hidden Moon Dojo\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
@@ -34,7 +34,7 @@
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.hiddenMoonDojo);
-                expect(this.player1).toHavePrompt('Hidden Moon Dōjō');
+                expect(this.player1).toHavePrompt('Hidden Moon Dojo');
                 expect(this.player1).toBeAbleToSelect(this.bayushiLiar);
                 expect(this.player1).not.toBeAbleToSelect(this.favorableGround);
                 expect(this.player1).not.toBeAbleToSelect(this.bayushiManipulator);
@@ -54,7 +54,7 @@
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.hiddenMoonDojo);
-                expect(this.player1).toHavePrompt('Hidden Moon Dōjō');
+                expect(this.player1).toHavePrompt('Hidden Moon Dojo');
                 this.player1.clickCard(this.mountaintopStatuary);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.mountaintopStatuary);
