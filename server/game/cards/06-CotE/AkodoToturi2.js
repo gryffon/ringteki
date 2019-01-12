@@ -19,6 +19,6 @@ class AkodoToturi2 extends DrawCard {
     }
 }
 
-AkodoToturi2.id = 'akodo-toturi-neutral';
+AkodoToturi2.id = 'akodo-toturi-2';
 
 module.exports = AkodoToturi2;
