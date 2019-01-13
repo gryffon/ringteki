@@ -1,12 +1,12 @@
 import { CardGameAction, CardActionProperties} from './CardGameAction';
-import { CardTypes, Locations, EventNames } from '../Constants';
+import { CardTypes, Locations, DuelTypes } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Duel = require('../Duel');
 import DuelFlow = require('../gamesteps/DuelFlow');
 
 export interface DuelProperties extends CardActionProperties {
-    type: string;
+    type: DuelTypes;
     challenger?: DrawCard;
     resolutionHandler: (winner: DrawCard, loser: DrawCard) => void,
     costHandler?: (context: AbilityContext, prompt: any) => void
@@ -17,7 +17,7 @@ export class DuelAction extends CardGameAction {
     targetType = [CardTypes.Character];
 
     defaultProperties: DuelProperties = {
-        type: '',
+        type: undefined,
         resolutionHandler: () => true
     };
     constructor(properties: DuelProperties | ((context: AbilityContext) => DuelProperties)) {
@@ -34,7 +34,17 @@ export class DuelAction extends CardGameAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context);
-        return ['initiate a ' + properties.type + ' duel between {1} and {0}', [properties.target, properties.challenger]];
+        return ['initiate a ' + this.getTypeFriendlyName(properties.type) + ' duel between {1} and {0}', [properties.target, properties.challenger]];
+    }
+
+    getTypeFriendlyName(type: DuelTypes): string {
+        if(type === DuelTypes.BaseMilitary) {
+            return 'base skill military'
+        }
+        if(type === DuelTypes.BasePolitical) {
+            return 'base skill political'
+        }
+        return type.toString();
     }
 
     canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {

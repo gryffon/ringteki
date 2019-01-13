@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, CardTypes } = require('../../Constants');
+const { Players, CardTypes, DuelTypes } = require('../../Constants');
 
 class HonestChallenger extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +10,7 @@ class HonestChallenger extends DrawCard {
         this.action({
             title: 'Initiate a military duel',
             initiateDuel: context => ({
-                type: 'military',
+                type: DuelTypes.Military,
                 resolutionHandler: (winner) => this.resolutionHandler(context, winner)
             })
         });

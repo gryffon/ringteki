@@ -51,6 +51,8 @@ export enum EffectNames {
     ModifyBasePoliticalSkill = 'modifyBasePoliticalSkill',
     ModifyBaseProvinceStrength = 'modifyBaseProvinceStrength',
     ModifyBothSkills = 'modifyBothSkills',
+    ModifyDuelBaseMilitarySkill = 'modifyDuelBaseMilitarySkill',
+    ModifyDuelBasePoliticalSkill = 'modifyDuelBasePoliticalSkill',
     ModifyDuelGlory = 'modifyDuelGlory',
     ModifyDuelMilitarySkill = 'modifyDuelMilitarySkill',
     ModifyDuelPoliticalSkill = 'modifyDuelPoliticalSkill',
@@ -146,6 +148,14 @@ export enum CardTypes {
 export enum PlayTypes {
     PlayFromHand = 'playFromHand',
     PlayFromProvince = 'playFromProvince'
+};
+
+export enum DuelTypes {
+    Military = 'military',
+    Political = 'political',
+    Glory = 'glory',
+    BaseMilitary = 'baseMilitary',
+    BasePolitical = 'basePolitical'
 };
 
 export enum EventNames {
