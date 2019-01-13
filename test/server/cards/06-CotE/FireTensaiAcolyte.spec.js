@@ -24,7 +24,7 @@ describe('Fire Tensai Acolyte', function() {
                 this.initiateConflict({
                     type: 'military',
                     ring: 'water',
-                    attackers: [this.acolyte, this.masahiro],
+                    attackers: ['fire-tensai-acolyte','isawa-masahiro'],
                     defenders: []
                 });
                 expect(this.game.currentConflict.attackers).toContain(this.masahiro);
@@ -36,7 +36,7 @@ describe('Fire Tensai Acolyte', function() {
                 this.initiateConflict({
                     type: 'military',
                     ring: 'fire',
-                    attackers: [this.acolyte, this.masahiro],
+                    attackers: ['fire-tensai-acolyte','isawa-masahiro'],
                     defenders: []
                 });
                 expect(this.game.currentConflict.attackers).toContain(this.masahiro);
@@ -48,7 +48,7 @@ describe('Fire Tensai Acolyte', function() {
                 this.initiateConflict({
                     type: 'military',
                     ring: 'water',
-                    attackers: [this.masahiro],
+                    attackers: ['isawa-masahiro'],
                     defenders: []
                 });
                 this.player2.pass();
