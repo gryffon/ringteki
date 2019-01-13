@@ -43,11 +43,11 @@ describe('Fire Tensai Acolyte', function() {
                 expect(this.game.currentConflict.attackers).toContain(this.acolyte);
             });
 
-            it('should be able to participate in fire conflicts if moved in', function() {
+            it('should be able to participate in non-fire conflicts if moved in', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    ring: 'fire',
+                    ring: 'water',
                     attackers: [this.masahiro],
                     defenders: []
                 });
