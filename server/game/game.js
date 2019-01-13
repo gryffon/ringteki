@@ -984,13 +984,7 @@ class Game extends EventEmitter {
                 this.currentConflict.addDefender(card);
             }
         }
-        for(let effect of card.abilities.persistentEffects) {
-            if(effect.ref) {
-                for(let e of effect.ref) {
-                    e.refreshContext();
-                }
-            }
-        }
+        card.updateEffectContexts();
         this.checkGameState(true);
     }
 

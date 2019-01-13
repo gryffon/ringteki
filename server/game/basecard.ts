@@ -62,6 +62,18 @@ class BaseCard extends EffectSource {
         this.printedName = name;
     }
 
+    get actions(): CardAction[] {
+        return this.abilities.actions;
+    }
+
+    get reactions(): TriggeredAbility[] {
+        return this.abilities.reactions;
+    }
+
+    get persistentEffects(): any[] {
+        return this.abilities.persistentEffects;
+    }
+
     /**
      * Create card abilities by calling subsequent methods with appropriate properties
      * @param {Object} ability - AbilityDsl object containing limits, costs, effects, and game actions
@@ -153,7 +165,7 @@ class BaseCard extends EffectSource {
     }
 
     applyAnyLocationPersistentEffects(): void {
-        _.each(this.abilities.persistentEffects, effect => {
+        _.each(this.persistentEffects, effect => {
             if(effect.location === Locations.Any) {
                 this.addEffectToEngine(effect);
             }
@@ -162,14 +174,14 @@ class BaseCard extends EffectSource {
 
     leavesPlay(): void {
         this.tokens = {};
-        _.each(this.abilities.actions, action => action.limit.reset());
-        _.each(this.abilities.reactions, reaction => reaction.limit.reset());
+        _.each(this.actions, action => action.limit.reset());
+        _.each(this.reactions, reaction => reaction.limit.reset());
         this.controller = this.owner;
         this.inConflict = false;
     }
 
     updateAbilityEvents(from: Locations, to: Locations) {
-        _.each(this.abilities.reactions, reaction => {
+        _.each(this.reactions, reaction => {
             if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
             } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === CardTypes.Event && to === Locations.ConflictDeck)) {
@@ -186,7 +198,7 @@ class BaseCard extends EffectSource {
         if(from === Locations.PlayArea || this.type === CardTypes.Holding && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
             this.removeLastingEffects();
         }
-        _.each(this.abilities.persistentEffects, effect => {
+        _.each(this.persistentEffects, effect => {
             if(effect.location !== Locations.Any) {
                 if(activeLocations[effect.location].includes(to) && !activeLocations[effect.location].includes(from)) {
                     effect.ref = this.addEffectToEngine(effect);
@@ -195,6 +207,16 @@ class BaseCard extends EffectSource {
                 }
             }
         });
+    }
+
+    updateEffectContexts() {
+        for(const effect of this.persistentEffects) {
+            if(effect.ref) {
+                for(let e of effect.ref) {
+                    e.refreshContext();
+                }
+            }
+        }
     }
 
     moveTo(targetLocation: Locations) {
@@ -262,7 +284,7 @@ class BaseCard extends EffectSource {
     }
 
     isBlank(): boolean {
-        return this.anyEffect(EffectNames.Blank);
+        return this.anyEffect(EffectNames.Blank) || this.anyEffect(EffectNames.CopyCharacter);
     }
 
     getPrintedFaction(): string {
@@ -299,7 +321,7 @@ class BaseCard extends EffectSource {
     }
 
     getActions(): any[] {
-        return this.abilities.actions.slice();
+        return this.actions.slice();
     }
 
     getProvinceStrengthBonus(): number {

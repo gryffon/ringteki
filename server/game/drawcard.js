@@ -143,7 +143,7 @@ class DrawCard extends BaseCard {
     anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (
             card.location === Locations.PlayArea &&
-            card.name === this.name &&
+            card.printedName === this.printedName &&
             card !== this &&
             (card.owner === player || card.controller === player || card.owner === this.owner)
         ));
