@@ -328,13 +328,16 @@ class DrawCard extends BaseCard {
     }
 
     getSkillFromGlory() {
-        if(!this.allowGameAction('affectedByHonor')) {
+        if(this.anyEffect(EffectNames.HonorStatusDoesNotModifySkill)) {
             return 0;
         }
         if(this.isHonored) {
+            if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
+                return 0 - this.getGlory();
+            }
             return this.getGlory();
         } else if(this.isDishonored) {
-            if(this.anyEffect(EffectNames.AddGloryWhileDishonored)) {
+            if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
                 return this.getGlory();
             }
             return 0 - this.getGlory();
@@ -506,10 +509,10 @@ class DrawCard extends BaseCard {
             this.game.currentConflict.removeFromConflict(this);
         }
 
-        if(this.isDishonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
+        if(this.isDishonored && !this.anyEffect(EffectNames.HonorStatusDoesNotAffectLeavePlay)) {
             this.game.addMessage('{0} loses 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.loseHonor().getEvent(this.controller, this.game.getFrameworkContext()));
-        } else if(this.isHonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
+        } else if(this.isHonored && !this.anyEffect(EffectNames.HonorStatusDoesNotAffectLeavePlay)) {
             this.game.addMessage('{0} gains 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.gainHonor().getEvent(this.controller, this.game.getFrameworkContext()));
         }

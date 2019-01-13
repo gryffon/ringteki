@@ -3,7 +3,7 @@ const _ = require('underscore');
 const AbilityLimit = require('./abilitylimit.js');
 const Restriction = require('./Effects/restriction.js');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, Durations, PlayTypes } = require('./Constants');
+const { EffectNames, Durations, PlayTypes, Players } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -15,7 +15,6 @@ const Effects = {
     // Card effects
     addFaction: (faction) => EffectBuilder.card.static(EffectNames.AddFaction, faction),
     addGloryToBothSkills: () => EffectBuilder.card.static(EffectNames.AddGloryToBothSkills),
-    addGloryWhileDishonored: () => EffectBuilder.card.static(EffectNames.AddGloryWhileDishonored),
     addKeyword: (keyword) => EffectBuilder.card.static(EffectNames.AddKeyword, keyword),
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
     blank: () => EffectBuilder.card.static(EffectNames.Blank),
@@ -80,8 +79,11 @@ const Effects = {
         unapply: (card, context, playAction) => card.abilities.playActions = card.abilities.playActions.filter(action => action !== playAction)
     }),
     hideWhenFaceUp: () => EffectBuilder.card.static(EffectNames.HideWhenFaceUp),
+    honorStatusDoesNotAffectLeavePlay: () => EffectBuilder.card.flexible(EffectNames.HonorStatusDoesNotAffectLeavePlay),
+    honorStatusDoesNotModifySkill: () => EffectBuilder.card.flexible(EffectNames.HonorStatusDoesNotModifySkill),
+    honorStatusReverseModifySkill: () => EffectBuilder.card.flexible(EffectNames.HonorStatusReverseModifySkill),
     immunity: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(properties)),
-    increaseLimitOnAbilities: (amount) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, amount),
+    increaseLimitOnAbilities: (playerConstant = Players.Self) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, playerConstant),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseMilitarySkill, value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBasePoliticalSkill, value),
     modifyBaseProvinceStrength: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseProvinceStrength, value),

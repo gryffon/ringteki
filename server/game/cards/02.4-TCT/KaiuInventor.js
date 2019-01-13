@@ -12,7 +12,7 @@ class KaiuInventor extends DrawCard {
                 gameAction: ability.actions.cardLastingEffect({
                     duration: Durations.UntilEndOfRound,
                     targetLocation: Locations.Provinces,
-                    effect: ability.effects.increaseLimitOnAbilities(1)
+                    effect: ability.effects.increaseLimitOnAbilities()
                 })
             },
             effect: 'add an additional use to each of {0}\'s abilities'
