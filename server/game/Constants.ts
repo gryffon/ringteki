@@ -41,6 +41,7 @@ export enum EffectNames {
     DoesNotBow = 'doesNotBow',
     DoesNotReady = 'doesNotReady',
     GainAbility = 'gainAbility',
+    GainAction = 'gainAction',
     GainPlayAction = 'gainPlayAction',
     HideWhenFaceUp = 'hideWhenFaceUp',
     HonorStatusDoesNotAffectLeavePlay = 'honorStatusDoesNotAffectLeavePlay',
@@ -213,10 +214,12 @@ export enum EventNames {
 };
 
 export enum AbilityTypes {
+    Action = 'action',
     WouldInterrupt = 'cancelinterrupt',
     ForcedInterrupt = 'forcedinterrupt',
     Interrupt = 'interrupt',
     ForcedReaction = 'forcedreaction',
     Reaction = 'reaction',
+    Persistent = 'persistent',
     OtherEffects = 'OtherEffects'
 };

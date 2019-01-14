@@ -2,7 +2,7 @@ const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 const { Players, CardTypes, Locations } = require('../../Constants');
 
-class SageOfGiseiToshi extends DrawCard {
+class MiyakosUndertaking extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Make a character a copy',
@@ -20,7 +20,7 @@ class SageOfGiseiToshi extends DrawCard {
                     controller: Players.Self,
                     cardCondition: card => card.isParticipating(),
                     gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
-                        effect: AbilityDsl.effects.copyCharacter(context.targets.cardToCopy.createSnapshot())
+                        effect: AbilityDsl.effects.copyCharacter(context.targets.cardToCopy)
                     }))
                 }
             },
@@ -30,6 +30,6 @@ class SageOfGiseiToshi extends DrawCard {
     }
 }
 
-SageOfGiseiToshi.id = 'sage-of-gisei-toshi';
+MiyakosUndertaking.id = 'miyako-s-undertaking';
 
-module.exports = SageOfGiseiToshi;
+module.exports = MiyakosUndertaking;

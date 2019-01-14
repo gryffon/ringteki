@@ -298,10 +298,11 @@ class DrawCard extends BaseCard {
             return this.mostRecentEffect(EffectNames.SetBaseMilitarySkill);
         }
         return this.effects.reduce((total, effect) => {
+            const value = effect.getValue(this);
             if(effect.type === EffectNames.CopyCharacter) {
-                return effect.value.printedMilitarySkill;
+                return value.printedMilitarySkill;
             } else if(effect.type === EffectNames.ModifyBaseMilitarySkill) {
-                return total + effect.value;
+                return total + value;
             }
             return total;
         }, this.printedMilitarySkill);
@@ -318,10 +319,11 @@ class DrawCard extends BaseCard {
             return this.mostRecentEffect(EffectNames.SetBasePoliticalSkill);
         }
         return this.effects.reduce((total, effect) => {
+            const value = effect.getValue(this);
             if(effect.type === EffectNames.CopyCharacter) {
-                return effect.value.printedPoliticalSkill;
+                return value.printedPoliticalSkill;
             } else if(effect.type === EffectNames.ModifyBasePoliticalSkill) {
-                return total + effect.value;
+                return total + value;
             }
             return total;
         }, this.printedPoliticalSkill);

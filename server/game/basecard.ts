@@ -12,7 +12,6 @@ import Game = require('./game');
 import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, Players } from './Constants';
 import { ActionProps, TriggeredAbilityProps, PersistentEffectProps } from './Interfaces'; 
 
-
 class BaseCard extends EffectSource {
     owner: Player;
     controller: Player;
@@ -55,7 +54,7 @@ class BaseCard extends EffectSource {
 
     get name(): string {
         let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
-        return copyEffect ? copyEffect.name : this.printedName;
+        return copyEffect ? copyEffect.printedName : this.printedName;
     }
 
     set name(name: string) {
@@ -63,15 +62,29 @@ class BaseCard extends EffectSource {
     }
 
     get actions(): CardAction[] {
-        return this.abilities.actions;
+        let actions = this.abilities.actions;
+        if(this.anyEffect(EffectNames.CopyCharacter)) {
+            actions = this.mostRecentEffect(EffectNames.CopyCharacter).getActions(this);
+        }
+        let effectActions = this.getEffects(EffectNames.GainAbility).filter(ability => ability.abilityType === AbilityTypes.Action);
+        return actions.concat(effectActions);
     }
 
     get reactions(): TriggeredAbility[] {
-        return this.abilities.reactions;
+        const TriggeredAbilityTypes = [AbilityTypes.ForcedInterrupt, AbilityTypes.ForcedReaction, AbilityTypes.Interrupt, AbilityTypes.Reaction, AbilityTypes.WouldInterrupt];
+        let reactions =  this.abilities.reactions;
+        if(this.anyEffect(EffectNames.CopyCharacter)) {
+            reactions = this.mostRecentEffect(EffectNames.CopyCharacter).getRections(this);
+        }
+        let effectReactions = this.getEffects(EffectNames.GainAbility).filter(ability => TriggeredAbilityTypes.includes(ability.abilityType));
+        return reactions.concat(effectReactions);
     }
 
     get persistentEffects(): any[] {
-        return this.abilities.persistentEffects;
+        if(this.anyEffect(EffectNames.CopyCharacter)) {
+            return this.mostRecentEffect(EffectNames.CopyCharacter).getPersistentEffects();
+        }
+        return this.isBlank() ? [] : this.abilities.persistentEffects;
     }
 
     /**
@@ -81,16 +94,20 @@ class BaseCard extends EffectSource {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }
 
-    action(properties: ActionProps): CardAction {
-        var action = new CardAction(this.game, this, properties);
-        this.abilities.actions.push(action);
-        return action;
+    action(properties: ActionProps): void {
+        this.abilities.actions.push(this.createAction(properties));
     }
 
-    triggeredAbility(abilityType: AbilityTypes, properties: TriggeredAbilityProps): TriggeredAbility {
-        let reaction = new TriggeredAbility(this.game, this, abilityType, properties);
-        this.abilities.reactions.push(reaction);
-        return reaction;
+    createAction(properties: ActionProps): CardAction {
+        return new CardAction(this.game, this, properties);
+    }
+
+    triggeredAbility(abilityType: AbilityTypes, properties: TriggeredAbilityProps): void {
+        this.abilities.reactions.push(this.createTriggeredAbility(abilityType, properties));
+    }
+
+    createTriggeredAbility(abilityType: AbilityTypes, properties: TriggeredAbilityProps): TriggeredAbility {
+        return new TriggeredAbility(this.game, this, abilityType, properties);
     }
 
     reaction(properties: TriggeredAbilityProps): void {
@@ -244,11 +261,12 @@ class BaseCard extends EffectSource {
     getModifiedLimitMax(player: Player, max): number {
         let effects = this.effects.filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
         return effects.reduce((total, effect) => {
-            if(effect.value === Players.Self && effect.context.player === player) {
+            const value = effect.getValue(this);
+            if(value === Players.Self && effect.context.player === player) {
                 return total + 1;
-            } else if(effect.value === Players.Opponent && effect.context.player.opponent === player) {
+            } else if(value === Players.Opponent && effect.context.player.opponent === player) {
                 return total + 1;
-            } else if(effect.value === Players.Any) {
+            } else if(value === Players.Any) {
                 return total + 1;
             }
             return total;

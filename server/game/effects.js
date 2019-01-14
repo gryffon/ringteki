@@ -2,6 +2,7 @@ const _ = require('underscore');
 
 const AbilityLimit = require('./abilitylimit.js');
 const Restriction = require('./Effects/restriction.js');
+const GainAbility = require('./Effects/GainAbility');
 const EffectBuilder = require('./Effects/EffectBuilder');
 const { EffectNames, Durations, PlayTypes, Players } = require('./Constants');
 
@@ -35,41 +36,7 @@ const Effects = {
     }),
     doesNotBow: () => EffectBuilder.card.static(EffectNames.DoesNotBow),
     doesNotReady: () => EffectBuilder.card.static(EffectNames.DoesNotReady),
-    gainAbility: (abilityType, properties) => EffectBuilder.card.detached(EffectNames.GainAbility, {
-        apply: (card, context) => {
-            let ability;
-            if(abilityType === Durations.Persistent) {
-                ability = card.persistentEffect(properties);
-                return ability;
-            } else if(abilityType === 'action') {
-                ability = card.action(properties);
-            } else {
-                ability = card.triggeredAbility(abilityType, properties);
-                ability.registerEvents();
-            }
-            if(context.source.grantedAbilityLimits) {
-                if(context.source.grantedAbilityLimits[card.uuid]) {
-                    ability.limit = context.source.grantedAbilityLimits[card.uuid];
-                } else {
-                    context.source.grantedAbilityLimits[card.uuid] = ability.limit;
-                }
-            }
-            return ability;
-        },
-        unapply: (card, context, ability) => {
-            if(abilityType === Durations.Persistent) {
-                if(ability.ref) {
-                    card.removeEffectFromEngine(ability.ref);
-                }
-                card.abilities.persistentEffects = card.abilities.persistentEffects.filter(a => a !== ability);
-            } else if(abilityType === 'action') {
-                card.abilities.actions = card.abilities.actions.filter(a => a !== ability);
-            } else {
-                card.abilities.reactions = card.abilities.reactions.filter(a => a !== ability);
-                ability.unregisterEvents();
-            }
-        }
-    }),
+    gainAbility: (abilityType, properties) => EffectBuilder.card.static(EffectNames.GainAbility, new GainAbility(abilityType, properties)),
     gainPlayAction: (playActionClass) => EffectBuilder.card.detached(EffectNames.GainPlayAction, {
         apply: card => {
             let action = new playActionClass(card);
