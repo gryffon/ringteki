@@ -28,6 +28,10 @@ class MiyakosUndertaking extends DrawCard {
             effectArgs: context => [context.targets.myCharacter, context.targets.cardToCopy]
         });
     }
+
+    canPlay(context) {
+        return context.player.honor <= 6 && super.canPlay(context);
+    }
 }
 
 MiyakosUndertaking.id = 'miyako-s-undertaking';

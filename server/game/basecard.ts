@@ -64,7 +64,8 @@ class BaseCard extends EffectSource {
     get actions(): CardAction[] {
         let actions = this.abilities.actions;
         if(this.anyEffect(EffectNames.CopyCharacter)) {
-            actions = this.mostRecentEffect(EffectNames.CopyCharacter).getActions(this);
+            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
+            actions = mostRecentEffect.value.getActions(this);
         }
         let effectActions = this.getEffects(EffectNames.GainAbility).filter(ability => ability.abilityType === AbilityTypes.Action);
         return actions.concat(effectActions);
@@ -74,7 +75,8 @@ class BaseCard extends EffectSource {
         const TriggeredAbilityTypes = [AbilityTypes.ForcedInterrupt, AbilityTypes.ForcedReaction, AbilityTypes.Interrupt, AbilityTypes.Reaction, AbilityTypes.WouldInterrupt];
         let reactions =  this.abilities.reactions;
         if(this.anyEffect(EffectNames.CopyCharacter)) {
-            reactions = this.mostRecentEffect(EffectNames.CopyCharacter).getRections(this);
+            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
+            reactions = mostRecentEffect.value.getReactions(this);
         }
         let effectReactions = this.getEffects(EffectNames.GainAbility).filter(ability => TriggeredAbilityTypes.includes(ability.abilityType));
         return reactions.concat(effectReactions);
@@ -82,7 +84,8 @@ class BaseCard extends EffectSource {
 
     get persistentEffects(): any[] {
         if(this.anyEffect(EffectNames.CopyCharacter)) {
-            return this.mostRecentEffect(EffectNames.CopyCharacter).getPersistentEffects();
+            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
+            return mostRecentEffect.value.getPersistentEffects();
         }
         return this.isBlank() ? [] : this.abilities.persistentEffects;
     }

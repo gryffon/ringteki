@@ -24,10 +24,10 @@ class EffectValue {
     reset() {
     }
 
-    apply(target) {
+    apply(target) { // eslint-disable-line no-unused-vars
     }
 
-    unapply(target) {
+    unapply(target) { // eslint-disable-line no-unused-vars
     }
 }
 

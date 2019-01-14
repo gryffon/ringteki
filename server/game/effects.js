@@ -1,10 +1,11 @@
 const _ = require('underscore');
 
 const AbilityLimit = require('./abilitylimit.js');
+const CopyCharacter = require('./Effects/CopyCharacter');
 const Restriction = require('./Effects/restriction.js');
 const GainAbility = require('./Effects/GainAbility');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, Durations, PlayTypes, Players } = require('./Constants');
+const { EffectNames, PlayTypes, Players } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -24,7 +25,7 @@ const Effects = {
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsAttacker, type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsDefender, type),
     cardCannot: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(Object.assign({ type: properties.cannot || properties }, properties))),
-    copyCharacter: (character) => EffectBuilder.card.dynamic(EffectNames.CopyCharacter, character),
+    copyCharacter: (character) => EffectBuilder.card.static(EffectNames.CopyCharacter, new CopyCharacter(character)),
     customDetachedCard: (properties) => EffectBuilder.card.detached(EffectNames.CustomEffect, properties),
     delayedEffect: (properties) => EffectBuilder.card.detached(EffectNames.DelayedEffect, {
         apply: (card, context) => {
