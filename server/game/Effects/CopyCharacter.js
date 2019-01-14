@@ -1,13 +1,13 @@
 const EffectValue = require('./EffectValue');
 const GainAbility = require('./GainAbility');
-const { AbilityTypes } = require('../Constants');
+const { AbilityTypes, Locations } = require('../Constants');
 
 class CopyCharacter extends EffectValue {
     constructor(card) {
         super(card);
         this.actions = card.abilities.actions.map(action => new GainAbility(AbilityTypes.Action, action));
         this.reactions = card.abilities.reactions.map(ability => new GainAbility(ability.abilityType, ability));
-        this.persistentEffects = card.abilities.persistentEffects;
+        this.persistentEffects = card.abilities.persistentEffects.map(effect => Object.assign({}, effect));
         this.abilitiesForTargets = {};
     }
 
@@ -22,11 +22,22 @@ class CopyCharacter extends EffectValue {
                 return value.getValue();
             })
         };
+        for(const effect of this.persistentEffects) {
+            if(effect.location === Locations.PlayArea || effect.location === Locations.Any) {
+                effect.ref = target.addEffectToEngine(effect);
+            }
+        }
     }
 
     unapply(target) {
         for(const value of this.abilitiesForTargets[target.uuid].reactions) {
             value.unregisterEvents();
+        }
+        for(const effect of this.persistentEffects) {
+            if(effect.ref) {
+                target.removeEffectFromEngine(effect.ref);
+                effect.ref = [];
+            }
         }
         delete this.abilitiesForTargets[target.uuid];
     }

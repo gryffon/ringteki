@@ -184,7 +184,7 @@ class BaseCard extends EffectSource {
     applyAnyLocationPersistentEffects(): void {
         _.each(this.persistentEffects, effect => {
             if(effect.location === Locations.Any) {
-                this.addEffectToEngine(effect);
+                effect.ref = this.addEffectToEngine(effect);
             }
         });
     }
@@ -223,6 +223,7 @@ class BaseCard extends EffectSource {
                     effect.ref = this.addEffectToEngine(effect);
                 } else if(!activeLocations[effect.location].includes(to) && activeLocations[effect.location].includes(from)) {
                     this.removeEffectFromEngine(effect.ref);
+                    effect.ref = [];
                 }
             }
         });
