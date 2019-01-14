@@ -41,7 +41,6 @@ export enum EffectNames {
     DoesNotBow = 'doesNotBow',
     DoesNotReady = 'doesNotReady',
     GainAbility = 'gainAbility',
-    GainAction = 'gainAction',
     GainPlayAction = 'gainPlayAction',
     HideWhenFaceUp = 'hideWhenFaceUp',
     HonorStatusDoesNotAffectLeavePlay = 'honorStatusDoesNotAffectLeavePlay',
