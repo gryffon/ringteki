@@ -194,8 +194,8 @@ class BaseCard extends EffectSource {
 
     leavesPlay(): void {
         this.tokens = {};
-        _.each(this.actions, action => action.limit.reset());
-        _.each(this.reactions, reaction => reaction.limit.reset());
+        _.each(this.abilities.actions, action => action.limit.reset());
+        _.each(this.abilities.reactions, reaction => reaction.limit.reset());
         this.controller = this.owner;
         this.inConflict = false;
     }

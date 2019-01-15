@@ -76,6 +76,32 @@ describe('Miyako\'s Undertaking', function() {
                 expect(this.bayushiKachiko.isUnique()).toBe(true);
             });
 
+            it('should not permit playing a new copy of the character if it\'s unique', function() {
+                this.player1.clickCard('miyako-s-undertaking');
+                this.player1.clickCard(this.kitsuSpiritcaller);
+                this.player1.clickCard(this.bayushiKachiko);
+                this.player2.pass();
+                this.player1.clickCard('bayushi-kachiko', 'hand');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should expire at the end of the conflict', function() {
+                this.player1.clickCard('miyako-s-undertaking');
+                this.player1.clickCard(this.kitsuSpiritcaller);
+                this.player1.clickCard(this.bayushiKachiko);
+                this.noMoreActions();
+                this.player1.clickPrompt('No');
+                this.player1.clickPrompt('Don\'t Resolve');
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.bayushiKachiko.name).toBe(this.bayushiKachiko.printedName);
+                expect(this.bayushiKachiko.getCost()).toBe(this.bayushiKachiko.printedCost);
+                expect(this.bayushiKachiko.getBaseMilitarySkill()).toBe(this.bayushiKachiko.printedMilitarySkill);
+                expect(this.bayushiKachiko.getPoliticalSkill()).toBe(this.bayushiKachiko.printedPoliticalSkill);
+                expect(this.bayushiKachiko.getTraits()).toContain('courtier');
+                expect(this.bayushiKachiko.getTraits()).toContain('imperial');
+                expect(this.bayushiKachiko.isUnique()).toBe(true);
+            });
+
             it('should remove any action abilities, and copy them from the target', function() {
                 this.player1.clickCard('miyako-s-undertaking');
                 this.player1.clickCard(this.kitsuSpiritcaller);
@@ -169,6 +195,24 @@ describe('Miyako\'s Undertaking', function() {
                 expect(this.bayushiKachiko.getTraits()).toContain('magistrate');
                 expect(this.bayushiKachiko.isUnique()).toBe(true);
                 expect(this.game.currentConflict.attackerSkill).toBe(2);
+            });
+
+            it('should only allow reactions to trigger if they are currently being copied', function() {
+                this.player1.clickCard('miyako-s-undertaking');
+                this.player1.clickCard(this.nitenMaster);
+                this.player1.clickCard(this.youngRumormonger);
+                this.player2.pass();
+                this.player1.clickCard('miyako-s-undertaking', 'hand');
+                this.player1.clickCard(this.implacableMagistrate);
+                this.player1.clickCard(this.youngRumormonger);
+                this.player2.pass();
+                this.player1.clickCard(this.bayushiKachiko);
+                this.player1.clickCard(this.youngRumormonger);
+                this.player1.clickPrompt('Yes');
+                expect(this.youngRumormonger.bowed).toBe(true);
+                this.player2.pass();
+                this.player1.playAttachment('fine-katana', this.youngRumormonger);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
     });
