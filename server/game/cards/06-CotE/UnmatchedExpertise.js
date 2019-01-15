@@ -11,7 +11,7 @@ class UnmatchedExpertise extends DrawCard {
                 afterConflict: (event, context) => context.source.parent.isParticipating() &&
                                                    event.conflict.loser === context.source.parent.controller
             },
-            gameAction: ability.actions.discardFromPlay(context => ({ target: context.source }))
+            gameAction: ability.actions.discardFromPlay()
         });
     }
 }
