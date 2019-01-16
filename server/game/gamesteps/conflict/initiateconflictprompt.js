@@ -178,7 +178,7 @@ class InitiateConflictPrompt extends UiPrompt {
 
     recalculateCovert() {
         // remove any selected defenders with covert
-        this.selectedDefenders.map(card => {
+        _.each(this.selectedDefenders, card => {
             if(card.isCovert()) {
                 card.covert = false;
                 this.selectedDefenders.splice(this.selectedDefenders.indexOf(card));
