@@ -1,3 +1,5 @@
+const EffectValue = require('./EffectValue');
+
 const { CardTypes } = require('../Constants');
 
 const checkRestrictions = {
@@ -17,8 +19,9 @@ const checkRestrictions = {
     source: (context, player, source) => context.source === source
 };
 
-class Restriction {
+class Restriction extends EffectValue {
     constructor(properties) {
+        super();
         if(typeof properties === 'string') {
             this.type = properties;
         } else {
@@ -26,7 +29,11 @@ class Restriction {
             this.restriction = properties.restricts;
             this.params = properties.params;
         }
-        this.context = {};
+    }
+
+    // @ts-ignore
+    getValue() {
+        return this;
     }
 
     isMatch(type, abilityContext) {
