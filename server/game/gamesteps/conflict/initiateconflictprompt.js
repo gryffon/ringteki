@@ -93,7 +93,6 @@ class InitiateConflictPrompt extends UiPrompt {
         }
 
         return this.selectCard(card);
-
     }
 
     onRingClicked(player, ring) {
@@ -178,7 +177,21 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     recalculateCovert() {
+        // remove any selected defenders with covert
+        this.selectedDefenders.map(card => {
+            if(card.isCovert()) {
+                card.covert = false;
+                this.selectedDefenders.splice(this.selectedDefenders.indexOf(card));
+            }
+        });
+
+        // remove any covert in excess of attackers with covert
         let attackersWithCovert = _.size(_.filter(this.conflict.attackers, card => card.isCovert()));
+        while(attackersWithCovert < _.size(this.selectedDefenders)) {
+            this.selectedDefenders.pop().covert = false;
+        }
+
+        // set if any covert remaining
         this.covertRemaining = attackersWithCovert > _.size(this.selectedDefenders);
     }
 
@@ -216,9 +229,6 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     removeFromConflict(card) {
-        if(card.isCovert() && !this.covertRemaining) {
-            this.selectedDefenders.pop().covert = false;
-        }
         this.conflict.removeFromConflict(card);
     }
 

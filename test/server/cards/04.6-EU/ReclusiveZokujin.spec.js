@@ -11,13 +11,18 @@ describe('Reclusive Zokujin', function() {
                     },
                     player2: {
                         hand: ['cloud-the-mind', 'misinformation', 'ornate-fan'],
-                        inPlay: ['sinister-soshi', 'bayushi-liar', 'steward-of-law']
+                        inPlay: ['sinister-soshi', 'bayushi-liar', 'steward-of-law', 'togashi-mitsu']
                     }
                 });
                 this.player2.player.showBid = 5;
                 this.favorableGround = this.player1.placeCardInProvince('favorable-ground');
                 this.reclusiveZokujin = this.player1.findCardByName('reclusive-zokujin');
+                this.otomoCourtier = this.player1.findCardByName('otomo-courtier');
                 this.bayushiLiar = this.player2.findCardByName('bayushi-liar');
+                this.stewardOfLaw = this.player2.findCardByName('steward-of-law');
+                this.togashiMitsu = this.player2.findCardByName('togashi-mitsu');
+                this.shamefulDisplayPlayer1 = this.player1.findCardByName('shameful-display', 'province 1');
+                this.shamefulDisplayPlayer2 = this.player2.findCardByName('shameful-display', 'province 1');
             });
 
             it('should give covert during earth conflicts', function() {
@@ -160,6 +165,67 @@ describe('Reclusive Zokujin', function() {
                 this.player1.clickPrompt('Pay Costs first');
                 expect(this.player1).toBeAbleToSelect(this.reclusiveZokujin);
                 expect(this.player1).not.toBeAbleToSelect('otomo-courtier');
+            });
+
+            it('should not prompt for covert during non-earth conflicts (even if earth ring clicked initially)', function() {
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Initiate Conflict');
+                this.player1.clickRing('earth');
+                this.player1.clickCard(this.reclusiveZokujin);
+                this.player1.clickCard(this.shamefulDisplayPlayer2);
+                this.player1.clickRing('air');
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player1).not.toHavePrompt('Choose Covert');
+                expect(this.player2).toHavePrompt('Choose defenders');
+            });
+
+            it('should not keep covert selection if ring changed from earth during declaring attackers', function() {
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Initiate Conflict');
+                this.player1.clickRing('earth');
+                this.player1.clickCard(this.reclusiveZokujin);
+                this.player1.clickCard(this.stewardOfLaw);
+                this.player1.clickCard(this.shamefulDisplayPlayer2);
+                this.player1.clickRing('air');
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player2).toHavePrompt('Choose defenders');
+                this.player2.clickCard(this.stewardOfLaw);
+                this.player2.clickPrompt('Done');
+                expect(this.stewardOfLaw.isParticipating()).toBe(true);
+            });
+
+            it('should not keep covert selection if removed from conflict during declaring attackers', function() {
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Initiate Conflict');
+                this.player1.clickRing('earth');
+                this.player1.clickCard(this.reclusiveZokujin);
+                this.player1.clickCard(this.otomoCourtier);
+                this.player1.clickCard(this.stewardOfLaw);
+                this.player1.clickCard(this.shamefulDisplayPlayer2);
+                this.player1.clickCard(this.reclusiveZokujin);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.player2).toHavePrompt('Choose defenders');
+                this.player2.clickCard(this.stewardOfLaw);
+                this.player2.clickPrompt('Done');
+                expect(this.stewardOfLaw.isParticipating()).toBe(true);
+            });
+
+            it('should not remain coverted if ring changed to earth when defending', function() {
+                this.noMoreActions();
+                this.player1.passConflict();
+                this.noMoreActions();
+                expect(this.player2).toHavePrompt('Initiate Conflict');
+                this.player2.clickRing('air');
+                this.player2.clickCard(this.togashiMitsu);
+                this.player2.clickCard(this.reclusiveZokujin);
+                this.player2.clickCard(this.shamefulDisplayPlayer1);
+                this.player2.clickRing('earth');
+                this.player2.clickPrompt('Initiate Conflict');
+                expect(this.player2).toHavePrompt('Choose Covert');
+                this.player2.clickCard(this.otomoCourtier);
+                this.player1.clickCard(this.reclusiveZokujin);
+                this.player1.clickPrompt('Done');
+                expect(this.reclusiveZokujin.isParticipating()).toBe(true);
             });
         });
     });

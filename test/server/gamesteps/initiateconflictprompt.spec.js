@@ -232,7 +232,7 @@ describe('InitateConflictPrompt: ', function() {
                     describe('and it\'s currently participating,', function() {
                         beforeEach(function() {
                             this.conflictSpy.attackers.push(this.cardSpy);
-                            this.defenderSpy = jasmine.createSpyObj('defender', ['checkRestrictions', 'canBeBypassedByCovert']);
+                            this.defenderSpy = jasmine.createSpyObj('defender', ['checkRestrictions', 'canBeBypassedByCovert', 'isCovert']);
                             this.defenderSpy.covert = true;
                             this.prompt.selectedDefenders = [this.defenderSpy];
                             this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
@@ -339,6 +339,9 @@ describe('InitateConflictPrompt: ', function() {
                 describe('if there is covert remaining', function() {
                     beforeEach(function() {
                         this.prompt.covertRemaining = true;
+                        let attacker = jasmine.createSpyObj('attacker', ['isCovert']);
+                        attacker.isCovert.and.returnValue(true);
+                        this.prompt.conflict.attackers.push(attacker);
                         this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
                     });
 
