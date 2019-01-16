@@ -32,6 +32,7 @@ class DrawCard extends BaseCard {
 
         this.printedMilitarySkill = parseInt(cardData.military);
         this.printedPoliticalSkill = parseInt(cardData.political);
+        this.printedCost = this.cardData.cost;
         this.fate = 0;
         this.bowed = false;
         this.covert = false;
@@ -126,7 +127,8 @@ class DrawCard extends BaseCard {
     }
 
     getCost() {
-        return this.cardData.cost;
+        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+        return copyEffect ? copyEffect.printedCost : this.printedCost;
     }
 
     getFate() {
@@ -134,13 +136,14 @@ class DrawCard extends BaseCard {
     }
 
     costLessThan(num) {
-        return num && (this.cardData.cost || this.cardData.cost === 0) && this.cardData.cost < num;
+        let cost = this.getCost();
+        return num && (cost || cost === 0) && cost < num;
     }
 
     anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (
             card.location === Locations.PlayArea &&
-            card.name === this.name &&
+            card.printedName === this.printedName &&
             card !== this &&
             (card.owner === player || card.controller === player || card.owner === this.owner)
         ));
@@ -159,6 +162,7 @@ class DrawCard extends BaseCard {
         clone.parent = this.parent;
         clone.fate = this.fate;
         clone.inConflict = this.inConflict;
+        clone.traits = this.getTraits();
         return clone;
     }
 
@@ -167,12 +171,15 @@ class DrawCard extends BaseCard {
             return false;
         }
         let dashEffects = this.getEffects(EffectNames.SetDash);
+        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+        let militarySkill = copyEffect ? copyEffect.printedMilitarySkill : this.printedMilitarySkill;
+        let politicalSkill = copyEffect ? copyEffect.printedPoliticalSkill : this.printedPoliticalSkill;
         if(type === 'military') {
-            return Number.isNaN(this.printedMilitarySkill) || dashEffects.includes(type);
+            return Number.isNaN(militarySkill) || dashEffects.includes(type);
         } else if(type === 'political') {
-            return Number.isNaN(this.printedPoliticalSkill) || dashEffects.includes(type);
+            return Number.isNaN(politicalSkill) || dashEffects.includes(type);
         }
-        return Number.isNaN(this.printedMilitarySkill) || Number.isNaN(this.printedPoliticalSkill) || dashEffects.length > 0;
+        return Number.isNaN(militarySkill) || Number.isNaN(politicalSkill) || dashEffects.length > 0;
     }
 
     getSkill(type) {
@@ -201,7 +208,9 @@ class DrawCard extends BaseCard {
             if(this.anyEffect(EffectNames.SetGlory)) {
                 return Math.max(0, this.mostRecentEffect(EffectNames.SetGlory));
             }
-            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + this.cardData.glory + this.sumEffects(EffectNames.ModifyDuelGlory));
+            let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+            let glory = copyEffect ? copyEffect.getGlory() : this.cardData.glory;
+            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + glory + this.sumEffects(EffectNames.ModifyDuelGlory));
 
         }
         return 0;
@@ -288,7 +297,15 @@ class DrawCard extends BaseCard {
         } else if(this.anyEffect(EffectNames.SetBaseMilitarySkill)) {
             return this.mostRecentEffect(EffectNames.SetBaseMilitarySkill);
         }
-        return this.sumEffects(EffectNames.ModifyBaseMilitarySkill) + this.printedMilitarySkill;
+        return this.effects.reduce((total, effect) => {
+            const value = effect.getValue(this);
+            if(effect.type === EffectNames.CopyCharacter) {
+                return value.printedMilitarySkill;
+            } else if(effect.type === EffectNames.ModifyBaseMilitarySkill) {
+                return total + value;
+            }
+            return total;
+        }, this.printedMilitarySkill);
     }
 
     get basePoliticalSkill() {
@@ -301,7 +318,15 @@ class DrawCard extends BaseCard {
         } else if(this.anyEffect(EffectNames.SetBasePoliticalSkill)) {
             return this.mostRecentEffect(EffectNames.SetBasePoliticalSkill);
         }
-        return this.sumEffects(EffectNames.ModifyBasePoliticalSkill) + this.printedPoliticalSkill;
+        return this.effects.reduce((total, effect) => {
+            const value = effect.getValue(this);
+            if(effect.type === EffectNames.CopyCharacter) {
+                return value.printedPoliticalSkill;
+            } else if(effect.type === EffectNames.ModifyBasePoliticalSkill) {
+                return total + value;
+            }
+            return total;
+        }, this.printedPoliticalSkill);
     }
 
     getSkillFromGlory() {

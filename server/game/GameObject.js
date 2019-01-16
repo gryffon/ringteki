@@ -7,7 +7,7 @@ class GameObject {
     constructor(game, name) {
         this.game = game;
         this.name = name;
-        this.id = this.name;
+        this.id = name;
         this.type = '';
         this.facedown = false;
         this.uuid = uuid.v1();
