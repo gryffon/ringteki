@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const CardSelector = require('../CardSelector.js');
-const { Stages, Players, EffectNames } = require('../Constants.js');
+const { Stages, Players, EffectNames, TargetModes } = require('../Constants.js');
 
 class AbilityTargetCard {
     constructor(name, properties, ability) {
@@ -56,6 +56,13 @@ class AbilityTargetCard {
     resolve(context, targetResults) {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
             return;
+        }
+        if(this.properties.mode === TargetModes.Auto) {
+            let legalTargets = this.selector.getAllLegalTargets(context);
+            if(legalTargets.length === 1) {
+                context.targets[this.name] = legalTargets[0];
+                return;
+            }
         }
         let otherProperties = _.omit(this.properties, 'cardCondition', 'player');
         let playerProp = this.properties.player;
