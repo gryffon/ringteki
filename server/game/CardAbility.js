@@ -16,7 +16,7 @@ class CardAbility extends ThenAbility {
             properties.targets = {
                 challenger: {
                     cardType: CardTypes.Character,
-                    mode: TargetModes.Auto,
+                    mode: TargetModes.AutoSingle,
                     controller: Players.Self,
                     cardCondition: (card, context) => card.isParticipating() && card === context.source
                 },

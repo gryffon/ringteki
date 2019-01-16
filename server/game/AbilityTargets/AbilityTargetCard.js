@@ -57,7 +57,7 @@ class AbilityTargetCard {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
             return;
         }
-        if(this.properties.mode === TargetModes.Auto) {
+        if(this.properties.mode === TargetModes.AutoSingle) {
             let legalTargets = this.selector.getAllLegalTargets(context);
             if(legalTargets.length === 1) {
                 context.targets[this.name] = legalTargets[0];
