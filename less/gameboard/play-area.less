@@ -110,10 +110,11 @@
     &.card-row {
         display:flex;
         flex-direction:row-reverse;
-        justify-content:flex-start;
+        justify-content:flex-end;
         align-items:flex-end;
+        align-content:flex-start;
         flex-wrap: wrap-reverse;
-
+        
         grid-row-start:2;
         grid-column-start:1;
         grid-column-end:3;
@@ -123,6 +124,8 @@
         }
         &.our-side {
             align-items:flex-start;
+            justify-content: flex-start;
+            align-content:flex-end;
             flex-direction:row;
             flex-wrap:wrap;
             grid-row-start:2;

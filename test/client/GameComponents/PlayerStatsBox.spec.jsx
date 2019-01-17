@@ -35,19 +35,12 @@ describe('The <PlayerStatsBox /> component', () => {
             document.createElement('div')
         );
 
-        it('should render player avatar with given name', () => {
-            const avatar = TestUtils.scryRenderedDOMComponentsWithClass(component, 'player-avatar');
-
-            expect(avatar.length).toBe(1);
-            expect(avatar[0].innerText).toBe(user.username);
-        });
-
         it('should render fate and honor stats without buttons', () => {
             const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
             expect(fateImage.length).toBe(2);
             expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Fate.png)');
+                .toBe('url(http://localhost:9877/img/Fate_token.png)');
             expect(fateImage[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(0);
@@ -64,7 +57,7 @@ describe('The <PlayerStatsBox /> component', () => {
             const conflicts = TestUtils.scryRenderedDOMComponentsWithClass(component, 'conflicts-remaining');
 
             expect(conflicts.length).toBe(1);
-            expect(conflicts[0].innerText).toBe('Conflicts Remaining: 2');
+            expect(conflicts[0].innerText).toBe('Conflicts: 2');
         });
     });
 
@@ -83,35 +76,22 @@ describe('The <PlayerStatsBox /> component', () => {
             document.createElement('div')
         );
 
-        it('should render player avatar with given name', () => {
-            const avatar = TestUtils.scryRenderedDOMComponentsWithClass(component, 'player-avatar');
-
-            expect(avatar.length).toBe(1);
-            expect(avatar[0].innerText).toBe(user.username);
-        });
-
         it('should render fate and honor stats with buttons', () => {
             const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
             expect(fateImage.length).toBe(2);
             expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Fate.png)');
+                .toBe('url(http://localhost:9877/img/Fate_token.png)');
             expect(fateImage[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(4);
-        });
-
-        it('should not render hand size', () => {
-            const handSize = TestUtils.scryRenderedDOMComponentsWithClass(component, 'hand-size');
-
-            expect(handSize.length).toBe(0);
         });
 
         it('should render conflicts remaining', () => {
             const conflicts = TestUtils.scryRenderedDOMComponentsWithClass(component, 'conflicts-remaining');
 
             expect(conflicts.length).toBe(1);
-            expect(conflicts[0].innerText).toBe('Conflicts Remaining: 2');
+            expect(conflicts[0].innerText).toBe('Conflicts: 2');
         });
     });
 
@@ -130,19 +110,12 @@ describe('The <PlayerStatsBox /> component', () => {
             document.createElement('div')
         );
 
-        it('should render player avatar with given name', () => {
-            const avatar = TestUtils.scryRenderedDOMComponentsWithClass(component, 'player-avatar');
-
-            expect(avatar.length).toBe(1);
-            expect(avatar[0].innerText).toBe(user.username);
-        });
-
         it('should render fate and honor stats without buttons', () => {
             const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
             expect(fateImage.length).toBe(2);
             expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Fate.png)');
+                .toBe('url(http://localhost:9877/img/Fate_token.png)');
             expect(fateImage[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(0);
@@ -159,7 +132,7 @@ describe('The <PlayerStatsBox /> component', () => {
             const conflicts = TestUtils.scryRenderedDOMComponentsWithClass(component, 'conflicts-remaining');
 
             expect(conflicts.length).toBe(1);
-            expect(conflicts[0].innerText).toBe('Conflicts Remaining: 2');
+            expect(conflicts[0].innerText).toBe('Conflicts: 2');
         });
     });
 
@@ -178,19 +151,12 @@ describe('The <PlayerStatsBox /> component', () => {
             document.createElement('div')
         );
 
-        it('should render player avatar with given name', () => {
-            const avatar = TestUtils.scryRenderedDOMComponentsWithClass(component, 'player-avatar');
-
-            expect(avatar.length).toBe(1);
-            expect(avatar[0].innerText).toBe(user.username);
-        });
-
         it('should render fate and honor stats without buttons', () => {
             const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
             expect(fateImage.length).toBe(2);
             expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Fate.png)');
+                .toBe('url(http://localhost:9877/img/Fate_token.png)');
             expect(fateImage[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(0);
@@ -207,7 +173,7 @@ describe('The <PlayerStatsBox /> component', () => {
             const conflicts = TestUtils.scryRenderedDOMComponentsWithClass(component, 'conflicts-remaining');
 
             expect(conflicts.length).toBe(1);
-            expect(conflicts[0].innerText).toBe('Conflicts Remaining: 2');
+            expect(conflicts[0].innerText).toBe('Conflicts: 2');
         });
     });
 
@@ -228,7 +194,6 @@ describe('The <PlayerStatsBox /> component', () => {
 
         it('should render first player indicator', () => {
             const indicator = TestUtils.scryRenderedDOMComponentsWithClass(component, 'first-player-indicator');
-
             expect(indicator.length).toBe(1);
         });
     });
@@ -250,8 +215,8 @@ describe('The <PlayerStatsBox /> component', () => {
 
         it('should not render first player indicator', () => {
             const indicator = TestUtils.scryRenderedDOMComponentsWithClass(component, 'first-player-indicator');
-
-            expect(indicator.length).toBe(0);
+            expect(indicator.length).toBe(1);
+            expect(indicator[0].classList.contains('hidden')).toBe(true);
         });
     });
 });

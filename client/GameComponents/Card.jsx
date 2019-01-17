@@ -184,21 +184,36 @@ class Card extends React.Component {
     getWrapperStyle() {
         let wrapperStyle = {};
         let attachmentOffset = 13;
+        let cardHeight = 84;
         switch(this.props.size) {
             case 'large':
                 attachmentOffset *= 1.4;
+                cardHeight*=1.4;
                 break;
             case 'small':
                 attachmentOffset *= 0.8;
+                cardHeight*=0.8;
                 break;
             case 'x-large':
                 attachmentOffset *= 2;
+                cardHeight*=2;
                 break;
         }
-        let attachments = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
-        if(attachments > 0) {
-            wrapperStyle = { marginLeft:(attachments * attachmentOffset) + 'px'};
+        let attachmentCount = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
+        let attachments = this.props.card.attachments;
+        let totalTiers = 0;
+        _.forEach(attachments, attachment => {
+            if(attachment.bowed) {
+                totalTiers += 1;
+            }
+        });
+
+        if(attachmentCount > 0) {
+            wrapperStyle = { marginLeft:(4 + attachmentCount * attachmentOffset) + 'px', minHeight: (cardHeight + totalTiers*attachmentOffset) +'px' };
+        } else if (this.props.source === 'play area'){
+            wrapperStyle = {marginLeft: '4px', marginRight: '4px'};
         }
+
 
         return wrapperStyle;
     }
@@ -210,22 +225,30 @@ class Card extends React.Component {
         }
 
         let attachmentOffset = 13;
+        let cardHeight = 84;
         let cardLayer = 10;
         switch(this.props.size) {
             case 'large':
                 attachmentOffset *= 1.4;
+                cardHeight *=1.4;
                 break;
             case 'small':
                 attachmentOffset *= 0.8;
+                cardHeight *=0.8;
                 break;
             case 'x-large':
                 attachmentOffset *= 2;
+                cardHeight *=2;
                 break;
         }
         var index = 1;
+        var tier = 1; 
         var attachments = _.map(this.props.card.attachments, attachment => {
+            if(attachment.bowed) {
+                tier += 1;
+            }
             var returnedAttachment = (<Card key={ attachment.uuid } source={ this.props.source } card={ attachment }
-                className={ 'attachment' } wrapped={ false } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }
+                className={ 'attachment' } wrapped={ false } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', marginTop:(-1*cardHeight - attachmentOffset*(attachment.bowed ? 1 : 0))+'px', zIndex: (cardLayer - index)} }
                 onMouseOver={ this.props.disableMouseOver ? null : this.onMouseOver.bind(this, attachment) }
                 onMouseOut={ this.props.disableMouseOver ? null : this.onMouseOut }
                 onClick={ this.props.onClick }
