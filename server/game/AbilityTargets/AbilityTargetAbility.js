@@ -5,6 +5,7 @@ class AbilityTargetAbility {
     constructor(name, properties, ability) {
         this.name = name;
         this.properties = properties;
+        this.abilityCondition = properties.abilityCondition || (() => true);
         this.selector = this.getSelector(properties);
         this.dependentTarget = null;
         this.dependentCost = null;
@@ -16,7 +17,7 @@ class AbilityTargetAbility {
 
     getSelector(properties) {
         let cardCondition = (card, context) => {
-            let abilities = card.abilities.actions.concat(card.abilities.reactions).filter(ability => ability.printedAbility);
+            let abilities = card.abilities.actions.concat(card.abilities.reactions).filter(ability => this.abilityCondition(ability));
             return abilities.some(ability => {
                 let contextCopy = context.copy();
                 contextCopy.targetAbility = ability;
@@ -67,8 +68,23 @@ class AbilityTargetAbility {
             context: context,
             selector: this.selector,
             onSelect: (player, card) => {
-                let ability = card.abilities.actions.find(action => action.printedAbility) || card.abilities.reactions.find(reaction => reaction.printedAbility);
-                context.targetAbility = ability;
+                let abilities = card.actions.concat(card.reactions).filter(ability => ability.isTriggeredAbility() && this.abilityCondition(ability));
+                if(abilities.length === 1) {
+                    context.targetAbility = abilities[0];
+                } else if(abilities.length > 1) {
+                    context.game.promptWithHandlerMenu(player, {
+                        activePromptTitle: 'Choose an ability',
+                        context: context,
+                        choices: abilities.map(ability => ability.title).concat('Back'),
+                        choiceHandler: choice => {
+                            if(choice === 'Back') {
+                                context.game.queueSimpleStep(() => this.resolve(context, targetResults));
+                            } else {
+                                context.targetAbility = abilities.find(ability => ability.title === choice);
+                            }
+                        }
+                    });
+                }
                 return true;
             },
             onCancel: () => {
@@ -92,6 +108,7 @@ class AbilityTargetAbility {
         }
         return this.properties.cardType === context.targetAbility.card.type &&
                this.properties.cardCondition(context.targetAbility.card, context) &&
+               this.abilityCondition(context.targetAbility) &&
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }
 }
