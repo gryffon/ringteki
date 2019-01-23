@@ -177,7 +177,7 @@ export enum EventNames {
     OnReturnRing = 'onReturnRing',
     OnPassFirstPlayer = 'onPassFirstPlayer',
     OnRoundEnded = 'onRoundEnded',
-    OnIncomeCollected = 'onIncomeCollected',
+    OnFateCollected = 'onFateCollected',
     OnCardAttached = 'onCardAttached',
     OnCardHonored = 'onCardHonored',
     OnCardDishonored = 'onCardDishonored',
