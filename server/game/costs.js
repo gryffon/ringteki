@@ -167,6 +167,7 @@ const Costs = {
      * Cost in which the player must pay a fixed, non-reduceable amount of honor.
      */
     payHonor: (amount) => CostBuilders.payHonor(amount),
+    giveHonorToOpponent: (amount = 1) => CostBuilders.giveHonorToOpponent(amount),
     /**
      * Cost where a character must spend fate to an unclaimed ring
      */
