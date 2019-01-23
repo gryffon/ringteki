@@ -117,6 +117,7 @@ export enum TargetModes {
     Ring = 'ring',
     Select = 'select',
     Ability = 'ability',
+    AutoSingle = 'autoSingle',
     Exactly = 'exactly',
     MaxStat = 'maxStat',
     Single = 'single',

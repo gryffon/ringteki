@@ -2,7 +2,7 @@ const AbilityLimit = require('./abilitylimit.js');
 const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, PlayTypes, Players } = require('./Constants');
+const { Locations, CardTypes, PlayTypes, Players, TargetModes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
@@ -13,11 +13,25 @@ class CardAbility extends ThenAbility {
             } else {
                 properties.condition = context => context.source.isParticipating();
             }
-            properties.target = {
-                cardType: CardTypes.Character,
-                controller: Players.Opponent,
-                cardCondition: card => card.isParticipating(),
-                gameAction: AbilityDsl.actions.duel(properties.initiateDuel)
+            properties.targets = {
+                challenger: {
+                    cardType: CardTypes.Character,
+                    mode: TargetModes.AutoSingle,
+                    controller: Players.Self,
+                    cardCondition: (card, context) => card.isParticipating() && card === context.source
+                },
+                duelTarget: {
+                    dependsOn: 'challenger',
+                    cardType: CardTypes.Character,
+                    controller: Players.Opponent,
+                    cardCondition: card => card.isParticipating(),
+                    gameAction: AbilityDsl.actions.duel(context => {
+                        if(typeof properties.initiateDuel === 'function') {
+                            return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel(context));
+                        }
+                        return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel);
+                    })
+                }
             };
         }
         super(game, card, properties);
