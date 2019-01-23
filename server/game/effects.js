@@ -5,7 +5,7 @@ const CopyCharacter = require('./Effects/CopyCharacter');
 const Restriction = require('./Effects/restriction.js');
 const GainAbility = require('./Effects/GainAbility');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, PlayTypes, Players } = require('./Constants');
+const { EffectNames, PlayTypes } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -51,7 +51,7 @@ const Effects = {
     honorStatusDoesNotModifySkill: () => EffectBuilder.card.flexible(EffectNames.HonorStatusDoesNotModifySkill),
     honorStatusReverseModifySkill: () => EffectBuilder.card.flexible(EffectNames.HonorStatusReverseModifySkill),
     immunity: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(properties)),
-    increaseLimitOnAbilities: (playerConstant = Players.Self) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, playerConstant),
+    increaseLimitOnAbilities: (abilities) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, abilities),
     modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseMilitarySkill, value),
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBasePoliticalSkill, value),
     modifyBaseProvinceStrength: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseProvinceStrength, value),

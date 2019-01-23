@@ -3,7 +3,7 @@ const { EventNames } = require('./Constants');
 class FixedAbilityLimit {
     constructor(max) {
         this.max = max;
-        this.card = null;
+        this.ability = null;
         this.useCount = {};
     }
 
@@ -12,7 +12,7 @@ class FixedAbilityLimit {
     }
 
     getModifiedMax(player) {
-        return this.card ? this.card.getModifiedLimitMax(player, this.max) : this.max;
+        return this.ability ? this.ability.card.getModifiedLimitMax(player, this.ability, this.max) : this.max;
     }
 
     isAtMax(player) {
