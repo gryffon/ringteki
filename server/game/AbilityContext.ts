@@ -16,6 +16,7 @@ interface AbilityContextProperties {
     selects?: any;
     events?: any[];
     stage?: Stages;
+    targetAbility?: any;
 }
 
 class AbilityContext {
@@ -29,6 +30,7 @@ class AbilityContext {
     selects: any;
     events: any[] = [];
     stage: Stages;
+    targetAbility: any;
     target: any;
     select: string;
     ring: Ring;
@@ -44,6 +46,7 @@ class AbilityContext {
         this.rings = properties.rings || {};
         this.selects = properties.selects || {};
         this.stage = properties.stage || Stages.Effect;
+        this.targetAbility = properties.targetAbility;
     }
 
     copy(newProps: object): AbilityContext {
@@ -83,6 +86,7 @@ class AbilityContext {
             selects: Object.assign({}, this.selects),
             events: this.events,
             stage: this.stage,
+            targetAbility: this.targetAbility
         };
     }
 }

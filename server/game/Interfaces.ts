@@ -70,7 +70,7 @@ interface ActionRingTarget {
     ringCondition?: (ring: Ring, context?: AbilityContext) => boolean;
 };
 
-type ActionTarget = (TargetCard & ActionCardTarget) | (TargetRing & ActionRingTarget) | TargetSelect;
+type ActionTarget = (TargetCard & ActionCardTarget) | (TargetRing & ActionRingTarget) | TargetSelect | TargetAbility;
 
 interface ActionTargets {
     [propName: string]: ActionTarget & SubTarget;

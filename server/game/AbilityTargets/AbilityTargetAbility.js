@@ -17,14 +17,14 @@ class AbilityTargetAbility {
 
     getSelector(properties) {
         let cardCondition = (card, context) => {
-            let abilities = card.abilities.actions.concat(card.abilities.reactions).filter(ability => this.abilityCondition(ability));
+            let abilities = card.actions.concat(card.reactions).filter(ability => ability.isTriggeredAbility() && this.abilityCondition(ability));
             return abilities.some(ability => {
                 let contextCopy = context.copy();
                 contextCopy.targetAbility = ability;
                 if(context.stage === Stages.PreTarget && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
                     return false;
                 }
-                return properties.cardCondition(card, contextCopy) &&
+                return (!properties.cardCondition || properties.cardCondition(card, contextCopy)) &&
                        (!this.dependentTarget || this.dependentTarget.hasLegalTarget(contextCopy)) &&
                        properties.gameAction.some(gameAction => gameAction.hasLegalTarget(contextCopy));
             });
@@ -107,7 +107,7 @@ class AbilityTargetAbility {
             return false;
         }
         return this.properties.cardType === context.targetAbility.card.type &&
-               this.properties.cardCondition(context.targetAbility.card, context) &&
+               (!this.properties.cardCondition || this.properties.cardCondition(context.targetAbility.card, context)) &&
                this.abilityCondition(context.targetAbility) &&
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }
