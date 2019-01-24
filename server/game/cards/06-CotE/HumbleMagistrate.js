@@ -1,13 +1,14 @@
 const DrawCard = require('../../drawcard.js');
 const { Players } = require('../../Constants');
+const AbilityDsl = require('../.../abilitydsl.js');
 
 class HumbleMagistrate extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: context => context.source.isAttacking(),
             match: (card) => card.printedCost >= 4,
             targetController: Players.Any,
-            effect: ability.effects.cardCannot('countForResolution')
+            effect: AbilityDsl.effects.cardCannot('countForResolution')
         });
     }
 }
