@@ -50,7 +50,6 @@ describe('Hand to Hand', function() {
                         defenders: [this.borderlandsDefender, this.intimidatingHida]
                     });
                     this.player2.pass();
-                    this.chat = spyOn(this.game, 'addMessage');
                 });
 
                 it('should prompt to choose an attachment on a participating character', function() {
@@ -78,7 +77,7 @@ describe('Hand to Hand', function() {
                     expect(this.player2).toHavePromptButton('Yes');
                     expect(this.player2).toHavePromptButton('No');
                     this.player2.clickPrompt('Yes');
-                    expect(this.chat).toHaveBeenCalledWith('{0} chooses to resolve {1}\'s ability again', this.player1.player, this.handToHand, undefined);
+                    expect(this.getChatLogs(1)).toContain('player2 chooses to resolve Hand to Hand\'s ability again');
                     expect(this.player2).toHavePrompt('Choose an attachment');
                     expect(this.player2).not.toBeAbleToSelect(this.fineKatana);
                     expect(this.player2).toBeAbleToSelect(this.ornateFan);

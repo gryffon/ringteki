@@ -18,17 +18,17 @@ class NoCostsAbilityResolver extends AbilityResolver {
     initiateAbility() {
         if(this.cancelled) {
             return;
-        } else if(this.context.ability.max && !this.context.secondResolution) {
+        } else if(this.context.ability.max && !this.context.subResolution) {
             this.context.player.incrementAbilityMax(this.context.ability.maxIdentifier);
         }
-        this.context.ability.displayMessage(this.context);
+        this.context.ability.displayMessage(this.context, 'resolves');
         this.game.raiseInitiateAbilityEvent({ card: this.context.source, context: this.context }, () => this.executeHandler());
     }
 }
 
 export interface ResolveAbilityProperties extends CardActionProperties {
     ability: CardAbility,
-    secondResolution?: boolean,
+    subResolution?: boolean,
     player?: Player
 }
 
@@ -36,7 +36,7 @@ export class ResolveAbilityAction extends CardGameAction {
     name = 'resolveAbility';
     defaultProperties: ResolveAbilityProperties = { 
         ability: null,
-        secondResolution: false
+        subResolution: false
     };
     constructor(properties: ((context: AbilityContext) => ResolveAbilityProperties) | ResolveAbilityProperties) {
         super(properties);
@@ -51,7 +51,7 @@ export class ResolveAbilityAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties) as ResolveAbilityProperties;
         let ability = properties.ability;
         let player = properties.player || context.player;
-        if(!super.canAffect(card, context) || !ability || !properties.secondResolution && player.isAbilityAtMax(ability.maxIdentifier)) {
+        if(!super.canAffect(card, context) || !ability || !properties.subResolution && player.isAbilityAtMax(ability.maxIdentifier)) {
             return false;
         }
         let newContext = ability.createContext(player);
@@ -65,7 +65,7 @@ export class ResolveAbilityAction extends CardGameAction {
         let properties = this.getProperties(event.context, additionalProperties) as ResolveAbilityProperties;
         let newContext = Object.assign(properties.ability.createContext(properties.player || event.context.player), {
             isResolveAbility: true,
-            secondResolution: properties.secondResolution
+            subResolution: properties.subResolution
         });
         event.context.game.queueStep(new NoCostsAbilityResolver(event.context.game, newContext));
 
