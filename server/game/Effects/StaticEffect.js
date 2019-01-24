@@ -1,5 +1,4 @@
 const _ = require('underscore');
-const EffectValue = require('./EffectValue');
 const { EffectNames, Durations } = require('../Constants');
 
 const binaryCardEffects = [
@@ -23,7 +22,7 @@ const hasDash = {
     modifyPoliticalSkillMultiplier: card => card.hasDash('political'),
     setBaseMilitarySkill: card => card.hasDash('military'),
     setBasePoliticalSkill: card => card.hasDash('political'),
-    setDash: (card, type) => type && card.hasDash(type),
+    setDash: (card, type) => card.hasDash(type),
     setMilitarySkill: card => card.hasDash('military'),
     setPoliticalSkill: card => card.hasDash('political')
 };
@@ -45,30 +44,23 @@ const conflictingEffects = {
 };
 
 class StaticEffect {
-    constructor(type = '', value) {
+    constructor(type = '', value = true) {
         this.type = type;
-        if(value instanceof EffectValue) {
-            this.value = value;
-        } else {
-            this.value = new EffectValue(value);
-        }
-        this.value.reset();
+        this.value = value;
         this.context = null;
         this.duration = null;
     }
 
     apply(target) {
         target.addEffect(this);
-        this.value.apply(target);
     }
 
     unapply(target) {
         target.removeEffect(this);
-        this.value.unapply(target);
     }
 
     getValue() {
-        return this.value.getValue();
+        return this.value;
     }
 
     recalculate() {
@@ -77,7 +69,10 @@ class StaticEffect {
 
     setContext(context) {
         this.context = context;
-        this.value.setContext(context);
+        if(typeof this.value === 'object') {
+            // @ts-ignore
+            this.value.context = context;
+        }
     }
 
     canBeApplied(target) {
@@ -93,7 +88,7 @@ class StaticEffect {
             return matchingEffects.every(effect => this.hasLongerDuration(effect) || effect.isConditional);
         }
         if(conflictingEffects[type]) {
-            let matchingEffects = conflictingEffects[type](target, this.getValue());
+            let matchingEffects = conflictingEffects[type](target, this.value);
             return matchingEffects.every(effect => this.hasLongerDuration(effect) || effect.isConditional);
         }
         if(type === EffectNames.ModifyBothSkills) {

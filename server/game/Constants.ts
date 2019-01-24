@@ -35,7 +35,6 @@ export enum EffectNames {
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
-    CopyCharacter = 'copyCharacter',
     CustomEffect = 'customEffect',
     DelayedEffect = 'delayedEffect',
     DoesNotBow = 'doesNotBow',
@@ -213,12 +212,10 @@ export enum EventNames {
 };
 
 export enum AbilityTypes {
-    Action = 'action',
     WouldInterrupt = 'cancelinterrupt',
     ForcedInterrupt = 'forcedinterrupt',
     Interrupt = 'interrupt',
     ForcedReaction = 'forcedreaction',
     Reaction = 'reaction',
-    Persistent = 'persistent',
     OtherEffects = 'OtherEffects'
 };

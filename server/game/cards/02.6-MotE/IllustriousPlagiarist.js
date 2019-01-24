@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Durations, Players, CardTypes, AbilityTypes } = require('../../Constants');
+const { Locations, Durations, Players, CardTypes } = require('../../Constants');
 
 class IllustriousPlagiarist extends DrawCard {
     setupCardAbilities(ability) {
@@ -14,7 +14,15 @@ class IllustriousPlagiarist extends DrawCard {
                 gameAction: ability.actions.cardLastingEffect(context => ({
                     duration: Durations.UntilEndOfPhase,
                     target: context.source,
-                    effect: context.target.abilities.actions.map(action => ability.effects.gainAbility(AbilityTypes.Action, action))
+                    effect: context.target.abilities.actions.map(action => {
+                        // We need to keep the old abilityIdentifier and ignore additional event costs
+                        let newProps = { printedAbility: false, abilityIdentifier: action.abilityIdentifier, cost: action.abilityCost };
+                        // If the copied ability has a max, we need to create a new instantiation of it, with the same max and reset event
+                        if(action.properties.max) {
+                            newProps.max = ability.limit.repeatable(action.properties.max.max, action.properties.max.eventName);
+                        }
+                        return ability.effects.gainAbility('action', Object.assign({}, action.properties, newProps));
+                    })
                 }))
             },
             effect: 'copy {0}\'s action abilities'

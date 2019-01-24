@@ -12,6 +12,7 @@ import Game = require('./game');
 import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, Players } from './Constants';
 import { ActionProps, TriggeredAbilityProps, PersistentEffectProps } from './Interfaces'; 
 
+
 class BaseCard extends EffectSource {
     owner: Player;
     controller: Player;
@@ -19,7 +20,7 @@ class BaseCard extends EffectSource {
     cardData;
 
     id: string;
-    printedName: string;
+    name: string;
     inConflict: boolean = false;
     type: CardTypes;
     
@@ -44,50 +45,12 @@ class BaseCard extends EffectSource {
         this.cardData = cardData;
 
         this.id = cardData.id;
-        this.printedName = cardData.name;
+        this.name = cardData.name;
         this.type = cardData.type;
         this.traits = cardData.traits || [];
         this.printedFaction = cardData.clan;
 
         this.setupCardAbilities(AbilityDsl);
-    }
-
-    get name(): string {
-        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
-        return copyEffect ? copyEffect.printedName : this.printedName;
-    }
-
-    set name(name: string) {
-        this.printedName = name;
-    }
-
-    get actions(): CardAction[] {
-        let actions = this.abilities.actions;
-        if(this.anyEffect(EffectNames.CopyCharacter)) {
-            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
-            actions = mostRecentEffect.value.getActions(this);
-        }
-        let effectActions = this.getEffects(EffectNames.GainAbility).filter(ability => ability.abilityType === AbilityTypes.Action);
-        return actions.concat(effectActions);
-    }
-
-    get reactions(): TriggeredAbility[] {
-        const TriggeredAbilityTypes = [AbilityTypes.ForcedInterrupt, AbilityTypes.ForcedReaction, AbilityTypes.Interrupt, AbilityTypes.Reaction, AbilityTypes.WouldInterrupt];
-        let reactions =  this.abilities.reactions;
-        if(this.anyEffect(EffectNames.CopyCharacter)) {
-            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
-            reactions = mostRecentEffect.value.getReactions(this);
-        }
-        let effectReactions = this.getEffects(EffectNames.GainAbility).filter(ability => TriggeredAbilityTypes.includes(ability.abilityType));
-        return reactions.concat(effectReactions);
-    }
-
-    get persistentEffects(): any[] {
-        if(this.anyEffect(EffectNames.CopyCharacter)) {
-            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
-            return mostRecentEffect.value.getPersistentEffects();
-        }
-        return this.isBlank() ? [] : this.abilities.persistentEffects;
     }
 
     /**
@@ -97,20 +60,16 @@ class BaseCard extends EffectSource {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
     }
 
-    action(properties: ActionProps): void {
-        this.abilities.actions.push(this.createAction(properties));
+    action(properties: ActionProps): CardAction {
+        var action = new CardAction(this.game, this, properties);
+        this.abilities.actions.push(action);
+        return action;
     }
 
-    createAction(properties: ActionProps): CardAction {
-        return new CardAction(this.game, this, properties);
-    }
-
-    triggeredAbility(abilityType: AbilityTypes, properties: TriggeredAbilityProps): void {
-        this.abilities.reactions.push(this.createTriggeredAbility(abilityType, properties));
-    }
-
-    createTriggeredAbility(abilityType: AbilityTypes, properties: TriggeredAbilityProps): TriggeredAbility {
-        return new TriggeredAbility(this.game, this, abilityType, properties);
+    triggeredAbility(abilityType: AbilityTypes, properties: TriggeredAbilityProps): TriggeredAbility {
+        let reaction = new TriggeredAbility(this.game, this, abilityType, properties);
+        this.abilities.reactions.push(reaction);
+        return reaction;
     }
 
     reaction(properties: TriggeredAbilityProps): void {
@@ -167,13 +126,12 @@ class BaseCard extends EffectSource {
 
     hasTrait(trait: string): boolean {
         trait = trait.toLowerCase();
-        return this.getTraits().includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);
+        return this.traits.includes(trait) || this.getEffects(EffectNames.AddTrait).includes(trait);
     }
 
     getTraits(): string[] {
-        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
-        let traits = copyEffect ? copyEffect.traits : this.traits;
-        return _.uniq(traits.concat(this.getEffects(EffectNames.AddTrait)));
+        let traits = this.traits.concat(this.getEffects(EffectNames.AddTrait));
+        return _.uniq(traits);
     }
 
     isFaction(faction: string): boolean {
@@ -185,9 +143,9 @@ class BaseCard extends EffectSource {
     }
 
     applyAnyLocationPersistentEffects(): void {
-        _.each(this.persistentEffects, effect => {
+        _.each(this.abilities.persistentEffects, effect => {
             if(effect.location === Locations.Any) {
-                effect.ref = this.addEffectToEngine(effect);
+                this.addEffectToEngine(effect);
             }
         });
     }
@@ -201,7 +159,7 @@ class BaseCard extends EffectSource {
     }
 
     updateAbilityEvents(from: Locations, to: Locations) {
-        _.each(this.reactions, reaction => {
+        _.each(this.abilities.reactions, reaction => {
             reaction.limit.reset();
             if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
@@ -220,26 +178,15 @@ class BaseCard extends EffectSource {
         if(from === Locations.PlayArea || this.type === CardTypes.Holding && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
             this.removeLastingEffects();
         }
-        _.each(this.persistentEffects, effect => {
+        _.each(this.abilities.persistentEffects, effect => {
             if(effect.location !== Locations.Any) {
                 if(activeLocations[effect.location].includes(to) && !activeLocations[effect.location].includes(from)) {
                     effect.ref = this.addEffectToEngine(effect);
                 } else if(!activeLocations[effect.location].includes(to) && activeLocations[effect.location].includes(from)) {
                     this.removeEffectFromEngine(effect.ref);
-                    effect.ref = [];
                 }
             }
         });
-    }
-
-    updateEffectContexts() {
-        for(const effect of this.persistentEffects) {
-            if(effect.ref) {
-                for(let e of effect.ref) {
-                    e.refreshContext();
-                }
-            }
-        }
     }
 
     moveTo(targetLocation: Locations) {
@@ -265,12 +212,11 @@ class BaseCard extends EffectSource {
     getModifiedLimitMax(player: Player, max): number {
         let effects = this.effects.filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
         return effects.reduce((total, effect) => {
-            const value = effect.getValue(this);
-            if(value === Players.Self && effect.context.player === player) {
+            if(effect.value === Players.Self && effect.context.player === player) {
                 return total + 1;
-            } else if(value === Players.Opponent && effect.context.player.opponent === player) {
+            } else if(effect.value === Players.Opponent && effect.context.player.opponent === player) {
                 return total + 1;
-            } else if(value === Players.Any) {
+            } else if(effect.value === Players.Any) {
                 return total + 1;
             }
             return total;
@@ -318,7 +264,7 @@ class BaseCard extends EffectSource {
     }
 
     isBlank(): boolean {
-        return this.anyEffect(EffectNames.Blank) || this.anyEffect(EffectNames.CopyCharacter);
+        return this.anyEffect(EffectNames.Blank);
     }
 
     getPrintedFaction(): string {
@@ -355,7 +301,7 @@ class BaseCard extends EffectSource {
     }
 
     getActions(): any[] {
-        return this.actions.slice();
+        return this.abilities.actions.slice();
     }
 
     getProvinceStrengthBonus(): number {

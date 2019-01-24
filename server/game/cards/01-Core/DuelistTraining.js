@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
 const GameActions = require('../../GameActions/GameActions');
-const { Players, CardTypes, AbilityTypes } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class DuelistTraining extends DrawCard {
     setupCardAbilities(ability) {
+        this.grantedAbilityLimits = {};
         this.whileAttached({
-            effect: ability.effects.gainAbility(AbilityTypes.Action, {
+            effect: ability.effects.gainAbility('action', {
                 title: 'Initiate a duel to bow',
                 condition: context => context.source.isParticipating(),
                 printedAbility: false,
@@ -53,6 +54,11 @@ class DuelistTraining extends DrawCard {
                 () => GameActions.chosenDiscard({ amount: difference }).resolve(lowBidder, context)
             ]
         });
+    }
+
+    leavesPlay() {
+        this.grantedAbilityLimits = {};
+        super.leavesPlay();
     }
 }
 

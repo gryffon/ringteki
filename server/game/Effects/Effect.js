@@ -84,16 +84,8 @@ class Effect {
         this.targets = [];
     }
 
-    isEffectActive() {
-        if(this.duration !== Durations.Persistent) {
-            return true;
-        }
-        let effectOnSource = this.source.persistentEffects.some(effect => effect.ref && effect.ref.includes(this));
-        return !this.source.facedown && effectOnSource;
-    }
-
     checkCondition(stateChanged) {
-        if(!this.condition(this.context) || !this.isEffectActive()) {
+        if(!this.condition(this.context) || (this.duration === Durations.Persistent && (this.source.isBlank() || this.source.facedown))) {
             stateChanged = this.targets.length > 0 || stateChanged;
             this.cancel();
             return stateChanged;

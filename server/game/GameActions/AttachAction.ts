@@ -61,7 +61,13 @@ export class AttachAction extends CardGameAction {
         event.card.parent = event.parent;
         if(event.card.controller !== event.context.player) {
             event.card.controller = event.context.player;
-            event.card.updateEffectContexts();
+            for(let effect of event.card.abilities.persistentEffects) {
+                if(effect.ref) {
+                    for(let e of effect.ref) {
+                        e.refreshContext();
+                    }
+                }
+            }
         }
     }
 }

@@ -1,12 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, CardTypes, AbilityTypes } = require('../../Constants');
+const { Durations, CardTypes } = require('../../Constants');
 
 class Ofushukai extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
         this.grantedAbilityLimits = {};
         this.whileAttached({
             match: card => card.hasTrait('champion'),
-            effect: ability.effects.gainAbility(AbilityTypes.Action, {
+            effect: ability.effects.gainAbility('action', {
                 title: 'Send a character home',
                 condition: context => context.source.isParticipating(),
                 printedAbility: false,

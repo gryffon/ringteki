@@ -1,11 +1,9 @@
 const _ = require('underscore');
 
 const AbilityLimit = require('./abilitylimit.js');
-const CopyCharacter = require('./Effects/CopyCharacter');
 const Restriction = require('./Effects/restriction.js');
-const GainAbility = require('./Effects/GainAbility');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, PlayTypes, Players } = require('./Constants');
+const { EffectNames, Durations, PlayTypes, Players } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -25,7 +23,6 @@ const Effects = {
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsAttacker, type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsDefender, type),
     cardCannot: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(Object.assign({ type: properties.cannot || properties }, properties))),
-    copyCharacter: (character) => EffectBuilder.card.static(EffectNames.CopyCharacter, new CopyCharacter(character)),
     customDetachedCard: (properties) => EffectBuilder.card.detached(EffectNames.CustomEffect, properties),
     delayedEffect: (properties) => EffectBuilder.card.detached(EffectNames.DelayedEffect, {
         apply: (card, context) => {
@@ -37,7 +34,41 @@ const Effects = {
     }),
     doesNotBow: () => EffectBuilder.card.static(EffectNames.DoesNotBow),
     doesNotReady: () => EffectBuilder.card.static(EffectNames.DoesNotReady),
-    gainAbility: (abilityType, properties) => EffectBuilder.card.static(EffectNames.GainAbility, new GainAbility(abilityType, properties)),
+    gainAbility: (abilityType, properties) => EffectBuilder.card.detached(EffectNames.GainAbility, {
+        apply: (card, context) => {
+            let ability;
+            if(abilityType === Durations.Persistent) {
+                ability = card.persistentEffect(properties);
+                return ability;
+            } else if(abilityType === 'action') {
+                ability = card.action(properties);
+            } else {
+                ability = card.triggeredAbility(abilityType, properties);
+                ability.registerEvents();
+            }
+            if(context.source.grantedAbilityLimits) {
+                if(context.source.grantedAbilityLimits[card.uuid]) {
+                    ability.limit = context.source.grantedAbilityLimits[card.uuid];
+                } else {
+                    context.source.grantedAbilityLimits[card.uuid] = ability.limit;
+                }
+            }
+            return ability;
+        },
+        unapply: (card, context, ability) => {
+            if(abilityType === Durations.Persistent) {
+                if(ability.ref) {
+                    card.removeEffectFromEngine(ability.ref);
+                }
+                card.abilities.persistentEffects = card.abilities.persistentEffects.filter(a => a !== ability);
+            } else if(abilityType === 'action') {
+                card.abilities.actions = card.abilities.actions.filter(a => a !== ability);
+            } else {
+                card.abilities.reactions = card.abilities.reactions.filter(a => a !== ability);
+                ability.unregisterEvents();
+            }
+        }
+    }),
     gainPlayAction: (playActionClass) => EffectBuilder.card.detached(EffectNames.GainPlayAction, {
         apply: card => {
             let action = new playActionClass(card);
