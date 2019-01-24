@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const { Players } = require('../../Constants');
-const AbilityDsl = require('../.../abilitydsl.js');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class HumbleMagistrate extends DrawCard {
     setupCardAbilities() {
