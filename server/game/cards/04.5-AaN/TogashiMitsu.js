@@ -13,7 +13,7 @@ class TogashiMitsu extends DrawCard {
                 gameAction: ability.actions.playCard({
                     postHandler: context => {
                         let card = context.source;
-                        if(card.type === CardTypes.Event && context.events.length > 0) {
+                        if(card.type === CardTypes.Event && !context.initiateEvent.cancelled) {
                             this.game.addMessage('{0} is placed on the bottom of {1}\'s deck', card, card.owner);
                             card.owner.moveCard(card, Locations.ConflictDeck, { bottom: true });
                         }
