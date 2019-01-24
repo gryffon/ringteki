@@ -75,8 +75,8 @@ describe('Prudent Challenger', function() {
                 this.player1.clickPrompt('5');
                 this.player2.clickPrompt('1');
                 expect(this.player1).toHavePrompt('Choose an attachment to discard');
-                expect(this.player1).toHavePromptButton('Fine Katana');
-                expect(this.player1).toHavePromptButton('Ornate Fan');
+                expect(this.player1).toBeAbleToSelect(this.fineKatana);
+                expect(this.player1).toBeAbleToSelect(this.ornateFan);
             });
 
             it('should prompt who controls Prudent Challenger to discard attachments on the loser (challenger loses)', function() {
@@ -86,7 +86,8 @@ describe('Prudent Challenger', function() {
                     defenders: [this.mirumotoRaitsugu, this.doomedShugenja],
                     type: 'political'
                 });
-                this.player2.pass();
+                this.player2.clickCard(this.fineKatana);
+                this.player2.clickCard(this.mirumotoRaitsugu);
                 this.player1.clickCard(this.ornateFan);
                 this.player1.clickCard(this.prudentChallenger);
                 this.player2.pass();
@@ -95,7 +96,8 @@ describe('Prudent Challenger', function() {
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('5');
                 expect(this.player1).toHavePrompt('Choose an attachment to discard');
-                expect(this.player1).toHavePromptButton('Ornate Fan');
+                expect(this.player1).not.toBeAbleToSelect(this.fineKatana);
+                expect(this.player1).toBeAbleToSelect(this.ornateFan);
             });
 
             it('should discard the chosen attachment', function() {
@@ -113,7 +115,7 @@ describe('Prudent Challenger', function() {
                 this.player1.clickCard(this.mirumotoRaitsugu);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('5');
-                this.player1.clickPrompt('Ornate Fan');
+                this.player1.clickCard(this.ornateFan);
                 expect(this.ornateFan.location).toBe('conflict discard pile');
             });
         });

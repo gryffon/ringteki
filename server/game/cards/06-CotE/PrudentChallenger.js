@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { CardTypes } = require('../../Constants');
 
 class PrudentChallenger extends DrawCard {
     setupCardAbilities() {
@@ -15,13 +16,15 @@ class PrudentChallenger extends DrawCard {
         if(loser) {
             this.game.addMessage('{0} wins the duel and {1} loses', winner, loser);
             if(loser.attachments.size() > 0) {
-                this.game.promptWithHandlerMenu(context.player, {
+                this.game.promptForSelect(context.player, {
                     activePromptTitle: 'Choose an attachment to discard',
                     context: context,
-                    cards: loser.attachments.sortBy(card => card.name),
-                    cardHandler: card => {
+                    cardType: CardTypes.Attachment,
+                    cardCondition: card => card.parent === loser,
+                    onSelect: (player, card) => {
                         this.game.addMessage('{0} chooses to discard {1}', context.player, card);
                         this.game.applyGameAction(context, { discardCard: card });
+                        return true;
                     }
                 });
             }
