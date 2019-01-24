@@ -1,4 +1,4 @@
-fdescribe('Storied Defeat', function() {
+describe('Storied Defeat', function() {
     integration(function() {
         describe('Storied Defeat\'s ability', function() {
             beforeEach(function() {
