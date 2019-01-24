@@ -7,11 +7,15 @@ export interface SequentialProperties extends GameActionProperties {
 }
 
 export class SequentialAction extends GameAction {
-    effect = 'do several things';
     defaultProperties: SequentialProperties;
 
     constructor(gameActions: GameAction[]) {
         super({ gameActions: gameActions } as GameActionProperties);
+    }
+
+    getEffectMessage(context: AbilityContext): [string, any] {
+        let properties = super.getProperties(context) as SequentialProperties;  
+        return properties.gameActions[0].getEffectMessage(context);      
     }
 
     getProperties(context: AbilityContext, additionalProperties = {}): SequentialProperties {
@@ -35,9 +39,16 @@ export class SequentialAction extends GameAction {
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         for(const gameAction of properties.gameActions) {
-            let events = [];
-            context.game.queueSimpleStep(() => gameAction.addEventsToArray(events, context));
-            context.game.queueSimpleStep(() => context.game.openEventWindow(events));
+            if(gameAction.hasLegalTarget(context, additionalProperties)) {
+                let eventsForThisAction = [];
+                context.game.queueSimpleStep(() => gameAction.addEventsToArray(eventsForThisAction, context));
+                context.game.queueSimpleStep(() => context.game.openEventWindow(eventsForThisAction));
+                context.game.queueSimpleStep(() => {
+                    for(const event of eventsForThisAction) {
+                        events.push(event);
+                    }    
+                });
+            }
         }
     }
 }

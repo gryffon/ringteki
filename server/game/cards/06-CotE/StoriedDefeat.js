@@ -2,7 +2,7 @@ const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 const EventRegistrar = require('../../eventregistrar');
 const CardAbility = require('../../CardAbility');
-const { CardTypes, TargetModes } = require('../../Constants');
+const { CardTypes, EventNames } = require('../../Constants');
 
 class StoriedDefeat extends DrawCard {
     setupCardAbilities() {
@@ -16,28 +16,31 @@ class StoriedDefeat extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => this.duelLosersThisConflict.includes(card),
-                gameAction: AbilityDsl.actions.bow()
-            },
-            then: context => ({
-                target: {
-                    mode: TargetModes.Select,
-                    choices: {
-                        'Spend 1 fate to dishonor this character': AbilityDsl.actions.loseFate({target: context.player }),
-                        'Done': () => true
-                    }
-                },
-                message: '{0} chooses {3}to spend a fate to dishonor {4}',
-                messageArgs: thenContext => [thenContext.select === 'Done' ? 'not ' : '', context.target],
-                then: {
-                    gameAction: AbilityDsl.actions.resolveAbility({
-                        subResolution: true,
-                        ability: new CardAbility(this.game, context.source, {
-                            title: 'Dishonor this character',
-                            gameAction: AbilityDsl.actions.dishonor({ target: context.target })
-                        })
-                    })
-                }
-            })
+                gameAction: AbilityDsl.actions.sequentialAction([
+                    AbilityDsl.actions.bow(),
+                    AbilityDsl.actions.menuPrompt(context => ({
+                        activePromptTitle: 'Spend 1 fate to dishonor ' + context.target.name + '?',
+                        choices: ['Yes'].concat(context.events.some(event => event.name === EventNames.OnCardBowed) ? ['No'] : []),
+                        choiceHandler: (choice, displayMessage) => {
+                            if(displayMessage) {
+                                context.game.addMessage('{0} chooses {1}to spend a fate to dishonor {2}', context.player, choice === 'No' ? 'not ' : '', context.target);
+                            }
+                            return { amount: choice === 'Yes' ? 1 : 0 };
+                        },
+                        gameAction: AbilityDsl.actions.jointAction([
+                            AbilityDsl.actions.loseFate({ target: context.player }),
+                            AbilityDsl.actions.resolveAbility({
+                                target: context.source,
+                                subResolution: true,
+                                ability: new CardAbility(this.game, context.source, {
+                                    title: 'Dishonor this character',
+                                    gameAction: AbilityDsl.actions.dishonor({ target: context.target })
+                                })
+                            })
+                        ])
+                    }))
+                ])
+            }
         });
     }
 
