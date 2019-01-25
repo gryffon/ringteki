@@ -3,6 +3,7 @@ import TriggeredAbilityContext = require('./TriggeredAbilityContext');
 import { GameAction } from './GameActions/GameAction';
 import Ring = require('./ring');
 import BaseCard = require('./basecard');
+import CardAbility = require('./CardAbility');
 import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } from './Constants';
 
 interface BaseTarget {
@@ -29,6 +30,7 @@ interface TargetAbility extends BaseTarget {
     mode: TargetModes.Ability;
     cardType?: CardTypes | CardTypes[];
     cardCondition?: (card: BaseCard, context?: AbilityContext) => boolean;
+    abilityCondition?: (ability: CardAbility) => boolean;
 };
 
 interface BaseTargetCard extends BaseTarget {
@@ -68,7 +70,7 @@ interface ActionRingTarget {
     ringCondition?: (ring: Ring, context?: AbilityContext) => boolean;
 };
 
-type ActionTarget = (TargetCard & ActionCardTarget) | (TargetRing & ActionRingTarget) | TargetSelect;
+type ActionTarget = (TargetCard & ActionCardTarget) | (TargetRing & ActionRingTarget) | TargetSelect | TargetAbility;
 
 interface ActionTargets {
     [propName: string]: ActionTarget & SubTarget;
