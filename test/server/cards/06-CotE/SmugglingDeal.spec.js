@@ -194,6 +194,12 @@ describe('Smuggling Deal', function() {
                 this.player2.clickCard(this.hidaYakamo);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kitsukiShomon);
+                expect(this.kitsukiShomon.bowed).toBe(true);
+                expect(this.kitsukiShomon.isDishonored).toBe(false);
+                this.player1.clickCard(this.kitsukiShomon);
+                expect(this.kitsukiShomon.bowed).toBe(false);
+                expect(this.kitsukiShomon.isDishonored).toBe(true);
+                expect(this.player1).toHavePrompt('Action Window');
             });
         });
 
