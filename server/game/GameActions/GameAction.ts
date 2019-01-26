@@ -87,7 +87,7 @@ export class GameAction {
 
     createEvent(target: any, context: AbilityContext, additionalProperties): Event {
         let event = new Event(EventNames.Unnamed, {});
-        event.isFullyResolved = () => this.isEventFullyResolved(event, target, context, additionalProperties);
+        event.checkFullyResolved = eventAtResolution => this.isEventFullyResolved(eventAtResolution, target, context, additionalProperties);
         return event;
     }
 

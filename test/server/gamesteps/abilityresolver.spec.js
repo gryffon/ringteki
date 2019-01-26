@@ -21,7 +21,8 @@ describe('AbilityResolver', function() {
         this.ability.hasLegalTargets.and.returnValue(true);
         this.ability.resolveTargets.and.returnValue({});
         this.source = jasmine.createSpyObj('source', ['createSnapshot', 'getType']);
-        this.costEvent = jasmine.createSpyObj('costEvent', ['getResult']);
+        this.costEvent = jasmine.createSpyObj('costEvent', ['getResolutionEvent']);
+        this.costEvent.getResolutionEvent.and.returnValue({ cancelled: false });
         this.ability.payCosts.and.returnValue([this.costEvent]);
         this.player = { player: 1 };
         this.game.getPlayers.and.returnValue([this.player]);
