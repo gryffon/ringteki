@@ -2,7 +2,7 @@ const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 const { CardTypes, Players, Durations, TargetModes } = require('../../Constants');
 
-class SmuggglingDeal extends DrawCard {
+class SmugglingDeal extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Increase an ability\'s limit',
@@ -24,6 +24,6 @@ class SmuggglingDeal extends DrawCard {
     }
 }
 
-SmuggglingDeal.id = 'smuggling-deal';
+SmugglingDeal.id = 'smuggling-deal';
 
-module.exports = SmuggglingDeal;
+module.exports = SmugglingDeal;
