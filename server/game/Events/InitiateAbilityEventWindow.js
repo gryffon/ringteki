@@ -37,7 +37,7 @@ class InitiateAbilityEventWindow extends EventWindow {
 
     executeHandler() {
         let event = this.initiateEvent;
-        if(event.context.secondResolution) {
+        if(event.context.subResolution) {
             super.executeHandler();
             return;
         }

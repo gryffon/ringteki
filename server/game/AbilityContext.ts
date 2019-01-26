@@ -35,7 +35,7 @@ class AbilityContext {
     select: string;
     ring: Ring;
     provincesToRefill: any[] = [];
-    secondResolution = false;
+    subResolution = false;
     constructor(properties: AbilityContextProperties) {
         this.game = properties.game;
         this.source = properties.source || new EffectSource(this.game);
@@ -55,7 +55,7 @@ class AbilityContext {
         copy.select = this.select;
         copy.ring = this.ring;
         copy.provincesToRefill = this.provincesToRefill;
-        copy.secondResolution = this.secondResolution;
+        copy.subResolution = this.subResolution;
         return copy;
     }
 
