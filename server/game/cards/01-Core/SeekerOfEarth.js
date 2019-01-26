@@ -12,6 +12,10 @@ class SeekerOfEarth extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['earth'];
+    }
 }
 
 SeekerOfEarth.id = 'seeker-of-earth';

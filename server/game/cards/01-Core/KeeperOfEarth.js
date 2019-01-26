@@ -12,6 +12,10 @@ class KeeperOfEarth extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['earth'];
+    }
 }
 
 KeeperOfEarth.id = 'keeper-of-earth';

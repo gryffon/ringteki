@@ -12,6 +12,10 @@ class SeekerOfAir extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['air'];
+    }
 }
 
 SeekerOfAir.id = 'seeker-of-air';

@@ -12,6 +12,10 @@ class KeeperOfWater extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['water'];
+    }
 }
 
 KeeperOfWater.id = 'keeper-of-water';

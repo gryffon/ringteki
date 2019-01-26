@@ -12,6 +12,10 @@ class KeeperOfAir extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['air'];
+    }
 }
 
 KeeperOfAir.id = 'keeper-of-air';

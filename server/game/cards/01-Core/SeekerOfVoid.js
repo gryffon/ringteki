@@ -12,6 +12,10 @@ class SeekerOfVoid extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['void'];
+    }
 }
 
 SeekerOfVoid.id = 'seeker-of-void';

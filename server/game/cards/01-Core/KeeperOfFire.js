@@ -12,6 +12,10 @@ class KeeperOfFire extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['fire'];
+    }
 }
 
 KeeperOfFire.id = 'keeper-of-fire';

@@ -12,6 +12,10 @@ class KeeperOfVoid extends RoleCard {
             gameAction: ability.actions.gainFate()
         });
     }
+
+    getElement() {
+        return ['void'];
+    }
 }
 
 KeeperOfVoid.id = 'keeper-of-void';
