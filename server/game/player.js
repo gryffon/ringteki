@@ -255,6 +255,24 @@ class Player extends GameObject {
     }
 
     /**
+     * Returns the total number of faceup non-stronghold province cards controlled by this player
+     * @param {Function} predicate - format: (card) => return boolean, default: () => true
+     * */
+    getNumberOfFaceupProvinces(predicate = () => true) {
+        return provinceLocations.reduce((n, province) => {
+            return this.getSourceList(province).filter(card => card.getType() === CardTypes.Province && !card.facedown && predicate(card)).length + n;
+        }, 0);
+    }
+
+    /**
+     * Returns the total number of faceup non-stronghold province cards controlled by this player's opponent
+     * @param {Function} predicate - format: (card) => return boolean, default: () => true
+     * */
+    getNumberOfOpponentsFaceupProvinces(predicate = () => true) {
+        return this.opponent && this.opponent.getNumberOfFaceupProvinces(predicate) || 0;
+    }
+
+    /**
      * Returns the total number of characters and attachments controlled by this player which match the passed predicate
      * @param {Function} predicate - DrawCard => Int
      */
@@ -577,15 +595,16 @@ class Player extends GameObject {
             card.new = false;
         });
 
-        this.modifyFate(this.getTotalIncome());
-
-        this.game.raiseEvent(EventNames.OnIncomeCollected, { player: this });
-
         this.passedDynasty = false;
         this.limitedPlayed = 0;
         this.conflictOpportunities.military = 1;
         this.conflictOpportunities.political = 1;
         this.conflictOpportunities.total = 2;
+    }
+
+    collectFate() {
+        this.modifyFate(this.getTotalIncome());
+        this.game.raiseEvent(EventNames.OnFateCollected, { player: this });
     }
 
     showConflictDeck() {

@@ -1,11 +1,11 @@
-describe('Akodo Toturi Neutral', function() {
+describe('Akodo Toturi 2', function() {
     integration(function() {
-        describe('Akodo Toturi Neutral\'s ability', function() {
+        describe('Akodo Toturi 2\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['akodo-toturi-neutral', 'matsu-berserker'],
+                        inPlay: ['akodo-toturi-2', 'matsu-berserker'],
                         hand: ['banzai', 'fine-katana','kami-unleashed','feral-ningyo', 'assassination']
                     },
                     player2: {
@@ -17,7 +17,7 @@ describe('Akodo Toturi Neutral', function() {
                 });
                 this.player1.player.imperialFavor = 'political';
 
-                this.akodoToturiNeutral = this.player1.findCardByName('akodo-toturi-neutral');
+                this.akodoToturi2 = this.player1.findCardByName('akodo-toturi-2');
                 this.matsuBerserker = this.player1.findCardByName('matsu-berserker');
 
                 this.togashiMitsu = this.player2.findCardByName('togashi-mitsu');
@@ -42,7 +42,7 @@ describe('Akodo Toturi Neutral', function() {
 
             it('should not be able to be triggered outside of a conflict', function() {
                 expect(this.player1).toHavePrompt('Action Window');
-                this.player1.clickCard(this.akodoToturiNeutral);
+                this.player1.clickCard(this.akodoToturi2);
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
@@ -54,7 +54,7 @@ describe('Akodo Toturi Neutral', function() {
                 });
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
-                this.player1.clickCard(this.akodoToturiNeutral);
+                this.player1.clickCard(this.akodoToturi2);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
@@ -62,7 +62,7 @@ describe('Akodo Toturi Neutral', function() {
                 beforeEach(function() {
                     this.noMoreActions();
                     this.initiateConflict({
-                        attackers: [this.akodoToturiNeutral],
+                        attackers: [this.akodoToturi2],
                         defenders: [this.togashiMitsu],
                         ring: 'water'
                     });
@@ -79,7 +79,7 @@ describe('Akodo Toturi Neutral', function() {
                     this.player2.pass();
                     expect(this.player1.player.imperialFavor).toBe('');
                     expect(this.player1).toHavePrompt('Conflict Action Window');
-                    this.player1.clickCard(this.akodoToturiNeutral);
+                    this.player1.clickCard(this.akodoToturi2);
                     expect(this.player1).toHavePrompt('Conflict Action Window');
                 });
 
@@ -87,14 +87,14 @@ describe('Akodo Toturi Neutral', function() {
                     this.player2.pass();
                     expect(this.player1.player.imperialFavor).not.toBe('');
                     expect(this.player1).toHavePrompt('Conflict Action Window');
-                    this.player1.clickCard(this.akodoToturiNeutral);
+                    this.player1.clickCard(this.akodoToturi2);
                     expect(this.player2).toHavePrompt('Conflict Action Window');
                 });
 
                 describe('if it resolves', function() {
                     beforeEach(function() {
                         this.player2.pass();
-                        this.player1.clickCard(this.akodoToturiNeutral);
+                        this.player1.clickCard(this.akodoToturi2);
                     });
 
                     it('should prevent his controller from playing cards from hand', function() {

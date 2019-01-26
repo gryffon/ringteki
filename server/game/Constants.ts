@@ -27,7 +27,6 @@ export enum EffectNames {
     AbilityRestrictions = 'abilityRestrictions',
     AddFaction = 'addFaction',
     AddGloryToBothSkills = 'addGloryToBothSkills',
-    AddGloryWhileDishonored = 'addGloryWhileDishonored',
     AddKeyword = 'addKeyword',
     AddTrait = 'addTrait',
     Blank = 'blank',
@@ -36,6 +35,7 @@ export enum EffectNames {
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
+    CopyCharacter = 'copyCharacter',
     CustomEffect = 'customEffect',
     DelayedEffect = 'delayedEffect',
     DoesNotBow = 'doesNotBow',
@@ -43,6 +43,9 @@ export enum EffectNames {
     GainAbility = 'gainAbility',
     GainPlayAction = 'gainPlayAction',
     HideWhenFaceUp = 'hideWhenFaceUp',
+    HonorStatusDoesNotAffectLeavePlay = 'honorStatusDoesNotAffectLeavePlay',
+    HonorStatusDoesNotModifySkill = 'honorStatusDoesNotModifySkill',
+    HonorStatusReverseModifySkill = 'honorStatusReverseModifySkill',
     IncreaseLimitOnAbilities = 'increaseLimitOnAbilities',
     ModifyBaseMilitarySkill = 'modifyBaseMilitarySkill',
     ModifyBasePoliticalSkill = 'modifyBasePoliticalSkill',
@@ -114,6 +117,7 @@ export enum TargetModes {
     Ring = 'ring',
     Select = 'select',
     Ability = 'ability',
+    AutoSingle = 'autoSingle',
     Exactly = 'exactly',
     MaxStat = 'maxStat',
     Single = 'single',
@@ -173,7 +177,7 @@ export enum EventNames {
     OnReturnRing = 'onReturnRing',
     OnPassFirstPlayer = 'onPassFirstPlayer',
     OnRoundEnded = 'onRoundEnded',
-    OnIncomeCollected = 'onIncomeCollected',
+    OnFateCollected = 'onFateCollected',
     OnCardAttached = 'onCardAttached',
     OnCardHonored = 'onCardHonored',
     OnCardDishonored = 'onCardDishonored',
@@ -210,10 +214,12 @@ export enum EventNames {
 };
 
 export enum AbilityTypes {
+    Action = 'action',
     WouldInterrupt = 'cancelinterrupt',
     ForcedInterrupt = 'forcedinterrupt',
     Interrupt = 'interrupt',
     ForcedReaction = 'forcedreaction',
     Reaction = 'reaction',
+    Persistent = 'persistent',
     OtherEffects = 'OtherEffects'
 };

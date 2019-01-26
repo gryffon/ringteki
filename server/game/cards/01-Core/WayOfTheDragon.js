@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class WayOfTheDragon extends DrawCard {
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: ability.effects.increaseLimitOnAbilities(1)
+            effect: ability.effects.increaseLimitOnAbilities()
         });
     }
     canAttach(card, context) {

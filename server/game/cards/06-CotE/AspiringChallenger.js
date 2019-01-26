@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
-class AspirantChallenger extends DrawCard {
-    setupCardAbilities(ability) {
+class AspiringChallenger extends DrawCard {
+    setupCardAbilities() {
         this.composure({
-            effect: ability.effects.modifyMilitarySkill(2)
+            effect: AbilityDsl.effects.modifyGlory(2)
         });
         this.action({
             title: 'Initiate a Military duel',
@@ -20,6 +21,6 @@ class AspirantChallenger extends DrawCard {
     }
 }
 
-AspirantChallenger.id = 'aspirant-challenger';
+AspiringChallenger.id = 'aspiring-challenger';
 
-module.exports = AspirantChallenger;
+module.exports = AspiringChallenger;
