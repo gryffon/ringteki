@@ -223,3 +223,11 @@ export enum AbilityTypes {
     Persistent = 'persistent',
     OtherEffects = 'OtherEffects'
 };
+
+export enum Elements {
+    Fire = 'fire',
+    Earth = 'earth',
+    Air = 'air',
+    Water = 'water',
+    Void = 'void',
+};

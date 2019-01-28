@@ -1,4 +1,5 @@
 const RoleCard = require('../../rolecard.js');
+const { Elements } = require('../../Constants');
 
 class KeeperOfVoid extends RoleCard {
     setupCardAbilities(ability) {
@@ -14,7 +15,7 @@ class KeeperOfVoid extends RoleCard {
     }
 
     getElement() {
-        return ['void'];
+        return [Elements.Void];
     }
 }
 

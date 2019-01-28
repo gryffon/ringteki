@@ -1,4 +1,5 @@
 const RoleCard = require('../../rolecard.js');
+const { Elements } = require('../../Constants');
 
 class SeekerOfEarth extends RoleCard {
     setupCardAbilities(ability) {
@@ -14,7 +15,7 @@ class SeekerOfEarth extends RoleCard {
     }
 
     getElement() {
-        return ['earth'];
+        return [Elements.Earth];
     }
 }
 

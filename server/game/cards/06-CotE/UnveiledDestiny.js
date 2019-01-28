@@ -4,9 +4,9 @@ const AbilityDsl = require('../../abilitydsl.js');
 class UnveiledDestiny extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
-            condition: context => context.source.parent.isAttacking() && context.player.role.getElement() !== [],
+            condition: context => context.player.role && context.source.parent.isAttacking(),
             match: ring => ring.contested,
-            effect: context => context.player.role.getElement().forEach(element => AbilityDsl.effects.addElement(element))
+            effect: context => context.player.role.getElement().map(element => AbilityDsl.effects.addElement(element))
         });
     }
 }
