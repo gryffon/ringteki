@@ -6,7 +6,7 @@ class UnveiledDestiny extends DrawCard {
         this.persistentEffect({
             condition: context => context.player.role && context.source.parent.isAttacking(),
             match: ring => ring.contested,
-            effect: context => context.player.role.getElement().map(element => AbilityDsl.effects.addElement(element))
+            effect: AbilityDsl.effects.addElement(context => context.player.role.getElement())
         });
     }
 }

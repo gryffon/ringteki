@@ -85,7 +85,7 @@ const Effects = {
         unapply: (card, context, effect) => context.game.effectEngine.removeTerminalCondition(effect)
     }),
     // Ring effects
-    addElement: (element) => EffectBuilder.ring.static(EffectNames.AddElement, element),
+    addElement: (element) => EffectBuilder.ring.flexible(EffectNames.AddElement, element),
     cannotBidInDuels: num => EffectBuilder.player.static(EffectNames.CannotBidInDuels, num),
     cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match), // TODO: Add this to lasting effect checks
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match), // TODO: Add this to lasting effect checks
