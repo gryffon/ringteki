@@ -103,14 +103,14 @@ describe('Policy Debate', function() {
                 expect(this.player2.player.honor).toBe(9);
             });
 
-            it('should buff targets by their bid', function() {
+            it('should not buff targets by their bid', function() {
                 this.player2.clickCard('policy-debate');
                 this.player2.clickCard(this.savvyPolitician);
                 this.player2.clickCard(this.prodigyOfTheWaves);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('3');
-                expect(this.prodigyOfTheWaves.politicalSkill).toBe(4);
-                expect(this.savvyPolitician.politicalSkill).toBe(5);
+                expect(this.prodigyOfTheWaves.politicalSkill).toBe(3);
+                expect(this.savvyPolitician.politicalSkill).toBe(2);
             });
 
             it('should prompt the winner to discard a card from the losers hand, and discard that card', function() {
