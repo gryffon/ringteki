@@ -33,7 +33,6 @@ describe('Unveiled Destiny', function() {
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Resolve Ring Effect');
                 this.player1.clickRing('fire');
-                this.player1.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Fire Ring');
                 this.player1.clickCard(this.shrineMaiden);
                 this.player1.clickPrompt('Honor shrine maiden');
@@ -45,7 +44,6 @@ describe('Unveiled Destiny', function() {
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Resolve Ring Effect');
                 this.player1.clickRing('void');
-                this.player1.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Void Ring');
                 this.player1.clickCard(this.shrineMaiden);
                 expect(this.shrineMaiden.fate).toBe(0);
