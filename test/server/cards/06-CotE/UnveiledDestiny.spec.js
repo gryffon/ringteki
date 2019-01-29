@@ -6,8 +6,8 @@ describe('Unveiled Destiny', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['shrine-maiden'],
-                        hand: ['seeker-of-knowledge', 'assassination', 'unveiled-destiny'],
-                        role: ['seeker-of-void']
+                        hand: ['seeker-of-knowledge', 'assassination', 'unveiled-destiny', 'fine-katana'],
+                        role: 'seeker-of-void'
                     },
                     player2: {
                         provinces: ['defend-the-wall'],

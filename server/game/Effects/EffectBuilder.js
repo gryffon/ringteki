@@ -31,8 +31,7 @@ const EffectBuilder = {
         static: (type, value) => ((game, source, props) => new RingEffect(game, source, props, new StaticEffect(type, value))),
         dynamic: (type, values) => {
             let effectsArray = [];
-            let i;
-            for(i = 0; i < values.length; i++) {
+            for(let i = 0; i < values.length; i++) {
                 (game, source, props) => effectsArray.push(new RingEffect(game, source, props, new DynamicEffect(type, values[i])));
             }
             return effectsArray;
