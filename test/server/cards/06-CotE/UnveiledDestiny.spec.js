@@ -49,6 +49,43 @@ describe('Unveiled Destiny', function() {
                 expect(this.shrineMaiden.fate).toBe(0);
                 expect(this.player1).toHavePrompt('Action Window');
             });
+
+            it('should interact correctly with Seeker of Knowledge', function() {
+                this.player2.pass();
+                this.player1.clickCard('seeker-of-knowledge');
+                this.player1.clickPrompt('0');
+                this.player1.clickPrompt('Conflict');
+                this.noMoreActions();
+                this.player1.clickRing('air');
+                expect(this.player1).toHavePrompt('Air Ring');
+
+            });
+
+            it('should allow defend the wall to resolve the attackers role element.', function() {
+                this.player2.playAttachment('fine-katana', 'shinjo-outrider');
+                this.noMoreActions();
+                this.player2.clickCard('defend-the-wall');
+                expect(this.player2).toHavePrompt('Resolve Ring Effect');
+                this.player2.clickRing('void');
+                expect(this.player2).toHavePrompt('Void Ring');
+                this.player2.clickCard(this.shrineMaiden);
+                expect(this.shrineMaiden.fate).toBe(0);
+            });
+
+            it('should allow defend the wall to resolve the attackers role element.', function() {
+                this.player2.pass();
+                this.player1.clickCard('assassination');
+                this.player1.clickCard('shinjo-outrider', 'any', 'opponent');
+                this.noMoreActions();
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect('display-of-power');
+                this.player2.clickCard('display-of-power');
+                expect(this.player2).toHavePrompt('Resolve Ring Effect');
+                this.player2.clickRing('void');
+                expect(this.player2).toHavePrompt('Void Ring');
+                this.player2.clickCard(this.shrineMaiden);
+                expect(this.shrineMaiden.fate).toBe(0);
+            });
         });
     });
 });
