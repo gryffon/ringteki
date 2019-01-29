@@ -15,8 +15,6 @@ describe('Unveiled Destiny', function() {
                         hand: ['display-of-power', 'fine-katana']
                     }
                 });
-                this.shrineMaiden = this.player1.findCardByName('shrine-maiden');
-                this.shrineMaiden.modifyFate(1);
                 this.player1.playAttachment('unveiled-destiny', 'shrine-maiden');
                 this.noMoreActions();
                 this.initiateConflict({
@@ -27,9 +25,11 @@ describe('Unveiled Destiny', function() {
                     defenders: ['shinjo-outrider']
                 });
                 this.player1.player.optionSettings.orderForcedAbilities = true;
+                this.shrineMaiden = this.player1.findCardByName('shrine-maiden');
+                this.shrineMaiden.modifyFate(1);
             });
 
-            it('should allow the attaking player to resolve only the chosen ring if they wins', function() {
+            it('should allow the attaking player to resolve the chosen ring if they wins', function() {
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Resolve Ring Effect');
                 this.player1.clickRing('fire');

@@ -29,13 +29,7 @@ const EffectBuilder = {
     },
     ring: {
         static: (type, value) => ((game, source, props) => new RingEffect(game, source, props, new StaticEffect(type, value))),
-        dynamic: (type, values) => {
-            let effectsArray = [];
-            for(let i = 0; i < values.length; i++) {
-                (game, source, props) => effectsArray.push(new RingEffect(game, source, props, new DynamicEffect(type, values[i])));
-            }
-            return effectsArray;
-        },
+        dynamic: (type, value) => ((game, source, props) => new RingEffect(game, source, props, new DynamicEffect(type, value))),
         detached: (type, value) => ((game, source, props) => new RingEffect(game, source, props, new DetachedEffect(type, value.apply, value.unapply))),
         flexible: (type, value) => _.isFunction(value) ? EffectBuilder.ring.dynamic(type, value) : EffectBuilder.ring.static(type, value)
     }
