@@ -179,6 +179,10 @@ class Card extends React.Component {
         if(this.props.size !== 'normal') {
             wrapperClassName += ' ' + this.props.size;
         }
+        if(this.props.isMe) {
+            wrapperClassName += ' is-mine';
+        }
+
         return wrapperClassName;
     }
 
