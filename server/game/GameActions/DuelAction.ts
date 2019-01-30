@@ -10,7 +10,8 @@ export interface DuelProperties extends CardActionProperties {
     type: DuelTypes;
     challenger?: DrawCard;
     resolutionHandler: (winner: DrawCard | DrawCard[], loser: DrawCard | DrawCard[]) => void,
-    costHandler?: (context: AbilityContext, prompt: any) => void
+    costHandler?: (context: AbilityContext, prompt: any) => void,
+    statistic?: (card: DrawCard) => any
 }
 
 export class DuelAction extends CardGameAction {
@@ -21,6 +22,7 @@ export class DuelAction extends CardGameAction {
         type: undefined,
         resolutionHandler: () => true
     };
+
     constructor(properties: DuelProperties | ((context: AbilityContext) => DuelProperties)) {
         super(properties);
     }
@@ -38,19 +40,9 @@ export class DuelAction extends CardGameAction {
         if(properties.target instanceof Array) {
             let targets = properties.target as BaseCard[];
             let indices = [...Array(targets.length + 1).keys()].map(x => '{' + x++ + '}').slice(1);
-            return ['initiate a ' + this.getTypeFriendlyName(properties.type) + ' duel : {0} vs. ' + indices.join(' and '), [properties.challenger, ...(properties.target as BaseCard[])]];
+            return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. ' + indices.join(' and '), [properties.challenger, ...(properties.target as BaseCard[])]];
         }
-        return ['initiate a ' + this.getTypeFriendlyName(properties.type) + ' duel : {0} vs. {1}', [properties.challenger, properties.target]];
-    }
-
-    getTypeFriendlyName(type: DuelTypes): string {
-        if(type === DuelTypes.BaseMilitary) {
-            return 'base skill military'
-        }
-        if(type === DuelTypes.BasePolitical) {
-            return 'base skill political'
-        }
-        return type.toString();
+        return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. {1}', [properties.challenger, properties.target]];
     }
 
     canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
@@ -101,7 +93,7 @@ export class DuelAction extends CardGameAction {
             context.game.addMessage('The duel cannot proceed as at least one participant for each side has to be in play');
             return;
         }
-        context.game.currentDuel = new Duel(context.game, properties.challenger, cards, properties.type);
+        context.game.currentDuel = new Duel(context.game, properties.challenger, cards, properties.type, properties.statistic);
         context.game.queueStep(new DuelFlow(
             context.game, 
             context.game.currentDuel, 

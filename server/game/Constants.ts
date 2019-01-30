@@ -224,9 +224,7 @@ export enum AbilityTypes {
 export enum DuelTypes {
     Military = 'military',
     Political = 'political',
-    Glory = 'glory',
-    BaseMilitary = 'baseMilitary',
-    BasePolitical = 'basePolitical'
+    Glory = 'glory'
 };
 
 export enum Elements {

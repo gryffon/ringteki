@@ -8,8 +8,9 @@ class TrueStrikeKenjutsu extends DrawCard {
             effect: AbilityDsl.effects.gainAbility('action', {
                 title: 'Initiate a military duel',
                 initiateDuel: context => ({
-                    type: DuelTypes.BaseMilitary,
-                    resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
+                    type: DuelTypes.Military,
+                    resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser),
+                    statistic: (card) => card.getBaseMilitarySkill()
                 }),
                 printedAbility: false
             })

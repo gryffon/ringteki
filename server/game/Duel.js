@@ -2,7 +2,7 @@ const _ = require('underscore');
 const { Locations, DuelTypes } = require('./Constants');
 
 class Duel {
-    constructor(game, challenger, target, type) {
+    constructor(game, challenger, target, type, statistic) {
         this.game = game;
         this.type = type;
         this.source = game.getFrameworkContext().source;
@@ -11,9 +11,13 @@ class Duel {
         this.bidFinished = false;
         this.winnner = null;
         this.loser = null;
+        this.statistic = statistic;
     }
 
     getSkillStatistic(card) {
+        if(this.statistic) {
+            return this.statistic(card);
+        }
         switch(this.type) {
             case DuelTypes.Military:
                 return card.getMilitarySkill();
@@ -21,10 +25,6 @@ class Duel {
                 return card.getPoliticalSkill();
             case DuelTypes.Glory:
                 return card.glory;
-            case DuelTypes.BaseMilitary:
-                return card.getBaseMilitarySkill();
-            case DuelTypes.BasePolitical:
-                return card.getBasePoliticalSkill();
         }
     }
 
