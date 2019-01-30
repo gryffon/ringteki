@@ -89,17 +89,17 @@ describe('Mirumoto Hitomi', function() {
                 this.player2.clickPrompt('1');
 
                 expect(this.player2).toHavePrompt('Select an action:');
-                expect(this.player2).toHavePromptButton('Dishonor Mirumoto Raitsugu');
-                expect(this.player2).toHavePromptButton('Bow Mirumoto Raitsugu');
+                expect(this.player2).toHavePromptButton('Dishonor this character');
+                expect(this.player2).toHavePromptButton('Bow this character');
 
-                this.player2.clickPrompt('Dishonor Mirumoto Raitsugu');
+                this.player2.clickPrompt('Dishonor this character');
                 expect(this.mirumotoRaitsugu.isDishonored).toBe(false); //should not be dishonored yet until all choices are made
 
                 expect(this.player2).toHavePrompt('Select an action:');
-                expect(this.player2).toHavePromptButton('Dishonor Doomed Shugenja');
-                expect(this.player2).toHavePromptButton('Bow Doomed Shugenja');
+                expect(this.player2).toHavePromptButton('Dishonor this character');
+                expect(this.player2).toHavePromptButton('Bow this character');
 
-                this.player2.clickPrompt('Bow Doomed Shugenja');
+                this.player2.clickPrompt('Bow this character');
 
                 expect(this.mirumotoRaitsugu.isDishonored).toBe(true);
                 expect(this.doomedShugenja.bowed).toBe(true);
@@ -153,16 +153,16 @@ describe('Mirumoto Hitomi', function() {
                 this.player2.clickPrompt('1');
 
                 expect(this.player2).toHavePrompt('Select an action:');
-                expect(this.player2).not.toHavePromptButton('Dishonor Mirumoto Raitsugu');
-                expect(this.player2).toHavePromptButton('Bow Mirumoto Raitsugu');
+                expect(this.player2).not.toHavePromptButton('Dishonor this character');
+                expect(this.player2).toHavePromptButton('Bow this character');
 
-                this.player2.clickPrompt('Bow Mirumoto Raitsugu');
+                this.player2.clickPrompt('Bow this character');
 
                 expect(this.player2).toHavePrompt('Select an action:');
-                expect(this.player2).toHavePromptButton('Dishonor Doomed Shugenja');
-                expect(this.player2).toHavePromptButton('Bow Doomed Shugenja');
+                expect(this.player2).toHavePromptButton('Dishonor this character');
+                expect(this.player2).toHavePromptButton('Bow this character');
 
-                this.player2.clickPrompt('Bow Doomed Shugenja');
+                this.player2.clickPrompt('Bow this character');
 
                 expect(this.mirumotoRaitsugu.bowed).toBe(true);
                 expect(this.doomedShugenja.bowed).toBe(true);

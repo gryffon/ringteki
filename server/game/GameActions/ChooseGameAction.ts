@@ -74,7 +74,8 @@ export class ChooseGameAction extends GameAction {
         if(choices.length === 0) {
             return;
         }
-        context.game.promptWithHandlerMenu(player, { activePromptTitle, context, choices, choiceHandler });
+        let target = properties.target;
+        context.game.promptWithHandlerMenu(player, { activePromptTitle, context, choices, choiceHandler, target });
     }
 
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
