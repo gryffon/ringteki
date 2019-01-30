@@ -170,10 +170,11 @@ class Card extends React.Component {
 
     getWrapper() {
         let wrapperClassName = '';
-        let attachments = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
-        wrapperClassName += 'wrapper-' + attachments.toString();
         if(this.props.source === 'play area') {
             wrapperClassName += ' at-home';
+        }
+        if(this.props.card.inConflict) {
+            wrapperClassName += ' conflict';
         }
         if(this.props.size !== 'normal') {
             wrapperClassName += ' ' + this.props.size;
@@ -499,7 +500,7 @@ class Card extends React.Component {
     render() {
         if(this.props.wrapped) {
             return (
-                <div className={ 'card-wrapper' } style={ Object.assign({}, this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
+                <div className={ 'card-wrapper ' + this.getWrapper()  } style={ Object.assign({}, this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
                     { this.getCard() }
                     { this.getAttachments() }
                 </div>);
