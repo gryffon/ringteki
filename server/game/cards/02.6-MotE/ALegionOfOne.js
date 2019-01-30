@@ -18,7 +18,7 @@ class ALegionOfOne extends DrawCard {
             },
             effect: 'give {0} +3/+0',
             then: context => {
-                if(context.secondResolution) {
+                if(context.subResolution) {
                     return {
                         target: {
                             mode: TargetModes.Select,
@@ -43,7 +43,7 @@ class ALegionOfOne extends DrawCard {
                     messageArgs: context => context.select === 'Done' ? 'not ' : '',
                     then: {
                         thenCondition: event => event.origin === context.target && !event.cancelled && event.name === EventNames.OnMoveFate,
-                        gameAction: ability.actions.resolveAbility({ ability: context.ability, secondResolution: true })
+                        gameAction: ability.actions.resolveAbility({ ability: context.ability, subResolution: true })
                     }
                 };
             }

@@ -24,18 +24,18 @@ export class JointGameAction extends GameAction {
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
-        return properties.gameActions.every(gameAction => gameAction.hasLegalTarget(context));
+        return properties.gameActions.every(gameAction => gameAction.hasLegalTarget(context, additionalProperties));
     }
 
     canAffect(target: GameObject, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
-        return properties.gameActions.every(gameAction => gameAction.canAffect(target, context));
+        return properties.gameActions.every(gameAction => gameAction.canAffect(target, context, additionalProperties));
     }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         for(const gameAction of properties.gameActions) {
-            gameAction.addEventsToArray(events, context);
+            gameAction.addEventsToArray(events, context, additionalProperties);
         }
     }
 }

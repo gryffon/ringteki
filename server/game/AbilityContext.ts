@@ -16,6 +16,7 @@ interface AbilityContextProperties {
     selects?: any;
     events?: any[];
     stage?: Stages;
+    targetAbility?: any;
 }
 
 class AbilityContext {
@@ -29,11 +30,12 @@ class AbilityContext {
     selects: any;
     events: any[] = [];
     stage: Stages;
+    targetAbility: any;
     target: any;
     select: string;
     ring: Ring;
     provincesToRefill: any[] = [];
-    secondResolution = false;
+    subResolution = false;
     constructor(properties: AbilityContextProperties) {
         this.game = properties.game;
         this.source = properties.source || new EffectSource(this.game);
@@ -44,6 +46,7 @@ class AbilityContext {
         this.rings = properties.rings || {};
         this.selects = properties.selects || {};
         this.stage = properties.stage || Stages.Effect;
+        this.targetAbility = properties.targetAbility;
     }
 
     copy(newProps: object): AbilityContext {
@@ -52,7 +55,7 @@ class AbilityContext {
         copy.select = this.select;
         copy.ring = this.ring;
         copy.provincesToRefill = this.provincesToRefill;
-        copy.secondResolution = this.secondResolution;
+        copy.subResolution = this.subResolution;
         return copy;
     }
 
@@ -83,6 +86,7 @@ class AbilityContext {
             selects: Object.assign({}, this.selects),
             events: this.events,
             stage: this.stage,
+            targetAbility: this.targetAbility
         };
     }
 }

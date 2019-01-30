@@ -9,10 +9,11 @@ class Event {
         this.handler = handler;
         this.context = null;
         this.window = null;
+        this.replacementEvent = null;
         this.condition = (event) => true; // eslint-disable-line no-unused-vars
         this.order = 0;
         this.isContingent = false;
-        this.isFullyResolved = (event) => !event.cancelled;
+        this.checkFullyResolved = (event) => !event.cancelled;
         this.createContingentEvents = () => [];
         this.preResolutionEffect = () => true;
 
@@ -41,6 +42,17 @@ class Event {
         if(!this.condition(this)) {
             this.cancel();
         }
+    }
+
+    getResolutionEvent() {
+        if(this.replacementEvent) {
+            return this.replacementEvent.getResolutionEvent();
+        }
+        return this;
+    }
+
+    isFullyResolved() {
+        return this.checkFullyResolved(this.getResolutionEvent());
     }
 
     executeHandler() {

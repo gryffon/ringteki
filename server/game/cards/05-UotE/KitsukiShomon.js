@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const ThenAbility = require('../../ThenAbility');
 
 class KitsukiShomon extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Dishonor this character instead',
             when: {
@@ -14,11 +15,14 @@ class KitsukiShomon extends DrawCard {
             effect: 'dishonor {0} instead of {1}',
             effectArgs: context => context.event.card,
             handler: context => {
-                context.event.card = context.source;
-                let thenAbility = new ThenAbility(this.game, this, { gameAction: ability.actions.ready() });
-                let condition = event => !event.cancelled && event.card === context.source;
-                context.events = [context.event];
-                context.event.window.addThenAbility(thenAbility, context, condition);
+                let newEvent = AbilityDsl.actions.dishonor().getEvent(context.source, context);
+                context.event.replacementEvent = newEvent;
+                let thenAbility = new ThenAbility(this.game, this, { gameAction: AbilityDsl.actions.ready() });
+                //let condition = event => !event.cancelled && event.card === context.source;
+                context.events = [newEvent];
+                context.event.window.addEvent(newEvent);
+                context.event.window.addThenAbility(thenAbility, context);
+                context.cancel();
             }
         });
     }

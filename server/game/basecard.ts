@@ -3,6 +3,7 @@ import _ = require('underscore');
 const AbilityDsl = require('./abilitydsl.js');
 const CustomPlayAction = require('./customplayaction.js');
 const EffectSource = require('./EffectSource.js');
+import CardAbility = require('./CardAbility');
 import CardAction = require('./cardaction.js');
 import TriggeredAbility = require('./triggeredability');
 import AbilityContext = require('./AbilityContext');
@@ -262,15 +263,11 @@ class BaseCard extends EffectSource {
         return !this.facedown && (this.checkRestrictions('triggerAbilities', context) || !context.ability.isTriggeredAbility());
     }
 
-    getModifiedLimitMax(player: Player, max): number {
-        let effects = this.effects.filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
+    getModifiedLimitMax(player: Player, ability: CardAbility, max: number): number {
+        const effects = this.effects.filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
         return effects.reduce((total, effect) => {
             const value = effect.getValue(this);
-            if(value === Players.Self && effect.context.player === player) {
-                return total + 1;
-            } else if(value === Players.Opponent && effect.context.player.opponent === player) {
-                return total + 1;
-            } else if(value === Players.Any) {
+            if((value === true || value === ability) && effect.context.player === player) {
                 return total + 1;
             }
             return total;

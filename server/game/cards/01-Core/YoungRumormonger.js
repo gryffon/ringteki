@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { CardTypes, EventNames } = require('../../Constants');
 
 class YoungRumormonger extends DrawCard {
@@ -16,7 +17,13 @@ class YoungRumormonger extends DrawCard {
             },
             effect: '{1} {0} instead of {2}',
             effectArgs: context => [context.event.name === EventNames.OnCardHonored ? 'honor' : 'dishonor', context.event.card],
-            handler: context => context.event.card = context.target
+            handler: context => {
+                let actionName = context.event.name === EventNames.OnCardHonored ? 'honor' : 'dishonor';
+                let newEvent = AbilityDsl.actions[actionName]().getEvent(context.target, context);
+                context.event.replacementEvent = newEvent;
+                context.event.window.addEvent(newEvent);
+                context.cancel();
+            }
         });
     }
 }

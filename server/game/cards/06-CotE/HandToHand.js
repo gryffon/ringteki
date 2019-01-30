@@ -18,11 +18,16 @@ class HandToHand extends DrawCard {
                     mode: TargetModes.Select,
                     activePromptTitle: 'Resolve Hand to Hand\'s ability again?',
                     choices: {
-                        'Yes': ability.actions.resolveAbility({ ability: context.ability, player: context.player.opponent }),
+                        'Yes': ability.actions.resolveAbility({
+                            ability: context.ability,
+                            player: context.player.opponent,
+                            subResolution: true
+                        }),
                         'No': () => true
                     }
                 },
-                message: '{0} chooses to resolve {1}\'s ability again'
+                message: '{3} chooses {4}to resolve {1}\'s ability again',
+                messageArgs: thenContext => [context.player.opponent, thenContext.select === 'No' ? 'not ' : '']
             })
         });
     }
