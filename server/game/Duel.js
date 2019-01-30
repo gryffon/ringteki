@@ -1,5 +1,5 @@
 const _ = require('underscore');
-const { Locations } = require('./Constants');
+const { Locations, DuelTypes } = require('./Constants');
 
 class Duel {
     constructor(game, challenger, target, type) {
@@ -11,18 +11,21 @@ class Duel {
         this.bidFinished = false;
         this.winnner = null;
         this.loser = null;
-        this.statistic = (card) => 0; // eslint-disable-line no-unused-vars
     }
 
     getSkillStatistic(card) {
-        if(this.type === 'military') {
-            return card.getMilitarySkill(this.bidFinished);
-        } else if(this.type === 'political') {
-            return card.getPoliticalSkill(this.bidFinished);
-        } else if(this.type === 'glory') {
-            return card.glory;
+        switch(this.type) {
+            case DuelTypes.Military:
+                return card.getMilitarySkill();
+            case DuelTypes.Political:
+                return card.getPoliticalSkill();
+            case DuelTypes.Glory:
+                return card.glory;
+            case DuelTypes.BaseMilitary:
+                return card.getBaseMilitarySkill();
+            case DuelTypes.BasePolitical:
+                return card.getBasePoliticalSkill();
         }
-        return this.statistic(card);
     }
 
     isInvolved(card) {
