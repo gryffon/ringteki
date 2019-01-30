@@ -2,7 +2,7 @@ import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 import { Players } from '../Constants';
 
-interface ChooseGameChoices {
+export interface ChooseGameChoices {
     [choice: string]: GameAction | GameAction[];
 }
 
