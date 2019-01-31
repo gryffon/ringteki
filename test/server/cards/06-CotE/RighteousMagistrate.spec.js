@@ -29,6 +29,13 @@ describe('Righteous magistrate', function() {
             });
 
             it('players should lose or gain honor when honored/dishonored characters leaving play', function() {
+                this.player2.clickCard('assassination');
+                this.player2.pass();
+                expect(this.player1.honor).toBe(11);
+                expect(this.player2.honor).toBe(9);
+            });
+
+            it('players should lose or gain honor when honored/dishonored characters leaving play', function() {
                 this.shrineMaiden.honor();
                 this.shibaTsukune.dishonor();
                 this.player2.clickCard('noble-sacrifice');
