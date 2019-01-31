@@ -42,7 +42,7 @@ describe('Righteous magistrate', function() {
             it('watch commander shouldn\'t cause you players to lose honor', function() {
                 this.player2.playAttachment('watch-commander', 'righteous-magistrate');
                 this.player1.playAttachment('fine-katana', 'shiba-tsukune');
-                
+                this.player2.pass();
                 expect(this.player1.honor).toBe(11);
                 expect(this.player2.honor).toBe(9);
             });
