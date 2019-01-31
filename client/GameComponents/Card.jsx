@@ -7,7 +7,6 @@ import 'jquery-nearest';
 
 import CardMenu from './CardMenu.jsx';
 import CardCounters from './CardCounters.jsx';
-import { textChangeRangeIsUnchanged } from 'typescript';
 
 class Card extends React.Component {
     constructor() {
@@ -193,15 +192,15 @@ class Card extends React.Component {
         switch(this.props.size) {
             case 'large':
                 attachmentOffset *= 1.4;
-                cardHeight*=1.4;
+                cardHeight *= 1.4;
                 break;
             case 'small':
                 attachmentOffset *= 0.8;
-                cardHeight*=0.8;
+                cardHeight *= 0.8;
                 break;
             case 'x-large':
                 attachmentOffset *= 2;
-                cardHeight*=2;
+                cardHeight *= 2;
                 break;
         }
         let attachmentCount = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
@@ -214,8 +213,8 @@ class Card extends React.Component {
         });
 
         if(attachmentCount > 0) {
-            wrapperStyle = { marginLeft:(4 + attachmentCount * attachmentOffset) + 'px', minHeight: (cardHeight + totalTiers*attachmentOffset) +'px' };
-        } else if (this.props.source === 'play area'){
+            wrapperStyle = { marginLeft:(4 + attachmentCount * attachmentOffset) + 'px', minHeight: (cardHeight + totalTiers * attachmentOffset) + 'px' };
+        } else if(this.props.source === 'play area') {
             wrapperStyle = {marginLeft: '4px', marginRight: '4px'};
         }
 
@@ -235,25 +234,21 @@ class Card extends React.Component {
         switch(this.props.size) {
             case 'large':
                 attachmentOffset *= 1.4;
-                cardHeight *=1.4;
+                cardHeight *= 1.4;
                 break;
             case 'small':
                 attachmentOffset *= 0.8;
-                cardHeight *=0.8;
+                cardHeight *= 0.8;
                 break;
             case 'x-large':
                 attachmentOffset *= 2;
-                cardHeight *=2;
+                cardHeight *= 2;
                 break;
         }
         var index = 1;
-        var tier = 1; 
         var attachments = _.map(this.props.card.attachments, attachment => {
-            if(attachment.bowed) {
-                tier += 1;
-            }
             var returnedAttachment = (<Card key={ attachment.uuid } source={ this.props.source } card={ attachment }
-                className={ 'attachment' } wrapped={ false } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', marginTop:(-1*cardHeight - attachmentOffset*(attachment.bowed ? 1 : 0))+'px', zIndex: (cardLayer - index)} }
+                className={ 'attachment' } wrapped={ false } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', marginTop:(-1 * cardHeight - attachmentOffset * (attachment.bowed ? 1 : 0)) + 'px', zIndex: (cardLayer - index)} }
                 onMouseOver={ this.props.disableMouseOver ? null : this.onMouseOver.bind(this, attachment) }
                 onMouseOut={ this.props.disableMouseOver ? null : this.onMouseOut }
                 onClick={ this.props.onClick }
@@ -504,7 +499,7 @@ class Card extends React.Component {
     render() {
         if(this.props.wrapped) {
             return (
-                <div className={ 'card-wrapper ' + this.getWrapper()  } style={ Object.assign({}, this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
+                <div className={ 'card-wrapper ' + this.getWrapper() } style={ Object.assign({}, this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
                     { this.getCard() }
                     { this.getAttachments() }
                 </div>);
