@@ -7,7 +7,7 @@ describe('Righteous magistrate', function() {
                     player1: {
                         honor: 11,
                         inPlay: ['shinjo-outrider', 'shiba-tsukune'],
-                        hand: ['assassination', 'fine-katana']
+                        hand: ['assassination', 'fine-katana', 'game-of-sadane']
                     },
                     player2: {
                         honor: 9,
@@ -28,20 +28,23 @@ describe('Righteous magistrate', function() {
                 this.shibaTsukune = this.player1.findCardByName('shiba-tsukune');
             });
 
-            it('players should lose or gain honor when honored/dishonored characters leaving play', function() {
+            it('players shouldn\'t being able to play assassination', function() {
                 this.player2.clickCard('assassination');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
                 this.player2.pass();
                 expect(this.player1.honor).toBe(11);
                 expect(this.player2.honor).toBe(9);
             });
 
-            it('players should lose or gain honor when honored/dishonored characters leaving play', function() {
+            it('players shouldn\'t lose or gain honor when honored/dishonored characters leaving play', function() {
                 this.shrineMaiden.honor();
                 this.shibaTsukune.dishonor();
                 this.player2.clickCard('noble-sacrifice');
                 this.player2.clickPrompt('Pay Costs First');
                 this.player2.clickCard(this.shrineMaiden);
                 this.player2.clickCard(this.shibaTsukune);
+                expect(this.shrineMaiden.location).toBe('conflict discard pile');
+                expect(this.shibaTsukune.location).toBe('dynasty discard pile');
                 expect(this.player1.honor).toBe(11);
                 expect(this.player2.honor).toBe(9);
             });
@@ -50,6 +53,17 @@ describe('Righteous magistrate', function() {
                 this.player2.playAttachment('watch-commander', 'righteous-magistrate');
                 this.player1.playAttachment('fine-katana', 'shiba-tsukune');
                 this.player2.pass();
+                expect(this.player1.honor).toBe(11);
+                expect(this.player2.honor).toBe(9);
+            });
+
+            it('should stop players from lossing honor during duels', function() {
+                this.player2.pass();
+                this.player1.clickCard('game-of-sadane');
+                this.player1.clickCard(this.shibaTsukune);
+                this.player1.clickCard(this.shrineMaiden);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('5');
                 expect(this.player1.honor).toBe(11);
                 expect(this.player2.honor).toBe(9);
             });
