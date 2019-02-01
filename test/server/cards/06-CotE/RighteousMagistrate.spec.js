@@ -7,7 +7,7 @@ describe('Righteous magistrate', function() {
                     player1: {
                         honor: 11,
                         inPlay: ['shinjo-outrider', 'shiba-tsukune'],
-                        hand: ['assassination', 'fine-katana', 'game-of-sadane']
+                        hand: ['assassination', 'fine-katana', 'game-of-sadane', 'smuggling-deal']
                     },
                     player2: {
                         honor: 9,
@@ -28,8 +28,10 @@ describe('Righteous magistrate', function() {
                 this.shibaTsukune = this.player1.findCardByName('shiba-tsukune');
             });
 
-            it('players shouldn\'t being able to play assassination', function() {
+            it('players shouldn\'t being able to play assassination or smuggling deal', function() {
                 this.player2.clickCard('assassination');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard('smuggling-deal');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 this.player2.pass();
                 expect(this.player1.honor).toBe(11);
