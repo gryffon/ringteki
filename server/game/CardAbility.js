@@ -9,16 +9,17 @@ class CardAbility extends ThenAbility {
         if(properties.initiateDuel) {
             if(properties.condition) {
                 let condition = properties.condition;
-                properties.condition = context => context.source.isParticipating() && condition(context);
+                properties.condition = context => (context.source.type !== CardTypes.Character || context.source.isParticipating()) && condition(context);
             } else {
-                properties.condition = context => context.source.isParticipating();
+                properties.condition = context => context.source.type !== CardTypes.Character || context.source.isParticipating();
             }
             properties.targets = {
                 challenger: {
                     cardType: CardTypes.Character,
-                    mode: TargetModes.AutoSingle,
+                    mode: card.type === CardTypes.Character ? TargetModes.AutoSingle : TargetModes.Single,
                     controller: Players.Self,
-                    cardCondition: (card, context) => card.isParticipating() && card === context.source
+                    cardCondition: (card, context) => card.isParticipating()
+                        && (context.source.type === CardTypes.Character ? card === context.source : true)
                 },
                 duelTarget: {
                     dependsOn: 'challenger',
