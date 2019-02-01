@@ -7,8 +7,8 @@ class TheMirrorsGaze extends DrawCard {
             title: 'Mirror an opponent\'s event',
             when: {
                 onAbilityResolved: (event, context) =>
-                    !event.initiateEvent.cancelled && event.card.type === CardTypes.Event &&
-                    !event.context.ability.cannotBeMirrored && event.context.player === context.player.opponent
+                    event.card.type === CardTypes.Event && !event.context.ability.cannotBeMirrored &&
+                    event.context.player === context.player.opponent && !event.cancelled
             },
             gameAction: ability.actions.resolveAbility(context => ({
                 target: context.event.card,

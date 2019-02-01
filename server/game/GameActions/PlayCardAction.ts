@@ -28,8 +28,8 @@ class PlayCardResolver extends AbilityResolver {
         super.payCosts();
     }
 
-    initiateAbility() {
-        super.initiateAbility();
+    executeHandler() {
+        super.executeHandler();
         if(!this.cancelPressed) {
             this.game.queueSimpleStep(() => this.gameActionProperties.postHandler(this.context));
         }

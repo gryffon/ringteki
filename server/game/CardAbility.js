@@ -105,11 +105,16 @@ class CardAbility extends ThenAbility {
         return super.meetsRequirements(context);
     }
 
+    getReducedCost(context) {
+        let fateCost = this.cost.find(cost => cost.getReducedCost);
+        return fateCost ? fateCost.getReducedCost(context) : 0;
+    }
+
     isInValidLocation(context) {
         return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand) : this.location.includes(this.card.location);
     }
 
-    displayMessage(context, messageVerb = context.source.type === CardTypes.Event ? 'plays' : 'uses') {
+    displayMessage(context) {
         if(this.properties.message) {
             let messageArgs = this.properties.messageArgs;
             if(typeof messageArgs === 'function') {
@@ -122,7 +127,7 @@ class CardAbility extends ThenAbility {
             return;
         }
         // Player1 plays Assassination
-        let messageArgs = [context.player, ' ' + messageVerb + ' ', context.source];
+        let messageArgs = [context.player, context.source.type === CardTypes.Event ? ' plays ' : ' uses ', context.source];
         let costMessages = this.cost.map(cost => {
             if(cost.action) {
                 let card = context.costs[cost.action.name];

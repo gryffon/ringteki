@@ -6,7 +6,7 @@ class ForgedEdict extends DrawCard {
         this.wouldInterrupt({
             title: 'Cancel an event',
             when: {
-                onCardAbilityInitiated: event => event.card.type === CardTypes.Event
+                onInitiateAbilityEffects: event => event.card.type === CardTypes.Event
             },
             cannotBeMirrored: true,
             cost: ability.costs.dishonor(card => card.hasTrait('courtier')),

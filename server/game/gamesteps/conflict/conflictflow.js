@@ -7,6 +7,7 @@ const SimpleStep = require('../simplestep.js');
 const ConflictActionWindow = require('./conflictactionwindow.js');
 const InitiateConflictPrompt = require('./initiateconflictprompt.js');
 const SelectDefendersPrompt = require('./selectdefendersprompt.js');
+const InitiateCardAbilityEvent = require('../../Events/InitiateCardAbilityEvent');
 
 const { Players, CardTypes, EventNames } = require('../../Constants');
 
@@ -151,10 +152,12 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        this.game.raiseMultipleInitiateAbilityEvents(this.covert.map(context => ({
-            params: { card: context.source, context: context },
-            handler: () => context.target.covert = true
-        })));
+        let events = this.covert.map(context => new InitiateCardAbilityEvent(
+            { card: context.source, context: context },
+            () => context.target.covert = true
+        ));
+        events = events.concat(this.covert.map(context => this.game.getEvent(EventNames.OnCovertResolved, { card: context.source, context: context })));
+        this.game.openEventWindow(events);
     }
 
     raiseDeclarationEvents() {

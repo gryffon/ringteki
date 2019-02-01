@@ -6,7 +6,7 @@ class YogoKikuyo extends DrawCard {
         this.wouldInterrupt({
             title: 'Cancel a spell',
             when: {
-                onCardAbilityInitiated: (event, context) => this.game.isDuringConflict() && event.card.type === CardTypes.Event &&
+                onInitiateAbilityEffects: (event, context) => this.game.isDuringConflict() && event.card.type === CardTypes.Event &&
                                                             event.card.hasTrait('spell') &&
                                                             event.card.controller === context.player.opponent
             },

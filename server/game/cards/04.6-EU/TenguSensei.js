@@ -6,7 +6,7 @@ class TenguSensei extends DrawCard {
         this.reaction({
             title: 'Prevent a character from attacking this phase',
             when: {
-                onAbilityResolved: (event, context) => event.card === context.source && event.context.ability.title === 'covert'
+                onCovertResolved: (event, context) => event.card === context.source
             },
             effect: 'prevent {1} from attacking this phase',
             effectArgs: context => context.event.context.target,
