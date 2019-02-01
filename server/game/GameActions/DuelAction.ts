@@ -16,6 +16,7 @@ export interface DuelProperties extends CardActionProperties {
 
 export class DuelAction extends CardGameAction {
     name = 'duel';
+    eventName = EventNames.OnDuelInitiated;
     targetType = [CardTypes.Character];
 
     defaultProperties: DuelProperties = {
