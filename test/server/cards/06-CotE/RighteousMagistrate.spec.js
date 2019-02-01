@@ -7,12 +7,12 @@ describe('Righteous magistrate', function() {
                     player1: {
                         honor: 11,
                         inPlay: ['shinjo-outrider', 'shiba-tsukune'],
-                        hand: ['assassination', 'fine-katana', 'game-of-sadane', 'smuggling-deal']
+                        hand: ['assassination', 'fine-katana', 'game-of-sadane']
                     },
                     player2: {
                         honor: 9,
                         inPlay: ['righteous-magistrate', 'shrine-maiden'],
-                        hand: ['assassination', 'noble-sacrifice', 'watch-commander']
+                        hand: ['assassination', 'noble-sacrifice', 'watch-commander', 'smuggling-deal']
                     }
                 });
                 this.noMoreActions();
