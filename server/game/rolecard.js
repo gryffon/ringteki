@@ -40,6 +40,10 @@ class RoleCard extends BaseCard {
         }
         return super.allowGameAction(actionType, context);
     }
+
+    getElement() {
+        return [];
+    }
 }
 
 module.exports = RoleCard;
