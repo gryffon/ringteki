@@ -83,7 +83,7 @@ export class PlayerStatsBox extends React.Component {
                     </div>
                 </div>
                 <div className='stats-row'>
-                    { this.getButton('fate', 'Fate_token') }
+                    { this.getButton('fate', 'Fate') }
                 </div>
                 <div className='stats-row'>
                     { this.getButton('honor', 'Honor') }
