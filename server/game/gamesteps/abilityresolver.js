@@ -12,6 +12,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.context = context;
         this.canCancel = true;
         this.initiateAbility = false;
+        this.events = [];
         this.provincesToRefill = [];
         this.targetResults = {};
         this.initialise();
@@ -34,7 +35,6 @@ class AbilityResolver extends BaseStepWithPipeline {
     }
 
     openInitiateAbilityEventWindow() {
-        let events = [];
         let eventName = EventNames.Unnamed;
         let eventProps = {};
         if(this.context.ability.isCardAbility()) {
@@ -44,7 +44,7 @@ class AbilityResolver extends BaseStepWithPipeline {
                 ability: this.context.ability
             };
             if(this.context.ability.isCardPlayed() && !this.context.isResolveAbility) {
-                events.push(this.game.getEvent(EventNames.OnCardPlayed, {
+                this.events.push(this.game.getEvent(EventNames.OnCardPlayed, {
                     player: this.context.player,
                     card: this.context.source,
                     originalLocation: this.context.source.location,
@@ -53,8 +53,8 @@ class AbilityResolver extends BaseStepWithPipeline {
                 }));
             }
         }
-        events.push(this.game.getEvent(eventName, eventProps, () => this.queueInitiateAbilitySteps()));
-        this.game.openEventWindow(events);
+        this.events.push(this.game.getEvent(eventName, eventProps, () => this.queueInitiateAbilitySteps()));
+        this.game.openEventWindow(this.events);
     }
 
     queueInitiateAbilitySteps() {
@@ -152,6 +152,9 @@ class AbilityResolver extends BaseStepWithPipeline {
 
     initiateAbilityEffects() {
         if(this.cancelled) {
+            for(const event of this.events) {
+                event.cancel();
+            }
             return;
         }
 
