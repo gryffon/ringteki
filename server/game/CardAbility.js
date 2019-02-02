@@ -105,6 +105,11 @@ class CardAbility extends ThenAbility {
         return super.meetsRequirements(context);
     }
 
+    getReducedCost(context) {
+        let fateCost = this.cost.find(cost => cost.getReducedCost);
+        return fateCost ? fateCost.getReducedCost(context) : 0;
+    }
+
     isInValidLocation(context) {
         return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand) : this.location.includes(this.card.location);
     }

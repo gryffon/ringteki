@@ -6,7 +6,7 @@ class Censure extends DrawCard {
         this.wouldInterrupt({
             title: 'Cancel an event',
             when: {
-                onCardAbilityInitiated: event => event.card.type === CardTypes.Event
+                onInitiateAbilityEffects: event => event.card.type === CardTypes.Event
             },
             cannotBeMirrored: true,
             effect: 'cancel {1}',

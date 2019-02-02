@@ -30,7 +30,7 @@ describe('Forged Edict', function() {
 
             it('should cancel Assassination when Forged Edict is played, and not prompt for a second cancel', function() {
                 this.window = this.game.currentAbilityWindow;
-                this.event = this.window.events.find(event => event.name === 'onCardAbilityInitiated');
+                this.event = this.window.events.find(event => event.name === 'onInitiateAbilityEffects');
                 this.player1.clickCard(this.forgedEdict1);
                 this.player1.clickCard(this.youngRumormonger1);
                 this.player1.clickPrompt('Pass');
