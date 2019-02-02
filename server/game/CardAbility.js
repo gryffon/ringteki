@@ -7,12 +7,6 @@ const { Locations, CardTypes, PlayTypes, Players, TargetModes } = require('./Con
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
         if(properties.initiateDuel) {
-            if(properties.condition) {
-                let condition = properties.condition;
-                properties.condition = context => (context.source.type !== CardTypes.Character || context.source.isParticipating()) && condition(context);
-            } else {
-                properties.condition = context => context.source.type !== CardTypes.Character || context.source.isParticipating();
-            }
             properties.targets = {
                 challenger: {
                     cardType: CardTypes.Character,
