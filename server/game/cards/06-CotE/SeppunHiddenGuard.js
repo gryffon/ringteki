@@ -16,8 +16,7 @@ class SeppunHiddenGuard extends DrawCard {
             effectArgs: context => context.event.card,
             handler: context => {
                 context.cancel();
-                // AbilityDsl.actions.discardAtRandom();
-                context.game.applyGameAction(context, { discardAtRandom: context.player.opponent });
+                context.game.applyGameAction(context, { discardAtRandom: context.event.context.player });
             }
         });
     }
