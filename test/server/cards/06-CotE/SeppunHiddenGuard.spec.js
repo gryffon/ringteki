@@ -26,6 +26,7 @@ describe('Seppun Hidden Guard', function() {
                 this.seppunHiddenGuard = this.player1.findCardByName('seppun-hidden-guard');
                 this.isawaUona = this.player1.findCardByName('isawa-uona');
                 this.adeptOfTheWaves = this.player1.findCardByName('adept-of-the-waves');
+                this.player1.player.optionSettings.cancelOwnAbilities = true;
             });
 
             it('it should be able to cancel Raitsugu\'s duel', function() {
