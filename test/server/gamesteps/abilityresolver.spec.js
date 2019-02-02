@@ -2,7 +2,7 @@ const AbilityResolver = require('../../../build/server/game/gamesteps/abilityres
 
 describe('AbilityResolver', function() {
     beforeEach(function() {
-        this.game = jasmine.createSpyObj('game', ['getPlayers', 'markActionAsTaken', 'popAbilityContext', 'pushAbilityContext', 'getEvent', 'raiseEvent', 'reportError', 'openEventWindow']);
+        this.game = jasmine.createSpyObj('game', ['getPlayers', 'markActionAsTaken', 'popAbilityContext', 'pushAbilityContext', 'getEvent', 'raiseEvent', 'reportError', 'openEventWindow', 'queueStep']);
         this.game.raiseEvent.and.callFake((name, params, handler) => {
             if(handler) {
                 handler(params);
@@ -12,6 +12,7 @@ describe('AbilityResolver', function() {
             if(handler) {
                 handler(params);
             }
+            return { setWindow: () => true };
         });
 
         this.ability = jasmine.createSpyObj('ability', [

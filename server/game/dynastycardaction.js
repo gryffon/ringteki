@@ -39,6 +39,7 @@ class DynastyCardAction extends BaseAction {
         let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
+            context: context,
             originalLocation: context.source.location,
             playType: PlayTypes.PlayFromProvince
         });

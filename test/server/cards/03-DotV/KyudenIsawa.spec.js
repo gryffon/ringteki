@@ -7,15 +7,15 @@ describe('Kyuden Isawa', function() {
                     player1: {
                         stronghold: 'kyuden-isawa',
                         inPlay: ['adept-of-the-waves'],
-                        hand: ['against-the-waves', 'walking-the-way'],
-                        dynastyDeck: ['asako-tsuki']
+                        hand: ['against-the-waves', 'walking-the-way', 'charge'],
+                        dynastyDeck: ['mantis-tenkinja']
                     },
                     player2: {
                         inPlay: ['doji-whisperer'],
                         hand: ['voice-of-honor', 'way-of-the-crane']
                     }
                 });
-                this.asakoTsuki = this.player1.placeCardInProvince('asako-tsuki');
+                this.mantisTenkinja = this.player1.placeCardInProvince('mantis-tenkinja');
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: ['adept-of-the-waves'],
@@ -58,7 +58,7 @@ describe('Kyuden Isawa', function() {
                 this.player2.pass();
                 this.walkingTheWay = this.player1.clickCard('walking-the-way');
                 this.player1.clickPrompt('Adept of the Waves (3)');
-                this.player1.clickCard(this.asakoTsuki);
+                this.player1.clickCard(this.mantisTenkinja);
                 expect(this.walkingTheWay.location).toBe('conflict discard pile');
                 this.player2.pass();
                 this.kyudenIsawa = this.player1.clickCard('kyuden-isawa');
