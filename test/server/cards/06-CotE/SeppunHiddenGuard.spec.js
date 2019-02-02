@@ -1,4 +1,4 @@
-fdescribe('Seppun Hidden Guard', function() {
+describe('Seppun Hidden Guard', function() {
     integration(function() {
         describe('Seppun Hidden Guard\'s ability', function() {
             beforeEach(function() {
