@@ -210,8 +210,7 @@ class DrawCard extends BaseCard {
             }
             let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
             let glory = copyEffect ? copyEffect.getGlory() : this.cardData.glory;
-            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + glory + this.sumEffects(EffectNames.ModifyDuelGlory));
-
+            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + glory);
         }
         return 0;
     }
@@ -230,7 +229,7 @@ class DrawCard extends BaseCard {
     getMilitarySkill(floor = true) {
         /**
          * Get the military skill.
-         * @param  {boolean} floor - Return the value after flooring it at 0; default false
+         * @param  {boolean} floor - Return the value after flooring it at 0; default true
          * @return {integer} The military skill value
          */
 
@@ -251,7 +250,6 @@ class DrawCard extends BaseCard {
         }, skill);
         // multiply total
         skill = this.getEffects(EffectNames.ModifyMilitarySkillMultiplier).reduce((total, value) => total * value, skill);
-        skill += this.sumEffects(EffectNames.ModifyDuelMilitarySkill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -262,8 +260,7 @@ class DrawCard extends BaseCard {
     getPoliticalSkill(floor = true) {
         /**
          * Get the political skill.
-         * @param  {boolean} printed - Use the printed value of the skill; default false
-         * @param  {boolean} floor - Return the value after flooring it at 0; default false
+         * @param  {boolean} floor - Return the value after flooring it at 0; default true
          * @return {integer} The political skill value
          */
         if(this.hasDash('political')) {
@@ -283,7 +280,6 @@ class DrawCard extends BaseCard {
         }, skill);
         // multiply total
         skill = this.getEffects(EffectNames.ModifyPoliticalSkillMultiplier).reduce((total, value) => total * value, skill);
-        skill += this.sumEffects(EffectNames.ModifyDuelPoliticalSkill);
         return floor ? Math.max(0, skill) : skill;
     }
 

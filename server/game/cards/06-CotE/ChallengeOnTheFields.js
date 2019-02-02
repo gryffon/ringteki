@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, CardTypes, Durations } = require('../../Constants');
+const { Players, CardTypes, Durations, DuelTypes } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class ChallengeOnTheFields extends DrawCard {
@@ -32,7 +32,7 @@ class ChallengeOnTheFields extends DrawCard {
                             )
                         })),
                         AbilityDsl.actions.duel(context => ({
-                            type: 'military',
+                            type: DuelTypes.Military,
                             challenger: context.targets.challenger,
                             resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
                         }))

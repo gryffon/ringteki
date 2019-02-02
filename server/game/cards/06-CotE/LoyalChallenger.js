@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
+const { DuelTypes } = require('../../Constants');
 
 class LoyalChallenger extends DrawCard {
     setupCardAbilities() {
@@ -31,7 +32,7 @@ class LoyalChallenger extends DrawCard {
         this.action({
             title: 'Initiate a Political duel',
             initiateDuel: context => ({
-                type: 'political',
+                type: DuelTypes.Political,
                 resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
             })
         });

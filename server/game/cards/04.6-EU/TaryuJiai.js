@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, CardTypes } = require('../../Constants');
+const { Players, CardTypes, DuelTypes } = require('../../Constants');
 
 class TaryuJiai extends DrawCard {
     setupCardAbilities(ability) {
@@ -20,7 +20,7 @@ class TaryuJiai extends DrawCard {
                     cardType: CardTypes.Character,
                     cardCondition: card => card.hasTrait('shugenja'),
                     gameAction: ability.actions.duel(context => ({
-                        type: 'glory',
+                        type: DuelTypes.Glory,
                         challenger: context.targets.myShugenja,
                         resolutionHandler: winner => winner && this.resolveRingEffect(winner.controller)
                     }))

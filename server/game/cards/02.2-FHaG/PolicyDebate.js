@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, CardTypes } = require('../../Constants');
+const { Players, CardTypes, DuelTypes } = require('../../Constants');
 
 class PolicyDebate extends DrawCard {
     setupCardAbilities(ability) {
@@ -17,7 +17,7 @@ class PolicyDebate extends DrawCard {
                     controller: Players.Opponent,
                     cardCondition: card => card.isParticipating(),
                     gameAction: ability.actions.duel(context => ({
-                        type: 'political',
+                        type: DuelTypes.Political,
                         challenger: context.targets.challenger,
                         resolutionHandler: (winner, loser) => this.duelOutcome(context, winner, loser)
                     }))

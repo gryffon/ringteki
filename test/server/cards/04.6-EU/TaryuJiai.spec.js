@@ -87,8 +87,8 @@ describe('Taryu Jiai', function() {
                 this.player2.clickPrompt('1');
                 expect(this.player1.honor).toBe(10);
                 expect(this.player2.honor).toBe(11);
-                expect(this.asakoAzunami.glory).toBe(5);
-                expect(this.soshiIllusionist.glory).toBe(2);
+                expect(this.asakoAzunami.glory).toBe(3);
+                expect(this.soshiIllusionist.glory).toBe(1);
                 expect(this.player1).toHavePrompt('Choose a ring effect to resolve');
             });
 

@@ -51,9 +51,6 @@ export enum EffectNames {
     ModifyBasePoliticalSkill = 'modifyBasePoliticalSkill',
     ModifyBaseProvinceStrength = 'modifyBaseProvinceStrength',
     ModifyBothSkills = 'modifyBothSkills',
-    ModifyDuelGlory = 'modifyDuelGlory',
-    ModifyDuelMilitarySkill = 'modifyDuelMilitarySkill',
-    ModifyDuelPoliticalSkill = 'modifyDuelPoliticalSkill',
     ModifyGlory = 'modifyGlory',
     ModifyMilitarySkill = 'modifyMilitarySkill',
     ModifyMilitarySkillMultiplier = 'modifyMilitarySkillMultiplier',
@@ -224,6 +221,12 @@ export enum AbilityTypes {
     Reaction = 'reaction',
     Persistent = 'persistent',
     OtherEffects = 'OtherEffects'
+};
+
+export enum DuelTypes {
+    Military = 'military',
+    Political = 'political',
+    Glory = 'glory'
 };
 
 export enum Elements {

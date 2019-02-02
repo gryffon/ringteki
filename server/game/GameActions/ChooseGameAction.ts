@@ -1,7 +1,8 @@
 import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
+import { Players } from '../Constants';
 
-interface ChooseGameChoices {
+export interface ChooseGameChoices {
     [choice: string]: GameAction | GameAction[];
 }
 
@@ -9,6 +10,7 @@ export interface ChooseActionProperties extends GameActionProperties {
     activePromptTitle?: string;
     choices: ChooseGameChoices;
     messages: object;
+    player?: Players; 
 }
 
 interface ChooseGameChoicesInternal {
@@ -19,6 +21,7 @@ interface ChooseActionPropertiesInternal extends GameActionProperties {
     activePromptTitle?: string;
     choices: ChooseGameChoicesInternal;
     messages: object;
+    player?: Players;
 }
 
 export class ChooseGameAction extends GameAction {
@@ -59,9 +62,10 @@ export class ChooseGameAction extends GameAction {
         let activePromptTitle = properties.activePromptTitle;
         let choices = Object.keys(properties.choices);
         choices = choices.filter(key => (properties.choices[key]).some(action => action.hasLegalTarget(context)));
+        let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
         let choiceHandler = (choice: string): void => {
             if(properties.messages[choice]) {
-                context.game.addMessage(properties.messages[choice], context.player, properties.target);
+                context.game.addMessage(properties.messages[choice], player, properties.target);
             }
             for(const gameAction of properties.choices[choice]) {
                 context.game.queueSimpleStep(() => gameAction.addEventsToArray(events, context));
@@ -70,7 +74,8 @@ export class ChooseGameAction extends GameAction {
         if(choices.length === 0) {
             return;
         }
-        context.game.promptWithHandlerMenu(context.player, { activePromptTitle, context, choices, choiceHandler });
+        let target = properties.target;
+        context.game.promptWithHandlerMenu(player, { activePromptTitle, context, choices, choiceHandler, target });
     }
 
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {

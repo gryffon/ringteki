@@ -83,8 +83,11 @@ class HandlerMenuPrompt extends UiPrompt {
         }
         let targets = this.context.targets ? Object.values(this.context.targets) : [];
         targets = targets.reduce((array, target) => array.concat(target), []);
+        if(this.properties.target) {
+            targets = Array.isArray(this.properties.target) ? this.properties.target : [this.properties.target];
+        }
         if(targets.length === 0 && this.context.event && this.context.event.card) {
-            this.targets = [this.context.event.card];
+            targets = [this.context.event.card];
         }
         return [{
             type: 'targeting',
