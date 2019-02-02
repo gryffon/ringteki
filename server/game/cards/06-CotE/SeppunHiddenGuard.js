@@ -7,7 +7,7 @@ class SeppunHiddenGuard extends DrawCard {
         this.wouldInterrupt({
             title: 'Cancel ability',
             when: {
-                onCardAbilityInitiated: (event, context) => event.card.type === CardTypes.Character && event.cardTargets.some(card => (
+                onInitiateAbilityEffects: (event, context) => event.card.type === CardTypes.Character && event.cardTargets.some(card => (
                     card.isUnique() && card.controller === context.player && card.location === Locations.PlayArea)
                 )
             },
