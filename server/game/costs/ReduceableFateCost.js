@@ -12,32 +12,29 @@ class ReduceableFateCost {
         let alternatePools = context.player.getAlternateFatePools(this.playingType, context.source);
         let alternatePoolTotal = alternatePools.reduce((total, pool) => total + pool.fate, 0);
         let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
-        context.game.queueSimpleStep(() => {
-            alternatePoolTotal = alternatePools.reduce((total, pool) => total + pool.fate, 0);
-            if(this.getReducedCost(context) > maxPlayerFate + alternatePoolTotal) {
-                result.cancelled = true;
-            } else if(!result.cancelled && alternatePools.length > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
-                let properties = {
-                    reducedCost: this.getReducedCost(context),
-                    remainingPoolTotal: alternatePoolTotal
-                };
-                context.costs.alternateFate = new Map();
-                let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
-                for(const alternatePool of alternatePools) {
-                    context.game.queueSimpleStep(() => {
-                        properties.remainingPoolTotal -= alternatePool.fate;
-                        properties.minFate = Math.max(properties.reducedCost - maxPlayerFate - properties.remainingPoolTotal, 0);
-                        properties.maxFate = Math.min(alternatePool.fate, properties.reducedCost);
-                        properties.pool = alternatePool;
-                        properties.numberOfChoices = properties.maxFate - properties.minFate + 1;
-                        if(result.cancelled || properties.numberOfChoices === 0) {
-                            return;
-                        }
-                        this.promptForAlternateFate(context, result, properties);
-                    });
-                }
+        if(this.getReducedCost(context) > maxPlayerFate + alternatePoolTotal) {
+            result.cancelled = true;
+        } else if(!result.cancelled && alternatePools.length > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
+            let properties = {
+                reducedCost: this.getReducedCost(context),
+                remainingPoolTotal: alternatePoolTotal
+            };
+            context.costs.alternateFate = new Map();
+            let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
+            for(const alternatePool of alternatePools) {
+                context.game.queueSimpleStep(() => {
+                    properties.remainingPoolTotal -= alternatePool.fate;
+                    properties.minFate = Math.max(properties.reducedCost - maxPlayerFate - properties.remainingPoolTotal, 0);
+                    properties.maxFate = Math.min(alternatePool.fate, properties.reducedCost);
+                    properties.pool = alternatePool;
+                    properties.numberOfChoices = properties.maxFate - properties.minFate + 1;
+                    if(result.cancelled || properties.numberOfChoices === 0) {
+                        return;
+                    }
+                    this.promptForAlternateFate(context, result, properties);
+                });
             }
-        });
+        }
     }
 
     getReducedCost(context) {
