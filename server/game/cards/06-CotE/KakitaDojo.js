@@ -17,7 +17,7 @@ class KakitaDojo extends DrawCard {
         if(loser) {
             if(winner.hasTrait('duelist')) {
                 this.game.addMessage('{0} loses the duel and is bowed and cannot trigger its abilities until the end of the conflict', loser);
-                this.game.actions.jointAction(
+                this.game.actions.multiple(
                     [
                         AbilityDsl.actions.bow(),
                         AbilityDsl.actions.cardLastingEffect({

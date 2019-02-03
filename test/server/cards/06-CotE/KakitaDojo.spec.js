@@ -9,7 +9,8 @@ describe('Kakita Dojo', function() {
                         inPlay: ['doji-challenger', 'brash-samurai']
                     },
                     player2: {
-                        inPlay: ['mirumoto-raitsugu', 'doomed-shugenja']
+                        inPlay: ['mirumoto-raitsugu', 'doomed-shugenja', 'borderlands-defender'],
+                        hand: ['duelist-training']
                     }
                 });
                 this.kakitaDojo = this.player1.placeCardInProvince('kakita-dojo', 'province 1');
@@ -19,6 +20,8 @@ describe('Kakita Dojo', function() {
 
                 this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
                 this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
+                this.borderlandsDefender = this.player2.findCardByName('borderlands-defender');
+                this.duelistTraining = this.player2.findCardByName('duelist-training');
             });
 
             it('should not be triggered outside of a conflict', function() {
@@ -111,6 +114,26 @@ describe('Kakita Dojo', function() {
                 this.player2.clickPrompt('1');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 expect(this.mirumotoRaitsugu.bowed).toBe(true);
+            });
+
+            it('should not bow a borderlands defender when it is defending, but still prevent triggered abilities', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.dojiChallenger],
+                    defenders: [this.borderlandsDefender],
+                    type: 'military'
+                });
+                this.player2.clickCard(this.duelistTraining);
+                this.player2.clickCard(this.borderlandsDefender);
+                this.player1.clickCard(this.kakitaDojo);
+                this.player1.clickCard(this.dojiChallenger);
+                this.player1.clickCard(this.borderlandsDefender);
+                this.player1.clickPrompt('5');
+                this.player2.clickPrompt('1');
+                expect(this.borderlandsDefender.bowed).toBe(false);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.borderlandsDefender);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
     });
