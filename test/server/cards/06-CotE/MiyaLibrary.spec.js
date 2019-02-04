@@ -5,7 +5,7 @@ describe('Miya Library', function () {
                 this.setupTest({
                     phase: 'dynasty',
                     player1: {
-                        inPlay: ['miya-library', 'kanjo-district', 'miya-mystic', 'miya-satoshi', 'adept-of-the-waves', 'kudaka']
+                        inPlay: ['miya-library', 'kanjo-district', 'miya-satoshi', 'adept-of-the-waves', 'kudaka']
                     },
                     player2: {
                     }
@@ -13,7 +13,6 @@ describe('Miya Library', function () {
                 this.miyaLibrary = this.player1.findCardByName('miya-library');
                 this.player1.placeCardInProvince('miya-library', 'province 1');
                 this.player1.moveCard('kanjo-district', 'dynasty deck');
-                this.player1.moveCard('miya-mystic', 'dynasty deck');
                 this.player1.moveCard('miya-satoshi', 'dynasty deck');
                 this.player1.moveCard('adept-of-the-waves', 'dynasty deck');
                 this.player1.moveCard('kudaka', 'dynasty deck');
@@ -26,8 +25,6 @@ describe('Miya Library', function () {
                 this.player1.clickPrompt('Miya Satoshi');
                 expect(this.player1).toHavePrompt('Select the card you would like to place on top of your dynasty deck');
                 this.player1.clickPrompt('Kanjo District');
-                expect(this.player1).toHavePrompt('Which card would you like to put back now');
-                this.player1.clickPrompt('Miya Mystic');
                 expect(this.player1).toHavePrompt('Which card would you like to put back now');
                 this.player1.clickPrompt('Adept of the Waves');
                 expect(this.player1).toHavePrompt('Which card would you like to put back now');
