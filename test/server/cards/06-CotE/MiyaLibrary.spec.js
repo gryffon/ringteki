@@ -33,6 +33,13 @@ describe('Miya Library', function () {
                 this.player2.pass();
                 this.player1.clickCard('miya-satoshi');
             });
+
+            it('should not let you select an imperial holding', function () {
+                this.player1.clickCard(this.miyaLibrary);
+                expect(this.player1).toHavePrompt('select an imperial character to replace miya library');
+                this.player1.clickPrompt('Kanjo District');\
+                expect(this.player1).toHavePrompt('select an imperial character to replace miya library');
+            });
         });
     });
 });
