@@ -32,8 +32,6 @@ fdescribe('Miya Library', function () {
                 this.player1.clickPrompt('Adept of the Waves');
                 expect(this.player1).toHavePrompt('Which card would you like to put back now');
                 this.player1.clickPrompt('Kudaka');
-                expect(this.player1).toHavePrompt('Which card would you like to put back now');
-                this.player1.clickPrompt(this.miyaLibrary);
                 expect(this.player2).toHavePrompt('Dynasty Action Window');
                 this.player2.pass();
                 this.player1.clickCard('miya-satoshi');
