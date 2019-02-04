@@ -11,11 +11,15 @@ const UiPrompt = require('./uiprompt.js');
  * The properties option object may contain the following:
  * choices            - an array of titles for menu buttons
  * handlers           - an array of handlers corresponding to the menu buttons
+ * choiceHandler      - handler which is called when a choice button is clicked
  * activePromptTitle  - the title that should be used in the prompt for the
  *                      choosing player.
  * waitingPromptTitle - the title to display for opponents.
  * source             - what is at the origin of the user prompt, usually a card;
  *                      used to provide a default waitingPromptTitle, if missing
+ * cards              - a list of cards to display as buttons with mouseover support
+ * cardCondition      - disables the prompt buttons for any cards which return false
+ * cardHandler        - handler which is called when a card button is clicked
  */
 class HandlerMenuPrompt extends UiPrompt {
     constructor(game, player, properties) {
@@ -32,6 +36,7 @@ class HandlerMenuPrompt extends UiPrompt {
             properties.source = new EffectSource(game);
         }
         this.properties = properties;
+        this.cardCondition = properties.cardCondition || (() => true);
         this.context = properties.context || new AbilityContext({ game: game, player: player, source: properties.source });
     }
 
@@ -56,7 +61,7 @@ class HandlerMenuPrompt extends UiPrompt {
                 if(cardQuantities[card.id] > 1) {
                     text = text + ' (' + cardQuantities[card.id].toString() + ')';
                 }
-                return {text: text, arg: card.id, card: card};
+                return {text: text, arg: card.id, card: card, disabled: !this.cardCondition(card, this.context) };
             });
         }
         buttons = buttons.concat(_.map(this.properties.choices, (choice, index) => {
