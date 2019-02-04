@@ -1,4 +1,4 @@
-fdescribe('Miya Library', function () {
+describe('Miya Library', function () {
     integration(function () {
         describe('Miya Library\'s ability', function () {
             beforeEach(function () {
@@ -32,7 +32,7 @@ fdescribe('Miya Library', function () {
                 this.player1.clickPrompt('Adept of the Waves');
                 expect(this.player1).toHavePrompt('Which card would you like to put back now');
                 this.player1.clickPrompt('Kudaka');
-                expect(this.player2).toHavePrompt('Dynasty Action Window');
+                expect(this.player2).toHavePrompt('Play cards from provinces');
                 this.player2.pass();
                 this.player1.clickCard('miya-satoshi');
             });
