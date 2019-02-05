@@ -12,16 +12,27 @@ class MiyaLibrary extends DrawCard {
                 this.game.promptWithHandlerMenu(context.player, {
                     activePromptTitle: 'select an imperial character to replace miya library',
                     context: context,
+<<<<<<< HEAD
                     cardCondition: card => card.hasTrait('imperial') && card.getType() === CardTypes.Character,
                     cards: context.player.dynastyDeck.first(4),
                     choices: ['Do not replace Miya Library'],
                     cardHandler: (card) => {
                         let choices = context.player.dynastyDeck.first(4);
                         if(typeof card !== 'undefined' && card.hasTrait('imperial') && card.getType() === CardTypes.Character) {
+=======
+                    cards: context.player.dynastyDeck.first(4),
+                    cardHandler: (card) => {
+                        let choices = context.player.dynastyDeck.first(4);
+                        if(card.hasTrait('imperial') && card.getType() === CardTypes.Character) {
+>>>>>>> 48564c0b31ca56fe3393cff025fe0d08d4e87416
                             context.player.moveCard(card, context.source.location);
                             card.facedown = false;
                             choices.splice(choices.indexOf(card), 1);
                             choices.push(context.source);
+<<<<<<< HEAD
+=======
+
+>>>>>>> 48564c0b31ca56fe3393cff025fe0d08d4e87416
                         }
                         this.miyaLibraryPrompt(context, choices, [], 'Select the card you would like to place on top of your dynasty deck');
                     }
