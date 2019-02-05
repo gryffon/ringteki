@@ -17,10 +17,6 @@ class MiyaLibrary extends DrawCard {
                     choices: ['Do not replace Miya Library'],
                     cardHandler: (card) => {
                         let choices = context.player.dynastyDeck.first(4);
-                        if(typeof card !== 'undefined' && card.hasTrait('imperial') && card.getType() === CardTypes.Character) {
-                    cards: context.player.dynastyDeck.first(4),
-                    cardHandler: (card) => {
-                        let choices = context.player.dynastyDeck.first(4);
                         if(card.hasTrait('imperial') && card.getType() === CardTypes.Character) {
                             context.player.moveCard(card, context.source.location);
                             card.facedown = false;
