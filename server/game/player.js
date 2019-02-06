@@ -399,6 +399,10 @@ class Player extends GameObject {
         this.dynastyDeck = _(this.dynastyDeck.shuffle());
     }
 
+    shuffleDeck(deck) {
+        deck === Decks.DynastyDeck ? this.shuffleDynastyDeck() : this.shuffleConflictDeck();
+    }
+
     addConflictOpportunity(type) {
         if(type) {
             this.conflictOpportunities[type]++;
