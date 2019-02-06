@@ -1,3 +1,4 @@
+
 const DrawCard = require('../../drawcard.js');
 const { CardTypes, Locations } = require('../../Constants');
 // const AbilitDsl = require('../../abilitydsl');
@@ -43,6 +44,7 @@ class MiyaLibrary extends DrawCard {
                 } else if(promptCards.length === 1) {
                     orderedCards.push(promptCards[0]);
                 }
+                orderedCards.reverse();
                 context.player.dynastyDeck.splice(0, 5, ...orderedCards);
             }
         });
