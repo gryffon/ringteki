@@ -11,11 +11,16 @@ describe('Miya Library', function () {
                     }
                 });
                 this.miyaLibrary = this.player1.findCardByName('miya-library');
-                this.player1.placeCardInProvince('miya-library', 'province 1');
-                this.player1.moveCard('miya-satoshi', 'dynasty deck');
-                this.player1.moveCard('kanjo-district', 'dynasty deck');
-                this.player1.moveCard('adept-of-the-waves', 'dynasty deck');
-                this.player1.moveCard('kudaka', 'dynasty deck');
+                this.miyaSatoshi = this.player1.findCardByName('miya-satoshi');
+                this.adept = this.player1.findCardByName('adept-of-the-waves');
+                this.kudaka = this.player1.findCardByName('kudaka');
+                this.kanjo = this.player1.findCardByName('kanjo-district');
+                this.naiveStudent = this.player1.findCardByName('naive-student');
+                this.player1.placeCardInProvince(this.miyaLibrary, 'province 1');
+                this.player1.moveCard(this.miyaSatoshi, 'dynasty deck');
+                this.player1.moveCard(this.kanjo, 'dynasty deck');
+                this.player1.moveCard(this.adept, 'dynasty deck');
+                this.player1.moveCard(this.kudaka, 'dynasty deck');
 
             });
 
@@ -30,23 +35,23 @@ describe('Miya Library', function () {
                 expect(this.player1).toHavePrompt('Which card would you like to put back now');
                 this.player1.clickPrompt('Kudaka');
                 expect(this.player2).toHavePrompt('Play cards from provinces');
-                expect('miya-satoshi').toBe('province 1');
-                expect(this.miyaLibrary).toBe('dynasty deck');
+                expect(this.miyaSatoshi.location).toBe('province 1');
+                expect(this.miyaLibrary.location).toBe('dynasty deck');
                 this.player2.pass();
-                this.player1.clickCard('miya-satoshi');
+                this.player1.clickCard(this.miyaSatoshi);
                 this.player1.clickPrompt('1');
-                expect('miya-satoshi').toBe('play area');
+                expect(this.miyaSatoshi.location).toBe('play area');
             });
 
             it('should not let you select an imperial holding', function () {
                 this.player1.clickCard(this.miyaLibrary);
-                expect(this.player1).not.toBeAbleToSelect('kanjo-district');
+                expect(this.player1).not.toBeAbleToSelect('Kanjo District');
             });
 
             it('should still let you rearrange your deck if there is not an imperial character', function () {
-                this.player1.moveCard('naive-student', 'dynasty deck');
+                this.player1.moveCard(this.naiveStudent, 'dynasty deck');
                 this.player1.clickCard(this.miyaLibrary);
-                expect(this.player1).not.toBeAbleToSelect('miya-satoshi');
+                expect(this.player1).not.toBeAbleToSelect(this.miyaSatoshi);
                 expect(this.player1).toHavePrompt('select an imperial character to replace miya library');
                 this.player1.clickPrompt('Do not replace Miya Library');
                 this.player1.clickPrompt('Kudaka');
@@ -65,13 +70,13 @@ describe('Miya Library', function () {
                 expect(this.player1).toHavePrompt('Which card would you like to put back now');
                 this.player1.clickPrompt('Kudaka');
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
-                expect(this.miyaLibrary).toBe('dynasty discard pile');
+                expect(this.miyaLibrary.location).toBe('dynasty discard pile');
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
-                expect('kudaka').toBe('dynasty discard pile');
+                expect(this.kudaka.location).toBe('dynasty discard pile');
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
-                expect('adept-of-the-waves').toBe('dynasty discard pile');
+                expect(this.adept.location).toBe('dynasty discard pile');
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
-                expect('kanjo-district').toBe('dynasty discard pile');
+                expect(this.kanjo.location).toBe('dynasty discard pile');
             });
         });
     });
