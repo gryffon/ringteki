@@ -18,6 +18,7 @@ class DefendYourHonor extends DrawCard {
                 },
                 duelTarget: {
                     dependsOn: 'challenger',
+                    player: Players.Opponent,
                     cardType: CardTypes.Character,
                     controller: Players.Opponent,
                     cardCondition: card => card.isParticipating()
