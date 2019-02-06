@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, Locations } = require('../../Constants');
 // const AbilitDsl = require('../../abilitydsl');
 
 class MiyaLibrary extends DrawCard {
@@ -17,14 +17,12 @@ class MiyaLibrary extends DrawCard {
                     choices: ['Do not replace Miya Library'],
                     handlers: [() => this.miyaLibraryPrompt(context, context.player.dynastyDeck.first(4), [], 'Select the card you would like to place on top of your dynasty deck')],
                     cardHandler: (card) => {
-                        let choices = context.player.dynastyDeck.first(4);
                         if(card.hasTrait('imperial') && card.getType() === CardTypes.Character) {
                             context.player.moveCard(card, context.source.location);
                             card.facedown = false;
-                            choices.splice(choices.indexOf(card), 1);
-                            choices.push(context.source);
+                            context.player.moveCard(context.source, Locations.DynastyDeck);
                         }
-                        this.miyaLibraryPrompt(context, choices, [], 'Select the card you would like to place on top of your dynasty deck');
+                        this.miyaLibraryPrompt(context, context.player.dynastyDeck.first(4), [], 'Select the card you would like to place on top of your dynasty deck');
                     }
                 });
             }

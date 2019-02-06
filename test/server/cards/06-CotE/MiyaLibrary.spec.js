@@ -31,8 +31,11 @@ describe('Miya Library', function () {
                 this.player1.clickPrompt('Kudaka');
                 expect(this.player2).toHavePrompt('Play cards from provinces');
                 expect('miya-satoshi').toBe('province 1');
+                expect(this.miyaLibrary).toBe('dynasty deck');
                 this.player2.pass();
                 this.player1.clickCard('miya-satoshi');
+                this.player1.clickPrompt('1');
+                expect('miya-satoshi').toBe('play area');
             });
 
             it('should not let you select an imperial holding', function () {
