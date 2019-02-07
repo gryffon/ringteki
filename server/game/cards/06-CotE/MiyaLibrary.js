@@ -31,6 +31,7 @@ class MiyaLibrary extends DrawCard {
     }
 
     miyaLibraryPrompt(context, promptCards, orderedCards, promptTitle) {
+        const orderPrompt = ['first', 'second', 'third'];
         this.game.promptWithHandlerMenu(context.player, {
             activePromptTitle: promptTitle,
             context: context,
@@ -39,12 +40,11 @@ class MiyaLibrary extends DrawCard {
                 orderedCards.push(card);
                 promptCards = promptCards.filter(c => c !== card);
                 if(promptCards.length > 1) {
-                    this.miyaLibraryPrompt(context, promptCards, orderedCards, 'Which card would you like to put back now');
+                    this.miyaLibraryPrompt(context, promptCards, orderedCards, 'Which card do you want to be the ' + orderPrompt[orderedCards.length] + ' card?');
                     return;
                 } else if(promptCards.length === 1) {
                     orderedCards.push(promptCards[0]);
                 }
-                orderedCards.reverse();
                 context.player.dynastyDeck.splice(0, 5, ...orderedCards);
             }
         });

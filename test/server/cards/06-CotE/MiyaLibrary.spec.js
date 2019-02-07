@@ -5,7 +5,8 @@ describe('Miya Library', function () {
                 this.setupTest({
                     phase: 'dynasty',
                     player1: {
-                        inPlay: ['miya-library', 'kanjo-district', 'miya-satoshi', 'adept-of-the-waves', 'kudaka', 'naive-student']
+                        inPlay: ['miya-library', 'kanjo-district', 'miya-satoshi', 'adept-of-the-waves', 'kudaka', 'naive-student'],
+                        dynastyDeck: []
                     },
                     player2: {
                     }
@@ -30,9 +31,9 @@ describe('Miya Library', function () {
                 this.player1.clickPrompt('Miya Satoshi');
                 expect(this.player1).toHavePrompt('Select the card you would like to place on top of your dynasty deck');
                 this.player1.clickPrompt('Kanjo District');
-                expect(this.player1).toHavePrompt('Which card would you like to put back now');
+                expect(this.player1).toHavePrompt('Which card do you want to be the second card?');
                 this.player1.clickPrompt('Adept of the Waves');
-                expect(this.player1).toHavePrompt('Which card would you like to put back now');
+                expect(this.player1).toHavePrompt('Which card do you want to be the third card?');
                 this.player1.clickPrompt('Kudaka');
                 expect(this.player2).toHavePrompt('Play cards from provinces');
                 expect(this.miyaSatoshi.location).toBe('province 1');
@@ -65,18 +66,18 @@ describe('Miya Library', function () {
                 this.player1.clickPrompt('Miya Satoshi');
                 expect(this.player1).toHavePrompt('Select the card you would like to place on top of your dynasty deck');
                 this.player1.clickPrompt('Kanjo District');
-                expect(this.player1).toHavePrompt('Which card would you like to put back now');
+                expect(this.player1).toHavePrompt('Which card do you want to be the second card?');
                 this.player1.clickPrompt('Adept of the Waves');
-                expect(this.player1).toHavePrompt('Which card would you like to put back now');
+                expect(this.player1).toHavePrompt('Which card do you want to be the third card?');
                 this.player1.clickPrompt('Kudaka');
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
-                expect(this.miyaLibrary.location).toBe('dynasty discard pile');
-                this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
-                expect(this.kudaka.location).toBe('dynasty discard pile');
+                expect(this.kanjo.location).toBe('dynasty discard pile');
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
                 expect(this.adept.location).toBe('dynasty discard pile');
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
-                expect(this.kanjo.location).toBe('dynasty discard pile');
+                expect(this.kudaka.location).toBe('dynasty discard pile');
+                this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
+                expect(this.miyaLibrary.location).toBe('dynasty discard pile');
             });
         });
     });
