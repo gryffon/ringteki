@@ -79,6 +79,18 @@ describe('Miya Library', function () {
                 this.player1.moveCard(this.player1.player.dynastyDeck.first(), 'dynasty discard pile');
                 expect(this.miyaLibrary.location).toBe('dynasty discard pile');
             });
+
+            it('should work if the player has less four card in their dynasty deck', function () {
+                for(var i = this.player1.dynastyDeck.length - 1; i >= 0; i--) {
+                    this.player1.moveCard(this.player1.dynastyDeck[i], 'dynasty discard pile');
+                }
+                this.player1.moveCard(this.miyaSatoshi, 'dynasty deck');
+                this.player1.moveCard(this.kanjo, 'dynasty deck');
+                this.player1.clickCard(this.miyaLibrary);
+                this.player1.clickPrompt('Do not replace Miya Library');
+                this.player1.clickPrompt('Kanjo District');
+                expect(this.player2).toHavePrompt('Play cards from provinces');
+            });
         });
     });
 });
