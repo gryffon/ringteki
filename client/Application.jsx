@@ -407,7 +407,7 @@ class App extends React.Component {
                     backgroundClass = 'bg-board-unicorn';
                     break;
                 default:
-                    backgroundClass = '';
+                    backgroundClass = 'bg-board-default';
                     break;
             }
         }

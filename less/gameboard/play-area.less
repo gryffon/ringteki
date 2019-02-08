@@ -3,24 +3,62 @@
     display: flex;
 }
 
-.play-area, .player-board {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-}
 
 .player-board {
-    margin: 10px;
+    padding-top:10px;
+    padding-bottom:10px;
+    grid-row-start:1;
+    grid-row-end:2;
+    grid-column-start:1;
+    grid-column-end:3;
+    display:grid;
+    grid-template-columns: 1fr repeat(3,(@card-width + 10px));
+    grid-template-rows: minmax(@card-height+@attachment-offset*2,auto) minmax(@card-height + @attachment-offset + 5px,auto);
+
+    &.small {
+        grid-template-columns: 1fr repeat(3, (@card-sm-width + 10px));
+        grid-template-rows: minmax(@card-sm-height+@attachment-offset-sm*2,auto) minmax(@card-sm-height + @attachment-offset-sm + 5px,auto) minmax(2*@attachment-offset,auto);
+    }
+    &.large {
+        grid-template-columns: 1fr repeat(3, (@card-lg-width + 10px));
+        grid-template-rows: minmax(@card-lg-height+@attachment-offset-lg*2,auto) minmax(@card-lg-height + @attachment-offset-lg + 5px,auto) minmax(2*@attachment-offset,auto);
+    }
+    &.x-large {
+        grid-template-columns: 1fr repeat(3, (@card-xl-width + 10px));
+        grid-template-rows: minmax(@card-xl-height+@attachment-offset-xl*2,auto) minmax(@card-xl-height + @attachment-offset-xl + 5px,auto) minmax(2*@attachment-offset,auto);
+    }
+    
+
+    &.our-side {
+        grid-row-start:5;
+        grid-row-end:6;
+        grid-template-columns: repeat(3, (@card-width + 10px)) 1fr;
+        grid-template-rows: minmax(2*@attachment-offset,auto) minmax(@card-height+@attachment-offset + 5px,auto) minmax(@card-height + @attachment-offset + 5px,auto);
+        &.small {
+            grid-template-columns: repeat(3, (@card-sm-width + 10px)) 1fr;
+            grid-template-rows: minmax(2*@attachment-offset-sm,auto) minmax(@card-sm-height+@attachment-offset-sm+ 5px,auto) minmax(@card-sm-height + @attachment-offset-sm + 5px,auto);
+        }
+        &.large {
+            grid-template-columns: repeat(3, (@card-lg-width + 10px)) 1fr;
+            grid-template-rows: minmax(2*@attachment-offset-lg,auto) minmax(@card-lg-height+@attachment-offset-lg + 5px,auto) minmax(@card-lg-height + @attachment-offset-lg + 5px,auto);
+        }
+        &.x-large {
+            grid-template-columns: repeat(3, (@card-xl-width + 10px)) 1fr;
+            grid-template-rows: minmax(2*@attachment-offset-xl,auto) minmax(@card-xl-height+@attachment-offset-xl  + 5px,auto) minmax(@card-xl-height + @attachment-offset-xl + 5px,auto);
+        }
+    }
 }
 
 .player-board.our-side > div:first-child {
-    margin-top: auto;
+    justify-content:bottom;
 }
 
 .player-home-row {
     display: flex;
+    flex-wrap: wrap;
     margin-top: 5px;
-
+    min-width:0;
+    min-height:0;
     &.our-side {
         margin-top: 0;
         margin-bottom: 5px;
@@ -34,28 +72,94 @@
 }
 
 .player-deck-row {
-    display: flex;
-    margin-top: 5px;
-
+    grid-row-start: 1;
+    grid-column-start:1;
+    grid-column-end:5;
     &.our-side {
-        margin-top: 0;
-        margin-bottom: 18px;
+        grid-row-start: 3;
+        grid-row-end:4;
     }
 }
 
 .player-stronghold-row {
     display: flex;
-    margin-top: 5px;
+    flex-direction:row;
+    justify-content:flex-end;
+    align-items: flex-start;
+    grid-row-start:2;
+    grid-column-start:3;
+    grid-column-end:5;
+    &.their-side {
+        &.favor {
+            grid-column-start:2;
+            }
+    }
 
     &.our-side {
-        margin-top: 0;
-        margin-bottom: 18px;
+        justify-content:flex-start;
+        grid-column-start:1;
+        grid-column-end: 3;
+        &.favor {
+            grid-column-end:4;
+        }
+        grid-row-start:2;
+    }
+}
+
+.player-home {
+    &.card-row {
+        display:flex;
+        flex-direction:row;
+        justify-content:flex-end;
+        align-items:flex-end;
+        align-content:flex-start;
+        flex-wrap: wrap-reverse;
+        
+        grid-row-start:2;
+        grid-column-start:1;
+        grid-column-end:3;
+
+        &.favor {
+            grid-column-end:2;
+        }
+        &.our-side {
+            align-items:flex-start;
+            justify-content: flex-start;
+            align-content:flex-end;
+            flex-wrap:wrap;
+            grid-row-start:2;
+            grid-column-start:3;
+            &.favor {
+                grid-column-start:4;
+            }
+            grid-column-end:5;
+        }
     }
 }
 
 .deck-cards {
     display: flex;
+    justify-content:space-between;
 }
+
+.province-row {
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+}
+
+.left-decks {
+    display:flex; 
+    flex-direction:row;
+    justify-content:flex-start;
+}
+
+.right-decks {
+    display:flex;
+    flex-direction:row;
+    justify-content:flex-end;
+}
+
 
 .card-row, .hand {
     display: flex;
@@ -65,19 +169,35 @@
 .card-row .card.horizontal {
     margin-bottom: @card-height - @card-width;
 }
-
-.player-board .card-wrapper {
-    margin-right: 10px;
-    margin-bottom: 5px;
+.card-row {
+    flex-direction:row;
+    justify-content: flex-start;
 }
 
-.board-middle {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
+.play-area {
+    position:absolute;    
+    min-height:100%;
+    width:100%;
+    grid-row-start:1;
+    grid-row-end:4;
+    grid-column-start:2;
+    grid-column-end:4;
+    display:grid;
+    grid-template-rows: minmax(2*@card-height+2*@attachment-offset,max-content) 1fr @center-bar-height 1fr minmax(2*@card-height+2*@attachment-offset,max-content);
+    grid-template-columns: minmax(9*(@card-width+10px), auto) 1fr @chat-width;
 
-.board-inner {
-    flex: 1;
-    display: flex;
+    &.small {
+        grid-template-rows: minmax(2*@card-sm-height + 2*@attachment-offset-sm, max-content) 1fr @center-bar-height 1fr minmax(2*@card-sm-height + 2*@attachment-offset-sm, max-content);
+        grid-template-columns: minmax(9*(@card-sm-width+10px), auto) 1fr @chat-width;
+    }
+
+    &.large {
+        grid-template-rows: minmax(2*@card-lg-height+2*@attachment-offset-lg,max-content) 1fr @center-bar-height 1fr minmax(2*@card-lg-height+2*@attachment-offset-lg,max-content);
+        grid-template-columns: minmax(9*(@card-lg-width+10px), auto) 1fr @chat-width;
+    }
+
+    &.x-large {
+        grid-template-rows: minmax(2*@card-xl-height + 2*@attachment-offset-xl,max-content) 1fr @center-bar-height 1fr minmax(2*@card-xl-height + 2*@attachment-offset-xl,max-content);
+        grid-template-columns: minmax(9*(@card-xl-width+10px), auto) 1fr @chat-width;
+    }
 }

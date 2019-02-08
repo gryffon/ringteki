@@ -1,31 +1,28 @@
-.navbar-fixed-top {
-    z-index: 1060;
-}
-
-
 .game-board {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: 50px;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
-}
-
-@media (max-width: 1366px) {
-    .game-board {
-        top: 25px;
-    }
+    position:absolute;
+    top:50px;
+    bottom:0;
+    left:0;
+    right:0;
+    display: grid;
+    grid-template-columns:  @sidebar-width auto @chat-width;
+    grid-template-rows:  1fr;
+    align-content:stretch;
 }
 
 .main-window {
-    display: flex;
-    flex-direction: row;
-    flex: 1;
-    min-height: calc(~"100vh - 170px");
-    z-index: 1010;
+    position:absolute;
+    top:0px;
+    bottom:0px;
+    left:0px;
+    right:0px;
+    grid-column-start:1;
+    grid-column-end: 4;
+    //grid-row-start: 1;
+    //grid-row-end:2;
+    display:grid; 
+    grid-template-columns: @sidebar-width auto @chat-width;
+    grid-template-rows: 1fr;
 }
 
 .popup {
