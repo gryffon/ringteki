@@ -18,6 +18,12 @@ class CardAbility extends ThenAbility {
                 duelTarget: {
                     dependsOn: 'challenger',
                     cardType: CardTypes.Character,
+                    player: context => {
+                        if(typeof properties.initiateDuel === 'function') {
+                            return properties.initiateDuel(context).opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                        }
+                        return properties.initiateDuel.opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                    },
                     controller: Players.Opponent,
                     cardCondition: card => card.isParticipating(),
                     gameAction: AbilityDsl.actions.duel(context => {
