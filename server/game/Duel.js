@@ -34,7 +34,7 @@ class Duel {
     }
 
     isInvolvedInAnyDuel(card) {
-        return this.isInvolved(card) || this.previousDuel && this.previousDuel.isInvolved(card);
+        return this.isInvolved(card) || this.previousDuel && this.previousDuel.isInvolvedInAnyDuel(card);
     }
 
     getTotalsForDisplay() {
