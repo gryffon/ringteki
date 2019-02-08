@@ -1149,6 +1149,7 @@ class Game extends EventEmitter {
         let activePlayer = this.playersAndSpectators[activePlayerName] || new AnonymousSpectator();
         let playerState = {};
         let ringState = {};
+        let conflictState = {};
 
         if(this.started) {
             for(const player of this.getPlayers()) {
@@ -1159,6 +1160,10 @@ class Game extends EventEmitter {
                 ringState[ring.element] = ring.getState(activePlayer);
             });
 
+            if(this.currentPhase === 'conflict' && this.currentConflict) {
+                conflictState = this.currentConflict.getSummary();
+            }
+
             return {
                 id: this.id,
                 manualMode: this.manualMode,
@@ -1166,6 +1171,8 @@ class Game extends EventEmitter {
                 owner: this.owner,
                 players: playerState,
                 rings: ringState,
+                conflict: conflictState,
+                phase: this.currentPhase,
                 messages: this.gameChat.messages,
                 spectators: this.getSpectators().map(spectator => {
                     return {

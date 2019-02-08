@@ -43,7 +43,7 @@ class PlayerHand extends React.Component {
         let cardIndex = 1;
         let cardWidth = this.getCardWidth();
         let attachmentOffset = 13;
-        switch(this.props.size) {
+        switch(this.props.cardSize) {
             case 'large':
                 attachmentOffset *= 1.4;
                 break;
