@@ -12,6 +12,7 @@ class Duel {
         this.winnner = null;
         this.loser = null;
         this.statistic = statistic;
+        this.previousDuel = null;
     }
 
     getSkillStatistic(card) {
@@ -30,6 +31,10 @@ class Duel {
 
     isInvolved(card) {
         return (card === this.challenger || card === this.target || this.target.includes(card)) && card.location === Locations.PlayArea;
+    }
+
+    isInvolvedInAnyDuel(card) {
+        return this.isInvolved(card) || this.previousDuel && this.previousDuel.isInvolved(card);
     }
 
     getTotalsForDisplay() {
