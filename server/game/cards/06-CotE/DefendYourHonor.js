@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes, DuelTypes, Players } = require('../../Constants');
+const { CardTypes, DuelTypes } = require('../../Constants');
 
 class DefendYourHonor extends DrawCard {
     setupCardAbilities() {
@@ -10,30 +10,11 @@ class DefendYourHonor extends DrawCard {
                     context.game.isDuringConflict() &&
                     event.card.type === CardTypes.Event && context.player.opponent
             },
-            targets: {
-                challenger: {
-                    cardType: CardTypes.Character,
-                    controller: Players.Self,
-                    cardCondition: (card) => card.isParticipating()
-                },
-                duelTarget: {
-                    dependsOn: 'challenger',
-                    player: Players.Opponent,
-                    cardType: CardTypes.Character,
-                    controller: Players.Opponent,
-                    cardCondition: card => card.isParticipating()
-                }
-            },
-            effect: 'initiate a military duel between {1} and {2}',
-            effectArgs: (context) => [context.targets.challenger, context.targets.duelTarget],
-            handler: context => {
-                this.game.actions.duel({
-                    type: DuelTypes.Military,
-                    challenger: context.targets.challenger,
-                    target: context.targets.duelTarget,
-                    resolutionHandler: (winner) => this.resolutionHandler(context, winner)
-                }).resolve(null, context);
-            }
+            initiateDuel: context => ({
+                type: DuelTypes.Military,
+                opponentChoosesDuelTarget: true,
+                resolutionHandler: (winner) => this.resolutionHandler(context, winner)
+            })
         });
     }
 
