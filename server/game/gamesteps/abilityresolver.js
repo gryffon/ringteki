@@ -3,6 +3,7 @@ const _ = require('underscore');
 const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
 const InitiateCardAbilityEvent = require('../Events/InitiateCardAbilityEvent');
+const InitiateAbilityEventWindow = require('../Events/InitiateAbilityEventWindow');
 const { Locations, Stages, CardTypes, EventNames, PlayTypes } = require('../Constants');
 
 class AbilityResolver extends BaseStepWithPipeline {
@@ -21,6 +22,8 @@ class AbilityResolver extends BaseStepWithPipeline {
     initialise() {
         this.pipeline.initialise([
             new SimpleStep(this.game, () => this.createSnapshot()),
+            new SimpleStep(this.game, () => this.resolveEarlyTargets()),
+            new SimpleStep(this.game, () => this.checkForCancel()),
             new SimpleStep(this.game, () => this.openInitiateAbilityEventWindow()),
             new SimpleStep(this.game, () => this.executeHandler()),
             new SimpleStep(this.game, () => this.moveEventCardToDiscard()),
@@ -35,6 +38,9 @@ class AbilityResolver extends BaseStepWithPipeline {
     }
 
     openInitiateAbilityEventWindow() {
+        if(this.cancelled) {
+            return;
+        }
         let eventName = EventNames.Unnamed;
         let eventProps = {};
         if(this.context.ability.isCardAbility()) {
@@ -47,19 +53,18 @@ class AbilityResolver extends BaseStepWithPipeline {
                 this.events.push(this.game.getEvent(EventNames.OnCardPlayed, {
                     player: this.context.player,
                     card: this.context.source,
+                    context: this.context,
                     originalLocation: this.context.source.location,
                     playType: PlayTypes.PlayFromHand,
-                    reducedCost: this.context.ability.getReducedCost(this.context)
+                    resolver: this
                 }));
             }
         }
         this.events.push(this.game.getEvent(eventName, eventProps, () => this.queueInitiateAbilitySteps()));
-        this.game.openEventWindow(this.events);
+        this.game.queueStep(new InitiateAbilityEventWindow(this.game, this.events));
     }
 
     queueInitiateAbilitySteps() {
-        this.queueStep(new SimpleStep(this.game, () => this.resolveEarlyTargets()));
-        this.queueStep(new SimpleStep(this.game, () => this.checkForCancel()));
         this.queueStep(new SimpleStep(this.game, () => this.resolveCosts()));
         this.queueStep(new SimpleStep(this.game, () => this.payCosts()));
         this.queueStep(new SimpleStep(this.game, () => this.checkCostsWerePaid()));
@@ -69,9 +74,6 @@ class AbilityResolver extends BaseStepWithPipeline {
     }
 
     resolveEarlyTargets() {
-        if(this.cancelled) {
-            return;
-        }
         this.context.stage = Stages.PreTarget;
         if(!this.context.ability.cannotTargetFirst) {
             this.targetResults = this.context.ability.resolveTargets(this.context);
