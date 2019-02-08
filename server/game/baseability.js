@@ -113,12 +113,6 @@ class BaseAbility {
         return this.cost.every(cost => cost.canPay(contextCopy));
     }
 
-    /**
-     * Resolves all costs for the ability prior to payment. Some cost objects
-     * have a `resolve` method in order to prompt the user to make a choice,
-     * such as choosing a card to kneel. Consumers of this method should wait
-     * until all costs have a `resolved` value of `true` before proceeding.
-     */
     resolveCosts(context, results) {
         for(let cost of this.cost.filter(cost => cost.resolve)) {
             context.game.queueSimpleStep(() => {
@@ -181,6 +175,11 @@ class BaseAbility {
 
     checkAllTargets(context) {
         return this.nonDependentTargets.every(target => target.checkTarget(context));
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        return this.targets.some(target => target.hasTargetsChosenByInitiatingPlayer(context)) ||
+            this.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context));
     }
 
     displayMessage(context) { // eslint-disable-line no-unused-vars

@@ -1,5 +1,5 @@
 const CardSelector = require('../CardSelector.js');
-const { Stages } = require('../Constants.js');
+const { Stages, Players } = require('../Constants.js');
 
 class AbilityTargetAbility {
     constructor(name, properties, ability) {
@@ -50,6 +50,11 @@ class AbilityTargetAbility {
 
     resolve(context, targetResults) {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
+            return;
+        }
+        let player = context.choosingPlayerOverride || this.getChoosingPlayer(context);
+        if(player === context.player.opponent && context.stage === Stages.PreTarget) {
+            targetResults.delayTargeting = this;
             return;
         }
         let buttons = [];
@@ -110,6 +115,21 @@ class AbilityTargetAbility {
                (!this.properties.cardCondition || this.properties.cardCondition(context.targetAbility.card, context)) &&
                this.abilityCondition(context.targetAbility) &&
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+    }
+
+    getChoosingPlayer(context) {
+        let playerProp = this.properties.player;
+        if(typeof playerProp === 'function') {
+            playerProp = playerProp(context);
+        }
+        return playerProp === Players.Opponent ? context.player.opponent : context.player;
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        if(this.properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context))) {
+            return true;
+        }
+        return this.getChoosingPlayer(context) === context.player;
     }
 }
 

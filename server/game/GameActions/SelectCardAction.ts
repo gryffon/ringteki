@@ -61,6 +61,7 @@ export class SelectCardAction extends CardGameAction {
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
         let mustSelect = [];
         if(properties.targets) {
+            player = context.choosingPlayerOverride || player;
             mustSelect = properties.selector.getAllLegalTargets(context).filter(card =>
                 card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
             );
@@ -78,5 +79,10 @@ export class SelectCardAction extends CardGameAction {
             }
         };
         context.game.promptForSelect(player, Object.assign(defaultProperties, properties));
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.targets && properties.player !== Players.Opponent;
     }
 }

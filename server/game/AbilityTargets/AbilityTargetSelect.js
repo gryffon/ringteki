@@ -121,6 +121,13 @@ class AbilityTargetSelect {
         return context.selects[this.name] && this.isChoiceLegal(context.selects[this.name].choice, context) &&
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        return this.properties.choices.some(choice =>
+            (typeof choice === 'object') &&
+            choice.some(action => action.hasTargetsChosenByInitiatingPlayer(context))
+        );
+    }
 }
 
 module.exports = AbilityTargetSelect;

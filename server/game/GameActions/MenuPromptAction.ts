@@ -61,4 +61,9 @@ export class MenuPromptAction extends GameAction {
         }
         context.game.promptWithHandlerMenu(player, Object.assign({}, properties, { context, choiceHandler }));
     }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        let properties = this.getProperties(context);
+        return properties.gameAction.hasTargetsChosenByInitiatingPlayer(context);
+    }
 }

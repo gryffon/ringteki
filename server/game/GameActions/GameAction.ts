@@ -40,7 +40,6 @@ export class GameAction {
         if(!Array.isArray(properties.target)) {
             properties.target = [properties.target];
         }
-        properties.target = properties.target.filter(target => !!target);
         return properties;
     }
 
@@ -144,5 +143,9 @@ export class GameAction {
         if(event.recipient) {
             event.recipient.modifyFate(event.fate);
         }
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
+        return false;
     }
 }

@@ -65,17 +65,10 @@ class AbilityTargetCard {
             }
         }
         let otherProperties = _.omit(this.properties, 'cardCondition', 'player');
-        let playerProp = this.properties.player;
-        if(typeof playerProp === 'function') {
-            playerProp = playerProp(context);
-        }
-        let player = context.player;
-        if(playerProp === Players.Opponent) {
-            if(context.stage === Stages.PreTarget) {
-                targetResults.delayTargeting = this;
-                return;
-            }
-            player = player.opponent;
+        let player = context.choosingPlayerOverride || this.getChoosingPlayer(context);
+        if(player === context.player.opponent && context.stage === Stages.PreTarget) {
+            targetResults.delayTargeting = this;
+            return;
         }
         let buttons = [];
         let waitingPromptTitle = '';
@@ -138,6 +131,21 @@ class AbilityTargetCard {
                 this.selector.hasEnoughSelected(cards) &&
                 !this.selector.hasExceededLimit(cards)) &&
                 (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+    }
+
+    getChoosingPlayer(context) {
+        let playerProp = this.properties.player;
+        if(typeof playerProp === 'function') {
+            playerProp = playerProp(context);
+        }
+        return playerProp === Players.Opponent ? context.player.opponent : context.player;
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        if(this.properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context))) {
+            return true;
+        }
+        return this.getChoosingPlayer(context) === context.player;
     }
 }
 
