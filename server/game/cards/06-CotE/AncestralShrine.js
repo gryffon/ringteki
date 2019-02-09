@@ -7,6 +7,7 @@ class AncestralShrine extends DrawCard {
             title: 'Return rings to gain honor',
             cost: AbilityDsl.costs.returnRings(),
             gameAction: AbilityDsl.actions.gainHonor(context => ({
+                target: context.player,
                 amount: context.costs.returnRing
             }))
         });
