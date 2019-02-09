@@ -69,7 +69,7 @@ describe('Outskirts Sentry', function() {
                 expect(this.player1).not.toBeAbleToSelect(this.berserker);
             });
 
-            it('should only honor the target', function() {
+            it('should honor the target', function() {
                 this.initiateConflict({
                     attackers: [this.outrider],
                     defenders: []
