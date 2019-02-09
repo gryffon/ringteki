@@ -10,7 +10,7 @@ class Unmask extends DrawCard {
                 cardType: CardTypes.Character,
                 controller: Players.Any,
                 cardCondition: card => card.isParticipating(),
-                gameAction: [
+                gameAction: ability.actions.multiple([
                     ability.actions.discardStatusToken(),
                     ability.actions.cardLastingEffect(context => ({
                         effect: [
@@ -19,8 +19,7 @@ class Unmask extends DrawCard {
                         ]
                     })),
                     ability.actions.gainHonor(context => ({ amount: 2, target: context.target.controller }))
-
-                ]
+                ])
             }
         });
     }
