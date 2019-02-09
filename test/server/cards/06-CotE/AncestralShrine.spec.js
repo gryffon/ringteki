@@ -48,11 +48,11 @@ describe('Ancestral Shrine', function () {
                 expect(this.player1).toBeAbleToSelectRing('earth');
                 expect(this.player1).not.toBeAbleToSelectRing('fire');
                 expect(this.player1).toBeAbleToSelectRing('air');
-                /*this.player1.clickRing('earth');
-                expect(this.game.rings.earth.isUnclaimed()).toBe(true);*/
+                this.player1.clickRing('earth');
                 expect(this.player1).toHavePrompt('Choose a ring to return');
                 expect(this.player1).toBeAbleToSelectRing('air');
                 this.player1.clickRing('air');
+                expect(this.game.rings.earth.isUnclaimed()).toBe(true);
                 expect(this.game.rings.air.isUnclaimed()).toBe(true);
                 expect(this.player1.honor).toBe(12);
             });
