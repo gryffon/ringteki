@@ -102,4 +102,8 @@ export class DuelAction extends CardGameAction {
             (winner, loser) => this.resolveDuel(winner, loser, event.context, additionalProperties)
         ));
     }
+
+    checkEventCondition(event, additionalProperties) {
+        return event.cards.some(card => this.canAffect(card, event.context, additionalProperties));
+    }
 }
