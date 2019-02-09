@@ -46,11 +46,6 @@ describe('Iaijutsu Master', function() {
 
                 this.challenger = this.player2.findCardByName('doji-challenger');
                 this.iaijutsu = this.player2.findCardByName('iaijutsu-master');
-                this.player1.pass();
-                this.player2.clickCard(this.iaijutsu);
-                expect(this.player2).toBeAbleToSelect(this.challenger);
-                expect(this.player2).not.toBeAbleToSelect('doji-whisperer');
-                this.player2.clickCard(this.challenger);
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.raitsugu],
@@ -58,8 +53,14 @@ describe('Iaijutsu Master', function() {
                 });
             });
 
+            it('should not be playable on a non-duelist', function() {
+                this.player2.clickCard(this.iaijutsu);
+                expect(this.player2).toBeAbleToSelect(this.challenger);
+                expect(this.player2).not.toBeAbleToSelect('doji-whisperer');
+            });
+
             it('should trigger after dials are revealed', function() {
-                this.player2.pass();
+                this.player2.playAttachment(this.iaijutsu, this.challenger);
                 this.player1.clickCard(this.raitsugu);
                 this.player1.clickCard(this.challenger);
                 this.player1.clickPrompt('2');
@@ -69,7 +70,7 @@ describe('Iaijutsu Master', function() {
             });
 
             it('should be able to change dial value to 0', function() {
-                this.player2.pass();
+                this.player2.playAttachment(this.iaijutsu, this.challenger);
                 this.player1.clickCard(this.raitsugu);
                 this.player1.clickCard(this.challenger);
                 this.player1.clickPrompt('1');
@@ -83,7 +84,7 @@ describe('Iaijutsu Master', function() {
             });
 
             it('should correctly modify the value', function() {
-                this.player2.pass();
+                this.player2.playAttachment(this.iaijutsu, this.challenger);
                 this.player1.clickCard(this.raitsugu);
                 this.player1.clickCard(this.challenger);
                 this.player1.clickPrompt('2');

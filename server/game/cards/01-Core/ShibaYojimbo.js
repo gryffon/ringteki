@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Locations } = require('../../Constants');
 
 class ShibaYojimbo extends DrawCard {
@@ -10,9 +11,7 @@ class ShibaYojimbo extends DrawCard {
                     card.hasTrait('shugenja') && card.controller === context.player && card.location === Locations.PlayArea)
                 )
             },
-            effect: 'cancel the effects of {1}',
-            effectArgs: context => context.event.card,
-            handler: context => context.cancel()
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 }
