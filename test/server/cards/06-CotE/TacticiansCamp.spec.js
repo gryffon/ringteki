@@ -22,7 +22,8 @@ describe('Tactician\'s Camp', function() {
 
         it('should only give honored characters +1 MIL', function() {
             this.toturi.honor();
-            expect(this.toturi.getMilitarySkill()).toBe(9);
+            this.game.checkGameState(true);
+            expect(this.toturi.getMilitarySkill()).toBe(10);
             expect(this.berserker.getMilitarySkill()).toBe(3);
             expect(this.whisperer.getMilitarySkill()).toBe(0);
         });
