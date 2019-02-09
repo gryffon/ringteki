@@ -12,12 +12,12 @@ class SeppunHiddenGuard extends DrawCard {
                 )
             },
             cost: AbilityDsl.costs.sacrificeSelf(),
-            effect: 'cancel the effects of {1}',
-            effectArgs: context => context.event.card,
-            handler: context => {
-                context.cancel();
-                context.game.applyGameAction(context, { discardAtRandom: context.event.context.player });
-            }
+            effect: 'cancel the effects of {1}, and force {2} to discard a card at random',
+            effectArgs: context => [context.event.card, context.event.context.player],
+            gameAction: AbilityDsl.actions.multiple([
+                AbilityDsl.actions.cancel(),
+                AbilityDsl.actions.discardAtRandom(context => ({ target: context.event.context.player }))
+            ])
         });
     }
 }
