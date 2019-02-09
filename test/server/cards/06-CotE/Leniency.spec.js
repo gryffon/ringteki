@@ -1,4 +1,4 @@
-fdescribe('Leniency', function() {
+describe('Leniency', function() {
     integration(function() {
         describe('When playing Leniency', function() {
             beforeEach(function() {
