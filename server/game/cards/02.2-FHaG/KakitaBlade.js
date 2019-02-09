@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class KakitaBlade extends DrawCard {
     setupCardAbilities(ability) {
         this.whileAttached({
-            condition: () => this.game.currentDuel && this.game.currentDuel.isInvolved(this.parent),
+            condition: () => this.game.currentDuel && this.game.currentDuel.isInvolvedInAnyDuel(this.parent),
             effect: ability.effects.modifyPoliticalSkill(2)
         });
         this.reaction({
