@@ -58,4 +58,8 @@ export class CancelAction extends GameAction {
         let { replacementGameAction } = this.getProperties(context, additionalProperties);
         return !replacementGameAction || replacementGameAction.canAffect(target, context, additionalProperties);
     }
+
+    defaultTargets(context: TriggeredAbilityContext): any[] {
+        return context.event.card ? [context.event.card] : [];
+    }
 }
