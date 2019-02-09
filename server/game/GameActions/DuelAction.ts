@@ -1,5 +1,5 @@
 import { CardGameAction, CardActionProperties} from './CardGameAction';
-import { CardTypes, Locations, DuelTypes } from '../Constants';
+import { CardTypes, Locations, DuelTypes, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Duel = require('../Duel');
