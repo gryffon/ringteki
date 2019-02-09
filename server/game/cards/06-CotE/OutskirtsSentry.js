@@ -8,7 +8,6 @@ class OutskirtsSentry extends DrawCard {
             when: {
                 onMoveToConflict: (event, context) => context.source.isParticipating()
             },
-            collectiveTrigger: true,
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
