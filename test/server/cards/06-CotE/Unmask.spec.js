@@ -5,93 +5,85 @@ describe('Unmask', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['matsu-berserker', 'kitsu-spiritcaller']
+                        inPlay: ['yoritomo', 'kitsu-spiritcaller'],
+                        fate: 2,
+                        honor: 10
                     },
                     player2: {
-                        inPlay: ['yoritomo'],
-                        hand: ['unmask']
+                        inPlay: ['matsu-berserker'],
+                        hand: ['unmask'],
+                        fate: 1,
+                        honor: 10
                     }
                 });
-                this.matsuBerserker = this.player1.findCardByName('matsu-berserker');
+                this.matsuBerserker = this.player2.findCardByName('matsu-berserker');
                 this.yoritomo = this.player1.findCardByName('yoritomo');
+                this.player1.player.showBid = 4;
+                this.player2.player.showBid = 5;
+            });
+
+            it('should not be playable outside of a conflict', function() {
+                this.player1.pass();
+                this.player2.clickCard('unmask');
+                expect(this.player2).toHavePrompt('Action Window');
+            });
+
+            it('should not be playable if the controller bid less on his dial', function() {
+                this.player1.player.showBid = 5;
+                this.player2.player.showBid = 4;
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: [this.matsuBerserker],
-                    defenders: [this.yoritomo]
+                    attackers: [this.yoritomo],
+                    defenders: [this.matsuBerserker]
                 });
                 this.player2.clickCard('unmask');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
-            it('should not allow targeting characters not participating', function() {
-                this.kitsuSpiritcaller = this.player1.findCardByName('kitsu-spiritcaller');
-                expect(this.player2).toHavePrompt('Unmask');
-                expect(this.player2).toBeAbleToSelect(this.matsuBerserker);
-                expect(this.player2).not.toBeAbleToSelect(this.kitsuSpiritcaller);
+            describe('during a conflict', function() {
+                beforeEach(function() {
+                    this.yoritomo.honor();
+                    this.noMoreActions();
+                    this.initiateConflict({
+                        attackers: [this.yoritomo],
+                        defenders: [this.matsuBerserker]
+                    });
+                    this.yoritomo.honor();
+                    this.player2.clickCard('unmask');
+                });
+
+                it('should not allow targeting characters not participating', function() {
+                    this.kitsuSpiritcaller = this.player1.findCardByName('kitsu-spiritcaller');
+                    expect(this.player2).toHavePrompt('Unmask');
+                    expect(this.player2).toBeAbleToSelect(this.yoritomo);
+                    expect(this.player2).not.toBeAbleToSelect(this.kitsuSpiritcaller);
+                });
+
+                it('should remove any status token on the target', function() {
+                    expect(this.yoritomo.isHonored).toBe(true);
+                    this.player2.clickCard(this.yoritomo);
+                    expect(this.yoritomo.isHonored).toBe(false);
+                });
+
+                it('should set the target\'s skill to match it\'s base skill for the duration of the conflict', function() {
+                    // Honored so that defender wins and ring is not chosen.
+                    this.matsuBerserker.honor();
+                    expect(this.yoritomo.getMilitarySkill()).toBe(this.yoritomo.getBaseMilitarySkill() + this.yoritomo.glory + this.player1.fate);
+                    expect(this.yoritomo.getPoliticalSkill()).toBe(this.yoritomo.getBasePoliticalSkill() + this.yoritomo.glory + this.player1.fate);
+                    this.player2.clickCard(this.yoritomo);
+                    expect(this.yoritomo.getMilitarySkill()).toBe(this.yoritomo.getBaseMilitarySkill());
+                    expect(this.yoritomo.getPoliticalSkill()).toBe(this.yoritomo.getBasePoliticalSkill());
+                    this.noMoreActions();
+                    expect(this.yoritomo.getMilitarySkill()).toBe(this.yoritomo.getBaseMilitarySkill() + this.player1.fate);
+                    expect(this.yoritomo.getPoliticalSkill()).toBe(this.yoritomo.getBasePoliticalSkill() + this.player1.fate);
+                });
+
+                it('should give the target\'s controller 2 honor', function() {
+                    this.player1Honor = this.player1.honor;
+                    this.player2.clickCard(this.yoritomo);
+                    expect(this.player1.honor).toBe(this.player1Honor + 2);
+                });
             });
-
-            // it('should prompt the player to choose a new dial value', function() {
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     expect(this.player2).toHavePrompt('Choose a value to set your honor dial at');
-            // });
-
-            // it('should prompt their opponent to choose Even or Odd', function() {
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     this.player2.clickPrompt('5');
-            //     expect(this.player1).toHavePrompt('Guess whether your opponent set their dial to even or odd');
-            // });
-
-            // it('should display messages saying what players choices were', function() {
-            //     this.chatSpy = spyOn(this.game, 'addMessage');
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     this.player2.clickPrompt('5');
-            //     this.player1.clickPrompt('Even');
-            //     expect(this.chatSpy).toHaveBeenCalledWith('{0} guesses {1}', this.player1.player, 'Even');
-            //     expect(this.chatSpy).toHaveBeenCalledWith('{0} reveals their honor dial:{1}', this.player2.player, 5);
-            // });
-
-            // it('should change the players honor dial', function() {
-            //     this.chatSpy = spyOn(this.game, 'addMessage');
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     this.player2.clickPrompt('5');
-            //     this.player1.clickPrompt('Even');
-            //     expect(this.player2.player.showBid).toBe(5);
-            // });
-
-            // it('should bow and dishonor the target if the opponent guesses Even and they are wrong', function() {
-            //     this.chatSpy = spyOn(this.game, 'addMessage');
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     this.player2.clickPrompt('5');
-            //     this.player1.clickPrompt('Even');
-            //     expect(this.matsuBerserker.isDishonored).toBe(true);
-            //     expect(this.matsuBerserker.bowed).toBe(true);
-            // });
-
-            // it('should bow and dishonor the target if the opponent guesses Odd and they are wrong', function() {
-            //     this.chatSpy = spyOn(this.game, 'addMessage');
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     this.player2.clickPrompt('4');
-            //     this.player1.clickPrompt('Odd');
-            //     expect(this.matsuBerserker.isDishonored).toBe(true);
-            //     expect(this.matsuBerserker.bowed).toBe(true);
-            // });
-
-            // it('should not bow or dishonor the target if the opponent guesses Even and they are right', function() {
-            //     this.chatSpy = spyOn(this.game, 'addMessage');
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     this.player2.clickPrompt('4');
-            //     this.player1.clickPrompt('Even');
-            //     expect(this.matsuBerserker.isDishonored).toBe(false);
-            //     expect(this.matsuBerserker.bowed).toBe(false);
-            // });
-
-            // it('should not bow or dishonor the target if the opponent guesses Odd and they are right', function() {
-            //     this.chatSpy = spyOn(this.game, 'addMessage');
-            //     this.player2.clickCard(this.matsuBerserker);
-            //     this.player2.clickPrompt('5');
-            //     this.player1.clickPrompt('Odd');
-            //     expect(this.matsuBerserker.isDishonored).toBe(false);
-            //     expect(this.matsuBerserker.bowed).toBe(false);
-            // });
         });
     });
 });

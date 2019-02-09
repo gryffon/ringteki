@@ -14,8 +14,8 @@ class Unmask extends DrawCard {
                     ability.actions.discardStatusToken(),
                     ability.actions.cardLastingEffect(context => ({
                         effect: [
-                            ability.effects.setBaseMilitarySkill(context.target.getBaseMilitarySkill()),
-                            ability.effects.setBasePoliticalSkill(context.target.getBasePoliticalSkill())
+                            ability.effects.setMilitarySkill(context.target.getBaseMilitarySkill()),
+                            ability.effects.setPoliticalSkill(context.target.getBasePoliticalSkill())
                         ]
                     })),
                     ability.actions.gainHonor(context => ({ amount: 2, target: context.target.controller }))
