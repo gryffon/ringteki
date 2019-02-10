@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations } = require('../../Constants');
 
 class ShinjoAmbusher extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,13 +8,13 @@ class ShinjoAmbusher extends DrawCard {
             when: {
                 onCardPlayed: (event, context) => event.card === context.source && context.source.isParticipating()
             },
-            gameAction: ability.actions.cardLastingEffect({
-                target: card => card === this.game.currentConflict.conflictProvince,
+            effect: 'prevent {1} from triggering its abilities this conflict',
+            effectArgs: context => context.game.currentConflict.conflictProvince,
+            gameAction: ability.actions.cardLastingEffect(() => ({
+                target: this.game.currentConflict.conflictProvince,
                 targetLocation: Locations.Provinces,
-                targetController: Players.Opponent,
                 effect: ability.effects.cardCannot('triggerAbilities')
-            }),
-            effect: 'prevent {0} from triggering its abilities this conflict'
+            }))
         });
     }
 }
