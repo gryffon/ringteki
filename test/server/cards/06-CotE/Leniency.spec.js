@@ -1,4 +1,4 @@
-fdescribe('Leniency', function() {
+describe('Leniency', function() {
     integration(function() {
         describe('When playing Leniency', function() {
             beforeEach(function() {
@@ -72,7 +72,12 @@ fdescribe('Leniency', function() {
                 expect(this.player2).toBeAbleToSelect('display-of-power');
                 this.player2.clickCard('display-of-power');
                 expect(this.player2).toBeAbleToSelect('leniency');
-                
+                this.player2.clickCard('leniency');
+                expect(this.player2).toHavePrompt('Choose a character');
+                this.player1.clickCard(this.borderRider);
+                expect(this.player2).toHavePrompt('Choose a character');
+                expect(this.borderRider.location).toBe('play area');
+                expect(this.player1).toHavePrompt('Action Window');
             });
         });
     });
