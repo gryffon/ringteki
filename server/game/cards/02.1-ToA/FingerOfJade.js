@@ -1,16 +1,15 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class FingerOfJade extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Cancel an ability',
             when: {
                 onInitiateAbilityEffects: (event, context) => event.cardTargets.some(card => card === context.source.parent)
             },
-            cost: ability.costs.sacrificeSelf(),
-            effect: 'cancel the effects of {1}',
-            effectArgs: context => context.event.card,
-            handler: context => context.cancel()
+            cost: AbilityDsl.costs.sacrificeSelf(),
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 

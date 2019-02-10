@@ -1,18 +1,18 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class IkebanaArtisan extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Lose fate instead of honor',
             when: {
                 onModifyHonor: (event, context) => event.dueToUnopposed && event.player === context.player
             },
-            limit: ability.limit.unlimitedPerConflict(),
+            limit: AbilityDsl.limit.unlimitedPerConflict(),
             effect: 'lose 1 fate rather than 1 honor for not defending the conflict',
-            effectArgs: context => context.event.card,
-            handler: context => {
-                context.event.window.addEvent(ability.actions.loseFate({ amount: 1 }).getEvent(context.player, context));
-                context.cancel();
+            gameAction: AbilityDsl.actions.cancel(),
+            then: {
+                gameAction: AbilityDsl.actions.loseFate(context => ({ target: context.player }))
             }
         });
     }

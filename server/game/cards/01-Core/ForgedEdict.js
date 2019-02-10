@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { CardTypes } = require('../../Constants');
 
 class ForgedEdict extends DrawCard {
@@ -10,9 +11,7 @@ class ForgedEdict extends DrawCard {
             },
             cannotBeMirrored: true,
             cost: ability.costs.dishonor(card => card.hasTrait('courtier')),
-            effect: 'cancel {1}',
-            effectArgs: context => context.event.card,
-            handler: context => context.cancel()
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 }
