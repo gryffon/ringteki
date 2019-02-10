@@ -1,4 +1,4 @@
-fdescribe('Leniency', function() {
+describe('Leniency', function() {
     integration(function() {
         describe('When playing Leniency', function() {
             beforeEach(function() {
@@ -22,6 +22,7 @@ fdescribe('Leniency', function() {
                 this.player1.placeCardInProvince('ethereal-dreamer', 'province 4');
                 this.player2.placeCardInProvince('border-rider', 'province 1');
                 this.etherealDreamer = this.player1.findCardByName('ethereal-dreamer');
+                this.naiveStudent = this.player1.findCardByName('naive-student');
                 this.borderRider = this.player2.findCardByName('border-rider');
                 this.noMoreActions();
                 this.initiateConflict({
@@ -33,12 +34,21 @@ fdescribe('Leniency', function() {
                 });
             });
 
-            it('should let you put ethereal dreamer in to play instead of resolving the ring effect', function () {
+            it('should let you put ethereal dreamer into play instead of resolving the ring effect', function () {
                 this.noMoreActions();
                 this.player1.clickCard('leniency');
                 expect(this.player1).toHavePrompt('Choose a character');
                 this.player1.clickCard(this.etherealDreamer);
                 expect(this.etherealDreamer.location).toBe('play area');
+                expect(this.player1).toHavePrompt('Action Window');
+            });
+
+            it('should let you put a dash mil chararcter into play instead of resolving the ring effect', function () {
+                this.noMoreActions();
+                this.player1.clickCard('leniency');
+                expect(this.player1).toHavePrompt('Choose a character');
+                this.player1.clickCard(this.naiveStudent);
+                expect(this.naiveStudent.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
