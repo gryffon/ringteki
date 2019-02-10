@@ -13,10 +13,10 @@ class Leniency extends DrawCard {
                 cardType: CardTypes.Character,
                 location: Locations.Provinces,
                 controller: Players.Self,
-                cardCondition: card => card.printedCost <= 2,
+                cardCondition: card => card.printedCost < 3,
                 gameAction: [AbilityDsl.actions.cancel(), AbilityDsl.actions.putIntoPlay()]
             },
-            effect: 'put {0} into play instead of resolving the ring effect',
+            effect: 'put {0} into play instead of resolving the ring effect'
         });
     }
 }
