@@ -14,13 +14,9 @@ class Leniency extends DrawCard {
                 location: Locations.Provinces,
                 controller: Players.Self,
                 cardCondition: card => card.printedCost <= 2,
-                gameAction: AbilityDsl.actions.putIntoPlay() // this doesn't seem to be putting the character in play
+                gameAction: [AbilityDsl.actions.cancel(), AbilityDsl.actions.putIntoPlay()]
             },
             effect: 'put {0} into play instead of resolving the ring effect',
-            handler: (context) => {
-                // this does cancel the ring effect
-                context.cancel();
-            }
         });
     }
 }
