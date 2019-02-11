@@ -29,6 +29,7 @@ class GainAbility extends EffectValue {
     apply(target) {
         if(this.abilityType === AbilityTypes.Persistent) {
             this.value = this.properties;
+            this.value.ref = target.addEffectToEngine(this.value);
             return;
         } else if(this.abilityType === AbilityTypes.Action) {
             this.value = target.createAction(this.properties);
@@ -43,9 +44,12 @@ class GainAbility extends EffectValue {
         }
     }
 
-    unapply() {
+    unapply(target) {
         if([AbilityTypes.ForcedInterrupt, AbilityTypes.ForcedReaction, AbilityTypes.Interrupt, AbilityTypes.Reaction, AbilityTypes.WouldInterrupt].includes(this.abilityType)) {
             this.value.unregisterEvents();
+        } else if(this.abilityType == AbilityTypes.Persistent && this.value.ref) {
+            target.removeEffectFromEngine(this.value.ref);
+            delete this.value.ref;
         }
     }
 }
