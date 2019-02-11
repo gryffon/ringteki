@@ -4,7 +4,7 @@ const { Players, CardTypes } = require('../../Constants');
 class Unmask extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
-            title: 'Discard a character\'s status token and set its skills to its printed value until the conflicts end. It\'s controller gains 2 honor.',
+            title: 'Discard a character\'s status token and set its skills to its printed value until the conflicts end. Its controller gains 2 honor.',
             condition: context => context.player.opponent && context.player.showBid > context.player.opponent.showBid,
             target: {
                 cardType: CardTypes.Character,
