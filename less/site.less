@@ -33,7 +33,17 @@ html {
 }
 
 body {
+  padding-top: 55px;
+}
+@media (max-width: 979px) {
+  body {
+  padding-top: 0px;
+  }
+}
+
+body {
   height: 100%;
+  width:100%;
   background-color: @background-color;
   color: @foreground-color
 }
@@ -70,8 +80,11 @@ h4 {
   background-size: cover;
 }
 
+.bg-board-default {
+  height:100%;
+}
+
 .bg-board-crab {
-  padding-top: 75px;
   background-image: url("/img/bgs/crab.jpg");
 
   height: 100%;
@@ -82,7 +95,6 @@ h4 {
 }
 
 .bg-board-crane {
-  padding-top: 75px;
   background-image: url("/img/bgs/crane.jpg");
 
   height: 100%;
@@ -93,7 +105,6 @@ h4 {
 }
 
 .bg-board-dragon {
-  padding-top: 75px;
   background-image: url("/img/bgs/dragon.jpg");
 
   height: 100%;
@@ -104,7 +115,6 @@ h4 {
 }
 
 .bg-board-lion {
-  padding-top: 75px;
   background-image: url("/img/bgs/lion.jpg");
 
   height: 100%;
@@ -115,7 +125,6 @@ h4 {
 }
 
 .bg-board-mantis {
-  padding-top: 75px;
   background-image: url("/img/bgs/mantis.jpg");
 
   height: 100%;
@@ -126,7 +135,6 @@ h4 {
 }
 
 .bg-board-phoenix {
-  padding-top: 75px;
   background-image: url("/img/bgs/phoenix.jpg");
 
   height: 100%;
@@ -137,7 +145,6 @@ h4 {
 }
 
 .bg-board-scorpion {
-  padding-top: 75px;
   background-image: url("/img/bgs/scorpion.jpg");
 
   height: 100%;
@@ -148,7 +155,6 @@ h4 {
 }
 
 .bg-board-spider {
-  padding-top: 75px;
   background-image: url("/img/bgs/spider.jpg");
 
   height: 100%;
@@ -159,7 +165,6 @@ h4 {
 }
 
 .bg-board-unicorn {
-  padding-top: 75px;
   background-image: url("/img/bgs/unicorn.jpg");
 
   height: 100%;

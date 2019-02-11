@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { CardTypes } = require('../../Constants');
 
 class Censure extends DrawCard {
@@ -9,9 +10,7 @@ class Censure extends DrawCard {
                 onInitiateAbilityEffects: event => event.card.type === CardTypes.Event
             },
             cannotBeMirrored: true,
-            effect: 'cancel {1}',
-            effectArgs: context => context.event.card,
-            handler: context => context.cancel()
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 

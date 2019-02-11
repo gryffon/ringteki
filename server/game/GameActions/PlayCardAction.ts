@@ -3,7 +3,7 @@ import AbilityResolver = require('../gamesteps/abilityresolver');
 import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations, EventNames }  from '../Constants';
+import { Locations }  from '../Constants';
 
 class PlayCardResolver extends AbilityResolver {
     playGameAction: PlayCardAction;
@@ -18,14 +18,20 @@ class PlayCardResolver extends AbilityResolver {
         this.cancelPressed = false;
     }
 
-    payCosts() {
-        if(this.cancelled || this.canPayResults.cancelled) {
-            if(this.gameActionProperties.resetOnCancel) {
-                this.playGameAction.cancelAction(this.gameActionContext);
-                this.cancelPressed = true;
-            }
+    checkForCancel() {
+        super.checkForCancel();
+        if(this.cancelled && this.gameActionProperties.resetOnCancel) {
+            this.playGameAction.cancelAction(this.gameActionContext);
+            this.cancelPressed = true;
         }
+    }
+
+    payCosts() {
         super.payCosts();
+        if(this.cancelled && this.gameActionProperties.resetOnCancel) {
+            this.playGameAction.cancelAction(this.gameActionContext);
+            this.cancelPressed = true;
+        }
     }
 
     executeHandler() {

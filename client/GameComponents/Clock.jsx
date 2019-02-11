@@ -32,12 +32,15 @@ class Clock extends React.Component {
     }
 
     render() {
-        let className = 'player-stats-row';
+        let className = 'player-stats-row state clock';
         if(this.props.mode !== 'stop') {
             className += ' clock-active';
         }
         return (
             <div className={ className }>
+                <span>
+                    <img src='/img/free-clock-icon-png.png' className='clock-icon' />
+                </span>
                 { formattedSeconds(this.state.timeLeft) }
             </div>
         );

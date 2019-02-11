@@ -1,11 +1,26 @@
 .card-wrapper {
-  margin: 0px 0px 0px 0px;
+
   vertical-align: middle;
   display: inline-block;
+  &.at-home {
+    order:2;
+    &.conflict{ 
+      margin-top:20px;
+      order:1;
+      &.is-mine {
+        margin-top:-20px;
+      }
+    }
+  }
+
+  &.at-home {
+    margin-left:3px;
+    margin-right:3px;
+  }
 
   &.imperial-favor {
     margin: 0 7px 10px;
-
+  }
     &.small {
       &.vertical {
         height: @card-sm-height;
@@ -41,37 +56,37 @@
         width: @card-xl-height;
       }
     }
-  }
 }
 
-.generate-wrappers(@n, @i: 1) when (@i =< @n) {
+.generate-wrappers(@n, @i: 0) when (@i =< @n) {
   .wrapper-@{i} {
     margin-left: @attachment-offset*@i;
 
   &.small {
-      margin-left: -(@attachment-offset-sm)*@i;
+      margin-left: (@attachment-offset-sm)*@i;
     }
 
     &.large {
-      margin-left: -(@attachment-offset-lg)*@i;
+      margin-left: (@attachment-offset-lg)*@i;
     }
 
     &.x-large {
-      margin-left: -(@attachment-offset-xl)*@i;
+      margin-left: (@attachment-offset-xl)*@i;
     }
   }
   .generate-wrappers(@n, (@i + 1));
 }
 
-.generate-wrappers(10, 1);
+.generate-wrappers(10, 0);
 
 .card-frame {
+  border-radius:6px;
   position: relative;
 }
 
 .card {
   position: relative;
-  border-radius: 4px;
+  border-radius: 6px;
   box-shadow: 0 0 12px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(255,255,255,0.1);
   overflow: hidden;
   z-index: @layer-cards;
@@ -249,7 +264,7 @@
 .card-order {
   background: rgba(0, 0, 0, 0.8);
   border: 1px solid rgba(0, 0, 0, 0.9);
-  border-radius: 4px;
+  border-radius: 6px;
   color: white;
   font-size: 16px;
   font-weight: bold;
@@ -281,16 +296,13 @@
   position: absolute;
   top: 0;
   right: 0;
-  margin-right: 5px;
-  margin-top: 5px;
+
 }
 
 .card-large-horizontal {
   width: 307px;
   height: 220px;
   position: relative;
-  margin-right: 5px;
-  margin-top: 5px;
 }
 
 .card-zoomed {
@@ -405,21 +417,48 @@
   }
 }
 
-.fatecountertext {
-  position: relative;
-  left: 0px;
-  top: -95%;
-  text-align: center;
-  font-size: 14px;
-  color: white;
-  text-shadow: 1px 1px 2px #000;
+.fatecounter {
+  box-sizing:border-box;
+  font-size: 25px;
+  font-weight:bold;
+  width: 1em;
+  height: 1em;
+  line-height:1em;
+  &.ring-fate {
+    font-size: 0.5em;
+  }
+  filter: drop-shadow(4px,4px,5px,5px,black);
 }
 
-.fatecounter {
-  box-sizing: border-box;
-  width: 25px;
-  height: 25px;
+.fatecounter > img {
+  float:left;
+  top:0;
+  left:0;
+  margin-bottom:-100%;
+  z-index: @layer-cards + 2;
+  width:1em;
+  height:1em;
 }
+
+.fatecountertext {
+  left:0px;
+  width:100%;
+  float:left;
+  text-align:center;
+  color: white;
+  text-shadow: 1px 1px 2px #000;
+  z-index: @layer-cards + 3;
+  font-size:0.5em;
+}
+@media(max-width: 1279px) {
+  .fatecounter {
+    &.ring-fate {
+      font-size:15px;
+    }
+  }
+}
+
+
 
 .honorcounter {
   box-sizing: border-box;
@@ -436,6 +475,7 @@
   width: 25px;
   height: 25px;
 }
+
 
 /* Don't think we actually need this
 .counter {

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { CardTypes } = require('../../Constants');
 
 class VoiceOfHonor extends DrawCard {
@@ -11,9 +12,7 @@ class VoiceOfHonor extends DrawCard {
                                                             context.player.opponent.getNumberOfCardsInPlay(card => card.isHonored)
             },
             cannotBeMirrored: true,
-            effect: 'cancel {1}',
-            effectArgs: context => context.event.card,
-            handler: context => context.cancel()
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 }

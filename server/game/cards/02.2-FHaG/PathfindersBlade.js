@@ -1,16 +1,17 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class PathfindersBlade extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Cancel conflict province ability',
             when: {
                 onInitiateAbilityEffects: (event, context) => context.source.parent.isAttacking() && event.card.isConflictProvince()
             },
-            cost: ability.costs.sacrificeSelf(),
+            cost: AbilityDsl.costs.sacrificeSelf(),
             effect: 'cancel the effects of {1}\'s ability',
             effectArgs: context => context.event.card,
-            handler: context => context.cancel()
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 }
