@@ -1,6 +1,6 @@
 describe('Warm Welcome', function() {
     integration(function() {
-        fdescribe('Warm Welcome\'s ability', function() {
+        describe('Warm Welcome\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
