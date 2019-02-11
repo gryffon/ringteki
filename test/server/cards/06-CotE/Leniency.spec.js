@@ -58,8 +58,7 @@ describe('Leniency', function() {
                 this.player2.clickCard('defend-the-wall');
                 this.player2.clickCard('leniency');
                 expect(this.player2).toHavePrompt('Choose a character');
-                this.player1.clickCard(this.borderRider);
-                expect(this.player2).toHavePrompt('Choose a character');
+                this.player2.clickCard(this.borderRider);
                 expect(this.borderRider.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Action Window');
             });
@@ -74,8 +73,7 @@ describe('Leniency', function() {
                 expect(this.player2).toBeAbleToSelect('leniency');
                 this.player2.clickCard('leniency');
                 expect(this.player2).toHavePrompt('Choose a character');
-                this.player1.clickCard(this.borderRider);
-                expect(this.player2).toHavePrompt('Choose a character');
+                this.player2.clickCard(this.borderRider);
                 expect(this.borderRider.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Action Window');
             });
