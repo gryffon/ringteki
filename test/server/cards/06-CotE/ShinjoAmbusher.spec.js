@@ -51,7 +51,6 @@ describe('Shinjo Ambusher', function() {
                 expect(this.ambusher.inConflict).toBe(false);
                 expect(this.game.currentConflict.attackerSkill).toBe(3);
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
-                expect(this.player1).not.toBeAbleToSelect(this.ambusher);
                 expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
             });
         });
