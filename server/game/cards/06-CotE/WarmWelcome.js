@@ -10,13 +10,13 @@ class WarmWelcome extends DrawCard {
             target: {
                 location: Locations.ConflictDiscardPile,
                 controller: Players.Self,
-                gameAction: [
+                gameAction: AbilityDsl.actions.sequentialAction([
                     AbilityDsl.actions.playCard(context => ({ target: context.target })),
                     AbilityDsl.actions.moveCard(context => ({
                         target: context.target.type === CardTypes.Event ? context.target : [],
                         destination: Locations.ConflictDeck, bottom: true
                     }))
-                ]
+                ])
             }
         });
     }
