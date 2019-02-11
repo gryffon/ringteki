@@ -1,6 +1,6 @@
 const AbilityLimit = require('../abilitylimit');
 const EffectValue = require('./EffectValue');
-const { AbilityTypes } = require('../Constants');
+const { AbilityTypes, Locations } = require('../Constants');
 
 class GainAbility extends EffectValue {
     constructor(abilityType, ability) {
@@ -20,6 +20,9 @@ class GainAbility extends EffectValue {
             }
             this.properties = Object.assign({}, ability.properties, newProps);
         }
+        if(abilityType === AbilityTypes.Persistent && !this.properties.location) {
+            this.properties.location = Locations.PlayArea;
+        }
     }
 
     reset() {
@@ -28,7 +31,14 @@ class GainAbility extends EffectValue {
 
     apply(target) {
         if(this.abilityType === AbilityTypes.Persistent) {
+            const activeLocations = {
+                'play area': [Locations.PlayArea],
+                'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
+            };
             this.value = this.properties;
+            if(activeLocations[this.value.location].includes(target.location)) {
+                this.value.ref = target.addEffectToEngine(this.value);
+            }
             return;
         } else if(this.abilityType === AbilityTypes.Action) {
             this.value = target.createAction(this.properties);
@@ -43,9 +53,12 @@ class GainAbility extends EffectValue {
         }
     }
 
-    unapply() {
+    unapply(target) {
         if([AbilityTypes.ForcedInterrupt, AbilityTypes.ForcedReaction, AbilityTypes.Interrupt, AbilityTypes.Reaction, AbilityTypes.WouldInterrupt].includes(this.abilityType)) {
             this.value.unregisterEvents();
+        } else if(this.abilityType === AbilityTypes.Persistent && this.value.ref) {
+            target.removeEffectFromEngine(this.value.ref);
+            delete this.value.ref;
         }
     }
 }
