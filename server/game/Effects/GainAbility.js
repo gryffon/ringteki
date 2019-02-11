@@ -22,6 +22,7 @@ class GainAbility extends EffectValue {
         }
         if(abilityType === AbilityTypes.Persistent && !this.properties.location) {
             this.properties.location = Locations.PlayArea;
+            this.properties.abilityType = AbilityTypes.Persistent;
         }
     }
 

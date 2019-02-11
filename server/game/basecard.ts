@@ -84,11 +84,13 @@ class BaseCard extends EffectSource {
     }
 
     get persistentEffects(): any[] {
+        let persistentEffects = this.abilities.persistentEffects;
         if(this.anyEffect(EffectNames.CopyCharacter)) {
             let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
-            return mostRecentEffect.value.getPersistentEffects();
+            persistentEffects = mostRecentEffect.value.getPersistentEffects();
         }
-        return this.isBlank() ? [] : this.abilities.persistentEffects;
+        let gainedPersistentEffects = this.getEffects(EffectNames.GainAbility).filter(ability => ability.abilityType === AbilityTypes.Persistent);
+        return this.isBlank() ? gainedPersistentEffects : persistentEffects.concat(gainedPersistentEffects);
     }
 
     /**
