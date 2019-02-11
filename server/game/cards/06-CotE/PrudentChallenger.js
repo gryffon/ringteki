@@ -4,7 +4,7 @@ const { CardTypes } = require('../../Constants');
 class PrudentChallenger extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Initiate a military duel',
+            title: 'Initiate a duel to discard attachment',
             initiateDuel: context => ({
                 type: 'military',
                 resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)

@@ -122,11 +122,8 @@ class AbilityTargetSelect {
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }
 
-    hasTargetsChosenByInitiatingPlayer(context) {
-        return this.properties.choices.some(choice =>
-            (typeof choice === 'object') &&
-            choice.some(action => action.hasTargetsChosenByInitiatingPlayer(context))
-        );
+    hasTargetsChosenByInitiatingPlayer() {
+        return !!this.properties.targets;
     }
 }
 

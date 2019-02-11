@@ -9,9 +9,10 @@ class FuSuiDisciple extends DrawCard {
                 player: {
                     mode: TargetModes.Select,
                     activePromptTitle: 'Choose a player',
+                    targets: true,
                     choices: {
-                        'Me': context => context.game.rings.air.isConsideredClaimed(context.player),
-                        'My Opponent': context => context.game.rings.air.isConsideredClaimed(context.player.opponent)
+                        [this.owner.name]: context => context.game.rings.air.isConsideredClaimed(this.owner),
+                        [this.owner.opponent && this.owner.opponent.name || 'NA']: context => context.game.rings.air.isConsideredClaimed(this.owner.opponent)
                     }
                 },
                 character: {
