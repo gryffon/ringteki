@@ -56,7 +56,7 @@ class GainAbility extends EffectValue {
     unapply(target) {
         if([AbilityTypes.ForcedInterrupt, AbilityTypes.ForcedReaction, AbilityTypes.Interrupt, AbilityTypes.Reaction, AbilityTypes.WouldInterrupt].includes(this.abilityType)) {
             this.value.unregisterEvents();
-        } else if(this.abilityType == AbilityTypes.Persistent && this.value.ref) {
+        } else if(this.abilityType === AbilityTypes.Persistent && this.value.ref) {
             target.removeEffectFromEngine(this.value.ref);
             delete this.value.ref;
         }
