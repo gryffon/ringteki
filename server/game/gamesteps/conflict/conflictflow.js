@@ -307,11 +307,9 @@ class ConflictFlow extends BaseStepWithPipeline {
             });
             event.condition = event => {
                 let prevWinner = event.conflict.winner;
-                let attackerSkill = event.conflict.attackerSkill;
-                let defenderSkill = event.conflict.defenderSkill;
                 this.conflict.winnerDetermined = false;
                 this.conflict.determineWinner();
-                if(this.conflict.winner !== prevWinner || this.conflict.attackerSkill !== attackerSkill || this.conflict.defenderSkill !== defenderSkill) {
+                if(this.conflict.winner !== prevWinner) {
                     let newEvent = eventFactory();
                     event.window.addEvent(newEvent);
                     return false;
