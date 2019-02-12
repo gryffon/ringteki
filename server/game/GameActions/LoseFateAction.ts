@@ -21,6 +21,11 @@ export class LoseFateAction extends PlayerAction {
         return ['make {0} lose {1} fate', [properties.target, properties.amount]];
     }
 
+    getCostMessage(context: AbilityContext): [string, any[]] {
+        let properties: LoseFateProperties = this.getProperties(context);
+        return ['spending {1} fate', [properties.amount]];
+    }
+
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties: LoseFateProperties = this.getProperties(context, additionalProperties);
         return properties.amount > 0 && player.fate > 0 && super.canAffect(player, context);
