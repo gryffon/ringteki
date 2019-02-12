@@ -7,6 +7,7 @@ import { CancelAction, CancelActionProperties } from './CancelAction';
 import { CardMenuAction, CardMenuProperties } from './CardMenuAction';
 import { ChooseGameAction, ChooseActionProperties } from './ChooseGameAction';
 import { ChosenDiscardAction, ChosenDiscardProperties } from './ChosenDiscardAction';
+import { ConditionalGameAction, ConditionalActionProperties } from './ConditionalGameAction';
 import { CreateTokenAction, CreateTokenProperties } from './CreateTokenAction';
 import { DeckSearchAction,  DeckSearchProperties} from './DeckSearchAction';
 import { DelayedEffectAction, DelayedEffectActionProperties } from './DelayedEffectAction';
@@ -124,6 +125,8 @@ const GameActions = {
     // meta actions
     cardMenu: (propertyFactory: CardMenuProperties | ((context: TriggeredAbilityContext) => CardMenuProperties)) => new CardMenuAction(propertyFactory),
     chooseAction: (propertyFactory: ChooseActionProperties | ((context: TriggeredAbilityContext) => ChooseActionProperties)) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
+    /** Will resolve gameAction: if condition: is true or will resolve else: if condition: is not true.  If condition: is not defined then will resolve else: if gameAction: cannot effect game state. */
+    conditional: (propertyFactory: ConditionalActionProperties | ((context: TriggeredAbilityContext) => ConditionalActionProperties)) => new ConditionalGameAction(propertyFactory),
     jointAction: (gameActions: GameAction[]) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     multiple: (gameActions: GameAction[]) => new MultipleGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     menuPrompt: (propertyFactory: MenuPromptProperties | ((context: TriggeredAbilityContext) => MenuPromptProperties)) => new MenuPromptAction(propertyFactory),
