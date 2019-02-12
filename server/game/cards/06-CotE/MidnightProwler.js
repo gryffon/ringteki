@@ -15,9 +15,6 @@ class MidnightProwler extends DrawCard {
                 handlers: [() => context.player.opponent.conflictDeck.splice(0, 2, ...context.player.opponent.conflictDeck.first(2))],
                 cardHandler: card => {
                     context.player.opponent.moveCard(card, 'conflict discard pile');
-                    let cardChoices = context.player.opponent.conflictDeck.first(2);
-                    cardChoices.splice(cardChoices.indexOf(card), 1);
-                    context.player.opponent.conflictDeck.splice(0, 1, ...cardChoices);
                 }
             })
         });
