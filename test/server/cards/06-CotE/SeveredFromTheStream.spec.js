@@ -24,7 +24,7 @@ describe('Severed From the Stream', function() {
                 this.player1.claimRing('fire');
                 this.player2.claimRing('void');
             });
-                       
+
             it('should return all rings from the player with the lowest glory count', function() {
                 expect(this.player1.player.getGloryCount()).toBe(2 + 2);
                 expect(this.player2.player.getGloryCount()).toBe(2 + 1);
