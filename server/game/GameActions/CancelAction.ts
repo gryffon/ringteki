@@ -3,7 +3,6 @@ import TriggeredAbilityContext = require('../TriggeredAbilityContext');
 
 export interface CancelActionProperties extends GameActionProperties {
     replacementGameAction?: GameAction;
-    thenGameAction?: GameAction;
 }
 
 export class CancelAction extends GameAction {
