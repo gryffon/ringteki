@@ -49,11 +49,11 @@ describe('Illustrious Forge', function() {
                 });
                 this.player2.clickCard(this.illustriousForge);
                 expect(this.player2).toHavePrompt('Choose an attachment');
-                expect(this.player2).toHaveDisabledPromptButton('Censure');
+                expect(this.player2).not.toHavePromptButton('Censure');
                 expect(this.player2).toHavePromptButton('Fine Katana');
                 expect(this.player2).toHavePromptButton('Finger of Jade');
-                expect(this.player2).toHaveDisabledPromptButton('Tattooed Wanderer');
-                expect(this.player2).toHaveDisabledPromptButton('Force of the River');
+                expect(this.player2).not.toHavePromptButton('Tattooed Wanderer');
+                expect(this.player2).not.toHavePromptButton('Force of the River');
                 expect(this.player2).toHavePromptButton('Take nothing');
             });
 
@@ -84,7 +84,7 @@ describe('Illustrious Forge', function() {
                 expect(this.player2).not.toBeAbleToSelect(this.adeptOfTheWaves);
             });
 
-            it('should attach the chosen attachment to the chosen character', function() {
+            it('should attach the chosen attachment to the chosen character and shuffle the deck', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.adeptOfTheWaves]
@@ -94,6 +94,7 @@ describe('Illustrious Forge', function() {
                 this.player2.clickCard(this.borderRider);
                 expect(this.borderRider.attachments.toArray()).toContain(this.fineKatana);
                 expect(this.player2).toHavePrompt('Choose defenders');
+                expect(this.getChatLogs(2)).toContain('player2 is shuffling their conflict deck');
             });
         });
     });
