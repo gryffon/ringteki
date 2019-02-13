@@ -103,6 +103,7 @@ interface AbilityProps {
 export interface ActionProps extends AbilityProps {
     condition?: (context?: AbilityContext) => boolean;
     phase?: string;
+    anyPlayer?: boolean;
 };
 
 interface TriggeredAbilityCardTarget {
