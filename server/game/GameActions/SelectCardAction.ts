@@ -38,7 +38,7 @@ export class SelectCardAction extends CardGameAction {
 
     getProperties(context: AbilityContext, additionalProperties = {}): SelectCardProperties {
         let properties = super.getProperties(context, additionalProperties) as SelectCardProperties;
-        let cardCondition = (card, context) => properties.gameAction.canAffect(card, context) && properties.cardCondition(card, context)
+        let cardCondition = (card, context) => properties.gameAction.canAffect(card, context, additionalProperties) && properties.cardCondition(card, context)
         properties.selector = CardSelector.for(Object.assign({}, properties, { cardCondition }));
         return properties;
     }
@@ -73,7 +73,7 @@ export class SelectCardAction extends CardGameAction {
                 if(properties.message) {
                     context.game.addMessage(properties.message, ...properties.messageArgs(cards, properties.gameAction));
                 }
-                properties.gameAction.addEventsToArray(events, context, { target: cards });
+                properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, { target: cards }));
                 return true;
             }
         };
