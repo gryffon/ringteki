@@ -108,7 +108,7 @@ class AbilityTargetAbility {
     }
 
     checkTarget(context) {
-        if(!context.targetAbility) {
+        if(!context.targetAbility || context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
             return false;
         }
         return this.properties.cardType === context.targetAbility.card.type &&

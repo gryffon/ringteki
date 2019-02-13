@@ -12,6 +12,7 @@ export interface SelectCardProperties extends CardActionProperties {
     player?: Players;
     cardType?: CardTypes | CardTypes[];
     controller?: Players;
+    optional?: boolean;
     location?: Locations | Locations[];
     cardCondition?: (card: BaseCard, context: AbilityContext) => boolean;
     targets?: boolean;
@@ -72,7 +73,7 @@ export class SelectCardAction extends CardGameAction {
             mustSelect: mustSelect,
             onSelect: (player, cards) => {
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, properties.gameAction));
+                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, player));
                 }
                 properties.gameAction.addEventsToArray(events, context, { target: cards });
                 return true;

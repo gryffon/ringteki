@@ -97,6 +97,9 @@ class AbilityTargetRing {
     }
 
     checkTarget(context) {
+        if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
+            return false;
+        }
         return context.rings[this.name] && this.properties.ringCondition(context.rings[this.name], context) &&
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }

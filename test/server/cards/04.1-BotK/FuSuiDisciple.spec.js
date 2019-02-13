@@ -37,16 +37,16 @@ describe('Fu Sui Disciple', function() {
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2.currentButtons).toContain('Cancel');
-                expect(this.player2.currentButtons).toContain('Me');
-                expect(this.player2.currentButtons).not.toContain('My Opponent');
+                expect(this.player2.currentButtons).toContain('player2');
+                expect(this.player2.currentButtons).not.toContain('player1');
             });
 
             it('should prompt to choose a player when the controller\'s opponent is the only one with the air ring', function() {
                 this.fuSuiDiciple = this.player1.clickCard('fu-sui-disciple');
                 expect(this.player1).toHavePrompt('Fū Sui Disciple');
                 expect(this.player1.currentButtons).toContain('Cancel');
-                expect(this.player1.currentButtons).not.toContain('Me');
-                expect(this.player1.currentButtons).toContain('My Opponent');
+                expect(this.player1.currentButtons).not.toContain('player1');
+                expect(this.player1.currentButtons).toContain('player2');
             });
 
             it('should prompt to choose a player when both players have the air ring', function() {
@@ -59,15 +59,15 @@ describe('Fu Sui Disciple', function() {
                 this.fuSuiDiciple = this.player1.clickCard('fu-sui-disciple');
                 expect(this.player1).toHavePrompt('Fū Sui Disciple');
                 expect(this.player1.currentButtons).toContain('Cancel');
-                expect(this.player1.currentButtons).toContain('Me');
-                expect(this.player1.currentButtons).toContain('My Opponent');
+                expect(this.player1.currentButtons).toContain('player1');
+                expect(this.player1.currentButtons).toContain('player2');
             });
 
             it('should not allow choosing an honored character', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
                 this.fuSuiDiciple.isHonored = true;
-                this.player2.clickPrompt('Me');
+                this.player2.clickPrompt('player2');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2).toBeAbleToSelect('steward-of-law');
                 expect(this.player2).not.toBeAbleToSelect(this.fuSuiDiciple);
@@ -77,7 +77,7 @@ describe('Fu Sui Disciple', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
                 this.fuSuiDiciple.isDishonored = true;
-                this.player2.clickPrompt('Me');
+                this.player2.clickPrompt('player2');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2).toBeAbleToSelect('steward-of-law');
                 expect(this.player2).not.toBeAbleToSelect(this.fuSuiDiciple);
@@ -86,7 +86,7 @@ describe('Fu Sui Disciple', function() {
             it('should allow the controller to cancel when choosing a character', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('Me');
+                this.player2.clickPrompt('player2');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2.currentButtons).toContain('Cancel');
             });
@@ -94,7 +94,7 @@ describe('Fu Sui Disciple', function() {
             it('should allow the controller to cancel when choosing an effect for their character', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('Me');
+                this.player2.clickPrompt('player2');
                 this.player2.clickCard(this.fuSuiDiciple);
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2.currentButtons).toContain('Cancel');
@@ -107,7 +107,7 @@ describe('Fu Sui Disciple', function() {
                 this.player1.clickRing('void');
                 this.player1.clickRing('air');
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('My Opponent');
+                this.player2.clickPrompt('player1');
                 expect(this.player1).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2.currentButtons).not.toContain('Cancel');
             });
@@ -117,7 +117,7 @@ describe('Fu Sui Disciple', function() {
                 this.player1.clickRing('void');
                 this.player1.clickRing('air');
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('My Opponent');
+                this.player2.clickPrompt('player1');
                 this.player1.clickCard('fu-sui-disciple');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2.currentButtons).not.toContain('Cancel');
@@ -133,7 +133,7 @@ describe('Fu Sui Disciple', function() {
                 });
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('Me');
+                this.player2.clickPrompt('player2');
                 this.player2.clickCard(this.fuSuiDiciple);
                 expect(this.player2.currentButtons).toContain('Honor this character');
                 expect(this.player2.currentButtons).not.toContain('Dishonor this character');
@@ -142,7 +142,7 @@ describe('Fu Sui Disciple', function() {
             it('should honor the character', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('Me');
+                this.player2.clickPrompt('player2');
                 this.player2.clickCard(this.fuSuiDiciple);
                 this.player2.clickPrompt('Honor this character');
                 expect(this.fuSuiDiciple.isHonored).toBe(true);
@@ -152,7 +152,7 @@ describe('Fu Sui Disciple', function() {
             it('should dishonor the character', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('Me');
+                this.player2.clickPrompt('player2');
                 this.player2.clickCard(this.fuSuiDiciple);
                 this.player2.clickPrompt('Dishonor this character');
                 expect(this.fuSuiDiciple.isDishonored).toBe(true);
@@ -174,7 +174,7 @@ describe('Fu Sui Disciple', function() {
                 this.player1.clickCard(this.maraudingOni);
                 expect(this.maraudingOni.location).toBe('play area');
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.player2.clickPrompt('My Opponent');
+                this.player2.clickPrompt('player1');
                 expect(this.player1).toHavePrompt('Fū Sui Disciple');
                 expect(this.player1).toBeAbleToSelect('fu-sui-disciple');
                 expect(this.player1).not.toBeAbleToSelect(this.maraudingOni);
@@ -196,14 +196,14 @@ describe('Fu Sui Disciple', function() {
                 expect(this.maraudingOni.location).toBe('play area');
                 this.player2.pass();
                 this.fuSuiDiciple = this.player1.clickCard('fu-sui-disciple');
-                this.player1.clickPrompt('Me');
+                this.player1.clickPrompt('player1');
                 this.player1.clickCard(this.fuSuiDiciple);
                 this.player1.clickPrompt('Honor this character');
                 expect(this.fuSuiDiciple.isHonored).toBe(true);
                 this.player2.clickCard('fu-sui-disciple');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
-                expect(this.player2.currentButtons).toContain('Me');
-                expect(this.player2.currentButtons).not.toContain('My Opponent');
+                expect(this.player2.currentButtons).toContain('player2');
+                expect(this.player2.currentButtons).not.toContain('player1');
             });
         });
     });

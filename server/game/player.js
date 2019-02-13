@@ -451,6 +451,8 @@ class Player extends GameObject {
      * Called when the Game object starts the game. Creates all cards on this players decklist, shuffles the decks and initialises player parameters for the start of the game
      */
     initialise() {
+        this.opponent = this.game.getOtherPlayer(this);
+
         this.prepareDecks();
         this.shuffleConflictDeck();
         this.shuffleDynastyDeck();
@@ -461,7 +463,6 @@ class Player extends GameObject {
         this.limitedPlayed = 0;
         this.maxLimited = 1;
         this.firstPlayer = false;
-        this.opponent = this.game.getOtherPlayer(this);
     }
 
     /**

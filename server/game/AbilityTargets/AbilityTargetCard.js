@@ -122,6 +122,8 @@ class AbilityTargetCard {
             return (!this.dependentTarget || this.dependentTarget.checkTarget(context));
         } else if(!context.targets[this.name]) {
             return false;
+        } else if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
+            return false;
         }
         let cards = context.targets[this.name];
         if(!Array.isArray(cards)) {

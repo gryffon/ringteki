@@ -42,13 +42,12 @@ export class CancelAction extends GameAction {
             let eventWindow = event.context.event.window;
             replacementGameAction.addEventsToArray(events, event.context, additionalProperties)
             event.context.game.queueSimpleStep(() => {
-                if(events.length > 1) {
-                    throw new Error('Multiple replacement events found');
-                }
-                if(!event.context.event.isSacrifice) {
+                if(!event.context.event.isSacrifice && events.length === 1) {
                     event.context.event.replacementEvent = events[0];
                 }
-                eventWindow.addEvent(events[0]);
+                for(let newEvent of events) {
+                    eventWindow.addEvent(newEvent);
+                }
             });
         }
         event.context.cancel();
@@ -61,5 +60,10 @@ export class CancelAction extends GameAction {
 
     defaultTargets(context: TriggeredAbilityContext): any[] {
         return context.event.card ? [context.event.card] : [];
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: TriggeredAbilityContext, additionalProperties = {}): boolean {
+        let { replacementGameAction } = this.getProperties(context);
+        return replacementGameAction && replacementGameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties);
     }
 }
