@@ -61,7 +61,7 @@ class ConflictPhase extends Phase {
 
     claimImperialFavor() {
         let gloryTotals = this.game.getPlayersInFirstPlayerOrder().map(player => {
-            return player.cardsInPlay.reduce((total, card) => total + card.getContributionToImperialFavor(), player.getClaimedRings().length + player.gloryModifier);
+            return player.getGloryCount();
         });
         let winner = this.game.getFirstPlayer();
         if(winner.opponent) {
