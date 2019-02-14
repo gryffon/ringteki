@@ -216,8 +216,6 @@ describe('Kakita Toshimoko', function() {
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.kireiKo);
                 this.player2.clickCard(this.kireiKo);
-                expect(this.player2).toHavePrompt('Triggered Abilities');
-                this.player2.clickPrompt('Pass'); //Stay Your Hand
                 expect(this.getChatLogs(1)).toContain('player2 won a military conflict 8 vs 0');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.fallenInBattle);
