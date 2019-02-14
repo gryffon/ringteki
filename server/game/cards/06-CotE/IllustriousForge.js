@@ -26,6 +26,9 @@ class IllustriousForge extends ProvinceCard {
                         controller: Players.Self,
                         location: Locations.PlayArea,
                         cardType: CardTypes.Character,
+                        message: '{0} chooses to attach {1} to {2}',
+                        // @ts-ignore
+                        messageArgs: (card, action, properties) => [context.player, properties.attachment, card],
                         gameAction: AbilityDsl.actions.attach()
                     })
                 })),

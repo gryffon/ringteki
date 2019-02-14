@@ -94,6 +94,7 @@ describe('Illustrious Forge', function() {
                 this.player2.clickCard(this.borderRider);
                 expect(this.borderRider.attachments.toArray()).toContain(this.fineKatana);
                 expect(this.player2).toHavePrompt('Choose defenders');
+                expect(this.getChatLogs(3)).toContain('player2 chooses to attach Fine Katana to Border Rider');
                 expect(this.getChatLogs(2)).toContain('player2 is shuffling their conflict deck');
             });
         });
