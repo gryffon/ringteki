@@ -5,13 +5,17 @@ import DrawCard = require('../drawcard');
 import Duel = require('../Duel');
 import DuelFlow = require('../gamesteps/DuelFlow');
 import BaseCard = require('../basecard');
+import { GameAction } from './GameAction';
 
 export interface DuelProperties extends CardActionProperties {
     type: DuelTypes;
     challenger?: DrawCard;
-    resolutionHandler: (winner: DrawCard | DrawCard[], loser: DrawCard | DrawCard[]) => void,
-    costHandler?: (context: AbilityContext, prompt: any) => void,
-    statistic?: (card: DrawCard) => any
+    gameAction?: GameAction;
+    message?: string;
+    messageArgs?: (context: AbilityContext) => any | any[];
+    resolutionHandler?: (winner: DrawCard | DrawCard[], loser: DrawCard | DrawCard[]) => void;
+    costHandler?: (context: AbilityContext, prompt: any) => void;
+    statistic?: (card: DrawCard) => number;
 }
 
 export class DuelAction extends CardGameAction {
@@ -23,10 +27,6 @@ export class DuelAction extends CardGameAction {
         type: undefined,
         resolutionHandler: () => true
     };
-
-    constructor(properties: DuelProperties | ((context: AbilityContext) => DuelProperties)) {
-        super(properties);
-    }
 
     getProperties(context: AbilityContext, additionalProperties = {}): DuelProperties {
         let properties = super.getProperties(context, additionalProperties) as DuelProperties;
@@ -56,7 +56,15 @@ export class DuelAction extends CardGameAction {
 
     resolveDuel(winner: DrawCard | DrawCard[], loser: DrawCard | DrawCard[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        properties.resolutionHandler(winner, loser);
+        if(properties.gameAction && properties.gameAction.hasLegalTarget(context)) {
+            if(properties.message) {
+                const messageArgs = properties.messageArgs ? [].concat(properties.messageArgs(context)) : [];
+                context.game.addMessage(properties.message, ...messageArgs);
+            }
+            properties.gameAction.resolve(null, context);
+        } else if(properties.resolutionHandler) {
+            properties.resolutionHandler(winner, loser);
+        }
     }
 
     honorCosts(prompt, context: AbilityContext, additionalProperties = {}): void {

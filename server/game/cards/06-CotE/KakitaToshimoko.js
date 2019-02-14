@@ -11,24 +11,17 @@ class KakitaToshimoko extends DrawCard {
                     context.source.isParticipating() &&
                     event.conflict.loser === context.player
             },
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Military,
                 opponentChoosesDuelTarget: true,
-                resolutionHandler: (winner) => this.resolutionHandler(context, winner)
-            }),
-            effect: 'initiate a military duel between {1} and {2}',
-            effectArgs: (context) => [context.source, context.targets.duelTarget]
+                message: '{0} sets both players to count 0 total skill for the conflict',
+                messageArgs: context => context.game.currentDuel.winner,
+                gameAction: AbilityDsl.actions.playerLastingEffect(context => ({
+                    targetController: Players.Any,
+                    effect: context.game.currentDuel.winner === context.source ? AbilityDsl.effects.setConflictTotalSkill(0) : []
+                }))
+            }
         });
-    }
-
-    resolutionHandler(context, winner) {
-        if(winner === context.source) {
-            this.game.addMessage('{0} sets both players to count 0 total skill for the conflict', winner);
-            this.game.actions.playerLastingEffect({
-                targetController: Players.Any,
-                effect: AbilityDsl.effects.setConflictTotalSkill(0)
-            }).resolve(null, context);
-        }
     }
 }
 
