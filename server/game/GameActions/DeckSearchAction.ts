@@ -1,18 +1,13 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
-import { Locations, EventNames, Decks } from '../Constants';
+import { Locations, EventNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Player = require('../player');
-import { GameActionProperties } from './GameAction';
 
 export interface DeckSearchProperties extends PlayerActionProperties {
     amount?: number;
     reveal?: boolean;
     cardCondition?: (card: DrawCard, context: AbilityContext) => boolean;
-    cardHandler?: (card: DrawCard, context: AbilityContext) => void;
-    activePromptTitle?: string;
-    takeNothingHandler?: (context: AbilityContext) => void;
-    deck?: Decks;
 }
 
 export class DeckSearchAction extends PlayerAction {
@@ -22,11 +17,10 @@ export class DeckSearchAction extends PlayerAction {
     defaultProperties: DeckSearchProperties = {
         amount: -1,
         reveal: false,
-        cardCondition: () => true,
-        deck: Decks.ConflictDeck
+        cardCondition: () => true
     };
 
-    getProperties(context: AbilityContext, additionalProperties = {}): GameActionProperties {
+    getProperties(context: AbilityContext, additionalProperties = {}): DeckSearchProperties {
         let properties = super.getProperties(context, additionalProperties) as DeckSearchProperties;
         properties.reveal = properties.reveal || properties.cardCondition.toString() !== this.defaultProperties.cardCondition.toString();
         return properties;
@@ -60,31 +54,30 @@ export class DeckSearchAction extends PlayerAction {
         let context = event.context;
         let player = event.player;
         let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;
-        let deck = properties.deck === Decks.ConflictDeck ? player.conflictDeck : player.dynastyDeck;
-        let amount = event.amount > -1 ? event.amount : deck.size();
-        let cards = deck.first(amount);
+        let amount = event.amount > -1 ? event.amount : player.conflictDeck.size();
+        let cards = player.conflictDeck.first(amount);
         if(event.amount === -1) {
             cards = cards.filter(card => properties.cardCondition(card, context));
         }
         context.game.promptWithHandlerMenu(player, {
-            activePromptTitle: properties.activePromptTitle || 'Select a card to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand',
+            activePromptTitle: 'Select a card to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand',
             context: context,
             cards: cards,
             cardCondition: properties.cardCondition,
             choices: ['Take nothing'],
-            handlers: [properties.takeNothingHandler || (context => {
-                context.game.addMessage('{0} takes nothing', context.player);
-                context.player.shuffleDeck(properties.deck);
-            })],
-            cardHandler: properties.cardHandler || (card => {
+            handlers: [() => {
+                context.game.addMessage('{0} takes nothing', player);
+                player.shuffleConflictDeck();
+            }],
+            cardHandler: card => {
                 if(properties.reveal) {
                     context.game.addMessage('{0} takes {1} and adds it to their hand', player, card);
                 } else {
                     context.game.addMessage('{0} takes a card into their hand', player);
                 }
                 player.moveCard(card, Locations.Hand);
-                context.player.shuffleDeck(properties.deck);
-            })
+                player.shuffleConflictDeck();
+            }
         });
     }
 }
