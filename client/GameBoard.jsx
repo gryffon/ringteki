@@ -16,6 +16,7 @@ import StrongholdRow from './GameComponents/StrongholdRow.jsx';
 import Ring from './GameComponents/Ring.jsx';
 import HonorFan from './GameComponents/HonorFan.jsx';
 import ActivePlayerPrompt from './GameComponents/ActivePlayerPrompt.jsx';
+import Avatar from './Avatar.jsx';
 import CardZoom from './GameComponents/CardZoom.jsx';
 import Card from './GameComponents/Card.jsx';
 import Chat from './GameComponents/Chat.jsx';
@@ -270,7 +271,7 @@ export class InnerGameBoard extends React.Component {
             let cardsInPlay = _.map(cards, card => {
                 return (<Card key={ card.uuid } source='play area' card={ card } disableMouseOver={ card.facedown && !card.code }
                     onMenuItemClick={ this.onMenuItemClick } onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut }
-                    onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } />);
+                    onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ isMe }/>);
             });
             cardsByLocation.push(cardsInPlay);
         });
@@ -349,22 +350,83 @@ export class InnerGameBoard extends React.Component {
         this.props.sendGameMessage('toggleManualMode');
     }
 
-    getRings() {
-        return (<div className='panel ring-panel'>
-            <Ring ring={ this.props.currentGame.rings.air } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring ring={ this.props.currentGame.rings.earth } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring ring={ this.props.currentGame.rings.fire } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring ring={ this.props.currentGame.rings.void } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring ring={ this.props.currentGame.rings.water } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+    getRings(owner, className) {
+        return (<div className={ className } >
+            <Ring owner={ owner } ring={ this.props.currentGame.rings.air } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+            <Ring owner={ owner } ring={ this.props.currentGame.rings.earth } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+            <Ring owner={ owner } ring={ this.props.currentGame.rings.fire } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+            <Ring owner={ owner } ring={ this.props.currentGame.rings.void } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+            <Ring owner={ owner } ring={ this.props.currentGame.rings.water } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+        </div>);
+    }
+
+    renderCenterBar(thisPlayer, otherPlayer, conflict) {
+        var conflictElement;
+        //if there's an active conflict, build the conflict tracker element
+        if(conflict.attackingPlayerId) {
+            let thisPlayerSkill = '-';
+            let otherPlayerSkill = '-';
+            if(otherPlayer && otherPlayer.id.includes(conflict.attackingPlayerId)) {
+                otherPlayerSkill = (conflict.attackerSkill !== undefined) ? conflict.attackerSkill : '-';
+                thisPlayerSkill = (conflict.defenderSkill !== undefined && !conflict.unopposed) ? conflict.defenderSkill : '-';
+            } else if(otherPlayer && otherPlayer.id.includes(conflict.defendingPlayerId)) {
+                otherPlayerSkill = (conflict.defenderSkill !== undefined && !conflict.unopposed) ? conflict.defenderSkill : '-';
+                thisPlayerSkill = (conflict.attackerSkill !== undefined) ? conflict.attackerSkill : '-';
+            } else {
+                //games with no opponent should still show conflict skill
+                thisPlayerSkill = (conflict.attackerSkill !== undefined) ? conflict.attackerSkill : '-';
+            }
+            let conflictClass = 'icon-' + conflict.type + ' conflict-' + conflict.type + ' icon-medium skill-symbol';
+
+            conflictElement = (<div>
+                <div className='conflict-panel'>
+                    <div className='phase-display conflict-count-top'>
+                        { otherPlayerSkill }
+                    </div>
+                    <div className='phase-display conflict-separator'>
+                        vs
+                    </div>
+                    <div className='phase-display conflict-count-bottom'>
+                        { thisPlayerSkill }
+                    </div>
+                </div>
+                <div className='conflict-panel'>
+                    <div className='phase-display'>
+                        <span className={ conflictClass } >&nbsp;</span>
+                        { conflict.elements && conflict.elements.includes('fire') && <span className={ 'icon-element-fire' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('water') && <span className={ 'icon-element-water' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('earth') && <span className={ 'icon-element-earth' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('air') && <span className={ 'icon-element-air' } >&nbsp;</span> }
+                        { conflict.elements && conflict.elements.includes('void') && <span className={ 'icon-element-void' } /> }
+                    </div>
+                </div>
+
+            </div>);
+        } else {
+            conflictElement = <div />;
+        }
+
+
+        return (<div className='center-bar'>
+            { this.getRings(null, 'ring-panel') }
+            { conflictElement }
         </div>);
     }
 
     renderSidebar(thisPlayer, otherPlayer) {
+        let size = this.props.user.settings.cardSize;
         return (
             <div className='province-pane'>
-                {
-                    thisPlayer.optionSettings.showStatusInSidebar &&
-                    <div className='player-stats-box'>
+                <div className='player-nameplate'>
+                    <Avatar emailHash={ otherPlayer && otherPlayer.user ? otherPlayer.user.emailHash : 'unknown' } />
+                    <div className='player-name'>
+                        { otherPlayer && otherPlayer.user ? otherPlayer.user.username : 'Noone' }
+                    </div>
+                </div>
+                <div className='sidebar-pane their-side'>
+                    { thisPlayer.hideProvinceDeck && <HonorFan value={ otherPlayer ? otherPlayer.showBid + '' : '0' } /> }
+                    { this.getRings(otherPlayer ? otherPlayer.name : '\0', 'claimed-pool their-pool ' + (size ? size : '')) }
+                    <div className='sidebar-pane their-side'>
                         <PlayerStatsBox
                             clockState={ otherPlayer ? otherPlayer.clock : null }
                             stats={ otherPlayer ? otherPlayer.stats : null }
@@ -374,41 +436,41 @@ export class InnerGameBoard extends React.Component {
                             handSize={ otherPlayer && otherPlayer.cardPiles.hand ? otherPlayer.cardPiles.hand.length : 0 }
                         />
                     </div>
-                }
-                { thisPlayer.hideProvinceDeck && <HonorFan value={ otherPlayer ? otherPlayer.showBid + '' : '0' } /> }
-                { thisPlayer.hideProvinceDeck && this.getRings() }
-                { thisPlayer.hideProvinceDeck && <HonorFan value={ thisPlayer.showBid + '' } /> }
-                {
-                    !thisPlayer.hideProvinceDeck &&
-                    <div className='province-group our-side no-highlight'>
-                        <CardPile
-                            className='province-deck'
-                            title='Province Deck' source='province deck'
-                            cards={ thisPlayer.cardPiles.provinceDeck }
-                            hiddenTopCard
-                            onMouseOver={ this.onMouseOver }
-                            onMouseOut={ this.onMouseOut }
-                            onCardClick={ this.onCardClick }
-                            onDragDrop={ this.onDragDrop }
-                            disableMenu={ this.state.spectating }
-                            size={ this.props.user.settings.cardSize } />
+                </div>
+                <div className='sidebar-pane our-side'>
+                    <PlayerStatsBox
+                        { ...bindActionCreators(actions, this.props.dispatch) }
+                        clockState={ thisPlayer.clock }
+                        stats={ thisPlayer.stats }
+                        showControls={ !this.state.spectating && this.props.currentGame.manualMode }
+                        user={ thisPlayer.user }
+                        firstPlayer={ thisPlayer.firstPlayer }
+                        otherPlayer={ false }
+                        spectating={ this.state.spectating }
+                        handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
+                    { this.getRings(thisPlayer ? thisPlayer.name : '\0', 'claimed-pool my-pool ' + (size ? size : '')) }
+                    { thisPlayer.hideProvinceDeck && <HonorFan value={ thisPlayer.showBid + '' } /> }
+                    { false && thisPlayer.optionSettings.showStatusInSidebar &&
+                        <div className='player-stats-box our-side'>
+                            <PlayerStatsBox
+                                { ...bindActionCreators(actions, this.props.dispatch) }
+                                clockState={ thisPlayer.clock }
+                                stats={ thisPlayer.stats }
+                                showControls={ !this.state.spectating }
+                                user={ thisPlayer.user }
+                                firstPlayer={ thisPlayer.firstPlayer }
+                                otherPlayer={ false }
+                                spectating={ this.state.spectating }
+                                handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
+                        </div>
+                    }
+                </div>
+                <div className='player-nameplate our-side'>
+                    <Avatar emailHash={ thisPlayer.user ? thisPlayer.user.emailHash : 'unknown' } />
+                    <div className='player-name'>
+                        { thisPlayer.user ? thisPlayer.user.username : 'Noone' }
                     </div>
-                }
-                {
-                    thisPlayer.optionSettings.showStatusInSidebar &&
-                    <div className='player-stats-box our-side'>
-                        <PlayerStatsBox
-                            { ...bindActionCreators(actions, this.props.dispatch) }
-                            clockState={ thisPlayer.clock }
-                            stats={ thisPlayer.stats }
-                            showControls={ !this.state.spectating }
-                            user={ thisPlayer.user }
-                            firstPlayer={ thisPlayer.firstPlayer }
-                            otherPlayer={ false }
-                            spectating={ this.state.spectating }
-                            handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
-                    </div>
-                }
+                </div>
             </div>
         );
     }
@@ -476,23 +538,23 @@ export class InnerGameBoard extends React.Component {
         let index = 0;
         let thisCardsInPlay = this.getCardsInPlay(thisPlayer, true);
         _.each(thisCardsInPlay, cards => {
-            thisPlayerCards.push(<div className='card-row' key={ 'this-loc' + index++ }>{ cards }</div>);
+            thisPlayerCards.push(<div className={ 'card-row our-side player-home' + (thisPlayer && thisPlayer.imperialFavor ? ' favor' : '') } key={ 'this-loc' + index++ }>{ cards }</div>);
         });
 
         let otherPlayerCards = [];
         if(otherPlayer) {
             _.each(this.getCardsInPlay(otherPlayer, false), cards => {
-                otherPlayerCards.push(<div className='card-row' key={ 'other-loc' + index++ }>{ cards }</div>);
+                otherPlayerCards.push(<div className={ 'card-row player-home' + (otherPlayer.imperialFavor ? ' favor' : '') } key={ 'other-loc' + index++ }>{ cards }</div>);
             });
         }
 
-        for(let i = thisPlayerCards.length; i < 2; i++) {
-            thisPlayerCards.push(<div className='card-row' key={ 'this-empty' + i } />);
-        }
+        // for(let i = thisPlayerCards.length; i < 2; i++) {
+        //     thisPlayerCards.push(<div className='card-row player-home' key={ 'this-empty' + i } />);
+        // }
 
-        for(let i = otherPlayerCards.length; i < 2; i++) {
-            thisPlayerCards.push(<div className='card-row' key={ 'other-empty' + i } />);
-        }
+        // for(let i = otherPlayerCards.length; i < 2; i++) {
+        //     thisPlayerCards.push(<div className='card-row player-home' key={ 'other-empty' + i } />);
+        // }
 
         let popup = (
             <div id='settings-modal' ref='modal' className='modal fade' tabIndex='-1' role='dialog'>
@@ -518,7 +580,7 @@ export class InnerGameBoard extends React.Component {
                 { this.getPrompt(thisPlayer) }
                 { this.getPlayerHand(thisPlayer) }
                 {
-                    !thisPlayer.optionSettings.showStatusInSidebar &&
+                    false && !thisPlayer.optionSettings.showStatusInSidebar &&
                     <div className='player-stats-row'>
                         <PlayerStatsRow
                             clockState={ otherPlayer ? otherPlayer.clock : null }
@@ -530,30 +592,31 @@ export class InnerGameBoard extends React.Component {
                         />
                     </div>
                 }
-                <div className='main-window'>
+                <div className={ 'main-window ' + this.props.user.settings.cardSize }>
                     { this.renderSidebar(thisPlayer, otherPlayer) }
-                    <div className='board-middle'>
-                        <div className='player-deck-row'>
-                            <DynastyRow
-                                conflictDiscardPile={ otherPlayer ? otherPlayer.cardPiles.conflictDiscardPile : [] }
-                                conflictDeck={ otherPlayer ? otherPlayer.cardPiles.conflictDeck : [] }
-                                conflictDeckTopCard={ otherPlayer ? otherPlayer.conflictDeckTopCard : null }
-                                dynastyDiscardPile={ otherPlayer ? otherPlayer.cardPiles.dynastyDiscardPile : [] }
-                                dynastyDeck={ otherPlayer ? otherPlayer.cardPiles.dynastyDeck : [] }
-                                removedFromGame={ otherPlayer ? otherPlayer.cardPiles.removedFromGame : [] }
-                                numConflictCards={ otherPlayer ? otherPlayer.numConflictCards : 0 }
-                                numDynastyCards={ otherPlayer ? otherPlayer.numDynastyCards : 0 }
-                                province1Cards={ otherPlayer ? otherPlayer.provinces.one : [] }
-                                province2Cards={ otherPlayer ? otherPlayer.provinces.two : [] }
-                                province3Cards={ otherPlayer ? otherPlayer.provinces.three : [] }
-                                province4Cards={ otherPlayer ? otherPlayer.provinces.four : [] }
-                                onCardClick={ this.onCardClick }
-                                onMouseOver={ this.onMouseOver }
-                                onMouseOut={ this.onMouseOut }
-                                otherPlayer= { otherPlayer }
-                                cardSize={ this.props.user.settings.cardSize } />
-                        </div>
-                        <div className='player-stronghold-row'>
+                    <div className={ 'play-area' + (this.props.user.settings.cardSize ? (' ' + this.props.user.settings.cardSize) : '') }>
+                        <div className={ 'player-board their-side' + (this.props.user.settings.cardSize ? (' ' + this.props.user.settings.cardSize) : '') }>
+                            <div className='player-deck-row'>
+                                <DynastyRow
+                                    conflictDiscardPile={ otherPlayer ? otherPlayer.cardPiles.conflictDiscardPile : [] }
+                                    conflictDeck={ otherPlayer ? otherPlayer.cardPiles.conflictDeck : [] }
+                                    conflictDeckTopCard={ otherPlayer ? otherPlayer.conflictDeckTopCard : null }
+                                    dynastyDiscardPile={ otherPlayer ? otherPlayer.cardPiles.dynastyDiscardPile : [] }
+                                    dynastyDeck={ otherPlayer ? otherPlayer.cardPiles.dynastyDeck : [] }
+                                    removedFromGame={ otherPlayer ? otherPlayer.cardPiles.removedFromGame : [] }
+                                    numConflictCards={ otherPlayer ? otherPlayer.numConflictCards : 0 }
+                                    numDynastyCards={ otherPlayer ? otherPlayer.numDynastyCards : 0 }
+                                    province1Cards={ otherPlayer ? otherPlayer.provinces.one : [] }
+                                    province2Cards={ otherPlayer ? otherPlayer.provinces.two : [] }
+                                    province3Cards={ otherPlayer ? otherPlayer.provinces.three : [] }
+                                    province4Cards={ otherPlayer ? otherPlayer.provinces.four : [] }
+                                    onCardClick={ this.onCardClick }
+                                    onMouseOver={ this.onMouseOver }
+                                    onMouseOut={ this.onMouseOut }
+                                    otherPlayer= { otherPlayer }
+                                    cardSize={ this.props.user.settings.cardSize } />
+                            </div>
+                            { otherPlayerCards }
                             <StrongholdRow
                                 onCardClick={ this.onCardClick }
                                 onMouseOver={ this.onMouseOver }
@@ -564,18 +627,9 @@ export class InnerGameBoard extends React.Component {
                                 cardSize={ this.props.user.settings.cardSize }
                             />
                         </div>
-                        <div className='board-inner'>
-                            <div className='play-area'>
-                                <div className='player-board'>
-                                    { otherPlayerCards }
-                                </div>
-                                <div className='player-board our-side' onDragOver={ this.onDragOver }
-                                    onDrop={ event => this.onDragDropEvent(event, 'play area') } >
-                                    { thisPlayerCards }
-                                </div>
-                            </div>
-                        </div>
-                        <div className='player-stronghold-row our-side'>
+                        { this.renderCenterBar(thisPlayer, otherPlayer, this.props.currentGame.conflict) }
+                        <div className={ 'player-board our-side' + (this.props.user.settings.cardSize ? (' ' + this.props.user.settings.cardSize) : '') } onDragOver={ this.onDragOver }
+                            onDrop={ event => this.onDragDropEvent(event, 'play area') } >
                             <StrongholdRow isMe={ !this.state.spectating }
                                 spectating={ this.state.spectating }
                                 onCardClick={ this.onCardClick }
@@ -587,35 +641,53 @@ export class InnerGameBoard extends React.Component {
                                 role={ thisPlayer.role }
                                 thisPlayer ={ thisPlayer }
                                 cardSize={ this.props.user.settings.cardSize } />
-                        </div>
-                        <div className='player-deck-row our-side'>
-                            <DynastyRow isMe={ !this.state.spectating }
-                                conflictDiscardPile={ thisPlayer.cardPiles.conflictDiscardPile }
-                                conflictDeck={ thisPlayer.cardPiles.conflictDeck }
-                                conflictDeckTopCard={ thisPlayer.conflictDeckTopCard }
-                                dynastyDiscardPile={ thisPlayer.cardPiles.dynastyDiscardPile }
-                                dynastyDeck={ thisPlayer.cardPiles.dynastyDeck }
-                                removedFromGame={ thisPlayer.cardPiles.removedFromGame }
-                                onCardClick={ this.onCardClick }
-                                onConflictClick={ this.onConflictClick }
-                                onDynastyClick={ this.onDynastyClick }
-                                onMouseOver={ this.onMouseOver }
-                                onMouseOut={ this.onMouseOut }
-                                manualMode={ manualMode }
-                                numConflictCards={ thisPlayer.numConflictCards }
-                                numDynastyCards={ thisPlayer.numDynastyCards }
-                                onConflictShuffleClick={ this.onConflictShuffleClick }
-                                onDynastyShuffleClick={ this.onDynastyShuffleClick }
-                                province1Cards={ thisPlayer.provinces.one }
-                                province2Cards={ thisPlayer.provinces.two }
-                                province3Cards={ thisPlayer.provinces.three }
-                                province4Cards={ thisPlayer.provinces.four }
-                                showConflictDeck={ this.state.showConflictDeck }
-                                showDynastyDeck={ this.state.showDynastyDeck }
-                                onDragDrop={ this.onDragDrop }
-                                spectating={ this.state.spectating }
-                                onMenuItemClick={ this.onMenuItemClick }
-                                cardSize={ this.props.user.settings.cardSize } />
+                            {
+                                !thisPlayer.hideProvinceDeck &&
+                                <div className='province-group our-side no-highlight'>
+                                    <CardPile
+                                        className='province-deck'
+                                        title='Province Deck' source='province deck'
+                                        cards={ thisPlayer.cardPiles.provinceDeck }
+                                        hiddenTopCard
+                                        onMouseOver={ this.onMouseOver }
+                                        onMouseOut={ this.onMouseOut }
+                                        onCardClick={ this.onCardClick }
+                                        onDragDrop={ this.onDragDrop }
+                                        disableMenu={ this.state.spectating }
+                                        closeOnClick
+                                        size={ this.props.user.settings.cardSize } />
+                                </div>
+                            }
+                            { thisPlayerCards }
+                            <div className='player-deck-row our-side'>
+                                <DynastyRow isMe={ !this.state.spectating }
+                                    conflictDiscardPile={ thisPlayer.cardPiles.conflictDiscardPile }
+                                    conflictDeck={ thisPlayer.cardPiles.conflictDeck }
+                                    conflictDeckTopCard={ thisPlayer.conflictDeckTopCard }
+                                    dynastyDiscardPile={ thisPlayer.cardPiles.dynastyDiscardPile }
+                                    dynastyDeck={ thisPlayer.cardPiles.dynastyDeck }
+                                    removedFromGame={ thisPlayer.cardPiles.removedFromGame }
+                                    onCardClick={ this.onCardClick }
+                                    onConflictClick={ this.onConflictClick }
+                                    onDynastyClick={ this.onDynastyClick }
+                                    onMouseOver={ this.onMouseOver }
+                                    onMouseOut={ this.onMouseOut }
+                                    manualMode={ manualMode }
+                                    numConflictCards={ thisPlayer.numConflictCards }
+                                    numDynastyCards={ thisPlayer.numDynastyCards }
+                                    onConflictShuffleClick={ this.onConflictShuffleClick }
+                                    onDynastyShuffleClick={ this.onDynastyShuffleClick }
+                                    province1Cards={ thisPlayer.provinces.one }
+                                    province2Cards={ thisPlayer.provinces.two }
+                                    province3Cards={ thisPlayer.provinces.three }
+                                    province4Cards={ thisPlayer.provinces.four }
+                                    showConflictDeck={ this.state.showConflictDeck }
+                                    showDynastyDeck={ this.state.showDynastyDeck }
+                                    onDragDrop={ this.onDragDrop }
+                                    spectating={ this.state.spectating }
+                                    onMenuItemClick={ this.onMenuItemClick }
+                                    cardSize={ this.props.user.settings.cardSize } />
+                            </div>
                         </div>
                     </div>
                     <div className='right-side'>
@@ -640,13 +712,13 @@ export class InnerGameBoard extends React.Component {
                     </div>
                 </div>
                 {
-                    !thisPlayer.optionSettings.showStatusInSidebar &&
+                    false && !thisPlayer.optionSettings.showStatusInSidebar &&
                     <div className='player-stats-row our-side'>
                         <PlayerStatsRow
                             { ...bindActionCreators(actions, this.props.dispatch) }
                             clockState={ thisPlayer.clock }
                             stats={ thisPlayer.stats }
-                            showControls={ !this.state.spectating }
+                            showControls={ !this.state.spectating && manualMode }
                             user={ thisPlayer.user }
                             firstPlayer={ thisPlayer.firstPlayer }
                             otherPlayer={ false }

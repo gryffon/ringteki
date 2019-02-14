@@ -10,10 +10,9 @@ class IdeNegotiator extends DrawCard {
                 onHonorDialsRevealed: () => true
             },
             gameAction: AbilityDsl.actions.chooseAction(context => ({
-                target: context.player,
                 choices: {
-                    'Increase bid by 1': AbilityDsl.actions.setHonorDial({ value: context.player.honorBid + 1 }),
-                    'Decrease bid by 1': AbilityDsl.actions.setHonorDial({ value: context.player.honorBid - 1 })
+                    'Increase bid by 1': AbilityDsl.actions.setHonorDial({ target: context.player, value: context.player.honorBid + 1 }),
+                    'Decrease bid by 1': AbilityDsl.actions.setHonorDial({ target: context.player, value: context.player.honorBid - 1 })
                 },
                 messages: {
                     'Increase bid by 1': '{0} chooses to increase their honor bid by 1',

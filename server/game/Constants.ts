@@ -51,9 +51,6 @@ export enum EffectNames {
     ModifyBasePoliticalSkill = 'modifyBasePoliticalSkill',
     ModifyBaseProvinceStrength = 'modifyBaseProvinceStrength',
     ModifyBothSkills = 'modifyBothSkills',
-    ModifyDuelGlory = 'modifyDuelGlory',
-    ModifyDuelMilitarySkill = 'modifyDuelMilitarySkill',
-    ModifyDuelPoliticalSkill = 'modifyDuelPoliticalSkill',
     ModifyGlory = 'modifyGlory',
     ModifyMilitarySkill = 'modifyMilitarySkill',
     ModifyMilitarySkillMultiplier = 'modifyMilitarySkillMultiplier',
@@ -65,6 +62,7 @@ export enum EffectNames {
     SetBaseMilitarySkill = 'setBaseMilitarySkill',
     SetBasePoliticalSkill = 'setBasePoliticalSkill',
     SetBaseProvinceStrength = 'setBaseProvinceStrength',
+    SetConflictTotalSkill = 'setConflictTotalSkill',
     SetDash = 'setDash',
     SetGlory = 'setGlory',
     SetMilitarySkill = 'setMilitarySkill',
@@ -152,11 +150,14 @@ export enum EventNames {
     OnMoveFate = 'onMoveFate',
     OnBeginRound = 'onBeginRound',
     OnCharacterEntersPlay = 'onCharacterEntersPlay',
+    OnInitiateAbilityEffects = 'onInitiateAbilityEffects',
     OnCardAbilityInitiated = 'onCardAbilityInitiated',
     OnCardAbilityTriggered = 'onCardAbilityTriggered',
     OnConflictInitiated = 'onConflictInitiated',
+    OnDuelInitiated = 'onDuelInitiated',
     OnSelectRingWithFate = 'onSelectRingWithFate',
     OnConflictDeclared = 'onConflictDeclared',
+    OnCovertResolved = 'onCovertResolved',
     OnCardRevealed = 'onCardRevealed',
     OnDefendersDeclared = 'onDefendersDeclared',
     AfterConflict = 'afterConflict',
@@ -222,4 +223,18 @@ export enum AbilityTypes {
     Reaction = 'reaction',
     Persistent = 'persistent',
     OtherEffects = 'OtherEffects'
+};
+
+export enum DuelTypes {
+    Military = 'military',
+    Political = 'political',
+    Glory = 'glory'
+};
+
+export enum Elements {
+    Fire = 'fire',
+    Earth = 'earth',
+    Air = 'air',
+    Water = 'water',
+    Void = 'void',
 };

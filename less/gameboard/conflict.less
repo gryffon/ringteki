@@ -1,0 +1,61 @@
+
+.conflict-panel {
+    margin-left: 0.2em;
+    float:left;
+    vertical-align:center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height:100%;
+    border-radius:4px;
+}
+
+.phase-display {
+    color:white;
+    margin-left: 0.3em;
+    font-family: arial;
+    font-size: 18pt;
+    text-align:center;
+}
+
+.conflict-count-top {
+    font-family: arial;
+    
+}
+
+.conflict-count-bottom {
+    font-family: arial;
+    
+}
+
+.conflict-separator {
+    text-align:center;
+    font-size:8pt;
+}
+
+
+.center-bar {
+    margin-left:12px;
+    
+    border-radius:8px;
+    background-color:rgba(0,0,0,0.4);
+    box-shadow: 0 0 10px 5px rgba(0,0,0,0.4);
+    grid-row-start: 3;
+    grid-column-start: 1;
+    grid-column-end:3;
+    display:flex;
+    flex-direction:row;
+    justify-content: left;
+    
+
+    z-index:@layer-cards + 2;
+}
+
+.skill-symbol {
+    margin-left: 0.5em;
+}
+
+
+.conflict-political {
+    color:@political-icon-color;
+}

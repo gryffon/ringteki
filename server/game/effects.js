@@ -56,9 +56,6 @@ const Effects = {
     modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBasePoliticalSkill, value),
     modifyBaseProvinceStrength: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseProvinceStrength, value),
     modifyBothSkills: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBothSkills, value),
-    modifyDuelGlory: (value) => EffectBuilder.card.static(EffectNames.ModifyDuelGlory, value),
-    modifyDuelMilitarySkill: (value) => EffectBuilder.card.static(EffectNames.ModifyDuelMilitarySkill, value),
-    modifyDuelPoliticalSkill: (value) => EffectBuilder.card.static(EffectNames.ModifyDuelPoliticalSkill, value),
     modifyGlory: (value) => EffectBuilder.card.flexible(EffectNames.ModifyGlory, value),
     modifyMilitarySkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyMilitarySkill, value),
     modifyMilitarySkillMultiplier: (value) => EffectBuilder.card.flexible(EffectNames.ModifyMilitarySkillMultiplier, value),
@@ -85,7 +82,7 @@ const Effects = {
         unapply: (card, context, effect) => context.game.effectEngine.removeTerminalCondition(effect)
     }),
     // Ring effects
-    addElement: (element) => EffectBuilder.ring.static(EffectNames.AddElement, element),
+    addElement: (element) => EffectBuilder.ring.flexible(EffectNames.AddElement, element),
     cannotBidInDuels: num => EffectBuilder.player.static(EffectNames.CannotBidInDuels, num),
     cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match), // TODO: Add this to lasting effect checks
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match), // TODO: Add this to lasting effect checks
@@ -118,6 +115,7 @@ const Effects = {
         unapply: (player, context, reducer) => player.removeCostReducer(reducer)
     }),
     setMaxConflicts: (amount) => EffectBuilder.player.static(EffectNames.SetMaxConflicts, amount),
+    setConflictTotalSkill: (value) => EffectBuilder.player.static(EffectNames.SetConflictTotalSkill, value),
     showTopConflictCard: () => EffectBuilder.player.static(EffectNames.ShowTopConflictCard),
     // Conflict effects
     contributeToConflict: (card) => EffectBuilder.conflict.flexible(EffectNames.ContributeToConflict, card),

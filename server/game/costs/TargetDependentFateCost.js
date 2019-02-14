@@ -11,7 +11,7 @@ class TargetDependentFateCost extends ReduceableFateCost {
             // we don't need to check now because this will be checked again once targeting is done
             return true;
         }
-        let reducedCost = context.player.getMinimumCost(this.playingType, context.source, context.targets[this.dependsOn]);
+        let reducedCost = context.player.getMinimumCost(this.playingType, context, context.targets[this.dependsOn]);
         return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
 

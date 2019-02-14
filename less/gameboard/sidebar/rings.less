@@ -1,6 +1,6 @@
 .ring-pane {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 }
@@ -8,24 +8,69 @@
 .ring-panel {
     padding: 0;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: start;
-    align-self: stretch;
-}
-
-.ring-display {
-    display: flex;
+    grid-row-start:5;
+    grid-column-start:2;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    align-self: stretch;
+    min-width: 25%;
+    font-size:40pt;
 }
 
-.ring {
-    position: relative;
+.ring-prompt {
+    font-size:40pt;
+    min-height:@ring-height;
+    min-width:@ring-width;
 }
 
+.claimed-pool {
+    font-size:24pt;
+    display:flex;
+    justify-content:flex-start;
+    flex-direction:row;
+    flex-wrap:wrap;
+    width:100%;
+    margin:10px;
+    min-height:2em;
+}
+
+circle.ring-background {
+    position:absolute;
+    z-index:0;
+    cx:50%;
+    cy:50%;
+    r:50%;
+    
+    &.unselectable {
+        filter: brightness(60%);
+    }
+}
+
+svg.ring-svg {
+    top:0px;
+    position:absolute;
+    height:@ring-height;
+    width:@ring-width;
+    
+    &.contested {
+        &.tint-military {
+            -webkit-filter: drop-shadow( 0 0 12px pink);
+            filter: drop-shadow( 0 0 12px pink);
+        }
+        &.tint-political {
+            -webkit-filter: drop-shadow( 0 0 12px lightblue);
+            filter: drop-shadow( 0 0 12px lightblue);
+        }
+        &.tint-neutral {
+            -webkit-filter: drop-shadow( 0 0 12px white);
+            filter: drop-shadow( 0 0 12px white);
+        }
+    }
+
+    &.hidden {
+        display:none;
+    }
+}
 .ring-info {
     flex: 1;
     font-size: 12px;
@@ -34,31 +79,54 @@
     text-overflow: ellipsis;
 }
 
-img.ring {
-    height: @ring-height;
-    width: @ring-width;
-    padding: 5px;
+.ring {
+    margin-right:5px;
+    margin-top:0px;
+    position:relative;
+    color:white;
+    min-height: @ring-height;
+    max-height: @ring-height;
+    max-width: @ring-width;
 
     &.unselectable {
-        filter: grayscale(100%) brightness(60%);
+        filter: brightness(60%);
       }
-    
-    &.small {
-        height: @ring-sm-height;
-        width: @ring-sm-width;
+
+    &.hidden {
+        display:none;
+        margin-right:0px;
     }
 }
 
-@media (max-width: 1366px) {
-    .ring-panel {
-        padding: 0 5px;
+.tint-military {
+    fill: @military-ring-color;
+    &.unselectable {
+        fill:darkred;
+    }
+  }
+  
+  .tint-political {
+    fill: @political-ring-color;
+    &.unselectable {
+        fill:darkblue;
     }
 
-    .ring-display {
-        img.ring {
-            width: @ring-sm-width;
-            height: @ring-sm-height;
+    .tint-neutral {
+        fill: darkgrey;
+        &.unselectable {
+            fill:darkslategrey;
         }
+    }
+  }
+
+@media (max-width: 1279px) {
+    .ring-panel {
+        padding: 0 5px;
+        font-size:24pt;
+    }
+
+    .claimed-pool {
+        font-size:18pt;
     }
 
     .ring-info {

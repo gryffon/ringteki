@@ -38,6 +38,13 @@ describe('Breach of Etiquette', function() {
                 expect(this.brashSamurai.militarySkill).toBe(1);
             });
 
+            it('should not trigger when an opponent cancels a non-courtier ability', function() {
+                this.player1.clickCard('bayushi-yunako');
+                this.player1.clickPrompt('Cancel');
+                expect(this.player1.honor).toBe(10);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
             it('should trigger when the player uses a non-courtier ability', function() {
                 this.player1.pass();
                 this.player2.clickCard(this.brashSamurai);

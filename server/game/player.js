@@ -503,14 +503,15 @@ class Player extends GameObject {
         return _.uniq(alternateFatePools);
     }
 
-    getMinimumCost(playingType, card, target) {
+    getMinimumCost(playingType, context, target) {
+        const card = context.source;
         let reducedCost = this.getReducedCost(playingType, card, target);
         let alternateFatePools = this.getAlternateFatePools(playingType, card);
         let alternateFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0);
         let triggeredCostReducers = 0;
         let fakeWindow = { addChoice: () => triggeredCostReducers++ };
-        let fakeEvent = this.game.getEvent(EventNames.OnResolveFateCost, { card: card, player: this });
-        this.game.emit(EventNames.OnResolveFateCost + ':' + AbilityTypes.Interrupt, fakeEvent, fakeWindow);
+        let fakeEvent = this.game.getEvent(EventNames.OnCardPlayed, { card: card, player: this, context: context });
+        this.game.emit(EventNames.OnCardPlayed + ':' + AbilityTypes.Interrupt, fakeEvent, fakeWindow);
         return Math.max(reducedCost - triggeredCostReducers - alternateFate, 0);
     }
 
@@ -836,6 +837,10 @@ class Player extends GameObject {
      */
     getClaimedRings() {
         return _.filter(this.game.rings, ring => ring.isConsideredClaimed(this));
+    }
+
+    getGloryCount() {
+        return this.cardsInPlay.reduce((total, card) => total + card.getContributionToImperialFavor(), this.getClaimedRings().length + this.gloryModifier);
     }
 
     /**

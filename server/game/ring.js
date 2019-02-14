@@ -54,7 +54,7 @@ class Ring extends EffectSource {
     }
 
     getElements() {
-        return _.uniq(this.getEffects(EffectNames.AddElement).concat([this.element]));
+        return _.uniq(_.flatten(this.getEffects(EffectNames.AddElement).concat([this.element])));
     }
 
     hasElement(element) {
@@ -113,6 +113,7 @@ class Ring extends EffectSource {
             claimedBy: this.claimedBy,
             conflictType: this.conflictType,
             contested: this.contested,
+            selected: this.game.currentConflict && this.game.currentConflict.conflictRing === this.element,
             element: this.element,
             fate: this.fate,
             menu: this.getMenu()

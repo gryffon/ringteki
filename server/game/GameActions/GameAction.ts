@@ -40,6 +40,7 @@ export class GameAction {
         if(!Array.isArray(properties.target)) {
             properties.target = [properties.target];
         }
+        properties.target = properties.target.filter(target => !!target);
         return properties;
     }
 

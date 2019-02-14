@@ -28,10 +28,10 @@ class AbilityTargeting extends React.Component {
 
     renderSimpleRing(ring) {
         return (
-            <div className='target-card vertical'>
-                <img className='target-card-image vertical'
-                    alt={ ring.name }
-                    src={ '/img/' + ring.conflictType + '-' + ring.element + '.png' } />
+            <div className='ring-prompt'>
+                <div className='ring no-highlight'>
+                    <div className={ 'ring icon-element-' + ring.element + ' large' }/>
+                </div>
             </div>);
     }
 

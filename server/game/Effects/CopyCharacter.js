@@ -36,7 +36,7 @@ class CopyCharacter extends EffectValue {
         for(const effect of this.persistentEffects) {
             if(effect.ref) {
                 target.removeEffectFromEngine(effect.ref);
-                effect.ref = [];
+                delete effect.ref;
             }
         }
         delete this.abilitiesForTargets[target.uuid];

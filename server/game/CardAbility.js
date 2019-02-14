@@ -7,22 +7,23 @@ const { Locations, CardTypes, PlayTypes, Players, TargetModes } = require('./Con
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
         if(properties.initiateDuel) {
-            if(properties.condition) {
-                let condition = properties.condition;
-                properties.condition = context => context.source.isParticipating() && condition(context);
-            } else {
-                properties.condition = context => context.source.isParticipating();
-            }
             properties.targets = {
                 challenger: {
                     cardType: CardTypes.Character,
-                    mode: TargetModes.AutoSingle,
+                    mode: card.type === CardTypes.Character ? TargetModes.AutoSingle : TargetModes.Single,
                     controller: Players.Self,
-                    cardCondition: (card, context) => card.isParticipating() && card === context.source
+                    cardCondition: (card, context) => card.isParticipating()
+                        && (context.source.type === CardTypes.Character ? card === context.source : true)
                 },
                 duelTarget: {
                     dependsOn: 'challenger',
                     cardType: CardTypes.Character,
+                    player: context => {
+                        if(typeof properties.initiateDuel === 'function') {
+                            return properties.initiateDuel(context).opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                        }
+                        return properties.initiateDuel.opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                    },
                     controller: Players.Opponent,
                     cardCondition: card => card.isParticipating(),
                     gameAction: AbilityDsl.actions.duel(context => {
@@ -103,6 +104,11 @@ class CardAbility extends ThenAbility {
         }
 
         return super.meetsRequirements(context);
+    }
+
+    getReducedCost(context) {
+        let fateCost = this.cost.find(cost => cost.getReducedCost);
+        return fateCost ? fateCost.getReducedCost(context) : 0;
     }
 
     isInValidLocation(context) {

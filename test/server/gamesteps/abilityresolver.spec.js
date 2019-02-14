@@ -2,22 +2,24 @@ const AbilityResolver = require('../../../build/server/game/gamesteps/abilityres
 
 describe('AbilityResolver', function() {
     beforeEach(function() {
-        this.game = jasmine.createSpyObj('game', ['getPlayers', 'markActionAsTaken', 'popAbilityContext', 'pushAbilityContext', 'raiseEvent', 'reportError', 'raiseInitiateAbilityEvent', 'openEventWindow']);
+        this.game = jasmine.createSpyObj('game', ['getPlayers', 'markActionAsTaken', 'popAbilityContext', 'pushAbilityContext', 'getEvent', 'raiseEvent', 'reportError', 'openEventWindow', 'queueStep']);
         this.game.raiseEvent.and.callFake((name, params, handler) => {
             if(handler) {
                 handler(params);
             }
         });
-        this.game.raiseInitiateAbilityEvent.and.callFake((params, handler) => {
+        this.game.getEvent.and.callFake((name, params, handler) => {
             if(handler) {
                 handler(params);
             }
+            return { setWindow: () => true };
         });
 
         this.ability = jasmine.createSpyObj('ability', [
-            'isAction', 'isTriggeredAbility', 'isCardPlayed', 'displayMessage', 'resolveCosts', 'payCosts', 'resolveTargets', 'executeHandler', 'hasLegalTargets', 'checkAllTargets'
+            'isAction', 'isTriggeredAbility', 'isCardAbility', 'displayMessage', 'resolveCosts', 'payCosts', 'resolveTargets', 'executeHandler', 'hasLegalTargets', 'checkAllTargets'
         ]);
         this.ability.isTriggeredAbility.and.returnValue(false);
+        this.ability.isCardAbility.and.returnValue(false);
         this.ability.hasLegalTargets.and.returnValue(true);
         this.ability.resolveTargets.and.returnValue({});
         this.source = jasmine.createSpyObj('source', ['createSnapshot', 'getType']);
@@ -81,7 +83,7 @@ describe('AbilityResolver', function() {
             });
 
             it('should raise the InitiateAbility event', function() {
-                expect(this.game.raiseInitiateAbilityEvent).toHaveBeenCalledWith(jasmine.any(Object), jasmine.any(Function));
+                expect(this.game.openEventWindow).toHaveBeenCalledWith(jasmine.any(Object));
             });
         });
 
@@ -92,8 +94,8 @@ describe('AbilityResolver', function() {
                 this.resolver.continue();
             });
 
-            it('should not raise the onCardAbilityInitiated event', function() {
-                expect(this.game.raiseEvent).not.toHaveBeenCalledWith('onCardAbilityInitiated', jasmine.any(Object), jasmine.any(Function));
+            it('should not raise the onInitiateAbilityEffects event', function() {
+                expect(this.game.raiseEvent).not.toHaveBeenCalledWith('onInitiateAbilityEffects', jasmine.any(Object), jasmine.any(Function));
             });
         });
         xdescribe('when the ability is an event being played', function() {

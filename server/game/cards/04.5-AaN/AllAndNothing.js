@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { TargetModes } = require('../../Constants');
 
 class AllAndNothing extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Replace a void effect with another ring effect',
             when: {
@@ -10,15 +11,16 @@ class AllAndNothing extends DrawCard {
             },
             target: {
                 mode: TargetModes.Ring,
-                ringCondition: (ring, context) => context.event.physicalRing ? ring !== context.event.physicalRing : ring.element !== 'void'
+                ringCondition: (ring, context) => context.event.physicalRing ? ring !== context.event.physicalRing : ring.element !== 'void',
+                gameAction: AbilityDsl.actions.cancel(context => ({
+                    replacementGameAction: AbilityDsl.actions.resolveRingEffect({
+                        optional: context.event.optional,
+                        physicalRing: context.ring
+                    })
+                }))
             },
             effect: 'resolve {0} effect instead of the void effect',
-            handler: context => {
-                let event = ability.actions.resolveRingEffect({ optional: context.event.optional, physicalRing: context.ring }).getEvent(context.ring, context);
-                context.event.window.addEvent(event);
-                this.game.openThenEventWindow(ability.actions.draw().getEvent(context.player, context));
-                context.cancel();
-            }
+            gameAction: AbilityDsl.actions.draw()
         });
     }
 }

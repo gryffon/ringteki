@@ -653,7 +653,7 @@ using the `wouldInterrupt` method.  The context object for triggered ability has
 this.wouldInterrupt({
     title: 'Cancel an event',
     when: {
-        onCardAbilityInitiated: event => event.card.type === 'event'
+        onInitiateAbilityEffects: event => event.card.type === 'event'
     },
     cost: ability.costs.dishonor(card => card.hasTrait('courtier')),
     effect: 'cancel {1}',

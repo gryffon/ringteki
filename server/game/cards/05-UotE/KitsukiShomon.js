@@ -18,7 +18,6 @@ class KitsukiShomon extends DrawCard {
                 let newEvent = AbilityDsl.actions.dishonor().getEvent(context.source, context);
                 context.event.replacementEvent = newEvent;
                 let thenAbility = new ThenAbility(this.game, this, { gameAction: AbilityDsl.actions.ready() });
-                //let condition = event => !event.cancelled && event.card === context.source;
                 context.events = [newEvent];
                 context.event.window.addEvent(newEvent);
                 context.event.window.addThenAbility(thenAbility, context);

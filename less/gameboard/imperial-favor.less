@@ -1,10 +1,26 @@
 .imperial-favor {
+    
+    &.small {
+        height: @card-sm-height;
+        width: @card-sm-width;
+    }
+    
+    &.large {
+        height: @card-lg-height;
+        width: @card-lg-width;
+    }
+
+    &.x-large {
+        height: @card-xl-height;
+        width: @card-xl-width;
+    }
+    border-radius:6px;
     height: @card-height;
     width: @card-width;
     position: relative;
     justify-content: center;
     align-items: center;
-
+    background-color:transparent;
     &.hidden {
         display: none;
     }
