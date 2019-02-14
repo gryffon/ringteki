@@ -840,6 +840,10 @@ class Player extends GameObject {
         return _.filter(this.game.rings, ring => ring.isConsideredClaimed(this));
     }
 
+    getGloryCount() {
+        return this.cardsInPlay.reduce((total, card) => total + card.getContributionToImperialFavor(), this.getClaimedRings().length + this.gloryModifier);
+    }
+
     /**
      * Marks that this player controls the favor for the relevant conflict type
      */

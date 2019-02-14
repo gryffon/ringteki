@@ -430,15 +430,15 @@ class DrawCard extends BaseCard {
     }
 
     checkForIllegalAttachments() {
-        // TODO: Context object here?
+        let context = this.game.getFrameworkContext(this.controller);
         let illegalAttachments = this.attachments.filter(attachment => (
             !this.allowAttachment(attachment) || !attachment.canAttach(this, { game: this.game, player: this.controller })
         ));
-        if(illegalAttachments.length > 0) {
-            this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
-            this.game.applyGameAction(null, { discardFromPlay: illegalAttachments });
-            return true;
-        } else if(this.attachments.filter(card => card.isRestricted()).length > 2) {
+        for(const effectCard of this.getEffects(EffectNames.CannotHaveOtherRestrictedAttachments)) {
+            illegalAttachments = illegalAttachments.concat(this.attachments.filter(card => card.isRestricted() && card !== effectCard));
+        }
+        illegalAttachments = _.uniq(illegalAttachments);
+        if(this.attachments.filter(card => card.isRestricted()).length > 2) {
             this.game.promptForSelect(this.controller, {
                 activePromptTitle: 'Choose an attachment to discard',
                 waitingPromptTitle: 'Waiting for opponent to choose an attachment to discard',
@@ -446,19 +446,22 @@ class DrawCard extends BaseCard {
                 cardCondition: card => card.parent === this && card.isRestricted(),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
-                    this.game.applyGameAction(null, { discardFromPlay: card });
+                    if(illegalAttachments.length > 0) {
+                        this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
+                        if(!illegalAttachments.includes(card)) {
+                            illegalAttachments.push(card);
+                        }
+                    }
+                    this.game.applyGameAction(context, { discardFromPlay: illegalAttachments });
                     return true;
                 },
                 source: 'Too many Restricted attachments'
             });
             return true;
-        } else if(this.anyEffect(EffectNames.CannotHaveOtherRestrictedAttachments)) {
-            let attachmentsToRemove = this.attachments.filter(card => card.isRestricted() && card !== this.mostRecentEffect(EffectNames.CannotHaveOtherRestrictedAttachments));
-            if(attachmentsToRemove.length > 0) {
-                this.game.addMessage('{0} is discarded from {1} as it is no longer legally attached', attachmentsToRemove, this);
-                this.game.applyGameAction(null, { discardFromPlay: attachmentsToRemove});
-                return true;
-            }
+        } else if(illegalAttachments.length > 0) {
+            this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
+            this.game.applyGameAction(null, { discardFromPlay: illegalAttachments});
+            return true;
         }
         return false;
     }

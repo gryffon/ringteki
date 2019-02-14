@@ -219,7 +219,7 @@ fdescribe('Hantei XXXVII', function() {
                 expect(this.player1).toHavePrompt('Kitsuki Investigator');
             });
 
-            fit('should trigger for Policy Debate', function() {
+            it('should trigger for Policy Debate', function() {
                 this.player2.clickCard('policy-debate');
                 this.player2.clickPrompt('Pay costs first');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
@@ -270,7 +270,7 @@ fdescribe('Hantei XXXVII', function() {
                 expect(this.player2).toHavePrompt('Air Ring');
             });
 
-            it('should trigger for The Perfect Gift', function() {
+            fit('should trigger for The Perfect Gift', function() {
                 this.player2.clickCard('the-perfect-gift');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hantei);

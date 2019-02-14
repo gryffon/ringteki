@@ -4,6 +4,7 @@ import { GameAction } from './GameActions/GameAction';
 import Ring = require('./ring');
 import BaseCard = require('./basecard');
 import CardAbility = require('./CardAbility');
+import { DuelProperties } from './GameActions/DuelAction';
 import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } from './Constants';
 
 interface BaseTarget {
@@ -77,9 +78,8 @@ interface ActionTargets {
     [propName: string]: ActionTarget & SubTarget;
 };
 
-interface InitiateDuel {
-    type: string;
-    resolutionHandler: (winner: BaseCard) => void
+interface InitiateDuel extends DuelProperties {
+    opponentChoosesDuelTarget?: boolean;
 };
 
 interface AbilityProps {
@@ -104,6 +104,7 @@ interface AbilityProps {
 export interface ActionProps extends AbilityProps {
     condition?: (context?: AbilityContext) => boolean;
     phase?: string;
+    anyPlayer?: boolean;
 };
 
 interface TriggeredAbilityCardTarget {

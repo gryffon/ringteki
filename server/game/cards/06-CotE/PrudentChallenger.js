@@ -1,36 +1,24 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
+const { CardTypes, DuelTypes } = require('../../Constants');
 
 class PrudentChallenger extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Initiate a duel to discard attachment',
-            initiateDuel: context => ({
-                type: 'military',
-                resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
-            })
-        });
-    }
-
-    resolutionHandler(context, winner, loser) {
-        if(loser) {
-            this.game.addMessage('{0} wins the duel and {1} loses', winner, loser);
-            if(loser.attachments.size() > 0) {
-                this.game.promptForSelect(context.player, {
+            initiateDuel: {
+                type: DuelTypes.Military,
+                gameAction: AbilityDsl.actions.selectCard({
                     activePromptTitle: 'Choose an attachment to discard',
-                    context: context,
                     cardType: CardTypes.Attachment,
-                    cardCondition: card => card.parent === loser,
-                    onSelect: (player, card) => {
-                        this.game.addMessage('{0} chooses to discard {1}', context.player, card);
-                        this.game.applyGameAction(context, { discardCard: card });
-                        return true;
-                    }
-                });
+                    cardCondition: (card, context) => context.game.currentDuel && card.parent === context.game.currentDuel.loser,
+                    targets: true,
+                    message: '{0} chooses to discard {1}',
+                    messageArgs: (card, player) => [player, card],
+                    gameAction: AbilityDsl.actions.discardFromPlay()
+                })
             }
-        } else {
-            this.game.addMessage('{0} wins the duel but there is no loser', winner);
-        }
+        });
     }
 }
 
