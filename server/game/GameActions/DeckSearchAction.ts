@@ -15,14 +15,15 @@ export class DeckSearchAction extends PlayerAction {
     eventName = EventNames.OnDeckSearch;
 
     defaultProperties: DeckSearchProperties = {
-        amount: -1,
-        reveal: false,
-        cardCondition: () => true
+        amount: -1
     };
 
     getProperties(context: AbilityContext, additionalProperties = {}): DeckSearchProperties {
         let properties = super.getProperties(context, additionalProperties) as DeckSearchProperties;
-        properties.reveal = properties.reveal || properties.cardCondition.toString() !== this.defaultProperties.cardCondition.toString();
+        if(properties.reveal === undefined) {
+            properties.reveal = properties.cardCondition !== undefined;            
+        }
+        properties.cardCondition = properties.cardCondition || (() => true);
         return properties;
     }
     
