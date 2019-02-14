@@ -347,7 +347,7 @@ class PlayerInteractionWrapper {
             return 'no prompt active';
         }
 
-        return prompt.menuTitle + '\n' + _.map(prompt.buttons, button => '[ ' + button.text + ' ]').join('\n') + '\n' + _.pluck(selectableCards, 'name').join('\n');
+        return prompt.menuTitle + '\n' + _.map(prompt.buttons, button => '[ ' + button.text + (button.disabled ? ' (disabled)' : '') + ' ]').join('\n') + '\n' + _.pluck(selectableCards, 'name').join('\n');
     }
 
     findCardByName(name, locations = 'any', side) {
@@ -449,8 +449,8 @@ class PlayerInteractionWrapper {
         text = text.toString();
         var currentPrompt = this.player.currentPrompt();
         var promptButton = _.find(currentPrompt.buttons, button => button.text.toString().toLowerCase() === text.toLowerCase());
-
-        if(!promptButton) {
+        
+        if(!promptButton || promptButton.disabled) {
             throw new Error(`Couldn't click on "${text}" for ${this.player.name}. Current prompt is:\n${this.formatPrompt()}`);
         }
 
