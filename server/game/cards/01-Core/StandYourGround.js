@@ -1,7 +1,8 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class StandYourGround extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Prevent a character from leaving play',
             when: {
@@ -10,10 +11,9 @@ class StandYourGround extends DrawCard {
             effect: 'prevent {1} from leaving play',
             effectArgs: context => context.event.card,
             cannotBeMirrored: true,
-            handler: context => {
-                context.event.window.addEvent(ability.actions.discardStatusToken().getEvent(context.event.card, context));
-                context.cancel();
-            }
+            gameAction: AbilityDsl.actions.cancel({
+                replacementGameAction: AbilityDsl.actions.discardStatusToken()
+            })
         });
     }
 }

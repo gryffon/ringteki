@@ -11,11 +11,11 @@ class KitsuWarrior extends DrawCard {
     }
 
     twiceMilClaimedRings() {
-        let milclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() & ring.isConflictType('military'));
+        let milclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() && ring.isConflictType('military'));
         return 2 * milclaimedRings.length;
     }
     twicePolClaimedRings() {
-        let polclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() & ring.isConflictType('political'));
+        let polclaimedRings = Object.values(this.game.rings).filter(ring => ring.isConsideredClaimed() && ring.isConflictType('political'));
         return 2 * polclaimedRings.length;
     }
 }

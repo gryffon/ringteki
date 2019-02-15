@@ -6,7 +6,7 @@ class DiscouragePursuit extends DrawCard {
         this.action({
             title: 'Give -4 military to a participating character',
             condition: () => this.game.isDuringConflict(),
-            cost: ability.costs.dishonor(card => card.hasTrait('shinobi')),
+            cost: ability.costs.dishonor({ cardCondition: card => card.hasTrait('shinobi') }),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),

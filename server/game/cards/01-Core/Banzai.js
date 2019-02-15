@@ -16,7 +16,7 @@ class Banzai extends DrawCard {
             },
             effect: 'grant 2 military skill to {0}',
             then: context => {
-                if(context.secondResolution) {
+                if(context.subResolution) {
                     return {
                         target: {
                             mode: TargetModes.Select,
@@ -39,7 +39,7 @@ class Banzai extends DrawCard {
                     },
                     message: '{0} chooses {3}to lose an honor to resolve {1} again',
                     messageArgs: context => context.select === 'Done' ? 'not ' : '',
-                    then: { gameAction: ability.actions.resolveAbility({ ability: context.ability, secondResolution: true }) }
+                    then: { gameAction: ability.actions.resolveAbility({ ability: context.ability, subResolution: true }) }
                 };
             }
         });

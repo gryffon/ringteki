@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class WayOfTheUnicorn extends DrawCard {
     setupCardAbilities() {
@@ -9,7 +10,7 @@ class WayOfTheUnicorn extends DrawCard {
             },
             cannotBeMirrored: true,
             effect: 'keep the first player token',
-            handler: context => context.cancel()
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 }

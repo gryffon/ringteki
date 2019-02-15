@@ -54,7 +54,7 @@ class Ring extends EffectSource {
     }
 
     getElements() {
-        return _.uniq(this.getEffects(EffectNames.AddElement).concat([this.element]));
+        return _.uniq(_.flatten(this.getEffects(EffectNames.AddElement).concat([this.element])));
     }
 
     hasElement(element) {

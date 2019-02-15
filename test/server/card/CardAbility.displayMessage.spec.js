@@ -1,16 +1,18 @@
-const CardAbility = require('../../../server/game/CardAbility');
-const GameChat = require('../../../server/game/gamechat');
-const AbilityDsl = require('../../../server/game/abilitydsl');
+const CardAbility = require('../../../build/server/game/CardAbility');
+const GameChat = require('../../../build/server/game/gamechat');
+const AbilityDsl = require('../../../build/server/game/abilitydsl');
 
 describe('CardAbility displayMessage', function() {
     beforeEach(function() {
         this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'on']);
         this.gameSpy.gameChat = new GameChat();
         this.player = {
-            name: 'Player 1'
+            name: 'Player 1',
+            getShortSummary: () => this.player
         };
-        this.cardSpy = jasmine.createSpyObj('card', ['getType']);
+        this.cardSpy = jasmine.createSpyObj('card', ['getType', 'getShortSummary']);
         this.cardSpy.type = 'event';
+        this.cardSpy.getShortSummary.and.returnValue(this.cardSpy);
     });
 
     describe('Assassinaton', function() {
@@ -25,7 +27,7 @@ describe('CardAbility displayMessage', function() {
             });
             this.actionSpy = spyOn(this.ability.targets[0].properties.gameAction[0], 'canAffect');
             this.actionSpy.and.returnValue('true');
-            this.target = { name: 'target' };
+            this.target = { name: 'target', getShortSummary: () => this.target };
             this.ability.displayMessage({
                 game: this.gameSpy,
                 player: this.player,
@@ -82,10 +84,10 @@ describe('CardAbility displayMessage', function() {
 
     describe('Forged Edict', function() {
         beforeEach(function() {
-            this.courtier = { name: 'courtier' };
-            this.eventToCancel = { name: 'eventToCancel' };
+            this.courtier = { name: 'courtier', getShortSummary: () => this.courtier };
+            this.eventToCancel = { name: 'eventToCancel', getShortSummary: () => this.eventToCancel };
             this.ability = new CardAbility(this.gameSpy, this.cardSpy, {
-                cost: AbilityDsl.costs.dishonor(card => card.hasTrait('courtier')),
+                cost: AbilityDsl.costs.dishonor({ cardCondition: card => card.hasTrait('courtier') }),
                 effect: 'cancel {1}',
                 effectArgs: context => context.event.card,
                 handler: context => context.cancel()
@@ -151,6 +153,10 @@ describe('CardAbility displayMessage', function() {
 
                 checkRestrictions() {
                     return true;
+                }
+
+                getShortSummary() {
+                    return this;
                 }
             }
             this.opponent = new Player('Player 2');

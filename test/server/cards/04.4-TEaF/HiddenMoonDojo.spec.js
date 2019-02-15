@@ -1,4 +1,4 @@
-﻿describe('Hidden Moon Dōjō', function() {
+describe('Hidden Moon Dōjō', function() {
     integration(function() {
         describe('Hidden Moon Dōjō\'s ability', function() {
             beforeEach(function() {

@@ -45,7 +45,7 @@ class GameChat {
                     } else if(arg.getShortSummary) {
                         return output.concat(arg.getShortSummary());
                     }
-                    return output.concat(arg);
+                    return output.concat(arg.toString());
 
                 }
             } else if(!argMatch && fragment) {

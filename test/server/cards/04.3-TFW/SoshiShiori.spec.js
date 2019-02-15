@@ -55,7 +55,7 @@ describe('Soshi Shiori', function() {
                 });
                 this.player1.clickCard(this.soshi);
                 expect(this.player1).toHavePrompt('Choose a player to lose 1 honor');
-                this.player1.clickPrompt('Opponent');
+                this.player1.clickPrompt('player2');
                 expect(this.player2.honor).toBe(9);
                 expect(this.player1.honor).toBe(12);
             });
@@ -69,7 +69,7 @@ describe('Soshi Shiori', function() {
                 });
                 this.player1.clickCard(this.soshi);
                 expect(this.player1).toHavePrompt('Choose a player to lose 1 honor');
-                this.player1.clickPrompt('Me');
+                this.player1.clickPrompt('player1');
                 expect(this.player1.honor).toBe(11);
                 expect(this.player2.honor).toBe(10);
             });

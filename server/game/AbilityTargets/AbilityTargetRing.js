@@ -33,12 +33,6 @@ class AbilityTargetRing {
         return !!this.properties.dependsOn || this.hasLegalTarget(context);
     }
 
-    resetGameActions() {
-        for(let action of this.properties.gameAction) {
-            action.reset();
-        }
-    }
-
     hasLegalTarget(context) {
         return _.any(context.game.rings, ring => this.ringCondition(ring, context));
     }
@@ -55,13 +49,10 @@ class AbilityTargetRing {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
             return;
         }
-        let player = context.player;
-        if(this.properties.player && this.properties.player === Players.Opponent) {
-            if(context.stage === Stages.PreTarget) {
-                targetResults.delayTargeting = this;
-                return;
-            }
-            player = player.opponent;
+        let player = context.choosingPlayerOverride || this.getChoosingPlayer(context);
+        if(player === context.player.opponent && context.stage === Stages.PreTarget) {
+            targetResults.delayTargeting = this;
+            return;
         }
         let buttons = [];
         let waitingPromptTitle = '';
@@ -106,8 +97,26 @@ class AbilityTargetRing {
     }
 
     checkTarget(context) {
+        if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
+            return false;
+        }
         return context.rings[this.name] && this.properties.ringCondition(context.rings[this.name], context) &&
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+    }
+
+    getChoosingPlayer(context) {
+        let playerProp = this.properties.player;
+        if(typeof playerProp === 'function') {
+            playerProp = playerProp(context);
+        }
+        return playerProp === Players.Opponent ? context.player.opponent : context.player;
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        if(this.properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context))) {
+            return true;
+        }
+        return this.getChoosingPlayer(context) === context.player;
     }
 }
 

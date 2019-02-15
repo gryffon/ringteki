@@ -1,26 +1,26 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Stages } = require('../../Constants.js');
 
 class Duty extends DrawCard {
-    setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Cancel honor loss',
             when: {
                 onModifyHonor: (event, context) =>
-                    event.player === context.player && event.amount <= -context.player.honor && event.context.stage === Stages.Effect,
+                    event.player === context.player && -event.amount >= context.player.honor && event.context.stage === Stages.Effect,
                 onTransferHonor: (event, context) =>
                     event.player === context.player && event.amount >= context.player.honor && event.context.stage === Stages.Effect
             },
-            effect: 'cancel their honor loss',
-            handler: context => {
-                context.cancel();
-                this.game.openThenEventWindow(ability.actions.gainHonor().getEvent(context.player, context));
-                this.game.addMessage('{0} gains an honor from {1}\'s resolution', context.player, context.source);
+            effect: 'cancel their honor loss, and gain 1 honor',
+            gameAction: AbilityDsl.actions.cancel(),
+            then: {
+                gameAction: AbilityDsl.actions.gainHonor()
             }
         });
     }
 }
 
-Duty.id = 'duty'; // This is a guess at what the id might be - please check it!!!
+Duty.id = 'duty';
 
 module.exports = Duty;

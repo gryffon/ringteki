@@ -1,5 +1,6 @@
 const CardAbility = require('./CardAbility.js');
 const Costs = require('./costs.js');
+const { AbilityTypes } = require('./Constants');
 
 /**
  * Represents an action ability provided by card text.
@@ -32,7 +33,7 @@ class CardAction extends CardAbility {
     constructor(game, card, properties) {
         super(game, card, properties);
 
-        this.abilityType = 'action';
+        this.abilityType = AbilityTypes.Action;
         this.phase = properties.phase || 'any';
         this.anyPlayer = properties.anyPlayer || false;
         this.condition = properties.condition;

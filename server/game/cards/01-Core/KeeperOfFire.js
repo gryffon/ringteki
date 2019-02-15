@@ -1,4 +1,5 @@
 const RoleCard = require('../../rolecard.js');
+const { Elements } = require('../../Constants');
 
 class KeeperOfFire extends RoleCard {
     setupCardAbilities(ability) {
@@ -11,6 +12,10 @@ class KeeperOfFire extends RoleCard {
             },
             gameAction: ability.actions.gainFate()
         });
+    }
+
+    getElement() {
+        return [Elements.Fire];
     }
 }
 

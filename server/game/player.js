@@ -23,6 +23,10 @@ class Player extends GameObject {
         this.id = id;
         this.owner = owner;
         this.type = 'player';
+        this.socket = null;
+        this.disconnected = false;
+        this.left = false;
+        this.lobbyId = null;
 
         this.dynastyDeck = _([]);
         this.conflictDeck = _([]);
@@ -81,6 +85,7 @@ class Player extends GameObject {
         this.timerSettings = user.settings.timerSettings || {};
         this.timerSettings.windowTimer = user.settings.windowTimer;
         this.optionSettings = user.settings.optionSettings;
+        this.resetTimerAtEndOfRound = false;
 
         this.promptState = new PlayerPromptState(this);
     }
@@ -98,8 +103,8 @@ class Player extends GameObject {
 
     /**
      * Checks whether a card with a uuid matching the passed card is in the passed _(Array)
-     * @param {_(Array)} list
-     * @param {BaseCard} card
+     * @param list _(Array)
+     * @param card BaseCard
      */
     isCardUuidInList(list, card) {
         return list.any(c => {
@@ -109,8 +114,8 @@ class Player extends GameObject {
 
     /**
      * Checks whether a card with a name matching the passed card is in the passed list
-     * @param {_(Array)} list
-     * @param {BaseCard} card
+     * @param list _(Array)
+     * @param card BaseCard
      */
     isCardNameInList(list, card) {
         return list.any(c => {
@@ -129,7 +134,7 @@ class Player extends GameObject {
 
     /**
      * Removes a card with the passed uuid from a list. Returns an _(Array)
-     * @param {_(Array)} list
+     * @param list _(Array)
      * @param {String} uuid
      */
     removeCardByUuid(list, uuid) {
@@ -140,7 +145,7 @@ class Player extends GameObject {
 
     /**
      * Returns a card with the passed name in the passed list
-     * @param {_(Array)} list
+     * @param list _(Array)
      * @param {String} name
      */
     findCardByName(list, name) {
@@ -149,7 +154,7 @@ class Player extends GameObject {
 
     /**
      * Returns a card with the passed uuid in the passed list
-     * @param {_(Array)} list
+     * @param list _(Array)
      * @param {String} uuid
      */
     findCardByUuid(list, uuid) {
@@ -166,7 +171,7 @@ class Player extends GameObject {
 
     /**
      * Returns a card which matches passed predicate in the passed list
-     * @param {_(Array)} cardList
+     * @param cardList _(Array)
      * @param {Function} predicate - BaseCard => Boolean
      */
     findCard(cardList, predicate) {
@@ -180,7 +185,7 @@ class Player extends GameObject {
 
     /**
      * Returns an Array of BaseCard which match (or whose attachments match) passed predicate in the passed list
-     * @param {_(Array)} cardList
+     * @param cardList _(Array)
      * @param {Function} predicate - BaseCard => Boolean
      */
     findCards(cardList, predicate) {
@@ -245,6 +250,28 @@ class Player extends GameObject {
         return this.game.allCards.filter(card => card.controller === this && card.location === Locations.PlayArea && predicate(card));
     }
 
+    hasComposure() {
+        return this.opponent && this.opponent.showBid > this.showBid;
+    }
+
+    /**
+     * Returns the total number of faceup non-stronghold province cards controlled by this player
+     * @param {Function} predicate - format: (card) => return boolean, default: () => true
+     * */
+    getNumberOfFaceupProvinces(predicate = () => true) {
+        return provinceLocations.reduce((n, province) => {
+            return this.getSourceList(province).filter(card => card.getType() === CardTypes.Province && !card.facedown && predicate(card)).length + n;
+        }, 0);
+    }
+
+    /**
+     * Returns the total number of faceup non-stronghold province cards controlled by this player's opponent
+     * @param {Function} predicate - format: (card) => return boolean, default: () => true
+     * */
+    getNumberOfOpponentsFaceupProvinces(predicate = () => true) {
+        return this.opponent && this.opponent.getNumberOfFaceupProvinces(predicate) || 0;
+    }
+
     /**
      * Returns the total number of characters and attachments controlled by this player which match the passed predicate
      * @param {Function} predicate - DrawCard => Int
@@ -270,7 +297,7 @@ class Player extends GameObject {
 
     /**
      * Checks whether the passes card is in a legal location for the passed type of play
-     * @param {BaseCard} card
+     * @param card BaseCard
      * @param {String} playingType
      */
     isCardInPlayableLocation(card, playingType) {
@@ -279,7 +306,7 @@ class Player extends GameObject {
 
     /**
      * Returns a character in play under this player's control which matches (for uniqueness) the passed card.
-     * @param {DrawCard} card
+     * @param card DrawCard
      */
     getDuplicateInPlay(card) {
         if(!card.isUnique()) {
@@ -347,6 +374,7 @@ class Player extends GameObject {
         } else {
             this.moveCard(this.dynastyDeck.first(), location);
         }
+        return true;
     }
 
     /**
@@ -423,6 +451,8 @@ class Player extends GameObject {
      * Called when the Game object starts the game. Creates all cards on this players decklist, shuffles the decks and initialises player parameters for the start of the game
      */
     initialise() {
+        this.opponent = this.game.getOtherPlayer(this);
+
         this.prepareDecks();
         this.shuffleConflictDeck();
         this.shuffleDynastyDeck();
@@ -433,12 +463,11 @@ class Player extends GameObject {
         this.limitedPlayed = 0;
         this.maxLimited = 1;
         this.firstPlayer = false;
-        this.opponent = this.game.getOtherPlayer(this);
     }
 
     /**
      * Adds the passed Cost Reducer to this Player
-     * @param {EffectSource} source = source of the reducer
+     * @param source = EffectSource source of the reducer
      * @param {Object} properties
      * @returns {CostReducer}
      */
@@ -475,22 +504,23 @@ class Player extends GameObject {
         return _.uniq(alternateFatePools);
     }
 
-    getMinimumCost(playingType, card, target) {
+    getMinimumCost(playingType, context, target) {
+        const card = context.source;
         let reducedCost = this.getReducedCost(playingType, card, target);
         let alternateFatePools = this.getAlternateFatePools(playingType, card);
         let alternateFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0);
         let triggeredCostReducers = 0;
         let fakeWindow = { addChoice: () => triggeredCostReducers++ };
-        let fakeEvent = this.game.getEvent(EventNames.OnResolveFateCost, { card: card, player: this });
-        this.game.emit(EventNames.OnResolveFateCost + ':' + AbilityTypes.Interrupt, fakeEvent, fakeWindow);
+        let fakeEvent = this.game.getEvent(EventNames.OnCardPlayed, { card: card, player: this, context: context });
+        this.game.emit(EventNames.OnCardPlayed + ':' + AbilityTypes.Interrupt, fakeEvent, fakeWindow);
         return Math.max(reducedCost - triggeredCostReducers - alternateFate, 0);
     }
 
     /**
      * Checks if any Cost Reducers on this Player apply to the passed card/target, and returns the cost to play the cost if they are used
      * @param {String} playingType - not sure what legal values for this are
-     * @param {DrawCard} card
-     * @param {BaseCard} target
+     * @param card DrawCard
+     * @param target BaseCard
      */
     getReducedCost(playingType, card, target) {
         var baseCost = card.getCost();
@@ -502,8 +532,8 @@ class Player extends GameObject {
     /**
      * Mark all cost reducers which are valid for this card/target/playingType as used, and remove thim if they have no uses remaining
      * @param {String} playingType
-     * @param {DrawCard} card
-     * @param {BaseCard} target
+     * @param card DrawCard
+     * @param target BaseCard
      */
     markUsedReducers(playingType, card, target = null) {
         var matchingReducers = _.filter(this.costReducers, reducer => reducer.canReduce(playingType, card, target));
@@ -518,7 +548,7 @@ class Player extends GameObject {
     /**
      * Registers a card ability max limit on this Player
      * @param {String} maxIdentifier
-     * @param {FixedAbilityLimit} limit
+     * @param limit FixedAbilityLimit
      */
     registerAbilityMax(maxIdentifier, limit) {
         if(this.abilityMaxByIdentifier[maxIdentifier]) {
@@ -567,15 +597,16 @@ class Player extends GameObject {
             card.new = false;
         });
 
-        this.modifyFate(this.getTotalIncome());
-
-        this.game.raiseEvent(EventNames.OnIncomeCollected, { player: this });
-
         this.passedDynasty = false;
         this.limitedPlayed = 0;
         this.conflictOpportunities.military = 1;
         this.conflictOpportunities.political = 1;
         this.conflictOpportunities.total = 2;
+    }
+
+    collectFate() {
+        this.modifyFate(this.getTotalIncome());
+        this.game.raiseEvent(EventNames.OnFateCollected, { player: this });
     }
 
     showConflictDeck() {
@@ -632,7 +663,7 @@ class Player extends GameObject {
     /**
      * Assigns the passed _(Array) to the parameter matching the passed location
      * @param {String} source
-     * @param {_(Array)} targetList
+     * @param targetList _(Array)
      */
     updateSourceList(source, targetList) {
         switch(source) {
@@ -685,8 +716,8 @@ class Player extends GameObject {
     /**
      * Called when a player drags and drops a card from one location on the client to another
      * @param {String} cardId - the uuid of the dropped card
-     * @param {String} source
-     * @param {String} target
+     * @param source
+     * @param target
      */
     drop(cardId, source, target) {
         var sourceList = this.getSourceList(source);
@@ -714,7 +745,7 @@ class Player extends GameObject {
 
     /**
      * Checks whether card.type is consistent with location
-     * @param {BaseCard} card
+     * @param card BaseCard
      * @param {String} location
      */
     isLegalLocationForCard(card, location) {
@@ -809,6 +840,10 @@ class Player extends GameObject {
         return _.filter(this.game.rings, ring => ring.isConsideredClaimed(this));
     }
 
+    getGloryCount() {
+        return this.cardsInPlay.reduce((total, card) => total + card.getContributionToImperialFavor(), this.getClaimedRings().length + this.gloryModifier);
+    }
+
     /**
      * Marks that this player controls the favor for the relevant conflict type
      */
@@ -854,8 +889,8 @@ class Player extends GameObject {
     /**
      * Moves a card from one location to another. This involves removing in from the list it's currently in, calling DrawCard.move (which changes
      * its location property), and then adding it to the list it should now be in
-     * @param {BaseCard} card
-     * @param {String} targetLocation
+     * @param card BaseCard
+     * @param targetLocation
      * @param {Object} options
      */
     moveCard(card, targetLocation, options = {}) {
@@ -926,7 +961,7 @@ class Player extends GameObject {
 
     /**
      * Removes a card from whichever list it's currently in
-     * @param {DrawCard} card
+     * @param card DrawCard
      */
     removeCardFromPile(card) {
         if(card.controller !== this) {
@@ -959,7 +994,7 @@ class Player extends GameObject {
 
     /**
      * Sets the passed cards as selected
-     * @param {BaseCard[]} cards
+     * @param cards BaseCard[]
      */
     setSelectedCards(cards) {
         this.promptState.setSelectedCards(cards);

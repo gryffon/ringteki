@@ -69,8 +69,9 @@ class BackAlleyPlayCharacterAction extends DynastyCardAction {
             playType: PlayTypes.PlayFromProvince
         });
         let window = context.game.openEventWindow([putIntoPlayEvent, cardPlayedEvent]);
+        context.events = [putIntoPlayEvent];
         let thenAbility = new ThenAbility(context.game, this.backAlleyCard, { gameAction: GameActions.sacrifice({ target: this.backAlleyCard }) });
-        window.addThenAbility([putIntoPlayEvent], thenAbility, context);
+        window.addThenAbility(thenAbility, context);
     }
 
     isCardAbility() {

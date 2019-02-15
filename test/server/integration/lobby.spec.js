@@ -1,4 +1,4 @@
-const Lobby = require('../../../server/lobby.js');
+const Lobby = require('../../../build/server/lobby.js');
 const _ = require('underscore');
 
 describe('lobby', function() {

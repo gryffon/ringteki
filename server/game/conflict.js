@@ -216,16 +216,27 @@ class Conflict extends GameObject {
         }
 
         let additionalCharacters = this.getEffects(EffectNames.ContributeToConflict);
-        let additionalAttackers = additionalCharacters.filter(card => card.controller === this.attackingPlayer);
-        let additionalDefenders = additionalCharacters.filter(card => card.controller === this.defendingPlayer);
-        this.attackerSkill = this.calculateSkillFor(this.attackers.concat(additionalAttackers)) + this.attackingPlayer.skillModifier;
-        this.defenderSkill = this.calculateSkillFor(this.defenders.concat(additionalDefenders)) + this.defendingPlayer.skillModifier;
 
-        if(this.attackingPlayer.imperialFavor === this.conflictType && this.attackers.length > 0) {
-            this.attackerSkill++;
-        } else if(this.defendingPlayer.imperialFavor === this.conflictType && this.defenders.length > 0) {
-            this.defenderSkill++;
+        if(this.attackingPlayer.anyEffect(EffectNames.SetConflictTotalSkill)) {
+            this.attackerSkill = this.attackingPlayer.mostRecentEffect(EffectNames.SetConflictTotalSkill);
+        } else {
+            let additionalAttackers = additionalCharacters.filter(card => card.controller === this.attackingPlayer);
+            this.attackerSkill = this.calculateSkillFor(this.attackers.concat(additionalAttackers)) + this.attackingPlayer.skillModifier;
+            if(this.attackingPlayer.imperialFavor === this.conflictType && this.attackers.length > 0) {
+                this.attackerSkill++;
+            }
         }
+
+        if(this.defendingPlayer.anyEffect(EffectNames.SetConflictTotalSkill)) {
+            this.defenderSkill = this.defendingPlayer.mostRecentEffect(EffectNames.SetConflictTotalSkill);
+        } else {
+            let additionalDefenders = additionalCharacters.filter(card => card.controller === this.defendingPlayer);
+            this.defenderSkill = this.calculateSkillFor(this.defenders.concat(additionalDefenders)) + this.defendingPlayer.skillModifier;
+            if(this.defendingPlayer.imperialFavor === this.conflictType && this.defenders.length > 0) {
+                this.defenderSkill++;
+            }
+        }
+
         return stateChanged;
     }
 

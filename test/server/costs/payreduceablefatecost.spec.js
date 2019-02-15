@@ -1,4 +1,4 @@
-const Costs = require('../../../server/game/costs.js');
+const Costs = require('../../../build/server/game/costs.js');
 
 describe('Costs.payReduceableFateCost', function() {
     beforeEach(function() {
@@ -27,7 +27,7 @@ describe('Costs.payReduceableFateCost', function() {
 
         it('should check the cost properly', function() {
             this.cost.canPay(this.context);
-            expect(this.playerSpy.getMinimumCost).toHaveBeenCalledWith('playing-type', this.cardSpy);
+            expect(this.playerSpy.getMinimumCost).toHaveBeenCalledWith('playing-type', this.context);
         });
 
         describe('when there is not enough fate', function() {

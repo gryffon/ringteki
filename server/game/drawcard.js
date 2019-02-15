@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
-const BaseCard = require('./basecard.js');
+const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
@@ -32,6 +32,7 @@ class DrawCard extends BaseCard {
 
         this.printedMilitarySkill = parseInt(cardData.military);
         this.printedPoliticalSkill = parseInt(cardData.political);
+        this.printedCost = this.cardData.cost;
         this.fate = 0;
         this.bowed = false;
         this.covert = false;
@@ -126,7 +127,8 @@ class DrawCard extends BaseCard {
     }
 
     getCost() {
-        return this.cardData.cost;
+        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+        return copyEffect ? copyEffect.printedCost : this.printedCost;
     }
 
     getFate() {
@@ -134,13 +136,14 @@ class DrawCard extends BaseCard {
     }
 
     costLessThan(num) {
-        return num && (this.cardData.cost || this.cardData.cost === 0) && this.cardData.cost < num;
+        let cost = this.getCost();
+        return num && (cost || cost === 0) && cost < num;
     }
 
     anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (
             card.location === Locations.PlayArea &&
-            card.name === this.name &&
+            card.printedName === this.printedName &&
             card !== this &&
             (card.owner === player || card.controller === player || card.owner === this.owner)
         ));
@@ -159,6 +162,7 @@ class DrawCard extends BaseCard {
         clone.parent = this.parent;
         clone.fate = this.fate;
         clone.inConflict = this.inConflict;
+        clone.traits = this.getTraits();
         return clone;
     }
 
@@ -167,12 +171,15 @@ class DrawCard extends BaseCard {
             return false;
         }
         let dashEffects = this.getEffects(EffectNames.SetDash);
+        let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+        let militarySkill = copyEffect ? copyEffect.printedMilitarySkill : this.printedMilitarySkill;
+        let politicalSkill = copyEffect ? copyEffect.printedPoliticalSkill : this.printedPoliticalSkill;
         if(type === 'military') {
-            return Number.isNaN(this.printedMilitarySkill) || dashEffects.includes(type);
+            return Number.isNaN(militarySkill) || dashEffects.includes(type);
         } else if(type === 'political') {
-            return Number.isNaN(this.printedPoliticalSkill) || dashEffects.includes(type);
+            return Number.isNaN(politicalSkill) || dashEffects.includes(type);
         }
-        return Number.isNaN(this.printedMilitarySkill) || Number.isNaN(this.printedPoliticalSkill) || dashEffects.length > 0;
+        return Number.isNaN(militarySkill) || Number.isNaN(politicalSkill) || dashEffects.length > 0;
     }
 
     getSkill(type) {
@@ -201,8 +208,9 @@ class DrawCard extends BaseCard {
             if(this.anyEffect(EffectNames.SetGlory)) {
                 return Math.max(0, this.mostRecentEffect(EffectNames.SetGlory));
             }
-            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + this.cardData.glory + this.sumEffects(EffectNames.ModifyDuelGlory));
-
+            let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
+            let glory = copyEffect ? copyEffect.getGlory() : this.cardData.glory;
+            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + glory);
         }
         return 0;
     }
@@ -221,7 +229,7 @@ class DrawCard extends BaseCard {
     getMilitarySkill(floor = true) {
         /**
          * Get the military skill.
-         * @param  {boolean} floor - Return the value after flooring it at 0; default false
+         * @param  {boolean} floor - Return the value after flooring it at 0; default true
          * @return {integer} The military skill value
          */
 
@@ -233,6 +241,8 @@ class DrawCard extends BaseCard {
 
         // get base mill skill + effect modifiers
         let skill = this.sumEffects(EffectNames.ModifyMilitarySkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBaseMilitarySkill();
+        // apply any addGlory effects
+        skill += this.anyEffect(EffectNames.AddGloryToBothSkills) ? this.getGlory() : 0;
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.military_bonus);
@@ -240,7 +250,6 @@ class DrawCard extends BaseCard {
         }, skill);
         // multiply total
         skill = this.getEffects(EffectNames.ModifyMilitarySkillMultiplier).reduce((total, value) => total * value, skill);
-        skill += this.sumEffects(EffectNames.ModifyDuelMilitarySkill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -251,8 +260,7 @@ class DrawCard extends BaseCard {
     getPoliticalSkill(floor = true) {
         /**
          * Get the political skill.
-         * @param  {boolean} printed - Use the printed value of the skill; default false
-         * @param  {boolean} floor - Return the value after flooring it at 0; default false
+         * @param  {boolean} floor - Return the value after flooring it at 0; default true
          * @return {integer} The political skill value
          */
         if(this.hasDash('political')) {
@@ -263,6 +271,8 @@ class DrawCard extends BaseCard {
 
         // get base pol skill + effect modifiers
         let skill = this.sumEffects(EffectNames.ModifyPoliticalSkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBasePoliticalSkill();
+        // apply any addGlory effects
+        skill += this.anyEffect(EffectNames.AddGloryToBothSkills) ? this.getGlory() : 0;
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.political_bonus);
@@ -270,7 +280,6 @@ class DrawCard extends BaseCard {
         }, skill);
         // multiply total
         skill = this.getEffects(EffectNames.ModifyPoliticalSkillMultiplier).reduce((total, value) => total * value, skill);
-        skill += this.sumEffects(EffectNames.ModifyDuelPoliticalSkill);
         return floor ? Math.max(0, skill) : skill;
     }
 
@@ -284,7 +293,15 @@ class DrawCard extends BaseCard {
         } else if(this.anyEffect(EffectNames.SetBaseMilitarySkill)) {
             return this.mostRecentEffect(EffectNames.SetBaseMilitarySkill);
         }
-        return this.sumEffects(EffectNames.ModifyBaseMilitarySkill) + this.printedMilitarySkill;
+        return this.effects.reduce((total, effect) => {
+            const value = effect.getValue(this);
+            if(effect.type === EffectNames.CopyCharacter) {
+                return value.printedMilitarySkill;
+            } else if(effect.type === EffectNames.ModifyBaseMilitarySkill) {
+                return total + value;
+            }
+            return total;
+        }, this.printedMilitarySkill);
     }
 
     get basePoliticalSkill() {
@@ -297,17 +314,28 @@ class DrawCard extends BaseCard {
         } else if(this.anyEffect(EffectNames.SetBasePoliticalSkill)) {
             return this.mostRecentEffect(EffectNames.SetBasePoliticalSkill);
         }
-        return this.sumEffects(EffectNames.ModifyBasePoliticalSkill) + this.printedPoliticalSkill;
+        return this.effects.reduce((total, effect) => {
+            const value = effect.getValue(this);
+            if(effect.type === EffectNames.CopyCharacter) {
+                return value.printedPoliticalSkill;
+            } else if(effect.type === EffectNames.ModifyBasePoliticalSkill) {
+                return total + value;
+            }
+            return total;
+        }, this.printedPoliticalSkill);
     }
 
     getSkillFromGlory() {
-        if(!this.allowGameAction('affectedByHonor')) {
+        if(this.anyEffect(EffectNames.HonorStatusDoesNotModifySkill)) {
             return 0;
         }
         if(this.isHonored) {
+            if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
+                return 0 - this.getGlory();
+            }
             return this.getGlory();
         } else if(this.isDishonored) {
-            if(this.anyEffect(EffectNames.AddGloryWhileDishonored)) {
+            if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
                 return this.getGlory();
             }
             return 0 - this.getGlory();
@@ -402,15 +430,15 @@ class DrawCard extends BaseCard {
     }
 
     checkForIllegalAttachments() {
-        // TODO: Context object here?
+        let context = this.game.getFrameworkContext(this.controller);
         let illegalAttachments = this.attachments.filter(attachment => (
             !this.allowAttachment(attachment) || !attachment.canAttach(this, { game: this.game, player: this.controller })
         ));
-        if(illegalAttachments.length > 0) {
-            this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
-            this.game.applyGameAction(null, { discardFromPlay: illegalAttachments });
-            return true;
-        } else if(this.attachments.filter(card => card.isRestricted()).length > 2) {
+        for(const effectCard of this.getEffects(EffectNames.CannotHaveOtherRestrictedAttachments)) {
+            illegalAttachments = illegalAttachments.concat(this.attachments.filter(card => card.isRestricted() && card !== effectCard));
+        }
+        illegalAttachments = _.uniq(illegalAttachments);
+        if(this.attachments.filter(card => card.isRestricted()).length > 2) {
             this.game.promptForSelect(this.controller, {
                 activePromptTitle: 'Choose an attachment to discard',
                 waitingPromptTitle: 'Waiting for opponent to choose an attachment to discard',
@@ -418,11 +446,21 @@ class DrawCard extends BaseCard {
                 cardCondition: card => card.parent === this && card.isRestricted(),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
-                    this.game.applyGameAction(null, { discardFromPlay: card });
+                    if(illegalAttachments.length > 0) {
+                        this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
+                        if(!illegalAttachments.includes(card)) {
+                            illegalAttachments.push(card);
+                        }
+                    }
+                    this.game.applyGameAction(context, { discardFromPlay: illegalAttachments });
                     return true;
                 },
                 source: 'Too many Restricted attachments'
             });
+            return true;
+        } else if(illegalAttachments.length > 0) {
+            this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
+            this.game.applyGameAction(null, { discardFromPlay: illegalAttachments});
             return true;
         }
         return false;
@@ -472,10 +510,10 @@ class DrawCard extends BaseCard {
             this.game.currentConflict.removeFromConflict(this);
         }
 
-        if(this.isDishonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
+        if(this.isDishonored && !this.anyEffect(EffectNames.HonorStatusDoesNotAffectLeavePlay)) {
             this.game.addMessage('{0} loses 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.loseHonor().getEvent(this.controller, this.game.getFrameworkContext()));
-        } else if(this.isHonored && this.checkRestrictions('affectedByHonor', this.game.getFrameworkContext())) {
+        } else if(this.isHonored && !this.anyEffect(EffectNames.HonorStatusDoesNotAffectLeavePlay)) {
             this.game.addMessage('{0} gains 1 honor due to {1}\'s personal honor', this.controller, this);
             this.game.openThenEventWindow(this.game.actions.gainHonor().getEvent(this.controller, this.game.getFrameworkContext()));
         }

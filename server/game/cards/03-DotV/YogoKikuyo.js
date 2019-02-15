@@ -1,20 +1,19 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Locations, CardTypes } = require('../../Constants');
 
 class YogoKikuyo extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.wouldInterrupt({
             title: 'Cancel a spell',
             when: {
-                onCardAbilityInitiated: (event, context) => this.game.isDuringConflict() && event.card.type === CardTypes.Event &&
-                                                            event.card.hasTrait('spell') &&
-                                                            event.card.controller === context.player.opponent
+                onInitiateAbilityEffects: (event, context) =>
+                    this.game.isDuringConflict() && event.card.type === CardTypes.Event &&
+                    event.card.hasTrait('spell') && event.card.controller === context.player.opponent
             },
-            cost: ability.costs.putSelfIntoPlay(),
+            cost: AbilityDsl.costs.putSelfIntoPlay(),
             location: Locations.Hand,
-            effect: 'cancel the effects of {1}',
-            effectArgs: context => context.event.card,
-            handler: context => context.cancel()
+            gameAction: AbilityDsl.actions.cancel()
         });
     }
 }

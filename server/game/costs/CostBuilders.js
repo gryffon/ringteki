@@ -2,6 +2,7 @@ const CostBuilder = require('./CostBuilder.js');
 const GameActions = require('../GameActions/GameActions');
 const PlayerCost = require('./PlayerCost');
 const RingCost = require('./RingCost');
+const { Locations } = require('../Constants');
 
 const CostBuilders = {
     bow: new CostBuilder(GameActions.bow(), {
@@ -40,15 +41,16 @@ const CostBuilders = {
         select: 'Select card to sacrifice',
         selectMultiple: number => `Select ${number} cards to sacrifice`
     }),
-    shuffleIntoDeck: new CostBuilder(GameActions.returnToDeck({ shuffle: true, ignoreLocation: true }), {
+    shuffleIntoDeck: new CostBuilder(GameActions.moveCard({ destination: Locations.DynastyDeck, shuffle: true }), {
         select: 'Select a card to shuffle into deck',
         selectMultiple: number => `Select ${number} cards to shuffle into deck`
     }),
     discardImperialFavor: () => new PlayerCost(GameActions.loseImperialFavor()),
-    giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate({ amount: amount })),
-    payHonor: (amount) => new PlayerCost(GameActions.loseHonor({ amount: amount })),
-    payFate: (amount) => new PlayerCost(GameActions.gainFate({ amount: -amount })),
-    payFateToRing: (amount, ringCondition) => new RingCost(GameActions.placeFateOnRing({ amount: amount }), ringCondition)
+    giveFateToOpponent: (amount) => new PlayerCost(GameActions.takeFate({ amount })),
+    giveHonorToOpponent: (amount) => new PlayerCost(GameActions.takeHonor({ amount })),
+    payHonor: (amount) => new PlayerCost(GameActions.loseHonor({ amount })),
+    payFate: (amount) => new PlayerCost(GameActions.loseFate({ amount })),
+    payFateToRing: (amount, ringCondition) => new RingCost(GameActions.placeFateOnRing({ amount }), ringCondition)
 };
 
 module.exports = CostBuilders;

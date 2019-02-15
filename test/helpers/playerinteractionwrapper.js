@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const { matchCardByNameAndPack } = require('./cardutil.js');
-const { detectBinary } = require('../../server/util');
+const { detectBinary } = require('../../build/server/util');
 
 class PlayerInteractionWrapper {
     constructor(game, player) {
@@ -316,6 +316,14 @@ class PlayerInteractionWrapper {
     }
 
     /**
+     * Lists rings selectable by the player during the action
+     * @return {Ring[]} - selectable rings
+     */
+    get currentActionRingTargets() {
+        return this.player.promptState.selectableRings;
+    }
+
+    /**
      * Lists cards currently selected by the player
      * @return {DrawCard[]} - selected cards
      */
@@ -339,7 +347,7 @@ class PlayerInteractionWrapper {
             return 'no prompt active';
         }
 
-        return prompt.menuTitle + '\n' + _.map(prompt.buttons, button => '[ ' + button.text + ' ]').join('\n') + '\n' + _.pluck(selectableCards, 'name').join('\n');
+        return prompt.menuTitle + '\n' + _.map(prompt.buttons, button => '[ ' + button.text + (button.disabled ? ' (disabled)' : '') + ' ]').join('\n') + '\n' + _.pluck(selectableCards, 'name').join('\n');
     }
 
     findCardByName(name, locations = 'any', side) {
@@ -441,8 +449,8 @@ class PlayerInteractionWrapper {
         text = text.toString();
         var currentPrompt = this.player.currentPrompt();
         var promptButton = _.find(currentPrompt.buttons, button => button.text.toString().toLowerCase() === text.toLowerCase());
-
-        if(!promptButton) {
+        
+        if(!promptButton || promptButton.disabled) {
             throw new Error(`Couldn't click on "${text}" for ${this.player.name}. Current prompt is:\n${this.formatPrompt()}`);
         }
 
@@ -555,6 +563,17 @@ class PlayerInteractionWrapper {
             throw new Error(`${this.name} can't pass, because they don't have priority`);
         }
         this.clickPrompt('Pass');
+    }
+
+    /**
+     * Player's action of passing a conflict
+     */
+    passConflict() {
+        if(!this.hasPrompt('Initiate Conflict')) {
+            throw new Error(`${this.name} can't pass their conflict, because they are not being prompted to declare one`);
+        }
+        this.clickPrompt('Pass Conflict');
+        this.clickPrompt('Yes');
     }
 
     /**

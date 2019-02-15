@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
+const { Players, CardTypes, DuelTypes } = require('../../Constants');
 
 class TaryuJiai extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Initiate a glory duel between two shugenja',
             condition: () => this.game.isDuringConflict(),
@@ -19,25 +20,20 @@ class TaryuJiai extends DrawCard {
                     controller: Players.Opponent,
                     cardType: CardTypes.Character,
                     cardCondition: card => card.hasTrait('shugenja'),
-                    gameAction: ability.actions.duel(context => ({
-                        type: 'glory',
+                    gameAction: AbilityDsl.actions.duel(context => ({
+                        type: DuelTypes.Glory,
                         challenger: context.targets.myShugenja,
-                        resolutionHandler: winner => winner && this.resolveRingEffect(winner.controller)
+                        gameAction: AbilityDsl.actions.selectRing(context => ({
+                            activePromptTitle: 'Choose a ring effect to resolve',
+                            player: context.game.currentDuel.winner && context.game.currentDuel.winner.controller === context.player ? Players.Self : Players.Opponent,
+                            ringCondition: () => !!context.game.currentDuel.winner,
+                            targets: true,
+                            message: '{0} chooses to resolve {1}\'s effect',
+                            messageArgs: ring => [context.game.currentDuel.winner.controller, ring],
+                            gameAction: AbilityDsl.actions.resolveRingEffect()
+                        }))
                     }))
                 }
-            },
-            effect: 'initiate a glory duel between {1} and {2}',
-            effectArgs: context => [context.targets.myShugenja, context.targets.oppShugenja]
-        });
-    }
-
-    resolveRingEffect(player) {
-        this.game.promptForRingSelect(player, {
-            activePromptTitle: 'Choose a ring effect to resolve',
-            onSelect: (player, ring) => {
-                this.game.addMessage('{0} chooses to resolve {1}\'s effect', player, ring);
-                this.game.openThenEventWindow(this.game.actions.resolveRingEffect().getEvent(ring, this.game.getFrameworkContext(player)));
-                return true;
             }
         });
     }

@@ -1,4 +1,4 @@
-const CardAction = require('../../../server/game/cardaction.js');
+const CardAction = require('../../../build/server/game/cardaction.js');
 
 describe('CardAction', function () {
     beforeEach(function () {
