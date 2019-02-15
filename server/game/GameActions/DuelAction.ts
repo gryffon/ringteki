@@ -114,4 +114,9 @@ export class DuelAction extends CardGameAction {
     checkEventCondition(event, additionalProperties) {
         return event.cards.some(card => this.canAffect(card, event.context, additionalProperties));
     }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.gameAction && properties.gameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties);
+    }
 }

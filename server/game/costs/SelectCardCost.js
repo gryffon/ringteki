@@ -7,6 +7,7 @@ class SelectCardCost {
         this.selector = this.createSelector(action, promptProperties);
         this.activePromptTitle = promptProperties.activePromptTitle;
         this.promptsPlayer = true;
+        this.targets = promptProperties.targets;
     }
 
     createSelector(action, properties) {

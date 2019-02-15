@@ -25,7 +25,8 @@ class HanteiXXXVIII extends DrawCard {
         this.interrupt({
             title: 'Choose targets for opponent\'s ability',
             when: {
-                onCardAbilityInitiated: event => event.ability.hasTargetsChosenByInitiatingPlayer(event.context)
+                onCardAbilityInitiated: (event, context) =>
+                    event.ability.hasTargetsChosenByInitiatingPlayer(event.context) && event.context.player === context.player.opponent
             },
             effect: 'choose targets for {1}\'s {2} ability',
             effectArgs: context => [context.event.card, context.event.ability],

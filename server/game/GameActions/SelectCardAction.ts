@@ -20,12 +20,14 @@ export interface SelectCardProperties extends CardActionProperties {
     messageArgs?: (card: BaseCard, action: GameAction) => any[];
     gameAction: GameAction;
     selector?: BaseCardSelector;
+    actionParameter?: string;
 }
 
 export class SelectCardAction extends CardGameAction {
     defaultProperties: SelectCardProperties = {
         cardCondition: () => true,
-        gameAction: null
+        gameAction: null,
+        actionParameter: 'target'
     };
 
     constructor(properties: SelectCardProperties | ((context: AbilityContext) => SelectCardProperties)) {
@@ -39,8 +41,10 @@ export class SelectCardAction extends CardGameAction {
 
     getProperties(context: AbilityContext, additionalProperties = {}): SelectCardProperties {
         let properties = super.getProperties(context, additionalProperties) as SelectCardProperties;
-        let cardCondition = (card, context) => properties.gameAction.canAffect(card, context) && properties.cardCondition(card, context)
-        properties.selector = CardSelector.for(Object.assign({}, properties, { cardCondition }));
+        if(!properties.selector) {
+            let cardCondition = (card, context) => properties.gameAction.canAffect(card, context) && properties.cardCondition(card, context)
+            properties.selector = CardSelector.for(Object.assign({}, properties, { cardCondition }));    
+        }
         return properties;
     }
 
@@ -75,7 +79,7 @@ export class SelectCardAction extends CardGameAction {
                 if(properties.message) {
                     context.game.addMessage(properties.message, ...properties.messageArgs(cards, player));
                 }
-                properties.gameAction.addEventsToArray(events, context, { target: cards });
+                properties.gameAction.addEventsToArray(events, context, { [properties.actionParameter]: cards });
                 return true;
             }
         };

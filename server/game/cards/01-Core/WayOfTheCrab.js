@@ -7,7 +7,10 @@ class WayOfTheCrab extends DrawCard {
         this.action({
             title: 'Make your opponent sacrifice a character',
             condition: context => context.player.opponent,
-            cost: AbilityDsl.costs.sacrifice(card => card.type === CardTypes.Character && card.isFaction('crab')),
+            cost: AbilityDsl.costs.sacrifice({
+                cardType: CardTypes.Character,
+                cardCondition: card => card.isFaction('crab')
+            }),
             effect: 'force {1} to sacrifice a character',
             effectArgs: context => context.player.opponent,
             gameAction: AbilityDsl.actions.selectCard(context => ({

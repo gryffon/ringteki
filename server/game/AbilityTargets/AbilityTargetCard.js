@@ -108,7 +108,7 @@ class AbilityTargetCard {
             },
             onMenuCommand: (player, arg) => {
                 if(arg === 'costsFirst') {
-                    targetResults.costsFirst = true;
+                    targetResults.payCostsFirst = true;
                     return true;
                 }
                 return true;

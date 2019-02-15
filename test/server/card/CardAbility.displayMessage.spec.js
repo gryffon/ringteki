@@ -87,7 +87,7 @@ describe('CardAbility displayMessage', function() {
             this.courtier = { name: 'courtier', getShortSummary: () => this.courtier };
             this.eventToCancel = { name: 'eventToCancel', getShortSummary: () => this.eventToCancel };
             this.ability = new CardAbility(this.gameSpy, this.cardSpy, {
-                cost: AbilityDsl.costs.dishonor(card => card.hasTrait('courtier')),
+                cost: AbilityDsl.costs.dishonor({ cardCondition: card => card.hasTrait('courtier') }),
                 effect: 'cancel {1}',
                 effectArgs: context => context.event.card,
                 handler: context => context.cancel()

@@ -179,7 +179,8 @@ class BaseAbility {
 
     hasTargetsChosenByInitiatingPlayer(context) {
         return this.targets.some(target => target.hasTargetsChosenByInitiatingPlayer(context)) ||
-            this.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context));
+            this.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context)) ||
+            this.cost.some(cost => cost.targets);
     }
 
     displayMessage(context) { // eslint-disable-line no-unused-vars

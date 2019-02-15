@@ -1,12 +1,15 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 
 class StolenSecrets extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Steal one of opponent\'s top 4 cards',
             condition: context => this.game.isDuringConflict('political') && context.player.opponent && context.player.opponent.conflictDeck.size() > 0,
-            cost: ability.costs.removeFate(card => card.isParticipating()),
+            cost: ability.costs.removeFate({
+                cardType: CardTypes.Character,
+                cardCondition: card => card.isParticipating()
+            }),
             effect: 'look at the top 4 cards of {1}\'s conflict deck and remove one from the game',
             effectArgs: context => context.player.opponent,
             handler: context => this.game.promptWithHandlerMenu(context.player, {

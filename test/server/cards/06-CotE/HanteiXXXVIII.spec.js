@@ -1,4 +1,4 @@
-fdescribe('Hantei XXXVII', function() {
+describe('Hantei XXXVII', function() {
     integration(function() {
         describe('Hantei XXXVII\'s ability', function() {
             beforeEach(function() {
@@ -7,7 +7,7 @@ fdescribe('Hantei XXXVII', function() {
                     player1: {
                         fate: 4,
                         inPlay: ['hantei-xxxviii', 'asahina-storyteller'],
-                        hand: ['fine-katana', 'ornate-fan', 'banzai']
+                        hand: ['fine-katana', 'ornate-fan', 'banzai', 'banzai']
                     },
                     player2: {
                         fate: 5,
@@ -22,7 +22,7 @@ fdescribe('Hantei XXXVII', function() {
                         hand: [
                             'ambush', 'backhanded-compliment', 'court-games', 'duelist-training',
                             'noble-sacrifice', 'policy-debate', 'taryu-jiai', 'the-perfect-gift',
-                            'bayushi-kachiko', 'bayushi-kachiko', 'soul-beyond-reproach'
+                            'bayushi-kachiko', 'soul-beyond-reproach'
                         ]
                     }
                 });
@@ -50,7 +50,7 @@ fdescribe('Hantei XXXVII', function() {
                 this.player2.clickRing('air');
                 this.player1.pass();
 
-                this.ornateFan = this.player1.playAttachment('fine-katana', this.asahinaStoryteller);
+                this.ornateFan = this.player1.playAttachment('ornate-fan', this.asahinaStoryteller);
                 this.duelistTraining = this.player2.playAttachment('duelist-training', this.prudentChallenger);
 
                 this.noMoreActions();
@@ -249,7 +249,7 @@ fdescribe('Hantei XXXVII', function() {
                 this.player1.clickCard(this.asahinaStoryteller);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('5');
-                expect(this.player1).toHavePrompt('Prudent Challnger');
+                expect(this.player1).toHavePrompt('Prudent Challenger');
                 this.player1.clickCard(this.fineKatana);
                 expect(this.fineKatana.location).toBe('conflict discard pile');
             });
@@ -260,17 +260,17 @@ fdescribe('Hantei XXXVII', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hantei);
                 this.player1.clickCard(this.hantei);
-                expect(this.player1).toHavePrompt('Taryu Jiai');
+                expect(this.player1).toHavePrompt('Taryū-Jiai');
                 this.player1.clickCard(this.fusuiDisciple);
                 this.player1.clickCard(this.asahinaStoryteller);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('5');
-                expect(this.player1).toHavePrompt('Taryu Jiai');
+                expect(this.player1).toHavePrompt('Taryū-Jiai');
                 this.player1.clickRing('air');
                 expect(this.player2).toHavePrompt('Air Ring');
             });
 
-            fit('should trigger for The Perfect Gift', function() {
+            it('should trigger for The Perfect Gift', function() {
                 this.player2.clickCard('the-perfect-gift');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hantei);
@@ -285,6 +285,8 @@ fdescribe('Hantei XXXVII', function() {
                 expect(this.player1).toHavePrompt('Hantei XXXVIII');
                 this.player1.clickCard(this.kitsukiInvestigator);
                 expect(this.kitsukiInvestigator.bowed).toBe(true);
+                expect(this.asahinaStoryteller.isHonored).toBe(true);
+                expect(this.asahinaStoryteller.politicalSkill).toBe(8);
                 this.noMoreActions();
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect('upholding-authority');
@@ -293,9 +295,9 @@ fdescribe('Hantei XXXVII', function() {
                 expect(this.player1).toBeAbleToSelect(this.hantei);
                 this.player1.clickCard(this.hantei);
                 expect(this.player1).toHavePrompt('Upholding Authority');
-                this.player1.clickPrompt('Bayushi Kachiko (2)');
-                expect(this.player1).toHavePrompt('Upholding Authority');
-                this.player1.clickPrompt('2');
+                this.player1.clickPrompt('Banzai! (2)');
+                expect(this.player2).toHavePrompt('Upholding Authority');
+                this.player2.clickPrompt('2');
             });
 
             it('should trigger for Utako Kamoko', function() {
@@ -309,6 +311,8 @@ fdescribe('Hantei XXXVII', function() {
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect('upholding-authority');
                 this.player2.pass();
+                expect(this.player1).toHavePrompt('Do you wish to discard Secluded Shrine?');
+                this.player1.clickPrompt('Yes')
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.utakuKamoko);
                 this.player2.clickCard(this.utakuKamoko);
@@ -335,7 +339,7 @@ fdescribe('Hantei XXXVII', function() {
                     expect(this.player1).not.toBeAbleToSelect(this.bayushiKachiko);
                     expect(this.player1).toBeAbleToSelect(this.youngRumormonger);
                     this.player1.clickCard(this.youngRumormonger);
-                    this.player1.clickCard('Done');
+                    this.player1.clickPrompt('Done');
                     expect(this.youngRumormonger.location).toBe('play area');
                     expect(this.bayushiKachiko.location).toBe('hand');
                 });

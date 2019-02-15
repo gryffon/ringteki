@@ -49,6 +49,9 @@ export class SelectRingAction extends RingAction {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
+        if(properties.targets && context.choosingPlayerOverride) {
+            player = context.choosingPlayerOverride;
+        }
         let defaultProperties = {
             context: context,
             onSelect: (player, ring) => {
