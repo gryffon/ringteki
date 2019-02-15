@@ -1,6 +1,6 @@
 const _ = require('underscore');
 
-const BaseCard = require('./basecard.js');
+const BaseCard = require('./basecard');
 const { EffectNames } = require('./Constants');
 
 class RoleCard extends BaseCard {
@@ -39,6 +39,10 @@ class RoleCard extends BaseCard {
             return false;
         }
         return super.allowGameAction(actionType, context);
+    }
+
+    getElement() {
+        return [];
     }
 }
 

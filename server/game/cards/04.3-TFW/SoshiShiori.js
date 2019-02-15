@@ -12,9 +12,10 @@ class SoshiShiori extends DrawCard {
             target: {
                 mode: TargetModes.Select,
                 activePromptTitle:'Choose a player to lose 1 honor',
+                targets: true,
                 choices: {
-                    'Me': ability.actions.loseHonor(context => ({ target: context.player })),
-                    'Opponent': ability.actions.loseHonor()
+                    [this.owner.name]: ability.actions.loseHonor({ target: this.owner }),
+                    [this.owner.opponent && this.owner.opponent.name || 'NA']: ability.actions.loseHonor({ target: this.owner.opponent})
                 }
             }
         });

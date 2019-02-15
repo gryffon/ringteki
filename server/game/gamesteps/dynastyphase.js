@@ -22,6 +22,7 @@ class DynastyPhase extends Phase {
         this.initialise([
             new SimpleStep(game, () => this.beginDynasty()),
             new SimpleStep(game, () => this.flipDynastyCards()),
+            new SimpleStep(game, () => this.collectFate()),
             new SimpleStep(game, () => this.dynastyActionWindowStep())
         ]);
     }
@@ -51,6 +52,12 @@ class DynastyPhase extends Phase {
             if(revealedCards.length > 0) {
                 this.game.queueSimpleStep(() => this.game.addMessage('{0} reveals {1}', player, revealedCards));
             }
+        });
+    }
+
+    collectFate() {
+        _.each(this.game.getPlayersInFirstPlayerOrder(), player => {
+            player.collectFate();
         });
     }
 

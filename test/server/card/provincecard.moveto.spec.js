@@ -1,4 +1,4 @@
-const ProvinceCard = require('../../../server/game/provincecard.js');
+const ProvinceCard = require('../../../build/server/game/provincecard.js');
 
 describe('ProvinceCard', function () {
     beforeEach(function () {

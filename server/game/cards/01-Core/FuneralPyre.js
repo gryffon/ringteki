@@ -5,7 +5,7 @@ class FuneralPyre extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Sacrifice a character to draw',
-            cost: ability.costs.sacrifice(card => card.type === CardTypes.Character),
+            cost: ability.costs.sacrifice({ cardType: CardTypes.Character }),
             gameAction: ability.actions.draw()
         });
     }

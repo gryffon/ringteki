@@ -11,8 +11,9 @@ class TogashiMitsu extends DrawCard {
                 controller: Players.Self,
                 cardCondition: card => card.hasTrait('monk') || card.hasTrait('kiho') || card.hasTrait('tattoo'),
                 gameAction: ability.actions.playCard({
-                    postHandler: card => {
-                        if(card.type === CardTypes.Event) {
+                    postHandler: context => {
+                        let card = context.source;
+                        if(card.type === CardTypes.Event && context.events.length > 0) {
                             this.game.addMessage('{0} is placed on the bottom of {1}\'s deck', card, card.owner);
                             card.owner.moveCard(card, Locations.ConflictDeck, { bottom: true });
                         }

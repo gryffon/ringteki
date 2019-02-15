@@ -1,19 +1,9 @@
 /* global jasmine */
 
 const _ = require('underscore');
-const Game = require('../../server/game/game.js');
+const Game = require('../../build/server/game/game.js');
 const PlayerInteractionWrapper = require('./playerinteractionwrapper.js');
-const Settings = require('../../server/settings.js');
-
-// Phase values enum
-const phaseValue = {
-    dynasty: 0,
-    draw: 1,
-    conflict: 2,
-    fate: 3,
-    regroup: 4
-};
-const numPhases = 5;
+const Settings = require('../../build/server/settings.js');
 
 class GameFlowWrapper {
     constructor() {
@@ -197,12 +187,10 @@ class GameFlowWrapper {
                 phaseChange = -1;
                 break;
             case 'fate':
-                console.log('fate');
                 this.finishFatePhase();
                 phaseChange = -1;
                 break;
             case 'regroup':
-                console.log('regroup');
                 this.finishRegroupPhase();
                 phaseChange = 4; //New turn
                 break;

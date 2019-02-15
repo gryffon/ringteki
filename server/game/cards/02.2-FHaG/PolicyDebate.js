@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
+const { Players, CardTypes, DuelTypes } = require('../../Constants');
 
 class PolicyDebate extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Initiate a political duel',
             targets: {
@@ -16,32 +17,26 @@ class PolicyDebate extends DrawCard {
                     cardType: CardTypes.Character,
                     controller: Players.Opponent,
                     cardCondition: card => card.isParticipating(),
-                    gameAction: ability.actions.duel(context => ({
-                        type: 'political',
+                    gameAction: AbilityDsl.actions.duel(context => ({
+                        type: DuelTypes.Political,
                         challenger: context.targets.challenger,
-                        resolutionHandler: (winner, loser) => this.duelOutcome(context, winner, loser)
+                        gameAction: AbilityDsl.actions.multiple([
+                            AbilityDsl.actions.lookAt(context => ({
+                                target: context.game.currentDuel.loser ? context.game.currentDuel.loser.controller.hand.sortBy(card => card.name) : []
+                            })),
+                            AbilityDsl.actions.cardMenu(context => ({
+                                activePromptTitle: 'Choose card to discard',
+                                cards: context.game.currentDuel.loser ? context.game.currentDuel.loser.controller.hand.sortBy(card => card.name) : [],
+                                targets: true,
+                                message: '{0} chooses {1} to be discarded',
+                                messageArgs: card => [context.game.currentDuel.winner.controller, card],
+                                gameAction: AbilityDsl.actions.discardCard()
+                            }))
+                        ])
                     }))
                 }
             }
         });
-    }
-
-    duelOutcome(context, winner, loser) {
-        if(loser) {
-            this.game.addMessage('{0} wins the duel - {1} reveals their hand: {2}', winner, loser.controller, loser.controller.hand.sortBy(card => card.name));
-            if(loser.controller.hand.size() === 0) {
-                return;
-            }
-            this.game.promptWithHandlerMenu(winner.controller, {
-                activePromptTitle: 'Choose card to discard',
-                context: context,
-                cards: loser.controller.hand.sortBy(card => card.name),
-                cardHandler: card => {
-                    this.game.addMessage('{0} chooses to discard {1}', winner.controller, card);
-                    this.game.applyGameAction(context, { discardCard: card });
-                }
-            });
-        }
     }
 }
 

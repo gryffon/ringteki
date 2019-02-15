@@ -9,18 +9,19 @@ class FuSuiDisciple extends DrawCard {
                 player: {
                     mode: TargetModes.Select,
                     activePromptTitle: 'Choose a player',
+                    targets: true,
                     choices: {
-                        'Me': context => context.game.rings.air.isConsideredClaimed(context.player),
-                        'My Opponent': context => context.game.rings.air.isConsideredClaimed(context.player.opponent)
+                        [this.owner.name]: context => context.game.rings.air.isConsideredClaimed(this.owner),
+                        [this.owner.opponent && this.owner.opponent.name || 'NA']: context => context.game.rings.air.isConsideredClaimed(this.owner.opponent)
                     }
                 },
                 character: {
                     dependsOn: 'player',
-                    player: context => context.selects.player.choice === 'Me' ? Players.Self : Players.Opponent,
+                    player: context => context.selects.player.choice === context.player.name ? Players.Self : Players.Opponent,
                     activePromptTitle: 'Choose a character to be honored or dishonored',
                     cardType: CardTypes.Character,
                     cardCondition: (card, context) => {
-                        let player = context.selects.player.choice === 'Me' ? context.player : context.player.opponent;
+                        let player = context.selects.player.choice === context.player.name ? context.player : context.player.opponent;
                         return !card.isHonored && !card.isDishonored && card.controller === player;
                     }
                 },

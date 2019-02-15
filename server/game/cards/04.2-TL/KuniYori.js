@@ -16,9 +16,10 @@ class KuniYori extends DrawCard {
             target: {
                 mode: TargetModes.Select,
                 activePromptTitle:'Select a player to discard a random card from his/her hand',
+                targets: true,
                 choices: {
-                    'Me': ability.actions.discardAtRandom(context => ({ target: context.player })),
-                    'My Opponent': ability.actions.discardAtRandom()
+                    [this.owner.name]: ability.actions.discardAtRandom({ target: this.owner }),
+                    [this.owner.opponent && this.owner.opponent.name || 'NA']: ability.actions.discardAtRandom({ target: this.owner.opponent })
                 }
             }
         });

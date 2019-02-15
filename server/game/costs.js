@@ -24,12 +24,12 @@ const Costs = {
      * Cost that requires bowing a card that matches the passed condition
      * predicate function.
      */
-    bow: condition => CostBuilders.bow.select(condition),
+    bow: properties => CostBuilders.bow.select(properties),
     /**
      * Cost that requires bowing a certain number of cards that match the
      * passed condition predicate function.
      */
-    bowMultiple: (amount, condition) => CostBuilders.bow.selectMultiple(amount, condition),
+    bowMultiple: (properties) => CostBuilders.bow.selectMultiple(properties),
     /**
      * Cost that will sacrifice the card that initiated the ability.
      */
@@ -42,12 +42,12 @@ const Costs = {
      * Cost that requires sacrificing a card that matches the passed condition
      * predicate function.
      */
-    sacrifice: condition => CostBuilders.sacrifice.select(condition),
+    sacrifice: properties => CostBuilders.sacrifice.select(properties),
     /**
      * Cost that will return a selected card to hand which matches the passed
      * condition.
      */
-    returnToHand: condition => CostBuilders.returnToHand.select(condition),
+    returnToHand: properties => CostBuilders.returnToHand.select(properties),
     /**
      * Cost that will return to hand the card that initiated the ability.
      */
@@ -56,7 +56,7 @@ const Costs = {
      * Cost that will shuffle a selected card into the relevant deck which matches the passed
      * condition.
      */
-    shuffleIntoDeck: condition => CostBuilders.shuffleIntoDeck.select(condition),
+    shuffleIntoDeck: properties => CostBuilders.shuffleIntoDeck.select(properties),
     /**
      * Cost that requires discarding a specific card.
      */
@@ -64,7 +64,7 @@ const Costs = {
     /**
      * Cost that requires discarding a card to be selected by the player.
      */
-    discardCard: condition => CostBuilders.discardCard.select(condition),
+    discardCard: properties => CostBuilders.discardCard.select(properties),
     /**
      * Cost that will discard a fate from the card
      */
@@ -72,7 +72,7 @@ const Costs = {
     /**
      * Cost that will discard a fate from a selected card
      */
-    removeFate: condition => CostBuilders.removeFate.select(condition),
+    removeFate: properties => CostBuilders.removeFate.select(properties),
     /**
      * Cost that will discard a fate from the card's parent
      */
@@ -85,7 +85,7 @@ const Costs = {
      * Cost that requires dishonoring a card that matches the passed condition
      * predicate function
      */
-    dishonor: condition => CostBuilders.dishonor.select(condition),
+    dishonor: properties => CostBuilders.dishonor.select(properties),
     /**
      * Cost that will break the province that initiated the ability
      */
@@ -162,11 +162,12 @@ const Costs = {
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of fate.
      */
-    payFate: (amount) => CostBuilders.payFate(amount),
+    payFate: (amount = 1) => CostBuilders.payFate(amount),
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of honor.
      */
-    payHonor: (amount) => CostBuilders.payHonor(amount),
+    payHonor: (amount = 1) => CostBuilders.payHonor(amount),
+    giveHonorToOpponent: (amount = 1) => CostBuilders.giveHonorToOpponent(amount),
     /**
      * Cost where a character must spend fate to an unclaimed ring
      */

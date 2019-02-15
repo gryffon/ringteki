@@ -82,21 +82,21 @@ describe('Kuni Yori', function() {
                     it('should prompt to choose a player', function() {
                         this.player1.clickCard(this.kuniYori);
                         expect(this.player1).toHavePrompt('Select a player to discard a random card from his/her hand');
-                        expect(this.player1).toHavePromptButton('Me');
-                        expect(this.player1).toHavePromptButton('My Opponent');
+                        expect(this.player1).toHavePromptButton('player1');
+                        expect(this.player1).toHavePromptButton('player2');
                     });
 
                     it('should cost 1 honor', function() {
                         let honor = this.player1.player.honor;
                         this.player1.clickCard(this.kuniYori);
-                        this.player1.clickPrompt('My Opponent');
+                        this.player1.clickPrompt('player2');
                         expect(this.player1.player.honor).toBe(honor - 1);
                     });
 
                     it('should discard 1 card at random from the chosen player\'s hand', function() {
                         let handSize = this.player2.player.hand.size();
                         this.player1.clickCard(this.kuniYori);
-                        this.player1.clickPrompt('My Opponent');
+                        this.player1.clickPrompt('player2');
                         expect(this.player2.player.hand.size()).toBe(handSize - 1);
                     });
                 });

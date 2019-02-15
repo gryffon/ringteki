@@ -1,25 +1,25 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
+const { CardTypes, Players } = require('../../Constants');
 
 class HidaAmoro extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.forcedReaction({
             title: 'Sacrifice a character',
             when: {
                 onConflictPass: () => true
             },
-            limit: ability.limit.perPhase(Infinity),
+            limit: AbilityDsl.limit.perPhase(Infinity),
             effect: 'force {1} to sacrifice a character',
             effectArgs: context => context.event.conflict.attackingPlayer,
-            gameAction: ability.actions.sacrifice(context => ({
-                promptForSelect: {
-                    player: context.event.conflict.attackingPlayer,
-                    activePromptTitle: 'Choose a character to sacrifice',
-                    cardType: CardTypes.Character,
-                    cardCondition: card => card.controller === context.event.conflict.attackingPlayer,
-                    message: '{0} sacrifices {1} to {2}',
-                    messageArgs: card => [context.player.opponent, card, context.source]
-                }
+            gameAction: AbilityDsl.actions.selectCard(context => ({
+                player: context.event.conflict.attackingPlayer === context.player ? Players.Self : Players.Opponent,
+                activePromptTitle: 'Choose a character to sacrifice',
+                cardType: CardTypes.Character,
+                cardCondition: card => card.controller === context.event.conflict.attackingPlayer,
+                message: '{0} sacrifices {1} to {2}',
+                messageArgs: card => [context.player.opponent, card, context.source],
+                gameAction: AbilityDsl.actions.sacrifice()
             }))
         });
     }

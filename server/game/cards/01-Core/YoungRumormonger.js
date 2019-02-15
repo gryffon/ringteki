@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { CardTypes, EventNames } = require('../../Constants');
 
 class YoungRumormonger extends DrawCard {
@@ -11,12 +12,11 @@ class YoungRumormonger extends DrawCard {
             },
             target: {
                 cardType: CardTypes.Character,
-                cardCondition: (card, context) => card !== context.event.card && card.controller === context.event.card.controller &&
-                                                  card.allowGameAction(context.event.name === EventNames.OnCardHonored ? 'honor' : 'dishonor', context)
-            },
-            effect: '{1} {0} instead of {2}',
-            effectArgs: context => [context.event.name === EventNames.OnCardHonored ? 'honor' : 'dishonor', context.event.card],
-            handler: context => context.event.card = context.target
+                cardCondition: (card, context) => card !== context.event.card && card.controller === context.event.card.controller,
+                gameAction: AbilityDsl.actions.cancel(context => ({
+                    replacementGameAction: context.event.name === EventNames.OnCardHonored ? AbilityDsl.actions.honor() : AbilityDsl.actions.dishonor()
+                }))
+            }
         });
     }
 }

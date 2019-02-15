@@ -19,7 +19,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         }
         // Show a bluff prompt if we're in Step 6, the player has the approriate setting, and there's an event for the other player
         return this.abilityType === AbilityTypes.WouldInterrupt && player.timerSettings.events && _.any(this.events, event => (
-            event.name === EventNames.OnCardAbilityInitiated &&
+            event.name === EventNames.OnInitiateAbilityEffects &&
             event.card.type === CardTypes.Event && event.context.player !== player
         ));
     }
@@ -65,7 +65,7 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         if(this.abilityType === AbilityTypes.WouldInterrupt && !this.currentPlayer.optionSettings.cancelOwnAbilities) {
             this.choices = this.choices.filter(context => !(
                 context.player === this.currentPlayer &&
-                context.event.name === EventNames.OnCardAbilityInitiated &&
+                context.event.name === EventNames.OnInitiateAbilityEffects &&
                 context.event.context.player === this.currentPlayer
             ));
         }

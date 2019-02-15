@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, TargetModes, CardTypes } = require('../../Constants');
+const { Players, TargetModes, CardTypes, EventNames } = require('../../Constants');
 
 class ALegionOfOne extends DrawCard {
     setupCardAbilities(ability) {
@@ -18,7 +18,7 @@ class ALegionOfOne extends DrawCard {
             },
             effect: 'give {0} +3/+0',
             then: context => {
-                if(context.secondResolution) {
+                if(context.subResolution) {
                     return {
                         target: {
                             mode: TargetModes.Select,
@@ -41,7 +41,10 @@ class ALegionOfOne extends DrawCard {
                     },
                     message: '{0} chooses {3}to remove a fate to resolve {1} again',
                     messageArgs: context => context.select === 'Done' ? 'not ' : '',
-                    then: { gameAction: ability.actions.resolveAbility({ ability: context.ability, secondResolution: true }) }
+                    then: {
+                        thenCondition: event => event.origin === context.target && !event.cancelled && event.name === EventNames.OnMoveFate,
+                        gameAction: ability.actions.resolveAbility({ ability: context.ability, subResolution: true })
+                    }
                 };
             }
         });

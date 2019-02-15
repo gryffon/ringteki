@@ -37,7 +37,7 @@ class GameChat {
             let argMatch = fragment.match(/\{(\d+)\}/);
             if(argMatch && args) {
                 let arg = args[argMatch[1]];
-                if(arg) {
+                if(arg || arg === 0) {
                     if(arg.message) {
                         return output.concat(arg.message);
                     } else if(Array.isArray(arg)) {
@@ -45,7 +45,7 @@ class GameChat {
                     } else if(arg.getShortSummary) {
                         return output.concat(arg.getShortSummary());
                     }
-                    return output.concat(arg);
+                    return output.concat(arg.toString());
 
                 }
             } else if(!argMatch && fragment) {

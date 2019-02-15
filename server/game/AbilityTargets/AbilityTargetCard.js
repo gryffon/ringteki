@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const CardSelector = require('../CardSelector.js');
-const { Stages, Players } = require('../Constants.js');
+const { Stages, Players, EffectNames, TargetModes } = require('../Constants.js');
 
 class AbilityTargetCard {
     constructor(name, properties, ability) {
@@ -41,14 +41,8 @@ class AbilityTargetCard {
         return !!this.properties.dependsOn || this.hasLegalTarget(context);
     }
 
-    resetGameActions() {
-        for(let action of this.properties.gameAction) {
-            action.reset();
-        }
-    }
-
     hasLegalTarget(context) {
-        return this.selector.hasEnoughTargets(context);
+        return this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
     }
 
     getGameAction(context) {
@@ -56,26 +50,27 @@ class AbilityTargetCard {
     }
 
     getAllLegalTargets(context) {
-        return this.selector.getAllLegalTargets(context);
+        return this.selector.getAllLegalTargets(context, this.getChoosingPlayer(context));
     }
 
     resolve(context, targetResults) {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
             return;
         }
-        let otherProperties = _.omit(this.properties, 'cardCondition', 'player');
-        let playerProp = this.properties.player;
-        if(typeof playerProp === 'function') {
-            playerProp = playerProp(context);
+        let player = context.choosingPlayerOverride || this.getChoosingPlayer(context);
+        if(player === context.player.opponent && context.stage === Stages.PreTarget) {
+            targetResults.delayTargeting = this;
+            return;
         }
-        let player = context.player;
-        if(playerProp === Players.Opponent) {
-            if(context.stage === Stages.PreTarget) {
-                targetResults.delayTargeting = this;
+        if(this.properties.mode === TargetModes.AutoSingle) {
+            let legalTargets = this.selector.getAllLegalTargets(context, player);
+            if(legalTargets.length === 1) {
+                context.targets[this.name] = legalTargets[0];
                 return;
             }
-            player = player.opponent;
         }
+        let otherProperties = _.omit(this.properties, 'cardCondition', 'player');
+
         let buttons = [];
         let waitingPromptTitle = '';
         if(this.properties.optional) {
@@ -92,11 +87,15 @@ class AbilityTargetCard {
                 waitingPromptTitle = 'Waiting for opponent';
             }
         }
+        let mustSelect = this.selector.getAllLegalTargets(context, player).filter(card =>
+            card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
+        );
         let promptProperties = {
             waitingPromptTitle: waitingPromptTitle,
             context: context,
             selector: this.selector,
             buttons: buttons,
+            mustSelect: mustSelect,
             onSelect: (player, card) => {
                 context.targets[this.name] = card;
                 if(this.name === 'target') {
@@ -110,7 +109,7 @@ class AbilityTargetCard {
             },
             onMenuCommand: (player, arg) => {
                 if(arg === 'costsFirst') {
-                    targetResults.costsFirst = true;
+                    targetResults.payCostsFirst = true;
                     return true;
                 }
                 return true;
@@ -124,15 +123,32 @@ class AbilityTargetCard {
             return (!this.dependentTarget || this.dependentTarget.checkTarget(context));
         } else if(!context.targets[this.name]) {
             return false;
+        } else if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
+            return false;
         }
         let cards = context.targets[this.name];
         if(!Array.isArray(cards)) {
             cards = [cards];
         }
-        return (cards.every(card => this.selector.canTarget(card, context)) &&
+        return (cards.every(card => this.selector.canTarget(card, context, context.choosingPlayerOverride || this.getChoosingPlayer(context))) &&
                 this.selector.hasEnoughSelected(cards) &&
                 !this.selector.hasExceededLimit(cards)) &&
                 (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+    }
+
+    getChoosingPlayer(context) {
+        let playerProp = this.properties.player;
+        if(typeof playerProp === 'function') {
+            playerProp = playerProp(context);
+        }
+        return playerProp === Players.Opponent ? context.player.opponent : context.player;
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        if(this.properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context))) {
+            return true;
+        }
+        return this.getChoosingPlayer(context) === context.player && this.selector.hasEnoughTargets(context, context.player.opponent);
     }
 }
 

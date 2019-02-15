@@ -1,4 +1,4 @@
-const TriggeredAbility = require('../../../server/game/triggeredability.js');
+const TriggeredAbility = require('../../../build/server/game/triggeredability.js');
 
 describe('TriggeredAbility', function () {
     beforeEach(function () {
@@ -21,6 +21,7 @@ describe('TriggeredAbility', function () {
         this.properties.when.onSomething.and.returnValue(true);
 
         this.reaction = new TriggeredAbility(this.gameSpy, this.cardSpy, 'reaction', this.properties);
+        this.cardSpy.reactions = [this.reaction];
     });
 
     describe('eventHandler()', function() {

@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
-//const Effect = require('../../server/game/effect.js');
-const Player = require('../../server/game/player.js');
+//const Effect = require('../../build/server/game/effect.js');
+const Player = require('../../build/server/game/player.js');
 
 function createTarget(properties = {}) {
     let card = jasmine.createSpyObj('card', ['allowEffectFrom']);

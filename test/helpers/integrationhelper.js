@@ -40,13 +40,32 @@ var customMatchers = {
                 var buttons = actual.currentPrompt().buttons;
                 var result = {};
 
-                result.pass = _.any(buttons, button => util.equals(button.text, expected, customEqualityMatchers));
+                result.pass = _.any(buttons, button => !button.disabled && util.equals(button.text, expected, customEqualityMatchers));
 
                 if(result.pass) {
-                    result.message = `Expected ${actual.name} not to have prompt button "${expected}" but it did.`;
+                    result.message = `Expected ${actual.name} not to have enabled prompt button "${expected}" but it did.`;
                 } else {
-                    var buttonText = _.map(buttons, button => '[' + button.text + ']').join('\n');
-                    result.message = `Expected ${actual.name} to have prompt button "${expected}" but it had buttons:\n${buttonText}`;
+                    var buttonText = _.map(buttons, button => '[' + button.text + (button.disabled ? ' (disabled) ' : '') + ']').join('\n');
+                    result.message = `Expected ${actual.name} to have enabled prompt button "${expected}" but it had buttons:\n${buttonText}`;
+                }
+
+                return result;
+            }
+        };
+    },
+    toHaveDisabledPromptButton: function(util, customEqualityMatchers) {
+        return {
+            compare: function(actual, expected) {
+                var buttons = actual.currentPrompt().buttons;
+                var result = {};
+
+                result.pass = _.any(buttons, button => button.disabled && util.equals(button.text, expected, customEqualityMatchers));
+
+                if(result.pass) {
+                    result.message = `Expected ${actual.name} not to have disabled prompt button "${expected}" but it did.`;
+                } else {
+                    var buttonText = _.map(buttons, button => '[' + button.text + (button.disabled ? ' (disabled) ' : '') + ']').join('\n');
+                    result.message = `Expected ${actual.name} to have disabled prompt button "${expected}" but it had buttons:\n${buttonText}`;
                 }
 
                 return result;
@@ -67,6 +86,26 @@ var customMatchers = {
                     result.message = `Expected ${card.name} not to be selectable by ${player.name} but it was.`;
                 } else {
                     result.message = `Expected ${card.name} to be selectable by ${player.name} but it wasn't.`;
+                }
+
+                return result;
+            }
+        };
+    },
+    toBeAbleToSelectRing: function() {
+        return {
+            compare: function(player, ring) {
+                if(_.isString(ring)) {
+                    ring = player.game.rings[ring];
+                }
+                let result = {};
+
+                result.pass = player.currentActionRingTargets.includes(ring);
+
+                if(result.pass) {
+                    result.message = `Expected ${ring.element} not to be selectable by ${player.name} but it was.`;
+                } else {
+                    result.message = `Expected ${ring.element} to be selectable by ${player.name} but it wasn't.`;
                 }
 
                 return result;

@@ -24,7 +24,7 @@ class BaseAbility {
      * objects.
      * @param {Object} [properties.target] - optional property that specifies
      * the target of the ability.
-     * @param {GameAction[]} [properties.gameAction] - optional array of game actions
+     * @param [properties.gameAction] - GameAction[] optional array of game actions
      */
     constructor(properties) {
         this.gameAction = properties.gameAction || [];
@@ -91,12 +91,6 @@ class BaseAbility {
         // check legal targets exist
         // check costs can be paid
         // check for potential to change game state
-        for(let target of this.targets) {
-            target.resetGameActions();
-        }
-        for(let action of this.gameAction) {
-            action.reset();
-        }
         if(!this.canPayCosts(context)) {
             return 'cost';
         }
@@ -119,12 +113,6 @@ class BaseAbility {
         return this.cost.every(cost => cost.canPay(contextCopy));
     }
 
-    /**
-     * Resolves all costs for the ability prior to payment. Some cost objects
-     * have a `resolve` method in order to prompt the user to make a choice,
-     * such as choosing a card to kneel. Consumers of this method should wait
-     * until all costs have a `resolved` value of `true` before proceeding.
-     */
     resolveCosts(context, results) {
         for(let cost of this.cost.filter(cost => cost.resolve)) {
             context.game.queueSimpleStep(() => {
@@ -187,6 +175,12 @@ class BaseAbility {
 
     checkAllTargets(context) {
         return this.nonDependentTargets.every(target => target.checkTarget(context));
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        return this.targets.some(target => target.hasTargetsChosenByInitiatingPlayer(context)) ||
+            this.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context)) ||
+            this.cost.some(cost => cost.targets);
     }
 
     displayMessage(context) { // eslint-disable-line no-unused-vars

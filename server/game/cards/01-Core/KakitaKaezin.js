@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const { Players, DuelTypes } = require('../../Constants');
 
 class KakitaKaezin extends DrawCard {
     setupCardAbilities(ability) {
@@ -12,7 +12,7 @@ class KakitaKaezin extends DrawCard {
                 controller: Players.Opponent,
                 cardCondition: card => card.isParticipating(),
                 gameAction: ability.actions.duel(context => ({
-                    type: 'military',
+                    type: DuelTypes.Military,
                     challenger: context.source,
                     resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
                 }))

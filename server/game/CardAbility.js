@@ -1,16 +1,46 @@
 const AbilityLimit = require('./abilitylimit.js');
+const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, PlayTypes } = require('./Constants');
+const { Locations, CardTypes, PlayTypes, Players, TargetModes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
+        if(properties.initiateDuel) {
+            properties.targets = {
+                challenger: {
+                    cardType: CardTypes.Character,
+                    mode: card.type === CardTypes.Character ? TargetModes.AutoSingle : TargetModes.Single,
+                    controller: Players.Self,
+                    cardCondition: (card, context) => card.isParticipating()
+                        && (context.source.type === CardTypes.Character ? card === context.source : true)
+                },
+                duelTarget: {
+                    dependsOn: 'challenger',
+                    cardType: CardTypes.Character,
+                    player: context => {
+                        if(typeof properties.initiateDuel === 'function') {
+                            return properties.initiateDuel(context).opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                        }
+                        return properties.initiateDuel.opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                    },
+                    controller: Players.Opponent,
+                    cardCondition: card => card.isParticipating(),
+                    gameAction: AbilityDsl.actions.duel(context => {
+                        if(typeof properties.initiateDuel === 'function') {
+                            return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel(context));
+                        }
+                        return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel);
+                    })
+                }
+            };
+        }
         super(game, card, properties);
 
         this.title = properties.title;
         this.limit = properties.limit || AbilityLimit.perRound(1);
         this.limit.registerEvents(game);
-        this.limit.card = card;
+        this.limit.ability = this;
         this.abilityCost = this.cost;
         this.location = this.buildLocation(card, properties.location);
         this.printedAbility = properties.printedAbility === false ? false : true;
@@ -76,11 +106,16 @@ class CardAbility extends ThenAbility {
         return super.meetsRequirements(context);
     }
 
+    getReducedCost(context) {
+        let fateCost = this.cost.find(cost => cost.getReducedCost);
+        return fateCost ? fateCost.getReducedCost(context) : 0;
+    }
+
     isInValidLocation(context) {
         return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand) : this.location.includes(this.card.location);
     }
 
-    displayMessage(context) {
+    displayMessage(context, messageVerb = context.source.type === CardTypes.Event ? 'plays' : 'uses') {
         if(this.properties.message) {
             let messageArgs = this.properties.messageArgs;
             if(typeof messageArgs === 'function') {
@@ -93,14 +128,15 @@ class CardAbility extends ThenAbility {
             return;
         }
         // Player1 plays Assassination
-        let messageArgs = [context.player, context.source.type === CardTypes.Event ? ' plays ' : ' uses ', context.source];
+        let messageArgs = [context.player, ' ' + messageVerb + ' ', context.source];
         let costMessages = this.cost.map(cost => {
-            if(cost.action && cost.action.cost) {
+            if(cost.action) {
                 let card = context.costs[cost.action.name];
                 if(card && card.facedown) {
                     card = 'a facedown card';
                 }
-                return { message: this.game.gameChat.formatMessage(cost.action.cost, [card]) };
+                let [format, args] = cost.action.getCostMessage(context);
+                return { message: this.game.gameChat.formatMessage(format, [card].concat(args)) };
             }
         }).filter(obj => obj);
         if(costMessages.length > 0) {
@@ -118,9 +154,7 @@ class CardAbility extends ThenAbility {
             let gameActions = this.getGameActions(context).filter(gameAction => gameAction.hasLegalTarget(context));
             if(gameActions.length > 0) {
                 // effects with multiple game actions really need their own effect message
-                effectMessage = gameActions[0].effectMsg;
-                effectArgs.push(gameActions[0].target);
-                extraArgs = gameActions[0].effectArgs;
+                [effectMessage, extraArgs] = gameActions[0].getEffectMessage(context);
             }
         } else {
             effectArgs.push(context.target || context.ring || context.source);
