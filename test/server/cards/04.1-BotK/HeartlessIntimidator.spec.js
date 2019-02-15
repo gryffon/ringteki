@@ -34,7 +34,7 @@ describe('Heartless Intimidator', function () {
 
             it('will trigger from an honor loss caused by the player', function () {
                 this.player1.clickCard(this.backhand, 'hand');
-                this.player1.clickPrompt('My Opponent');
+                this.player1.clickPrompt('player2');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.heartless);
             });
@@ -65,7 +65,7 @@ describe('Heartless Intimidator', function () {
             it('will trigger from multiple honor losses', function () {
                 // Player 1 uses backhanded compliment to cause 1 honor loss
                 this.player1.clickCard(this.backhand, 'hand');
-                this.player1.clickPrompt('My Opponent');
+                this.player1.clickPrompt('player2');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.heartless);
                 this.player1.clickCard(this.heartless);

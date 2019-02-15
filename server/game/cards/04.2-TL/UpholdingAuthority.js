@@ -29,6 +29,7 @@ class UpholdingAuthority extends ProvinceCard {
             gameAction: ability.actions.cardMenu(context => ({
                 activePromptTitle: 'Choose a card to discard',
                 cards: context.player.opponent.hand.sortBy(card => card.name),
+                targets: true,
                 message: '{0} reveals their hand: {1}',
                 messageArgs: () => [context.player.opponent, context.player.opponent.hand.sortBy(card => card.name)],
                 gameAction: gameAction,

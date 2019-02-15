@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
+const { Locations } = require('../../Constants');
 
 class UtakuKamoko extends DrawCard {
     setupCardAbilities() {
@@ -12,7 +13,10 @@ class UtakuKamoko extends DrawCard {
             when: {
                 onBreakProvince: (event, context) => context.player.opponent && event.conflict.attackingPlayer === context.player.opponent
             },
-            cost: AbilityDsl.costs.discardCard(),
+            cost: AbilityDsl.costs.discardCard({
+                location: Locations.Hand,
+                targets: true
+            }),
             gameAction: [
                 AbilityDsl.actions.ready(),
                 AbilityDsl.actions.honor()

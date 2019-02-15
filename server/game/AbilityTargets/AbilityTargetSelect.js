@@ -6,11 +6,6 @@ class AbilityTargetSelect {
     constructor(name, properties, ability) {
         this.name = name;
         this.properties = properties;
-        for(const key of Object.keys(properties.choices)) {
-            if(typeof properties.choices[key] !== 'function' && !Array.isArray(properties.choices[key])) {
-                properties.choices[key] = [properties.choices[key]];
-            }
-        }
         this.dependentTarget = null;
         this.dependentCost = null;
         if(this.properties.dependsOn) {
@@ -44,13 +39,13 @@ class AbilityTargetSelect {
         if(typeof choice === 'function') {
             return choice(contextCopy);
         }
-        return choice.some(gameAction => gameAction.hasLegalTarget(contextCopy));
+        return choice.hasLegalTarget(contextCopy);
     }
 
     getGameAction(context) {
         let choice = this.properties.choices[context.selects[this.name].choice];
         if(typeof choice !== 'function') {
-            return choice.filter(gameAction => gameAction.hasLegalTarget(context));
+            return choice;
         }
         return [];
     }
@@ -63,17 +58,10 @@ class AbilityTargetSelect {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
             return;
         }
-        let playerProp = this.properties.player;
-        if(typeof playerProp === 'function') {
-            playerProp = playerProp(context);
-        }
-        let player = context.player;
-        if(playerProp === Players.Opponent) {
-            if(context.stage === Stages.PreTarget) {
-                targetResults.delayTargeting = this;
-                return;
-            }
-            player = player.opponent;
+        let player = this.properties.targets && context.choosingPlayerOverride || this.getChoosingPlayer(context);
+        if(player === context.player.opponent && context.stage === Stages.PreTarget) {
+            targetResults.delayTargeting = this;
+            return;
         }
         let promptTitle = this.properties.activePromptTitle || 'Select one';
         let choices = Object.keys(this.properties.choices).filter(key => (
@@ -87,7 +75,7 @@ class AbilityTargetSelect {
                 }
             });
         });
-        if(playerProp !== Players.Opponent && context.stage === Stages.PreTarget) {
+        if(player !== context.player.opponent && context.stage === Stages.PreTarget) {
             if(!targetResults.noCostsFirstButton) {
                 choices.push('Pay costs first');
                 handlers.push(() => targetResults.payCostsFirst = true);
@@ -118,8 +106,27 @@ class AbilityTargetSelect {
     }
 
     checkTarget(context) {
+        if(this.properties.targets && context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
+            return false;
+        }
         return context.selects[this.name] && this.isChoiceLegal(context.selects[this.name].choice, context) &&
                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+    }
+
+    getChoosingPlayer(context) {
+        let playerProp = this.properties.player;
+        if(typeof playerProp === 'function') {
+            playerProp = playerProp(context);
+        }
+        return playerProp === Players.Opponent ? context.player.opponent : context.player;
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        if(this.properties.targets) {
+            return true;
+        }
+        let actions = Object.values(this.properties.choices).filter(value => typeof value !== 'function');
+        return actions.some(action => action.hasTargetsChosenByInitiatingPlayer(context));
     }
 }
 

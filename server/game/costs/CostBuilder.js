@@ -28,27 +28,25 @@ class CostBuilder {
 
     /**
      * Returns a cost that asks the player to select a card matching the passed condition.
-     * @param {function} condition Function that takes a card and ability context and returns whether to allow the player to select it.
+     * @param {object} properties Card Selector properties.
      */
-    select(condition = () => true) {
-        return new SelectCardCost(this.action, {
+    select(properties = {}) {
+        return new SelectCardCost(this.action, Object.assign({
             activePromptTitle: this.titles.select,
-            cardCondition: condition
-        });
+            cardCondition: () => true
+        }, properties));
     }
 
     /**
      * Returns a cost that asks the player to select an exact number of cards matching the passed condition.
-     * @param {number} number The number of cards that must be selected.
-     * @param {function} condition Function that takes a card and ability context and returns whether to allow the player to select it.
+     * @param {object} properties Card Selector properties.
      */
-    selectMultiple(number, condition = () => true) {
-        return new SelectCardCost(this.action, {
+    selectMultiple(properties = {}) {
+        return new SelectCardCost(this.action, Object.assign({
             mode: TargetModes.Exactly,
-            numCards: number,
-            activePromptTitle: this.titles.selectMultiple(number),
-            cardCondition: condition
-        });
+            activePromptTitle: this.titles.selectMultiple(properties.numCards),
+            cardCondition: () => true
+        }, properties));
     }
 
     /**

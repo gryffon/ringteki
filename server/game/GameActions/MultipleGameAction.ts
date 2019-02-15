@@ -40,4 +40,11 @@ export class MultipleGameAction extends GameAction {
             }
         }
     }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        let properties = this.getProperties(context);
+        return properties.gameActions.some(
+            gameAction => gameAction.hasTargetsChosenByInitiatingPlayer(context)
+        );
+    }
 }

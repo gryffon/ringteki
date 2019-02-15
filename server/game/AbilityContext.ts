@@ -36,6 +36,7 @@ class AbilityContext {
     ring: Ring;
     provincesToRefill: any[] = [];
     subResolution = false;
+    choosingPlayerOverride: Player = null;
     constructor(properties: AbilityContextProperties) {
         this.game = properties.game;
         this.source = properties.source || new EffectSource(this.game);
@@ -56,6 +57,7 @@ class AbilityContext {
         copy.ring = this.ring;
         copy.provincesToRefill = this.provincesToRefill;
         copy.subResolution = this.subResolution;
+        copy.choosingPlayerOverride = this.choosingPlayerOverride;
         return copy;
     }
 

@@ -11,6 +11,7 @@ export interface CardMenuProperties extends CardActionProperties {
     cards: BaseCard[];
     choices?: string[];
     handlers?: Function[];
+    targets?: boolean;
     message?: string;
     messageArgs?: (card: BaseCard, action: GameAction) => any[];
     actionParameter?: string;
@@ -23,6 +24,7 @@ export class CardMenuAction extends CardGameAction {
     defaultProperties: CardMenuProperties = {
         activePromptTitle: 'Select a card:',
         actionParameter: 'target',
+        targets: false,
         cards: [],
         gameAction: null
     };
@@ -61,6 +63,9 @@ export class CardMenuAction extends CardGameAction {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
+        if(properties.targets && context.choosingPlayerOverride) {
+            player = context.choosingPlayerOverride;
+        }
         let defaultProperties = {
             context: context,
             cardHandler: (card: BaseCard): void => {
@@ -71,5 +76,10 @@ export class CardMenuAction extends CardGameAction {
             }
         };
         context.game.promptWithHandlerMenu(player, Object.assign(defaultProperties, properties, { cards }))
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.targets || properties.gameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties);
     }
 }

@@ -7,6 +7,7 @@ import { GameAction } from './GameAction';
 export interface SelectRingProperties extends RingActionProperties {
     activePromptTitle?: string;
     player?: Players;
+    targets?: boolean;
     ringCondition?: (ring: Ring, context: AbilityContext) => boolean;
     message?: string;
     messageArgs?: (ring: Ring, action: GameAction) => any[];
@@ -48,6 +49,9 @@ export class SelectRingAction extends RingAction {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
+        if(properties.targets && context.choosingPlayerOverride) {
+            player = context.choosingPlayerOverride;
+        }
         let defaultProperties = {
             context: context,
             onSelect: (player, ring) => {
@@ -59,5 +63,10 @@ export class SelectRingAction extends RingAction {
             }
         };
         context.game.promptForRingSelect(player, Object.assign(defaultProperties, properties));
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = super.getProperties(context, additionalProperties) as SelectRingProperties;
+        return properties.targets && properties.player !== Players.Opponent;
     }
 }

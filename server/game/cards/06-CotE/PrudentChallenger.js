@@ -5,7 +5,7 @@ const { CardTypes, DuelTypes } = require('../../Constants');
 class PrudentChallenger extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Initiate a military duel',
+            title: 'Initiate a duel to discard attachment',
             initiateDuel: {
                 type: DuelTypes.Military,
                 gameAction: AbilityDsl.actions.selectCard({
