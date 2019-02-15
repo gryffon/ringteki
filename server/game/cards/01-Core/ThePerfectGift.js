@@ -8,12 +8,12 @@ class ThePerfectGift extends DrawCard {
             title: 'Give each player a gift',
             effect: 'give each player a gift',
             gameAction: AbilityDsl.actions.sequentialAction([
-                AbilityDsl.actions.lookAt(context => ({ 
+                AbilityDsl.actions.lookAt(context => ({
                     target: context.player.conflictDeck.first(4),
                     message: '{0} reveals the top {1} from their conflict deck: {2}',
                     messageArgs: cards => [context.player, cards.length, cards]
                 })),
-                AbilityDsl.actions.lookAt(context => ({ 
+                AbilityDsl.actions.lookAt(context => ({
                     target: context.player.opponent ? context.player.opponent.conflictDeck.first(4) : [],
                     message: '{0} reveals the top {1} from their conflict deck: {2}',
                     messageArgs: cards => [context.player, cards.length, cards]

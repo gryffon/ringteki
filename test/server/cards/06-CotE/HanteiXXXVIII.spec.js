@@ -38,6 +38,7 @@ describe('Hantei XXXVII', function() {
                 this.fusuiDisciple = this.player2.findCardByName('fu-sui-disciple');
                 this.guardianKami = this.player2.findCardByName('guardian-kami');
                 this.honoredBlade = this.player2.findCardByName('honored-blade');
+                this.timeForWar = this.player2.findCardByName('time-for-war');
                 this.secludedShrine = this.player2.placeCardInProvince('secluded-shrine');
                 this.utakuKamoko.bow();
                 this.fawningDiplomat.honor();
@@ -61,6 +62,27 @@ describe('Hantei XXXVII', function() {
                     attackers: [this.asahinaStoryteller],
                     defenders: [this.prudentChallenger, this.kitsukiInvestigator, this.dojiGiftGiver, this.guardianKami]
                 });
+            });
+
+            it('should discard Hantei XXXVIII if his opponent gains the imperial favor', function() {
+                this.asahinaStoryteller.dishonor();
+                this.asahinaStoryteller.dishonor();
+                this.player2.clickCard('noble-sacrifice');
+                expect(this.player2).toHavePrompt('Noble Sacrifice');
+                expect(this.player2).toBeAbleToSelect(this.asahinaStoryteller);
+                this.player2.clickCard(this.asahinaStoryteller);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                this.player1.pass();
+                expect(this.player2).toHavePrompt('Noble Sacrifice');
+                this.player2.clickCard(this.fawningDiplomat);
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.fawningDiplomat);
+                this.player2.clickCard(this.fawningDiplomat);
+                this.player2.clickPrompt('Political');
+                expect(this.player2.player.imperialFavor).toBe('political');
+                expect(this.fawningDiplomat.location).toBe('dynasty discard pile');
+                expect(this.hantei.location).toBe('dynasty discard pile');
+                expect(this.asahinaStoryteller.location).toBe('dynasty discard pile');
             });
 
             it('should trigger after pre-targeting but before costs are paid', function() {
@@ -312,7 +334,7 @@ describe('Hantei XXXVII', function() {
                 expect(this.player2).toBeAbleToSelect('upholding-authority');
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Do you wish to discard Secluded Shrine?');
-                this.player1.clickPrompt('Yes')
+                this.player1.clickPrompt('Yes');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.utakuKamoko);
                 this.player2.clickCard(this.utakuKamoko);
@@ -323,7 +345,7 @@ describe('Hantei XXXVII', function() {
                 expect(this.utakuKamoko.bowed).toBe(false);
             });
 
-            describe('whan Ambush is played', function() {
+            describe('when Ambush is played', function() {
                 it('should trigger when a scorpion character is visible', function() {
                     this.youngRumormonger = this.player2.placeCardInProvince('young-rumormonger');
                     this.player2.clickCard('ambush');
@@ -355,7 +377,7 @@ describe('Hantei XXXVII', function() {
                 });
             });
 
-            describe('whan Duelist Training is triggered', function() {
+            describe('when Duelist Training is triggered', function() {
                 it('should allow Hantei to be used', function() {
                     let handSize = this.player2.hand.length;
                     this.player2.clickCard(this.prudentChallenger);
@@ -376,16 +398,18 @@ describe('Hantei XXXVII', function() {
                 });
             });
 
-            describe('whan Time for War is played', function() {
+            describe('when Time for War is played', function() {
                 beforeEach(function() {
-                    this.timeForWar = this.player2.moveCard('time-for-war', 'hand');
+                    this.asahinaStoryteller.honor();
+                    this.player2.player.moveCard(this.timeForWar, 'hand');
                     this.noMoreActions();
                 });
 
                 it('should allow Hantei to be triggered', function() {
-                    expect(this.player1).toHavePrompt('Triggered Abilities');
-                    expect(this.player1).toBeAbleToSelect(this.timeForWar);
-                    this.player1.clickCard(this.timeForWar);
+                    expect(this.player2).toHavePrompt('Triggered Abilities');
+                    expect(this.player2).toBeAbleToSelect(this.timeForWar);
+                    this.player2.clickCard(this.timeForWar);
+                    this.player2.clickCard(this.prudentChallenger);
                     expect(this.player1).toHavePrompt('Triggered Abilities');
                     expect(this.player1).toBeAbleToSelect(this.hantei);
                 });

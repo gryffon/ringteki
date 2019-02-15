@@ -6,7 +6,7 @@ class NitenAdept extends DrawCard {
         this.action({
             title: 'Bow character',
             condition: context => context.source.attachments.size() > 0 && context.source.isParticipating(),
-            cost: ability.costs.bow({ 
+            cost: ability.costs.bow({
                 cardType: CardTypes.Attachment,
                 cardCondition: (card, context) => card.parent === context.source
             }),

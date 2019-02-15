@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const CardSelector = require('../CardSelector.js');
 const { Locations, Players } = require('../Constants');
 
@@ -25,6 +26,11 @@ class SelectCardCost {
     }
 
     resolve(context, result) {
+        if(this.targets && context.choosingPlayerOverride) {
+            context.costs[this.action.name] = _.shuffle(this.selector.getAllLegalTargets(context, context.player))[0];
+            context.costs[this.action.name + 'StateWhenChosen'] = context.costs[this.action.name].createSnapshot();
+            return result;
+        }
         context.game.promptForSelect(context.player, {
             activePromptTitle: this.activePromptTitle,
             context: context,

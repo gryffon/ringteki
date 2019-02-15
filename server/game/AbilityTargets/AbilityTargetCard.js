@@ -148,7 +148,7 @@ class AbilityTargetCard {
         if(this.properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context))) {
             return true;
         }
-        return this.getChoosingPlayer(context) === context.player;
+        return this.getChoosingPlayer(context) === context.player && this.selector.hasEnoughTargets(context, context.player.opponent);
     }
 }
 

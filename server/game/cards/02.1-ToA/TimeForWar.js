@@ -17,7 +17,7 @@ class TimeForWar extends DrawCard {
                 cardCondition: card => card.hasTrait('bushi'),
                 gameAction: AbilityDsl.actions.selectCard(context => ({
                     selector: CardSelector.for({
-                        activePromptTitle: 'Choose a weapon attachment', 
+                        activePromptTitle: 'Choose a weapon attachment',
                         cardType: CardTypes.Attachment,
                         location: [Locations.ConflictDiscardPile, Locations.Hand],
                         controller: Players.Self,
@@ -25,11 +25,11 @@ class TimeForWar extends DrawCard {
                     }),
                     message: '{0} chooses to attach {1} to {2}',
                     messageArgs: (card, player) => [player, card, context.target],
-                    actionParameter: 'attachment', 
+                    actionParameter: 'attachment',
                     gameAction: attachAction
                 }))
             },
-            effect: 'attach a weapon to {0}',
+            effect: 'attach a weapon to {0}'
         });
     }
 }
