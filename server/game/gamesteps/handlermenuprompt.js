@@ -109,7 +109,7 @@ class HandlerMenuPrompt extends UiPrompt {
         if(_.isString(arg)) {
             let card = _.find(this.properties.cards, card => card.id === arg);
             if(card && this.properties.cardHandler) {
-                this.properties.cardHandler(card, this.context);
+                this.properties.cardHandler(card);
                 this.complete();
                 return true;
             }
@@ -126,7 +126,7 @@ class HandlerMenuPrompt extends UiPrompt {
             return false;
         }
 
-        this.properties.handlers[arg](this.context);
+        this.properties.handlers[arg]();
         this.complete();
 
         return true;
