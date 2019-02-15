@@ -42,7 +42,7 @@ class AbilityTargetCard {
     }
 
     hasLegalTarget(context) {
-        return this.selector.hasEnoughTargets(context);
+        return this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
     }
 
     getGameAction(context) {
@@ -50,26 +50,27 @@ class AbilityTargetCard {
     }
 
     getAllLegalTargets(context) {
-        return this.selector.getAllLegalTargets(context);
+        return this.selector.getAllLegalTargets(context, this.getChoosingPlayer(context));
     }
 
     resolve(context, targetResults) {
         if(targetResults.cancelled || targetResults.payCostsFirst || targetResults.delayTargeting) {
             return;
         }
+        let player = context.choosingPlayerOverride || this.getChoosingPlayer(context);
+        if(player === context.player.opponent && context.stage === Stages.PreTarget) {
+            targetResults.delayTargeting = this;
+            return;
+        }
         if(this.properties.mode === TargetModes.AutoSingle) {
-            let legalTargets = this.selector.getAllLegalTargets(context);
+            let legalTargets = this.selector.getAllLegalTargets(context, player);
             if(legalTargets.length === 1) {
                 context.targets[this.name] = legalTargets[0];
                 return;
             }
         }
         let otherProperties = _.omit(this.properties, 'cardCondition', 'player');
-        let player = context.choosingPlayerOverride || this.getChoosingPlayer(context);
-        if(player === context.player.opponent && context.stage === Stages.PreTarget) {
-            targetResults.delayTargeting = this;
-            return;
-        }
+
         let buttons = [];
         let waitingPromptTitle = '';
         if(this.properties.optional) {
@@ -86,7 +87,7 @@ class AbilityTargetCard {
                 waitingPromptTitle = 'Waiting for opponent';
             }
         }
-        let mustSelect = this.selector.getAllLegalTargets(context).filter(card =>
+        let mustSelect = this.selector.getAllLegalTargets(context, player).filter(card =>
             card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
         );
         let promptProperties = {
@@ -129,7 +130,7 @@ class AbilityTargetCard {
         if(!Array.isArray(cards)) {
             cards = [cards];
         }
-        return (cards.every(card => this.selector.canTarget(card, context)) &&
+        return (cards.every(card => this.selector.canTarget(card, context, context.choosingPlayerOverride || this.getChoosingPlayer(context))) &&
                 this.selector.hasEnoughSelected(cards) &&
                 !this.selector.hasExceededLimit(cards)) &&
                 (!this.dependentTarget || this.dependentTarget.checkTarget(context));

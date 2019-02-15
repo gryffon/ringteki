@@ -37,11 +37,11 @@ class AbilityTargetAbility {
     }
 
     hasLegalTarget(context) {
-        return this.selector.hasEnoughTargets(context);
+        return this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
     }
 
     getAllLegalTargets(context) {
-        return this.selector.getAllLegalTargets(context);
+        return this.selector.getAllLegalTargets(context, this.getChoosingPlayer(context));
     }
 
     getGameAction(context) {

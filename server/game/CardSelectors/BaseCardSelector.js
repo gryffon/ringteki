@@ -7,7 +7,7 @@ class BaseCardSelector {
         this.optional = properties.optional;
         this.location = this.buildLocation(properties.location);
         this.controller = properties.controller || Players.Any;
-        this.checkTarget = properties.targets;
+        this.checkTarget = !!properties.targets;
 
         if(!Array.isArray(properties.cardType)) {
             this.cardType = [properties.cardType];
@@ -61,7 +61,7 @@ class BaseCardSelector {
         return possibleCards;
     }
 
-    canTarget(card, context) {
+    canTarget(card, context, choosingPlayer) {
         if(!card) {
             return false;
         }
@@ -77,19 +77,22 @@ class BaseCardSelector {
         if(!this.location.includes(Locations.Any) && !this.location.includes(card.location)) {
             return false;
         }
+        if(card.location === Locations.Hand && card.controller !== choosingPlayer) {
+            return false;
+        }
         return this.cardType.includes(card.getType()) && this.cardCondition(card, context);
     }
 
-    getAllLegalTargets(context) {
-        return this.findPossibleCards(context).filter(card => this.canTarget(card, context));
+    getAllLegalTargets(context, choosingPlayer) {
+        return this.findPossibleCards(context).filter(card => this.canTarget(card, context, choosingPlayer));
     }
 
     hasEnoughSelected(selectedCards) {
         return this.optional || selectedCards.length > 0;
     }
 
-    hasEnoughTargets(context) {
-        return (this.optional || this.findPossibleCards(context).some(card => this.canTarget(card, context)));
+    hasEnoughTargets(context, choosingPlayer) {
+        return (this.optional || this.findPossibleCards(context).some(card => this.canTarget(card, context, choosingPlayer)));
     }
 
     defaultActivePromptTitle() {

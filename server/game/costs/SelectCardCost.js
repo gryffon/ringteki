@@ -21,7 +21,7 @@ class SelectCardCost {
     }
 
     canPay(context) {
-        return this.selector.hasEnoughTargets(context);
+        return this.selector.hasEnoughTargets(context, context.player);
     }
 
     resolve(context, result) {
