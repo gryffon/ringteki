@@ -44,8 +44,10 @@ class GameChat {
                         return output.concat(this.formatArray(arg));
                     } else if(arg.getShortSummary) {
                         return output.concat(arg.getShortSummary());
+                    } else if(arg.name && (arg.emailHash || arg.noAvatar)) {
+                        return output.concat(arg);
                     }
-                    return output.concat(arg);
+                    return output.concat(arg.toString());
 
                 }
             } else if(!argMatch && fragment) {
