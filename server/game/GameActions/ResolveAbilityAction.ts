@@ -19,7 +19,7 @@ class NoCostsAbilityResolver extends AbilityResolver {
     }
 
     openInitiateAbilityEventWindow() {
-        this.game.raiseEvent(EventNames.OnCardAbilityInitiated, { card: this.context.source, ability: this.context.ability }, () => {
+        this.game.raiseEvent(EventNames.OnCardAbilityInitiated, { card: this.context.source, ability: this.context.ability, context: this.context }, () => {
             this.game.queueSimpleStep(() => this.resolveTargets());
             this.game.queueSimpleStep(() => this.initiateAbilityEffects());    
         });
