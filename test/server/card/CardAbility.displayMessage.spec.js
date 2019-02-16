@@ -66,7 +66,7 @@ describe('CardAbility displayMessage', function() {
         it('should have a cost term as the fifth arg', function() {
             expect(this.args[5][0].message[0]).toBe('losing');
             expect(this.args[5][0].message[1]).toBe(' ');
-            expect(this.args[5][0].message[2]).toBe('3');
+            expect(this.args[5][0].message[2]).toBe(3);
             expect(this.args[5][0].message[3]).toBe(' ');
             expect(this.args[5][0].message[4]).toBe('honor');
         });
@@ -211,7 +211,7 @@ describe('CardAbility displayMessage', function() {
         it('should have an effect term as the seventh arg', function() {
             expect(this.args[7].message[0]).toBe('take');
             expect(this.args[7].message[1]).toBe(' ');
-            expect(this.args[7].message[2]).toBe('1');
+            expect(this.args[7].message[2]).toBe(1);
             expect(this.args[7].message[3]).toBe(' ');
             expect(this.args[7].message[4]).toBe('honor');
             expect(this.args[7].message[5]).toBe(' ');
