@@ -83,7 +83,7 @@ export class SelectCardAction extends CardGameAction {
             mustSelect: mustSelect,
             onSelect: (player, cards) => {
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, properties.gameAction, properties));
+                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
                 }
                 properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, { [properties.actionParameter]: cards }));
                 return true;
