@@ -14,7 +14,7 @@ describe('Hantei XXXVII', function() {
                         honor: 10,
                         inPlay: [
                             'asako-azunami', 'favored-niece','fu-sui-disciple', 'fawning-diplomat', 'guardian-kami',
-                            'kitsuki-investigator', 'prudent-challenger', 'utaku-kamoko', 'doji-gift-giver'
+                            'kitsuki-investigator', 'prudent-challenger', 'utaku-kamoko', 'doji-gift-giver', 'togashi-yokuni'
                         ],
                         provinces: ['upholding-authority'],
                         dynastyDiscard: ['young-rumormonger', 'secluded-shrine'],
@@ -121,6 +121,31 @@ describe('Hantei XXXVII', function() {
                 expect(this.player1).toHavePrompt('Soul Beyond Reproach');
                 expect(this.player1).toBeAbleToSelect(this.fusuiDisciple);
                 expect(this.player1).toBeAbleToSelect(this.dojiGiftGiver);
+            });
+
+            it('should trigger for Yokuni', function() {
+                this.togashiYokuni = this.player2.clickCard('togashi-yokuni');
+                expect(this.player2).toHavePrompt('Togashi Yokuni');
+                expect(this.player2).toBeAbleToSelect(this.hantei);
+                this.player2.clickCard(this.hantei);
+                expect(this.player2).toHavePrompt('Togashi Yokuni');
+                this.player2.clickPrompt('Choose targets for opponent\'s ability');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.hantei);
+                this.player1.clickCard(this.hantei);
+                expect(this.player1).toHavePrompt('Togashi Yokuni');
+                expect(this.player1).toBeAbleToSelect(this.prudentChallenger);
+                expect(this.player1).toBeAbleToSelect(this.hantei);
+                this.player1.clickCard(this.hantei);
+                expect(this.player1).toHavePrompt('Togashi Yokuni');
+                this.player1.clickPrompt('Bow a character');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.pass();
+                this.player2.clickCard(this.togashiYokuni);
+                expect(this.player2).toHavePrompt('Togashi Yokuni');
+                expect(this.player2).toBeAbleToSelect(this.asahinaStoryteller);
+                this.player2.clickCard(this.asahinaStoryteller);
+                expect(this.asahinaStoryteller.bowed).toBe(true);
             });
 
             it('should trigger for Azunami', function() {

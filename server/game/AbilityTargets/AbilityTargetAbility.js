@@ -104,7 +104,7 @@ class AbilityTargetAbility {
                 return true;
             }
         };
-        context.game.promptForSelect(context.player, Object.assign(promptProperties, this.properties));
+        context.game.promptForSelect(player, Object.assign(promptProperties, this.properties));
     }
 
     checkTarget(context) {
