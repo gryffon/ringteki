@@ -22,7 +22,7 @@ export class ReturnToDeckAction extends CardGameAction {
 
     getCostMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as ReturnToDeckProperties;
-        return [properties.shuffle ? 'reshuffling {0} into their deck' : 'returning {0} to their deck', [properties.target]];
+        return [properties.shuffle ? 'shuffling {0} into their deck' : 'returning {0} to their deck', [properties.target]];
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
