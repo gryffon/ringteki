@@ -18,6 +18,11 @@ export class PlaceFateRingAction extends RingAction {
         super(properties);
     }
 
+    getCostMessage(context: AbilityContext): [string, any[]] {
+        let properties: PlaceFateRingProperties = this.getProperties(context);
+        return ['placing {1} fate on {0}', [properties.target, properties.amount]];
+    }
+
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties: PlaceFateRingProperties = this.getProperties(context);
         if(properties.origin) {
