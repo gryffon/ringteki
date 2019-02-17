@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class SocialPuppeteer extends DrawCard {
     setupCardAbilities(ability) {
         this.composure({
-            effect: ability.effects.mustBeChosen({ restriction: 'opponentEvents' })
+            effect: ability.effects.mustBeChosen({ restricts: 'opponentsEvents' })
         });
 
         this.action({
