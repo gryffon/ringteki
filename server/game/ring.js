@@ -113,7 +113,7 @@ class Ring extends EffectSource {
             claimedBy: this.claimedBy,
             conflictType: this.conflictType,
             contested: this.contested,
-            selected: this.game.currentConflict && this.game.currentConflict.conflictRing === this.element,
+            selected: (this.game.currentConflict && this.game.currentConflict.conflictRing === this.element) ? true : false,
             element: this.element,
             fate: this.fate,
             menu: this.getMenu()

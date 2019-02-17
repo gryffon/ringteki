@@ -44,9 +44,9 @@ class Conflict extends GameObject {
             defenderSkill: this.defenderSkill,
             type: this.conflictType,
             elements: this.elements,
-            attackerWins: this.attackers.length > 0 && this.attackerSkill >= this.defenderSkill,
-            breaking: this.conflictProvince && (this.conflictProvince.getStrength() - (this.attackerSkill - this.defenderSkill) <= 0),
-            unopposed: !(this.defenders && this.defenders.length > 0)
+            attackerWins: (this.attackers.length > 0 && this.attackerSkill >= this.defenderSkill) ? true : false,
+            breaking: (this.conflictProvince && (this.conflictProvince.getStrength() - (this.attackerSkill - this.defenderSkill) <= 0)) ? true : false,
+            unopposed: (this.defenders && (this.defenders.length > 0)) ? false : true
         };
     }
 
