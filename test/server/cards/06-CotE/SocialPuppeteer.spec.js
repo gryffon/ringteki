@@ -10,7 +10,7 @@ describe('Social Puppeteer', function() {
                 },
                 player2: {
                     inPlay: ['mirumoto-raitsugu', 'agasha-swordsmith'],
-                    hand: ['banzai', 'court-games', 'harmonize']
+                    hand: ['banzai', 'court-games', 'harmonize', 'ornate-fan']
                 }
             });
 
@@ -47,6 +47,22 @@ describe('Social Puppeteer', function() {
             });
             this.player2.clickCard(this.banzai);
             expect(this.player2).toHavePrompt('Banzai!');
+            expect(this.player2).toBeAbleToSelect(this.socialPuppeteer);
+            expect(this.player2).toBeAbleToSelect(this.miyaMystic);
+            expect(this.player2).toBeAbleToSelect(this.mirumotoRaitsugu);
+            expect(this.player2).toBeAbleToSelect(this.agashaSwordsmith);
+        });
+
+        it('should not have to be selected by opponent\'s attachments', function() {
+            this.initiateConflict({
+                type: 'political',
+                attackers: [this.socialPuppeteer, this.miyaMystic],
+                defenders: [this.mirumotoRaitsugu, this.agashaSwordsmith]
+            });
+            this.player2.pass();
+            this.player1.clickCard(this.socialPuppeteer);
+            this.player2.clickCard('ornate-fan');
+            expect(this.player2).toHavePrompt('Ornate Fan');
             expect(this.player2).toBeAbleToSelect(this.socialPuppeteer);
             expect(this.player2).toBeAbleToSelect(this.miyaMystic);
             expect(this.player2).toBeAbleToSelect(this.mirumotoRaitsugu);
