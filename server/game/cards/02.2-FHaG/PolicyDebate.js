@@ -26,6 +26,7 @@ class PolicyDebate extends DrawCard {
                             })),
                             AbilityDsl.actions.cardMenu(context => ({
                                 activePromptTitle: 'Choose card to discard',
+                                player: context.game.currentDuel.loser && context.game.currentDuel.loser.controller === context.player ? Players.Opponent : Players.Self,
                                 cards: context.game.currentDuel.loser ? context.game.currentDuel.loser.controller.hand.sortBy(card => card.name) : [],
                                 targets: true,
                                 message: '{0} chooses {1} to be discarded',

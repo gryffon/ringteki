@@ -3,7 +3,7 @@ const restrictedList = {
     cards: [
         'guest-of-honor',
         'niten-master',
-        'young-rumormongor',
+        'young-rumormonger',
         'rebuild',
         'mirumoto-s-fury',
         'for-greater-glory',
