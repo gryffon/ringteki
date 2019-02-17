@@ -4,7 +4,7 @@ const { Locations, CardTypes } = require('../../Constants');
 
 const testOfSkillCost = function() {
     return {
-        action: { name: 'testOfSkillCost', cost: 'naming {0}' },
+        action: { name: 'testOfSkillCost', getCostMessage: () => ['naming {0}', []] },
         canPay: function() {
             return true;
         },
