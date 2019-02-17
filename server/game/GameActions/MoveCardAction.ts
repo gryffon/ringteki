@@ -26,6 +26,11 @@ export class MoveCardAction extends CardGameAction {
         super(properties);
     }
 
+    getCostMessage(context: AbilityContext): [string, any[]] {
+        let properties = this.getProperties(context) as MoveCardProperties;        
+        return ['shuffling {0} into their deck', [properties.target]];
+    }
+
     canAffect(card: BaseCard, context: AbilityContext): boolean {
         return card.location !== Locations.PlayArea && super.canAffect(card, context);
     }
