@@ -2,6 +2,7 @@ import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
 import BaseCardSelector = require('../CardSelectors/BaseCardSelector');
 import CardSelector = require('../CardSelector');
+import Player = require('../player');
 
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { CardTypes, Players, Locations, EffectNames } from '../Constants';
@@ -17,7 +18,7 @@ export interface SelectCardProperties extends CardActionProperties {
     cardCondition?: (card: BaseCard, context: AbilityContext) => boolean;
     targets?: boolean;
     message?: string;
-    messageArgs?: (card: BaseCard, action: GameAction, properties: SelectCardProperties) => any[];
+    messageArgs?: (card: BaseCard, player: Player, properties: SelectCardProperties) => any[];
     gameAction: GameAction;
     selector?: BaseCardSelector;
     actionParameter?: string;
@@ -83,7 +84,7 @@ export class SelectCardAction extends CardGameAction {
             mustSelect: mustSelect,
             onSelect: (player, cards) => {
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, properties.gameAction, properties));
+                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
                 }
                 properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, { [properties.actionParameter]: cards }));
                 return true;

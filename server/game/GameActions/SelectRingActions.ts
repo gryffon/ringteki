@@ -1,8 +1,10 @@
 import AbilityContext = require('../AbilityContext');
+import Player = require('../player');
 import Ring = require('../ring');
 import { RingAction, RingActionProperties } from './RingAction';
 import { Players } from '../Constants';
 import { GameAction } from './GameAction';
+
 
 export interface SelectRingProperties extends RingActionProperties {
     activePromptTitle?: string;
@@ -10,7 +12,7 @@ export interface SelectRingProperties extends RingActionProperties {
     targets?: boolean;
     ringCondition?: (ring: Ring, context: AbilityContext) => boolean;
     message?: string;
-    messageArgs?: (ring: Ring, action: GameAction) => any[];
+    messageArgs?: (ring: Ring, player: Player) => any[];
     gameAction: GameAction;
 }
 
@@ -56,7 +58,7 @@ export class SelectRingAction extends RingAction {
             context: context,
             onSelect: (player, ring) => {
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(ring, properties.gameAction));
+                    context.game.addMessage(properties.message, ...properties.messageArgs(ring, player));
                 }
                 properties.gameAction.addEventsToArray(events, context, { target: ring });
                 return true;
