@@ -3,7 +3,7 @@ describe('Iaijutsu Master', function() {
         describe('During the draw phase,', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'draw',
+                    phase: 'regroup',
                     player1: {
                         honor: 11,
                         inPlay: ['mirumoto-raitsugu']
@@ -17,14 +17,24 @@ describe('Iaijutsu Master', function() {
                 this.raitsugu = this.player1.findCardByName('mirumoto-raitsugu');
 
                 this.challenger = this.player2.findCardByName('doji-challenger');
-                this.iaijutsu = this.player2.playAttachment('iaijutsu-master', this.challenger);
 
+                this.player1.pass();
+                this.iaijutsu = this.player2.playAttachment('iaijutsu-master', this.challenger);
+                this.noMoreActions(); // regroup phase
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+                this.player2.clickPrompt('End Round');
+                this.player1.clickPrompt('End Round');
+                this.noMoreActions(); // dynasty phase
             });
+
             it('should not trigger', function() {
+                expect(this.challenger.attachments.toArray()).toContain(this.iaijutsu);
                 this.player1.clickPrompt('3');
                 this.player2.clickPrompt('1');
                 expect(this.player2).not.toHavePrompt('Triggered Abilities');
                 expect(this.player2).not.toBeAbleToSelect(this.iaijutsu);
+                expect(this.player2).toHavePrompt('Action Window');
             });
         });
 
