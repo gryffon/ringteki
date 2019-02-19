@@ -58,7 +58,8 @@ export class GameAction {
     }
 
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
-        return this.targetType.includes(target.type) && target.checkRestrictions(this.name, context);
+        return this.targetType.includes(target.type) && target.checkRestrictions(this.name, context) && 
+            !context.gameActionsResolutionChain.includes(this);
     }
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
