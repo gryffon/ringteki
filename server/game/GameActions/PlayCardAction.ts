@@ -76,9 +76,9 @@ export class PlayCardAction extends CardGameAction {
     getLegalActions(actions, context) {
         // filter actions to exclude actions which involve this game action, or which are not legal
         return actions.filter(action => {
-            let gameActions = action.targets.reduce((array, target) => array.concat(target.properties.gameAction), action.gameAction);
             let newContext = action.createContext(context.player);
-            return !gameActions.includes(this) && !action.meetsRequirements(newContext, ['location', 'player']);
+            newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
+            return !action.meetsRequirements(newContext, ['location', 'player']);
         });
     }
 
