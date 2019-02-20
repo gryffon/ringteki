@@ -325,7 +325,7 @@ describe('Hantei XXXVII', function() {
                 expect(this.player1).toHavePrompt('The Perfect Gift');
             });
 
-            fit('should trigger for Upholding Authority', function() {
+            it('should trigger for Upholding Authority', function() {
                 this.asahinaStoryteller.honor();
                 this.player2.pass();
                 this.player1.clickCard(this.hantei);
