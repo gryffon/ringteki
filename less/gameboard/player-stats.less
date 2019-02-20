@@ -127,6 +127,28 @@
         visibility: hidden;
     }
 }
+@media (max-width: 1366px) {
+    .first-player-indicator {
+        height: 25px;
+        width: 20px;
+        margin:2px;
+        
+        &.hidden {
+            display:none;
+        }
+        &.invisible {
+            display:none;
+        }
+    }
+
+    .player-stats {
+        font-size: 10pt;
+
+        &.panel {
+            padding: 2px 0 2px 5px;
+    }
+}
+}
 
 .player-avatar {
     padding-right: 10px;
@@ -139,10 +161,22 @@
 
 .stat-image {
     margin-right: 5px;
-    width: 28px;
-    height: 28px;
-    background: no-repeat center;
-    background-size: 28px 28px;
+    width: 24px;
+    height: 24px;
+    &.small {
+        width: 16px;
+        height: 16px;
+    }
+    &.large {
+        width: 28px;
+        height: 28px;
+    }
+    &.x-large {
+        width:28px;
+        height:28px;
+    }
+    background: center;
+    background-size: contain;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -154,20 +188,4 @@
     width: 18px;
     height: 18px;
     text-align: center;
-    line-height: 18px;
-}
-
-@media (max-width: 1366px) {
-    .first-player-indicator {
-        height: 25px;
-        width: 25px
-    }
-
-    .player-stats {
-        font-size: 10pt;
-
-        &.panel {
-            padding: 2px 0 2px 5px;
-    }
-}
 }

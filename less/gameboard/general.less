@@ -5,9 +5,12 @@
     left:0;
     right:0;
     display: grid;
-    grid-template-columns:  @sidebar-width auto @chat-width;
+    grid-template-columns:  @sidebar-width 2fr minmax(@chat-width, 1fr);
     grid-template-rows:  1fr;
     align-content:stretch;
+    @media (max-width: 1366px) {
+        top:25px;
+    }
 }
 
 .main-window {
