@@ -95,7 +95,7 @@ export enum Durations {
     UntilEndOfPhase = 'untilEndOfPhase',
     UntilEndOfRound = 'untilEndOfRound',
     Persistent = 'persistent',
-    Custom = 'custom'
+    Custom = 'lastingEffect'
 };
 
 export enum Stages {
