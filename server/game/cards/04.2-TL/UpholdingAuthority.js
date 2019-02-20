@@ -33,8 +33,8 @@ class UpholdingAuthority extends ProvinceCard {
                 message: '{0} reveals their hand: {1}',
                 messageArgs: () => [context.player.opponent, context.player.opponent.hand.sortBy(card => card.name)],
                 gameAction: gameAction,
-                choices: ['Don\'t discard anything'],
-                handlers: [() => context.game.addMessage('{0} chooses not to discard anything', context.player)]
+                choices: context.choosingPlayerOverride ? [] : ['Don\'t discard anything'],
+                handlers: context.choosingPlayerOverride ? [] : [() => context.game.addMessage('{0} chooses not to discard anything', context.player)]
             }))
         });
     }
