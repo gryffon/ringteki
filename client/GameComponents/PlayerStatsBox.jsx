@@ -82,12 +82,26 @@ export class PlayerStatsBox extends React.Component {
                         <div className='hand-size'>Hand Size: { this.props.handSize }</div>
                     </div>
                 </div>
-                <div className='stats-row'>
-                    { this.getButton('fate', 'Fate') }
-                </div>
-                <div className='stats-row'>
-                    { this.getButton('honor', 'Honor') }
-                </div>
+                { this.props.otherPlayer &&
+                        <div className='stats-row'>
+                            { this.getButton('fate', 'Fate') }
+                        </div>
+                }
+                { this.props.otherPlayer &&
+                    <div className='stats-row'>
+                        { this.getButton('honor', 'Honor') }
+                    </div>
+                }
+                { !this.props.otherPlayer &&
+                    <div className='stats-row'>
+                        { this.getButton('honor', 'Honor') }
+                    </div>
+                }
+                { !this.props.otherPlayer &&
+                        <div className='stats-row'>
+                            { this.getButton('fate', 'Fate') }
+                        </div>
+                }
             </div>
         );
     }
