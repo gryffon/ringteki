@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Decks } = require('../../Constants');
+const { Locations, Decks, Durations } = require('../../Constants');
 
 class PillowBook extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,7 +10,7 @@ class PillowBook extends DrawCard {
             gameAction: ability.actions.playerLastingEffect(context => {
                 let topCard = context.player.conflictDeck.first();
                 return {
-                    duration: 'lastingEffect',
+                    duration: Durations.Custom,
                     until: {
                         onCardMoved: event => event.card === topCard && event.originalLocation === Locations.ConflictDeck,
                         onConflictFinished: () => true,
