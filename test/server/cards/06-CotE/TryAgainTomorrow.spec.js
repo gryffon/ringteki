@@ -27,8 +27,8 @@ describe('Try Again Tomorrow', function() {
             });
 
             it('should not trigger in a conflict without a controlled courtier', function() {
-                this.dojiChallenger.honored = true;
-                this.dojiWhisperer.honored = true;
+                this.dojiChallenger.honor();
+                this.dojiWhisperer.honor();
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.dojiChallenger],
@@ -41,7 +41,7 @@ describe('Try Again Tomorrow', function() {
             });
 
             it('should not trigger in a conflict without an honored controlled courtier', function() {
-                this.dojiWhisperer.honored = true;
+                this.dojiWhisperer.honor();
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.stewardOfLaw],
@@ -55,7 +55,7 @@ describe('Try Again Tomorrow', function() {
 
             describe('during a conflict as the attacker', function() {
                 beforeEach(function() {
-                    this.stewardOfLaw.honored = true;
+                    this.stewardOfLaw.honor();
                     this.noMoreActions();
                     this.initiateConflict({
                         attackers: [this.stewardOfLaw, this.dojiChallenger],
@@ -89,7 +89,7 @@ describe('Try Again Tomorrow', function() {
 
             describe('during a conflict as the defender', function() {
                 beforeEach(function() {
-                    this.stewardOfLaw.honored = true;
+                    this.stewardOfLaw.honor();
                     this.noMoreActions();
                     this.player1.clickPrompt('Pass Conflict');
                     this.player1.clickPrompt('yes');
