@@ -38,7 +38,8 @@ describe('CardAbility displayMessage', function() {
                 targets: {
                     target: this.target
                 },
-                target: this.target
+                target: this.target,
+                gameActionsResolutionChain: []
             });
             this.args = this.gameSpy.addMessage.calls.allArgs()[0];
         });
@@ -101,7 +102,8 @@ describe('CardAbility displayMessage', function() {
                 },
                 event: {
                     card: this.eventToCancel
-                }
+                },
+                gameActionsResolutionChain: []
             });
             this.args = this.gameSpy.addMessage.calls.allArgs()[0];
         });
@@ -173,7 +175,8 @@ describe('CardAbility displayMessage', function() {
                 source: this.cardSpy,
                 costs: {
                     bow: this.cardSpy
-                }
+                },
+                gameActionsResolutionChain: []
             });
             this.args = this.gameSpy.addMessage.calls.allArgs()[0];
         });
