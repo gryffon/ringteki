@@ -85,8 +85,8 @@ class EffectEngine {
         this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfConflict);
     }
 
-    onDuelFinished() {
-        this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfDuel);
+    onDuelFinished(event) {
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfDuel && event.duel === effect.context.duel);
     }
 
     onPhaseEnded() {

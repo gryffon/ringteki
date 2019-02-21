@@ -112,7 +112,7 @@ describe('Challenge on the Fields', function() {
                 this.contingencyPlan = this.player2.findCardByName('contingency-plan');
             });
 
-            it('the bonus to military skill should continue throughout all of the nested duels', function() {
+            fit('the bonus to military skill should continue throughout all of the nested duels', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.borderRider, this.battleMaidenRecruit, this.ideMessenger],
@@ -138,11 +138,13 @@ describe('Challenge on the Fields', function() {
                 expect(this.agashaSwordsmith.getMilitarySkill()).toBe(1 + 1);
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('2');
+                expect(this.getChatLogs(1)).toContain('Border Rider: 3 vs 4: Agasha Swordsmith'); // 2 (skill) + 1 (honor bid) vs. 1 (skill) + 1 (CotF) + 2 (honor bid)
                 expect(this.player2).toHavePrompt('Contingency Plan');
                 this.player2.clickPrompt('Increase honor bid');
-                expect(this.getChatLogs(6)).toContain('Border Rider: 4 vs 3: Agasha Swordsmith');
-                expect(this.getChatLogs(4)).toContain('Battle Maiden Recruit: 4 vs 6: Agasha Swordsmith');
+                expect(this.getChatLogs(4)).toContain('Battle Maiden Recruit: 3 vs 5: Agasha Swordsmith'); // 0 (skill) + 2 (CotF) + 1 (honor bid) vs. 1 (skill) + 1 (CotF) + 3 (honor bid)
                 expect(this.battleMaidenRecruit.isParticipating()).toBe(false);
+                expect(this.battleMaidenRecruit.getMilitarySkill()).toBe(0);
+                expect(this.agashaSwordsmith.getMilitarySkill()).toBe(1);
             });
         });
 
