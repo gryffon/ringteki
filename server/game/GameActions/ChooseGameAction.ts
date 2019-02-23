@@ -3,23 +3,12 @@ import AbilityContext = require('../AbilityContext');
 import { Players } from '../Constants';
 
 export interface ChooseGameChoices {
-    [choice: string]: GameAction | GameAction[];
+    [choice: string]: GameAction;
 }
 
 export interface ChooseActionProperties extends GameActionProperties {
     activePromptTitle?: string;
     choices: ChooseGameChoices;
-    messages: object;
-    player?: Players; 
-}
-
-interface ChooseGameChoicesInternal {
-    [choice: string]: GameAction[];
-}
-
-interface ChooseActionPropertiesInternal extends GameActionProperties {
-    activePromptTitle?: string;
-    choices: ChooseGameChoicesInternal;
     messages: object;
     player?: Players;
 }
@@ -35,25 +24,18 @@ export class ChooseGameAction extends GameAction {
         super(properties);
     }
 
-    getProperties(context: AbilityContext, additionalProperties = {}): ChooseActionPropertiesInternal {
+    getProperties(context: AbilityContext, additionalProperties = {}): ChooseActionProperties {
         let properties = super.getProperties(context, additionalProperties) as ChooseActionProperties;
         for(const key of Object.keys(properties.choices)) {
-            if(!Array.isArray(properties.choices[key])) {
-                properties.choices[key] = [properties.choices[key]] as GameAction[];
-            }
-            for(const action of properties.choices[key] as GameAction[]) {
-                action.setDefaultTarget(() => properties.target);
-            }
+            properties.choices[key].setDefaultTarget(() => properties.target);
         }
-        return properties as ChooseActionPropertiesInternal;
+        return properties;
     }
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         return Object.values(properties.choices).some(
-            (array: GameAction[]): boolean => array.some(
-                (gameAction: GameAction): boolean => gameAction.hasLegalTarget(context)
-            )
+            gameAction => gameAction.hasLegalTarget(context)
         );
     }
 
@@ -61,15 +43,13 @@ export class ChooseGameAction extends GameAction {
         let properties = this.getProperties(context, additionalProperties);
         let activePromptTitle = properties.activePromptTitle;
         let choices = Object.keys(properties.choices);
-        choices = choices.filter(key => (properties.choices[key]).some(action => action.hasLegalTarget(context)));
+        choices = choices.filter(key => properties.choices[key].hasLegalTarget(context));
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
         let choiceHandler = (choice: string): void => {
             if(properties.messages[choice]) {
                 context.game.addMessage(properties.messages[choice], player, properties.target);
             }
-            for(const gameAction of properties.choices[choice]) {
-                context.game.queueSimpleStep(() => gameAction.addEventsToArray(events, context));
-            }
+            context.game.queueSimpleStep(() => properties.choices[choice].addEventsToArray(events, context));
         }
         if(choices.length === 0) {
             return;
@@ -81,9 +61,14 @@ export class ChooseGameAction extends GameAction {
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         return Object.values(properties.choices).some(
-            array => array.some(
-                gameAction => gameAction.canAffect(target, context)
-            )
+            gameAction => gameAction.canAffect(target, context)
+        );
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        let properties = this.getProperties(context);
+        return Object.values(properties.choices).some(
+            gameAction => gameAction.hasTargetsChosenByInitiatingPlayer(context)
         );
     }
 }

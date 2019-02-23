@@ -15,11 +15,18 @@ export class DeckSearchAction extends PlayerAction {
     eventName = EventNames.OnDeckSearch;
 
     defaultProperties: DeckSearchProperties = {
-        amount: -1,
-        reveal: false,
-        cardCondition: () => true
+        amount: -1
     };
 
+    getProperties(context: AbilityContext, additionalProperties = {}): DeckSearchProperties {
+        let properties = super.getProperties(context, additionalProperties) as DeckSearchProperties;
+        if(properties.reveal === undefined) {
+            properties.reveal = properties.cardCondition !== undefined;            
+        }
+        properties.cardCondition = properties.cardCondition || (() => true);
+        return properties;
+    }
+    
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as DeckSearchProperties;
         let message = 'search their deck';
@@ -49,10 +56,15 @@ export class DeckSearchAction extends PlayerAction {
         let player = event.player;
         let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;
         let amount = event.amount > -1 ? event.amount : player.conflictDeck.size();
+        let cards = player.conflictDeck.first(amount);
+        if(event.amount === -1) {
+            cards = cards.filter(card => properties.cardCondition(card, context));
+        }
         context.game.promptWithHandlerMenu(player, {
             activePromptTitle: 'Select a card to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand',
             context: context,
-            cards: player.conflictDeck.first(amount).filter(card => properties.cardCondition(card, context)),
+            cards: cards,
+            cardCondition: properties.cardCondition,
             choices: ['Take nothing'],
             handlers: [() => {
                 context.game.addMessage('{0} takes nothing', player);

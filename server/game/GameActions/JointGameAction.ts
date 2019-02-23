@@ -38,4 +38,11 @@ export class JointGameAction extends GameAction {
             gameAction.addEventsToArray(events, context, additionalProperties);
         }
     }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        let properties = this.getProperties(context);
+        return properties.gameActions.some(
+            gameAction => gameAction.hasTargetsChosenByInitiatingPlayer(context)
+        );
+    }
 }

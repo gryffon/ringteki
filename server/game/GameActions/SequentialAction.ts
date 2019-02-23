@@ -51,4 +51,11 @@ export class SequentialAction extends GameAction {
             }
         }
     }
+
+    hasTargetsChosenByInitiatingPlayer(context, additionalProperties = {}) {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.gameActions.some(
+            gameAction => gameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties)
+        );
+    }
 }

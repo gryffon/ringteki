@@ -145,4 +145,8 @@ export class GameAction {
             event.recipient.modifyFate(event.fate);
         }
     }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
+        return false;
+    }
 }

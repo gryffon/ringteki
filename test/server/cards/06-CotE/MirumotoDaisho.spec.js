@@ -36,7 +36,32 @@ describe('Mirumoto Daisho', function() {
                 expect(this.mirumotoRaitsugu.getPoliticalSkill()).toBe(politicalSkill + 2);
             });
 
-            it('if character already has 2 restricted attachments, the controller should be prompted to remove', function() {
+            it('if character already has 2 restricted attachments, the controller should be prompted to remove one', function() {
+                this.player1.clickCard(this.fineKatana);
+                this.player1.clickCard(this.mirumotoRaitsugu);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).toContain(this.fineKatana);
+                this.player2.pass();
+                this.player1.clickCard(this.ornateFan);
+                this.player1.clickCard(this.mirumotoRaitsugu);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).toContain(this.ornateFan);
+                this.player2.pass();
+                this.player1.clickCard(this.mirumotoDaisho);
+                this.player1.clickCard(this.mirumotoRaitsugu);
+                expect(this.mirumotoDaisho.hasKeyword('Restricted')).toBe(true);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).toContain(this.mirumotoDaisho);
+                expect(this.player1).toHavePrompt('Choose an attachment to discard');
+                expect(this.player1).toBeAbleToSelect(this.fineKatana);
+                expect(this.player1).toBeAbleToSelect(this.ornateFan);
+                expect(this.player1).toBeAbleToSelect(this.mirumotoDaisho);
+                this.player1.clickCard(this.fineKatana);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).not.toContain(this.fineKatana);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).not.toContain(this.ornateFan);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).toContain(this.mirumotoDaisho);
+                expect(this.fineKatana.location).toBe('conflict discard pile');
+                expect(this.ornateFan.location).toBe('conflict discard pile');
+            });
+
+            it('if character already has 2 restricted attachments and the controller chooses to discard Daisho, all 3 should be discarded', function() {
                 this.player1.clickCard(this.fineKatana);
                 this.player1.clickCard(this.mirumotoRaitsugu);
                 expect(this.mirumotoRaitsugu.attachments.toArray()).toContain(this.fineKatana);
@@ -54,10 +79,12 @@ describe('Mirumoto Daisho', function() {
                 expect(this.player1).toBeAbleToSelect(this.ornateFan);
                 expect(this.player1).toBeAbleToSelect(this.mirumotoDaisho);
                 this.player1.clickCard(this.mirumotoDaisho);
-                expect(this.mirumotoRaitsugu.attachments.toArray()).toContain(this.fineKatana);
-                expect(this.mirumotoRaitsugu.attachments.toArray()).toContain(this.ornateFan);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).not.toContain(this.fineKatana);
+                expect(this.mirumotoRaitsugu.attachments.toArray()).not.toContain(this.ornateFan);
                 expect(this.mirumotoRaitsugu.attachments.toArray()).not.toContain(this.mirumotoDaisho);
                 expect(this.mirumotoDaisho.location).toBe('conflict discard pile');
+                expect(this.fineKatana.location).toBe('conflict discard pile');
+                expect(this.ornateFan.location).toBe('conflict discard pile');
             });
 
             it('if character already has 1 restricted attachment it should be discarded', function() {

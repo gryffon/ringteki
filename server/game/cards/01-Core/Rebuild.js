@@ -5,10 +5,10 @@ class Rebuild extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Put a holding into play from your discard',
-            cost: ability.costs.shuffleIntoDeck((card, context) =>
-                [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince].includes(card.location) &&
-                !context.player.getProvinceCardInProvince(card.location).isBroken
-            ),
+            cost: ability.costs.shuffleIntoDeck({
+                location: Locations.Provinces,
+                cardCondition: card => !card.controller.getProvinceCardInProvince(card.location).isBroken
+            }),
             target: {
                 activePromptTitle: 'Choose a holding to put into the province',
                 cardType: CardTypes.Holding,

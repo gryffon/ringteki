@@ -47,7 +47,8 @@ class AbilityResolver extends BaseStepWithPipeline {
             eventName = EventNames.OnCardAbilityInitiated;
             eventProps = {
                 card: this.context.source,
-                ability: this.context.ability
+                ability: this.context.ability,
+                context: this.context
             };
             if(this.context.ability.isCardPlayed() && !this.context.isResolveAbility) {
                 this.events.push(this.game.getEvent(EventNames.OnCardPlayed, {

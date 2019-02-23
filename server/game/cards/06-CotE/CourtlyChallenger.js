@@ -1,40 +1,42 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { DuelTypes } = require('../../Constants');
 
 class CourtlyChallenger extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             effect: [
-                ability.effects.delayedEffect({
+                AbilityDsl.effects.delayedEffect({
                     when: {
                         afterDuel: (event, context) => event.winner && event.winner === context.source
                     },
                     multipleTrigger: true,
                     message: '{0} is honored due to winning a duel',
-                    gameAction: ability.actions.honor(context => ({ target: context.source }))
+                    gameAction: AbilityDsl.actions.honor(context => ({ target: context.source }))
                 }),
-                ability.effects.delayedEffect({
+                AbilityDsl.effects.delayedEffect({
                     when: {
                         afterDuel: (event, context) => event.loser && event.loser === context.source
                     },
                     multipleTrigger: true,
                     message: '{0} is dishonored due to losing a duel',
-                    gameAction: ability.actions.dishonor(context => ({ target: context.source }))
+                    gameAction: AbilityDsl.actions.dishonor(context => ({ target: context.source }))
                 })
             ]
         });
 
         this.action({
             title: 'Initiate a Political duel',
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Political,
-                resolutionHandler: winner => this.resolutionHandler(context, winner)
-            })
+                message: '{0} wins the duel - {1} draws 2 cards',
+                messageArgs: context => [context.game.currentDuel.winner, context.game.currentDuel.winner.controller],
+                gameAction: AbilityDsl.actions.draw(context => ({
+                    amount: 2,
+                    target: context.game.currentDuel.winner.controller
+                }))
+            }
         });
-    }
-    resolutionHandler(context, winner) {
-        this.game.addMessage('{0} wins the duel - {1} draws 2 cards', winner, winner.controller);
-        this.game.actions.draw({ amount: 2 }).resolve(winner.controller, context);
     }
 }
 

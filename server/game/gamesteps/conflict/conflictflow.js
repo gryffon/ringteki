@@ -262,13 +262,6 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         this.conflict.determineWinner();
-
-        if(!this.conflict.winner && !this.conflict.loser) {
-            this.game.addMessage('There is no winner or loser for this conflict because both sides have 0 skill');
-        } else {
-            this.game.addMessage('{0} won a {1} conflict {2} vs {3}',
-                this.conflict.winner, this.conflict.conflictType, this.conflict.winnerSkill, this.conflict.loserSkill);
-        }
     }
 
     manuallyDetermineWinner(player, choice) {
@@ -287,19 +280,46 @@ class ConflictFlow extends BaseStepWithPipeline {
         return true;
     }
 
+    showConflictResult() {
+        if(!this.conflict.winner && !this.conflict.loser) {
+            this.game.addMessage('There is no winner or loser for this conflict because both sides have 0 skill');
+        } else {
+            this.game.addMessage('{0} won a {1} conflict {2} vs {3}',
+                this.conflict.winner, this.conflict.conflictType, this.conflict.winnerSkill, this.conflict.loserSkill);
+        }
+    }
+
     afterConflict() {
         if(this.conflict.conflictPassed) {
             return;
         }
 
-        this.game.recordConflictWinner(this.conflict);
         this.game.checkGameState(true);
 
-        if(this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) {
-            this.conflict.conflictUnopposed = true;
-        }
+        const eventFactory = () => {
+            let event = this.game.getEvent(EventNames.AfterConflict, { conflict: this.conflict }, () => {
+                this.showConflictResult();
+                this.game.recordConflictWinner(this.conflict);
 
-        this.game.raiseEvent(EventNames.AfterConflict, { conflict: this.conflict });
+                if(this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) {
+                    this.conflict.conflictUnopposed = true;
+                }
+            });
+            event.condition = event => {
+                let prevWinner = event.conflict.winner;
+                this.conflict.winnerDetermined = false;
+                this.conflict.determineWinner();
+                if(this.conflict.winner !== prevWinner) {
+                    let newEvent = eventFactory();
+                    event.window.addEvent(newEvent);
+                    return false;
+                }
+                return true;
+            };
+            return event;
+        };
+
+        this.game.openEventWindow(eventFactory());
     }
 
     applyUnopposed() {

@@ -16,6 +16,7 @@ class KitsukiInvestigator extends DrawCard {
                 })),
                 AbilityDsl.actions.cardMenu(context => ({
                     cards: context.player.opponent.hand.sortBy(card => card.name),
+                    targets: true,
                     message: '{0} chooses {1} to be discarded',
                     messageArgs: card => [context.player, card],
                     gameAction: AbilityDsl.actions.discardCard()
