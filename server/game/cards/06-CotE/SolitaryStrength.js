@@ -4,7 +4,7 @@ class SolitaryStrength extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             effect: ability.effects.terminalCondition({
-                condition: context => context.source.parent.isParticipating() && this.game.currentConflict.getNumberOfParticipantsFor(context.player) !== 1,
+                condition: context => context.source.parent.isParticipating() && this.game.currentConflict.getNumberOfParticipantsFor(context.source.parent.controller) !== 1,
                 message: '{0} is discarded from play as {1} is not participating alone in the conflict',
                 messageArgs: context => [context.source,context.source.parent],
                 gameAction: ability.actions.discardFromPlay()
