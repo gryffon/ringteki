@@ -1,10 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const AbilitDsl = require('../../abilitydsl');
+const { Elements } = require('../../Constants');
 
 class FireTensaiAcolyte extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
-            condition: () => !this.game.isDuringConflict('fire'),
-            effect: ability.effects.cardCannot('declareAsAttacker')
+            condition: () => !this.game.isDuringConflict(Elements.Fire),
+            effect: AbilitDsl.effects.cardCannot('declareAsAttacker')
         });
     }
 }

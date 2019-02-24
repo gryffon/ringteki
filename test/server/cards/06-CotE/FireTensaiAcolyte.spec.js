@@ -9,11 +9,13 @@ describe('Fire Tensai Acolyte', function() {
                         dynastyDiscard: ['favorable-ground']
                     },
                     player2: {
-                        inPlay: ['doji-challenger']
+                        inPlay: ['doji-challenger'],
+                        provinces: ['fertile-fields']
                     }
                 });
                 this.acolyte = this.player1.findCardByName('fire-tensai-acolyte');
                 this.masahiro = this.player1.findCardByName('isawa-masahiro');
+                this.fertileFields = this.player2.findCardByName('fertile-fields');
                 this.favorableground = this.player1.placeCardInProvince('favorable-ground', 'province 1');
 
                 this.duelist = this.player2.findCardByName('doji-challenger');
@@ -55,6 +57,27 @@ describe('Fire Tensai Acolyte', function() {
                 this.player1.clickCard(this.favorableground);
                 this.player1.clickCard(this.acolyte);
                 expect(this.game.currentConflict.attackers).toContain(this.acolyte);
+            });
+
+            it('should let you declare an attack with only the acolyte with the fire ring', function () {
+                this.masahiro.bow();
+                this.player1.pass();
+                this.player2.pass();
+                this.player1.clickRing('fire');
+                this.player1.clickCard(this.acolyte);
+                expect(this.player1).toHavePrompt('Initiate Conflict');
+            });
+
+            it('should not let you pick the fire ring declare acolyte as an attacking then change the ring and keep him in the conflict', function () {
+                this.player1.pass();
+                this.player2.pass();
+                this.player1.clickRing('fire');
+                this.player1.clickCard(this.acolyte);
+                this.player1.clickRing('void');
+                this.player1.clickCard(this.masahiro);
+                this.player1.clickCard(this.fertileFields);
+                this.player1.clickPrompt('Initiate Conflict');
+                expect(this.game.currentConflict.attackers).not.toContain(this.acolyte);
             });
         });
     });
