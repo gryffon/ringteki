@@ -61,6 +61,7 @@ describe('Storied Defeat', function() {
                 expect(this.player1).toHavePromptButton('No');
                 this.player1.clickPrompt('No');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.dojiWhisperer.isDishonored).toBe(false);
             });
 
             it('should dishonor the target if the player spends fate', function() {
