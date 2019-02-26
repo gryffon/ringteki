@@ -22,7 +22,7 @@ describe('Hantei XXXVII', function() {
                         hand: [
                             'ambush', 'backhanded-compliment', 'court-games', 'duelist-training',
                             'noble-sacrifice', 'policy-debate', 'taryu-jiai', 'the-perfect-gift',
-                            'bayushi-kachiko', 'soul-beyond-reproach'
+                            'bayushi-kachiko', 'soul-beyond-reproach', 'peasant-s-advice'
                         ]
                     }
                 });
@@ -264,6 +264,12 @@ describe('Hantei XXXVII', function() {
                 this.player1.clickCard(this.hantei);
                 this.player2.clickRing('fire');
                 expect(this.player1).toHavePrompt('Kitsuki Investigator');
+            });
+
+            it('should trigger for Peasant\'s Advice', function() {
+                this.player2.clickCard('peasant-s-advice');
+                this.player2.clickPrompt('Pay costs first');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
             });
 
             it('should trigger for Policy Debate', function() {
