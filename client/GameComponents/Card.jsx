@@ -174,6 +174,9 @@ class Card extends React.Component {
         }
         if(this.props.card.inConflict) {
             wrapperClassName += ' conflict';
+            if(!this.props.declaring) {
+                wrapperClassName += ' activeCombatant';
+            }
         }
         if(this.props.size !== 'normal') {
             wrapperClassName += ' ' + this.props.size;
@@ -551,6 +554,7 @@ Card.propTypes = {
         uuid: PropTypes.string
     }).isRequired,
     className: PropTypes.string,
+    declaring: PropTypes.bool,
     disableMouseOver: PropTypes.bool,
     isInPopup: PropTypes.bool,
     isMe: PropTypes.bool,
