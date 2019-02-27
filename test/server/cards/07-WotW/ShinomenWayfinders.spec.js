@@ -11,7 +11,8 @@ describe('Shinomen Wayfinders', function() {
                     },
                     player2: {
                         honor: 11,
-                        inPlay: []
+                        inPlay: ['iuchi-wayfinder'],
+                        hand: ['infiltrator']
                     }
                 });
                 this.borderRider = this.player1.findCardByName('border-rider');
@@ -22,6 +23,7 @@ describe('Shinomen Wayfinders', function() {
                 });
                 this.player2.pass();
             });
+
             it('should reduce the cost only for unicorn charaters participating', function () {
                 this.player1.clickCard('shinomen-wayfinders');
                 this.player1.clickPrompt('1');
