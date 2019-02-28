@@ -12,6 +12,8 @@ class Conflict extends GameObject {
         this.defendingPlayer = defendingPlayer || this.singlePlayerDefender();
         this.declaredRing = this.ring = ring;
         this.declaredType = null;
+        this.declarationComplete = false;
+        this.defendersChosen = false;
         this.conflictProvince = conflictProvince;
         this.conflictPassed = false;
         this.conflictTypeSwitched = false;
@@ -46,8 +48,18 @@ class Conflict extends GameObject {
             elements: this.elements,
             attackerWins: this.attackers.length > 0 && this.attackerSkill >= this.defenderSkill,
             breaking: this.conflictProvince && (this.conflictProvince.getStrength() - (this.attackerSkill - this.defenderSkill) <= 0),
-            unopposed: !(this.defenders && this.defenders.length > 0)
+            unopposed: !(this.defenders && this.defenders.length > 0),
+            declarationComplete: this.declarationComplete,
+            defendersChosen: this.defendersChosen
         };
+    }
+
+    setDeclarationComplete(value) {
+        this.declarationComplete = value;
+    }
+
+    setDefendersChosen(value) {
+        this.defendersChosen = value;
     }
 
     singlePlayerDefender() {

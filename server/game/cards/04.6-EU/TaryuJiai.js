@@ -30,7 +30,7 @@ class TaryuJiai extends DrawCard {
                             targets: true,
                             message: '{0} chooses to resolve {1}\'s effect',
                             messageArgs: ring => [context.game.currentDuel.winner.controller, ring],
-                            gameAction: AbilityDsl.actions.resolveRingEffect()
+                            gameAction: AbilityDsl.actions.resolveRingEffect({ player: context.game.currentDuel.winner.controller })
                         }))
                     }))
                 }

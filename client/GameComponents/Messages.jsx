@@ -146,9 +146,12 @@ class InnerMessages extends React.Component {
                 );
             } else if(_.isString(fragment)) {
                 return this.emoji.replace_colons(fragment);
+            } else if(fragment.isReactComponent) {
+                return fragment;
+            } else if(typeof(fragment) === 'number') {
+                return fragment;
             }
-
-            return fragment;
+            return '[ERROR: Non-Component in message!]';
         });
     }
 

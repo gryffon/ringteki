@@ -7,6 +7,7 @@ class SeppunTruthseeker extends DrawCard {
             when: {
                 onCardLeavesPlay: (event, context) => event.card === context.source
             },
+            effect: 'make both players draw 2 cards',
             gameAction: ability.actions.draw(context => ({
                 target: context.game.getPlayers(),
                 amount: 2

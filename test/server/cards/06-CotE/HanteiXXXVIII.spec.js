@@ -348,6 +348,7 @@ describe('Hantei XXXVII', function() {
                 expect(this.player1).toBeAbleToSelect(this.hantei);
                 this.player1.clickCard(this.hantei);
                 expect(this.player1).toHavePrompt('Upholding Authority');
+                expect(this.player1).not.toHavePromptButton('Don\'t discard anything');
                 this.player1.clickPrompt('Banzai! (2)');
                 expect(this.player2).toHavePrompt('Upholding Authority');
                 this.player2.clickPrompt('2');

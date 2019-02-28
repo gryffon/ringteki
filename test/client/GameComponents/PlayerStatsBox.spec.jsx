@@ -81,9 +81,9 @@ describe('The <PlayerStatsBox /> component', () => {
 
             expect(fateImage.length).toBe(2);
             expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Fate.png)');
-            expect(fateImage[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
+            expect(fateImage[1].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/Fate.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(4);
         });
 
@@ -156,9 +156,9 @@ describe('The <PlayerStatsBox /> component', () => {
 
             expect(fateImage.length).toBe(2);
             expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Fate.png)');
-            expect(fateImage[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
+            expect(fateImage[1].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/Fate.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(0);
         });
 
