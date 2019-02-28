@@ -21,11 +21,7 @@ class AbilityTargetCard {
 
     getSelector(properties) {
         let cardCondition = (card, context) => {
-            let contextCopy = context.copy();
-            contextCopy.targets[this.name] = card;
-            if(this.name === 'target') {
-                contextCopy.target = card;
-            }
+            let contextCopy = this.getContextCopy(card, context);
             if(context.stage === Stages.PreTarget && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
                 return false;
             }
@@ -34,6 +30,15 @@ class AbilityTargetCard {
                    (properties.gameAction.length === 0 || properties.gameAction.some(gameAction => gameAction.hasLegalTarget(contextCopy)));
         };
         return CardSelector.for(Object.assign({}, properties, { cardCondition: cardCondition, targets: true }));
+    }
+
+    getContextCopy(card, context) {
+        let contextCopy = context.copy();
+        contextCopy.targets[this.name] = card;
+        if(this.name === 'target') {
+            contextCopy.target = card;
+        }
+        return contextCopy;
     }
 
     canResolve(context) {
@@ -145,10 +150,22 @@ class AbilityTargetCard {
     }
 
     hasTargetsChosenByInitiatingPlayer(context) {
-        if(this.properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context))) {
+        if(this.getChoosingPlayer(context) === context.player && this.selector.hasEnoughTargets(context, context.player.opponent)) {
             return true;
         }
-        return this.getChoosingPlayer(context) === context.player && this.selector.hasEnoughTargets(context, context.player.opponent);
+        return !this.properties.dependsOn && this.checkGameActionsForTargetsChosenByInitiatingPlayer(context);
+    }
+
+    checkGameActionsForTargetsChosenByInitiatingPlayer(context) {
+        return this.getAllLegalTargets(context).some(card => {
+            let contextCopy = this.getContextCopy(card, context);
+            if(this.properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(contextCopy))) {
+                return true;
+            } else if(this.dependentTarget) {
+                return this.dependentTarget.checkGameActionsForTargetsChosenByInitiatingPlayer(contextCopy);
+            }
+            return false;
+        });
     }
 }
 
