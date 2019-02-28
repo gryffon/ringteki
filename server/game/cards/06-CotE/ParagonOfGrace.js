@@ -11,7 +11,9 @@ class ParagonOfGrace extends DrawCard {
             gameAction: AbilityDsl.actions.multiple([
                 AbilityDsl.actions.discardAtRandom(context => ({ target: context.source.isHonored ? context.player.opponent : [] })),
                 AbilityDsl.actions.chosenDiscard(context => ({ target: context.source.isHonored ? [] : context.player.opponent }))
-            ])
+            ]),
+            effect: 'make {1} discard 1 card{2}',
+            effectArgs: context => [context.player.opponent, context.source.isHonored ? ' at random' : '']
         });
     }
 }

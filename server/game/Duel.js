@@ -91,14 +91,14 @@ class Duel {
             this.loser = this.challenger;
         }
         if(Array.isArray(this.loser)) {
-            this.loser = _.reject(this.loser, (card) => !card.checkRestrictions('loseDuels'));
+            this.loser = _.reject(this.loser, (card) => !card.checkRestrictions('loseDuels', card.game.getFrameworkContext()));
             if(this.loser.length === 0) {
                 this.loser = null;
             } else if(this.loser.length === 1) {
                 this.loser = this.loser[0];
             }
         } else {
-            if(this.loser && !this.loser.checkRestrictions('loseDuels')) {
+            if(this.loser && !this.loser.checkRestrictions('loseDuels', this.loser.game.getFrameworkContext())) {
                 this.loser = null;
             }
         }

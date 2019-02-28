@@ -15,7 +15,6 @@ const capitalize = {
 class InitiateConflictPrompt extends UiPrompt {
     constructor(game, conflict, choosingPlayer, attackerChoosesRing = true, canPass = attackerChoosesRing) {
         super(game);
-
         this.conflict = conflict;
         this.choosingPlayer = choosingPlayer;
         this.attackerChoosesRing = attackerChoosesRing;
@@ -228,6 +227,7 @@ class InitiateConflictPrompt extends UiPrompt {
                                 (!this.conflict.isSinglePlayer && !this.conflict.conflictProvince) || this.conflict.attackers.length === 0) {
                 return false;
             }
+            this.conflict.setDeclarationComplete(true);
             this.complete();
             this.conflict.declaredRing = this.conflict.ring;
             this.conflict.declaredType = this.conflict.ring.conflictType;

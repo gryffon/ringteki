@@ -50,7 +50,7 @@ class HonorFan extends React.Component {
     render() {
 
         return (
-            <div className='honor-fan no-highlight'>
+            <div className={ 'honor-fan no-highlight ' + this.props.size }>
                 <img className='honor-fan-value' src={ '/img/honorfan-' + this.props.value + '.png' } />
             </div>);
     }
@@ -62,6 +62,7 @@ HonorFan.propTypes = {
     onButtonClick: PropTypes.func,
     onMouseOut: PropTypes.func,
     onMouseOver: PropTypes.func,
+    size: PropTypes.string,
     socket: PropTypes.object,
     value: PropTypes.string
 };

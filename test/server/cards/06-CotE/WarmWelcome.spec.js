@@ -76,5 +76,25 @@ describe('Warm Welcome', function() {
                 expect(this.player1.player.conflictDeck.last()).toBe(this.hurricanePunch);
             });
         });
+
+        describe('Multiple Warm Welcomes', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'draw',
+                    player1: {
+                        conflictDiscard: ['warm-welcome', 'warm-welcome'],
+                        hand: ['warm-welcome']
+                    }
+                });
+
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('2');
+            });
+
+            it('should not cause an infinite loop', function() {
+                this.player1.clickCard('warm-welcome', 'hand');
+                expect(this.player1).toHavePrompt('Warm Welcome');
+            });
+        });
     });
 });

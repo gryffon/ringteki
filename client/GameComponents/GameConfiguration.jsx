@@ -141,17 +141,6 @@ class GameConfiguration extends React.Component {
                                 onChange={ this.onOptionSettingToggle.bind(this, 'confirmOneClick') }
                                 checked={ this.props.optionSettings.confirmOneClick }
                             />
-                            <Checkbox
-                                name='optionSettings.showStatusInSidebar'
-                                noGroup
-                                label={
-                                    'Show player status in the sidebar, instead of horizontal bars.' +
-                                    ' Useful to free up space for cards on smaller screens.'
-                                }
-                                fieldClass='col-sm-6'
-                                onChange={ this.onOptionSettingToggle.bind(this, 'showStatusInSidebar') }
-                                checked={ this.props.optionSettings.showStatusInSidebar }
-                            />
                         </div>
                     </div>
                 </form>
