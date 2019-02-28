@@ -1,5 +1,6 @@
 import AbilityContext = require('../AbilityContext');
 import Event = require('../Events/Event');
+import Player = require('../player');
 import RingEffects = require('../RingEffects');
 import Ring = require('../ring');
 import { RingAction, RingActionProperties} from './RingAction';
@@ -8,6 +9,7 @@ import { EventNames } from '../Constants';
 export interface ResolveElementProperties extends RingActionProperties {
     optional?: boolean;
     physicalRing?: Ring;
+    player?: Player;
 }
 
 export class ResolveElementAction extends RingAction {
@@ -40,9 +42,9 @@ export class ResolveElementAction extends RingAction {
     }
 
     addPropertiesToEvent(event, ring: Ring, context: AbilityContext, additionalProperties): void {
-        let { physicalRing, optional } = this.getProperties(context, additionalProperties) as ResolveElementProperties;
+        let { physicalRing, optional, player } = this.getProperties(context, additionalProperties) as ResolveElementProperties;
         super.addPropertiesToEvent(event, ring, context, additionalProperties);
-        event.player = context.player;
+        event.player = player || context.player;
         event.physicalRing = physicalRing;
         event.optional = optional;
     }

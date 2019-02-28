@@ -17,7 +17,7 @@ class ShosuroMiyako extends DrawCard {
                     'Discard at random': AbilityDsl.actions.discardAtRandom(),
                     'Dishonor a character': AbilityDsl.actions.selectCard(context => ({
                         activePromptTitle: 'Choose a character to dishonor',
-                        player: context.player.opponent,
+                        player: Players.Opponent,
                         controller: Players.Opponent,
                         targets: true,
                         message: '{0} chooses to dishonor {1}',

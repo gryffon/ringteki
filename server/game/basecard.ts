@@ -323,7 +323,7 @@ class BaseCard extends EffectSource {
         return this.cardData.clan;
     }
 
-    checkRestrictions(actionType, context: AbilityContext = null): boolean {
+    checkRestrictions(actionType, context: AbilityContext): boolean {
         return super.checkRestrictions(actionType, context) && this.controller.checkRestrictions(actionType, context);
     }
 

@@ -970,7 +970,7 @@ class Game extends EventEmitter {
      * @param card
      */
     takeControl(player, card) {
-        if(card.controller === player || !card.checkRestrictions(EffectNames.TakeControl)) {
+        if(card.controller === player || !card.checkRestrictions(EffectNames.TakeControl, this.getFrameworkContext())) {
             return;
         }
         card.controller.removeCardFromPile(card);

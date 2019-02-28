@@ -1,6 +1,6 @@
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-
+import Player = require('../player');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Players } from '../Constants';
 import { GameAction } from './GameAction';
@@ -13,7 +13,7 @@ export interface CardMenuProperties extends CardActionProperties {
     handlers?: Function[];
     targets?: boolean;
     message?: string;
-    messageArgs?: (card: BaseCard, action: GameAction) => any[];
+    messageArgs?: (card: BaseCard, player: Player) => any[];
     actionParameter?: string;
     gameAction: GameAction;
     gameActionHasLegalTarget?: (context: AbilityContext) => boolean;
@@ -71,7 +71,7 @@ export class CardMenuAction extends CardGameAction {
             cardHandler: (card: BaseCard): void => {
                 properties.gameAction.addEventsToArray(events, context, { [properties.actionParameter]: card });
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(card, properties.gameAction))
+                    context.game.addMessage(properties.message, ...properties.messageArgs(card, player))
                 }
             }
         };

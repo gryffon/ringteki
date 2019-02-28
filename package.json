@@ -62,7 +62,7 @@
     "raven-js": "^3.24.0",
     "react": "^16.0.0",
     "react-async-script": "^0.9.1",
-    "react-bootstrap-slider": "^2.0.1",
+    "react-bootstrap-slider": "2.1.5",
     "react-bootstrap-typeahead": "^2.0.0-alpha.3",
     "react-dom": "^16.0.0",
     "react-draggable": "^3.0.3",

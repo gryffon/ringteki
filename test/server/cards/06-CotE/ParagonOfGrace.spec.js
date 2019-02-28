@@ -65,6 +65,7 @@ describe('Paragon of Grace', function() {
                 this.player2.clickCard(this.ornateFan);
                 expect(this.fineKatana.location).toBe('hand');
                 expect(this.ornateFan.location).toBe('conflict discard pile');
+                expect(this.getChatLogs(4)).toContain('player1 uses Paragon of Grace to make player2 discard 1 card');
             });
 
             it('should make your opponent discard a card at random if Paragon of Grace is honored', function() {
@@ -82,6 +83,7 @@ describe('Paragon of Grace', function() {
                 this.player1.clickCard(this.paragonOfGrace);
                 expect(this.player2).not.toHavePrompt('Choose a card to discard');
                 expect(this.player2.player.hand.size()).toBe(player2hand - 1);
+                expect(this.getChatLogs(4)).toContain('player1 uses Paragon of Grace to make player2 discard 1 card at random');
             });
         });
     });

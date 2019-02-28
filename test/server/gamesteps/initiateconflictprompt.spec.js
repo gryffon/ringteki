@@ -6,7 +6,7 @@ describe('InitateConflictPrompt: ', function() {
         this.fireRing = { element: 'fire' };
         this.gameSpy.rings = { fire: this.fireRing};
         this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan']);
-        this.conflictSpy = jasmine.createSpyObj('conflict', ['calculateSkill', 'removeFromConflict', 'addAttacker']);
+        this.conflictSpy = jasmine.createSpyObj('conflict', ['calculateSkill', 'removeFromConflict', 'addAttacker', 'setDeclarationComplete']);
         this.conflictSpy.attackers = [];
         this.conflictSpy.conflictProvince = null;
         this.prompt = new InitateConflictPrompt(this.gameSpy, this.conflictSpy, this.playerSpy);
