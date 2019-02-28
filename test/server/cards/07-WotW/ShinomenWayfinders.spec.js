@@ -38,6 +38,7 @@ describe('Shinomen Wayfinders', function() {
             it('should work for your opponent with infiltrator as well', function () {
                 this.player2.playAttachment('infiltrator', 'iuchi-wayfinder');
                 this.player1.moveCard(this.shinomenWayfinders, 'conflict deck');
+                this.player1.pass();
                 this.player2.clickCard('infiltrator');
                 expect(this.player2).toHavePrompt('Choose an action for Shinomen Wayfinders');
                 this.player2.clickPrompt('Play this card');

@@ -8,16 +8,14 @@ class ShinomenWayfinders extends DrawCard {
             location: Locations.Any,
             targetController: Players.Any,
             effect: AbilityDsl.effects.reduceCost({
-                amount: context => this.amountReduced(context),
+                amount: (card, player) => {
+                    return player.cardsInPlay.filter(card => {
+                        return card.isParticipating() && card.isFaction('unicorn');
+                    }).length;
+                },
                 match: (card, source) => card === source
             })
         });
-    }
-
-    amountReduced(context) {
-        return context.player.filterCardsInPlay(card => {
-            return card.isParticipating() && card.isFaction('unicorn');
-        }).length;
     }
 }
 
