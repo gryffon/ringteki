@@ -35,9 +35,9 @@ class CostReducer {
         return this.targetCondition(target, this.source);
     }
 
-    getAmount(card) {
+    getAmount(card, player) {
         if(_.isFunction(this.amount)) {
-            return this.amount(card);
+            return this.amount(card, player);
         }
 
         return this.amount;
