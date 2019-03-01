@@ -28,16 +28,16 @@ export class PlayerStatsBox extends React.Component {
             <div className='state'>
                 {
                     this.props.showControls &&
-                    <button className='btn btn-stat' onClick={ this.sendUpdate.bind(this, statToSet, 'down') }>
+                    <button className={ 'btn btn-stat ' + this.props.size } onClick={ this.sendUpdate.bind(this, statToSet, 'down') }>
                         <img src='/img/Minus.png' title='-' alt='-' />
                     </button>
                 }
-                <div className='stat-image' style={ imageStyle } />
+                <div className={ 'stat-image ' + this.props.size } style={ imageStyle } />
                 <div>:</div>
                 <div className='stat-value'>{ this.getStatValueOrDefault(stat) }</div>
                 {
                     this.props.showControls &&
-                    <button className='btn btn-stat' onClick={ this.sendUpdate.bind(this, statToSet, 'up') }>
+                    <button className={ 'btn btn-stat ' + this.props.size } onClick={ this.sendUpdate.bind(this, statToSet, 'up') }>
                         <img src='/img/Plus.png' title='+' alt='+' />
                     </button>
                 }
@@ -82,12 +82,26 @@ export class PlayerStatsBox extends React.Component {
                         <div className='hand-size'>Hand Size: { this.props.handSize }</div>
                     </div>
                 </div>
-                <div className='stats-row'>
-                    { this.getButton('fate', 'Fate') }
-                </div>
-                <div className='stats-row'>
-                    { this.getButton('honor', 'Honor') }
-                </div>
+                { this.props.otherPlayer &&
+                        <div className='stats-row'>
+                            { this.getButton('fate', 'Fate') }
+                        </div>
+                }
+                { this.props.otherPlayer &&
+                    <div className='stats-row'>
+                        { this.getButton('honor', 'Honor') }
+                    </div>
+                }
+                { !this.props.otherPlayer &&
+                    <div className='stats-row'>
+                        { this.getButton('honor', 'Honor') }
+                    </div>
+                }
+                { !this.props.otherPlayer &&
+                        <div className='stats-row'>
+                            { this.getButton('fate', 'Fate') }
+                        </div>
+                }
             </div>
         );
     }
@@ -101,6 +115,7 @@ PlayerStatsBox.propTypes = {
     otherPlayer: PropTypes.bool,
     sendGameMessage: PropTypes.func,
     showControls: PropTypes.bool,
+    size: PropTypes.string,
     spectating: PropTypes.bool,
     stats: PropTypes.object,
     user: PropTypes.object

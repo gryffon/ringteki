@@ -28,7 +28,7 @@ export class LoseFateAction extends PlayerAction {
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties: LoseFateProperties = this.getProperties(context, additionalProperties);
-        return properties.amount > 0 && player.fate > 0 && super.canAffect(player, context);
+        return properties.amount > 0 && player.fate > 0 && super.canAffect(player, context, additionalProperties);
     }
 
     addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
