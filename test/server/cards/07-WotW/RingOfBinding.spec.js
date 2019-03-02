@@ -22,13 +22,15 @@ describe('Ring of Binding', function() {
         it('should stop the fate from being removed from border rider during the fate phase', function () {
             this.borderRider.fate = 1;
             this.nextPhase();
-            this.player2.clickCard(this.mirumotoRaitsugu);
+            this.player2.clickPrompt('Done');
             expect(this.borderRider.fate).toBe(1);
         });
 
         it('should stop border rider from being discarded in the fate phase', function () {
+            expect(this.borderRider.fate).toBe(0);
             this.nextPhase();
-            this.player2.clickCard(this.mirumotoRaitsugu);
+            this.player1.clickPrompt('Done');
+            this.player2.clickPrompt('Done');
             expect(this.borderRider.fate).toBe(0);
             expect(this.borderRider.location).toBe('play area');
         });
@@ -61,14 +63,14 @@ describe('Ring of Binding', function() {
         it('should not stop the fate from being removed from raitsugu during the fate phase', function () {
             this.mirumotoRaitsugu.fate = 1;
             this.nextPhase();
-            this.player1.clickCard(this.borderRider);
+            this.player1.clickPrompt('Done');
             expect(this.mirumotoRaitsugu.fate).toBe(0);
         });
 
         it('should not stop raitsugu from being discarded in the fate phase', function () {
             this.nextPhase();
-            this.player1.clickCard(this.borderRider);
-            this.player2.clickCard(this.mirumotoRaitsugu);
+            this.player1.clickPrompt('Done');
+            this.player2.clickPrompt('Done');
             expect(this.mirumotoRaitsugu.location).toBe('dynasty discard pile');
         });
 
