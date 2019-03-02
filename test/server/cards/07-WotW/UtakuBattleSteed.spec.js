@@ -71,7 +71,7 @@ describe('Utaku Battle Steed', function() {
                 expect(this.yumino.isHonored).toBe(true);
             });
 
-            it('should only trigger after winning a political conflict', function() {
+            it('should not trigger after winning a political conflict', function() {
                 this.player2.clickCard(this.kuroiMori);
                 this.player2.clickPrompt('Switch the conflict type');
                 this.player1.clickCard(this.battleSteed);
