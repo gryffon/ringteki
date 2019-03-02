@@ -10,7 +10,7 @@ class ForgedEdict extends DrawCard {
                 onInitiateAbilityEffects: event => event.card.type === CardTypes.Event
             },
             cannotBeMirrored: true,
-            cost: ability.costs.dishonor(card => card.hasTrait('courtier')),
+            cost: ability.costs.dishonor({ cardCondition: card => card.hasTrait('courtier') }),
             gameAction: AbilityDsl.actions.cancel()
         });
     }

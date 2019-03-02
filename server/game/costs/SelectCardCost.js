@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const CardSelector = require('../CardSelector.js');
 const { Locations, Players } = require('../Constants');
 
@@ -7,6 +8,7 @@ class SelectCardCost {
         this.selector = this.createSelector(action, promptProperties);
         this.activePromptTitle = promptProperties.activePromptTitle;
         this.promptsPlayer = true;
+        this.targets = promptProperties.targets;
     }
 
     createSelector(action, properties) {
@@ -20,10 +22,15 @@ class SelectCardCost {
     }
 
     canPay(context) {
-        return this.selector.hasEnoughTargets(context);
+        return this.selector.hasEnoughTargets(context, context.player);
     }
 
     resolve(context, result) {
+        if(this.targets && context.choosingPlayerOverride) {
+            context.costs[this.action.name] = _.shuffle(this.selector.getAllLegalTargets(context, context.player))[0];
+            context.costs[this.action.name + 'StateWhenChosen'] = context.costs[this.action.name].createSnapshot();
+            return result;
+        }
         context.game.promptForSelect(context.player, {
             activePromptTitle: this.activePromptTitle,
             context: context,

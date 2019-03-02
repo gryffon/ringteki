@@ -38,7 +38,8 @@ describe('CardAbility displayMessage', function() {
                 targets: {
                     target: this.target
                 },
-                target: this.target
+                target: this.target,
+                gameActionsResolutionChain: []
             });
             this.args = this.gameSpy.addMessage.calls.allArgs()[0];
         });
@@ -66,7 +67,7 @@ describe('CardAbility displayMessage', function() {
         it('should have a cost term as the fifth arg', function() {
             expect(this.args[5][0].message[0]).toBe('losing');
             expect(this.args[5][0].message[1]).toBe(' ');
-            expect(this.args[5][0].message[2]).toBe('3');
+            expect(this.args[5][0].message[2]).toBe(3);
             expect(this.args[5][0].message[3]).toBe(' ');
             expect(this.args[5][0].message[4]).toBe('honor');
         });
@@ -87,7 +88,7 @@ describe('CardAbility displayMessage', function() {
             this.courtier = { name: 'courtier', getShortSummary: () => this.courtier };
             this.eventToCancel = { name: 'eventToCancel', getShortSummary: () => this.eventToCancel };
             this.ability = new CardAbility(this.gameSpy, this.cardSpy, {
-                cost: AbilityDsl.costs.dishonor(card => card.hasTrait('courtier')),
+                cost: AbilityDsl.costs.dishonor({ cardCondition: card => card.hasTrait('courtier') }),
                 effect: 'cancel {1}',
                 effectArgs: context => context.event.card,
                 handler: context => context.cancel()
@@ -101,7 +102,8 @@ describe('CardAbility displayMessage', function() {
                 },
                 event: {
                     card: this.eventToCancel
-                }
+                },
+                gameActionsResolutionChain: []
             });
             this.args = this.gameSpy.addMessage.calls.allArgs()[0];
         });
@@ -173,7 +175,8 @@ describe('CardAbility displayMessage', function() {
                 source: this.cardSpy,
                 costs: {
                     bow: this.cardSpy
-                }
+                },
+                gameActionsResolutionChain: []
             });
             this.args = this.gameSpy.addMessage.calls.allArgs()[0];
         });
@@ -211,7 +214,7 @@ describe('CardAbility displayMessage', function() {
         it('should have an effect term as the seventh arg', function() {
             expect(this.args[7].message[0]).toBe('take');
             expect(this.args[7].message[1]).toBe(' ');
-            expect(this.args[7].message[2]).toBe('1');
+            expect(this.args[7].message[2]).toBe(1);
             expect(this.args[7].message[3]).toBe(' ');
             expect(this.args[7].message[4]).toBe('honor');
             expect(this.args[7].message[5]).toBe(' ');

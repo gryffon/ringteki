@@ -20,6 +20,7 @@ interface ChoicesInterface {
 interface TargetSelect extends BaseTarget {
     mode: TargetModes.Select;
     choices: ChoicesInterface;
+    targets?: boolean;
 };
 
 interface TargetRing extends BaseTarget {

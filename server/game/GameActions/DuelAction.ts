@@ -102,10 +102,9 @@ export class DuelAction extends CardGameAction {
             context.game.addMessage('The duel cannot proceed as at least one participant for each side has to be in play');
             return;
         }
-        context.game.currentDuel = new Duel(context.game, properties.challenger, cards, properties.type, properties.statistic);
         context.game.queueStep(new DuelFlow(
             context.game, 
-            context.game.currentDuel, 
+            new Duel(context.game, properties.challenger, cards, properties.type, properties.statistic), 
             properties.costHandler ? prompt => this.honorCosts(prompt, event.context, additionalProperties) : null, 
             (winner, loser) => this.resolveDuel(winner, loser, event.context, additionalProperties)
         ));
@@ -113,5 +112,10 @@ export class DuelAction extends CardGameAction {
 
     checkEventCondition(event, additionalProperties) {
         return event.cards.some(card => this.canAffect(card, event.context, additionalProperties));
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.gameAction && properties.gameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties);
     }
 }

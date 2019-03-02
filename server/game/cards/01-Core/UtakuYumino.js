@@ -6,7 +6,7 @@ class UtakuYumino extends DrawCard {
         this.action({
             title: 'Discard a card for +2/+2',
             condition: () => this.game.isDuringConflict(),
-            cost: ability.costs.discardCard(card => card.location === Locations.Hand),
+            cost: ability.costs.discardCard({ location: Locations.Hand }),
             effect: 'give {0} +2/+2',
             gameAction: ability.actions.cardLastingEffect({ effect: ability.effects.modifyBothSkills(2) }),
             limit: ability.limit.perConflict(1)

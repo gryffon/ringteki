@@ -448,9 +448,9 @@ class DrawCard extends BaseCard {
                     this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
                     if(illegalAttachments.length > 0) {
                         this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
-                        if(!illegalAttachments.includes(card)) {
-                            illegalAttachments.push(card);
-                        }
+                    }
+                    if(!illegalAttachments.includes(card)) {
+                        illegalAttachments.push(card);
                     }
                     this.game.applyGameAction(context, { discardFromPlay: illegalAttachments });
                     return true;

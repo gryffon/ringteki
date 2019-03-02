@@ -7,7 +7,7 @@ class PeasantsAdvice extends DrawCard {
         this.action({
             title: 'look at a province and return its dynasty card to deck',
             phase: Phases.Conflict,
-            cost: AbilityDsl.costs.dishonor(() => true),
+            cost: AbilityDsl.costs.dishonor(),
             target: {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,

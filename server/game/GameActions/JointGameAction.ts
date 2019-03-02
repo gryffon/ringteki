@@ -34,8 +34,17 @@ export class JointGameAction extends GameAction {
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        for(const gameAction of properties.gameActions) {
-            gameAction.addEventsToArray(events, context, additionalProperties);
+        if(this.hasLegalTarget(context, additionalProperties)) {
+            for(const gameAction of properties.gameActions) {
+                gameAction.addEventsToArray(events, context, additionalProperties);
+            }    
         }
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context) {
+        let properties = this.getProperties(context);
+        return properties.gameActions.some(
+            gameAction => gameAction.hasTargetsChosenByInitiatingPlayer(context)
+        );
     }
 }

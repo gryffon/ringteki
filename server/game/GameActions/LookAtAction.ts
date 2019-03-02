@@ -4,12 +4,17 @@ import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
 
 export interface LookAtProperties extends CardActionProperties {
+    message?: string;
+    messageArgs?: (cards: any) => any[];
 }
 
 export class LookAtAction extends CardGameAction {
     name = 'lookAt';
     eventName = EventNames.OnLookAtCards;
     effect = 'look at a facedown card';
+    defaultProperties: LookAtProperties = {
+        message: '{0} sees {1}'
+    };
     
     canAffect(card: BaseCard, context: AbilityContext) {
         let testLocations = [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince, Locations.PlayArea];
@@ -41,9 +46,11 @@ export class LookAtAction extends CardGameAction {
         event.context = context;
     }
 
-    eventHandler(event): void {
+    eventHandler(event, additionalProperties = {}): void {
         let context = event.context;
-        context.game.addMessage('{0} sees {1}', context.source, event.cards);
+        let properties = this.getProperties(context, additionalProperties) as LookAtProperties;
+        let messageArgs = properties.messageArgs ? properties.messageArgs(event.cards) : [context.source, event.cards];
+        context.game.addMessage(properties.message, ...messageArgs);
     }
 
     isEventFullyResolved(event): boolean {

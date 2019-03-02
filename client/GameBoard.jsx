@@ -266,12 +266,15 @@ export class InnerGameBoard extends React.Component {
         });
 
         let cardsByLocation = [];
+        let conflict = this.props.currentGame.conflict;
+        let playerIsDefending = (player && conflict.defendingPlayerId && player.id.includes(conflict.defendingPlayerId));
+        let playerDeclaringParticipants = conflict && (!conflict.declarationComplete || (playerIsDefending && !conflict.defendersChosen));
 
         _.each(cardsByType, cards => {
             let cardsInPlay = _.map(cards, card => {
                 return (<Card key={ card.uuid } source='play area' card={ card } disableMouseOver={ card.facedown && !card.code }
                     onMenuItemClick={ this.onMenuItemClick } onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut }
-                    onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ isMe }/>);
+                    onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ isMe } declaring={ playerDeclaringParticipants }/>);
             });
             cardsByLocation.push(cardsInPlay);
         });
@@ -416,15 +419,15 @@ export class InnerGameBoard extends React.Component {
     renderSidebar(thisPlayer, otherPlayer) {
         let size = this.props.user.settings.cardSize;
         return (
-            <div className='province-pane'>
+            <div className={ 'province-pane ' + size }>
                 <div className='player-nameplate'>
                     <Avatar emailHash={ otherPlayer && otherPlayer.user ? otherPlayer.user.emailHash : 'unknown' } />
                     <div className='player-name'>
                         { otherPlayer && otherPlayer.user ? otherPlayer.user.username : 'Noone' }
                     </div>
                 </div>
-                <div className='sidebar-pane their-side'>
-                    { thisPlayer.hideProvinceDeck && <HonorFan value={ otherPlayer ? otherPlayer.showBid + '' : '0' } /> }
+                <div className={ 'sidebar-pane their-side ' + size }>
+                    { thisPlayer.hideProvinceDeck && <HonorFan size={ size } value={ otherPlayer ? otherPlayer.showBid + '' : '0' } /> }
                     { this.getRings(otherPlayer ? otherPlayer.name : '\0', 'claimed-pool their-pool ' + (size ? size : '')) }
                     <div className='sidebar-pane their-side'>
                         <PlayerStatsBox
@@ -432,8 +435,9 @@ export class InnerGameBoard extends React.Component {
                             stats={ otherPlayer ? otherPlayer.stats : null }
                             user={ otherPlayer ? otherPlayer.user : null }
                             firstPlayer={ otherPlayer && otherPlayer.firstPlayer }
-                            otherPlayer
                             handSize={ otherPlayer && otherPlayer.cardPiles.hand ? otherPlayer.cardPiles.hand.length : 0 }
+                            otherPlayer
+                            size={ size }
                         />
                     </div>
                 </div>
@@ -447,23 +451,10 @@ export class InnerGameBoard extends React.Component {
                         firstPlayer={ thisPlayer.firstPlayer }
                         otherPlayer={ false }
                         spectating={ this.state.spectating }
+                        size={ size }
                         handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
                     { this.getRings(thisPlayer ? thisPlayer.name : '\0', 'claimed-pool my-pool ' + (size ? size : '')) }
-                    { thisPlayer.hideProvinceDeck && <HonorFan value={ thisPlayer.showBid + '' } /> }
-                    { false && thisPlayer.optionSettings.showStatusInSidebar &&
-                        <div className='player-stats-box our-side'>
-                            <PlayerStatsBox
-                                { ...bindActionCreators(actions, this.props.dispatch) }
-                                clockState={ thisPlayer.clock }
-                                stats={ thisPlayer.stats }
-                                showControls={ !this.state.spectating }
-                                user={ thisPlayer.user }
-                                firstPlayer={ thisPlayer.firstPlayer }
-                                otherPlayer={ false }
-                                spectating={ this.state.spectating }
-                                handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
-                        </div>
-                    }
+                    { thisPlayer.hideProvinceDeck && <HonorFan size={ size } value={ thisPlayer.showBid + '' } /> }
                 </div>
                 <div className='player-nameplate our-side'>
                     <Avatar emailHash={ thisPlayer.user ? thisPlayer.user.emailHash : 'unknown' } />

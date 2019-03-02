@@ -4,6 +4,7 @@ import Game = require('./game');
 import Player = require('./player');
 import Ring = require('./ring');
 import { Stages, Locations } from './Constants.js';
+import { GameAction } from './GameActions/GameAction.js';
 
 interface AbilityContextProperties {
     game: Game;
@@ -36,6 +37,9 @@ class AbilityContext {
     ring: Ring;
     provincesToRefill: any[] = [];
     subResolution = false;
+    choosingPlayerOverride: Player = null;
+    gameActionsResolutionChain: GameAction[] = [];
+
     constructor(properties: AbilityContextProperties) {
         this.game = properties.game;
         this.source = properties.source || new EffectSource(this.game);
@@ -56,6 +60,8 @@ class AbilityContext {
         copy.ring = this.ring;
         copy.provincesToRefill = this.provincesToRefill;
         copy.subResolution = this.subResolution;
+        copy.choosingPlayerOverride = this.choosingPlayerOverride;
+        copy.gameActionsResolutionChain = this.gameActionsResolutionChain;
         return copy;
     }
 

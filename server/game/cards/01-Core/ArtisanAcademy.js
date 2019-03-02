@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Decks, Phases } = require('../../Constants');
+const { Locations, Decks, Phases, Durations } = require('../../Constants');
 
 class ArtisanAcademy extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +11,7 @@ class ArtisanAcademy extends DrawCard {
             gameAction: ability.actions.playerLastingEffect(context => {
                 let topCard = context.player.conflictDeck.first();
                 return {
-                    duration: 'lastingEffect',
+                    duration: Durations.Custom,
                     until: {
                         onCardMoved: event => event.card === topCard && event.originalLocation === Locations.ConflictDeck,
                         onPhaseEnded: event => event.phase === Phases.Conflict,

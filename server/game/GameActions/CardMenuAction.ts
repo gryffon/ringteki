@@ -1,6 +1,6 @@
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-
+import Player = require('../player');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Players } from '../Constants';
 import { GameAction } from './GameAction';
@@ -11,8 +11,9 @@ export interface CardMenuProperties extends CardActionProperties {
     cards: BaseCard[];
     choices?: string[];
     handlers?: Function[];
+    targets?: boolean;
     message?: string;
-    messageArgs?: (card: BaseCard, action: GameAction) => any[];
+    messageArgs?: (card: BaseCard, player: Player) => any[];
     actionParameter?: string;
     gameAction: GameAction;
     gameActionHasLegalTarget?: (context: AbilityContext) => boolean;
@@ -23,6 +24,7 @@ export class CardMenuAction extends CardGameAction {
     defaultProperties: CardMenuProperties = {
         activePromptTitle: 'Select a card:',
         actionParameter: 'target',
+        targets: false,
         cards: [],
         gameAction: null
     };
@@ -61,15 +63,23 @@ export class CardMenuAction extends CardGameAction {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
+        if(properties.targets && context.choosingPlayerOverride) {
+            player = context.choosingPlayerOverride;
+        }
         let defaultProperties = {
             context: context,
             cardHandler: (card: BaseCard): void => {
                 properties.gameAction.addEventsToArray(events, context, { [properties.actionParameter]: card });
                 if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(card, properties.gameAction))
+                    context.game.addMessage(properties.message, ...properties.messageArgs(card, player))
                 }
             }
         };
         context.game.promptWithHandlerMenu(player, Object.assign(defaultProperties, properties, { cards }))
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.targets || properties.gameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties);
     }
 }

@@ -58,7 +58,8 @@ export class GameAction {
     }
 
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
-        return this.targetType.includes(target.type) && target.checkRestrictions(this.name, context);
+        return this.targetType.includes(target.type) && target.checkRestrictions(this.name, context) && 
+            !context.gameActionsResolutionChain.includes(this);
     }
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
@@ -144,5 +145,9 @@ export class GameAction {
         if(event.recipient) {
             event.recipient.modifyFate(event.fate);
         }
+    }
+
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
+        return false;
     }
 }
