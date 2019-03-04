@@ -31,6 +31,7 @@ export enum EffectNames {
     AddTrait = 'addTrait',
     Blank = 'blank',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
+    CannotBeAttacked = 'cannotBeAttacked',
     CannotBidInDuels = 'cannotBidInDuels',
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
