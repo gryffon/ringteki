@@ -12,7 +12,13 @@ describe('Chisei District', function () {
                         dynastyDeck: ['chisei-district']
                     }
                 });
-                this.chisei2 = this.player2.placeCardInProvince('chisei-district', 'province 1');
+
+                this.adeptOfTheWaves = this.player1.findCardByName('adept-of-the-waves');
+                this.seppunGuardsman = this.player1.findCardByName('seppun-guardsman');
+
+                this.pilgrimage = this.player2.findCardByName('pilgrimage');
+                this.chiseiDistrict = this.player2.placeCardInProvince('chisei-district', 'province 1');
+
                 this.noMoreActions();
             });
 
@@ -21,8 +27,8 @@ describe('Chisei District', function () {
                 expect(function () {
                     _this.initiateConflict({
                         type: 'military',
-                        province: 'pilgrimage',
-                        attackers: ['adept-of-the-waves'],
+                        province: this.pilgrimage,
+                        attackers: [this.adeptOfTheWaves],
                         defenders: []
                     });
                 }).toThrow();
@@ -32,11 +38,21 @@ describe('Chisei District', function () {
             it('should allow political conflicts to be declared against it\'s province', function () {
                 this.initiateConflict({
                     type: 'political',
-                    province: 'pilgrimage',
-                    attackers: ['adept-of-the-waves'],
+                    province: this.pilgrimage,
+                    attackers: [this.adeptOfTheWaves],
                     defenders: []
                 });
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should deselect the province if the conflict type is changed during declaring a conflict', function() {
+                this.player1.clickCard(this.adeptOfTheWaves);
+                this.player1.clickRing('air');
+                this.player1.clickRing('air');
+                this.player1.clickCard(this.pilgrimage);
+                expect(this.player1).toHavePromptButton('Initiate Conflict');
+                this.player1.clickRing('air');
+                expect(this.player1).not.toHavePromptButton('Initiate Conflict');
             });
         });
     });
