@@ -12,11 +12,9 @@ class VisitingAdvisor extends DrawCard {
                 cardType: CardTypes.Character,
                 optional: true,
                 cardCondition: (card, context) => card !== context.source,
-                gameAction: AbilityDsl.actions.multiple([
-                    AbilityDsl.actions.sendHome(),
-                    AbilityDsl.actions.sendHome(context => ({ target: context.source }))
-                ])
+                gameAction: AbilityDsl.actions.sendHome()
             },
+            gameAction: AbilityDsl.actions.sendHome(context => ({ target: context.source })),
             effect: 'send {0}{1}{2} home',
             effectArgs: (context) => context.target ? [' and ', context.source] : []
         });

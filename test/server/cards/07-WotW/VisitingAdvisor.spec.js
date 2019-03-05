@@ -108,6 +108,20 @@ describe('Visiting Advisor', function() {
                 expect(this.borderRider.isParticipating()).toBe(false);
                 expect(this.getChatLogs(3)).toContain('player1 uses Visiting Advisor to send Border Rider and Visiting Advisor home');
             });
+
+            it('should work Visiting Advisor is your only participating character', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.visitingAdvisor],
+                    defenders: [this.wanderingRonin]
+                });
+                this.player2.pass();
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.visitingAdvisor);
+                this.player1.clickPrompt('No more targets');
+                expect(this.visitingAdvisor.isParticipating()).toBe(false);
+                expect(this.getChatLogs(3)).toContain('player1 uses Visiting Advisor to send Visiting Advisor home');
+            });
         });
     });
 });
