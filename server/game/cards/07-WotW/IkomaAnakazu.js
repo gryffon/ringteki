@@ -10,7 +10,7 @@ class IkomaAnakazu extends DrawCard {
         this.eventRegistrar.register([EventNames.OnBreakProvince, EventNames.OnPhaseEnded]);
 
         this.persistentEffect({
-            condition: context => context.source.isParticipating() && this.brokenProvincesThisPhase[context.source.controller.opponent.name] > 0,
+            condition: context => context.source.isParticipating() && context.source.controller.opponent && this.brokenProvincesThisPhase[context.source.controller.opponent.name] > 0,
             effect: AbilityDsl.effects.modifyBothSkills(3)
         });
     }
