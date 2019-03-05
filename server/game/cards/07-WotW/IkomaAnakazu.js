@@ -5,23 +5,27 @@ const { EventNames } = require('../../Constants');
 
 class IkomaAnakazu extends DrawCard {
     setupCardAbilities() {
-        this.opponentBrokenProvinceThisPhase = false;
+        this.brokenProvincesThisPhase = {};
         this.eventRegistrar = new EventRegistrar(this.game, this);
         this.eventRegistrar.register([EventNames.OnBreakProvince, EventNames.OnPhaseEnded]);
 
         this.persistentEffect({
-            condition: context => context.source.isParticipating() && this.opponentBrokenProvinceThisPhase,
+            condition: context => context.source.isParticipating() && this.brokenProvincesThisPhase[context.source.controller.opponent.name] > 0,
             effect: AbilityDsl.effects.modifyBothSkills(3)
         });
     }
 
     onPhaseEnded() {
-        this.opponentBrokenProvinceThisPhase = false;
+        this.brokenProvincesThisPhase = {};
     }
 
     onBreakProvince(event) {
-        if(event.conflict && event.conflict.attackingPlayer !== this.controller) {
-            this.opponentBrokenProvinceThisPhase = true;
+        if(event.conflict && event.conflict.attackingPlayer) {
+            if(this.brokenProvincesThisPhase[event.conflict.attackingPlayer.name]) {
+                this.brokenProvincesThisPhase[event.conflict.attackingPlayer.name] += 1;
+            } else {
+                this.brokenProvincesThisPhase[event.conflict.attackingPlayer.name] = 1;
+            }
         }
     }
 }
