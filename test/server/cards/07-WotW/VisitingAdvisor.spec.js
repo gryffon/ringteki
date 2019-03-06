@@ -109,7 +109,7 @@ describe('Visiting Advisor', function() {
                 expect(this.getChatLogs(3)).toContain('player1 uses Visiting Advisor to send Border Rider and Visiting Advisor home');
             });
 
-            it('should work Visiting Advisor is your only participating character', function() {
+            it('should work if Visiting Advisor is your only participating character', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.visitingAdvisor],
