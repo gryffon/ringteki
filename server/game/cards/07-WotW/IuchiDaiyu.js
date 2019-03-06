@@ -10,8 +10,8 @@ class IuchiDaiyu extends DrawCard {
                     effect: ability.effects.modifyMilitarySkill(context.player.getNumberOfOpponentsFaceupProvinces())
                 }))
             },
-            effect: 'give {0} +1{1} for each faceup non-stronghold province their opponent controls',
-            effectArgs: () => ['military']
+            effect: 'give {0} +1{1} for each faceup non-stronghold province their opponent controls (+{2}{1})',
+            effectArgs: context => ['military', context.player.getNumberOfOpponentsFaceupProvinces()]
         });
     }
 }
