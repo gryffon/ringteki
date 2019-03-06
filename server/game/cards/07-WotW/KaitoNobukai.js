@@ -1,20 +1,22 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class KaitoNobukai extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Bow each participating characters',
-            cost: ability.costs.sacrificeSelf(),
+            cost: AbilityDsl.costs.sacrificeSelf(),
             condition: context => context.source.isParticipating(),
-            gameAction: [
-                ability.actions.bow(() => ({
+            gameAction: AbilityDsl.actions.multiple([
+                AbilityDsl.actions.bow(() => ({
                     target: this.game.findAnyCardsInPlay(card => card.getType() === CardTypes.Character && card.isParticipating())
                 })),
-                ability.actions.cardLastingEffect(() => ({
+                AbilityDsl.actions.cardLastingEffect(() => ({
                     target: this.game.findAnyCardsInPlay(card => card.getType() === CardTypes.Character),
-                    effect: ability.effects.cardCannot('moveToConflict')
-                }))]
+                    effect: AbilityDsl.effects.cardCannot('moveToConflict')
+                }))
+            ])
         });
     }
 }
