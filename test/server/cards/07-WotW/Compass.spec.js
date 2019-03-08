@@ -66,6 +66,7 @@ describe('Compass', function() {
                     attackers: [this.shinjoOutrider]
                 });
                 this.player1.clickCard(this.compass);
+                expect(this.getChatLogs(1)).toContain('player1 uses Compass to look at the top 3 cards of one of their decks');
                 expect(this.player1).toHavePromptButton('Dynasty Deck');
                 expect(this.player1).toHavePromptButton('Conflict Deck');
             });
@@ -77,7 +78,7 @@ describe('Compass', function() {
                 });
                 this.player1.clickCard(this.compass);
                 this.player1.clickPrompt('Dynasty Deck');
-                expect(this.getChatLogs(1)).toContain('player1 uses Compass to look at the top 3 cards of their dynasty deck');
+                expect(this.getChatLogs(1)).toContain('player1 chooses to look at the top 3 cards of their dynasty deck');
                 expect(this.player1).toHavePrompt('Choose a card to place on the bottom of your deck');
                 expect(this.player1).toHavePromptButton(this.imperialStorehouse.name);
                 expect(this.player1).toHavePromptButton(this.favorableGround.name);
@@ -111,7 +112,7 @@ describe('Compass', function() {
                 });
                 this.player1.clickCard(this.compass);
                 this.player1.clickPrompt('Conflict Deck');
-                expect(this.getChatLogs(1)).toContain('player1 uses Compass to look at the top 3 cards of their conflict deck');
+                expect(this.getChatLogs(1)).toContain('player1 chooses to look at the top 3 cards of their conflict deck');
                 expect(this.player1).toHavePrompt('Choose a card to place on the bottom of your deck');
                 expect(this.player1).toHavePromptButton(this.fineKatana.name);
                 expect(this.player1).toHavePromptButton(this.ornateFan.name);
