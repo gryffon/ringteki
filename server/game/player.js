@@ -413,7 +413,16 @@ class Player extends GameObject {
      */
 
     getConflictOpportunities(type = 'total') {
+        let setConflictDeclarationType = this.mostRecentEffect(EffectNames.SetConflictDeclarationType);
         let maxConflicts = this.mostRecentEffect(EffectNames.SetMaxConflicts);
+        if(setConflictDeclarationType && type !== 'total') {
+            if(type !== setConflictDeclarationType) {
+                return 0;
+            } else if(maxConflicts) {
+                return Math.max(0, maxConflicts - this.game.getConflicts(this).length);
+            }
+            return this.conflictOpportunities['total'];
+        }
         if(maxConflicts) {
             return Math.max(0, maxConflicts - this.game.getConflicts(this).length);
         }
