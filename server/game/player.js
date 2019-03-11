@@ -525,7 +525,7 @@ class Player extends GameObject {
     getReducedCost(playingType, card, target) {
         var baseCost = card.getCost();
         var matchingReducers = _.filter(this.costReducers, reducer => reducer.canReduce(playingType, card, target));
-        var reducedCost = _.reduce(matchingReducers, (cost, reducer) => cost - reducer.getAmount(card), baseCost);
+        var reducedCost = _.reduce(matchingReducers, (cost, reducer) => cost - reducer.getAmount(card, this), baseCost);
         return Math.max(reducedCost, 0);
     }
 
