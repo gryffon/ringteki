@@ -1232,13 +1232,6 @@ class Game extends EventEmitter {
             name: this.name,
             owner: _.omit(this.owner, ['blocklist', 'email', 'emailHash', 'promptedActionWindows', 'settings']),
             players: playerSummaries,
-            rings: {
-                air: this.rings.air.getState(activePlayer),
-                earth: this.rings.earth.getState(activePlayer),
-                fire: this.rings.fire.getState(activePlayer),
-                void: this.rings.void.getState(activePlayer),
-                water: this.rings.water.getState(activePlayer)
-            },
             started: this.started,
             startedAt: this.startedAt,
             spectators: this.getSpectators().map(spectator => {
