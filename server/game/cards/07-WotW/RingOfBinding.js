@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl');
 
 class RingOfBinding extends DrawCard {
     setupCardAbilities() {
-        this.persistentEffect({
+        this.whileAttached({
             condition: (context) => context.game.currentPhase === Phases.Fate && context.player.firstPlayer,
             effect: [
                 AbilityDsl.effects.cardCannot('removeFate'),

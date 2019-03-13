@@ -5,14 +5,15 @@ describe('Ring of Binding', function() {
                 phase: 'conflict',
                 player1: {
                     inPlay: ['border-rider'],
-                    hand: ['ring-of-binding']
+                    hand: ['ring-of-binding', 'shrine-maiden']
                 },
                 player2: {
                     inPlay: ['mirumoto-raitsugu'],
-                    hand: ['ring-of-binding']
+                    hand: ['ring-of-binding', 'ring-of-binding']
                 }
             });
             this.borderRider = this.player1.findCardByName('border-rider');
+            this.shrineMaiden = this.player1.findCardByName('shrine-maiden');
             this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
             this.player1.playAttachment('ring-of-binding', this.borderRider);
             this.player2.playAttachment('ring-of-binding', this.mirumotoRaitsugu);
@@ -29,7 +30,6 @@ describe('Ring of Binding', function() {
         it('should stop border rider from being discarded in the fate phase', function () {
             expect(this.borderRider.fate).toBe(0);
             this.nextPhase();
-            this.player1.clickPrompt('Done');
             this.player2.clickPrompt('Done');
             expect(this.borderRider.fate).toBe(0);
             expect(this.borderRider.location).toBe('play area');
@@ -69,10 +69,20 @@ describe('Ring of Binding', function() {
 
         it('should not stop raitsugu from being discarded in the fate phase', function () {
             this.nextPhase();
-            this.player1.clickPrompt('Done');
             this.player2.clickPrompt('Done');
             expect(this.mirumotoRaitsugu.location).toBe('dynasty discard pile');
         });
 
+        it('should stop opponent characters from being discarded', function () {
+            this.player1.clickPrompt('Pass Conflict');
+            this.player1.clickPrompt('Yes');
+            this.player1.clickCard(this.shrineMaiden);
+            this.player1.clickPrompt('0');
+            this.player2.playAttachment('ring-of-binding', this.shrineMaiden);
+            this.nextPhase();
+            this.player1.clickPrompt('Done');
+            this.player2.clickPrompt('Done');
+            expect(this.shrineMaiden.location).toBe('conflict discard pile');
+        });
     });
 });
