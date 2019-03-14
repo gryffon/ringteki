@@ -6,7 +6,8 @@ describe('Shinomen Wayfinders', function() {
                     phase: 'conflict',
                     player1: {
                         fate: 4,
-                        inPlay: ['border-rider', 'kudaka', 'battle-maiden-recruit'],
+                        inPlay: ['border-rider', 'kudaka', 'battle-maiden-recruit',
+                            'shinjo-outrider', 'moto-youth', 'ide-messenger'],
                         hand: ['shinomen-wayfinders']
                     },
                     player2: {
@@ -20,13 +21,13 @@ describe('Shinomen Wayfinders', function() {
                 this.player1.player.showBid = 4;
                 this.player2.player.showBid = 5;
                 this.noMoreActions();
+            });
+
+            it('should reduce the cost only for unicorn charaters participating', function () {
                 this.initiateConflict({
                     attackers: [this.borderRider, 'kudaka', 'battle-maiden-recruit'],
                     defenders: ['iuchi-wayfinder']
                 });
-            });
-
-            it('should reduce the cost only for unicorn charaters participating', function () {
                 this.player2.pass();
                 this.player1.clickCard(this.shinomenWayfinders);
                 this.player1.clickPrompt('1');
@@ -36,6 +37,10 @@ describe('Shinomen Wayfinders', function() {
             });
 
             it('should work for your opponent with infiltrator as well', function () {
+                this.initiateConflict({
+                    attackers: [this.borderRider, 'kudaka', 'battle-maiden-recruit'],
+                    defenders: ['iuchi-wayfinder']
+                });
                 this.player2.playAttachment('infiltrator', 'iuchi-wayfinder');
                 this.player1.moveCard(this.shinomenWayfinders, 'conflict deck');
                 this.player1.pass();
@@ -46,6 +51,19 @@ describe('Shinomen Wayfinders', function() {
                 this.player2.clickPrompt('Conflict');
                 expect(this.player2.player.fate).toBe(6);
                 expect(this.game.currentConflict.defenders).toContain(this.shinomenWayfinders);
+            });
+
+            it('should only reduce the cost to zero if the amount is greater than 4', function () {
+                this.initiateConflict({
+                    attackers: [this.borderRider, 'battle-maiden-recruit',
+                        'shinjo-outrider', 'moto-youth', 'ide-messenger'],
+                    defenders: ['iuchi-wayfinder']
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.shinomenWayfinders);
+                this.player1.clickPrompt('0');
+                this.player1.clickPrompt('Conflict');
+                expect(this.player1.player.fate).toBe(4);
             });
 
         });
