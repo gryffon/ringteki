@@ -1194,7 +1194,6 @@ class Game extends EventEmitter {
      */
     getSummary(activePlayerName) {
         var playerSummaries = {};
-        let activePlayer = this.getPlayerByName(activePlayerName);
 
         for(const player of this.getPlayers()) {
             var deck = undefined;
