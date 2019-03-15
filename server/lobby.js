@@ -177,8 +177,8 @@ class Lobby {
         return _.chain(games)
             .map(game => game.getSummary())
             .sortBy('createdAt')
-            .sortBy('started')
             .reverse()
+            .sortBy('started')
             .value();
     }
 
