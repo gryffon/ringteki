@@ -51,10 +51,11 @@ Clone the repository
 git submodule init
 git submodule update
 npm install # See https://github.com/JustinTulloss/zeromq.node/issues/283 for zmq errors on OS X
-mkdir server/logs
+tsc
+mkdir build/server/logs
 node server/scripts/fetchdata.js
 node .
-node server/gamenode
+node build/server/gamenode
 ```
 
 There are two exectuable components and you'll need to configure/run both to run a local server.  First is the lobby server and then there are game nodes. The default configurations assume you are running mongo locally on the default port. If you need to change any configurations, edit `config/default.json5` or create a `config/local.json5` configuration that overrides any desired settings.   
