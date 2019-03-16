@@ -97,8 +97,8 @@ class AbilityTargetRing {
         if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
             return false;
         }
-        return context.rings[this.name] && 
-            (this.properties.optional && context.rings[this.name].length === 0 || 
+        return context.rings[this.name] &&
+            (this.properties.optional && context.rings[this.name].length === 0 ||
                 this.properties.ringCondition(context.rings[this.name], context)) &&
             (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }
