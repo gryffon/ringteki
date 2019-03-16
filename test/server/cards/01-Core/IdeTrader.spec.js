@@ -168,7 +168,7 @@ describe('Ide Trader', function() {
                 this.player2.pass();
                 this.shinjoTatsuo = this.player1.clickCard('shinjo-tatsuo');
                 expect(this.player1).toHavePrompt('Shinjo Tatsuo');
-                this.player1.clickPrompt('No More Targets');
+                this.player1.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.ideTrader);
                 this.player1.clickCard(this.ideTrader);

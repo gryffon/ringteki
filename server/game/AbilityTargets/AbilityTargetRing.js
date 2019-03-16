@@ -56,9 +56,6 @@ class AbilityTargetRing {
         }
         let buttons = [];
         let waitingPromptTitle = '';
-        if(this.properties.optional) {
-            buttons.push({ text: 'No more targets', arg: 'noMoreTargets' });
-        }
         if(context.stage === Stages.PreTarget) {
             if(!targetResults.noCostsFirstButton) {
                 buttons.push({ text: 'Pay costs first', arg: 'costsFirst' });
@@ -100,8 +97,10 @@ class AbilityTargetRing {
         if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
             return false;
         }
-        return context.rings[this.name] && this.properties.ringCondition(context.rings[this.name], context) &&
-               (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+        return context.rings[this.name] && 
+            (this.properties.optional && context.rings[this.name].length === 0 || 
+                this.properties.ringCondition(context.rings[this.name], context)) &&
+            (!this.dependentTarget || this.dependentTarget.checkTarget(context));
     }
 
     getChoosingPlayer(context) {
