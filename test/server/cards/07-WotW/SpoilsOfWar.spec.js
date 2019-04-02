@@ -5,17 +5,18 @@ describe('Spoils Of War', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['matsu-berserker'],
+                        inPlay: ['student-of-war'],
                         hand: ['spoils-of-war','spoils-of-war','fine-katana','ornate-fan','strength-in-numbers']
                     },
                     player2: {
                         inPlay: ['shinjo-outrider'],
-                        hand: ['fine-katana','spoils-of-war']
+                        hand: ['fine-katana','spoils-of-war'],
+                        provinces: ['kuroi-mori']
 
                     }
                 });
 
-                this.matsuBerserker = this.player1.findCardByName('matsu-berserker');
+                this.studentOfWar = this.player1.findCardByName('student-of-war');
                 this.fineKatana = this.player1.findCardByName('fine-katana');
                 this.ornateFan = this.player1.findCardByName('ornate-fan');
                 this.siN = this.player1.findCardByName('strength-in-numbers');
@@ -23,7 +24,7 @@ describe('Spoils Of War', function() {
 
                 this.outrider = this.player2.findCardByName('shinjo-outrider');
                 this.fineKatanaP2 = this.player2.findCardByName('fine-katana');
-                this.spoilsOfWarP2 = this.player2.findCardByName('spoils-of-war');
+                this.kuroiMori = this.player2.findCardByName('kuroi-mori');
 
                 this.player1.moveCard(this.fineKatana, 'conflict deck');
                 this.player1.moveCard(this.ornateFan, 'conflict deck');
@@ -31,7 +32,8 @@ describe('Spoils Of War', function() {
 
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: [this.matsuBerserker],
+                    attackers: [this.studentOfWar],
+                    province: this.kuroiMori,
                     defenders: []
                 });
             });
@@ -40,6 +42,13 @@ describe('Spoils Of War', function() {
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.spoilsOfWar);
+            });
+
+            it('should not trigger after winning a political conflict as an attacker', function() {
+                this.player2.clickCard(this.kuroiMori);
+                this.player2.clickPrompt('Switch the conflict type');
+                this.noMoreActions();
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
             });
 
             it('should not trigger after you win a military conflict as a defender', function() {
