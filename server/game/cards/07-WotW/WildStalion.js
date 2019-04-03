@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Players, CardTypes } = require('../../Constants');
 
 class WildStalion extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Move this and another character to the conflict',
             condition: context => !context.source.isParticipating(),
@@ -11,7 +12,7 @@ class WildStalion extends DrawCard {
                 controller: Players.Self,
                 cardCondition: (card, context) => card !== context.source && !card.isParticipating(),
                 optional: true,
-                gameAction: ability.actions.moveToConflict(context => {
+                gameAction: AbilityDsl.actions.moveToConflict(context => {
                     return context.target ? { target: [context.target, context.source] } : { target: context.source };
                 })
             },
