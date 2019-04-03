@@ -6,7 +6,10 @@ class SaadiyahAlMozedu extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Flip province facedown',
-            cost: AbilityDsl.costs.discardCard(card => card.location === Locations.Hand),
+            cost: AbilityDsl.costs.discardCard({
+                location: Locations.Hand,
+                targets: true
+            }),
             target: {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,
