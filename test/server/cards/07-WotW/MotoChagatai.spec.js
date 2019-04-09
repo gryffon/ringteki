@@ -35,9 +35,29 @@ describe('Moto Chagatai', function() {
                     defenders: [this.steward],
                     jumpTo: 'afterConflict'
                 });
+
+                this.player1.clickPrompt('No');
+                this.player1.clickPrompt('Don\'t resolve');
+                expect(this.player1).toHavePrompt('Action Window');
                 expect(this.chagatai.bowed).toBe(false);
                 expect(this.fertileFields.isBroken).toBe(true);
             });
+
+            it('should bow chagatai if a province is not broken on attack', function() {
+                this.initiateConflict({
+                    type: 'political',
+                    province: this.fertileFields,
+                    attackers: [this.chagatai],
+                    defenders: [this.steward],
+                    jumpTo: 'afterConflict'
+                });
+
+                this.player1.clickPrompt('Don\'t resolve');
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.chagatai.bowed).toBe(true);
+                expect(this.fertileFields.isBroken).toBe(false);
+            });
+
 
             it('should not trigger if public forum is used', function () {
                 this.initiateConflict({
@@ -50,6 +70,8 @@ describe('Moto Chagatai', function() {
 
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 this.player2.clickCard(this.publicForum);
+                this.player1.clickPrompt('Don\'t resolve');
+                expect(this.player1).toHavePrompt('Action Window');
                 expect(this.chagatai.bowed).toBe(true);
                 expect(this.publicForum.isBroken).toBe(false);
             });
@@ -73,6 +95,8 @@ describe('Moto Chagatai', function() {
                 this.player2.clickCard(this.publicForum);
                 this.player1.pass();
                 this.player2.pass();
+                this.player1.clickPrompt('Don\'t resolve');
+                expect(this.player1).toHavePrompt('Action Window');
                 expect(this.chagatai.bowed).toBe(false);
                 expect(this.endlessPlains.isBroken).toBe(true);
                 expect(this.publicForum.isBroken).toBe(false);
