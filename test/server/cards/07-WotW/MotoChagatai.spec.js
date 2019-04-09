@@ -12,7 +12,7 @@ describe('Moto Chagatai', function() {
                     player2: {
                         inPlay: ['steward-of-law'],
                         hand: ['for-shame', 'talisman-of-the-sun'],
-                        provinces: ['public-forum', 'endless-plains', 'shameful-display']
+                        provinces: ['public-forum', 'endless-plains', 'fertile-fields']
                     }
                 });
 
@@ -22,7 +22,7 @@ describe('Moto Chagatai', function() {
 
                 this.endlessPlains = this.player2.findCardByName('endless-plains');
                 this.publicForum = this.player2.findCardByName('public-forum');
-                this.shameful = this.player2.findCardByName('shameful-display');
+                this.fertileFields = this.player2.findCardByName('fertile-fields');
 
                 this.noMoreActions();
             });
@@ -30,14 +30,13 @@ describe('Moto Chagatai', function() {
             it('should prevent chagatai if a province is broken on attack', function() {
                 this.initiateConflict({
                     type: 'military',
-                    province: this.shameful,
+                    province: this.fertileFields,
                     attackers: [this.chagatai],
                     defenders: [this.steward],
                     jumpTo: 'afterConflict'
                 });
-
-                expect(this.chagatai.bowed).toBe(true);
-                expect(this.shameful.isBroken).toBe(true);
+                expect(this.chagatai.bowed).toBe(false);
+                expect(this.fertileFields.isBroken).toBe(true);
             });
 
             it('should not trigger if public forum is used', function () {
