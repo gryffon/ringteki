@@ -12,7 +12,7 @@ describe('Moto Chagatai', function() {
                     player2: {
                         inPlay: ['steward-of-law'],
                         hand: ['for-shame', 'talisman-of-the-sun'],
-                        provinces: ['public-forum', 'endless-plains']
+                        provinces: ['public-forum', 'endless-plains', 'shameful-display']
                     }
                 });
 
@@ -22,8 +22,22 @@ describe('Moto Chagatai', function() {
 
                 this.endlessPlains = this.player2.findCardByName('endless-plains');
                 this.publicForum = this.player2.findCardByName('public-forum');
+                this.shameful = this.player2.findCardByName('shameful-display');
 
                 this.noMoreActions();
+            });
+
+            it('should prevent chagatai if a province is broken on attack', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    province: this.shameful,
+                    attackers: [this.chagatai],
+                    defenders: [this.steward],
+                    jumpTo: 'afterConflict'
+                });
+
+                expect(this.chagatai.bowed).toBe(true);
+                expect(this.shameful.isBroken).toBe(true);
             });
 
             it('should not trigger if public forum is used', function () {
@@ -31,11 +45,10 @@ describe('Moto Chagatai', function() {
                     type: 'military',
                     province: this.publicForum,
                     attackers: [this.chagatai],
-                    defenders: [this.steward]
+                    defenders: [this.steward],
+                    jumpTo: 'afterConflict'
                 });
 
-                this.player2.pass();
-                this.player1.pass();
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 this.player2.clickCard(this.publicForum);
                 expect(this.chagatai.bowed).toBe(true);
