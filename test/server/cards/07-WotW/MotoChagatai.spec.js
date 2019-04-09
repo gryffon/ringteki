@@ -24,16 +24,16 @@ fdescribe('Moto Chagatai', function() {
                 this.publicForum = this.player2.findCardByName('public-forum', 'province 1');
 
                 this.noMoreActions();
+            });
+
+            it('should work if a opponent uses endless plains and moves the conflict', function () {
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.chagatai, this.shrineMaiden],
                     defenders: [this.steward],
                     province: this.endlessPlains
                 });
-            });
 
-            it('should work if a opponent uses endless plains and moves the conflict', function () {
-                
                 this.player2.clickCard(this.endlessPlains);
                 this.player1.clickCard(this.shrineMaiden);
                 this.player2.playAttachment('tailsman-of-the-sun', this.steward);
