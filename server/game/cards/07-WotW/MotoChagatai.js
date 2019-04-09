@@ -12,7 +12,8 @@ class MotoChagatai extends DrawCard {
 
         this.persistentEffect({
             condition: context => (
-                context.source.isAttacking()
+                context.source.isAttacking() &&
+                this.provinceBroken
             ),
             effect: AbilityDsl.effects.doesNotBow()
         });
