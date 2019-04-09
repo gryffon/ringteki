@@ -26,6 +26,22 @@ describe('Moto Chagatai', function() {
                 this.noMoreActions();
             });
 
+            it('should not trigger if public forum is used', function () {
+                this.initiateConflict({
+                    type: 'military',
+                    province: this.publicForum,
+                    attackers: [this.chagatai],
+                    defenders: [this.steward]
+                });
+
+                this.player2.pass();
+                this.player1.pass();
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                this.player2.clickCard(this.publicForum);
+                expect(this.chagatai.bowed).toBe(true);
+                expect(this.publicForum.isBroken).toBe(false);
+            });
+
             it('should work if a opponent uses endless plains and moves the conflict', function () {
                 this.initiateConflict({
                     type: 'political',
@@ -47,22 +63,6 @@ describe('Moto Chagatai', function() {
                 this.player2.pass();
                 expect(this.chagatai.bowed).toBe(false);
                 expect(this.endlessPlains.isBroken).toBe(true);
-                expect(this.publicForum.isBroken).toBe(false);
-            });
-
-            it('should not trigger if public forum is used', function () {
-                this.initiateConflict({
-                    type: 'military',
-                    province: this.publicForum,
-                    attackers: [this.chagatai],
-                    defenders: [this.steward]
-                });
-
-                this.player2.pass();
-                this.player1.pass();
-                expect(this.player2).toHavePrompt('Triggered Abilities');
-                this.player2.clickCard(this.publicForum);
-                expect(this.chagatai.bowed).toBe(true);
                 expect(this.publicForum.isBroken).toBe(false);
             });
         });
