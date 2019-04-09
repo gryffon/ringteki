@@ -8,6 +8,7 @@ class KujirasHireling extends DrawCard {
             title: '+1/+1 or -1/-1',
             cost: AbilityDsl.costs.payFate(),
             anyPlayer: true,
+            limit: AbilityDsl.limit.unlimitedPerConflict(),
             target: {
                 mode: TargetModes.Select,
                 choices: {

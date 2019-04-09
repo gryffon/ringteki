@@ -36,6 +36,7 @@ describe('Young Rumormonger', function() {
                 expect(this.youngRumormonger.isDishonored).toBe(true);
                 expect(this.otomoCourtier.isDishonored).toBe(false);
                 expect(this.player2).toBeAbleToSelect('banzai');
+                expect(this.getChatLogs(3)).toContain('player1 uses Young Rumormonger to dishonor Young Rumormonger instead of Otomo Courtier');
                 this.player2.clickPrompt('Done');
                 expect(this.player2.hand.length).toBe(0);
             });
