@@ -1,14 +1,14 @@
-describe('Wild Stalion', function() {
+describe('Wild Stallion', function() {
     integration(function() {
-        describe('Wild Stalion ability', function() {
+        describe('Wild Stallion ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['wild-stalion', 'moto-youth','iuchi-wayfinder']
+                        inPlay: ['wild-stallion', 'moto-youth','iuchi-wayfinder']
                     }
                 });
-                this.wildStalion = this.player1.findCardByName('wild-stalion');
+                this.wildStallion = this.player1.findCardByName('wild-stallion');
                 this.motoYouth = this.player1.findCardByName('moto-youth');
                 this.wayfinder = this.player1.findCardByName('iuchi-wayfinder');
                 this.noMoreActions();
@@ -16,11 +16,11 @@ describe('Wild Stalion', function() {
 
             it('should not work if participating in a conflict', function() {
                 this.initiateConflict({
-                    attackers: [this.wildStalion],
+                    attackers: [this.wildStallion],
                     defenders: []
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.wildStalion);
+                this.player1.clickCard(this.wildStallion);
                 expect(this.player1).not.toHavePrompt('Choose a character');
             });
 
@@ -30,7 +30,7 @@ describe('Wild Stalion', function() {
                     defenders: []
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.wildStalion);
+                this.player1.clickCard(this.wildStallion);
                 expect(this.player1).toHavePrompt('Choose a character');
             });
 
@@ -40,21 +40,21 @@ describe('Wild Stalion', function() {
                     defenders: []
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.wildStalion);
+                this.player1.clickCard(this.wildStallion);
                 expect(this.player1).toBeAbleToSelect(this.wayfinder);
                 expect(this.player1).not.toBeAbleToSelect(this.motoYouth);
-                expect(this.player1).not.toBeAbleToSelect(this.wildStalion);
+                expect(this.player1).not.toBeAbleToSelect(this.wildStallion);
             });
 
-            it('should move chosen character and wild stalion to the conflict', function() {
+            it('should move chosen character and wild stallion to the conflict', function() {
                 this.initiateConflict({
                     attackers: [this.motoYouth],
                     defenders: []
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.wildStalion);
+                this.player1.clickCard(this.wildStallion);
                 this.player1.clickCard(this.wayfinder);
-                expect(this.wildStalion.inConflict).toBe(true);
+                expect(this.wildStallion.inConflict).toBe(true);
                 expect(this.wayfinder.inConflict).toBe(true);
             });
 
@@ -64,9 +64,9 @@ describe('Wild Stalion', function() {
                     defenders: []
                 });
                 this.player2.pass();
-                this.player1.clickCard(this.wildStalion);
+                this.player1.clickCard(this.wildStallion);
                 this.player1.clickPrompt('No More Targets');
-                expect(this.wildStalion.inConflict).toBe(true);
+                expect(this.wildStallion.inConflict).toBe(true);
                 expect(this.wayfinder.inConflict).toBe(false);
             });
         });

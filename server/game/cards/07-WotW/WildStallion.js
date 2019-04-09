@@ -2,7 +2,7 @@ const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 const { Players, CardTypes } = require('../../Constants');
 
-class WildStalion extends DrawCard {
+class WildStallion extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Move this and another character to the conflict',
@@ -22,6 +22,6 @@ class WildStalion extends DrawCard {
     }
 }
 
-WildStalion.id = 'wild-stalion';
+WildStallion.id = 'wild-stallion';
 
-module.exports = WildStalion;
+module.exports = WildStallion;
