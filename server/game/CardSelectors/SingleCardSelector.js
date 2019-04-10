@@ -31,7 +31,7 @@ class SingleCardSelector extends BaseCardSelector {
     }
 
     formatSelectParam(cards) {
-        return cards[0];
+        return cards[0] ? cards[0] : cards;
     }
 }
 
