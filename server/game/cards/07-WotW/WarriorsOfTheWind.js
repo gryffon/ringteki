@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { CardTypes, Players } = require('../../Constants');
+const { CardTypes, Players, TargetModes } = require('../../Constants');
 
 class WarriorsOfTheWind extends DrawCard {
     setupCardAbilities() {
@@ -13,8 +13,8 @@ class WarriorsOfTheWind extends DrawCard {
             then: {
                 target: {
                     activePromptTitle: 'Choose characters',
-                    numCards: 0,
-                    //optional: true,
+                    mode: TargetModes.Unlimited,
+                    optional: true,
                     cardType: CardTypes.Character,
                     controller: Players.Self,
                     cardCondition: card => card.hasTrait('cavalry'),
