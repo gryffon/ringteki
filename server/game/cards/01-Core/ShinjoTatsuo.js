@@ -11,7 +11,7 @@ class ShinjoTatsuo extends DrawCard {
                 cardCondition: (card, context) => card !== context.source,
                 optional: true,
                 gameAction: ability.actions.moveToConflict(context => {
-                    return context.target ? { target: [context.target, context.source] } : { target: context.source };
+                    return !Array.isArray(context.target) ? { target: [context.target, context.source] } : { target: context.source };
                 })
             },
             effect: 'move {1}{2}{3} into the conflict',

@@ -137,17 +137,13 @@ class SelectCardPrompt extends UiPrompt {
 
     activePrompt() {
         let buttons = this.properties.buttons;
-        if(!this.selector.automaticFireOnSelect() && this.selector.hasEnoughSelected(this.selectedCards)) {
-            if(buttons.every(button => button.text !== 'Done')) {
+        if(!this.selector.automaticFireOnSelect() && this.selector.hasEnoughSelected(this.selectedCards) || this.selector.optional) {
+            if(buttons.every(button => button.arg !== 'done')) {
                 buttons = [{ text: 'Done', arg: 'done' }].concat(buttons);
             }
         }
-        if((this.selector.optional || this.game.manualMode) && !_.any(buttons, button => button.arg === 'cancel')) {
-            let text = 'Cancel Prompt';
-            if(this.selector.optional) {
-                text = typeof this.selector.optional === 'string' ? this.selector.optional : 'Cancel';
-            }
-            buttons = buttons.concat({ text: text, arg: 'cancel' });
+        if(this.game.manualMode && buttons.every(button => button.arg !== 'cancel')) {
+            buttons = buttons.concat({ text: 'Cancel Prompt', arg: 'cancel' });
         }
         return {
             selectCard: this.properties.selectCard,
@@ -227,7 +223,7 @@ class SelectCardPrompt extends UiPrompt {
     }
 
     menuCommand(player, arg) {
-        if(arg === 'cancel' || (arg === 'done' && this.properties.optional && this.selectedCards.length === 0)) {
+        if(arg === 'cancel') {
             this.properties.onCancel(player);
             this.complete();
             return true;
