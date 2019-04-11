@@ -92,7 +92,7 @@ class InnerGameList extends React.Component {
             let gameTitle = '';
 
             if(game.needsPassword) {
-                gameTitle += '[Private] ';
+                gameTitle += '\uD83D\uDD12 ';
             }
 
             if(game.gameType) {

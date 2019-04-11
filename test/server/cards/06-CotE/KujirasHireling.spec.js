@@ -58,6 +58,32 @@ describe('Kujira\'s Hireling', function() {
                 expect(this.kujirasHireling.getMilitarySkill()).toBe(0);
                 expect(this.kujirasHireling.getPoliticalSkill()).toBe(0);
             });
+
+            it('should be able to be triggered multiple times', function() {
+                expect(this.kujirasHireling.getMilitarySkill()).toBe(1);
+                expect(this.kujirasHireling.getPoliticalSkill()).toBe(1);
+                this.player1.clickCard(this.kujirasHireling);
+                this.player1.clickPrompt('+1/+1');
+                expect(this.kujirasHireling.getMilitarySkill()).toBe(2);
+                expect(this.kujirasHireling.getPoliticalSkill()).toBe(2);
+                this.player2.clickCard(this.kujirasHireling);
+                this.player2.clickPrompt('-1/-1');
+                expect(this.kujirasHireling.getMilitarySkill()).toBe(1);
+                expect(this.kujirasHireling.getPoliticalSkill()).toBe(1);
+                this.player1.clickCard(this.kujirasHireling);
+                this.player1.clickPrompt('+1/+1');
+                expect(this.kujirasHireling.getMilitarySkill()).toBe(2);
+                expect(this.kujirasHireling.getPoliticalSkill()).toBe(2);
+                this.player2.pass();
+                this.player1.clickCard(this.kujirasHireling);
+                this.player1.clickPrompt('+1/+1');
+                expect(this.kujirasHireling.getMilitarySkill()).toBe(3);
+                expect(this.kujirasHireling.getPoliticalSkill()).toBe(3);
+                this.player2.clickCard(this.kujirasHireling);
+                this.player2.clickPrompt('-1/-1');
+                expect(this.kujirasHireling.getMilitarySkill()).toBe(2);
+                expect(this.kujirasHireling.getPoliticalSkill()).toBe(2);
+            });
         });
     });
 });

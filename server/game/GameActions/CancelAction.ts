@@ -9,9 +9,9 @@ export class CancelAction extends GameAction {
     getEffectMessage(context: TriggeredAbilityContext): [string, any[]] {
         let { replacementGameAction } = this.getProperties(context);
         if(replacementGameAction) {
-            return ['{1} {0} instead of {2}', [replacementGameAction.name, context.event.card]]
+            return ['{1} {0} instead of {2}', [context.target, replacementGameAction.name, context.event.card]]
         }
-        return ['cancel the effects of {1}', [context.event.card]];
+        return ['cancel the effects of {0}', [context.event.card]];
     }
 
     getProperties(context: TriggeredAbilityContext, additionalProperties = {}): CancelActionProperties {
