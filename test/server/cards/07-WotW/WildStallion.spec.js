@@ -65,7 +65,7 @@ describe('Wild Stallion', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.wildStallion);
-                this.player1.clickPrompt('No More Targets');
+                this.player1.clickPrompt('Done');
                 expect(this.wildStallion.inConflict).toBe(true);
                 expect(this.wayfinder.inConflict).toBe(false);
             });
