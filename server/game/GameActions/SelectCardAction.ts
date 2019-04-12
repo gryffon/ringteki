@@ -5,7 +5,7 @@ import CardSelector = require('../CardSelector');
 import Player = require('../player');
 
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { CardTypes, Players, Locations, EffectNames } from '../Constants';
+import { CardTypes, Players, Locations, EffectNames, TargetModes } from '../Constants';
 import { GameAction } from './GameAction';
 
 export interface SelectCardProperties extends CardActionProperties {
@@ -21,6 +21,7 @@ export interface SelectCardProperties extends CardActionProperties {
     messageArgs?: (card: BaseCard, player: Player, properties: SelectCardProperties) => any[];
     gameAction: GameAction;
     selector?: BaseCardSelector;
+    mode?: TargetModes;
     actionParameter?: string;
 }
 
