@@ -1,4 +1,4 @@
 {
-  "presets": ["react", "env"],
+  "presets": ["@babel/preset-react", "@babel/preset-env", "@babel/preset-typescript"],
   "plugins": [ "istanbul", "react-hot-loader/babel", "transform-object-assign" ]
 }
