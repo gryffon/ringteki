@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const UiPrompt = require('../uiprompt.js');
-const { Locations, CardTypes } = require('../../Constants');
+const { Locations, CardTypes, EffectNames } = require('../../Constants');
 
 const capitalize = {
     military: 'Military',
@@ -21,6 +21,13 @@ class InitiateConflictPrompt extends UiPrompt {
         this.canPass = canPass;
         this.selectedDefenders = [];
         this.covertRemaining = false;
+        let mustBeDeclared = this.choosingPlayer.cardsInPlay.filter(card =>
+            card.getEffects(EffectNames.MustBeDeclaredAsAttacker).some(effect => effect === 'both'));
+        for(const card of mustBeDeclared) {
+            if(this.checkCardCondition(card)) {
+                this.selectCard(card);
+            }
+        }
     }
 
     continue() {
@@ -167,7 +174,7 @@ class InitiateConflictPrompt extends UiPrompt {
         } else if(card.type === CardTypes.Character && card.location === Locations.PlayArea) {
             if(card.controller === this.choosingPlayer) {
                 if(card.canDeclareAsAttacker(this.conflict.conflictType)) {
-                    return true;
+                    return !card.getEffects(EffectNames.MustBeDeclaredAsAttacker).some(effect => effect === 'both' || effect === this.conflict.conflictType);
                 }
             } else if(this.selectedDefenders.includes(card) || (!card.isCovert() && this.covertRemaining)) {
                 return true;
