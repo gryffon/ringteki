@@ -489,6 +489,9 @@ class Player extends GameObject {
     }
 
     addPlayableLocation(type, player, location, cards = []) {
+        if(!player) {
+            return;
+        }
         let playableLocation = new PlayableLocation(type, player, location, cards);
         this.playableLocations.push(playableLocation);
         return playableLocation;
@@ -939,8 +942,6 @@ class Player extends GameObject {
             card.controller = card.owner;
         }
 
-        card.moveTo(targetLocation);
-
         if(provinceLocations.includes(targetLocation)) {
             if([Locations.DynastyDeck, Locations.ProvinceDeck].includes(location)) {
                 card.facedown = true;
@@ -957,6 +958,8 @@ class Player extends GameObject {
         } else if(targetPile) {
             targetPile.push(card);
         }
+
+        card.moveTo(targetLocation);
     }
 
     /**
