@@ -21,6 +21,9 @@ describe('Iuchi Daiyu', function() {
                 provinces['province 1'].provinceCard.facedown = false;
                 provinces['province 2'].provinceCard.facedown = false;
                 provinces['province 3'].provinceCard.facedown = false;
+
+                this.strongholdProvince = this.player2.findCardByName('shameful-display', 'stronghold province');
+                this.strongholdProvince.facedown = false;
             });
 
             it('should not be able to be triggered outside of a conflict', function() {
