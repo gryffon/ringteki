@@ -160,7 +160,7 @@ class InnerNewGame extends React.Component {
                             <div className='checkbox col-sm-8'>
                                 <label>
                                     <input type='checkbox' onChange={ this.onSpectatorSquelchClick } checked={ this.state.spectatorSquelch } />
-                                    Don't allow spectators to chat
+                                    Don&apos;t allow spectators to chat
                                 </label>
                             </div>
                             <div className='checkbox col-sm-8'>
