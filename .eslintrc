@@ -3,7 +3,23 @@
     "node": true,
     "es6": true
   },
-  "extends": "eslint:recommended",
+  "plugins": [
+    "react-redux",
+    "react-perf"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react-redux/recommended"
+  ],
+  "settings": {
+    "react": {
+      "createClass": "createReactClass", 
+      "pragma": "React",
+      "version": "detect"
+      //"flowVersion": "0.53"
+    }
+  },
   "rules": {
     "indent": [
       2,
