@@ -1,3 +1,4 @@
+/* eslint react/no-string-refs: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import Messages from './Messages.jsx';

@@ -1,3 +1,5 @@
+/* eslint react/no-find-dom-node: 0 */
+/* eslint react/no-string-refs: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';

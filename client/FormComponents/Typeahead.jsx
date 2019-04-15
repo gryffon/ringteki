@@ -1,3 +1,4 @@
+/* eslint react/no-string-refs: 0 */
 import { Typeahead } from 'react-bootstrap-typeahead';
 import React from 'react';
 import PropTypes from 'prop-types';
