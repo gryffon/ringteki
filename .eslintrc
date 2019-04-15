@@ -133,7 +133,8 @@
     "no-trailing-spaces": [
       2
     ],
-    "react-redux/prefer-separate-component-file": 0
+    "react-redux/prefer-separate-component-file": 0,
+    "react-redux/connect-prefer-named-arguments": 0
   },
   "parser": "babel-eslint"
 }
