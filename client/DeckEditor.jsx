@@ -1,3 +1,5 @@
+/* eslint react/no-find-dom-node: 0 */
+/* eslint react/no-string-refs: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'underscore';
@@ -418,7 +420,7 @@ class InnerDeckEditor extends React.Component {
             <div>
                 { popup }
                 <span className='btn btn-primary' data-toggle='modal' data-target='#decks-modal'>Import deck</span>
-                <h4>Either type the cards manually into the box below, add the cards one by one using the card box and autocomplete or for best results, copy the permalink url from <a href='http://fiveringsdb.com' target='_blank'>Five Rings DB</a> and paste it into the popup from clicking the "Import Deck" button.</h4>
+                <h4>Either type the cards manually into the box below, add the cards one by one using the card box and autocomplete or for best results, copy the permalink url from <a href='http://fiveringsdb.com' target='_blank' rel='noopener noreferrer'>Five Rings DB</a> and paste it into the popup from clicking the &quot;Import Deck&quot; button.</h4>
                 <form className='form form-horizontal'>
                     <Input name='deckName' label='Deck Name' labelClass='col-sm-3' fieldClass='col-sm-9' placeholder='Deck Name'
                         type='text' onChange={ this.onChange.bind(this, 'name') } value={ this.state.deck.name } />
@@ -457,7 +459,6 @@ InnerDeckEditor.propTypes = {
     deck: PropTypes.object,
     factions: PropTypes.object,
     loading: PropTypes.bool,
-    mode: PropTypes.string,
     onDeckSave: PropTypes.func,
     packs: PropTypes.array,
     updateDeck: PropTypes.func
