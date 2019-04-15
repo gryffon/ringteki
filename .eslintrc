@@ -132,7 +132,8 @@
     ],
     "no-trailing-spaces": [
       2
-    ]
+    ],
+    "react-redux/prefer-separate-component-file": 0
   },
   "parser": "babel-eslint"
 }
