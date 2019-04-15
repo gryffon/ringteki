@@ -72,7 +72,6 @@ export class InnerAddDeck extends React.Component {
 InnerAddDeck.displayName = 'InnerAddDeck';
 InnerAddDeck.propTypes = {
     addDeck: PropTypes.func,
-    agendas: PropTypes.object,
     apiError: PropTypes.string,
     cards: PropTypes.object,
     deck: PropTypes.object,
@@ -85,7 +84,6 @@ InnerAddDeck.propTypes = {
 
 function mapStateToProps(state) {
     return {
-        agendas: state.cards.factions,
         apiError: state.api.message,
         cards: state.cards.cards,
         deck: state.cards.selectedDeck,
