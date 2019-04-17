@@ -5,7 +5,7 @@ const CopyCharacter = require('./Effects/CopyCharacter');
 const Restriction = require('./Effects/restriction.js');
 const GainAbility = require('./Effects/GainAbility');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, PlayTypes } = require('./Constants');
+const { EffectNames, PlayTypes, CardTypes } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -94,7 +94,28 @@ const Effects = {
     }),
     alternateFatePool: (match) => EffectBuilder.player.static(EffectNames.AlternateFatePool, match),
     canPlayFromOwn: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
-        apply: (player) => player.addPlayableLocation(PlayTypes.PlayFromHand, player, location, cards),
+        apply: (player) => {
+            for(const card of cards.filter(card => card.type === CardTypes.Event && card.location === location)) {
+                for(const reaction of card.reactions) {
+                    reaction.registerEvents();
+                }
+            }
+            return player.addPlayableLocation(PlayTypes.PlayFromHand, player, location, cards);
+        },
+        unapply: (player, context, location) => player.removePlayableLocation(location)
+    }),
+    canPlayFromOpponents: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOpponents, {
+        apply: (player) => {
+            if(!player.opponent) {
+                return;
+            }
+            for(const card of cards.filter(card => card.type === CardTypes.Event && card.location === location)) {
+                for(const reaction of card.reactions) {
+                    reaction.registerEvents();
+                }
+            }
+            return player.addPlayableLocation(PlayTypes.PlayFromHand, player.opponent, location, cards);
+        },
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static(EffectNames.ChangePlayerGloryModifier, value),
