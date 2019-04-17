@@ -13,12 +13,14 @@ class Aranat extends DrawCard {
             effectArgs: context => context.player.opponent,
             gameAction: AbilityDsl.actions.selectCard({
                 cardType: CardTypes.Province,
-                location: Locations.Provinces,
+                location: [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour],
                 controller: Players.Opponent,
                 player: Players.Opponent,
                 optional: true,
                 mode: TargetModes.Unlimited,
-                cardCondition: card => !card.isStronghold && card.facedown,
+                cardCondition: card => card.facedown,
+                message: '{0} chooses to reveal {1}',
+                messageArgs: (card, player) => [player, card],
                 gameAction: AbilityDsl.actions.reveal()
             }),
             then: {
@@ -27,7 +29,7 @@ class Aranat extends DrawCard {
                 thenCondition: () => true,
                 gameAction: AbilityDsl.actions.placeFate(context => ({
                     target: context.source,
-                    amount: 5 - context.player.opponent.getNumberOfOpponentsFaceupProvinces()
+                    amount: 5 - context.player.getNumberOfOpponentsFaceupProvinces()
                 }))
             }
         });

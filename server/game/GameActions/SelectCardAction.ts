@@ -60,7 +60,7 @@ export class SelectCardAction extends CardGameAction {
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         let player = properties.targets && context.choosingPlayerOverride || (properties.player === Players.Opponent ? context.player.opponent : context.player);
-        return properties.selector.hasEnoughTargets(context, player);
+        return properties.selector.optional || properties.selector.hasEnoughTargets(context, player);
     }
 
     addEventsToArray(events, context: AbilityContext, additionalProperties = {}): void {
