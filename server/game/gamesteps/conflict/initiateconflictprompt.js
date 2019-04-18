@@ -52,7 +52,7 @@ class InitiateConflictPrompt extends UiPrompt {
         }
 
         if(!this.conflict.ring) {
-            menuTitle = 'Choose an elemental ring\n(click the ring again to change conflict type)';
+            menuTitle = this.conflict.forcedDeclaredType ? 'Choose an elemental ring' : 'Choose an elemental ring\n(click the ring again to change conflict type)';
             promptTitle = 'Initiate Conflict';
         } else {
             promptTitle = capitalize[this.conflict.conflictType] + ' ' + capitalize[this.conflict.element] + ' Conflict';
@@ -111,12 +111,14 @@ class InitiateConflictPrompt extends UiPrompt {
         let player = this.choosingPlayer;
 
         if(this.conflict.ring === ring) {
-            if(player.getConflictOpportunities(ring.conflictType === 'military' ? 'political' : 'military') === 0) {
+            if(player.getConflictOpportunities(ring.conflictType === 'military' ? 'political' : 'military') === 0 || this.conflict.forcedDeclaredType) {
                 return false;
             }
             ring.flipConflictType();
         } else {
-            if(player.getConflictOpportunities(ring.conflictType) === 0 || this.conflict.attackers.some(card => !card.canDeclareAsAttacker(ring.conflictType))) {
+            if(this.conflict.forcedDeclaredType && ring !== this.conflict.forcedDeclaredType) {
+                ring.flipConflictType();
+            } else if(player.getConflictOpportunities(ring.conflictType) === 0 || this.conflict.attackers.some(card => !card.canDeclareAsAttacker(ring.conflictType))) {
                 ring.flipConflictType();
             }
             if(this.conflict.ring) {

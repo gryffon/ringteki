@@ -5,11 +5,12 @@ const Settings = require('../settings.js');
 const { EffectNames, EventNames } = require('./Constants');
 
 class Conflict extends GameObject {
-    constructor(game, attackingPlayer, defendingPlayer, ring = null, conflictProvince = null) {
+    constructor(game, attackingPlayer, defendingPlayer, ring = null, conflictProvince = null, forcedDeclaredType = null) {
         super(game, 'Conflict');
         this.attackingPlayer = attackingPlayer;
         this.isSinglePlayer = !defendingPlayer;
         this.defendingPlayer = defendingPlayer || this.singlePlayerDefender();
+        this.forcedDeclaredType = forcedDeclaredType;
         this.declaredRing = this.ring = ring;
         this.declaredType = null;
         this.declarationComplete = false;

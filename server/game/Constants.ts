@@ -239,3 +239,8 @@ export enum Elements {
     Water = 'water',
     Void = 'void',
 };
+
+export enum ConflictTypes {
+    Military = 'military',
+    Political = 'political'
+};
