@@ -255,7 +255,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Returns the total number of faceup non-stronghold province cards controlled by this player
+     * Returns the total number of faceup province cards controlled by this player
      * @param {Function} predicate - format: (card) => return boolean, default: () => true
      * */
     getNumberOfFaceupProvinces(predicate = () => true) {
@@ -265,7 +265,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Returns the total number of faceup non-stronghold province cards controlled by this player's opponent
+     * Returns the total number of faceup province cards controlled by this player's opponent
      * @param {Function} predicate - format: (card) => return boolean, default: () => true
      * */
     getNumberOfOpponentsFaceupProvinces(predicate = () => true) {

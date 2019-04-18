@@ -21,6 +21,9 @@ describe('Iuchi Daiyu', function() {
                 provinces['province 1'].provinceCard.facedown = false;
                 provinces['province 2'].provinceCard.facedown = false;
                 provinces['province 3'].provinceCard.facedown = false;
+
+                this.strongholdProvince = this.player2.findCardByName('shameful-display', 'stronghold province');
+                this.strongholdProvince.facedown = false;
             });
 
             it('should not be able to be triggered outside of a conflict', function() {
@@ -53,6 +56,7 @@ describe('Iuchi Daiyu', function() {
                     this.player1.clickCard(this.iuchiDaiyu);
                     this.player1.clickCard(this.borderRider);
                     expect(this.borderRider.getMilitarySkill()).toBe(militarySkill + 3);
+                    expect(this.getChatLogs(3)).toContain('player1 uses Iuchi Daiyu to give Border Rider +1military for each faceup non-stronghold province their opponent controls (+3military)');
                 });
 
                 it('should last until the end of the conflict', function() {
