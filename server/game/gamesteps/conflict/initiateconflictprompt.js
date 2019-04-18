@@ -157,7 +157,7 @@ class InitiateConflictPrompt extends UiPrompt {
     }
 
     checkCardCondition(card) {
-        if(card.isProvince && card.controller !== this.choosingPlayer && !card.isBroken && card.checkRestrictions('initiateConflict', this.game.getFrameworkContext())) {
+        if(card.isProvince && card.controller !== this.choosingPlayer && card.canBeAttacked() && card.checkRestrictions('initiateConflict', this.game.getFrameworkContext())) {
             if(card.location === Locations.StrongholdProvince && _.size(this.game.allCards.filter(card => card.isProvince && card.isBroken && card.controller !== this.choosingPlayer)) < 3) {
                 return false;
             }
