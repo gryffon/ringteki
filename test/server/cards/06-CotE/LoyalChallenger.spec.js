@@ -1,18 +1,22 @@
-describe('Loyal Challenger', function() {
+fdescribe('Loyal Challenger', function() {
     integration(function() {
         describe('Loyal Challenger', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['loyal-challenger']
+                        inPlay: ['loyal-challenger'],
+                        dynastyDiscard: ['loyal-challenger']
                     },
                     player2: {
-                        inPlay: ['doomed-shugenja']
+                        inPlay: ['doomed-shugenja', 'shosuro-actress'],
+                        hand: ['ornate-fan']
                     }
                 });
-                this.loyalChallenger = this.player1.findCardByName('loyal-challenger');
+                this.loyalChallenger = this.player1.findCardByName('loyal-challenger', locations = 'play area');
                 this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
+                this.actress = this.player2.findCardByName('shosuro-actress');
+                this.discardLoyalChallenger = this.player1.findCardByName('loyal-challenger', locations = 'dynasty discard pile');
             });
 
             it('should gain 1 honor after winning a conflict', function() {
@@ -37,6 +41,23 @@ describe('Loyal Challenger', function() {
                 let honor = this.player1.player.honor;
                 this.noMoreActions();
                 expect(this.player1.player.honor).toBe(honor - 1);
+            });
+
+            it('should gain the opponent 1 honor if they win after take control with actress', function () {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.loyalChallenger],
+                    defenders: [this.actress],
+                    type: 'political'
+                });
+                this.player2.clickCard(this.actress);
+                this.player2.clickCard(this.discardLoyalChallenger);
+                expect(this.discardLoyalChallenger.location).toBe('play area');
+                let honor = this.player1.player.honor;
+                this.player1.pass();
+                this.player2.playAttachment('ornate-fan', this.discardLoyalChallenger);
+                this.noMoreActions();
+                expect(this.player2.player.honor).toBe(honor + 1);
             });
 
         });
@@ -118,7 +139,6 @@ describe('Loyal Challenger', function() {
                 this.player2.clickCard(this.agashaSwordsmith);
                 expect(this.player2).toHavePrompt('Agasha Swordsmith');
             });
-
         });
     });
 });
