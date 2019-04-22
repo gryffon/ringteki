@@ -6,40 +6,101 @@ describe('Kyuden Kakita', function() {
                     phase: 'conflict',
                     player1: {
                         stronghold: 'kyuden-kakita',
-                        inPlay: ['sincere-challenger']
+                        inPlay: ['sincere-challenger', 'solemn-scholar']
                     },
                     player2: {
-                        inPlay: ['honest-challenger', 'shrine-maiden']
+                        inPlay: ['honest-challenger']
                     }
                 });
 
                 this.sincereChallenger = this.player1.findCardByName(
                     'sincere-challenger');
-                this.shrineMaiden = this.player2.findCardByName(
-                    'shrine-maiden');
+                this.honestChallenger = this.player2.findCardByName(
+                    'honest-challenger');
+                this.solemnScholar = this.player1.findCardByName(
+                    'solemn-scholar');
 
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
-                    attackers: [this.sincereChallenger],
-                    defenders: [this.shrineMaiden]
+                    attackers: [this.sincereChallenger, this.solemnScholar],
+                    defenders: [this.honestChallenger]
                 });
-                this.player2.pass();
-                this.player1.clickCard(this.sincereChallenger);
-                this.player1.clickCard(this.shrineMaiden);
             });
 
             it('should let you honor your character after winning a duel', function() {
-                this.player1.clickPrompt('1');
-                this.player2.clickPrompt('2');
+                this.player2.pass();
+                this.player1.clickCard(this.sincereChallenger);
+                this.player1.clickCard(this.honestChallenger);
+                this.player1.clickPrompt('3');
+                this.player2.clickPrompt('1');
+
                 expect(this.player1).toBeAbleToSelect('kyuden-kakita');
                 this.player1.clickCard('kyuden-kakita');
                 expect(this.player1).toHavePrompt('Kyūden Kakita');
                 expect(this.player1).toBeAbleToSelect(this.sincereChallenger);
-                expect(this.player1).not.toBeAbleToSelect(this.shrineMaiden);
+                expect(this.player1).not.toBeAbleToSelect(this.honestChallenger);
+                expect(this.player1).not.toBeAbleToSelect(this.solemnScholar);
+
                 this.player1.clickCard(this.sincereChallenger);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 expect(this.sincereChallenger.isHonored).toBe(true);
+            });
+
+            it('should work for ties', function() {
+                this.player2.pass();
+                this.player1.clickCard(this.sincereChallenger);
+                this.player1.clickCard(this.honestChallenger);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+
+                expect(this.player1).toBeAbleToSelect('kyuden-kakita');
+                this.player1.clickCard('kyuden-kakita');
+                expect(this.player1).toHavePrompt('Kyūden Kakita');
+                expect(this.player1).toBeAbleToSelect(this.sincereChallenger);
+                expect(this.player1).not.toBeAbleToSelect(this.honestChallenger);
+                expect(this.player1).not.toBeAbleToSelect(this.solemnScholar);
+
+                this.player1.clickCard(this.sincereChallenger);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.sincereChallenger.isHonored).toBe(true);
+            });
+
+            it('should work if you lose', function() {
+                this.player2.pass();
+                this.player1.clickCard(this.sincereChallenger);
+                this.player1.clickCard(this.honestChallenger);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('4');
+
+                expect(this.player1).toBeAbleToSelect('kyuden-kakita');
+                this.player1.clickCard('kyuden-kakita');
+                expect(this.player1).toHavePrompt('Kyūden Kakita');
+                expect(this.player1).toBeAbleToSelect(this.sincereChallenger);
+                expect(this.player1).not.toBeAbleToSelect(this.honestChallenger);
+                expect(this.player1).not.toBeAbleToSelect(this.solemnScholar);
+
+                this.player1.clickCard(this.sincereChallenger);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.sincereChallenger.isHonored).toBe(true);
+            });
+
+            it('should trigger from opponent duels', function() {
+                this.player2.clickCard(this.honestChallenger);
+                this.player2.clickCard(this.solemnScholar);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('4');
+
+                expect(this.player1).toBeAbleToSelect('kyuden-kakita');
+                this.player1.clickCard('kyuden-kakita');
+                expect(this.player1).toHavePrompt('Kyūden Kakita');
+                expect(this.player1).not.toBeAbleToSelect(this.sincereChallenger);
+                expect(this.player1).not.toBeAbleToSelect(this.honestChallenger);
+                expect(this.player1).toBeAbleToSelect(this.solemnScholar);
+
+                this.player1.clickCard(this.solemnScholar);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.solemnScholar.isHonored).toBe(true);
             });
         });
     });

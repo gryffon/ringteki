@@ -6,11 +6,12 @@ class KyudenKakita extends StrongholdCard {
     setupCardAbilities() {
         this.reaction({
             title: 'Honor a Character',
-            when: { afterDuel: () => true },
+            when: { onDuelFinished: () => true },
             cost: [AbilityDsl.costs.bowSelf()],
             target: {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
+                cardCondition: (card, context) => context.event.duel.isInvolved(card),
                 gameAction: AbilityDsl.actions.honor()
             }
         });
