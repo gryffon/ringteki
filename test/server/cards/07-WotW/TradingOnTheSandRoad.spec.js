@@ -56,11 +56,13 @@ describe('Trading on the Sand Road', function () {
                 expect(this.iuchiWayfinder.location).toBe('removed from game');
                 expect(this.player1.conflictDeck.length).toBe(player1DeckSize - 4);
                 expect(this.player2.conflictDeck.length).toBe(player2DeckSize - 4);
-                expect(this.getChatLogs(2)).toContain(
-                    'player1 plays Trading on the Sand Road to remove the top 4 cards from player1\'s deck: ' +
-                    'Iuchi Wayfinder, Supernatural Storm, Supernatural Storm and Supernatural Storm ' +
-                    'and the top 4 cards from player2\'s deck: Feral Ningyo, Fine Katana, Supernatural Storm and Supernatural Storm ' +
-                    'and make them playable by both players until the end of the round'
+                expect(this.getChatLogs(3)).toContain(
+                    'player1 removes the top 4 cards from their conflict deck from the game: ' +
+                    'Iuchi Wayfinder, Supernatural Storm, Supernatural Storm and Supernatural Storm'
+                );
+                expect(this.getChatLogs(3)).toContain(
+                    'player2 removes the top 4 cards from their conflict deck from the game: ' +
+                    'Feral Ningyo, Fine Katana, Supernatural Storm and Supernatural Storm'
                 );
             });
 
