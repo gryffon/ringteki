@@ -1,6 +1,6 @@
 const StrongholdCard = require('../../strongholdcard.js');
 const AbilityDsl = require('../../abilitydsl.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, Players } = require('../../Constants');
 
 class KyudenKakita extends StrongholdCard {
     setupCardAbilities() {
@@ -10,6 +10,7 @@ class KyudenKakita extends StrongholdCard {
             cost: [AbilityDsl.costs.bowSelf()],
             target: {
                 cardType: CardTypes.Character,
+                controller: Players.Self,
                 gameAction: AbilityDsl.actions.honor()
             }
         });
