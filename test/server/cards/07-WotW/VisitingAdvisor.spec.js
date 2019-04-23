@@ -58,7 +58,7 @@ describe('Visiting Advisor', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.visitingAdvisor);
-                expect(this.player1).toHavePromptButton('No more targets');
+                expect(this.player1).toHavePromptButton('Done');
             });
 
             it('should allow you to choose up to 1 other character you control', function() {
@@ -86,7 +86,7 @@ describe('Visiting Advisor', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.visitingAdvisor);
-                this.player1.clickPrompt('No more targets');
+                this.player1.clickPrompt('Done');
                 expect(this.visitingAdvisor.isParticipating()).toBe(false);
                 expect(this.battleMaidenRecruit.isParticipating()).toBe(true);
                 expect(this.borderRider.isParticipating()).toBe(true);
@@ -118,7 +118,7 @@ describe('Visiting Advisor', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.visitingAdvisor);
-                this.player1.clickPrompt('No more targets');
+                this.player1.clickPrompt('Done');
                 expect(this.visitingAdvisor.isParticipating()).toBe(false);
                 expect(this.getChatLogs(3)).toContain('player1 uses Visiting Advisor to send Visiting Advisor home');
             });
