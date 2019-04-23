@@ -16,7 +16,7 @@ class VisitingAdvisor extends DrawCard {
             },
             gameAction: AbilityDsl.actions.sendHome(context => ({ target: context.source })),
             effect: 'send {0}{1}{2} home',
-            effectArgs: (context) => context.target ? [' and ', context.source] : []
+            effectArgs: (context) => context.target.length === 0 ? [context.source] : [' and ', context.source]
         });
     }
 }
