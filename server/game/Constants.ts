@@ -63,6 +63,7 @@ export enum EffectNames {
     SetBaseMilitarySkill = 'setBaseMilitarySkill',
     SetBasePoliticalSkill = 'setBasePoliticalSkill',
     SetBaseProvinceStrength = 'setBaseProvinceStrength',
+    SetConflictDeclarationType = 'setConflictDeclarationType',
     SetConflictTotalSkill = 'setConflictTotalSkill',
     SetDash = 'setDash',
     SetGlory = 'setGlory',
@@ -212,6 +213,7 @@ export enum EventNames {
     OnModifyBid = 'onModifyBid',
     OnModifyFate = 'onModifyFate',
     OnSetHonorDial = 'onSetHonorDial',
+    OnSwitchConflictType = 'onSwitchConflictType',
     OnTakeRing = 'onTakeRing',
     Unnamed = 'unnamedEvent'
 };
