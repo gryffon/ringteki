@@ -78,6 +78,7 @@ export enum EffectNames {
     AdditionalConflict = 'additionalConflict',
     AlternateFatePool = 'alternateFatePool',
     CanPlayFromOwn = 'canPlayFromOwn',
+    CanPlayFromOpponents = 'canPlayFromOpponents',
     ChangePlayerGloryModifier = 'gloryModifier',
     ChangePlayerSkillModifier = 'conflictSkillModifier',
     GainActionPhasePriority = 'actionPhasePriority',

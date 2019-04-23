@@ -10,7 +10,7 @@ const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 
-const { Locations, EffectNames, Players, CardTypes } = require('./Constants');
+const { Locations, EffectNames, Players, CardTypes, PlayTypes } = require('./Constants');
 
 const ValidKeywords = [
     'ancestral',
@@ -588,6 +588,8 @@ class DrawCard extends BaseCard {
             isDynasty: this.isDynasty,
             isDishonored: this.isDishonored,
             isHonored: this.isHonored,
+            isPlayableByMe: this.isConflict && this.controller.isCardInPlayableLocation(this, PlayTypes.PlayFromHand),
+            isPlayableByOpponent: this.isConflict && this.controller.opponent && this.controller.opponent.isCardInPlayableLocation(this, PlayTypes.PlayFromHand),
             bowed: this.bowed,
             fate: this.fate,
             new: this.new,

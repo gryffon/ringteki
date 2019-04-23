@@ -10,7 +10,7 @@ import AbilityContext = require('./AbilityContext');
 import Player = require('./player');
 import Game = require('./game');
 
-import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, Players } from './Constants';
+import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, PlayTypes } from './Constants';
 import { ActionProps, TriggeredAbilityProps, PersistentEffectProps } from './Interfaces'; 
 
 class BaseCard extends EffectSource {
@@ -205,9 +205,15 @@ class BaseCard extends EffectSource {
     updateAbilityEvents(from: Locations, to: Locations) {
         _.each(this.reactions, reaction => {
             reaction.limit.reset();
-            if((reaction.location.includes(to) || this.type === CardTypes.Event && to === Locations.ConflictDeck) && !reaction.location.includes(from)) {
+            if(this.type === CardTypes.Event) {
+                if(to === Locations.ConflictDeck || this.controller.isCardInPlayableLocation(this, PlayTypes.PlayFromHand) || this.controller.opponent && this.controller.opponent.isCardInPlayableLocation(this, PlayTypes.PlayFromHand)) {
+                    reaction.registerEvents();
+                } else {
+                    reaction.unregisterEvents();
+                }
+            } else if(reaction.location.includes(to) && !reaction.location.includes(from)) {
                 reaction.registerEvents();
-            } else if(!reaction.location.includes(to) && (reaction.location.includes(from) || this.type === CardTypes.Event && to === Locations.ConflictDeck)) {
+            } else if(!reaction.location.includes(to) && reaction.location.includes(from)) {
                 reaction.unregisterEvents();
             }
         });
