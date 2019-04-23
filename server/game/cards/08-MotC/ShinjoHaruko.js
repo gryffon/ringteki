@@ -3,7 +3,7 @@ const { Players, CardTypes } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class ShinjoHaruko extends DrawCard {
-    setupCardAbilites() {
+    setupCardAbilities() {
         this.action({
             title: 'Move a honored character into the conflict',
             condition: context => context.source.isParticipating(),
