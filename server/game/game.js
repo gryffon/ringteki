@@ -274,7 +274,7 @@ class Game extends EventEmitter {
             uuid: conflict.uuid
         });
         conflict.attackingPlayer.conflictOpportunities.total--;
-        if(conflict.conflictPassed) {
+        if(conflict.conflictPassed || conflict.forcedDeclaredType) {
             conflict.attackingPlayer.conflictOpportunities.military = Math.max(
                 conflict.attackingPlayer.conflictOpportunities.military,
                 conflict.attackingPlayer.conflictOpportunities.total
@@ -958,8 +958,8 @@ class Game extends EventEmitter {
         return new AbilityContext({ game: this, player: player });
     }
 
-    initiateConflict(player, canPass) {
-        this.currentConflict = new Conflict(this, player, player.opponent);
+    initiateConflict(player, canPass, forcedDeclaredType) {
+        this.currentConflict = new Conflict(this, player, player.opponent, null, null, forcedDeclaredType);
         this.queueStep(new ConflictFlow(this, this.currentConflict, canPass));
     }
 

@@ -80,7 +80,7 @@ describe('InitateConflictPrompt: ', function() {
 
     describe('the cardClicked function, ', function() {
         beforeEach(function() {
-            this.cardSpy = jasmine.createSpyObj('card', ['checkRestrictions', 'canDeclareAsAttacker', 'isCovert', 'canBeBypassedByCovert', 'getEffects']);
+            this.cardSpy = jasmine.createSpyObj('card', ['checkRestrictions', 'canDeclareAsAttacker', 'isCovert', 'canBeBypassedByCovert', 'getEffects', 'canBeAttacked']);
             this.cardSpy.getEffects.and.returnValue([]);
         });
 
@@ -99,6 +99,7 @@ describe('InitateConflictPrompt: ', function() {
                 this.cardSpy.isProvince = true;
                 this.cardSpy.controller = this.opponent;
                 this.cardSpy.isBroken = false;
+                this.cardSpy.canBeAttacked.and.returnValue(true);
                 this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
             });
 

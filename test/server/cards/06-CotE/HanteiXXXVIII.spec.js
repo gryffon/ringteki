@@ -22,7 +22,8 @@ describe('Hantei XXXVII', function() {
                         hand: [
                             'ambush', 'backhanded-compliment', 'court-games', 'duelist-training',
                             'noble-sacrifice', 'policy-debate', 'taryu-jiai', 'the-perfect-gift',
-                            'bayushi-kachiko', 'soul-beyond-reproach', 'peasant-s-advice'
+                            'bayushi-kachiko', 'soul-beyond-reproach', 'peasant-s-advice',
+                            'warriors-of-the-wind', 'favored-mount'
                         ]
                     }
                 });
@@ -39,6 +40,8 @@ describe('Hantei XXXVII', function() {
                 this.guardianKami = this.player2.findCardByName('guardian-kami');
                 this.honoredBlade = this.player2.findCardByName('honored-blade');
                 this.timeForWar = this.player2.findCardByName('time-for-war');
+                this.warriorsOfTheWind = this.player2.findCardByName('warriors-of-the-wind');
+                this.favoredMount = this.player2.findCardByName('favored-mount');
                 this.secludedShrine = this.player2.placeCardInProvince('secluded-shrine');
                 this.utakuKamoko.bow();
                 this.fawningDiplomat.honor();
@@ -444,6 +447,30 @@ describe('Hantei XXXVII', function() {
                     this.player2.clickCard(this.prudentChallenger);
                     expect(this.player1).toHavePrompt('Triggered Abilities');
                     expect(this.player1).toBeAbleToSelect(this.hantei);
+                });
+            });
+
+            describe('when Warriors of the Wind is played', function () {
+                beforeEach(function () {
+                    this.player2.playAttachment(this.favoredMount, this.utakuKamoko);
+                    this.player1.pass();
+                    this.player2.clickCard(this.favoredMount);
+                    this.player1.pass();
+                });
+
+                it('should allow Hantei to be triggered', function () {
+                    this.player2.clickCard(this.warriorsOfTheWind);
+                    expect(this.player1).toHavePrompt('Triggered Abilities');
+                    expect(this.player1).toBeAbleToSelect(this.hantei);
+                });
+
+                it('should allow Hantei controller to choose targets for the post-then effect', function () {
+                    expect(this.utakuKamoko.isParticipating()).toBe(true);
+                    this.player2.clickCard(this.warriorsOfTheWind);
+                    this.player1.clickCard(this.hantei);
+                    expect(this.utakuKamoko.isParticipating()).toBe(false);
+                    expect(this.player1).toHavePrompt('Choose characters');
+                    expect(this.player1).toHavePromptButton('Done');
                 });
             });
         });

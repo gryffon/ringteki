@@ -5,7 +5,7 @@ const CopyCharacter = require('./Effects/CopyCharacter');
 const Restriction = require('./Effects/restriction.js');
 const GainAbility = require('./Effects/GainAbility');
 const EffectBuilder = require('./Effects/EffectBuilder');
-const { EffectNames, PlayTypes } = require('./Constants');
+const { EffectNames, PlayTypes, CardTypes } = require('./Constants');
 
 /* Types of effect
     1. Static effects - do something for a period
@@ -21,6 +21,7 @@ const Effects = {
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
     blank: () => EffectBuilder.card.static(EffectNames.Blank),
     canBeSeenWhenFacedown: () => EffectBuilder.card.static(EffectNames.CanBeSeenWhenFacedown),
+    cannotBeAttacked: () => EffectBuilder.card.static(EffectNames.CannotBeAttacked),
     cannotHaveOtherRestrictedAttachments: card => EffectBuilder.card.static(EffectNames.CannotHaveOtherRestrictedAttachments, card),
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsAttacker, type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsDefender, type),
@@ -96,7 +97,28 @@ const Effects = {
     }),
     alternateFatePool: (match) => EffectBuilder.player.static(EffectNames.AlternateFatePool, match),
     canPlayFromOwn: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
-        apply: (player) => player.addPlayableLocation(PlayTypes.PlayFromHand, player, location, cards),
+        apply: (player) => {
+            for(const card of cards.filter(card => card.type === CardTypes.Event && card.location === location)) {
+                for(const reaction of card.reactions) {
+                    reaction.registerEvents();
+                }
+            }
+            return player.addPlayableLocation(PlayTypes.PlayFromHand, player, location, cards);
+        },
+        unapply: (player, context, location) => player.removePlayableLocation(location)
+    }),
+    canPlayFromOpponents: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOpponents, {
+        apply: (player) => {
+            if(!player.opponent) {
+                return;
+            }
+            for(const card of cards.filter(card => card.type === CardTypes.Event && card.location === location)) {
+                for(const reaction of card.reactions) {
+                    reaction.registerEvents();
+                }
+            }
+            return player.addPlayableLocation(PlayTypes.PlayFromHand, player.opponent, location, cards);
+        },
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
     changePlayerGloryModifier: (value) => EffectBuilder.player.static(EffectNames.ChangePlayerGloryModifier, value),
@@ -116,6 +138,7 @@ const Effects = {
         apply: (player, context) => player.addCostReducer(context.source, { amount: amount, match: match, limit: AbilityLimit.fixed(1) }),
         unapply: (player, context, reducer) => player.removeCostReducer(reducer)
     }),
+    setConflictDeclarationType: (type) => EffectBuilder.player.static(EffectNames.SetConflictDeclarationType, type),
     setMaxConflicts: (amount) => EffectBuilder.player.static(EffectNames.SetMaxConflicts, amount),
     setConflictTotalSkill: (value) => EffectBuilder.player.static(EffectNames.SetConflictTotalSkill, value),
     showTopConflictCard: () => EffectBuilder.player.static(EffectNames.ShowTopConflictCard),

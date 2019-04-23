@@ -1,17 +1,24 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
+const { Locations } = require('../../Constants');
 
 class IuchiDaiyu extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: '+1 military for each faceup province',
             condition: () => this.game.isDuringConflict(),
             target: {
-                gameAction: ability.actions.cardLastingEffect(context => ({
-                    effect: ability.effects.modifyMilitarySkill(context.player.getNumberOfOpponentsFaceupProvinces())
+                gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
+                    effect: AbilityDsl.effects.modifyMilitarySkill(
+                        context.player.getNumberOfOpponentsFaceupProvinces(province => province.location !== Locations.StrongholdProvince)
+                    )
                 }))
             },
-            effect: 'give {0} +1{1} for each faceup non-stronghold province their opponent controls',
-            effectArgs: () => ['military']
+            effect: 'give {0} +1{1} for each faceup non-stronghold province their opponent controls (+{2}{1})',
+            effectArgs: context => [
+                'military',
+                context.player.getNumberOfOpponentsFaceupProvinces(province => province.location !== Locations.StrongholdProvince)
+            ]
         });
     }
 }

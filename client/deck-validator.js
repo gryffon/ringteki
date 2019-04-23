@@ -16,7 +16,8 @@ const officialRoles = {
 
 const openRoles = [
     'support-of-the-phoenix',
-    'support-of-the-scorpion'
+    'support-of-the-scorpion',
+    'support-of-the-unicorn'
 ];
 
 function getDeckCount(deck) {
@@ -96,7 +97,8 @@ const roleRules = {
     'seeker-of-void': rulesForSeekerRole('void'),
     'seeker-of-water': rulesForSeekerRole('water'),
     'support-of-the-phoenix': rulesForSupportRole('phoenix'),
-    'support-of-the-scorpion': rulesForSupportRole('scorpion')
+    'support-of-the-scorpion': rulesForSupportRole('scorpion'),
+    'support-of-the-unicorn': rulesForSupportRole('unicorn')
 };
 
 class DeckValidator {

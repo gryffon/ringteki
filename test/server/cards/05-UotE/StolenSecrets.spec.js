@@ -9,7 +9,7 @@ describe('Stolen Secrets', function() {
                         hand: ['stolen-secrets','stolen-secrets']
                     },
                     player2: {
-                        hand: ['assassination', 'finger-of-jade', 'tattooed-wanderer', 'kami-unleashed','censure']
+                        hand: ['assassination', 'finger-of-jade', 'tattooed-wanderer', 'kami-unleashed','censure', 'levy']
                     }
                 });
 
@@ -18,6 +18,7 @@ describe('Stolen Secrets', function() {
                 this.tattooedWanderer = this.player2.findCardByName('tattooed-wanderer', 'hand');
                 this.kamiUnleashed = this.player2.findCardByName('kami-unleashed', 'hand');
                 this.censure = this.player2.findCardByName('censure', 'hand');
+                this.levy = this.player2.findCardByName('levy', 'hand');
 
                 this.player2.player.moveCard(this.censure, 'conflict deck');
                 this.player2.player.moveCard(this.assassination, 'conflict deck');
@@ -288,6 +289,33 @@ describe('Stolen Secrets', function() {
                         expect(this.tattooedWanderer.location).toBe('play area');
                         expect(this.tattooedWanderer.inConflict).toBe(false);
                         expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
+                    });
+                });
+
+                describe('if it resolves (with an interrupt event as chosen card)', function() {
+                    beforeEach(function() {
+                        this.player1.player.imperialFavor = 'political';
+                        this.player2.moveCard(this.tattooedWanderer, 'hand');
+                        this.player1.clickCard(this.stolenSecrets);
+                        this.player1.clickCard(this.favoredNiece);
+                        this.player1.clickPrompt(this.censure.name);
+                        this.player1.clickPrompt(this.fingerOfJade.name);
+                        this.player1.clickPrompt(this.assassination.name);
+                    });
+
+                    it('it should allow the event to be played', function() {
+                        expect(this.player2).toHavePrompt('Conflict Action Window');
+                        this.player2.clickCard(this.levy);
+                        expect(this.player1).toHavePrompt('Levy');
+                        this.player1.clickPrompt('Give your opponent 1 honor');
+                        expect(this.player1).toHavePrompt('Triggered Abilities');
+                        expect(this.player1).toBeAbleToSelect(this.censure);
+                        this.player1.clickCard(this.censure);
+                        expect(this.censure.location).toBe('conflict discard pile');
+                        expect(this.levy.location).toBe('conflict discard pile');
+                        expect(this.censure.controller).toBe(this.player2.player);
+                        expect(this.levy.controller).toBe(this.player2.player);
+                        expect(this.player1).toHavePrompt('Conflict Action Window');
                     });
                 });
 
