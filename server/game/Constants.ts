@@ -60,6 +60,8 @@ export enum EffectNames {
     ModifyProvinceStrength = 'modifyProvinceStrength',
     ModifyProvinceStrengthMultiplier = 'modifyProvinceStrengthMultiplier',
     MustBeChosen = 'mustBeChosen',
+    MustBeDeclaredAsAttacker = 'mustBeDeclaredAsAttacker',
+    MustBeDeclaredAsDefender = 'mustBeDeclaredAsDefender',
     SetBaseMilitarySkill = 'setBaseMilitarySkill',
     SetBasePoliticalSkill = 'setBasePoliticalSkill',
     SetBaseProvinceStrength = 'setBaseProvinceStrength',
