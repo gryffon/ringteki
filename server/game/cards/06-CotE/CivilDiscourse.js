@@ -6,11 +6,20 @@ class CivilDiscourse extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Initiate a political duel',
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Political,
                 opponentChoosesDuelTarget: true,
-                resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
-            }),
+                gameAction: duel => AbilityDsl.actions.cardLastingEffect({
+                    target: duel.loser,
+                    effect: AbilityDsl.effects.gainAbility(AbilityTypes.Persistent, {
+                        targetController: Players.Self,
+                        effect: AbilityDsl.effects.increaseCost({
+                            amount: 1,
+                            playingType: PlayTypes.PlayFromHand
+                        })
+                    })
+                })
+            },
             effect: 'initiate a political duel between {1} and {2}',
             effectArgs: (context) => [context.targets.challenger, context.targets.duelTarget]
         });

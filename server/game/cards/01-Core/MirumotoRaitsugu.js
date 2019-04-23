@@ -13,7 +13,11 @@ class MirumotoRaitsugu extends DrawCard {
                 gameAction: ability.actions.duel(context => ({
                     type: DuelTypes.Military,
                     challenger: context.source,
-                    resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
+                    gameAction: duel => ability.actions.otherwise({
+                        target: duel.loser,
+                        gameAction: ability.actions.removeFate(),
+                        otherwiseAction: ability.actions.discardFromPlay()
+                    })
                 }))
             }
         });

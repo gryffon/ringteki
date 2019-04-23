@@ -10,10 +10,9 @@ import { GameAction } from './GameAction';
 export interface DuelProperties extends CardActionProperties {
     type: DuelTypes;
     challenger?: DrawCard;
-    gameAction?: GameAction;
+    gameAction: (duel: Duel, context: AbilityContext) => GameAction | GameAction;
     message?: string;
     messageArgs?: (context: AbilityContext) => any | any[];
-    resolutionHandler?: (winner: DrawCard | DrawCard[], loser: DrawCard | DrawCard[]) => void;
     costHandler?: (context: AbilityContext, prompt: any) => void;
     statistic?: (card: DrawCard) => number;
 }
@@ -25,7 +24,7 @@ export class DuelAction extends CardGameAction {
 
     defaultProperties: DuelProperties = {
         type: undefined,
-        resolutionHandler: () => true
+        gameAction: null
     };
 
     getProperties(context: AbilityContext, additionalProperties = {}): DuelProperties {
@@ -54,16 +53,15 @@ export class DuelAction extends CardGameAction {
         return properties.challenger && !properties.challenger.hasDash(properties.type) && card.location === Locations.PlayArea && !card.hasDash(properties.type);
     }
 
-    resolveDuel(winner: DrawCard | DrawCard[], loser: DrawCard | DrawCard[], context: AbilityContext, additionalProperties = {}): void {
+    resolveDuel(duel: Duel, context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        if(properties.gameAction && properties.gameAction.hasLegalTarget(context)) {
+        let gameAction = typeof(properties.gameAction) === 'function' ? properties.gameAction(duel, context) : properties.gameAction;
+        if(gameAction) {
             if(properties.message) {
                 const messageArgs = properties.messageArgs ? [].concat(properties.messageArgs(context)) : [];
                 context.game.addMessage(properties.message, ...messageArgs);
             }
-            properties.gameAction.resolve(null, context);
-        } else if(properties.resolutionHandler) {
-            properties.resolutionHandler(winner, loser);
+            gameAction.resolve(null, context);
         }
     }
 
@@ -106,7 +104,7 @@ export class DuelAction extends CardGameAction {
             context.game, 
             new Duel(context.game, properties.challenger, cards, properties.type, properties.statistic), 
             properties.costHandler ? prompt => this.honorCosts(prompt, event.context, additionalProperties) : null, 
-            (winner, loser) => this.resolveDuel(winner, loser, event.context, additionalProperties)
+            duel => this.resolveDuel(duel, event.context, additionalProperties)
         ));
     }
 
@@ -116,6 +114,8 @@ export class DuelAction extends CardGameAction {
 
     hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties): boolean {
         let properties = this.getProperties(context, additionalProperties);
-        return properties.gameAction && properties.gameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties);
+        let mockDuel = new Duel(context.game, properties.challenger, [], properties.type, properties.statistic);
+        let gameAction = typeof(properties.gameAction) === 'function' ? properties.gameAction(mockDuel, context) : properties.gameAction;
+        return gameAction && gameAction.hasTargetsChosenByInitiatingPlayer(context, additionalProperties);
     }
 }

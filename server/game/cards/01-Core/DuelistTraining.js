@@ -16,7 +16,7 @@ class DuelistTraining extends DrawCard {
                     gameAction: ability.actions.duel(context => ({
                         type: DuelTypes.Military,
                         challenger: context.source,
-                        resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser),
+                        gameAction: duel => ability.actions.bow({ target: duel.loser }),
                         costHandler: (context, prompt) => this.costHandler(context, prompt)
                     }))
                 }

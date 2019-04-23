@@ -1,14 +1,18 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { DuelTypes } = require('../../Constants');
 
 class MirumotoDojo extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Initiate a military duel',
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Military,
-                resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
-            })
+                gameAction: duel => AbilityDsl.actions.removeFate({
+                    target: duel.loser,
+                    recipient: duel.winner && duel.winner.hasTrait('duelist') && duel.loser && duel.loser.owner
+                })
+            }
         });
     }
 

@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Players, CardTypes, DuelTypes } = require('../../Constants');
 
 class HonestChallenger extends DrawCard {
@@ -11,7 +12,13 @@ class HonestChallenger extends DrawCard {
             title: 'Initiate a military duel',
             initiateDuel: context => ({
                 type: DuelTypes.Military,
-                resolutionHandler: (winner) => this.resolutionHandler(context, winner)
+                gameAction: duel => duel.winner && AbilityDsl.actions.selectCard({
+                    activePromptTitle: 'Choose a character to move to the conflict',
+                    cardType: CardTypes.Character,
+                    player: duel.winner === context.player ? Players.Self : Players.Opponent,
+                    controller: duel.winner === context.player ? Players.Self : Players.Opponent,
+                    gameAction: AbilityDsl.actions.moveToConflict()
+                })
             })
         });
     }

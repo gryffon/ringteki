@@ -31,10 +31,13 @@ class LoyalChallenger extends DrawCard {
         });
         this.action({
             title: 'Initiate a Political duel',
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Political,
-                resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
-            })
+                gameAction: duel => AbilityDsl.actions.cardLastingEffect({
+                    target: duel.loser,
+                    effect: AbilityDsl.effects.blank()
+                })
+            }
         });
     }
 

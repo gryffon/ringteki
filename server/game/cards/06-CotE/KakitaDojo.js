@@ -6,10 +6,13 @@ class KakitaDojo extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Initiate a military duel',
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Military,
-                resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
-            })
+                gameAction: duel => AbilityDsl.actions.multiple([
+                    AbilityDsl.actions.cardLastingEffect({ effect: AbilityDsl.effects.cardCannot('triggerAbilities') }),
+                    AbilityDsl.actions.bow({ target: duel.winner && duel.winner.hasTrait('duelist') && duel.loser })
+                ])
+            }
         });
     }
 

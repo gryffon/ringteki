@@ -34,7 +34,7 @@ class ChallengeOnTheFields extends DrawCard {
                         AbilityDsl.actions.duel(context => ({
                             type: DuelTypes.Military,
                             challenger: context.targets.challenger,
-                            resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
+                            gameAction: duel => AbilityDsl.actions.sendHome({ target: duel.loser })
                         }))
                     ]
                 }
