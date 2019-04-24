@@ -12,7 +12,7 @@ class PoliticalSanctions extends DrawCard {
         let diff = this.game.currentConflict.attackerSkill - this.game.currentConflict.defenderSkill;
         return context.game.isDuringConflict('political') &&
             context.player.isAttackingPlayer() ? diff < 0 : diff > 0 &&
-            context.source.parent.isParticipating() &&
+            card.isParticipating() &&
             super.canAttach(card, context);
     }
 }
