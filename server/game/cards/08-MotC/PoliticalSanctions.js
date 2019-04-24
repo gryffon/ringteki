@@ -17,6 +17,6 @@ class PoliticalSanctions extends DrawCard {
     }
 }
 
-PoliticalSanctions.id = 'political-sanctions';
+PoliticalSanctions.id = 'political-sanction';
 
 module.exports = PoliticalSanctions;

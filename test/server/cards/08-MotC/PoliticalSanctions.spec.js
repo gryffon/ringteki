@@ -6,7 +6,7 @@ describe('Political Sanctions', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['isawa-ujina'],
-                        hand: ['political-sanctions']
+                        hand: ['political-sanction']
                     },
                     player2: {
                         inPlay: ['shiba-tetsu', 'adept-of-the-waves', 'shrine-maiden'],
@@ -28,16 +28,16 @@ describe('Political Sanctions', function() {
             });
 
             it('should stop actions if you have more pol skill', function() {
-                expect(this.player2).toBeAbleToSelect(this.adept);
                 this.player2.pass();
-                this.player1.playAttachment('political-sanctions', this.adept);
+                this.player1.playAttachment('political-sanction', this.adept);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
-                expect(this.player2).not.toBeAbleToSelect(this.adept);
+                this.player2.clickCard(this.adept);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
             it('should stop reactions', function() {
                 this.player2.pass();
-                this.player1.playAttachment('political-sanctions', this.tetsu);
+                this.player1.playAttachment('political-sanction', this.tetsu);
                 this.player2.clickCard('against-the-waves');
                 this.player2.clickCard(this.ujina);
                 expect(this.player2).not.toBeAbleToSelect(this.tetsu);
@@ -47,13 +47,13 @@ describe('Political Sanctions', function() {
             it('should not work if you have lower pol skill', function() {
                 this.player2.playAttachment('ornate-fan', this.tetsu);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
-                expect(this.player1).not.toBeAbleToSelect('political-sanctions');
+                expect(this.player1).not.toBeAbleToSelect('political-sanction');
             });
 
             it('should not be able to be attached to character outside the conflict', function() {
                 this.player2.pass();
-                this.player1.clickCard('political-sanctions');
-                expect(this.player1).not.toBeAbleToSelect(this.maiden);
+                this.player1.playAttachment('political-sanction', this.maiden);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
             });
         });
     });
