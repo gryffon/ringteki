@@ -40,7 +40,7 @@ describe('Winter Court Hosts', function() {
                 this.player2.playAttachment('fine-katana', this.tetsu);
                 this.player1.clickCard(this.winterCourt);
                 expect(this.player1.hand.length).toBe(1);
-                
+
                 this.player1.pass();
                 this.player2.clickCard(this.steward);
                 this.player2.clickPrompt('0');
