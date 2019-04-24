@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl.js');
 class WinterCourtHosts extends DrawCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'Draw a card.',
+            title: 'Draw a card',
             limit: AbilityDsl.limit.unlimitedPerConflict(),
             when: {
                 onCardPlayed: (event, context) => {
