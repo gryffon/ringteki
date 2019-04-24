@@ -37,7 +37,7 @@ class AbilityTargetAbility {
     }
 
     hasLegalTarget(context) {
-        return this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
+        return this.selector.optional || this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
     }
 
     getAllLegalTargets(context) {

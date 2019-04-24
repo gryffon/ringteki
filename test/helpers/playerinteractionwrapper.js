@@ -766,6 +766,18 @@ class PlayerInteractionWrapper {
             throw new Error('Unable to serialize game state back to client:\n' + JSON.stringify(results));
         }
     }
+
+    reduceDeckToNumber(deck, number) {
+        if(deck === 'conflict deck') {
+            for(let i = this.conflictDeck.length - 1; i >= number; i--) {
+                this.moveCard(this.conflictDeck[i], 'conflict discard pile');
+            }
+        } else if(deck === 'dynasty deck') {
+            for(let i = this.dynastyDeck.length - 1; i >= number; i--) {
+                this.moveCard(this.dynastyDeck[i], 'dynasty discard pile');
+            }
+        }
+    }
 }
 
 module.exports = PlayerInteractionWrapper;

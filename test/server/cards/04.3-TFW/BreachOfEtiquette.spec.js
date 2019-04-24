@@ -73,7 +73,6 @@ describe('Breach of Etiquette', function() {
                 let honorBefore = this.player2.honor;
                 this.player2.clickCard(this.banzai);
                 this.player2.clickCard(this.brashSamurai);
-                this.player1.clickPrompt('Pass');
                 this.player2.clickPrompt('Done');
                 expect(this.player2.honor).toBe(honorBefore);
             });

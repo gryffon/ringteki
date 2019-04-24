@@ -31,6 +31,7 @@ export enum EffectNames {
     AddTrait = 'addTrait',
     Blank = 'blank',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
+    CannotBeAttacked = 'cannotBeAttacked',
     CannotBidInDuels = 'cannotBidInDuels',
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
@@ -59,9 +60,12 @@ export enum EffectNames {
     ModifyProvinceStrength = 'modifyProvinceStrength',
     ModifyProvinceStrengthMultiplier = 'modifyProvinceStrengthMultiplier',
     MustBeChosen = 'mustBeChosen',
+    MustBeDeclaredAsAttacker = 'mustBeDeclaredAsAttacker',
+    MustBeDeclaredAsDefender = 'mustBeDeclaredAsDefender',
     SetBaseMilitarySkill = 'setBaseMilitarySkill',
     SetBasePoliticalSkill = 'setBasePoliticalSkill',
     SetBaseProvinceStrength = 'setBaseProvinceStrength',
+    SetConflictDeclarationType = 'setConflictDeclarationType',
     SetConflictTotalSkill = 'setConflictTotalSkill',
     SetDash = 'setDash',
     SetGlory = 'setGlory',
@@ -77,6 +81,7 @@ export enum EffectNames {
     AdditionalConflict = 'additionalConflict',
     AlternateFatePool = 'alternateFatePool',
     CanPlayFromOwn = 'canPlayFromOwn',
+    CanPlayFromOpponents = 'canPlayFromOpponents',
     ChangePlayerGloryModifier = 'gloryModifier',
     ChangePlayerSkillModifier = 'conflictSkillModifier',
     GainActionPhasePriority = 'actionPhasePriority',
@@ -210,6 +215,7 @@ export enum EventNames {
     OnModifyBid = 'onModifyBid',
     OnModifyFate = 'onModifyFate',
     OnSetHonorDial = 'onSetHonorDial',
+    OnSwitchConflictType = 'onSwitchConflictType',
     OnTakeRing = 'onTakeRing',
     Unnamed = 'unnamedEvent'
 };
@@ -237,4 +243,9 @@ export enum Elements {
     Air = 'air',
     Water = 'water',
     Void = 'void',
+};
+
+export enum ConflictTypes {
+    Military = 'military',
+    Political = 'political'
 };

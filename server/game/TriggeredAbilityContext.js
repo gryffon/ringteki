@@ -7,8 +7,8 @@ class TriggeredAbilityContext extends AbilityContext {
         this.event = properties.event;
     }
 
-    copy(newProps) {
-        return new TriggeredAbilityContext(Object.assign({}, this.getProps(), newProps));
+    createCopy(newProps) {
+        return new TriggeredAbilityContext(Object.assign(this.getProps(), newProps));
     }
 
     getProps() {
