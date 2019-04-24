@@ -1,7 +1,7 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl.js');
 
-class PoliticalSanctions extends DrawCard {
+class PoliticalSanction extends DrawCard {
     setupCardAbilities() {
         this.whileAttached({
             effect: AbilityDsl.effects.cardCannot('triggerAbilities')
@@ -23,6 +23,6 @@ class PoliticalSanctions extends DrawCard {
     }
 }
 
-PoliticalSanctions.id = 'political-sanction';
+PoliticalSanction.id = 'political-sanction';
 
-module.exports = PoliticalSanctions;
+module.exports = PoliticalSanction;
