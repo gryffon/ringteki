@@ -10,7 +10,7 @@ describe('Winter Court Hosts', function() {
                     },
                     player2: {
                         inPlay: ['shiba-tetsu'],
-                        hand: ['fine-katana', 'shrine-maiden', 'a-legion-of-one']
+                        hand: ['fine-katana', 'shrine-maiden', 'banzai']
                     }
                 });
 
@@ -33,6 +33,25 @@ describe('Winter Court Hosts', function() {
                 expect(this.player1.hand.length).toBe(1);
             });
 
+            it('should trigger for all card types and unlimited', function() {
+                this.player2.playAttachment('fine-katana', this.tetsu);
+                expect(this.player1).toHavePrompt('Winter Court Hosts');
+                this.player1.clickCard(this.winterCourt);
+                expect(this.player1.hand.length).toBe(1);
+                
+                this.player1.pass();
+                this.player2.clickCard(this.shrineMaiden);
+                this.player2.clickPrompt('0');
+                this.player1.clickCard(this.winterCourt);
+                expect(this.player1.hand.length).toBe(2);
+
+                this.player1.pass();
+                this.player2.clickCard('banzai');
+                this.player2.clickCard(this.tetsu);
+                this.player2.clickPrompt('Done');
+                this.player1.clickCard(this.winterCourt);
+                expect(this.player1.hand.length).toBe(3);
+            });
         });
     });
 });
