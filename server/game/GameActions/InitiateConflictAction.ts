@@ -1,10 +1,11 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import { EventNames } from '../Constants';
+import { EventNames, ConflictTypes } from '../Constants';
 
 export interface InitiateConflictProperties extends PlayerActionProperties {
     canPass?: boolean;
+    forcedDeclaredType?: ConflictTypes;
 }
 
 export class InitiateConflictAction extends PlayerAction {
@@ -19,9 +20,18 @@ export class InitiateConflictAction extends PlayerAction {
     }
 
     canAffect(player: Player, context: AbilityContext): boolean {
+        let properties = this.getProperties(context) as InitiateConflictProperties;
+        let availableTotalConflicts = player.conflictOpportunities['total'];
+        if(availableTotalConflicts === 0) {
+            // no remaining conflicts
+            return false;
+        }
         let availableConflictTypes = ['military', 'political'].filter(type => player.getConflictOpportunities(type));
-        if(!player.cardsInPlay.any(card => availableConflictTypes.some(type => card.canDeclareAsAttacker(type)))) {
-            // No legal attackers
+        if(properties.forcedDeclaredType && !player.cardsInPlay.any(card => card.canDeclareAsAttacker(properties.forcedDeclaredType))) {
+            // No legal attackers for forced declared type
+            return false;
+        } else if(!player.cardsInPlay.any(card => availableConflictTypes.some(type => card.canDeclareAsAttacker(type)))) {
+            // No legal attackerss
             return false;
         } else if(!Object.values(context.game.rings).some(ring => ring.canDeclare(player))) {
             // No legal rings
@@ -35,7 +45,7 @@ export class InitiateConflictAction extends PlayerAction {
     }
 
     eventHandler(event, additionalProperties): void {
-        let { canPass } = this.getProperties(event.context, additionalProperties) as InitiateConflictProperties;
-        event.context.game.initiateConflict(event.player, canPass)
+        let properties = this.getProperties(event.context, additionalProperties) as InitiateConflictProperties;
+        event.context.game.initiateConflict(event.player, properties.canPass, properties.forcedDeclaredType)
     }
 }

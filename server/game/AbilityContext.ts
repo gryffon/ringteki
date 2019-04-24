@@ -54,7 +54,7 @@ class AbilityContext {
     }
 
     copy(newProps: object): AbilityContext {
-        let copy = new AbilityContext(Object.assign(this.getProps(), newProps));
+        let copy = this.createCopy(newProps);
         copy.target = this.target;
         copy.select = this.select;
         copy.ring = this.ring;
@@ -63,6 +63,10 @@ class AbilityContext {
         copy.choosingPlayerOverride = this.choosingPlayerOverride;
         copy.gameActionsResolutionChain = this.gameActionsResolutionChain;
         return copy;
+    }
+
+    createCopy(newProps) {
+        return new AbilityContext(Object.assign(this.getProps(), newProps));
     }
 
     refillProvince(player: Player, location: Locations): void {

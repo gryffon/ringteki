@@ -6,6 +6,7 @@ describe('InitateConflictPrompt: ', function() {
         this.fireRing = { element: 'fire' };
         this.gameSpy.rings = { fire: this.fireRing};
         this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan']);
+        this.playerSpy.cardsInPlay = [];
         this.conflictSpy = jasmine.createSpyObj('conflict', ['calculateSkill', 'removeFromConflict', 'addAttacker', 'setDeclarationComplete']);
         this.conflictSpy.attackers = [];
         this.conflictSpy.conflictProvince = null;
@@ -79,7 +80,8 @@ describe('InitateConflictPrompt: ', function() {
 
     describe('the cardClicked function, ', function() {
         beforeEach(function() {
-            this.cardSpy = jasmine.createSpyObj('card', ['checkRestrictions', 'canDeclareAsAttacker', 'isCovert', 'canBeBypassedByCovert']);
+            this.cardSpy = jasmine.createSpyObj('card', ['checkRestrictions', 'canDeclareAsAttacker', 'isCovert', 'canBeBypassedByCovert', 'getEffects', 'canBeAttacked']);
+            this.cardSpy.getEffects.and.returnValue([]);
         });
 
         describe('when a different player clicks a card, ', function() {
@@ -97,6 +99,7 @@ describe('InitateConflictPrompt: ', function() {
                 this.cardSpy.isProvince = true;
                 this.cardSpy.controller = this.opponent;
                 this.cardSpy.isBroken = false;
+                this.cardSpy.canBeAttacked.and.returnValue(true);
                 this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
             });
 

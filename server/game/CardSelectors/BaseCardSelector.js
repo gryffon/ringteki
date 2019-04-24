@@ -92,7 +92,7 @@ class BaseCardSelector {
     }
 
     hasEnoughTargets(context, choosingPlayer) {
-        return (this.optional || this.findPossibleCards(context).some(card => this.canTarget(card, context, choosingPlayer)));
+        return this.findPossibleCards(context).some(card => this.canTarget(card, context, choosingPlayer));
     }
 
     defaultActivePromptTitle() {

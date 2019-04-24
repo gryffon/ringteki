@@ -47,7 +47,7 @@ class AbilityTargetCard {
     }
 
     hasLegalTarget(context) {
-        return this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
+        return this.selector.optional || this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
     }
 
     getGameAction(context) {
@@ -145,7 +145,7 @@ class AbilityTargetCard {
     }
 
     hasTargetsChosenByInitiatingPlayer(context) {
-        if(this.getChoosingPlayer(context) === context.player && this.selector.hasEnoughTargets(context, context.player.opponent)) {
+        if(this.getChoosingPlayer(context) === context.player && (this.selector.optional || this.selector.hasEnoughTargets(context, context.player.opponent))) {
             return true;
         }
         return !this.properties.dependsOn && this.checkGameActionsForTargetsChosenByInitiatingPlayer(context);
