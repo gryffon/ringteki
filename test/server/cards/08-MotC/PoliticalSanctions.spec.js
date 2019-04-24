@@ -52,8 +52,9 @@ describe('Political Sanctions', function() {
 
             it('should not be able to be attached to character outside the conflict', function() {
                 this.player2.pass();
-                this.player1.playAttachment('political-sanction', this.maiden);
-                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard('political-sanction');
+                expect(this.player1).not.toBeAbleToSelect(this.maiden);
+                expect(this.player1).toHavePrompt('Political Sanction');
             });
         });
     });

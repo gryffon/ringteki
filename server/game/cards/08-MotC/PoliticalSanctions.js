@@ -18,8 +18,8 @@ class PoliticalSanctions extends DrawCard {
         return false;
     }
 
-    canAttach(card, context) {
-        return card.isParticipating() && super.canAttach(card, context);
+    canPlayOn(card) {
+        return card.isParticipating() && super.canPlayOn(card);
     }
 }
 
