@@ -1,3 +1,4 @@
+const _ = require('underscore');
 const EventWindow = require('./EventWindow.js');
 const TriggeredAbilityWindow = require('../gamesteps/triggeredabilitywindow');
 const { EventNames, AbilityTypes } = require('../Constants');
@@ -51,6 +52,25 @@ class InitiateAbilityEventWindow extends EventWindow {
         } else {
             super.openWindow(abilityType);
         }
+    }
+
+    executeHandler() {
+        this.events = _.sortBy(this.events, 'order');
+
+        _.each(this.events, event => {
+            event.checkCondition();
+            if(!event.cancelled) {
+                event.executeHandler();
+            }
+        });
+
+        // We need to separate executing the handler and emitting events as in this window, the handler just
+        // queues ability resolution steps, and we don't want the events to be emitted until step 8
+        this.game.queueSimpleStep(() => this.emitEvents());
+    }
+
+    emitEvents() {
+        _.each(this.events, event => this.game.emit(event.name, event));
     }
 }
 
