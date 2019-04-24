@@ -274,7 +274,7 @@ class Game extends EventEmitter {
             uuid: conflict.uuid
         });
         conflict.attackingPlayer.conflictOpportunities.total--;
-        if(conflict.conflictPassed) {
+        if(conflict.conflictPassed || conflict.forcedDeclaredType) {
             conflict.attackingPlayer.conflictOpportunities.military = Math.max(
                 conflict.attackingPlayer.conflictOpportunities.military,
                 conflict.attackingPlayer.conflictOpportunities.total
@@ -958,8 +958,8 @@ class Game extends EventEmitter {
         return new AbilityContext({ game: this, player: player });
     }
 
-    initiateConflict(player, canPass) {
-        this.currentConflict = new Conflict(this, player, player.opponent);
+    initiateConflict(player, canPass, forcedDeclaredType) {
+        this.currentConflict = new Conflict(this, player, player.opponent, null, null, forcedDeclaredType);
         this.queueStep(new ConflictFlow(this, this.currentConflict, canPass));
     }
 
@@ -1194,7 +1194,6 @@ class Game extends EventEmitter {
      */
     getSummary(activePlayerName) {
         var playerSummaries = {};
-        let activePlayer = this.getPlayerByName(activePlayerName);
 
         for(const player of this.getPlayers()) {
             var deck = undefined;
@@ -1232,13 +1231,6 @@ class Game extends EventEmitter {
             name: this.name,
             owner: _.omit(this.owner, ['blocklist', 'email', 'emailHash', 'promptedActionWindows', 'settings']),
             players: playerSummaries,
-            rings: {
-                air: this.rings.air.getState(activePlayer),
-                earth: this.rings.earth.getState(activePlayer),
-                fire: this.rings.fire.getState(activePlayer),
-                void: this.rings.void.getState(activePlayer),
-                water: this.rings.water.getState(activePlayer)
-            },
             started: this.started,
             startedAt: this.startedAt,
             spectators: this.getSpectators().map(spectator => {

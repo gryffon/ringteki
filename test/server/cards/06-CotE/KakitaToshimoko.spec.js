@@ -156,12 +156,12 @@ describe('Kakita Toshimoko', function() {
                 this.player1.clickCard(this.kakitaToshimoko);
                 this.player2.clickCard(this.akodoToturi2);
                 expect(this.player2).toHavePrompt('Triggered Abilities');
-                expect(this.player2).toBeAbleToSelect(this.kireiKo);
-                this.player2.clickCard(this.kireiKo);
-                expect(this.player2).toHavePrompt('Triggered Abilities');
                 this.player2.clickPrompt('Pass'); //Stay Your Hand
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.kireiKo);
+                this.player2.clickCard(this.kireiKo);
                 expect(this.getChatLogs(1)).toContain('player2 won a military conflict 6 vs 0');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.fallenInBattle);
@@ -184,11 +184,11 @@ describe('Kakita Toshimoko', function() {
                 this.player1.clickCard(this.kakitaToshimoko);
                 this.player2.clickCard(this.akodoToturi2);
                 expect(this.player2).toHavePrompt('Triggered Abilities');
-                expect(this.player2).toBeAbleToSelect(this.kireiKo);
-                this.player2.clickCard(this.kireiKo);
-                expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.stayYourHand);
                 this.player2.clickCard(this.stayYourHand);
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.kireiKo);
+                this.player2.clickCard(this.kireiKo);
                 expect(this.getChatLogs(1)).toContain('player2 won a military conflict 6 vs 0');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.fallenInBattle);

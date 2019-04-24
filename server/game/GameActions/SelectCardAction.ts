@@ -5,7 +5,7 @@ import CardSelector = require('../CardSelector');
 import Player = require('../player');
 
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { CardTypes, Players, Locations, EffectNames } from '../Constants';
+import { CardTypes, Players, Locations, EffectNames, TargetModes } from '../Constants';
 import { GameAction } from './GameAction';
 
 export interface SelectCardProperties extends CardActionProperties {
@@ -21,6 +21,7 @@ export interface SelectCardProperties extends CardActionProperties {
     messageArgs?: (card: BaseCard, player: Player, properties: SelectCardProperties) => any[];
     gameAction: GameAction;
     selector?: BaseCardSelector;
+    mode?: TargetModes;
     actionParameter?: string;
 }
 
@@ -59,7 +60,7 @@ export class SelectCardAction extends CardGameAction {
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         let player = properties.targets && context.choosingPlayerOverride || (properties.player === Players.Opponent ? context.player.opponent : context.player);
-        return properties.selector.hasEnoughTargets(context, player);
+        return properties.selector.optional || properties.selector.hasEnoughTargets(context, player);
     }
 
     addEventsToArray(events, context: AbilityContext, additionalProperties = {}): void {

@@ -47,7 +47,7 @@ class AbilityTargetCard {
     }
 
     hasLegalTarget(context) {
-        return this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
+        return this.selector.optional || this.selector.hasEnoughTargets(context, this.getChoosingPlayer(context));
     }
 
     getGameAction(context) {
@@ -78,9 +78,6 @@ class AbilityTargetCard {
 
         let buttons = [];
         let waitingPromptTitle = '';
-        if(this.properties.optional) {
-            buttons.push({ text: 'No more targets', arg: 'noMoreTargets' });
-        }
         if(context.stage === Stages.PreTarget) {
             if(!targetResults.noCostsFirstButton) {
                 buttons.push({ text: 'Pay costs first', arg: 'costsFirst' });
@@ -124,9 +121,7 @@ class AbilityTargetCard {
     }
 
     checkTarget(context) {
-        if(this.properties.optional || context.targets[this.name] === 'noMoreTargets') {
-            return (!this.dependentTarget || this.dependentTarget.checkTarget(context));
-        } else if(!context.targets[this.name]) {
+        if(!context.targets[this.name]) {
             return false;
         } else if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
             return false;
@@ -150,7 +145,7 @@ class AbilityTargetCard {
     }
 
     hasTargetsChosenByInitiatingPlayer(context) {
-        if(this.getChoosingPlayer(context) === context.player && this.selector.hasEnoughTargets(context, context.player.opponent)) {
+        if(this.getChoosingPlayer(context) === context.player && (this.selector.optional || this.selector.hasEnoughTargets(context, context.player.opponent))) {
             return true;
         }
         return !this.properties.dependsOn && this.checkGameActionsForTargetsChosenByInitiatingPlayer(context);

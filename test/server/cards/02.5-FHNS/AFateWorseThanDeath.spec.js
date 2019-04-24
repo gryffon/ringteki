@@ -125,7 +125,6 @@ describe('A Fate Worse Than Death', function() {
                 });
 
                 it('should not remove Watch Commander when the blank effect ends', function() {
-                    this.player2.clickPrompt('Pass');
                     this.noMoreActions();
                     this.flow.finishConflictPhase();
                     expect(this.game.currentPhase).toBe('fate');

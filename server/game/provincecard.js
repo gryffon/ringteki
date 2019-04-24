@@ -58,6 +58,10 @@ class ProvinceCard extends BaseCard {
         return this.game.currentConflict && this.game.currentConflict.conflictProvince === this;
     }
 
+    canBeAttacked() {
+        return !this.isBroken && !this.anyEffect(EffectNames.CannotBeAttacked);
+    }
+
     isBlank() {
         return this.isBroken || super.isBlank();
     }
