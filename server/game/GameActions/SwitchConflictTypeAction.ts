@@ -28,19 +28,10 @@ export class SwitchConflictTypeAction extends RingAction {
         return properties;
     }
 
-    hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
-        let { targetConflictType } = this.getProperties(context);
+    canAffect(ring: Ring, context: AbilityContext, additionalProperties = {}) {
         if(!context.game.currentConflict) {
             return false;
         }
-        let currentConflictType = context.game.currentConflict.conflictType;
-        if(targetConflictType === currentConflictType) {
-            return false;
-        }
-        return true;
-    }
-
-    canAffect(ring: Ring, context: AbilityContext, additionalProperties = {}) {
         let { targetConflictType } = this.getProperties(context);
         return ring.conflictType !== targetConflictType;
     }
