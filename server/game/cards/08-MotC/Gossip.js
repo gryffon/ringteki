@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, PlayTypes } = require('../../constants');
+const { Players, PlayTypes } = require('../../Constants');
 
 class Gossip extends DrawCard {
     setupCardAbilities() {
