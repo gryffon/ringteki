@@ -48,7 +48,8 @@ describe('Challenge on the Fields', function() {
                     },
                     player2: {
                         honor: 11,
-                        inPlay: ['agasha-swordsmith', 'ancient-master', 'togashi-mitsu']
+                        inPlay: ['agasha-swordsmith', 'ancient-master', 'togashi-mitsu'],
+                        hand: ['stay-your-hand']
                     }
                 });
                 this.borderRider = this.player1.findCardByName('border-rider');
@@ -120,6 +121,7 @@ describe('Challenge on the Fields', function() {
                 this.player1.clickCard(this.challengeOnTheFields);
                 this.player1.clickCard(this.borderRider);
                 this.player1.clickCard(this.agashaSwordsmith);
+                this.player2.clickPrompt('Pass');
                 expect(this.borderRider.getMilitarySkill()).toBe(2 + 2);
                 expect(this.agashaSwordsmith.getMilitarySkill()).toBe(1 + 1);
                 this.player1.clickPrompt('1');
@@ -139,10 +141,30 @@ describe('Challenge on the Fields', function() {
                 this.player1.clickCard(this.challengeOnTheFields);
                 this.player1.clickCard(this.borderRider);
                 this.player1.clickCard(this.agashaSwordsmith);
+                this.player2.clickPrompt('Pass');
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
                 expect(this.borderRider.inConflict).toBe(true);
                 expect(this.agashaSwordsmith.inConflict).toBe(false);
+            });
+
+            it('should remove the bonuses if the duel is canceled', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.borderRider, this.battleMaidenRecruit, this.ideMessenger],
+                    defenders: [this.agashaSwordsmith, this.ancientMaster],
+                    type: 'political'
+                });
+                this.player2.pass();
+                expect(this.borderRider.getMilitarySkill()).toBe(2);
+                expect(this.agashaSwordsmith.getMilitarySkill()).toBe(1);
+                this.player1.clickCard(this.challengeOnTheFields);
+                this.player1.clickCard(this.borderRider);
+                this.player1.clickCard(this.agashaSwordsmith);
+                this.player2.clickCard('stay-your-hand');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.borderRider.getMilitarySkill()).toBe(2);
+                expect(this.agashaSwordsmith.getMilitarySkill()).toBe(1);
             });
 
         });
