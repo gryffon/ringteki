@@ -27,7 +27,7 @@ describe('Market of Kaze-no-Kami', function() {
                 });
             });
 
-            it('should trigger after being revelead', function() {
+            it('should trigger after being revealed', function() {
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.marketOfKazeNoKami);
             });
@@ -39,7 +39,7 @@ describe('Market of Kaze-no-Kami', function() {
                 expect(this.player2).not.toBeAbleToSelect(this.dojiWhisperer);
             });
 
-            it('should bow chosen character', function() {
+            it('should bow the chosen character', function() {
                 this.player2.clickCard(this.marketOfKazeNoKami);
                 this.player2.clickCard(this.doomedShugenja);
                 expect(this.doomedShugenja.bowed).toBe(true);
