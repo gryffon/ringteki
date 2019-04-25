@@ -1,6 +1,6 @@
-describe('Political Sanctions', function() {
+describe('Political Sanction', function() {
     integration(function() {
-        describe('Politcal Sanctions\'', function() {
+        describe('Politcal Sanction\'', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
