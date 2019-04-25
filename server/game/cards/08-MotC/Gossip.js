@@ -4,7 +4,7 @@ const { Players, PlayTypes } = require('../../Constants');
 class Gossip extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Name a card that your opponent cannot for for the phase',
+            title: 'Name a card that your opponent cannot play for the phase',
             handler: context => this.game.promptWithMenu(context.player, this, {
                 source: context.source,
                 activePrompt: {
