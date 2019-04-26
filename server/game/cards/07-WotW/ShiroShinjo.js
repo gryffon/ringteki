@@ -1,4 +1,5 @@
 const StrongholdCard = require('../../strongholdcard.js');
+const { Locations } = require('../../Constants');
 
 class ShiroShinjo extends StrongholdCard {
     setupCardAbilities(ability) {
@@ -8,9 +9,7 @@ class ShiroShinjo extends StrongholdCard {
             when: {
                 onFateCollected: (event, context) => event.player === context.source.controller
             },
-            gameAction: ability.actions.gainFate(context => ({ amount: context.player.getNumberOfOpponentsFaceupProvinces() })),
-            effect: 'gain {1} fate',
-            effectArgs: context => [context.player.getNumberOfOpponentsFaceupProvinces()]
+            gameAction: ability.actions.gainFate(context => ({ amount: context.player.getNumberOfOpponentsFaceupProvinces(province => province.location !== Locations.StrongholdProvince) }))
         });
     }
 }
