@@ -74,6 +74,8 @@ describe('The Spear Rushes Forth', function() {
                 });
                 this.player2.pass();
                 this.player1.clickCard(this.theSpearRushesForth);
+                expect(this.player1).toBeAbleToSelect(this.dojiChallenger);
+                expect(this.player1).toBeAbleToSelect(this.kakitaYoshi);
                 this.player1.clickCard(this.kakitaYoshi);
                 this.player1.clickCard(this.kakitaKaezin);
                 expect(this.kakitaYoshi.bowed).toBe(true);
