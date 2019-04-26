@@ -9,7 +9,8 @@ describe('Gossip', function() {
                     },
                     player2: {
                         inPlay: ['adept-of-the-waves'],
-                        hand: ['against-the-waves', 'fine-katana', 'kami-unleashed']
+                        hand: ['against-the-waves', 'fine-katana', 'kami-unleashed'],
+                        dynastyDiscard: ['hidden-moon-dojo', 'solemn-scholar']
                     }
                 });
 
@@ -40,6 +41,16 @@ describe('Gossip', function() {
                 this.player1.chooseCardInPrompt(this.kamiUnleashed.name, 'card-name');
                 expect(this.player2).toHavePrompt('Action Window');
                 this.player2.clickCard(this.kamiUnleashed);
+                expect(this.player2).toHavePrompt('Action Window');
+            });
+
+            it('should stop your opponent from playing characters of HMD', function() {
+                this.solemnScholar = this.player2.placeCardInProvince('solemn-scholar', 'province 1');
+                this.hiddenMoonDojo = this.player2.placeCardInProvince('hidden-moon-dojo', 'province 2');
+                this.player1.clickCard('gossip');
+                this.player1.chooseCardInPrompt(this.solemnScholar.name, 'card-name');
+                expect(this.player2).toHavePrompt('Action Window');
+                this.player2.clickCard(this.solemnScholar);
                 expect(this.player2).toHavePrompt('Action Window');
             });
         });
