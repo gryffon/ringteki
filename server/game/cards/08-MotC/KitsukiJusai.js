@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl');
 class KitsukiJusai extends DrawCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'Set your opponent\'s dial to equal yours',
+            title: 'Put a fate from your opponent pool on an unclaimed ring',
             when: {
                 onHonorDialsRevealed: (event, context) =>
                     context.player.opponent &&
