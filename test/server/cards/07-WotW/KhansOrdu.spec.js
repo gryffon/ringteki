@@ -36,9 +36,10 @@ describe('Khan\'s Ordu', function() {
                     attackers: [this.akodoGunso],
                     type: 'political'
                 });
-                expect(this.game.currentConflict.conflictType === 'political');
+                expect(this.game.currentConflict.conflictType).toBe('political');
                 this.player2.clickCard(this.khansOrdu);
-                expect(this.game.currentConflict.conflictType === 'military');
+                expect(this.getChatLogs(1)).toContain('player1 has initiated a military conflict with skill 2');
+                expect(this.game.currentConflict.conflictType).toBe('military');
             });
 
             it('should not switch the conflict type if it is already a military conflict', function() {
@@ -47,9 +48,9 @@ describe('Khan\'s Ordu', function() {
                     attackers: [this.akodoGunso],
                     type: 'military'
                 });
-                expect(this.game.currentConflict.conflictType === 'military');
+                expect(this.game.currentConflict.conflictType).toBe('military');
                 this.player2.clickCard(this.khansOrdu);
-                expect(this.game.currentConflict.conflictType === 'military');
+                expect(this.game.currentConflict.conflictType).toBe('military');
             });
 
             it('should set all future conflicts to be military', function() {
