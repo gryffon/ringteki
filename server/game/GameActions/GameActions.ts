@@ -7,6 +7,7 @@ import { CancelAction, CancelActionProperties } from './CancelAction';
 import { CardMenuAction, CardMenuProperties } from './CardMenuAction';
 import { ChooseGameAction, ChooseActionProperties } from './ChooseGameAction';
 import { ChosenDiscardAction, ChosenDiscardProperties } from './ChosenDiscardAction';
+import { ConditionalAction, ConditionalActionProperties } from './ConditionalAction';
 import { CreateTokenAction, CreateTokenProperties } from './CreateTokenAction';
 import { DeckSearchAction,  DeckSearchProperties} from './DeckSearchAction';
 import { DelayedEffectAction, DelayedEffectActionProperties } from './DelayedEffectAction';
@@ -21,6 +22,7 @@ import { FlipDynastyAction, FlipDynastyProperties } from './FlipDynastyAction';
 import { GainFateAction, GainFateProperties } from './GainFateAction';
 import { GainHonorAction, GainHonorProperties } from './GainHonorAction';
 import { HonorAction, HonorProperties } from './HonorAction';
+import { IfAbleAction, IfAbleActionProperties } from './IfAbleAction';
 import { InitiateConflictAction, InitiateConflictProperties } from './InitiateConflictAction';
 import { JointGameAction } from './JointGameAction';
 import { LastingEffectAction, LastingEffectProperties } from './LastingEffectAction';
@@ -126,6 +128,8 @@ const GameActions = {
     // meta actions
     cardMenu: (propertyFactory: CardMenuProperties | ((context: TriggeredAbilityContext) => CardMenuProperties)) => new CardMenuAction(propertyFactory),
     chooseAction: (propertyFactory: ChooseActionProperties | ((context: TriggeredAbilityContext) => ChooseActionProperties)) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
+    conditional: (propertyFactory: ConditionalActionProperties | ((context: TriggeredAbilityContext) => ConditionalActionProperties)) => new ConditionalAction(propertyFactory),
+    ifAble: (propertyFactory: IfAbleActionProperties | ((context: TriggeredAbilityContext) => IfAbleActionProperties)) => new IfAbleAction(propertyFactory),
     jointAction: (gameActions: GameAction[]) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     multiple: (gameActions: GameAction[]) => new MultipleGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     menuPrompt: (propertyFactory: MenuPromptProperties | ((context: TriggeredAbilityContext) => MenuPromptProperties)) => new MenuPromptAction(propertyFactory),
