@@ -6,7 +6,7 @@ describe('Letter from the Daimyo', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['doji-whisperer'],
-                        hand: ['letter-from-the-daimyo']
+                        hand: ['letter-from-the-daimyo','fine-katana']
                     },
                     player2: {
                         hand: ['banzai', 'charge','political-rival']
@@ -24,9 +24,13 @@ describe('Letter from the Daimyo', function() {
                 this.initiateConflict({
                     type: 'military',
                     attackers: [this.dojiWhisperer],
-                    defenders: [],
-                    jumpTo: 'afterConflict'
+                    defenders: []
                 });
+                this.player2.pass();
+                this.player1.clickCard('fine-katana');
+                this.player1.clickCard(this.dojiWhisperer);
+                this.player2.pass();
+                this.player1.pass();
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
             });
 
