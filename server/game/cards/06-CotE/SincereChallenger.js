@@ -11,17 +11,14 @@ class SincereChallenger extends DrawCard {
             title: 'Initiate a Political duel',
             initiateDuel: {
                 type: DuelTypes.Political,
+                message: '{0} is immune to events until the end of the conflict',
+                messageArgs: duel => duel.winner,
                 gameAction: duel => AbilityDsl.actions.cardLastingEffect({
                     target: duel.winner,
                     effect: AbilityDsl.effects.immunity({ restricts: 'events' })
                 })
             }
         });
-    }
-
-    resolutionHandler(context, winner) {
-        this.game.addMessage('{0} wins the duel and is immune to events until the end of the conflict', winner);
-        this.game.actions.cardLastingEffect({ effect: AbilityDsl.effects.immunity({ restricts: 'events' }) }).resolve(winner, context);
     }
 }
 

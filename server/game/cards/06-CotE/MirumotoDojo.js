@@ -8,26 +8,20 @@ class MirumotoDojo extends DrawCard {
             title: 'Initiate a military duel',
             initiateDuel: {
                 type: DuelTypes.Military,
+                message: '{0} 1 fate from {1}{2}{3}{4}',
+                messageArgs: duel => [
+                    duel.winner && duel.winner.hasTrait('duelist') ? 'discard' : 'move',
+                    duel.loser,
+                    duel.winner && duel.winner.hasTrait('duelist') ? '' : ' to ',
+                    duel.loser && duel.loser.owner,
+                    duel.winner && duel.winner.hasTrait('duelist') ? '' : '\'s pool'
+                ],
                 gameAction: duel => AbilityDsl.actions.removeFate({
                     target: duel.loser,
                     recipient: duel.winner && duel.winner.hasTrait('duelist') && duel.loser && duel.loser.owner
                 })
             }
         });
-    }
-
-    resolutionHandler(context, winner, loser) {
-        if(loser) {
-            if(winner.hasTrait('duelist')) {
-                this.game.addMessage('{0} loses the duel and has 1 fate discarded', loser);
-                this.game.actions.removeFate().resolve(loser, context);
-            } else {
-                this.game.addMessage('{0} loses the duel and returns 1 fate to its owner\'s fate pool', loser);
-                this.game.actions.removeFate({ recipient: loser.owner }).resolve(loser, context);
-            }
-        } else {
-            this.game.addMessage('{0} wins the duel but there is no loser', winner);
-        }
     }
 }
 

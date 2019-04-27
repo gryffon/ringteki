@@ -10,9 +10,9 @@ import { GameAction } from './GameAction';
 export interface DuelProperties extends CardActionProperties {
     type: DuelTypes;
     challenger?: DrawCard;
-    gameAction: (duel: Duel, context: AbilityContext) => GameAction | GameAction;
+    gameAction: GameAction | ((duel: Duel, context: AbilityContext) => GameAction);
     message?: string;
-    messageArgs?: (context: AbilityContext) => any | any[];
+    messageArgs?: (duel: Duel, context: AbilityContext) => any | any[];
     costHandler?: (context: AbilityContext, prompt: any) => void;
     statistic?: (card: DrawCard) => number;
 }
@@ -56,12 +56,18 @@ export class DuelAction extends CardGameAction {
     resolveDuel(duel: Duel, context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         let gameAction = typeof(properties.gameAction) === 'function' ? properties.gameAction(duel, context) : properties.gameAction;
-        if(gameAction) {
+        if(gameAction && gameAction.hasLegalTarget(context)) {
+            let message, messageArgs;
             if(properties.message) {
-                const messageArgs = properties.messageArgs ? [].concat(properties.messageArgs(context)) : [];
-                context.game.addMessage(properties.message, ...messageArgs);
+                message = properties.message;
+                messageArgs = properties.messageArgs ? [].concat(properties.messageArgs(duel, context)) : [];
+            } else {
+                [message, messageArgs] = gameAction.getEffectMessage(context);
             }
+            context.game.addMessage('Duel Effect: ' + message, ...messageArgs);
             gameAction.resolve(null, context);
+        } else {
+            context.game.addMessage('The duel has no effect')
         }
     }
 

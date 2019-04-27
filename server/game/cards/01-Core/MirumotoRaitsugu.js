@@ -13,24 +13,15 @@ class MirumotoRaitsugu extends DrawCard {
                 gameAction: ability.actions.duel(context => ({
                     type: DuelTypes.Military,
                     challenger: context.source,
-                    gameAction: duel => ability.actions.otherwise({
+                    gameAction: duel => ability.actions.conditional({
                         target: duel.loser,
-                        gameAction: ability.actions.removeFate(),
-                        otherwiseAction: ability.actions.discardFromPlay()
+                        condition: duel.loser.fate > 0,
+                        trueGameAction: ability.actions.removeFate(),
+                        falseGameAction: ability.actions.discardFromPlay()
                     })
                 }))
             }
         });
-    }
-
-    resolutionHandler(context, winner, loser) {
-        if(loser && loser.fate > 0) {
-            this.game.addMessage('{0} wins the duel, and {1} loses a fate', winner, loser);
-            this.game.applyGameAction(context, { removeFate: loser });
-        } else if(loser) {
-            this.game.addMessage('{0} wins the duel, and {1} is discarded', winner, loser);
-            this.game.applyGameAction(context, { discardFromPlay: loser });
-        }
     }
 }
 

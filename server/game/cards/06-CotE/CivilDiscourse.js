@@ -9,6 +9,8 @@ class CivilDiscourse extends DrawCard {
             initiateDuel: {
                 type: DuelTypes.Political,
                 opponentChoosesDuelTarget: true,
+                message: '{0} gains \'Increase the cost to play each card in your hand by 1.\'',
+                messageArgs: duel => duel.loser,
                 gameAction: duel => AbilityDsl.actions.cardLastingEffect({
                     target: duel.loser,
                     effect: AbilityDsl.effects.gainAbility(AbilityTypes.Persistent, {
@@ -19,27 +21,8 @@ class CivilDiscourse extends DrawCard {
                         })
                     })
                 })
-            },
-            effect: 'initiate a political duel between {1} and {2}',
-            effectArgs: (context) => [context.targets.challenger, context.targets.duelTarget]
+            }
         });
-    }
-
-    resolutionHandler(context, winner, loser) {
-        if(loser) {
-            this.game.addMessage('{0} loses the duel and gains \'Increase the cost to play each card in your hand by 1.\'', loser);
-            this.game.actions.cardLastingEffect({
-                effect: AbilityDsl.effects.gainAbility(AbilityTypes.Persistent, {
-                    targetController: Players.Self,
-                    effect: AbilityDsl.effects.increaseCost({
-                        amount: 1,
-                        playingType: PlayTypes.PlayFromHand
-                    })
-                })
-            }).resolve(loser, context);
-        } else {
-            this.game.addMessage('{0} wins the duel, but there is no loser of the duel', winner);
-        }
     }
 }
 

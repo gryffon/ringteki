@@ -16,15 +16,6 @@ class TrueStrikeKenjutsu extends DrawCard {
             })
         });
     }
-
-    resolutionHandler(context, winner, loser) {
-        if(loser) {
-            this.game.addMessage('{0} wins the duel, and bows {1}', winner, loser);
-            this.game.applyGameAction(context, { bow: loser });
-        } else {
-            this.game.addMessage('{0} wins the duel but there is no loser', winner);
-        }
-    }
 }
 
 TrueStrikeKenjutsu.id = 'true-strike-kenjutsu';

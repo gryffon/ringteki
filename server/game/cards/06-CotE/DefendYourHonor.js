@@ -18,13 +18,6 @@ class DefendYourHonor extends DrawCard {
             })
         });
     }
-
-    resolutionHandler(context, winner) {
-        if(winner.controller === context.source.controller) {
-            this.game.addMessage('{0} wins the duel and cancels {1}\'s effect', winner, context.event.card);
-            context.cancel();
-        }
-    }
 }
 
 DefendYourHonor.id = 'defend-your-honor';
