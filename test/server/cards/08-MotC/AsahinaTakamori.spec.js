@@ -9,7 +9,8 @@ describe('Asahina Takamori', function() {
                         hand: ['steward-of-law', 'doji-fumiki', 'kami-unleashed']
                     },
                     player2: {
-                        inPlay: ['adept-of-the-waves', 'wandering-ronin', 'isawa-tadaka']
+                        inPlay: ['adept-of-the-waves', 'wandering-ronin', 'isawa-tadaka'],
+                        dynastyDiscard: ['favorable-ground']
                     }
                 });
 
@@ -21,6 +22,7 @@ describe('Asahina Takamori', function() {
                 this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
                 this.wanderingRonin = this.player2.findCardByName('wandering-ronin');
                 this.isawaTadaka = this.player2.findCardByName('isawa-tadaka');
+                this.favorableGround = this.player2.placeCardInProvince('favorable-ground');
             });
 
             it('should trigger when a crane character is played (from province)', function() {
@@ -105,6 +107,45 @@ describe('Asahina Takamori', function() {
                 });
                 expect(this.adeptOfTheWaves.isParticipating()).toBe(false);
                 expect(this.isawaTadaka.isParticipating()).toBe(true);
+            });
+
+            it('should still allow the targeted character to participate as an attacker (just not declare as an attacker)', function() {
+                this.player1.clickCard(this.asahinaTakamori);
+                this.player1.clickPrompt('0');
+                this.player1.clickCard(this.asahinaTakamori);
+                this.player1.clickCard(this.adeptOfTheWaves);
+                expect(this.getChatLogs(1)).toContain('player1 uses Asahina Takamori to prevent Adept of the Waves from being declared as an attacker or defender this round');
+                this.advancePhases('conflict');
+                this.noMoreActions();
+                this.player1.passConflict();
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.isawaTadaka],
+                    defenders: []
+                });
+                this.player1.pass();
+                expect(this.adeptOfTheWaves.isParticipating()).toBe(false);
+                this.player2.clickCard(this.favorableGround);
+                this.player2.clickCard(this.adeptOfTheWaves);
+                expect(this.adeptOfTheWaves.isParticipating()).toBe(true);
+            });
+
+            it('should still allow the targeted character to participate as a defender (just not declare as an defender)', function() {
+                this.player1.clickCard(this.asahinaTakamori);
+                this.player1.clickPrompt('0');
+                this.player1.clickCard(this.asahinaTakamori);
+                this.player1.clickCard(this.adeptOfTheWaves);
+                expect(this.getChatLogs(1)).toContain('player1 uses Asahina Takamori to prevent Adept of the Waves from being declared as an attacker or defender this round');
+                this.advancePhases('conflict');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.asahinaTakamori],
+                    defenders: []
+                });
+                expect(this.adeptOfTheWaves.isParticipating()).toBe(false);
+                this.player2.clickCard(this.favorableGround);
+                this.player2.clickCard(this.adeptOfTheWaves);
+                expect(this.adeptOfTheWaves.isParticipating()).toBe(true);
             });
         });
     });
