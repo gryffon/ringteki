@@ -3,7 +3,7 @@ const AbilityDsl = require('../../abilitydsl');
 const { CardTypes } = require('../../Constants');
 
 class FestivalForTheFortunes extends DrawCard {
-    setupCardAbilities() { // eslint-disable-line no-unused-vars
+    setupCardAbilities() {
         this.action({
             title: 'Honor each character',
             effect: 'honor each character',
