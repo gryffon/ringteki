@@ -16,8 +16,8 @@ class AsahinaTakamori extends DrawCard {
                 gameAction: AbilityDsl.actions.cardLastingEffect({
                     duration: Durations.UntilEndOfRound,
                     effect: [
-                        AbilityDsl.effects.cannotParticipateAsAttacker(),
-                        AbilityDsl.effects.cannotParticipateAsDefender()
+                        AbilityDsl.effects.cardCannot('declareAsAttacker'),
+                        AbilityDsl.effects.cardCannot('declareAsDefender')
                     ]
                 })
             },
