@@ -11,7 +11,7 @@ class LetterFromTheDaimyo extends DrawCard {
                                                    event.conflict.winner === context.source.parent.controller &&
                                                    event.conflict.conflictType === 'political'
             },
-            gameAction: AbilityDsl.actions.chosenDiscard(context => ({ target: context.player.opponent, amount: 2 }))
+            gameAction: AbilityDsl.actions.chosenDiscard({ amount: 2 })
         });
     }
 
