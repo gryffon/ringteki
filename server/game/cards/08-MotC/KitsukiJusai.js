@@ -13,7 +13,7 @@ class KitsukiJusai extends DrawCard {
             },
             gameAction: AbilityDsl.actions.selectRing(context => ({
                 activePromptTitle: 'Choose an unclaimed ring to move fate to',
-                ringCondition: ring => ring.isUnclaimed() && ring !== context.ring,
+                ringCondition: ring => ring.isUnclaimed(),
                 message: '{0} moves a fate from {1}\'s fate pool to the {2}',
                 messageArgs: ring => [context.player, context.player.opponent, ring],
                 gameAction: AbilityDsl.actions.placeFateOnRing({ origin: context.player.opponent })
