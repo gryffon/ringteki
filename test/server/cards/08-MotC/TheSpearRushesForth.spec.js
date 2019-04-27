@@ -6,18 +6,17 @@ describe('The Spear Rushes Forth', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['brash-samurai','kakita-kaezin','doji-whisperer'],
-                        hand: ['the-spear-rushes-forth']
+                        hand: ['the-spear-rushes-forth','young-harrier']
                     },
                     player2: {
-                        inPlay: ['doji-challenger','kakita-yoshi'],
-                        hand: ['steward-of-law']
+                        inPlay: ['doji-challenger','kakita-yoshi']
                     }
                 });
 
                 this.brashSamurai = this.player1.findCardByName('brash-samurai');
                 this.kakitaKaezin = this.player1.findCardByName('kakita-kaezin');
                 this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
-                this.stewardOfLaw = this.player2.findCardByName('steward-of-law');
+                this.youngHarrier = this.player1.findCardByName('young-harrier');
                 this.theSpearRushesForth = this.player1.findCardByName('the-spear-rushes-forth');
 
                 this.dojiChallenger = this.player2.findCardByName('doji-challenger');
@@ -83,15 +82,19 @@ describe('The Spear Rushes Forth', function() {
                 expect(this.kakitaKaezin.isHonored).toBe(false);
             });
 
-            it('should work even if steward of law is present in the conflict', function() {
+            it('should work even if young harrier is present in the conflict', function() {
                 this.brashSamurai.honor();
                 this.initiateConflict({
                     attackers: [this.kakitaKaezin, this.brashSamurai, this.dojiWhisperer],
                     defenders: [this.dojiChallenger, this.kakitaYoshi]
                 });
-                this.player2.clickCard(this.stewardOfLaw);
-                this.player2.clickPrompt('0');
-                this.player2.clickPrompt('Conflict');
+                this.player2.pass();
+                this.player1.clickCard(this.youngHarrier);
+                this.player1.clickPrompt('0');
+                this.player1.clickPrompt('Conflict');
+                this.player2.pass();
+                this.player1.clickCard(this.youngHarrier);
+                this.player2.pass();
                 this.player1.clickCard(this.theSpearRushesForth);
                 this.player1.clickCard(this.kakitaYoshi);
                 this.player1.clickCard(this.kakitaKaezin);
