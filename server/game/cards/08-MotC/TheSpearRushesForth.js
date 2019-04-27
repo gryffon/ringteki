@@ -6,7 +6,7 @@ class TheSpearRushesForth extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Bow a participating character',
-            condition: () => this.game.isDuringConflict(),
+            condition: () => this.game.isDuringConflict('military'),
             cost: AbilityDsl.costs.dishonor({
                 cardCondition: card => card.isHonored && card.isParticipating()
             }),
