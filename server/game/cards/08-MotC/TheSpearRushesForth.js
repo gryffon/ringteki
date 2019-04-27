@@ -8,8 +8,6 @@ class TheSpearRushesForth extends DrawCard {
             title: 'Bow a participating character',
             condition: () => this.game.isDuringConflict(),
             cost: AbilityDsl.costs.dishonor({
-                cardType: CardTypes.Character,
-                controller: Players.Self,
                 cardCondition: card => card.isHonored && card.isParticipating()
             }),
             target: {

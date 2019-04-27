@@ -50,6 +50,7 @@ describe('The Spear Rushes Forth', function() {
 
             it('should discard an honored status token as a cost', function() {
                 this.brashSamurai.honor();
+                this.dojiChallenger.honor();
                 this.initiateConflict({
                     attackers: [this.kakitaKaezin, this.brashSamurai, this.dojiWhisperer],
                     defenders: [this.dojiChallenger]
