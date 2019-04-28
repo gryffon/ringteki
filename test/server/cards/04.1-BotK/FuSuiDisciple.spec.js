@@ -66,7 +66,7 @@ describe('Fu Sui Disciple', function() {
             it('should not allow choosing an honored character', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.fuSuiDiciple.isHonored = true;
+                this.fuSuiDiciple.honor();
                 this.player2.clickPrompt('player2');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2).toBeAbleToSelect('steward-of-law');
@@ -76,7 +76,7 @@ describe('Fu Sui Disciple', function() {
             it('should not allow choosing a dishonored character', function() {
                 this.player1.pass();
                 this.fuSuiDiciple = this.player2.clickCard('fu-sui-disciple');
-                this.fuSuiDiciple.isDishonored = true;
+                this.fuSuiDiciple.dishonor();
                 this.player2.clickPrompt('player2');
                 expect(this.player2).toHavePrompt('Fū Sui Disciple');
                 expect(this.player2).toBeAbleToSelect('steward-of-law');

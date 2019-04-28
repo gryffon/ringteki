@@ -1,26 +1,15 @@
-import { CardGameAction, CardActionProperties} from './CardGameAction';
-import { CardTypes, Locations, EventNames } from '../Constants';
-import AbilityContext = require('../AbilityContext');
-import BaseCard = require('../basecard');
+import { TokenAction, TokenActionProperties} from './TokenAction';
+import { EventNames } from '../Constants';
 
-export interface DiscardStatusProperties extends CardActionProperties {
+export interface DiscardStatusProperties extends TokenActionProperties {
 }
 
-export class DiscardStatusAction extends CardGameAction {
+export class DiscardStatusAction extends TokenAction {
     name = 'discardStatus';
     eventName = EventNames.OnCardStatusDiscarded;
     effect = 'discard {0}\'s status token';
-    targetType = [CardTypes.Character];
-
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        if(card.location !== Locations.PlayArea || !card.isHonored && !card.isDishonored) {
-            return false;
-        }
-        return super.canAffect(card, context);
-    }
 
     eventHandler(event): void {
-        event.card.isHonored = false;
-        event.card.isDishonored = false;
+        event.token.card.makeOrdinary();
     }
 }

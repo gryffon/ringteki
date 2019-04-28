@@ -38,8 +38,7 @@ class DrawCard extends BaseCard {
         this.covert = false;
         this.isConflict = cardData.side === 'conflict';
         this.isDynasty = cardData.side === 'dynasty';
-        this.isHonored = false;
-        this.isDishonored = false;
+        this.personalHonor = null;
 
         this.parseKeywords(cardData.text ? cardData.text.replace(/<[^>]*>/g, '').toLowerCase() : '');
 
@@ -156,8 +155,7 @@ class DrawCard extends BaseCard {
         clone.effects = _.clone(this.effects);
         clone.controller = this.controller;
         clone.bowed = this.bowed;
-        clone.isHonored = this.isHonored;
-        clone.isDishonored = this.isDishonored;
+        clone.personalHonor = this.personalHonor;
         clone.location = this.location;
         clone.parent = this.parent;
         clone.fate = this.fate;
@@ -354,20 +352,32 @@ class DrawCard extends BaseCard {
         this.fate = Math.max(0, this.fate + amount);
     }
 
+    get isHonored() {
+        return !!this.personalHonor && !!this.personalHonor.honored;
+    }
+
     honor() {
         if(this.isDishonored) {
-            this.isDishonored = false;
+            this.personalHonor = null;
         } else {
-            this.isHonored = true;
+            this.personalHonor = { honored: true, card: this, type: 'token' };
         }
+    }
+
+    get isDishonored() {
+        return !!this.personalHonor && !!this.personalHonor.dishonored;
     }
 
     dishonor() {
         if(this.isHonored) {
-            this.isHonored = false;
+            this.personalHonor = null;
         } else {
-            this.isDishonored = true;
+            this.personalHonor = { dishonored: true, card: this, type: 'token' };
         }
+    }
+
+    makeOrdinary() {
+        this.personalHonor = null;
     }
 
     bow() {
@@ -518,8 +528,7 @@ class DrawCard extends BaseCard {
             this.game.openThenEventWindow(this.game.actions.gainHonor().getEvent(this.controller, this.game.getFrameworkContext()));
         }
 
-        this.isDishonored = false;
-        this.isHonored = false;
+        this.makeOrdinary();
         this.bowed = false;
         this.covert = false;
         this.new = false;

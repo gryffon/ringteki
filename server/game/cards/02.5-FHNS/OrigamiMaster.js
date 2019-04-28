@@ -14,11 +14,11 @@ class OrigamiMaster extends DrawCard {
             effect: 'move an honor token to {0}',
             handler: context => {
                 if(context.source.isHonored) {
-                    context.source.isHonored = false;
+                    context.source.makeOrdinary();
                     if(context.target.isDishonored) {
-                        context.target.isDishonored = false;
+                        context.target.makeOrdinary();
                     } else {
-                        context.target.isHonored = true;
+                        context.target.honor();
                     }
                 }
             }

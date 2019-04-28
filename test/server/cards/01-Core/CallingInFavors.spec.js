@@ -63,8 +63,8 @@ describe('Calling In Favors', function() {
 
             describe('if costs cannot be paid', function() {
                 it('should not allow the event to be played', function() {
-                    this.miyaMystic.isDishonored = true;
-                    this.asceticVisionary.isDishonored = true;
+                    this.miyaMystic.dishonor();
+                    this.asceticVisionary.dishonor();
                     this.fineKatana = this.player1.playAttachment('fine-katana', 'adept-of-the-waves');
                     this.player2.clickCard('calling-in-favors', 'hand');
 

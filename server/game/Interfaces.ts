@@ -3,6 +3,7 @@ import TriggeredAbilityContext = require('./TriggeredAbilityContext');
 import { GameAction } from './GameActions/GameAction';
 import Ring = require('./ring');
 import BaseCard = require('./basecard');
+import DrawCard = require('./drawcard');
 import CardAbility = require('./CardAbility');
 import { DuelProperties } from './GameActions/DuelAction';
 import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } from './Constants';
@@ -143,3 +144,17 @@ export interface PersistentEffectProps {
     targetLocation?: Locations;
     effect: Function | Function[];
 };
+
+interface HonoredToken {
+    honored: true;
+    card: DrawCard;
+    type: 'token';
+};
+
+interface DishonoredToken {
+    dishonored: true;
+    card: DrawCard;
+    type: 'token';
+};
+
+export type Token = HonoredToken | DishonoredToken;
