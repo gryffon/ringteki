@@ -28,16 +28,6 @@ class GameOfSadane extends DrawCard {
             }
         });
     }
-
-    duelOutcome(context, winner, loser) {
-        if(winner && loser) {
-            this.game.addMessage('{0} wins the duel and is honored - {1} loses and is dishonored', winner, loser);
-            this.game.applyGameAction(context, { honor: winner, dishonor: loser });
-        } else {
-            this.game.addMessage('{0} wins the duel and is honored', winner);
-            this.game.applyGameAction(context, { honor: winner });
-        }
-    }
 }
 
 GameOfSadane.id = 'game-of-sadane';

@@ -1,5 +1,5 @@
 import { CardGameAction, CardActionProperties} from './CardGameAction';
-import { CardTypes, Locations, DuelTypes, EventNames } from '../Constants';
+import { CardTypes, Locations, DuelTypes, EventNames, Durations } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Duel = require('../Duel');
@@ -15,6 +15,8 @@ export interface DuelProperties extends CardActionProperties {
     messageArgs?: (duel: Duel, context: AbilityContext) => any | any[];
     costHandler?: (context: AbilityContext, prompt: any) => void;
     statistic?: (card: DrawCard) => number;
+    challengerEffect?;
+    targetEffect?;
 }
 
 export class DuelAction extends CardGameAction {
@@ -106,9 +108,28 @@ export class DuelAction extends CardGameAction {
             context.game.addMessage('The duel cannot proceed as at least one participant for each side has to be in play');
             return;
         }
+        let duel = new Duel(context.game, properties.challenger, cards, properties.type, properties.statistic);
+        if(properties.challengerEffect) {
+            context.game.actions.cardLastingEffect({
+                effect: properties.challengerEffect,
+                duration: Durations.Custom,
+                until: {
+                    onDuelFinished: event => event.duel === duel
+                }
+            }).resolve(properties.challenger, context);
+        }
+        if(properties.targetEffect) {
+            context.game.actions.cardLastingEffect({
+                effect: properties.targetEffect,
+                duration: Durations.Custom,
+                until: {
+                    onDuelFinished: event => event.duel === duel
+                }                
+            }).resolve(properties.target, context);
+        }
         context.game.queueStep(new DuelFlow(
             context.game, 
-            new Duel(context.game, properties.challenger, cards, properties.type, properties.statistic), 
+            duel, 
             properties.costHandler ? prompt => this.honorCosts(prompt, event.context, additionalProperties) : null, 
             duel => this.resolveDuel(duel, event.context, additionalProperties)
         ));
