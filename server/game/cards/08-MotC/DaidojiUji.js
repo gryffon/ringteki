@@ -22,7 +22,7 @@ class DaidojiUji extends DrawCard {
         this.persistentEffect({
             condition: context => context.source.isHonored,
             effect: AbilityDsl.effects.reduceCost({
-                match: card => Locations.Provinces.includes(card.location),
+                match: card => card.isDynasty && card.location.includes('province'),
                 playingTypes: PlayTypes.PlayFromHand
             })
         });

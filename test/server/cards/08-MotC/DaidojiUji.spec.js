@@ -38,31 +38,33 @@ describe('Daidoji Uji', function() {
             it('should let you play characters as if they were in your hand, reducing their cost by 1', function() {
                 this.nextPhase();
                 this.nextPhase();
+                let fate = this.player1.player.fate;
                 expect(this.game.currentPhase).toBe('conflict');
                 this.player1.clickCard(this.dojiWhisperer);
                 this.player1.clickPrompt('0');
                 expect(this.dojiWhisperer.location).toBe('play area');
-                expect(this.player1.fate).toBe(10);
+                expect(this.player1.fate).toBe(fate);
                 this.player2.pass();
                 this.player1.clickCard(this.kakitaKaezin);
                 this.player1.clickPrompt('1');
                 expect(this.kakitaKaezin.location).toBe('play area');
                 expect(this.kakitaKaezin.fate).toBe(1);
-                expect(this.player1.fate).toBe(7);
+                expect(this.player1.fate).toBe(fate - 3);
             });
 
             it('should not discount characters played directly from hand', function() {
                 this.nextPhase();
                 this.nextPhase();
+                let fate = this.player1.player.fate;
                 this.player1.clickCard(this.politicalRival);
                 this.player1.clickPrompt('0');
                 expect(this.politicalRival.location).toBe('play area');
-                expect(this.player1.fate).toBe(7);
+                expect(this.player1.fate).toBe(fate - 3);
                 this.player2.pass();
                 this.player1.clickCard(this.stewardOfLaw);
                 this.player1.clickPrompt('0');
                 expect(this.stewardOfLaw.location).toBe('play area');
-                expect(this.player1.fate).toBe(6);
+                expect(this.player1.fate).toBe(fate - 4);
             });
 
             it('should not let you play characters as if they were in your hand if Toturi2 is participating', function() {
@@ -75,6 +77,8 @@ describe('Daidoji Uji', function() {
                     attackers: [this.akodoToturi2],
                     defenders: []
                 });
+                this.player2.pass();
+                this.player1.clickCard(this.akodoToturi2);
                 this.player2.pass();
                 this.player1.clickCard(this.kakitaKaezin);
                 expect(this.player1).not.toHavePrompt('Choose additional fate');
