@@ -11,7 +11,10 @@ class KakitaDojo extends DrawCard {
                 message: '{0} {1}cannot trigger its abilities until the end of the conflict',
                 messageArgs: duel => [duel.loser, duel.winner && duel.winner.hasTrait('duelist') ? 'is bowed and ' : ''],
                 gameAction: duel => AbilityDsl.actions.multiple([
-                    AbilityDsl.actions.cardLastingEffect({ effect: AbilityDsl.effects.cardCannot('triggerAbilities') }),
+                    AbilityDsl.actions.cardLastingEffect({
+                        target: duel.loser,
+                        effect: AbilityDsl.effects.cardCannot('triggerAbilities')
+                    }),
                     AbilityDsl.actions.bow({ target: duel.winner && duel.winner.hasTrait('duelist') && duel.loser })
                 ])
             }

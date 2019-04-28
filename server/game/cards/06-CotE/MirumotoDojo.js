@@ -18,7 +18,7 @@ class MirumotoDojo extends DrawCard {
                 ],
                 gameAction: duel => AbilityDsl.actions.removeFate({
                     target: duel.loser,
-                    recipient: duel.winner && duel.winner.hasTrait('duelist') && duel.loser && duel.loser.owner
+                    recipient: duel.winner && !duel.winner.hasTrait('duelist') && duel.loser && duel.loser.owner
                 })
             }
         });

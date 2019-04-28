@@ -15,7 +15,7 @@ class MirumotoRaitsugu extends DrawCard {
                     challenger: context.source,
                     gameAction: duel => ability.actions.conditional({
                         target: duel.loser,
-                        condition: duel.loser.fate > 0,
+                        condition: duel.loser && duel.loser.fate > 0,
                         trueGameAction: ability.actions.removeFate(),
                         falseGameAction: ability.actions.discardFromPlay()
                     })

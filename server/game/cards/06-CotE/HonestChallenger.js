@@ -17,8 +17,8 @@ class HonestChallenger extends DrawCard {
                 gameAction: duel => duel.winner && AbilityDsl.actions.selectCard({
                     activePromptTitle: 'Choose a character to move to the conflict',
                     cardType: CardTypes.Character,
-                    player: duel.winner === context.player ? Players.Self : Players.Opponent,
-                    controller: duel.winner === context.player ? Players.Self : Players.Opponent,
+                    player: duel.winner.controller === context.player ? Players.Self : Players.Opponent,
+                    controller: duel.winner.controller === context.player ? Players.Self : Players.Opponent,
                     message: '{0} moves {1} to the conflict',
                     messageArgs: (card, player) => [player, card],
                     gameAction: AbilityDsl.actions.moveToConflict()
