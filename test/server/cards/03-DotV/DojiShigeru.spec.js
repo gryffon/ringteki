@@ -32,6 +32,7 @@ describe('Doji Shigeru', function() {
             it('should trigger when the opponent plays an event', function() {
                 this.player2.clickCard(this.banzai);
                 this.player2.clickCard(this.kaiuEnvoy);
+                this.player2.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.dojiShigeru);
             });
@@ -50,6 +51,7 @@ describe('Doji Shigeru', function() {
                 beforeEach(function() {
                     this.player2.clickCard(this.banzai);
                     this.player2.clickCard(this.kaiuEnvoy);
+                    this.player2.clickPrompt('Done');
                     this.player1.clickCard(this.dojiShigeru);
                 });
 
@@ -67,10 +69,10 @@ describe('Doji Shigeru', function() {
 
                 it('should be able to be triggered again', function() {
                     this.player2.clickCard(this.fineKatana);
-                    this.player2.clickPrompt('Done');
                     this.player1.pass();
                     this.player2.clickCard(this.courtGames);
                     this.player2.clickPrompt('Honor a friendly character');
+                    this.player2.clickCard(this.kaiuEnvoy);
                     expect(this.player1).toHavePrompt('Triggered Abilities');
                     expect(this.player1).toBeAbleToSelect(this.dojiShigeru);
                 });

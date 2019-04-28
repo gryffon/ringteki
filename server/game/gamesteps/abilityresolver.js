@@ -25,8 +25,6 @@ class AbilityResolver extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.resolveEarlyTargets()),
             new SimpleStep(this.game, () => this.checkForCancel()),
             new SimpleStep(this.game, () => this.openInitiateAbilityEventWindow()),
-            new SimpleStep(this.game, () => this.executeHandler()),
-            new SimpleStep(this.game, () => this.moveEventCardToDiscard()),
             new SimpleStep(this.game, () => this.refillProvinces())
         ]);
     }
@@ -50,7 +48,7 @@ class AbilityResolver extends BaseStepWithPipeline {
                 ability: this.context.ability,
                 context: this.context
             };
-            if(this.context.ability.isCardPlayed() && !this.context.isResolveAbility) {
+            if(this.context.ability.isCardPlayed()) {
                 this.events.push(this.game.getEvent(EventNames.OnCardPlayed, {
                     player: this.context.player,
                     card: this.context.source,
@@ -58,6 +56,13 @@ class AbilityResolver extends BaseStepWithPipeline {
                     originalLocation: this.context.source.location,
                     playType: PlayTypes.PlayFromHand,
                     resolver: this
+                }));
+            }
+            if(this.context.ability.isTriggeredAbility()) {
+                this.events.push(this.game.getEvent(EventNames.OnCardAbilityTriggered, {
+                    player: this.context.player,
+                    card: this.context.source,
+                    context: this.context
                 }));
             }
         }
@@ -70,8 +75,9 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.queueStep(new SimpleStep(this.game, () => this.payCosts()));
         this.queueStep(new SimpleStep(this.game, () => this.checkCostsWerePaid()));
         this.queueStep(new SimpleStep(this.game, () => this.resolveTargets()));
-        this.queueStep(new SimpleStep(this.game, () => this.raiseOnCardAbilityTriggered()));
         this.queueStep(new SimpleStep(this.game, () => this.initiateAbilityEffects()));
+        this.queueStep(new SimpleStep(this.game, () => this.executeHandler()));
+        this.queueStep(new SimpleStep(this.game, () => this.moveEventCardToDiscard()));
     }
 
     resolveEarlyTargets() {
@@ -143,16 +149,6 @@ class AbilityResolver extends BaseStepWithPipeline {
         }
     }
 
-    raiseOnCardAbilityTriggered() {
-        if(!this.cancelled) {
-            this.game.raiseEvent(EventNames.OnCardAbilityTriggered, {
-                card: this.context.source,
-                player: this.context.player,
-                ability: this.context.ability
-            });
-        }
-    }
-
     initiateAbilityEffects() {
         if(this.cancelled) {
             for(const event of this.events) {
@@ -188,13 +184,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             return;
         }
         this.context.stage = Stages.Effect;
-        if(!this.context.ability.isTriggeredAbility() || this.context.subResolution) {
-            this.context.ability.executeHandler(this.context);
-            return;
-        }
-        this.game.raiseEvent(EventNames.OnAbilityResolved, { card: this.context.source, context: this.context }, () => {
-            this.context.ability.executeHandler(this.context);
-        });
+        this.context.ability.executeHandler(this.context);
     }
 
     moveEventCardToDiscard() {

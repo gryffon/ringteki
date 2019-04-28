@@ -255,7 +255,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Returns the total number of faceup non-stronghold province cards controlled by this player
+     * Returns the total number of faceup province cards controlled by this player
      * @param {Function} predicate - format: (card) => return boolean, default: () => true
      * */
     getNumberOfFaceupProvinces(predicate = () => true) {
@@ -265,7 +265,7 @@ class Player extends GameObject {
     }
 
     /**
-     * Returns the total number of faceup non-stronghold province cards controlled by this player's opponent
+     * Returns the total number of faceup province cards controlled by this player's opponent
      * @param {Function} predicate - format: (card) => return boolean, default: () => true
      * */
     getNumberOfOpponentsFaceupProvinces(predicate = () => true) {
@@ -413,7 +413,16 @@ class Player extends GameObject {
      */
 
     getConflictOpportunities(type = 'total') {
+        let setConflictDeclarationType = this.mostRecentEffect(EffectNames.SetConflictDeclarationType);
         let maxConflicts = this.mostRecentEffect(EffectNames.SetMaxConflicts);
+        if(setConflictDeclarationType && type !== 'total') {
+            if(type !== setConflictDeclarationType) {
+                return 0;
+            } else if(maxConflicts) {
+                return Math.max(0, maxConflicts - this.game.getConflicts(this).length);
+            }
+            return this.conflictOpportunities['total'];
+        }
         if(maxConflicts) {
             return Math.max(0, maxConflicts - this.game.getConflicts(this).length);
         }
@@ -489,6 +498,9 @@ class Player extends GameObject {
     }
 
     addPlayableLocation(type, player, location, cards = []) {
+        if(!player) {
+            return;
+        }
         let playableLocation = new PlayableLocation(type, player, location, cards);
         this.playableLocations.push(playableLocation);
         return playableLocation;
@@ -939,8 +951,6 @@ class Player extends GameObject {
             card.controller = card.owner;
         }
 
-        card.moveTo(targetLocation);
-
         if(provinceLocations.includes(targetLocation)) {
             if([Locations.DynastyDeck, Locations.ProvinceDeck].includes(location)) {
                 card.facedown = true;
@@ -957,6 +967,8 @@ class Player extends GameObject {
         } else if(targetPile) {
             targetPile.push(card);
         }
+
+        card.moveTo(targetLocation);
     }
 
     /**

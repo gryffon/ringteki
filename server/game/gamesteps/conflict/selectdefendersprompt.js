@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const UiPrompt = require('../uiprompt.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, EffectNames } = require('../../Constants');
 
 const capitalize = {
     military: 'Military',
@@ -18,6 +18,13 @@ class SelectDefendersPrompt extends UiPrompt {
 
         this.player = player;
         this.conflict = conflict;
+        let mustBeDeclared = this.player.cardsInPlay.filter(card =>
+            card.getEffects(EffectNames.MustBeDeclaredAsDefender).some(effect => effect === 'both' || effect === conflict.conflictType));
+        for(const card of mustBeDeclared) {
+            if(this.checkCardCondition(card) && !this.conflict.defenders.includes(card)) {
+                this.selectCard(card);
+            }
+        }
     }
 
     activeCondition(player) {
@@ -51,7 +58,9 @@ class SelectDefendersPrompt extends UiPrompt {
     }
 
     checkCardCondition(card) {
-
+        if(this.conflict.defenders.includes(card) && card.getEffects(EffectNames.MustBeDeclaredAsDefender).some(effect => effect === 'both' || effect === this.conflict.conflictType)) {
+            return false;
+        }
         return (
             card.getType() === CardTypes.Character &&
             card.controller === this.player &&

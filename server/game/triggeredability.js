@@ -2,7 +2,7 @@ const _ = require('underscore');
 
 const CardAbility = require('./CardAbility.js');
 const TriggeredAbilityContext = require('./TriggeredAbilityContext.js');
-const { Stages } = require('./Constants.js');
+const { Stages, CardTypes, PlayTypes } = require('./Constants.js');
 
 /**
  * Represents a reaction/interrupt ability provided by card text.
@@ -37,15 +37,26 @@ class TriggeredAbility extends CardAbility {
     constructor(game, card, abilityType, properties) {
         super(game, card, properties);
         this.when = properties.when;
+        this.anyPlayer = !!properties.anyPlayer;
         this.abilityType = abilityType;
         this.collectiveTrigger = !!properties.collectiveTrigger;
     }
 
+    meetsRequirements(context) {
+        if(!this.anyPlayer && context.player !== this.card.controller && (this.card.type !== CardTypes.Event || !context.player.isCardInPlayableLocation(this.card, PlayTypes.PlayFromHand))) {
+            return 'player';
+        }
+
+        return super.meetsRequirements(context);
+    }
+
     eventHandler(event, window) {
-        let context = this.createContext(this.card.controller, event);
-        //console.log(event.name, this.card.name, this.isTriggeredByEvent(event, context), this.meetsRequirements(context));
-        if(this.card.reactions.includes(this) && this.isTriggeredByEvent(event, context) && this.meetsRequirements(context) === '') {
-            window.addChoice(context);
+        for(const player of this.game.getPlayers()) {
+            let context = this.createContext(player, event);
+            //console.log(event.name, this.card.name, this.isTriggeredByEvent(event, context), this.meetsRequirements(context));
+            if(this.card.reactions.includes(this) && this.isTriggeredByEvent(event, context) && this.meetsRequirements(context) === '') {
+                window.addChoice(context);
+            }
         }
     }
 
