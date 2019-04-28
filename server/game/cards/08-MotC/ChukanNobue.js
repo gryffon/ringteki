@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl.js');
 class ChukanNobue extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
-            effect: AbilityDsl.effects.cardCannot({
+            effect: AbilityDsl.effects.playerCannot({
                 cannot: 'discard',
                 restricts: 'opponentsTriggeredAbilities'
             })

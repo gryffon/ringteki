@@ -68,8 +68,29 @@ describe('Chukan Nobue', function() {
                 expect(this.player2).toHavePrompt('Choose a card to discard');
                 expect(this.player2.currentButtons).toContain('Ornate Fan');
                 expect(this.player2.currentButtons).toContain('Don\'t discard anything');
-                expect(this.player2).not.toBeAbleToSelect('Ornate Fan');
-                this.player2.clickPrompt('Don\'t discard anything');
+                this.player2.clickPrompt('Ornate Fan');
+                expect(this.player2).toHavePrompt('Choose a card to discard');
+            });
+
+            it('PD should be able to look at the player hand but not discard', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.nobue],
+                    defenders: [this.paragon],
+                    provinces: ['upholding-authority']
+                });
+
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard('policy-debate');
+                this.player2.clickCard(this.paragon);
+                this.player2.clickCard(this.nobue);
+                this.player2.clickPrompt('5');
+                this.player1.clickPrompt('5');
+                expect(this.player2.currentButtons).toContain('Ornate Fan');
+                expect(this.player2.currentButtons).toContain('Fine Katana');
+                this.player2.clickPrompt('Ornate Fan');
+                expect(this.player2).toHavePrompt('Choose a card to discard');
             });
         });
     });
