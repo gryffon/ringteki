@@ -6,7 +6,6 @@ import Ring = require('./ring');
 import StatusToken = require('./StatusToken');
 import { Stages, Locations } from './Constants.js';
 import { GameAction } from './GameActions/GameAction.js';
-import { AnyTypeAnnotation } from 'babel-types';
 
 interface AbilityContextProperties {
     game: Game;
