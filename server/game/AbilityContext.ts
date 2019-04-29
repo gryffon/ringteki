@@ -3,8 +3,10 @@ import EffectSource = require('./EffectSource.js');
 import Game = require('./game');
 import Player = require('./player');
 import Ring = require('./ring');
+import StatusToken = require('./StatusToken');
 import { Stages, Locations } from './Constants.js';
 import { GameAction } from './GameActions/GameAction.js';
+import { AnyTypeAnnotation } from 'babel-types';
 
 interface AbilityContextProperties {
     game: Game;
@@ -15,6 +17,7 @@ interface AbilityContextProperties {
     targets?: any;
     rings?: any;
     selects?: any;
+    tokens?: any;
     events?: any[];
     stage?: Stages;
     targetAbility?: any;
@@ -29,12 +32,14 @@ class AbilityContext {
     targets: any;
     rings: any;
     selects: any;
+    tokens: any;
     events: any[] = [];
     stage: Stages;
     targetAbility: any;
     target: any;
     select: string;
     ring: Ring;
+    token: StatusToken;
     provincesToRefill: any[] = [];
     subResolution = false;
     choosingPlayerOverride: Player = null;
@@ -49,6 +54,7 @@ class AbilityContext {
         this.targets = properties.targets || {};
         this.rings = properties.rings || {};
         this.selects = properties.selects || {};
+        this.tokens = properties.tokens || {};
         this.stage = properties.stage || Stages.Effect;
         this.targetAbility = properties.targetAbility;
     }

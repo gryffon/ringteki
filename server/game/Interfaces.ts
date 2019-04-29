@@ -36,6 +36,11 @@ interface TargetAbility extends BaseTarget {
     abilityCondition?: (ability: CardAbility) => boolean;
 };
 
+interface TargetToken extends BaseTarget {
+    mode: TargetModes.Token;
+    cardCondition?: (card: BaseCard, context?: AbilityContext) => boolean;
+};
+
 interface BaseTargetCard extends BaseTarget {
     cardType?: CardTypes | CardTypes[];
     controller?: Players;
@@ -59,7 +64,7 @@ interface TargetCardSingleUnlimited extends BaseTargetCard {
     mode?: TargetModes.Single | TargetModes.Unlimited;
 };
 
-type TargetCard = TargetCardExactlyUpTo | TargetCardMaxStat | TargetCardSingleUnlimited | TargetAbility;
+type TargetCard = TargetCardExactlyUpTo | TargetCardMaxStat | TargetCardSingleUnlimited | TargetAbility | TargetToken;
 
 interface SubTarget {
     dependsOn?: string;

@@ -5,9 +5,9 @@ import { CardTypes, EventNames } from '../Constants';
 import BaseCard = require('../basecard');
 import Ring = require ('../ring');
 import Player = require('../player');
-import { Token } from '../Interfaces';
+import StatusToken = require('../StatusToken');
 
-type PlayerOrRingOrCardOrToken = Player | Ring | BaseCard | Token;
+type PlayerOrRingOrCardOrToken = Player | Ring | BaseCard | StatusToken;
 
 export interface GameActionProperties {
     target?: PlayerOrRingOrCardOrToken | PlayerOrRingOrCardOrToken[];

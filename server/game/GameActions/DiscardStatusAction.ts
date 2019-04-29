@@ -6,7 +6,7 @@ export interface DiscardStatusProperties extends TokenActionProperties {
 
 export class DiscardStatusAction extends TokenAction {
     name = 'discardStatus';
-    eventName = EventNames.OnCardStatusDiscarded;
+    eventName = EventNames.OnStatusTokenDiscarded;
     effect = 'discard {0}\'s status token';
 
     eventHandler(event): void {

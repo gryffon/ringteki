@@ -9,6 +9,7 @@ const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
 const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
+const StatusToken = require('./StatusToken');
 
 const { Locations, EffectNames, Players, CardTypes, PlayTypes } = require('./Constants');
 
@@ -352,15 +353,19 @@ class DrawCard extends BaseCard {
         this.fate = Math.max(0, this.fate + amount);
     }
 
+    setPersonalHonor(token) {
+        this.personalHonor = token || null;
+    }
+
     get isHonored() {
         return !!this.personalHonor && !!this.personalHonor.honored;
     }
 
     honor() {
         if(this.isDishonored) {
-            this.personalHonor = null;
+            this.makeOrdinary();
         } else {
-            this.personalHonor = { honored: true, card: this, type: 'token' };
+            this.setPersonalHonor(new StatusToken(this.game, this, true));
         }
     }
 
@@ -370,14 +375,14 @@ class DrawCard extends BaseCard {
 
     dishonor() {
         if(this.isHonored) {
-            this.personalHonor = null;
+            this.makeOrdinary();
         } else {
-            this.personalHonor = { dishonored: true, card: this, type: 'token' };
+            this.setPersonalHonor(new StatusToken(this.game, this, false));
         }
     }
 
     makeOrdinary() {
-        this.personalHonor = null;
+        this.setPersonalHonor();
     }
 
     bow() {
