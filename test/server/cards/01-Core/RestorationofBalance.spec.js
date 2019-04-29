@@ -5,7 +5,7 @@ describe('Restoration of Balance', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['matsu-berserker'],
+                        inPlay: ['akodo-toturi'],
                         hand: [
                             'against-the-waves', 'fine-katana', 'ornate-fan', 'honored-blade',
                             'magnificent-kimono', 'assassination', 'banzai', 'charge'
@@ -15,23 +15,16 @@ describe('Restoration of Balance', function() {
                         provinces: ['restoration-of-balance']
                     }
                 });
-                this.matsuBerserker = this.player1.findCardByName('matsu-berserker');
-            });
-
-            it('should trigger when attackers are declared', function() {
-                this.noMoreActions();
-                this.initiateConflict({
-                    attackers: ['matsu-berserker']
-                });
-                expect(this.player2).toHavePrompt('Triggered Abilities');
-                expect(this.player2).toBeAbleToSelect('restoration-of-balance');
+                this.akodoToturi = this.player1.findCardByName('akodo-toturi');
             });
 
             it('should prompt the opponent to discard down to four cards', function() {
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: ['matsu-berserker']
+                    attackers: [this.akodoToturi],
+                    defenders: []
                 });
+                this.noMoreActions();
                 this.player2.clickCard('restoration-of-balance');
                 expect(this.player1).toHavePrompt('Choose 4 cards to discard');
                 expect(this.player1).toBeAbleToSelect('assassination');
@@ -41,8 +34,10 @@ describe('Restoration of Balance', function() {
             it('should discard the chosen cards', function() {
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: ['matsu-berserker']
+                    attackers: [this.akodoToturi],
+                    defenders: []
                 });
+                this.noMoreActions();
                 this.player2.clickCard('restoration-of-balance');
                 this.assassination = this.player1.clickCard('assassination');
                 this.fineKatana = this.player1.clickCard('fine-katana');

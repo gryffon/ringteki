@@ -5,7 +5,7 @@ describe('Border Fortress', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        provinces: ['restoration-of-balance', 'night-raid'],
+                        provinces: ['night-raid'],
                         inPlay: ['matsu-berserker']
                     },
                     player2: {
@@ -13,7 +13,6 @@ describe('Border Fortress', function() {
                         hand: ['charge', 'banzai', 'court-games', 'i-am-ready', 'breakthrough']
                     }
                 });
-                this.restorationOfBalance = this.player1.findCardByName('restoration-of-balance');
                 this.nightRaid = this.player1.findCardByName('night-raid');
                 this.matsuBerserker = this.player1.findCardByName('matsu-berserker');
                 this.borderFortress = this.player2.findCardByName('border-fortress');
@@ -68,20 +67,6 @@ describe('Border Fortress', function() {
                 expect(this.matsuBerserker.bowed).toBe(true);
                 expect(this.matsuBerserker.inConflict).toBe(false);
                 expect(this.game.currentConflict.conflictType).toBe('political');
-            });
-
-            it('should correctly trigger an opponent\'s Restoration of Balance', function() {
-                this.initiateConflict({
-                    province: this.borderFortress,
-                    attackers: ['matsu-berserker'],
-                    defenders: []
-                });
-                this.player2.clickCard(this.borderFortress);
-                this.player2.clickCard(this.restorationOfBalance);
-                expect(this.player1).toHavePrompt('Triggered Abilities');
-                expect(this.player1).toBeAbleToSelect(this.restorationOfBalance);
-                this.player1.clickCard(this.restorationOfBalance);
-                expect(this.player2).toHavePrompt('Choose a card to discard');
             });
 
             it('should correctly trigger an opponent\'s Night Raid', function() {
