@@ -24,13 +24,6 @@ class DuelistTraining extends DrawCard {
         });
     }
 
-    resolutionHandler(context, winner, loser) {
-        if(loser) {
-            this.game.addMessage('{0} wins the duel, and bows {1}', winner, loser);
-            this.game.applyGameAction(context, { bow: loser });
-        }
-    }
-
     costHandler(context, prompt) {
         let lowBidder = this.game.getFirstPlayer();
         let difference = lowBidder.honorBid - lowBidder.opponent.honorBid;
