@@ -49,7 +49,7 @@ describe('Challenge on the Fields', function() {
                     player2: {
                         honor: 11,
                         inPlay: ['agasha-swordsmith', 'ancient-master', 'togashi-mitsu'],
-                        hand: ['contingency-plan']
+                        conflictDiscard: ['contingency-plan']
                     }
                 });
                 this.borderRider = this.player1.findCardByName('border-rider');
@@ -63,6 +63,7 @@ describe('Challenge on the Fields', function() {
                 this.ancientMaster = this.player2.findCardByName('ancient-master');
                 this.togashiMitsu = this.player2.findCardByName('togashi-mitsu');
                 this.contingencyPlan = this.player2.findCardByName('contingency-plan');
+                this.player2.moveCard(this.contingencyPlan, 'hand');
             });
 
             it('the bonus to military skill should continue throughout all of the nested duels', function() {
