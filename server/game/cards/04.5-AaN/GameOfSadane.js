@@ -19,21 +19,14 @@ class GameOfSadane extends DrawCard {
                     gameAction: ability.actions.duel(context => ({
                         type: DuelTypes.Political,
                         challenger: context.targets.challenger,
-                        resolutionHandler: (winner, loser) => this.duelOutcome(context, winner, loser)
+                        gameAction: duel => ability.actions.multiple([
+                            ability.actions.honor({ target: duel.winner }),
+                            ability.actions.dishonor({ target: duel.loser })
+                        ])
                     }))
                 }
             }
         });
-    }
-
-    duelOutcome(context, winner, loser) {
-        if(winner && loser) {
-            this.game.addMessage('{0} wins the duel and is honored - {1} loses and is dishonored', winner, loser);
-            this.game.applyGameAction(context, { honor: winner, dishonor: loser });
-        } else {
-            this.game.addMessage('{0} wins the duel and is honored', winner);
-            this.game.applyGameAction(context, { honor: winner });
-        }
     }
 }
 

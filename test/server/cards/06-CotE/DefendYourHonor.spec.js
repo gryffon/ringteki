@@ -80,7 +80,7 @@ describe('Defend Your Honor', function() {
                 this.player2.clickCard(this.dojiChallenger);
                 this.player1.clickPrompt('5');
                 this.player2.clickPrompt('1');
-                expect(this.getChatLogs(3)).toContain('Border Rider wins the duel and cancels Way of the Crane\'s effect');
+                expect(this.getChatLogs(3)).toContain('Duel Effect: cancel the effects of Way of the Crane');
                 expect(this.dojiChallenger.isHonored).toBe(false);
             });
 

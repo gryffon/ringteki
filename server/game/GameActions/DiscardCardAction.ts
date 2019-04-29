@@ -1,7 +1,7 @@
 import { CardGameAction, CardActionProperties} from './CardGameAction';
-import { Locations, EventNames } from '../Constants';
+import { Locations, EventNames, CardTypes } from '../Constants';
 import AbilityContext = require('../AbilityContext');
-import BaseCard = require('../basecard');
+import DrawCard = require('../drawcard');
 
 export interface DiscardCardProperties extends CardActionProperties {
 }
@@ -11,10 +11,16 @@ export class DiscardCardAction extends CardGameAction {
     eventName = EventNames.OnCardsDiscarded;
     cost = 'discarding {0}';
     effect = 'discard {0}';
+    targetType = [CardTypes.Attachment, CardTypes.Character, CardTypes.Event, CardTypes.Holding];
+
+    canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
+        return (card.location !== Locations.Hand || card.controller.checkRestrictions('discard', context)) && 
+            super.canAffect(card, context, additionalProperties);
+    }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let { target } = this.getProperties(context, additionalProperties);
-        let cards = (target as BaseCard[]).filter(card => this.canAffect(card, context));
+        let cards = (target as DrawCard[]).filter(card => this.canAffect(card, context));
         if(cards.length === 0) {
             return
         }

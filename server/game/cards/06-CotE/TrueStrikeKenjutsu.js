@@ -7,23 +7,14 @@ class TrueStrikeKenjutsu extends DrawCard {
         this.whileAttached({
             effect: AbilityDsl.effects.gainAbility('action', {
                 title: 'Initiate a military duel',
-                initiateDuel: context => ({
+                initiateDuel: {
                     type: DuelTypes.Military,
-                    resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser),
+                    gameAction: duel => AbilityDsl.actions.bow({ target: duel.loser }),
                     statistic: (card) => card.getBaseMilitarySkill()
-                }),
+                },
                 printedAbility: false
             })
         });
-    }
-
-    resolutionHandler(context, winner, loser) {
-        if(loser) {
-            this.game.addMessage('{0} wins the duel, and bows {1}', winner, loser);
-            this.game.applyGameAction(context, { bow: loser });
-        } else {
-            this.game.addMessage('{0} wins the duel but there is no loser', winner);
-        }
     }
 }
 
