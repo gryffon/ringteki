@@ -23,13 +23,15 @@ export interface SelectCardProperties extends CardActionProperties {
     selector?: BaseCardSelector;
     mode?: TargetModes;
     additionalProperties?: (card: BaseCard) => any;
+    cancelHandler?: () => void;
 }
 
 export class SelectCardAction extends CardGameAction {
     defaultProperties: SelectCardProperties = {
         cardCondition: () => true,
         gameAction: null,
-        additionalProperties: card => ({ target: card })
+        additionalProperties: card => ({ target: card }),
+        targets: false
     };
 
     constructor(properties: SelectCardProperties | ((context: AbilityContext) => SelectCardProperties)) {
@@ -83,6 +85,8 @@ export class SelectCardAction extends CardGameAction {
             context: context,
             selector: properties.selector,
             mustSelect: mustSelect,
+            buttons: properties.cancelHandler ? [{ text: 'Cancel', arg: 'cancel' }] : [],
+            onCancel: properties.cancelHandler,
             onSelect: (player, cards) => {
                 if(properties.message) {
                     context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
