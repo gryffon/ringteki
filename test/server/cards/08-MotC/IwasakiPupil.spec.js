@@ -53,7 +53,7 @@ describe('Iwasaki Pupil', function() {
                 });
             });
 
-            it('during draw bids if the bids are 1 to 5, four honor is trade and only 3 cards are drawn', function() {
+            it('during draw bids if the bids are 1 to 5, four honor is traded and only 1 card is drawn', function() {
                 let playerOneHandSize = this.player1.player.hand.size();
                 let playerTwoHandSize = this.player2.player.hand.size();
                 this.player1.clickPrompt('1');
