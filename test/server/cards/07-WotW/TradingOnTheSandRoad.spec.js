@@ -138,6 +138,87 @@ describe('Trading on the Sand Road', function () {
                 expect(this.player2).toHavePrompt('Choose additional fate');
             });
         });
+
+        describe('Trading on the Sand Road\'s ability for action: cards', function () {
+            beforeEach(function () {
+                this.setupTest({
+                    phase: 'dynasty',
+                    player1: {
+                        inPlay: ['wandering-ronin', 'otomo-courtier'],
+                        hand: ['trading-on-the-sand-road'],
+                        conflictDiscard: ['fine-katana']
+                    },
+                    player2: {
+                        inPlay: ['guardian-kami'],
+                        hand: [],
+                        conflictDiscard: ['court-games', 'banzai', 'let-go']
+                    }
+                });
+
+                this.tradingOnTheSandRoad = this.player1.findCardByName('trading-on-the-sand-road');
+                this.wanderingRonin = this.player1.findCardByName('wandering-ronin');
+                this.wanderingRonin.fate = 2;
+                this.otomoCourtier = this.player1.findCardByName('otomo-courtier');
+                this.fineKatana = this.player1.findCardByName('fine-katana');
+                this.player1.moveCard(this.fineKatana, 'conflict deck');
+
+                this.guardianKami = this.player2.findCardByName('guardian-kami');
+                this.letGo = this.player2.findCardByName('let-go');
+                this.banzai = this.player2.findCardByName('banzai');
+                this.courtGames = this.player2.findCardByName('court-games');
+                this.player2.moveCard(this.letGo, 'conflict deck');
+                this.player2.moveCard(this.courtGames, 'conflict deck');
+                this.player2.moveCard(this.banzai, 'conflict deck');
+
+                this.noMoreActions();
+                this.player1.clickCard(this.tradingOnTheSandRoad);
+            });
+
+            it('should let you use your opponents let go', function () {
+                this.player1.pass();
+                this.player2.clickCard(this.fineKatana);
+                this.player2.clickCard(this.guardianKami);
+                expect(this.player1).toBeAbleToSelect(this.letGo);
+                this.player1.clickCard(this.letGo);
+                this.player1.clickCard(this.fineKatana);
+                expect(this.fineKatana.location).toBe('conflict discard');
+                expect(this.letGo.location).toBe('conflict discard');
+            });
+
+            it('should let you play your opponents court games', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.wanderingRonin],
+                    defenders: []
+                });
+                this.player2.pass();
+                expect(this.player1).toBeAbleToSelect(this.courtGames);
+                this.player1.clickCard(this.courtGames);
+                this.player1.clickPrompt('Honor a friendly character');
+                this.player1.clickCard(this.wanderingRonin);
+                expect(this.wanderingRonin.isHonored).toBe(true);
+                expect(this.courtGames.location).toBe('conflict discard');
+            });
+
+            it('should let you play your opponents banzai', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.wanderingRonin],
+                    defenders: []
+                });
+                this.player2.pass();
+                expect(this.player1).toBeAbleToSelect(this.banzai);
+                this.player1.clickCard(this.banzai);
+                this.player1.clickCard(this.wanderingRonin);
+                this.player1.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player1.clickCard(this.wanderingRonin);
+                this.player1.clickPrompt('Done');
+                expect(this.wanderingRonin.getMilitarySkill()).toBe(6);
+                expect(this.banzai.location).toBe('conflict discard');
+            });
+        });
     });
 });
 
