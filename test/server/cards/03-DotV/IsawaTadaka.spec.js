@@ -9,7 +9,7 @@ describe('Isawa Tadaka', function() {
                         hand: ['against-the-waves', 'against-the-waves']
                     },
                     player2: {
-                        inPlay: ['isawa-tadaka']
+                        inPlay: ['isawa-tadaka', 'serene-warrior']
                     }
                 });
                 this.isawaTadaka = this.player2.findCardByName('isawa-tadaka');
@@ -19,10 +19,10 @@ describe('Isawa Tadaka', function() {
                 this.player2.pass();
             });
 
-            it('should stop a player from playing an event in their discard pile', function() {
+            it('should allow a player to play an event in their discard pile', function() {
                 expect(this.isawaTadaka.bowed).toBe(true);
                 this.player1.clickCard(this.againstTheWaves);
-                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player1).toHavePrompt('Against the Waves');
             });
 
             it('should stop a player from playing an event in their discard pile while the earth ring is contested', function() {
@@ -40,20 +40,19 @@ describe('Isawa Tadaka', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
-            it('should allow a player to play an event in their discard pile if they have claimed the earth ring', function() {
+            it('should stop a player from playing an event when Tadaka\'s controller has claimed the earth ring', function() {
                 this.player1.pass();
                 this.initiateConflict({
                     type: 'military',
                     ring: 'earth',
                     attackers: ['seppun-guardsman'],
-                    defenders: []
+                    defenders: ['serene-warrior']
                 });
                 this.noMoreActions();
-                this.player1.clickPrompt('Don\'t resolve');
                 expect(this.game.rings.earth.contested).toBe(false);
                 expect(this.game.rings.earth.claimed).toBe(true);
                 this.player1.clickCard(this.againstTheWaves);
-                expect(this.player1).toHavePrompt('Against the Waves');
+                expect(this.player1).toHavePrompt('Action Window');
             });
         });
     });
