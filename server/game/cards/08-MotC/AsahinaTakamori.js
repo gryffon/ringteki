@@ -5,14 +5,14 @@ const AbilityDsl = require('../../abilitydsl');
 class AsahinaTakamori extends DrawCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'Choose a character to pacify',
+            title: 'Pacify a character',
             when: {
-                onCardPlayed: (event) => event.card.type === CardTypes.Character && event.card.isFaction('crane')
+                onCardPlayed: (event, context) => event.player === context.player && event.card.type === CardTypes.Character && event.card.isFaction('crane')
             },
             target: {
                 controller: Players.Opponent,
                 cardType: CardTypes.Character,
-                cardCondition: (card, context) => card.getCost() <= context.event.card.getCost(),
+                cardCondition: (card, context) => card.costLessThan(context.event.card.getCost() + 1),
                 gameAction: AbilityDsl.actions.cardLastingEffect({
                     duration: Durations.UntilEndOfRound,
                     effect: [

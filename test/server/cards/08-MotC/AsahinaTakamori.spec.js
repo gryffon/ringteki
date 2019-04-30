@@ -10,7 +10,7 @@ describe('Asahina Takamori', function() {
                     },
                     player2: {
                         inPlay: ['adept-of-the-waves', 'wandering-ronin', 'isawa-tadaka'],
-                        dynastyDiscard: ['favorable-ground']
+                        dynastyDiscard: ['favorable-ground', 'doji-whisperer']
                     }
                 });
 
@@ -22,7 +22,8 @@ describe('Asahina Takamori', function() {
                 this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
                 this.wanderingRonin = this.player2.findCardByName('wandering-ronin');
                 this.isawaTadaka = this.player2.findCardByName('isawa-tadaka');
-                this.favorableGround = this.player2.placeCardInProvince('favorable-ground');
+                this.favorableGround = this.player2.placeCardInProvince('favorable-ground', 'province 1');
+                this.dojiWhisperer = this.player2.placeCardInProvince('doji-whisperer', 'province 2');
             });
 
             it('should trigger when a crane character is played (from province)', function() {
@@ -30,6 +31,18 @@ describe('Asahina Takamori', function() {
                 this.player1.clickPrompt('0');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.asahinaTakamori);
+            });
+
+            it('should not trigger when your opponent plays a crane character', function() {
+                this.player1.clickCard(this.asahinaTakamori);
+                this.player1.clickPrompt('0');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                this.player1.clickPrompt('Pass');
+                this.player2.clickCard(this.dojiWhisperer);
+                this.player2.clickPrompt('0');
+                expect(this.dojiWhisperer.location).toBe('play area');
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).toHavePrompt('Play cards from provinces');
             });
 
             it('should trigger when a crane character is played (from hand)', function () {
