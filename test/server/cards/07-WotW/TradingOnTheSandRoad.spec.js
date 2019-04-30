@@ -178,11 +178,11 @@ describe('Trading on the Sand Road', function () {
                 this.player1.pass();
                 this.player2.clickCard(this.fineKatana);
                 this.player2.clickCard(this.guardianKami);
-                expect(this.player1).toBeAbleToSelect(this.letGo);
                 this.player1.clickCard(this.letGo);
+                expect(this.player1).toHavePrompt('Let Go');
                 this.player1.clickCard(this.fineKatana);
-                expect(this.fineKatana.location).toBe('conflict discard');
-                expect(this.letGo.location).toBe('conflict discard');
+                expect(this.fineKatana.location).toBe('conflict discard pile');
+                expect(this.letGo.location).toBe('conflict discard pile');
             });
 
             it('should let you play your opponents court games', function() {
@@ -193,12 +193,12 @@ describe('Trading on the Sand Road', function () {
                     defenders: []
                 });
                 this.player2.pass();
-                expect(this.player1).toBeAbleToSelect(this.courtGames);
                 this.player1.clickCard(this.courtGames);
+                expect(this.player1).toHavePrompt('Court Games');
                 this.player1.clickPrompt('Honor a friendly character');
                 this.player1.clickCard(this.wanderingRonin);
                 expect(this.wanderingRonin.isHonored).toBe(true);
-                expect(this.courtGames.location).toBe('conflict discard');
+                expect(this.courtGames.location).toBe('conflict discard pile');
             });
 
             it('should let you play your opponents banzai', function() {
@@ -209,14 +209,14 @@ describe('Trading on the Sand Road', function () {
                     defenders: []
                 });
                 this.player2.pass();
-                expect(this.player1).toBeAbleToSelect(this.banzai);
                 this.player1.clickCard(this.banzai);
+                expect(this.player1).toHavePrompt('Banzai!');
                 this.player1.clickCard(this.wanderingRonin);
                 this.player1.clickPrompt('Lose 1 honor to resolve this ability again');
                 this.player1.clickCard(this.wanderingRonin);
                 this.player1.clickPrompt('Done');
                 expect(this.wanderingRonin.getMilitarySkill()).toBe(6);
-                expect(this.banzai.location).toBe('conflict discard');
+                expect(this.banzai.location).toBe('conflict discard pile');
             });
         });
     });
