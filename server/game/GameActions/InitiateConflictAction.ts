@@ -1,7 +1,7 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
 import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
-import { EventNames, ConflictTypes } from '../Constants';
+import { EventNames, ConflictTypes, EffectNames } from '../Constants';
 
 export interface InitiateConflictProperties extends PlayerActionProperties {
     canPass?: boolean;
@@ -26,7 +26,8 @@ export class InitiateConflictAction extends PlayerAction {
             // no remaining conflicts
             return false;
         }
-        let availableConflictTypes = ['military', 'political'].filter(type => player.getConflictOpportunities(type));
+        let prohibitedConflictTypes = player.getEffects(EffectNames.CannotDeclareConflictsOfType);
+        let availableConflictTypes = ['military', 'political'].filter(type => player.getConflictOpportunities(type) && !prohibitedConflictTypes.includes(type));
         if(properties.forcedDeclaredType && !player.cardsInPlay.any(card => card.canDeclareAsAttacker(properties.forcedDeclaredType))) {
             // No legal attackers for forced declared type
             return false;

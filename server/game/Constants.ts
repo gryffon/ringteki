@@ -80,6 +80,7 @@ export enum EffectNames {
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
     AlternateFatePool = 'alternateFatePool',
+    CannotDeclareConflictsOfType = 'cannotDeclareConflictsOfType',
     CanPlayFromOwn = 'canPlayFromOwn',
     CanPlayFromOpponents = 'canPlayFromOpponents',
     ChangePlayerGloryModifier = 'gloryModifier',

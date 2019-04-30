@@ -96,6 +96,7 @@ const Effects = {
         unapply: () => true
     }),
     alternateFatePool: (match) => EffectBuilder.player.static(EffectNames.AlternateFatePool, match),
+    cannotDeclareConflictsOfType: type => EffectBuilder.player.static(EffectNames.CannotDeclareConflictsOfType, type),
     canPlayFromOwn: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
         apply: (player) => {
             for(const card of cards.filter(card => card.type === CardTypes.Event && card.location === location)) {
