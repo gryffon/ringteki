@@ -22,9 +22,11 @@ class PolicyDebate extends DrawCard {
                         challenger: context.targets.challenger,
                         message: '{0} sees {1}\'s hand and chooses a card to discard',
                         messageArgs: duel => [duel.loser && duel.loser.controller.opponent, duel.loser.controller],
-                        gameAction: duel => AbilityDsl.actions.multiple([
+                        gameAction: duel => AbilityDsl.actions.sequential([
                             AbilityDsl.actions.lookAt({
-                                target: duel.loser ? duel.loser.controller.hand.sortBy(card => card.name) : []
+                                target: duel.loser ? duel.loser.controller.hand.sortBy(card => card.name) : [],
+                                message: '{0} reveals their hand: {1}',
+                                messageArgs: cards => [duel.loser.controller, cards]
                             }),
                             AbilityDsl.actions.cardMenu({
                                 activePromptTitle: 'Choose card to discard',
