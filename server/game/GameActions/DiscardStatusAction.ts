@@ -10,6 +10,8 @@ export class DiscardStatusAction extends TokenAction {
     effect = 'discard {0}\'s status token';
 
     eventHandler(event): void {
-        event.token.card.makeOrdinary();
+        if(event.token.card.personalHonor === event.token) {
+            event.token.card.makeOrdinary();
+        }
     }
 }

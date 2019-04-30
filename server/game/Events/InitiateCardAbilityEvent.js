@@ -16,7 +16,7 @@ class InitiateCardAbilityEvent extends Event {
             this.selectTargets = [];
             this.tokenTargets = [];
         }
-        this.allTargets = this.cardTargets.concat(this.ringTargets.concat(this.selectTargets));
+        this.allTargets = this.cardTargets.concat(this.ringTargets, this.selectTargets, this.tokenTargets);
     }
 }
 

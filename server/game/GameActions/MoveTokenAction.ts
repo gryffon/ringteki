@@ -36,11 +36,13 @@ export class MoveTokenAction extends TokenAction {
     }
 
     eventHandler(event): void {
-        event.token.card.makeOrdinary();
-        if(event.recipient.isHonored && event.token.dishonored || event.recipient.isDishonored && event.token.honored) {
-            event.recipient.makeOrdinary();
-        } else if(!event.recipient.personalHonor) {
-            event.recipient.setPersonalHonor(event.token);
+        if(event.token.card.personalHonor === event.token) {
+            event.token.card.makeOrdinary();
+            if(event.recipient.isHonored && event.token.dishonored || event.recipient.isDishonored && event.token.honored) {
+                event.recipient.makeOrdinary();
+            } else if(!event.recipient.personalHonor) {
+                event.recipient.setPersonalHonor(event.token);
+            }
         }
     }
 }
