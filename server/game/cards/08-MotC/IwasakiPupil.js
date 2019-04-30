@@ -9,6 +9,6 @@ class IwasakiPupil extends DrawCard {
     }
 }
 
-IwasakiPupil.id = 'iswasaki-pupil';
+IwasakiPupil.id = 'iwasaki-pupil';
 
 module.exports = IwasakiPupil;
