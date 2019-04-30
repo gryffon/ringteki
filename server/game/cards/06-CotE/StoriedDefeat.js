@@ -16,7 +16,7 @@ class StoriedDefeat extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => this.duelLosersThisConflict.includes(card),
-                gameAction: AbilityDsl.actions.sequentialAction([
+                gameAction: AbilityDsl.actions.sequential([
                     AbilityDsl.actions.bow(),
                     AbilityDsl.actions.menuPrompt(context => ({
                         activePromptTitle: 'Spend 1 fate to dishonor ' + context.target.name + '?',
@@ -27,7 +27,7 @@ class StoriedDefeat extends DrawCard {
                             }
                             return { amount: choice === 'Yes' ? 1 : 0 };
                         },
-                        gameAction: AbilityDsl.actions.jointAction([
+                        gameAction: AbilityDsl.actions.joint([
                             AbilityDsl.actions.loseFate({ target: context.player }),
                             AbilityDsl.actions.resolveAbility({
                                 target: context.source,
