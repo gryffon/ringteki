@@ -69,7 +69,7 @@ describe('Chukan Nobue', function() {
                 expect(this.player2.currentButtons).toContain('Ornate Fan');
                 expect(this.player2.currentButtons).toContain('Don\'t discard anything');
                 this.player2.clickPrompt('Ornate Fan');
-                expect(this.player2).toHavePrompt('Choose a card to discard');
+                this.player2.clickPrompt('Don\'t discard anything');
             });
 
             it('PD should be able to look at the player hand but not discard', function() {
@@ -90,7 +90,7 @@ describe('Chukan Nobue', function() {
                 expect(this.player2.currentButtons).toContain('Ornate Fan');
                 expect(this.player2.currentButtons).toContain('Fine Katana');
                 this.player2.clickPrompt('Ornate Fan');
-                expect(this.player2).toHavePrompt('Choose a card to discard');
+                this.player2.clickPrompt('Don\'t discard anything');
             });
         });
     });
