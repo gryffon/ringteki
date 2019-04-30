@@ -70,7 +70,7 @@ describe('Mirumoto Hitomi', function() {
                 expect(this.mirumotoRaitsugu.getMilitarySkill()).toBe(3);
                 expect(this.doomedShugenja.getMilitarySkill()).toBe(3);
 
-                expect(this.getChatLogs(1)).toContain('Mirumoto Hitomi: 9 vs 7: Mirumoto Raitsugu and Doomed Shugenja');
+                expect(this.getChatLogs(2)).toContain('Mirumoto Hitomi: 9 vs 7: Mirumoto Raitsugu and Doomed Shugenja');
             });
 
             it('should prompt the controller of the losers to choose to dishonor or bow (duel target)', function() {

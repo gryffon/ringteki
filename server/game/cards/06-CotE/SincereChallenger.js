@@ -9,16 +9,16 @@ class SincereChallenger extends DrawCard {
         });
         this.action({
             title: 'Initiate a Political duel',
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Political,
-                resolutionHandler: (winner) => this.resolutionHandler(context, winner)
-            })
+                message: '{0} is immune to events until the end of the conflict',
+                messageArgs: duel => duel.winner,
+                gameAction: duel => AbilityDsl.actions.cardLastingEffect({
+                    target: duel.winner,
+                    effect: AbilityDsl.effects.immunity({ restricts: 'events' })
+                })
+            }
         });
-    }
-
-    resolutionHandler(context, winner) {
-        this.game.addMessage('{0} wins the duel and is immune to events until the end of the conflict', winner);
-        this.game.actions.cardLastingEffect({ effect: AbilityDsl.effects.immunity({ restricts: 'events' }) }).resolve(winner, context);
     }
 }
 

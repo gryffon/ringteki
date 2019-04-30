@@ -2,7 +2,7 @@ import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 
 export interface ConditionalActionProperties extends GameActionProperties {
-    condition: (context: AbilityContext) => boolean;
+    condition: ((context: AbilityContext) => boolean) | boolean;
     trueGameAction: GameAction;
     falseGameAction: GameAction;
 }
@@ -17,9 +17,17 @@ export class ConditionalAction extends GameAction {
         return properties;
     }
 
-    getGameAction(context: AbilityContext, additionalProperties): GameAction {
+    getGameAction(context: AbilityContext, additionalProperties = {}): GameAction {
         let properties = this.getProperties(context, additionalProperties);
-        return properties.condition(context) ? properties.trueGameAction : properties.falseGameAction;
+        let condition = properties.condition;
+        if(typeof(condition) === 'function') {
+            condition = condition(context);
+        }
+        return condition ? properties.trueGameAction : properties.falseGameAction;
+    }
+
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        return this.getGameAction(context).getEffectMessage(context);
     }
 
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
