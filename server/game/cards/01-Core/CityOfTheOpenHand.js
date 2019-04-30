@@ -11,8 +11,7 @@ class CityOfTheOpenHand extends StrongholdCard {
             target: {
                 mode: TargetModes.Select,
                 choices: {
-                    'Gain 1 Honor': AbilityDsl.actions.gainHonor()
-                    ,
+                    'Gain 1 Honor': AbilityDsl.actions.gainHonor(),
                     'Make opponent lose 1 honor': AbilityDsl.actions.loseHonor()
                 }
             }
