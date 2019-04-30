@@ -110,6 +110,8 @@ describe('Bayushi Aramoro', function() {
                 expect(this.motoYouth.location).toBe('play area');
                 expect(this.aramoro.isDishonored).toBe(true);
                 this.noMoreActions();
+                expect(this.player1).toHavePrompt('Air Ring');
+                expect(this.motoYouth.location).toBe('play area');
                 this.player1.clickPrompt('Gain 2 Honor');
                 expect(this.player1).toHavePrompt('Action Window');
                 expect(this.motoYouth.location).toBe('play area');
