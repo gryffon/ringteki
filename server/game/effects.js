@@ -129,7 +129,7 @@ const Effects = {
         unapply: player => player.actionPhasePriority = false
     }),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
-    modifyCardsDrawnInDrawPhase: (amount) => EffectBuilder.player.dynamic(EffectNames.ModifyCardsDrawnInDrawPhase, amount),
+    modifyCardsDrawnInDrawPhase: (amount) => EffectBuilder.player.flexible(EffectNames.ModifyCardsDrawnInDrawPhase, amount),
     playerCannot: (properties) => EffectBuilder.player.static(EffectNames.AbilityRestrictions, new Restriction(Object.assign({ type: properties.cannot || properties }, properties))),
     reduceCost: (properties) => EffectBuilder.player.detached(EffectNames.CostReducer, {
         apply: (player, context) => player.addCostReducer(context.source, properties),

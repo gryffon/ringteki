@@ -23,8 +23,8 @@ describe('Iwasaki Pupil', function() {
                 expect(this.player1).toHavePrompt('Action Window');
                 expect(this.player1.honor).toBe(11 + 4);
                 expect(this.player2.honor).toBe(11 - 4);
-                expect(playerOneHandSize).toBe(playerOneHandSize + 1);
-                expect(playerTwoHandSize).toBe(playerTwoHandSize + 3);
+                expect(this.player1.player.hand.size()).toBe(playerOneHandSize + 1);
+                expect(this.player2.player.hand.size()).toBe(playerTwoHandSize + 3);
             });
 
             it('should make biding 2 or 3 only draw you one card', function() {
@@ -33,8 +33,8 @@ describe('Iwasaki Pupil', function() {
                 this.player1.clickPrompt('3');
                 this.player2.clickPrompt('2');
                 expect(this.player1).toHavePrompt('Action Window');
-                expect(playerOneHandSize).toBe(playerOneHandSize + 1);
-                expect(playerTwoHandSize).toBe(playerTwoHandSize + 1);
+                expect(this.player1.player.hand.size()).toBe(playerOneHandSize + 1);
+                expect(this.player2.player.hand.size()).toBe(playerTwoHandSize + 1);
             });
         });
 
@@ -61,8 +61,8 @@ describe('Iwasaki Pupil', function() {
                 expect(this.player1).toHavePrompt('Action Window');
                 expect(this.player1.honor).toBe(11 + 4);
                 expect(this.player2.honor).toBe(11 - 4);
-                expect(playerOneHandSize).toBe(playerOneHandSize + 1);
-                expect(playerTwoHandSize).toBe(playerTwoHandSize + 1);
+                expect(this.player1.player.hand.size()).toBe(playerOneHandSize + 1);
+                expect(this.player2.player.hand.size()).toBe(playerTwoHandSize + 1);
             });
         });
     });
