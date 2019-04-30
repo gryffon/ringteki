@@ -65,7 +65,7 @@ describe('Chukan Nobue', function() {
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect('upholding-authority');
                 this.upholdingAuthority = this.player2.clickCard('upholding-authority');
-                expect(this.getChatLogs(numBack = 2)).toContain('player1 reveals their hand: Ornate Fan');
+                expect(this.getChatLogs(2)).toContain('player1 reveals their hand: Ornate Fan');
                 this.player1.clickPrompt('yes');
                 expect(this.player1).toHavePrompt('Air Ring');
             });
@@ -85,7 +85,7 @@ describe('Chukan Nobue', function() {
                 this.player2.clickCard(this.nobue);
                 this.player2.clickPrompt('5');
                 this.player1.clickPrompt('5');
-                expect(this.getChatLogs(numBack = 3)).toContain('player1 reveals their hand: Fine Katana and Ornate Fan');
+                expect(this.getChatLogs(3)).toContain('player1 reveals their hand: Fine Katana and Ornate Fan');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
         });
