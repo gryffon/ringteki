@@ -22,14 +22,14 @@ export interface SelectCardProperties extends CardActionProperties {
     gameAction: GameAction;
     selector?: BaseCardSelector;
     mode?: TargetModes;
-    actionParameter?: string;
+    additionalProperties?: (card: BaseCard) => any;
 }
 
 export class SelectCardAction extends CardGameAction {
     defaultProperties: SelectCardProperties = {
         cardCondition: () => true,
         gameAction: null,
-        actionParameter: 'target'
+        additionalProperties: card => ({ target: card })
     };
 
     constructor(properties: SelectCardProperties | ((context: AbilityContext) => SelectCardProperties)) {
@@ -87,7 +87,7 @@ export class SelectCardAction extends CardGameAction {
                 if(properties.message) {
                     context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
                 }
-                properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, { [properties.actionParameter]: cards }));
+                properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.additionalProperties(cards)));
                 return true;
             }
         };
