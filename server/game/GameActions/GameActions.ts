@@ -130,11 +130,11 @@ const GameActions = {
     chooseAction: (propertyFactory: ChooseActionProperties | ((context: TriggeredAbilityContext) => ChooseActionProperties)) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
     conditional: (propertyFactory: ConditionalActionProperties | ((context: TriggeredAbilityContext) => ConditionalActionProperties)) => new ConditionalAction(propertyFactory),
     ifAble: (propertyFactory: IfAbleActionProperties | ((context: TriggeredAbilityContext) => IfAbleActionProperties)) => new IfAbleAction(propertyFactory),
-    jointAction: (gameActions: GameAction[]) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
+    joint: (gameActions: GameAction[]) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     multiple: (gameActions: GameAction[]) => new MultipleGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     menuPrompt: (propertyFactory: MenuPromptProperties | ((context: TriggeredAbilityContext) => MenuPromptProperties)) => new MenuPromptAction(propertyFactory),
     selectCard: (propertyFactory: SelectCardProperties | ((context: TriggeredAbilityContext) => SelectCardProperties)) => new SelectCardAction(propertyFactory),
-    sequentialAction: (gameActions: GameAction[]) => new SequentialAction(gameActions) // takes an array of gameActions, not a propertyFactory
+    sequential: (gameActions: GameAction[]) => new SequentialAction(gameActions) // takes an array of gameActions, not a propertyFactory
 };
 
 export = GameActions;
