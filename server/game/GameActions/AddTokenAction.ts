@@ -27,7 +27,7 @@ export class AddTokenAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    addPropertiesToEvent(event, card: BaseCard, context: AbilityContext, additionalProperties = {}) {
+    addPropertiesToEvent(event, card: BaseCard, context: AbilityContext, additionalProperties = {}): void {
         const { tokenType } = this.getProperties(context, additionalProperties) as AddTokenProperties;
         super.addPropertiesToEvent(event, card, context, additionalProperties);
         event.tokenType = tokenType;
