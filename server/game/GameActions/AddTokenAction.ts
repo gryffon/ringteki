@@ -15,13 +15,21 @@ export class AddTokenAction extends CardGameAction {
         tokenType: TokenTypes.Honor
     };
 
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let properties: AddTokenProperties = this.getProperties(context) as AddTokenProperties;
+        return ['add a {1} token to {0}', [properties.target, properties.tokenType]];
+    }
+
     canAffect(card: BaseCard, context: AbilityContext): boolean {
         if(card.facedown) {
             return false;
         }
-        if([CardTypes.Holding, CardTypes.Province].includes(card.type) && !card.location.includes('province')) {
-            return false;
-        } else if(card.location !== Locations.PlayArea) {
+        if([CardTypes.Holding, CardTypes.Province].includes(card.type)) {
+            if(!card.location.includes('province')) {
+                return false;
+            }
+        }
+        else if(card.location !== Locations.PlayArea) {
             return false;
         }
         return super.canAffect(card, context);
