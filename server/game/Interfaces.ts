@@ -3,6 +3,7 @@ import TriggeredAbilityContext = require('./TriggeredAbilityContext');
 import { GameAction } from './GameActions/GameAction';
 import Ring = require('./ring');
 import BaseCard = require('./basecard');
+import DrawCard = require('./drawcard');
 import CardAbility = require('./CardAbility');
 import { DuelProperties } from './GameActions/DuelAction';
 import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } from './Constants';
@@ -35,6 +36,11 @@ interface TargetAbility extends BaseTarget {
     abilityCondition?: (ability: CardAbility) => boolean;
 };
 
+interface TargetToken extends BaseTarget {
+    mode: TargetModes.Token;
+    cardCondition?: (card: BaseCard, context?: AbilityContext) => boolean;
+};
+
 interface BaseTargetCard extends BaseTarget {
     cardType?: CardTypes | CardTypes[];
     controller?: Players;
@@ -58,7 +64,7 @@ interface TargetCardSingleUnlimited extends BaseTargetCard {
     mode?: TargetModes.Single | TargetModes.Unlimited;
 };
 
-type TargetCard = TargetCardExactlyUpTo | TargetCardMaxStat | TargetCardSingleUnlimited | TargetAbility;
+type TargetCard = TargetCardExactlyUpTo | TargetCardMaxStat | TargetCardSingleUnlimited | TargetAbility | TargetToken;
 
 interface SubTarget {
     dependsOn?: string;
@@ -143,3 +149,17 @@ export interface PersistentEffectProps {
     targetLocation?: Locations;
     effect: Function | Function[];
 };
+
+interface HonoredToken {
+    honored: true;
+    card: DrawCard;
+    type: 'token';
+};
+
+interface DishonoredToken {
+    dishonored: true;
+    card: DrawCard;
+    type: 'token';
+};
+
+export type Token = HonoredToken | DishonoredToken;

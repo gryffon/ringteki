@@ -99,7 +99,7 @@ describe('Abandoning Honor', function() {
                     }
                 });
                 this.shinjoShono = this.player1.findCardByName('shinjo-shono');
-                this.shinjoShono.isDishonored = true;
+                this.shinjoShono.dishonor();
                 this.player1.playAttachment('fine-katana', this.shinjoShono);
                 this.noMoreActions();
                 this.initiateConflict({
