@@ -403,6 +403,19 @@
   z-index: @layer-cards + 1;
 }
 
+.province {
+  .counters {
+    justify-content: flex-start;
+  }
+
+  .card.small {
+    .counters {
+      margin-top: -3px;
+    }
+  }  
+}
+
+
 .card.vertical .counters {
   flex-direction: column;
 
@@ -466,16 +479,39 @@
   box-sizing: border-box;
   width: 25px;
   height: 25px;
-  position: absolute;
-  top: 0px;
-  left: 20px;
+  position: relative;
 
+  & > img {
+    width: 25px;
+    height: 25px;
+    z-index: 2;
+  }
 }
 
 .honorstatuscounter {
   box-sizing: border-box;
   width: 25px;
   height: 25px;
+}
+
+.honorcountertext {
+  width:100%;
+  text-align:center;
+  color: white;
+  text-shadow: 1px 1px 2px #000;
+  z-index: @layer-cards + 3;
+  font-size:1.2em;
+  position: absolute;
+  top: 0;
+  left:0px;
+  width: 25px;
+  height: 25px;
+}
+
+.card.small {
+  .honorcountertext {
+    font-size: 3em;
+  }
 }
 
 
