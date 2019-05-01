@@ -29,7 +29,7 @@ class CourtlyChallenger extends DrawCard {
             title: 'Initiate a Political duel',
             initiateDuel: {
                 type: DuelTypes.Political,
-                gameAction: duel => AbilityDsl.actions.draw({
+                gameAction: duel => duel.winner && AbilityDsl.actions.draw({
                     amount: 2,
                     target: duel.winner.controller
                 })
