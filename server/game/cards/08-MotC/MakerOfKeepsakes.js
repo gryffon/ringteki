@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl');
 class MakerOfKeepsakes extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
-            effect: AbilityDsl.effects.cardCannot('becomeDishonored')
+            effect: AbilityDsl.effects.cardCannot('receiveDishonorToken')
         });
     }
 }
