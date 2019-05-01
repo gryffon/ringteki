@@ -1,20 +1,24 @@
 const _ = require('underscore');
-const GameActionCost = require('./GameActionCost');
-const { Locations, Players } = require('../Constants');
+import GameActionCost = require('./GameActionCost');
+import { SelectCardProperties } from '../GameActions/SelectCardAction'; 
+import { Locations, Players } from '../Constants';
+import AbilityContext = require('../AbilityContext');
 
 class MetaActionCost extends GameActionCost {
+    activePromptTitle: string;
+    
     constructor(action, activePromptTitle) {
         super(action);
         this.activePromptTitle = activePromptTitle;
     }
 
-    getActionName(context) {
-        const { gameAction } = this.action.getProperties(context);
+    getActionName(context: AbilityContext): string {
+        const { gameAction } = this.action.getProperties(context) as SelectCardProperties;
         return gameAction.name;
     }
 
-    canPay(context) {
-        const properties = this.action.getProperties(context);
+    canPay(context: AbilityContext): boolean {
+        const properties = this.action.getProperties(context) as SelectCardProperties;
         let additionalProps = {
             controller: Players.Self,
             location: properties.location || Locations.Any
@@ -22,8 +26,8 @@ class MetaActionCost extends GameActionCost {
         return this.action.hasLegalTarget(context, additionalProps);
     }
 
-    addEventsToArray(events, context, result) {
-        const properties = this.action.getProperties(context);
+    addEventsToArray(events: any[], context: AbilityContext, result): void {
+        const properties = this.action.getProperties(context) as SelectCardProperties;
         if(properties.targets && context.choosingPlayerOverride) {
             context.costs[properties.gameAction.name] = _.shuffle(properties.selector.getAllLegalTargets(context, context.player))[0];
             context.costs[properties.gameAction.name + 'StateWhenChosen'] = context.costs[properties.gameAction.name].createSnapshot();
@@ -34,12 +38,13 @@ class MetaActionCost extends GameActionCost {
             activePromptTitle: this.activePromptTitle,
             location: properties.location || Locations.Any,
             controller: Players.Self,
-            additionalProperties: target => {
+            cancelHandler: null,
+            subActionProperties: target => {
                 context.costs[properties.gameAction.name] = target;
                 if(target.createSnapshot) {
                     context.costs[properties.gameAction.name + 'StateWhenChosen'] = target.createSnapshot();
                 }
-                return properties.additionalProperties ? properties.additionalProperties(target) : {};
+                return properties.subActionProperties ? properties.subActionProperties(target) : {};
             }
         };
         if(result.canCancel) {
@@ -48,14 +53,14 @@ class MetaActionCost extends GameActionCost {
         this.action.addEventsToArray(events, context, additionalProps);
     }
 
-    hasTargetsChosenByInitiatingPlayer(context) {
+    hasTargetsChosenByInitiatingPlayer(context: AbilityContext): boolean {
         return this.action.hasTargetsChosenByInitiatingPlayer(context);
     }
 
-    getCostMessage(context) {
-        const properties = this.action.getProperties(context);
+    getCostMessage(context: AbilityContext): [string, any[]] {
+        const properties = this.action.getProperties(context) as SelectCardProperties;
         return properties.gameAction.getCostMessage(context);
     }
 }
 
-module.exports = MetaActionCost;
+export = MetaActionCost;
