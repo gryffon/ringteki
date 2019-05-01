@@ -26,7 +26,7 @@ describe('Bayushi Shoju', function() {
                 });
                 this.player2.pass();
                 this.bayushiShoju = this.player1.clickCard('bayushi-shoju');
-                this.bayushiShoju.isDishonored = true;
+                this.bayushiShoju.dishonor();
                 this.player1.clickCard(this.yogoOutcast);
             });
 
