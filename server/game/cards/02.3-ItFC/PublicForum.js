@@ -1,4 +1,5 @@
 const ProvinceCard = require('../../provincecard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class PublicForum extends ProvinceCard {
     setupCardAbilities() {
@@ -8,10 +9,10 @@ class PublicForum extends ProvinceCard {
                 onBreakProvince: (event, context) => event.card === context.source && !event.card.hasToken('honor')
             },
             effect: 'add an honor token to {0} instead of breaking it',
-            handler: context => {
-                context.cancel();
-                context.event.card.addToken('honor');
-            }
+            gameAction: AbilityDsl.actions.multiple([
+                AbilityDsl.actions.cancel(),
+                AbilityDsl.actions.addToken()
+            ])
         });
     }
 
