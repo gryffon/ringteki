@@ -192,6 +192,7 @@ export enum EventNames {
     OnCardsDiscarded = 'onCardsDiscarded',
     OnCardsDiscardedFromHand = 'onCardsDiscardedFromHand',
     OnCardLeavesPlay = 'onCardLeavesPlay',
+    OnAddTokenToCard = 'onAddTokenToCard',
     OnMoveToConflict = 'onMoveToConflict',
     OnSendHome = 'onSendHome',
     OnCardPlayed = 'onCardPlayed',
@@ -248,4 +249,8 @@ export enum Elements {
 export enum ConflictTypes {
     Military = 'military',
     Political = 'political'
+};
+
+export enum TokenTypes {
+    Honor = 'honor'
 };
