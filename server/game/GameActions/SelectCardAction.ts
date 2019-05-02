@@ -47,7 +47,9 @@ export class SelectCardAction extends CardGameAction {
         let properties = super.getProperties(context, additionalProperties) as SelectCardProperties;
         properties.gameAction.setDefaultTarget(() => properties.target);
         if(!properties.selector) {
-            let cardCondition = (card, context) => properties.gameAction.canAffect(card, context, additionalProperties) && properties.cardCondition(card, context)
+            let cardCondition = (card, context) => 
+                properties.gameAction.allTargetsLegal(context, Object.assign({}, additionalProperties, properties.subActionProperties(card))) && 
+                properties.cardCondition(card, context);
             properties.selector = CardSelector.for(Object.assign({}, properties, { cardCondition }));    
         }
         return properties;
