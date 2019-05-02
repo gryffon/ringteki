@@ -288,22 +288,6 @@ class Card extends React.Component {
         return true;
     }
 
-    showCounters() {
-        if(_.contains(['province 1','province 2','province 3','province 4','stronghold province'], this.props.source) && this.props.card.type === 'province') {
-            return true;
-        }
-
-        if(this.props.source !== 'play area' && this.props.source !== 'faction' && this.props.source !== 'revealed plots') {
-            return false;
-        }
-
-        if(this.props.card.facedown || this.props.card.type === 'attachment') {
-            return false;
-        }
-
-        return true;
-    }
-
     isFacedown() {
         return this.props.card.facedown || !this.props.card.id;
     }
@@ -401,7 +385,7 @@ class Card extends React.Component {
                         <span className='card-name'>{ this.props.card.name }</span>
                         <img className={ imageClass } src={ '/img/cards/' + (!this.isFacedown() && !this.props.card.isToken ? (this.props.card.id + '.jpg') : cardBack) } />
                     </div>
-                    { this.showCounters() ? <CardCounters counters={ this.getCountersForCard(this.props.card) } /> : null }
+                    <CardCounters counters={ this.getCountersForCard(this.props.card) } />
                 </div>
                 { this.showMenu() ? <CardMenu menu={ this.props.card.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
                 { this.getPopup() }
