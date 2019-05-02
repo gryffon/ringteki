@@ -21,7 +21,7 @@ class IllustriousForge extends ProvinceCard {
                         this.game.addMessage('{0} takes nothing', context.player);
                         return true;
                     }],
-                    additionalProperties: card => ({ attachment: card }),
+                    subActionProperties: card => ({ attachment: card }),
                     gameAction: AbilityDsl.actions.selectCard({
                         controller: Players.Self,
                         location: Locations.PlayArea,
