@@ -130,15 +130,13 @@ class CardAbility extends ThenAbility {
         // Player1 plays Assassination
         let messageArgs = [context.player, ' ' + messageVerb + ' ', context.source];
         let costMessages = this.cost.map(cost => {
-            if(cost.action) {
-                let card = context.costs[cost.action.name];
+            if(cost.getCostMessage) {
+                let card = context.costs[cost.getActionName(context)];
                 if(card && card.facedown) {
                     card = 'a facedown card';
                 }
                 let [format, args] = ['ERROR - MISSING COST MESSAGE', [' ',' ']];
-                if(cost.action.getCostMessage && typeof(cost.action.getCostMessage === 'function')) {
-                    [format,args] = cost.action.getCostMessage(context);
-                }
+                [format,args] = cost.getCostMessage(context);
                 return { message: this.game.gameChat.formatMessage(format, [card].concat(args)) };
             }
         }).filter(obj => obj);
