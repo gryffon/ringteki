@@ -24,7 +24,7 @@ describe('Rebuild', function() {
             it('should shuffle a faceup card into the deck', function() {
                 expect(this.player1.player.provinceOne.size()).toBe(2);
                 this.player1.clickCard('rebuild');
-                expect(this.player1).toHavePrompt('Select a card to shuffle into deck');
+                expect(this.player1).toHavePrompt('Select card to shuffle into deck');
                 this.player1.clickCard(this.seppunGuardsman);
                 expect(this.player1.player.provinceTwo.size()).toBe(1);
                 expect(this.seppunGuardsman.location).toBe('dynasty deck');
@@ -32,7 +32,7 @@ describe('Rebuild', function() {
 
             it('should shuffle a facedown card into the deck', function() {
                 this.player1.clickCard('rebuild');
-                expect(this.player1).toHavePrompt('Select a card to shuffle into deck');
+                expect(this.player1).toHavePrompt('Select card to shuffle into deck');
                 this.player1.clickCard(this.otomoCourtier);
                 expect(this.player1.player.provinceThree.size()).toBe(1);
                 expect(this.otomoCourtier.location).toBe('dynasty deck');

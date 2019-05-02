@@ -19,7 +19,7 @@ class MasterOfTheSwiftWaves extends DrawCard {
                     cardType: CardTypes.Character,
                     controller: Players.Self,
                     cardCondition: card => !card.isParticipating(),
-                    gameAction: ability.actions.jointAction([
+                    gameAction: ability.actions.joint([
                         ability.actions.sendHome(context => ({ target: context.targets.characterInConflict })),
                         ability.actions.moveToConflict()
                     ])

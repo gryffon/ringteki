@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { CardTypes, DuelTypes } = require('../../Constants');
 
 class DefendYourHonor extends DrawCard {
@@ -13,16 +14,9 @@ class DefendYourHonor extends DrawCard {
             initiateDuel: context => ({
                 type: DuelTypes.Military,
                 opponentChoosesDuelTarget: true,
-                resolutionHandler: (winner) => this.resolutionHandler(context, winner)
+                gameAction: duel => duel.winner && duel.winner.controller === context.player && AbilityDsl.actions.cancel()
             })
         });
-    }
-
-    resolutionHandler(context, winner) {
-        if(winner.controller === context.source.controller) {
-            this.game.addMessage('{0} wins the duel and cancels {1}\'s effect', winner, context.event.card);
-            context.cancel();
-        }
     }
 }
 

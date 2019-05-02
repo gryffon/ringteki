@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
+const { Locations } = require('../../Constants');
 
 class SpeakToTheHeart extends DrawCard {
     setupCardAbilities() {
@@ -10,11 +11,11 @@ class SpeakToTheHeart extends DrawCard {
             target: {
                 cardCondition: card => card.isFaction('unicorn'),
                 gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
-                    effect: AbilityDsl.effects.modifyPoliticalSkill(context.player.getNumberOfOpponentsFaceupProvinces())
+                    effect: AbilityDsl.effects.modifyPoliticalSkill(context.player.getNumberOfOpponentsFaceupProvinces(province => province.location !== Locations.StrongholdProvince))
                 }))
             },
             effect: 'give {0} +1{1} for each faceup non-stronghold province their opponent controls (+{2}{1})',
-            effectArgs: context => ['political', context.player.getNumberOfOpponentsFaceupProvinces()]
+            effectArgs: context => ['political', context.player.getNumberOfOpponentsFaceupProvinces(province => province.location !== Locations.StrongholdProvince)]
         });
     }
 }

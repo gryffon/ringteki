@@ -6,18 +6,17 @@ class WildStallion extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Move this and another character to the conflict',
-            condition: context => !context.source.isParticipating(),
+            condition: context => context.game.currentConflict && !context.source.isParticipating(),
             target: {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
-                cardCondition: (card, context) => card !== context.source && !card.isParticipating(),
+                cardCondition: (card, context) => card !== context.source,
                 optional: true,
-                gameAction: AbilityDsl.actions.moveToConflict(context => {
-                    return context.target ? { target: [context.target, context.source] } : { target: context.source };
-                })
+                gameAction: AbilityDsl.actions.moveToConflict()
             },
-            effect: 'move {1}{2}{3} into the conflict',
-            effectArgs: context => [context.source, context.target ? ' and ' : '', context.target ? context.target : '']
+            gameAction: AbilityDsl.actions.moveToConflict(),
+            effect: 'move {0}{1}{2} into the conflict',
+            effectArgs: context => [!context.target || context.target.length === 0 ? '' : ' and ', context.source]
         });
     }
 }

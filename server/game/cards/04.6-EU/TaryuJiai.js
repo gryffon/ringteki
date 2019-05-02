@@ -23,15 +23,17 @@ class TaryuJiai extends DrawCard {
                     gameAction: AbilityDsl.actions.duel(context => ({
                         type: DuelTypes.Glory,
                         challenger: context.targets.myShugenja,
-                        gameAction: AbilityDsl.actions.selectRing(context => ({
+                        message: '{0} chooses a ring effect to resolve',
+                        messageArgs: duel => duel.winner && duel.winner.controller,
+                        gameAction: duel => AbilityDsl.actions.selectRing({
                             activePromptTitle: 'Choose a ring effect to resolve',
-                            player: context.game.currentDuel.winner && context.game.currentDuel.winner.controller === context.player ? Players.Self : Players.Opponent,
-                            ringCondition: () => !!context.game.currentDuel.winner,
+                            player: duel.winner && duel.winner.controller === context.player ? Players.Self : Players.Opponent,
+                            ringCondition: () => !!duel.winner,
                             targets: true,
                             message: '{0} chooses to resolve {1}\'s effect',
-                            messageArgs: ring => [context.game.currentDuel.winner.controller, ring],
-                            gameAction: AbilityDsl.actions.resolveRingEffect({ player: context.game.currentDuel.winner.controller })
-                        }))
+                            messageArgs: ring => [duel.winner.controller, ring],
+                            gameAction: AbilityDsl.actions.resolveRingEffect({ player: duel.winner.controller })
+                        })
                     }))
                 }
             }

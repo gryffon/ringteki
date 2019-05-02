@@ -10,7 +10,7 @@ class IllustriousForge extends ProvinceCard {
                 onCardRevealed: (event, context) => event.card === context.source && context.player.conflictDeck.size() > 0
             },
             effect: 'search the top 5 cards of their conflict deck for an attachment and put it into play',
-            gameAction: AbilityDsl.actions.sequentialAction([
+            gameAction: AbilityDsl.actions.sequential([
                 AbilityDsl.actions.cardMenu(context => ({
                     activePromptTitle: 'Choose an attachment',
                     cards: context.player.conflictDeck.first(5).filter(card =>
@@ -21,7 +21,7 @@ class IllustriousForge extends ProvinceCard {
                         this.game.addMessage('{0} takes nothing', context.player);
                         return true;
                     }],
-                    actionParameter: 'attachment',
+                    subActionProperties: card => ({ attachment: card }),
                     gameAction: AbilityDsl.actions.selectCard({
                         controller: Players.Self,
                         location: Locations.PlayArea,

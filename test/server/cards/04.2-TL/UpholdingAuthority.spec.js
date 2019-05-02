@@ -70,7 +70,7 @@ describe('Upholding Authority', function() {
                 expect(this.banzai2.location).toBe('hand');
                 expect(this.banzai3.location).toBe('hand');
                 expect(this.player1).toHavePrompt('Break Upholding Authority');
-                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 1, 'y', this.banzai1);
+                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, '1', 'y', this.banzai1);
             });
 
             it('should discard the correct number of cards if the player picks a card with multiple copies (2 chosen)', function() {
@@ -85,7 +85,7 @@ describe('Upholding Authority', function() {
                 expect(this.banzai2.location).toBe('conflict discard pile');
                 expect(this.banzai3.location).toBe('hand');
                 expect(this.player1).toHavePrompt('Break Upholding Authority');
-                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 2, 'ies', this.banzai1);
+                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, '2', 'ies', this.banzai1);
             });
 
             it('should discard the correct number of cards if the player picks a card with multiple copies (3 chosen)', function() {
@@ -100,7 +100,7 @@ describe('Upholding Authority', function() {
                 expect(this.banzai2.location).toBe('conflict discard pile');
                 expect(this.banzai3.location).toBe('conflict discard pile');
                 expect(this.player1).toHavePrompt('Break Upholding Authority');
-                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, 3, 'ies', this.banzai1);
+                expect(this.chat).toHaveBeenCalledWith('{0} chooses to discard {1} cop{2} of {3}', this.player2.player, '3', 'ies', this.banzai1);
             });
         });
 

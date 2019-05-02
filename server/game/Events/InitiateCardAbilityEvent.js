@@ -9,12 +9,14 @@ class InitiateCardAbilityEvent extends Event {
             this.cardTargets = _.flatten(_.values(this.context.targets));
             this.ringTargets = _.flatten(_.values(this.context.rings));
             this.selectTargets = _.flatten(_.values(this.context.selects));
+            this.tokenTargets = _.flatten(_.values(this.context.tokens));
         } else {
             this.cardTargets = [];
             this.ringTargets = [];
             this.selectTargets = [];
+            this.tokenTargets = [];
         }
-        this.allTargets = this.cardTargets.concat(this.ringTargets.concat(this.selectTargets));
+        this.allTargets = this.cardTargets.concat(this.ringTargets, this.selectTargets, this.tokenTargets);
     }
 }
 

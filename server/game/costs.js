@@ -1,107 +1,105 @@
 const _ = require('underscore');
-const ChooseCost = require('./costs/choosecost.js');
-const CostBuilders = require('./costs/CostBuilders.js');
 const ReduceableFateCost = require('./costs/ReduceableFateCost');
 const TargetDependentFateCost = require('./costs/TargetDependentFateCost');
+const GameActions = require('./GameActions/GameActions');
+const GameActionCost = require('./costs/GameActionCost');
+const MetaActionCost = require('./costs/MetaActionCost');
+const { Locations } = require('./Constants');
+
+function getSelectCost(action, properties, activePromptTitle) {
+    return new MetaActionCost(GameActions.selectCard(Object.assign({ gameAction: action }, properties)), activePromptTitle);
+}
 
 const Costs = {
     /**
-     * Cost that allows the player to choose between multiple costs. The
-     * `choices` object should have string keys representing the button text
-     * that will be used to prompt the player, with the values being the cost
-     * associated with that choice.
-     */
-    choose: choices => new ChooseCost(choices),
-    /**
      * Cost that will bow the card that initiated the ability.
      */
-    bowSelf: () => CostBuilders.bow.self(),
+    bowSelf: () => new GameActionCost(GameActions.bow()),
     /**
      * Cost that will bow the card that the card that initiated the ability is attached to.
      */
-    bowParent: () => CostBuilders.bow.parent(),
+    bowParent: () => new GameActionCost(GameActions.bow(context => ({ target: context.source.parent }))),
     /**
      * Cost that requires bowing a card that matches the passed condition
      * predicate function.
      */
-    bow: properties => CostBuilders.bow.select(properties),
-    /**
-     * Cost that requires bowing a certain number of cards that match the
-     * passed condition predicate function.
-     */
-    bowMultiple: (properties) => CostBuilders.bow.selectMultiple(properties),
+    bow: properties => getSelectCost(GameActions.bow(), properties, 'Select card to bow'),
     /**
      * Cost that will sacrifice the card that initiated the ability.
      */
-    sacrificeSelf: () => CostBuilders.sacrifice.self(),
+    sacrificeSelf: () => new GameActionCost(GameActions.sacrifice()),
     /**
      * Cost that will sacrifice a specified card.
      */
-    sacrificeSpecific: cardFunc => CostBuilders.sacrifice.specific(cardFunc),
+    sacrificeSpecific: cardFunc => new GameActionCost(GameActions.sacrifice(context => ({ target: cardFunc(context) }))),
     /**
      * Cost that requires sacrificing a card that matches the passed condition
      * predicate function.
      */
-    sacrifice: properties => CostBuilders.sacrifice.select(properties),
+    sacrifice: properties => getSelectCost(GameActions.sacrifice(), properties, 'Select card to sacrifice'),
     /**
      * Cost that will return a selected card to hand which matches the passed
      * condition.
      */
-    returnToHand: properties => CostBuilders.returnToHand.select(properties),
+    returnToHand: properties => getSelectCost(GameActions.returnToHand(), properties, 'Select card to return to hand'),
     /**
      * Cost that will return to hand the card that initiated the ability.
      */
-    returnSelfToHand: () => CostBuilders.returnToHand.self(),
+    returnSelfToHand: () => new GameActionCost(GameActions.returnToHand()),
     /**
      * Cost that will shuffle a selected card into the relevant deck which matches the passed
      * condition.
      */
-    shuffleIntoDeck: properties => CostBuilders.shuffleIntoDeck.select(properties),
+    shuffleIntoDeck: properties => getSelectCost(
+        GameActions.moveCard({ destination: Locations.DynastyDeck, shuffle: true }),
+        properties,
+        'Select card to shuffle into deck'
+    ),
     /**
      * Cost that requires discarding a specific card.
      */
-    discardCardSpecific: cardFunc => CostBuilders.discardCard.specific(cardFunc),
+    discardCardSpecific: cardFunc => new GameActionCost(GameActions.discardCard(context => ({ target: cardFunc(context) }))),
     /**
      * Cost that requires discarding a card to be selected by the player.
      */
-    discardCard: properties => CostBuilders.discardCard.select(properties),
+    discardCard: properties => getSelectCost(GameActions.discardCard(), properties, 'Select card to discard'),
     /**
      * Cost that will discard a fate from the card
      */
-    removeFateFromSelf: () => CostBuilders.removeFate.self(),
+    removeFateFromSelf: () => new GameActionCost(GameActions.removeFate()),
     /**
      * Cost that will discard a fate from a selected card
      */
-    removeFate: properties => CostBuilders.removeFate.select(properties),
+    removeFate: properties => getSelectCost(GameActions.removeFate(), properties, 'Select character to discard a fate from'),
     /**
      * Cost that will discard a fate from the card's parent
      */
-    removeFateFromParent: () => CostBuilders.removeFate.parent(),
+    removeFateFromParent: () => new GameActionCost(GameActions.removeFate(context => ({ target: context.source.parent }))),
     /**
      * Cost that will dishonor the character that initiated the ability
      */
-    dishonorSelf: () => CostBuilders.dishonor.self(),
+    dishonorSelf: () => new GameActionCost(GameActions.dishonor()),
     /**
      * Cost that requires dishonoring a card that matches the passed condition
      * predicate function
      */
-    dishonor: properties => CostBuilders.dishonor.select(properties),
+    dishonor: properties => getSelectCost(GameActions.dishonor(), properties, 'Select character to dishonor'),
     /**
      * Cost that will break the province that initiated the ability
      */
-    breakSelf: () => CostBuilders.break.self(),
+    breakSelf: () => new GameActionCost(GameActions.break()),
     /**
      * Cost that will put into play the card that initiated the ability
      */
-    putSelfIntoPlay: () => CostBuilders.putIntoPlay.self(),
+    putSelfIntoPlay: () => new GameActionCost(GameActions.putIntoPlay()),
     /**
      * Cost that will reveal specific cards
      */
-    reveal: (cardFunc) => CostBuilders.reveal.specific(cardFunc),
+    reveal: (cardFunc) => new GameActionCost(GameActions.reveal(context => ({ target: cardFunc(context) }))),
     /**
      * Cost that discards the Imperial Favor
      */
-    discardImperialFavor: () => CostBuilders.discardImperialFavor(),
+    discardImperialFavor: () => new GameActionCost(GameActions.loseImperialFavor(context => ({ target: context.player }))),
     /**
      * Cost that ensures that the player can still play a Limited card this
      * round.
@@ -162,17 +160,20 @@ const Costs = {
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of fate.
      */
-    payFate: (amount = 1) => CostBuilders.payFate(amount),
+    payFate: (amount = 1) => new GameActionCost(GameActions.loseFate(context => ({ target: context.player, amount }))),
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of honor.
      */
-    payHonor: (amount = 1) => CostBuilders.payHonor(amount),
-    giveHonorToOpponent: (amount = 1) => CostBuilders.giveHonorToOpponent(amount),
+    payHonor: (amount = 1) => new GameActionCost(GameActions.loseHonor(context => ({ target: context.player, amount }))),
+    giveHonorToOpponent: (amount = 1) => new GameActionCost(GameActions.takeHonor(context => ({ target: context.player, amount }))),
     /**
      * Cost where a character must spend fate to an unclaimed ring
      */
-    payFateToRing: (amount = 1, ringCondition = ring => ring.isUnclaimed()) => CostBuilders.payFateToRing(amount, ringCondition),
-    giveFateToOpponent: (amount = 1) => CostBuilders.giveFateToOpponent(amount),
+    payFateToRing: (amount = 1, ringCondition = ring => ring.isUnclaimed()) => new MetaActionCost(GameActions.selectRing({
+        ringCondition,
+        gameAction: GameActions.placeFateOnRing(context => ({ amount, origin: context.player }))
+    }), 'Select a ring to place fate on'),
+    giveFateToOpponent: (amount = 1) => new GameActionCost(GameActions.takeFate(context => ({ target: context.player, amount }))),
     variableHonorCost: function (amount) {
         return {
             canPay: function (context) {

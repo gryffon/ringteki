@@ -11,9 +11,9 @@ class StandYourGround extends DrawCard {
             effect: 'prevent {1} from leaving play',
             effectArgs: context => context.event.card,
             cannotBeMirrored: true,
-            gameAction: AbilityDsl.actions.cancel({
-                replacementGameAction: AbilityDsl.actions.discardStatusToken()
-            })
+            gameAction: AbilityDsl.actions.cancel(context => ({
+                replacementGameAction: AbilityDsl.actions.discardStatusToken({ target: context.event.card.personalHonor })
+            }))
         });
     }
 }

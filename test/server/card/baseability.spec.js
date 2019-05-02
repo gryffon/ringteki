@@ -99,7 +99,7 @@ describe('BaseAbility', function () {
             this.cost2 = jasmine.createSpyObj('cost1', ['canPay']);
             this.ability = new BaseAbility(this.properties);
             this.ability.cost = [this.cost1, this.cost2];
-            this.context = { context: 1 };
+            this.context = { game: this.gameSpy, context: 1 };
             this.context.copy = () => this.context;
         });
 
@@ -139,6 +139,7 @@ describe('BaseAbility', function () {
             this.ability = new BaseAbility(this.properties);
 
             this.context = { game: this.gameSpy, context: 1 };
+            this.context.copy = () => this.context;
         });
 
         xdescribe('when the cost does not have a resolve method', function() {
@@ -162,7 +163,7 @@ describe('BaseAbility', function () {
             beforeEach(function() {
                 this.ability.cost = [this.resolveCost];
 
-                this.results = this.ability.resolveCosts(this.context, {});
+                this.results = this.ability.resolveCosts([], this.context, {});
             });
 
             it('should not call canPay on the cost', function() {
@@ -172,27 +173,6 @@ describe('BaseAbility', function () {
             it('should call resolve on the cost', function() {
                 expect(this.resolveCost.resolve).toHaveBeenCalledWith(this.context, {});
             });
-        });
-    });
-
-    describe('payCosts()', function() {
-        beforeEach(function() {
-            this.cost1 = jasmine.createSpyObj('cost1', ['canPay', 'pay']);
-            this.cost2 = jasmine.createSpyObj('cost2', ['canPay', 'resolve', 'payEvent']);
-            this.cost3 = jasmine.createSpyObj('cost3', ['canPay']);
-            this.ability = new BaseAbility(this.properties);
-            this.ability.cost = [this.cost1, this.cost2];
-            this.context = { game: this.gameSpy };
-        });
-
-        it('should call payEvent for costs with payEvent', function() {
-            this.ability.payCosts(this.context);
-            expect(this.cost2.payEvent).toHaveBeenCalledWith(this.context);
-        });
-
-        it('should not call pay for costs without payEvent', function() {
-            this.ability.payCosts(this.context);
-            expect(this.cost1.pay).not.toHaveBeenCalled();
         });
     });
 
