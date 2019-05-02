@@ -147,5 +147,28 @@ describe('Yasuki Procurer', function() {
                 });
             });
         });
+
+        describe('Yasuki Procurer\'s ability during dynasty', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'dynasty',
+                    player1: {
+                        inPlay: ['yasuki-procurer'],
+                        dynastyDiscard: ['crisis-breaker']
+                    }
+                });
+                this.yasukiProcurer = this.player1.findCardByName('yasuki-procurer');
+                this.crisisBreaker = this.player1.placeCardInProvince('crisis-breaker');
+            });
+
+            it('should reduce the cost of the next character you play', function() {
+                let fate = this.player1.player.fate;
+                this.player1.clickCard(this.yasukiProcurer);
+                this.player2.pass();
+                this.player1.clickCard(this.crisisBreaker);
+                this.player1.clickPrompt('0');
+                expect(this.player1.player.fate).toBe(fate - 3 + 1);
+            });
+        });
     });
 });
