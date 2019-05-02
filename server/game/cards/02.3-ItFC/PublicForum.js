@@ -11,7 +11,7 @@ class PublicForum extends ProvinceCard {
             effect: 'add an honor token to {0} instead of breaking it',
             gameAction: AbilityDsl.actions.multiple([
                 AbilityDsl.actions.cancel(),
-                AbilityDsl.actions.addToken()
+                AbilityDsl.actions.addToken(context => ({ target: context.source }))
             ])
         });
     }
