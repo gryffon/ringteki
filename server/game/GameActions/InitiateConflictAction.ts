@@ -32,7 +32,7 @@ export class InitiateConflictAction extends PlayerAction {
             // No legal attackers for forced declared type
             return false;
         } else if(!player.cardsInPlay.any(card => availableConflictTypes.some(type => card.canDeclareAsAttacker(type)))) {
-            // No legal attackerss
+            // No legal attackers
             return false;
         } else if(!Object.values(context.game.rings).some(ring => ring.canDeclare(player))) {
             // No legal rings

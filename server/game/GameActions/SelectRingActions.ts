@@ -11,6 +11,8 @@ export interface SelectRingProperties extends RingActionProperties {
     player?: Players;
     targets?: boolean;
     ringCondition?: (ring: Ring, context: AbilityContext) => boolean;
+    cancelHandler?: () => void;
+    additionalProperties?: (ring: Ring) => any;
     message?: string;
     messageArgs?: (ring: Ring, player: Player) => any[];
     gameAction: GameAction;
@@ -19,6 +21,7 @@ export interface SelectRingProperties extends RingActionProperties {
 export class SelectRingAction extends RingAction {
     defaultProperties: SelectRingProperties = {
         ringCondition: () => true,
+        additionalProperties: ring => ({ target: ring }),
         gameAction: null
     };
 
@@ -56,11 +59,13 @@ export class SelectRingAction extends RingAction {
         }
         let defaultProperties = {
             context: context,
+            buttons: properties.cancelHandler ? [{ text: 'Cancel', arg: 'cancel' }] : [],
+            onCancel: properties.cancelHandler,
             onSelect: (player, ring) => {
                 if(properties.message) {
                     context.game.addMessage(properties.message, ...properties.messageArgs(ring, player));
                 }
-                properties.gameAction.addEventsToArray(events, context, { target: ring });
+                properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.additionalProperties(ring)));
                 return true;
             }
         };

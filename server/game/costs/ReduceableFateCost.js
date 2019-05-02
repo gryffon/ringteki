@@ -4,8 +4,12 @@ class ReduceableFateCost {
     }
 
     canPay(context) {
+        if(context.source.printedCost === null) {
+            return false;
+        }
         let minCost = context.player.getMinimumCost(this.playingType, context);
-        return context.player.fate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
+        return context.player.fate >= minCost &&
+            (minCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
 
     resolve(context, result) {

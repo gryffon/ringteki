@@ -127,8 +127,10 @@ class InitiateConflictPrompt extends UiPrompt {
             }
             ring.flipConflictType();
         } else {
-            if(this.conflict.forcedDeclaredType && ring !== this.conflict.forcedDeclaredType) {
-                ring.flipConflictType();
+            if(this.conflict.forcedDeclaredType) {
+                if(ring.conflictType !== this.conflict.forcedDeclaredType) {
+                    ring.flipConflictType();
+                }
             } else if(player.getConflictOpportunities(ring.conflictType) === 0 || this.conflict.attackers.some(card => !card.canDeclareAsAttacker(ring.conflictType))) {
                 ring.flipConflictType();
             }

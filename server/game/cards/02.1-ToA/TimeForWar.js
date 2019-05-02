@@ -25,7 +25,7 @@ class TimeForWar extends DrawCard {
                     }),
                     message: '{0} chooses to attach {1} to {2}',
                     messageArgs: (card, player) => [player, card, context.target],
-                    actionParameter: 'attachment',
+                    additionalProperties: card => ({ attachment: card }),
                     gameAction: attachAction
                 }))
             },

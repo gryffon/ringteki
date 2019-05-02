@@ -145,10 +145,16 @@ describe('Ivory Kingdoms Unicorn', function() {
                 expect(this.getChatLogs(1)).toContain('player1 uses Ivory Kingdoms Unicorn to declare a new conflict');
                 expect(this.player1).toHavePrompt('Initiate Conflict');
                 expect(this.player1).not.toHavePromptButton('Pass Conflict');
+                expect(this.game.rings['earth'].conflictType).toBe('political');
                 this.player1.clickRing('earth');
                 expect(this.game.rings['earth'].conflictType).toBe('military');
                 this.player1.clickRing('earth');
                 expect(this.game.rings['earth'].conflictType).toBe('military');
+                expect(this.game.rings['fire'].conflictType).toBe('military');
+                this.player1.clickRing('fire');
+                expect(this.game.rings['fire'].conflictType).toBe('military');
+                this.player1.clickRing('fire');
+                expect(this.game.rings['fire'].conflictType).toBe('military');
                 this.player1.clickCard(this.iuchiFarseer);
                 this.player1.clickCard(this.shamefulDisplay2);
                 this.player1.clickPrompt('Initiate Conflict');

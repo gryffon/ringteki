@@ -223,6 +223,13 @@ class GameFlowWrapper {
         this.guardCurrentPhase('draw');
         this.player1.bidHonor(player1amt);
         this.player2.bidHonor(player2amt);
+        if(this.game.currentPhase === 'draw') {
+            this.eachPlayerInFirstPlayerOrder(player => {
+                if(player.hasPrompt('Triggered Abilities')) {
+                    player.pass();
+                }
+            });
+        }
         this.guardCurrentPhase('conflict');
     }
 
