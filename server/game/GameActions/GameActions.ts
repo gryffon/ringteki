@@ -1,5 +1,6 @@
 import TriggeredAbilityContext = require('../TriggeredAbilityContext');
 import { GameAction } from './GameAction';
+import { AddTokenAction, AddTokenProperties} from './AddTokenAction';
 import { AttachAction, AttachActionProperties } from './AttachAction';
 import { BowAction, BowActionProperties } from './BowAction';
 import { BreakAction, BreakProperties } from './BreakAction';
@@ -66,7 +67,8 @@ import { TransferHonorAction, TransferHonorProperties } from './TransferHonorAct
 import { LoseFateProperties, LoseFateAction } from './LoseFateAction';
 
 const GameActions = {
-    // card actions
+    // card 
+    addToken: (propertyFactory: AddTokenProperties | ((context: TriggeredAbilityContext) => AddTokenProperties) = {}) => new AddTokenAction(propertyFactory),
     attach: (propertyFactory: AttachActionProperties | ((context: TriggeredAbilityContext) => AttachActionProperties) = {}) => new AttachAction(propertyFactory), // attachment
     bow: (propertyFactory: BowActionProperties | ((context: TriggeredAbilityContext) => BowActionProperties) = {}) => new BowAction(propertyFactory),
     break: (propertyFactory: BreakProperties | ((context: TriggeredAbilityContext) => BreakProperties) = {}) => new BreakAction(propertyFactory),
