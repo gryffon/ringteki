@@ -86,6 +86,7 @@ export enum EffectNames {
     ChangePlayerSkillModifier = 'conflictSkillModifier',
     GainActionPhasePriority = 'actionPhasePriority',
     CostReducer = 'costReducer',
+    ModifyCardsDrawnInDrawPhase = 'modifyCardsDrawnInDrawPhase',
     SetMaxConflicts = 'maxConflicts',
     ShowTopConflictCard = 'showTopConflictCard',
     ContributeToConflict = 'contribute',
