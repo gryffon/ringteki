@@ -19,8 +19,12 @@ class KyudenBayushi extends StrongholdCard {
                     }))
                 ]
             },
-            effect: 'ready {1}{2}',
-            effectArgs: context => [context.target, context.player.honor <= 6 ? ' and give it +1/+1 until the end of the phase' : '']
+            effect: '{1}{2}{3} {0}',
+            effectArgs: context => [
+                context.target.bowed ? 'ready' : '',
+                context.target.bowed && context.player.honor <= 6 ? ' and ' : '',
+                context.player.honor <= 6 ? 'give +1/+1 until the end of phase to' : ''
+            ]
         });
     }
 }
