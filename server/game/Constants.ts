@@ -25,14 +25,17 @@ export enum Decks {
 
 export enum EffectNames {
     AbilityRestrictions = 'abilityRestrictions',
+    AddElementAsAttacker = 'addElementAsAttacker',
     AddFaction = 'addFaction',
     AddGloryToBothSkills = 'addGloryToBothSkills',
     AddKeyword = 'addKeyword',
     AddTrait = 'addTrait',
     Blank = 'blank',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
+    CanOnlyBeDeclaredAsAttackerWithElement = 'canOnlyBeDeclaredAsAttackerWithElement',
     CannotBeAttacked = 'cannotBeAttacked',
     CannotBidInDuels = 'cannotBidInDuels',
+    CannotHaveConflictsDeclaredOfType = 'cannotHaveConflictsDeclaredOfType',
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',

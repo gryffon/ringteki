@@ -73,25 +73,15 @@ describe('Young Warrior', function() {
                     expect(this.game.rings.air.conflictType).toBe('political');
                 });
 
-                it('should remove Young Warrior from the conflict if the ring is flipped to political', function() {
+                it('should not allow flipping the ring to political', function() {
                     this.player1.clickRing('air');
                     expect(this.youngWarrior.inConflict).toBe(true);
-                    this.player1.clickRing('air');
-                    expect(this.game.rings.air.conflictType).toBe('military');
-                    expect(this.youngWarrior.inConflict).toBe(false);
-                });
-
-                it('should add Young Warrior to the conflict if the ring is flipped to back to military', function() {
-                    this.player1.clickRing('air');
-                    expect(this.game.rings.air.conflictType).toBe('political');
-                    this.player1.clickRing('air');
-                    expect(this.game.rings.air.conflictType).toBe('military');
                     this.player1.clickRing('air');
                     expect(this.game.rings.air.conflictType).toBe('political');
                     expect(this.youngWarrior.inConflict).toBe(true);
                 });
 
-                it('should not add Young Warrior to a political conflict as a defender', function() {
+                it('should not add Young Warrior to a military conflict as a defender', function() {
                     this.player1.clickPrompt('Pass Conflict');
                     this.player1.clickPrompt('Yes');
                     this.noMoreActions();

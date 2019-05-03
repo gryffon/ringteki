@@ -8,31 +8,31 @@ describe('Chisei District', function () {
                         inPlay: ['adept-of-the-waves', 'seppun-guardsman']
                     },
                     player2: {
-                        provinces: ['pilgrimage'],
                         dynastyDeck: ['chisei-district']
                     }
                 });
-                this.chisei2 = this.player2.placeCardInProvince('chisei-district', 'province 1');
+                this.chisei = this.player2.placeCardInProvince('chisei-district', 'province 1');
+                this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 1');
                 this.noMoreActions();
             });
 
             it('should not allow military conflicts to be declared against it\'s province', function () {
-                let _this = this;
-                expect(function () {
-                    _this.initiateConflict({
-                        type: 'military',
-                        province: 'pilgrimage',
-                        attackers: ['adept-of-the-waves'],
-                        defenders: []
-                    });
-                }).toThrow();
-                expect(this.player1).toHavePrompt('Choose province to attack');
+                this.player1.clickCard(this.shamefulDisplay);
+                expect(this.game.currentConflict.conflictProvince).toBe(this.shamefulDisplay);
+                this.player1.clickRing('earth');
+                expect(this.game.currentConflict.ring.element).toBe('earth');
+                expect(this.game.currentConflict.conflictType).toBe('political');
+                expect(this.game.currentConflict.conflictProvince).toBe(this.shamefulDisplay);
+                this.player1.clickRing('earth');
+                expect(this.game.currentConflict.ring.element).toBe('earth');
+                expect(this.game.currentConflict.conflictType).toBe('political');
+                expect(this.game.currentConflict.conflictProvince).toBe(this.shamefulDisplay);
+                expect(this.player1).toHavePrompt('Political Earth Conflict');
             });
 
             it('should allow political conflicts to be declared against it\'s province', function () {
                 this.initiateConflict({
                     type: 'political',
-                    province: 'pilgrimage',
                     attackers: ['adept-of-the-waves'],
                     defenders: []
                 });

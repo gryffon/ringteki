@@ -21,24 +21,7 @@ export class InitiateConflictAction extends PlayerAction {
 
     canAffect(player: Player, context: AbilityContext): boolean {
         let properties = this.getProperties(context) as InitiateConflictProperties;
-        let availableTotalConflicts = player.conflictOpportunities['total'];
-        if(availableTotalConflicts === 0) {
-            // no remaining conflicts
-            return false;
-        }
-        let prohibitedConflictTypes = player.getEffects(EffectNames.CannotDeclareConflictsOfType);
-        let availableConflictTypes = ['military', 'political'].filter(type => player.getConflictOpportunities(type) && !prohibitedConflictTypes.includes(type));
-        if(properties.forcedDeclaredType && !player.cardsInPlay.any(card => card.canDeclareAsAttacker(properties.forcedDeclaredType))) {
-            // No legal attackers for forced declared type
-            return false;
-        } else if(!player.cardsInPlay.any(card => availableConflictTypes.some(type => card.canDeclareAsAttacker(type)))) {
-            // No legal attackers
-            return false;
-        } else if(!Object.values(context.game.rings).some(ring => ring.canDeclare(player))) {
-            // No legal rings
-            return false;
-        }
-        return super.canAffect(player, context);
+        return super.canAffect(player, context) && player.hasLegalConflictDeclaration(properties.forcedDeclaredType);
     }
 
     defaultTargets(context: AbilityContext): Player[] {
