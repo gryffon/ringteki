@@ -75,7 +75,7 @@ describe('Loyal Challenger', function() {
                 let honorPlayer1 = this.player1.player.honor;
                 let honorPlayer2 = this.player2.player.honor;
                 this.noMoreActions();
-                this.player1.clickPrompt('Gain 2 Honor');
+                this.player1.clickPrompt('Don\'t Resolve');
                 expect(this.player1).toHavePrompt('Action Window');
                 expect(this.player1.player.honor).toBe(honorPlayer1);
                 expect(this.player2.player.honor).toBe(honorPlayer2 - 1);
