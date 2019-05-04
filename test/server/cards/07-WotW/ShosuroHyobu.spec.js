@@ -29,6 +29,43 @@ describe('Shosuro Hyobu', function() {
             });
         });
 
+        describe('Shosuro Hyobu\'s ability with UA', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['shosuro-hyobu'],
+                        hand: ['spies-at-court']
+                    },
+                    player2: {
+                        inPlay: ['adept-of-the-waves'],
+                        hand: ['oracle-of-stone', 'assassination'],
+                        dynastyDiscard: ['heavy-ballista'],
+                        provinces: ['upholding-authority']
+                    }
+                });
+
+                this.shosuroHyobu = this.player1.findCardByName('shosuro-hyobu');
+
+                this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
+                this.oracleOfStone = this.player2.findCardByName('oracle-of-stone');
+                this.assassination = this.player2.findCardByName('assassination');
+                this.heavyBallista = this.player2.placeCardInProvince('heavy-ballista', 'province 1');
+            });
+
+            it('should trigger from spies at court', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.shosuroHyobu],
+                    defenders: [],
+                });
+                this.noMoreActions();
+                this.player2.clickCard('upholding-authority');
+                this.player2.clickPrompt('Spies At Court');
+                expect(this.player1).toHavePrompt('Air Ring');
+            });
+        });
+
         describe('Shosuro Hyobu\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
@@ -40,7 +77,7 @@ describe('Shosuro Hyobu', function() {
                     player2: {
                         inPlay: ['adept-of-the-waves'],
                         hand: ['oracle-of-stone', 'assassination'],
-                        dynastyDiscard: ['heavy-ballista']
+                        dynastyDiscard: ['heavy-ballista'],
                     }
                 });
 
