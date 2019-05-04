@@ -1,5 +1,46 @@
 describe('Iuchi Farseer', function() {
     integration(function() {
+        describe('Iuchi Farseer\'s ability during conflict phase', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['iuchi-farseer', 'shrine-maiden'],
+                        hand: ['charge']
+                    },
+                    player2: {
+                    }
+                });
+
+                this.iuchiFarseer = this.player1.placeCardInProvince('iuchi-farseer', 'province 1');
+
+                this.shamefulDisplay = this.player1.findCardByName('shameful-display', 'province 1');
+
+                this.shamefulDisplay1 = this.player2.findCardByName('shameful-display', 'province 1');
+                this.shamefulDisplay2 = this.player2.findCardByName('shameful-display', 'province 2');
+                this.shamefulDisplay3 = this.player2.findCardByName('shameful-display', 'province 3');
+                this.shamefulDisplay4 = this.player2.findCardByName('shameful-display', 'province 4');
+            });
+
+            it('should trigger when charged into play', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: ['shrine-maiden'],
+                    defenders: []
+                });
+
+                this.player2.pass();
+                this.player1.clickCard('charge');
+                this.player1.clickCard(this.iuchiFarseer);
+                expect(this.iuchiFarseer.location).toBe('play area');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.shamefulDisplay2);
+                this.player1.clickCard(this.shamefulDisplay2);
+                expect(this.shamefulDisplay2.facedown).toBe(false);
+
+            });
+        });
+
         describe('Iuchi Farseer\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
