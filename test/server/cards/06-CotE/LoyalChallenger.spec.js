@@ -1,11 +1,11 @@
-fdescribe('Loyal Challenger', function() {
+describe('Loyal Challenger', function() {
     integration(function() {
         describe('Loyal Challenger', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['loyal-challenger'],
+                        inPlay: ['loyal-challenger', 'shrine-maiden'],
                         dynastyDiscard: ['loyal-challenger']
                     },
                     player2: {
@@ -14,6 +14,7 @@ fdescribe('Loyal Challenger', function() {
                     }
                 });
                 this.loyalChallenger = this.player1.findCardByName('loyal-challenger', locations = 'play area');
+                this.maiden = this.player1.findCardByName('shrine-maiden');
                 this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
                 this.actress = this.player2.findCardByName('shosuro-actress');
                 this.discardLoyalChallenger = this.player1.findCardByName('loyal-challenger', locations = 'dynasty discard pile');
@@ -46,18 +47,38 @@ fdescribe('Loyal Challenger', function() {
             it('should gain the opponent 1 honor if they win after take control with actress', function () {
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: [this.loyalChallenger],
+                    attackers: [this.maiden],
                     defenders: [this.actress],
                     type: 'political'
                 });
                 this.player2.clickCard(this.actress);
                 this.player2.clickCard(this.discardLoyalChallenger);
                 expect(this.discardLoyalChallenger.location).toBe('play area');
-                let honor = this.player1.player.honor;
-                this.player1.pass();
-                this.player2.playAttachment('ornate-fan', this.discardLoyalChallenger);
+                let honorPlayer1 = this.player1.player.honor;
+                let honorPlayer2 = this.player2.player.honor;
                 this.noMoreActions();
-                expect(this.player2.player.honor).toBe(honor + 1);
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player1.player.honor).toBe(honorPlayer1);
+                expect(this.player2.player.honor).toBe(honorPlayer2 + 1);
+            });
+
+            it('should lose the opponent 1 honor if they win after take control with actress', function () {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.maiden],
+                    defenders: [this.actress],
+                    type: 'military'
+                });
+                this.player2.clickCard(this.actress);
+                this.player2.clickCard(this.discardLoyalChallenger);
+                expect(this.discardLoyalChallenger.location).toBe('play area');
+                let honorPlayer1 = this.player1.player.honor;
+                let honorPlayer2 = this.player2.player.honor;
+                this.noMoreActions();
+                this.player1.clickPrompt('Gain 2 Honor');
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player1.player.honor).toBe(honorPlayer1);
+                expect(this.player2.player.honor).toBe(honorPlayer2 - 1);
             });
 
         });
