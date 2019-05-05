@@ -68,6 +68,11 @@ export class GameAction {
         return (properties.target as PlayerOrRingOrCardOrToken[]).some(target => this.canAffect(target, context, additionalProperties));
     }
 
+    allTargetsLegal(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return (properties.target as PlayerOrRingOrCardOrToken[]).every(target => this.canAffect(target, context, additionalProperties));
+    }
+
     addEventsToArray(events: Event[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         for(const target of (properties.target as PlayerOrRingOrCardOrToken[]).filter(target => this.canAffect(target, context, additionalProperties))) {

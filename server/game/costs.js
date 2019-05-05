@@ -80,10 +80,18 @@ const Costs = {
      */
     dishonorSelf: () => new GameActionCost(GameActions.dishonor()),
     /**
-     * Cost that requires dishonoring a card that matches the passed condition
-     * predicate function
+     * Cost that requires dishonoring a card to be selected by the player
      */
     dishonor: properties => getSelectCost(GameActions.dishonor(), properties, 'Select character to dishonor'),
+    /**
+     * Cost that will discard the status token on a card to be selected by the player
+     */
+    discardStatusToken: properties => new MetaActionCost(
+        GameActions.selectCard(
+            Object.assign({ gameAction: GameActions.discardStatusToken(), subActionProperties: card => ({ target: card.personalHonor }) }, properties)
+        ),
+        'Select character to discard honored status token from'
+    ),
     /**
      * Cost that will break the province that initiated the ability
      */
