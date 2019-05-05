@@ -5,7 +5,8 @@ describe('Iuchi Farseer', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['iuchi-farseer', 'shrine-maiden'],
+                        inPlay: ['shrine-maiden'],
+                        dynastyDiscard: ['iuchi-farseer'],
                         hand: ['charge']
                     },
                     player2: {
@@ -34,6 +35,7 @@ describe('Iuchi Farseer', function() {
                 this.player1.clickCard(this.iuchiFarseer);
                 expect(this.iuchiFarseer.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
+                this.player1.clickCard(this.iuchiFarseer);
                 expect(this.player1).toBeAbleToSelect(this.shamefulDisplay2);
                 this.player1.clickCard(this.shamefulDisplay2);
                 expect(this.shamefulDisplay2.facedown).toBe(false);
