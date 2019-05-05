@@ -13,11 +13,11 @@ describe('Loyal Challenger', function() {
                         hand: ['ornate-fan']
                     }
                 });
-                this.loyalChallenger = this.player1.findCardByName('loyal-challenger', locations = 'play area');
+                this.loyalChallenger = this.player1.findCardByName('loyal-challenger', 'play area');
                 this.maiden = this.player1.findCardByName('shrine-maiden');
                 this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
                 this.actress = this.player2.findCardByName('shosuro-actress');
-                this.discardLoyalChallenger = this.player1.findCardByName('loyal-challenger', locations = 'dynasty discard pile');
+                this.discardLoyalChallenger = this.player1.findCardByName('loyal-challenger', 'dynasty discard pile');
             });
 
             it('should gain 1 honor after winning a conflict', function() {
