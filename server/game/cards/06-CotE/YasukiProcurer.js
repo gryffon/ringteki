@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl.js');
-const { Durations, CardTypes } = require('../../Constants');
+const { Durations, CardTypes, PlayTypes } = require('../../Constants');
 
 class YasukiProcurer extends DrawCard {
     setupCardAbilities() {
@@ -10,7 +10,11 @@ class YasukiProcurer extends DrawCard {
             effect: 'reduce the cost of their next attachment or character played this phase by 1',
             gameAction: AbilityDsl.actions.playerLastingEffect({
                 duration: Durations.UntilEndOfPhase,
-                effect: AbilityDsl.effects.reduceNextPlayedCardCost(1, card => card.type === CardTypes.Attachment || card.type === CardTypes.Character)
+                effect: AbilityDsl.effects.reduceCost({
+                    match: card => card.type === CardTypes.Attachment || card.type === CardTypes.Character,
+                    playingTypes: [PlayTypes.PlayFromHand, PlayTypes.PlayFromProvince],
+                    limit: AbilityDsl.limit.fixed(1)
+                })
             })
         });
     }
