@@ -103,7 +103,7 @@ class Ring extends React.Component {
         }
 
         return (
-            <div className={ringClassName} onClick={ event => this.onClick(event, this.props.ring.element) } >
+            <div className={ ringClassName } onClick={ event => this.onClick(event, this.props.ring.element) } >
                 <svg className={ svgClassName } >
                     <circle cx='50%' cy='50%' r='50%' className={ bgClassName } />
                 </svg>

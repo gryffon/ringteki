@@ -356,25 +356,29 @@ export class InnerGameBoard extends React.Component {
     getClaimedRings(owner, className, player) {
         let rings = this.props.currentGame.rings;
         return (<div className={ className } >
-            {Object.keys(rings).map((key) => { 
-                var ring = rings[key];
-                if (player) {
-                    return !this.ringIsClaimedByUser(ring, player.user) ? null : <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />;                    
-                }
-                return <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            })}
+            {
+                Object.keys(rings).map((key) => { 
+                    var ring = rings[key];
+                    if(player) {
+                        return !this.ringIsClaimedByUser(ring, player.user) ? null : <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />;
+                    }
+                    return <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />;
+                })
+            }
         </div>);
     }
     
     getCenterBarRings(owner, className) {
         let rings = this.props.currentGame.rings;
-        return (<div className={ className } >
-            {Object.keys(rings).map((key) => { 
-                var ring = rings[key];
-                return this.ringIsUnclaimedOrSelectable(ring) 
-                    ? <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-                    : null;
-                })}
+        return (<div className={ className }>
+            {
+                Object.keys(rings).map((key) => { 
+                    var ring = rings[key];
+                    return this.ringIsUnclaimedOrSelectable(ring)
+                        ? <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+                        : null;
+                    })
+            }
         </div>);
     }   
 
