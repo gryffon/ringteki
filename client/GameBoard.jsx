@@ -353,14 +353,37 @@ export class InnerGameBoard extends React.Component {
         this.props.sendGameMessage('toggleManualMode');
     }
 
-    getRings(owner, className) {
+    getClaimedRings(owner, className, player) {
+        let rings = this.props.currentGame.rings;
         return (<div className={ className } >
-            <Ring owner={ owner } ring={ this.props.currentGame.rings.air } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring owner={ owner } ring={ this.props.currentGame.rings.earth } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring owner={ owner } ring={ this.props.currentGame.rings.fire } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring owner={ owner } ring={ this.props.currentGame.rings.void } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
-            <Ring owner={ owner } ring={ this.props.currentGame.rings.water } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+            {Object.keys(rings).map((key) => { 
+                var ring = rings[key];
+                if (player) {
+                    return !this.ringIsClaimedByUser(ring, player.user) ? null : <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />;                    
+                }
+                return <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+            })}
         </div>);
+    }
+    
+    getCenterBarRings(owner, className) {
+        let rings = this.props.currentGame.rings;
+        return (<div className={ className } >
+            {Object.keys(rings).map((key) => { 
+                var ring = rings[key];
+                return this.ringIsUnclaimedOrSelectable(ring) 
+                    ? <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+                    : null;
+                })}
+        </div>);
+    }   
+
+    ringIsClaimedByUser(ring, user) {
+        return ring.claimed && ring.claimedBy === user.username;
+    }
+
+    ringIsUnclaimedOrSelectable(ring) {
+        return !ring.claimed || (ring.claimed && ring.unselectable === false);
     }
 
     renderCenterBar(thisPlayer, otherPlayer, conflict) {
@@ -411,7 +434,7 @@ export class InnerGameBoard extends React.Component {
 
 
         return (<div className='center-bar'>
-            { this.getRings(null, 'ring-panel') }
+            { this.getCenterBarRings(null, 'ring-panel') }
             { conflictElement }
         </div>);
     }
@@ -428,7 +451,7 @@ export class InnerGameBoard extends React.Component {
                 </div>
                 <div className={ 'sidebar-pane their-side ' + size }>
                     { thisPlayer.hideProvinceDeck && <HonorFan size={ size } value={ otherPlayer ? otherPlayer.showBid + '' : '0' } /> }
-                    { this.getRings(otherPlayer ? otherPlayer.name : '\0', 'claimed-pool their-pool ' + (size ? size : '')) }
+                    { this.getClaimedRings(otherPlayer ? otherPlayer.name : '\0', 'claimed-pool their-pool ' + (size ? size : ''), otherPlayer) }
                     <div className='sidebar-pane their-side'>
                         <PlayerStatsBox
                             clockState={ otherPlayer ? otherPlayer.clock : null }
@@ -453,7 +476,7 @@ export class InnerGameBoard extends React.Component {
                         spectating={ this.state.spectating }
                         size={ size }
                         handSize={ thisPlayer.cardPiles.hand ? thisPlayer.cardPiles.hand.length : 0 } />
-                    { this.getRings(thisPlayer ? thisPlayer.name : '\0', 'claimed-pool my-pool ' + (size ? size : '')) }
+                    { this.getClaimedRings(thisPlayer ? thisPlayer.name : '\0', 'claimed-pool my-pool ' + (size ? size : ''), thisPlayer) }
                     { thisPlayer.hideProvinceDeck && <HonorFan size={ size } value={ thisPlayer.showBid + '' } /> }
                 </div>
                 <div className='player-nameplate our-side'>
