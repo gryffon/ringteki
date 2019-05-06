@@ -5,7 +5,8 @@ class IsawaTadaka extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
             targetController: Players.Opponent,
-            match: player => !this.game.rings.earth.isConsideredClaimed(player),
+            condition: context => context.game.rings.earth.contested ||
+                context.game.rings.earth.isConsideredClaimed(context.player),
             effect: ability.effects.playerCannot({
                 cannot: PlayTypes.PlayFromHand,
                 restricts: 'copiesOfDiscardEvents'
