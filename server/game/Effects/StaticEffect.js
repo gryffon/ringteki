@@ -81,10 +81,7 @@ class StaticEffect {
     }
 
     canBeApplied(target) {
-        if(hasDash[this.type] && hasDash[this.type](target, this.value)) {
-            return false;
-        }
-        return this.checkConflictingEffects(this.type, target);
+        return !hasDash[this.type] || !hasDash[this.type](target, this.value);
     }
 
     checkConflictingEffects(type, target) {
