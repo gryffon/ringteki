@@ -372,7 +372,7 @@ export class InnerGameBoard extends React.Component {
         let rings = this.props.currentGame.rings;
         return (<div className={ className }>
             {
-                Object.keys(rings).map((key) => { 
+                Object.keys(rings).map((key) => {
                     var ring = rings[key];
                     return this.ringIsUnclaimedOrSelectable(ring)
                         ? <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
