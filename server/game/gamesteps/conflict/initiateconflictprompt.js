@@ -110,13 +110,10 @@ class InitiateConflictPrompt extends UiPrompt {
         if(this.conflict.ring === ring) {
             ring.flipConflictType();
         } else {
-            if(this.conflict.forcedDeclaredType) {
-                if(ring.conflictType !== this.conflict.forcedDeclaredType) {
-                    ring.flipConflictType();
-                }
-            } else if(!player.hasLegalConflictDeclaration(ring.conflictType, ring, this.conflict.conflictProvince)) {
+            const type = ring.conflictType;
+            if(!player.hasLegalConflictDeclaration({ type, ring, province: this.conflict.conflictProvince })) {
                 ring.flipConflictType();
-            } else if(this.conflict.attackers.some(card => !card.canDeclareAsAttacker(ring.conflictType, ring))) {
+            } else if(this.conflict.attackers.some(card => !card.canDeclareAsAttacker(type, ring))) {
                 ring.flipConflictType();
             }
             if(this.conflict.ring) {
@@ -140,24 +137,34 @@ class InitiateConflictPrompt extends UiPrompt {
 
     checkRingCondition(ring) {
         const player = this.choosingPlayer;
+        const province = this.conflict.conflictProvince;
         if(this.conflict.ring === ring) {
             const newType = ring.conflictType === 'military' ? 'political' : 'military';
+            if(!player.hasLegalConflictDeclaration({ type: newType, ring, province })) {
+                return false;
+            }
             const mustBeDeclaredAttackers = this.getMustBeDeclared().filter(card => card.inConflict);
-            return mustBeDeclaredAttackers.every(card => card.canDeclareAsAttacker(newType, ring, this.conflict.conflictProvince)) &&
-                player.hasLegalConflictDeclaration(newType, ring, this.conflict.conflictProvince);
+            return mustBeDeclaredAttackers.every(card =>
+                card.canDeclareAsAttacker(newType, ring, province) &&
+                player.hasLegalConflictDeclaration({ type: newType, ring, province })
+            );
         }
-        return this.attackerChoosesRing && player.hasLegalConflictDeclaration(this.conflict.forcedDeclaredType, ring, this.conflict.conflictProvince);
+        return this.attackerChoosesRing && player.hasLegalConflictDeclaration({ ring, province });
     }
 
     checkCardCondition(card) {
         if(card.isProvince && card.controller !== this.choosingPlayer) {
-            return card === this.conflict.conflictProvince || this.choosingPlayer.hasLegalConflictDeclaration(this.conflict.conflictType, this.conflict.ring, card);
+            return card === this.conflict.conflictProvince || this.choosingPlayer.hasLegalConflictDeclaration({
+                type: this.conflict.conflictType,
+                ring: this.conflict.ring,
+                province: card
+            });
         } else if(card.type === CardTypes.Character && card.location === Locations.PlayArea) {
             if(card.controller === this.choosingPlayer) {
                 if(this.conflict.attackers.includes(card)) {
                     return !card.getEffects(EffectNames.MustBeDeclaredAsAttacker).some(effect => effect === 'both' || effect === this.conflict.conflictType);
                 }
-                const availableTypes = this.choosingPlayer.getLegalConflictTypes(this.conflict.conflictType);
+                const availableTypes = this.choosingPlayer.getLegalConflictTypes({ type: this.conflict.conflictType });
                 return availableTypes.some(type => card.canDeclareAsAttacker(type, this.conflict.ring, this.conflict.conflictProvince));
             }
             return this.selectedDefenders.includes(card) || !card.isCovert() && this.covertRemaining;

@@ -254,30 +254,36 @@ class Player extends GameObject {
         return this.opponent && this.opponent.showBid > this.showBid;
     }
 
-    getLegalConflictTypes(types) {
-        types = types || [ConflictTypes.Military, ConflictTypes.Political];
+    getLegalConflictTypes(properties) {
+        let types = properties.type || [ConflictTypes.Military, ConflictTypes.Political];
         types = Array.isArray(types) ? types : [types];
-        const forcedDeclaredType = this.game.currentConflict && this.game.currentConflict.forcedDeclaredType;
+        const forcedDeclaredType = properties.forcedDeclaredType || this.game.currentConflict && this.game.currentConflict.forcedDeclaredType;
+        if(forcedDeclaredType) {
+            return [forcedDeclaredType].filter(type =>
+                types.includes(type) &&
+                this.getConflictOpportunities() > 0 &&
+                !this.getEffects(EffectNames.CannotDeclareConflictsOfType).includes(type)
+            );
+        }
         return types.filter(type =>
-            (!forcedDeclaredType || forcedDeclaredType === type) &&
             this.getConflictOpportunities(type) > 0 &&
             !this.getEffects(EffectNames.CannotDeclareConflictsOfType).includes(type)
         );
     }
 
-    hasLegalConflictDeclaration(type, ring, province) {
-        let conflictType = this.getLegalConflictTypes(type);
+    hasLegalConflictDeclaration(properties) {
+        let conflictType = this.getLegalConflictTypes(properties);
         if(conflictType.length === 0) {
             return false;
         }
-        ring = ring || Object.values(this.game.rings);
-        let conflictRing = Array.isArray(ring) ? ring : [ring];
+        let conflictRing = properties.ring || Object.values(this.game.rings);
+        conflictRing = Array.isArray(conflictRing) ? conflictRing : [conflictRing];
         conflictRing = conflictRing.filter(ring => ring.canDeclare(this));
         if(conflictRing.length === 0) {
             return false;
         }
-        province = province || this.opponent && this.opponent.getProvinces();
-        let conflictProvince = Array.isArray(province) ? province : [province];
+        let conflictProvince = properties.province || this.opponent && this.opponent.getProvinces();
+        conflictProvince = Array.isArray(conflictProvince) ? conflictProvince : [conflictProvince];
         return conflictType.some(type => conflictRing.some(ring => conflictProvince.some(province =>
             province.canDeclare(type, ring) &&
             this.cardsInPlay.some(card => card.canDeclareAsAttacker(type, ring, province))

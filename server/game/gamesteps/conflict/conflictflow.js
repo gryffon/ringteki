@@ -70,9 +70,9 @@ class ConflictFlow extends BaseStepWithPipeline {
                     activePromptTitle: 'Choose a ring for ' + this.conflict.attackingPlayer.name + '\'s conflict',
                     source: 'Defender chooses conflict ring',
                     waitingPromptTitle: 'Waiting for defender to choose conflict ring',
-                    ringCondition: ring => this.conflict.attackingPlayer.hasLegalConflictDeclaration(null, ring),
+                    ringCondition: ring => this.conflict.attackingPlayer.hasLegalConflictDeclaration({ ring }),
                     onSelect: (player, ring) => {
-                        if(!this.conflict.attackingPlayer.hasLegalConflictDeclaration(ring.conflictType, ring)) {
+                        if(!this.conflict.attackingPlayer.hasLegalConflictDeclaration({ type: ring.conflictType, ring })) {
                             ring.flipConflictType();
                         }
                         this.conflict.ring = ring;

@@ -20,8 +20,8 @@ export class InitiateConflictAction extends PlayerAction {
     }
 
     canAffect(player: Player, context: AbilityContext): boolean {
-        let properties = this.getProperties(context) as InitiateConflictProperties;
-        return super.canAffect(player, context) && player.hasLegalConflictDeclaration(properties.forcedDeclaredType);
+        let { forcedDeclaredType } = this.getProperties(context) as InitiateConflictProperties;
+        return super.canAffect(player, context) && player.hasLegalConflictDeclaration({ forcedDeclaredType });
     }
 
     defaultTargets(context: AbilityContext): Player[] {
