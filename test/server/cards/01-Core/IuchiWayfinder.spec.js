@@ -23,11 +23,10 @@ describe('Iuchi Wayfinder', function() {
             });
 
             it('should display a message in chat when a province is chosen', function() {
-                this.chat = spyOn(this.game, 'addMessage');
                 this.iuchiWayfinder = this.player1.playCharacterFromHand('iuchi-wayfinder');
                 this.player1.clickCard(this.iuchiWayfinder);
                 this.player1.clickCard(this.shamefulDisplay1);
-                expect(this.chat).toHaveBeenCalledWith('{0} sees {1}', this.iuchiWayfinder, [this.shamefulDisplay1]);
+                expect(this.getChatLogs(1)).toContain('Iuchi Wayfinder sees Shameful Display in province 1');
             });
         });
     });
