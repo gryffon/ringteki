@@ -38,6 +38,28 @@ describe('Chisei District', function () {
                 });
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
+
+            it('should not be able to be selected for a military conflict', function() {
+                this.player1.clickRing('earth');
+                expect(this.game.currentConflict.ring.element).toBe('earth');
+                expect(this.game.currentConflict.conflictType).toBe('political');
+                this.player1.clickRing('earth');
+                expect(this.game.currentConflict.ring.element).toBe('earth');
+                expect(this.game.currentConflict.conflictType).toBe('military');
+                this.player1.clickCard(this.shamefulDisplay);
+                expect(this.shamefulDisplay.inConflict).toBe(false);
+            });
+
+            it('should not allow changing the conflict type if selected when declaring a conflict', function() {
+                this.player1.clickRing('earth');
+                expect(this.game.currentConflict.ring.element).toBe('earth');
+                expect(this.game.currentConflict.conflictType).toBe('political');
+                this.player1.clickCard(this.shamefulDisplay);
+                expect(this.shamefulDisplay.inConflict).toBe(true);
+                this.player1.clickRing('earth');
+                expect(this.game.currentConflict.ring.element).toBe('earth');
+                expect(this.game.currentConflict.conflictType).toBe('political');
+            });
         });
     });
 });
