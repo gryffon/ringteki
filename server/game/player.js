@@ -12,7 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes } = require('./Constants');
+const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes, ConflictTypes } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -254,14 +254,57 @@ class Player extends GameObject {
         return this.opponent && this.opponent.showBid > this.showBid;
     }
 
+    getLegalConflictTypes(properties) {
+        let types = properties.type || [ConflictTypes.Military, ConflictTypes.Political];
+        types = Array.isArray(types) ? types : [types];
+        const forcedDeclaredType = properties.forcedDeclaredType || this.game.currentConflict && this.game.currentConflict.forcedDeclaredType;
+        if(forcedDeclaredType) {
+            return [forcedDeclaredType].filter(type =>
+                types.includes(type) &&
+                this.getConflictOpportunities() > 0 &&
+                !this.getEffects(EffectNames.CannotDeclareConflictsOfType).includes(type)
+            );
+        }
+        return types.filter(type =>
+            this.getConflictOpportunities(type) > 0 &&
+            !this.getEffects(EffectNames.CannotDeclareConflictsOfType).includes(type)
+        );
+    }
+
+    hasLegalConflictDeclaration(properties) {
+        let conflictType = this.getLegalConflictTypes(properties);
+        if(conflictType.length === 0) {
+            return false;
+        }
+        let conflictRing = properties.ring || Object.values(this.game.rings);
+        conflictRing = Array.isArray(conflictRing) ? conflictRing : [conflictRing];
+        conflictRing = conflictRing.filter(ring => ring.canDeclare(this));
+        if(conflictRing.length === 0) {
+            return false;
+        }
+        let conflictProvince = properties.province || this.opponent && this.opponent.getProvinces();
+        conflictProvince = Array.isArray(conflictProvince) ? conflictProvince : [conflictProvince];
+        return conflictType.some(type => conflictRing.some(ring => conflictProvince.some(province =>
+            province.canDeclare(type, ring) &&
+            this.cardsInPlay.some(card => card.canDeclareAsAttacker(type, ring, province))
+        )));
+    }
+
+    /**
+     * Returns the province cards (meeting an optional predicate) controlled by this player
+     * @param {Function} predicate - format: (card) => return boolean, default: () => true
+     * */
+    getProvinces(predicate = () => true) {
+        return provinceLocations.reduce((array, location) =>
+            array.concat(this.getSourceList(location).filter(card => card.type === CardTypes.Province && predicate(card))), []);
+    }
+
     /**
      * Returns the total number of faceup province cards controlled by this player
      * @param {Function} predicate - format: (card) => return boolean, default: () => true
      * */
     getNumberOfFaceupProvinces(predicate = () => true) {
-        return provinceLocations.reduce((n, province) => {
-            return this.getSourceList(province).filter(card => card.getType() === CardTypes.Province && !card.facedown && predicate(card)).length + n;
-        }, 0);
+        return this.getProvinces(card => !card.facedown && predicate(card)).length;
     }
 
     /**

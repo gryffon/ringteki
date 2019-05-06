@@ -550,13 +550,25 @@ class DrawCard extends BaseCard {
         return !this.isCovert() && this.checkRestrictions('applyCovert', context);
     }
 
-    canDeclareAsAttacker(conflictType = this.game.currentConflict.conflictType) {
-        return (this.allowGameAction('declareAsAttacker') && this.canParticipateAsAttacker(conflictType) &&
-                this.location === Locations.PlayArea && !this.bowed);
+    canDeclareAsAttacker(conflictType, ring, province) { // eslint-disable-line no-unused-vars
+        if(this.anyEffect(EffectNames.CanOnlyBeDeclaredAsAttackerWithElement)) {
+            const elementsAdded = this.attachments.reduce(
+                (array, attachment) => array.concat(attachment.getEffects(EffectNames.AddElementAsAttacker)),
+                this.getEffects(EffectNames.AddElementAsAttacker)
+            );
+            for(let element of this.getEffects(EffectNames.CanOnlyBeDeclaredAsAttackerWithElement)) {
+                if(!ring.hasElement(element) && !elementsAdded.includes(element)) {
+                    return false;
+                }
+            }
+        }
+        return this.checkRestrictions('declareAsAttacker', this.game.getFrameworkContext()) &&
+            this.canParticipateAsAttacker(conflictType) &&
+            this.location === Locations.PlayArea && !this.bowed;
     }
 
     canDeclareAsDefender(conflictType = this.game.currentConflict.conflictType) {
-        return (this.allowGameAction('declareAsDefender') && this.canParticipateAsDefender(conflictType) &&
+        return (this.checkRestrictions('declareAsDefender', this.game.getFrameworkContext()) && this.canParticipateAsDefender(conflictType) &&
                 this.location === Locations.PlayArea && !this.bowed && !this.covert);
     }
 
