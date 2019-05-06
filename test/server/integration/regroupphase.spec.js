@@ -61,6 +61,7 @@ describe('regroup phase', function() {
                 this.player1.clickRing('void');
                 this.player2.clickCard(this.daimyosFavor);
                 this.cityOfTheOpenHand = this.player1.clickCard('city-of-the-open-hand');
+                this.player1.clickPrompt('Gain 1 Honor');
             });
 
             it('should ready characters', function() {
