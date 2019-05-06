@@ -10,6 +10,7 @@ class KireiKo extends DrawCard {
                     event.card.type === CardTypes.Character && event.card.controller === context.player.opponent &&
                     event.ability.isTriggeredAbility()
             },
+            cannotBeMirrored: true,
             gameAction: ability.actions.bow(context => ({ target: context.event.card }))
         });
     }
