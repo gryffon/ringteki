@@ -5,16 +5,17 @@ const moment = require('moment');
 const RestrictedList = require('./RestrictedList');
 
 const officialRoles = {
-    crab: ['keeper-of-water', 'seeker-of-earth'],
-    crane: ['seeker-of-fire', 'keeper-of-air'],
-    dragon: ['seeker-of-void', 'keeper-of-void'],
-    lion: ['keeper-of-earth', 'seeker-of-void'],
-    phoenix: ['keeper-of-air', 'seeker-of-air'],
-    scorpion: ['seeker-of-air', 'keeper-of-earth'],
-    unicorn: ['seeker-of-water', 'keeper-of-fire']
+    crab: ['keeper-of-water', 'seeker-of-void'],
+    crane: ['seeker-of-fire', 'seeker-of-void'],
+    dragon: ['seeker-of-void', 'keeper-of-water'],
+    lion: ['keeper-of-earth', 'seeker-of-air'],
+    phoenix: ['keeper-of-air', 'seeker-of-void'],
+    scorpion: ['seeker-of-air', 'keeper-of-air'],
+    unicorn: ['seeker-of-water', 'keeper-of-water']
 };
 
 const openRoles = [
+    'support-of-the-crane',
     'support-of-the-phoenix',
     'support-of-the-scorpion',
     'support-of-the-unicorn'
@@ -96,6 +97,7 @@ const roleRules = {
     'seeker-of-fire': rulesForSeekerRole('fire'),
     'seeker-of-void': rulesForSeekerRole('void'),
     'seeker-of-water': rulesForSeekerRole('water'),
+    'support-of-the-crane': rulesForSupportRole('crane'),
     'support-of-the-phoenix': rulesForSupportRole('phoenix'),
     'support-of-the-scorpion': rulesForSupportRole('scorpion'),
     'support-of-the-unicorn': rulesForSupportRole('unicorn')

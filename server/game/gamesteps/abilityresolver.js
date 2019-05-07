@@ -103,8 +103,9 @@ class AbilityResolver extends BaseStepWithPipeline {
             cancelled: false,
             canCancel: this.canCancel
         };
+        this.costEvents = [];
         this.context.stage = Stages.Cost;
-        this.context.ability.resolveCosts(this.context, this.canPayResults);
+        this.context.ability.resolveCosts(this.costEvents, this.context, this.canPayResults);
     }
 
     payCosts() {
@@ -114,7 +115,6 @@ class AbilityResolver extends BaseStepWithPipeline {
             this.cancelled = true;
             return;
         }
-        this.costEvents = this.context.ability.payCosts(this.context);
         if(this.costEvents.length > 0) {
             this.game.openEventWindow(this.costEvents);
         }
@@ -165,7 +165,6 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.context.ability.max) {
             this.context.player.incrementAbilityMax(this.context.ability.maxIdentifier);
         }
-
         this.context.ability.displayMessage(this.context);
 
         if(this.context.ability.isTriggeredAbility()) {

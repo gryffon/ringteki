@@ -342,6 +342,13 @@ class BaseCard extends EffectSource {
         this.tokens[type] += number;
     }
 
+    getTokenCount(type: string): number {
+        if(_.isUndefined(this.tokens[type])) {
+            return 0;
+        }
+        return this.tokens[type];
+    }
+
     hasToken(type: string): boolean {
         return !!this.tokens[type];
     }

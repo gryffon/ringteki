@@ -21,7 +21,7 @@ class AgashaShunsen extends DrawCard {
                     choices: ['Don\'t attach a card'],
                     handlers: [() => this.game.addMessage('{0} chooses not to attach anything to {1}', context.player, context.target)],
                     gameAction: AbilityDsl.actions.attach(),
-                    actionParameter: 'attachment'
+                    subActionProperties: card => ({ attachment: card })
                 }))
             },
             effect: 'search their deck for an attachment costing {1} or less and attach it to {0}',

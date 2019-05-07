@@ -29,12 +29,10 @@ class CourtlyChallenger extends DrawCard {
             title: 'Initiate a Political duel',
             initiateDuel: {
                 type: DuelTypes.Political,
-                message: '{0} wins the duel - {1} draws 2 cards',
-                messageArgs: context => [context.game.currentDuel.winner, context.game.currentDuel.winner.controller],
-                gameAction: AbilityDsl.actions.draw(context => ({
+                gameAction: duel => duel.winner && AbilityDsl.actions.draw({
                     amount: 2,
-                    target: context.game.currentDuel.winner.controller
-                }))
+                    target: duel.winner.controller
+                })
             }
         });
     }

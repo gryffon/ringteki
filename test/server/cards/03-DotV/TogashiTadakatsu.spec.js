@@ -7,7 +7,7 @@ describe('Togashi Tadakatsu', function() {
                         phase: 'conflict',
                         player1: {
                             fate: 0,
-                            inPlay: ['seppun-guardsman']
+                            inPlay: ['doomed-shugenja']
                         },
                         player2: {
                             inPlay: ['togashi-tadakatsu', 'enlightened-warrior'],
@@ -45,7 +45,7 @@ describe('Togashi Tadakatsu', function() {
                     expect(this.player1).toHavePrompt('Political Fire Conflict');
                     expect(this.game.currentConflict.conflictType).toBe('political');
                     this.player1.clickRing('fire');
-                    this.seppunGuardsman = this.player1.clickCard('seppun-guardsman');
+                    this.seppunGuardsman = this.player1.clickCard('doomed-shugenja');
                     expect(this.seppunGuardsman.inConflict).toBe(true);
                     this.player1.clickCard(this.shamefulDisplay);
                     expect(this.shamefulDisplay.inConflict).toBe(true);
@@ -54,7 +54,7 @@ describe('Togashi Tadakatsu', function() {
                 it('should trigger reactions correctly', function() {
                     this.player1.clickPrompt('Declare a conflict');
                     this.player2.clickRing('fire');
-                    this.seppunGuardsman = this.player1.clickCard('seppun-guardsman');
+                    this.seppunGuardsman = this.player1.clickCard('doomed-shugenja');
                     this.player1.clickCard(this.shamefulDisplay);
                     this.player1.clickPrompt('Initiate Conflict');
                     expect(this.game.rings.fire.fate).toBe(0);

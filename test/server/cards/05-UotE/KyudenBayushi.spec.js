@@ -1,4 +1,4 @@
-describe('Kyuden Bayushi', function() {
+﻿describe('Kyuden Bayushi', function() {
     integration(function() {
         describe('Kyuden Bayushi\'s ability', function() {
             beforeEach(function() {
@@ -26,9 +26,10 @@ describe('Kyuden Bayushi', function() {
                 expect(this.aramoro.bowed).toBe(false);
                 expect(this.aramoro.militarySkill).toBe(4);
                 expect(this.aramoro.politicalSkill).toBe(1);
+                expect(this.getChatLogs(1)).toContain('player1 uses Kyūden Bayushi, bowing Kyūden Bayushi to ready and give +1/+1 until the end of phase to Bayushi Aramoro');
             });
 
-            it('shouldn not give +1 to both stats if more than 6 honor', function() {
+            it('should not give +1 to both stats if more than 6 honor', function() {
                 this.aramoro.dishonor();
                 this.aramoro.bow();
                 this.player1.honor = 7;
@@ -38,6 +39,7 @@ describe('Kyuden Bayushi', function() {
                 expect(this.aramoro.bowed).toBe(false);
                 expect(this.aramoro.militarySkill).toBe(3);
                 expect(this.aramoro.politicalSkill).toBe(0);
+                expect(this.getChatLogs(1)).toContain('player1 uses Kyūden Bayushi, bowing Kyūden Bayushi to ready Bayushi Aramoro');
             });
 
             it('should still give +1 to both stats if 6 or less honor and the character is ready', function() {
@@ -48,6 +50,7 @@ describe('Kyuden Bayushi', function() {
                 this.player1.clickCard(this.aramoro);
                 expect(this.aramoro.militarySkill).toBe(4);
                 expect(this.aramoro.politicalSkill).toBe(1);
+                expect(this.getChatLogs(1)).toContain('player1 uses Kyūden Bayushi, bowing Kyūden Bayushi to give +1/+1 until the end of phase to Bayushi Aramoro');
             });
 
             it('should not work if the character is not dishonored', function() {

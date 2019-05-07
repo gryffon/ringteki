@@ -20,19 +20,23 @@ class PolicyDebate extends DrawCard {
                     gameAction: AbilityDsl.actions.duel(context => ({
                         type: DuelTypes.Political,
                         challenger: context.targets.challenger,
-                        gameAction: AbilityDsl.actions.multiple([
-                            AbilityDsl.actions.lookAt(context => ({
-                                target: context.game.currentDuel.loser ? context.game.currentDuel.loser.controller.hand.sortBy(card => card.name) : []
-                            })),
-                            AbilityDsl.actions.cardMenu(context => ({
+                        message: '{0} sees {1}\'s hand and chooses a card to discard',
+                        messageArgs: duel => [duel.loser && duel.loser.controller.opponent, duel.loser && duel.loser.controller],
+                        gameAction: duel => AbilityDsl.actions.sequential([
+                            AbilityDsl.actions.lookAt({
+                                target: duel.loser ? duel.loser.controller.hand.sortBy(card => card.name) : [],
+                                message: '{0} reveals their hand: {1}',
+                                messageArgs: cards => [duel.loser && duel.loser.controller, cards]
+                            }),
+                            AbilityDsl.actions.cardMenu({
                                 activePromptTitle: 'Choose card to discard',
-                                player: context.game.currentDuel.loser && context.game.currentDuel.loser.controller === context.player ? Players.Opponent : Players.Self,
-                                cards: context.game.currentDuel.loser ? context.game.currentDuel.loser.controller.hand.sortBy(card => card.name) : [],
+                                player: duel.loser && duel.loser.controller === context.player ? Players.Opponent : Players.Self,
+                                cards: duel.loser ? duel.loser.controller.hand.sortBy(card => card.name) : [],
                                 targets: true,
                                 message: '{0} chooses {1} to be discarded',
-                                messageArgs: card => [context.game.currentDuel.winner.controller, card],
+                                messageArgs: card => [duel.loser && duel.loser.controller.opponent, card],
                                 gameAction: AbilityDsl.actions.discardCard()
-                            }))
+                            })
                         ])
                     }))
                 }

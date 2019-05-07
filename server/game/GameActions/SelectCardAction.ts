@@ -22,14 +22,16 @@ export interface SelectCardProperties extends CardActionProperties {
     gameAction: GameAction;
     selector?: BaseCardSelector;
     mode?: TargetModes;
-    actionParameter?: string;
+    subActionProperties?: (card: BaseCard) => any;
+    cancelHandler?: () => void;
 }
 
 export class SelectCardAction extends CardGameAction {
     defaultProperties: SelectCardProperties = {
         cardCondition: () => true,
         gameAction: null,
-        actionParameter: 'target'
+        subActionProperties: card => ({ target: card }),
+        targets: false
     };
 
     constructor(properties: SelectCardProperties | ((context: AbilityContext) => SelectCardProperties)) {
@@ -45,7 +47,9 @@ export class SelectCardAction extends CardGameAction {
         let properties = super.getProperties(context, additionalProperties) as SelectCardProperties;
         properties.gameAction.setDefaultTarget(() => properties.target);
         if(!properties.selector) {
-            let cardCondition = (card, context) => properties.gameAction.canAffect(card, context, additionalProperties) && properties.cardCondition(card, context)
+            let cardCondition = (card, context) => 
+                properties.gameAction.allTargetsLegal(context, Object.assign({}, additionalProperties, properties.subActionProperties(card))) && 
+                properties.cardCondition(card, context);
             properties.selector = CardSelector.for(Object.assign({}, properties, { cardCondition }));    
         }
         return properties;
@@ -83,11 +87,13 @@ export class SelectCardAction extends CardGameAction {
             context: context,
             selector: properties.selector,
             mustSelect: mustSelect,
+            buttons: properties.cancelHandler ? [{ text: 'Cancel', arg: 'cancel' }] : [],
+            onCancel: properties.cancelHandler,
             onSelect: (player, cards) => {
                 if(properties.message) {
                     context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
                 }
-                properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, { [properties.actionParameter]: cards }));
+                properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.subActionProperties(cards)));
                 return true;
             }
         };

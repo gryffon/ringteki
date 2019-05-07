@@ -12,6 +12,7 @@ class Duty extends DrawCard {
                 onTransferHonor: (event, context) =>
                     event.player === context.player && event.amount >= context.player.honor && event.context.stage === Stages.Effect
             },
+            cannotBeMirrored: true,
             effect: 'cancel their honor loss, and gain 1 honor',
             gameAction: AbilityDsl.actions.cancel(),
             then: {

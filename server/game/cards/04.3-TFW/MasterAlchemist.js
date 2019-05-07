@@ -13,7 +13,7 @@ class MasterAlchemist extends DrawCard {
                 gameAction: ability.actions.chooseAction({
                     messages: {
                         'Honor this character': '{0} chooses to honor {1}',
-                        'Dishonor this character': '{0} chooses to honor {1}'
+                        'Dishonor this character': '{0} chooses to dishonor {1}'
                     },
                     choices: {
                         'Honor this character': ability.actions.honor(),

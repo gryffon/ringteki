@@ -7,11 +7,15 @@ export interface MultipleActionProperties extends GameActionProperties {
 }
 
 export class MultipleGameAction extends GameAction {
-    effect = 'do several things';
     defaultProperties: MultipleActionProperties;
 
     constructor(gameActions: GameAction[]) {
         super({ gameActions: gameActions } as GameActionProperties);
+    }
+
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let { gameActions } = this.getProperties(context);
+        return ['{0}', gameActions.map(action => action.getEffectMessage(context))];
     }
 
     getProperties(context: AbilityContext, additionalProperties = {}): MultipleActionProperties {

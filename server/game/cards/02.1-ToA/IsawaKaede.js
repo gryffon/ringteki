@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Elements } = require('../../Constants');
 
 class IsawaKaede extends DrawCard {
     setupCardAbilities(ability) {
@@ -8,9 +9,7 @@ class IsawaKaede extends DrawCard {
             })
         });
         this.persistentEffect({
-            condition: context => context.source.isAttacking(),
-            match: ring => ring.contested,
-            effect: ability.effects.addElement('void')
+            effect: ability.effects.addElementAsAttacker(Elements.Void)
         });
         this.persistentEffect({
             condition: context => context.source.isAttacking() && this.game.currentConflict.winner === context.player,

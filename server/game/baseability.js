@@ -2,6 +2,7 @@ const AbilityTargetAbility = require('./AbilityTargets/AbilityTargetAbility.js')
 const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
+const AbilityTargetToken = require('./AbilityTargets/AbilityTargetToken.js');
 const { Stages, TargetModes } = require('./Constants.js');
 
 /**
@@ -79,6 +80,8 @@ class BaseAbility {
             return new AbilityTargetRing(name, properties, this);
         } else if(properties.mode === TargetModes.Ability) {
             return new AbilityTargetAbility(name, properties, this);
+        } else if(properties.mode === TargetModes.Token) {
+            return new AbilityTargetToken(name, properties, this);
         }
         return new AbilityTargetCard(name, properties, this);
     }
@@ -113,28 +116,30 @@ class BaseAbility {
         return this.cost.every(cost => cost.canPay(contextCopy));
     }
 
-    resolveCosts(context, results) {
-        for(let cost of this.cost.filter(cost => cost.resolve)) {
+    resolveCosts(events, context, results) {
+        for(let cost of this.cost) {
             context.game.queueSimpleStep(() => {
                 if(!results.cancelled) {
-                    cost.resolve(context, results);
+                    if(cost.addEventsToArray) {
+                        cost.addEventsToArray(events, context, results);
+                    } else {
+                        if(cost.resolve) {
+                            cost.resolve(context, results);
+                        }
+                        context.game.queueSimpleStep(() => {
+                            let newEvents = cost.payEvent ? cost.payEvent(context) : context.game.getEvent('payCost', {}, () => cost.pay(context));
+                            if(Array.isArray(newEvents)) {
+                                for(let event of newEvents) {
+                                    events.push(event);
+                                }
+                            } else {
+                                events.push(newEvents);
+                            }
+                        });
+                    }
                 }
             });
         }
-    }
-
-    /**
-     * Pays all costs for the ability simultaneously.
-     */
-    payCosts(context) {
-        return this.cost.reduce((array, cost) => {
-            if(cost.payEvent) {
-                return array.concat(cost.payEvent(context));
-            } else if(cost.pay) {
-                return array.concat(context.game.getEvent('payCost', {}, () => cost.pay(context)));
-            }
-            return array;
-        }, []);
     }
 
     /**
@@ -180,7 +185,7 @@ class BaseAbility {
     hasTargetsChosenByInitiatingPlayer(context) {
         return this.targets.some(target => target.hasTargetsChosenByInitiatingPlayer(context)) ||
             this.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context)) ||
-            this.cost.some(cost => cost.targets);
+            this.cost.some(cost => cost.hasTargetsChosenByInitiatingPlayer && cost.hasTargetsChosenByInitiatingPlayer(context));
     }
 
     displayMessage(context) { // eslint-disable-line no-unused-vars

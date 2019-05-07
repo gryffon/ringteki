@@ -5,11 +5,12 @@ import { CardTypes, EventNames } from '../Constants';
 import BaseCard = require('../basecard');
 import Ring = require ('../ring');
 import Player = require('../player');
+import StatusToken = require('../StatusToken');
 
-type PlayerOrRingOrCard = Player | Ring | BaseCard;
+type PlayerOrRingOrCardOrToken = Player | Ring | BaseCard | StatusToken;
 
 export interface GameActionProperties {
-    target?: PlayerOrRingOrCard | PlayerOrRingOrCard[];
+    target?: PlayerOrRingOrCardOrToken | PlayerOrRingOrCardOrToken[];
 }
 
 export class GameAction {
@@ -64,12 +65,17 @@ export class GameAction {
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
-        return (properties.target as PlayerOrRingOrCard[]).some(target => this.canAffect(target, context, additionalProperties));
+        return (properties.target as PlayerOrRingOrCardOrToken[]).some(target => this.canAffect(target, context, additionalProperties));
+    }
+
+    allTargetsLegal(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return (properties.target as PlayerOrRingOrCardOrToken[]).every(target => this.canAffect(target, context, additionalProperties));
     }
 
     addEventsToArray(events: Event[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        for(const target of (properties.target as PlayerOrRingOrCard[]).filter(target => this.canAffect(target, context, additionalProperties))) {
+        for(const target of (properties.target as PlayerOrRingOrCardOrToken[]).filter(target => this.canAffect(target, context, additionalProperties))) {
             events.push(this.getEvent(target, context, additionalProperties));
         }
     }
@@ -93,7 +99,7 @@ export class GameAction {
         return event;
     }
 
-    resolve(target: PlayerOrRingOrCard, context: AbilityContext): void {
+    resolve(target: PlayerOrRingOrCardOrToken, context: AbilityContext): void {
         this.setDefaultTarget(() => target);
         let events = [];
         this.addEventsToArray(events, context);
