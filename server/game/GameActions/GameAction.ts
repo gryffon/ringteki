@@ -37,7 +37,7 @@ export class GameAction {
     }
 
     getProperties(context: AbilityContext, additionalProperties = {}): GameActionProperties {
-        let properties = Object.assign({ target: this.getDefaultTargets(context) }, this.defaultProperties, this.properties || this.propertyFactory(context), additionalProperties);
+        let properties = Object.assign({ target: this.getDefaultTargets(context) }, this.defaultProperties, additionalProperties, this.properties || this.propertyFactory(context));
         if(!Array.isArray(properties.target)) {
             properties.target = [properties.target];
         }

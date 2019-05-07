@@ -60,6 +60,7 @@ import { SequentialAction } from './SequentialAction';
 import { SetDialAction, SetDialProperties } from './SetDialAction';
 import { ShuffleDeckAction, ShuffleDeckProperties } from './ShuffleDeckAction';
 import { SwitchConflictTypeAction, SwitchConflictTypeProperties } from './SwitchConflictTypeAction';
+import { TakeControlAction, TakeControlProperties } from './TakeControlAction';
 import { TakeFateRingAction, TakeFateRingProperties } from './TakeFateRingAction';
 import { TakeRingAction, TakeRingProperties } from './TakeRingAction';
 import { TransferFateAction, TransferFateProperties } from './TransferFateAction';
@@ -97,6 +98,7 @@ const GameActions = {
     reveal: (propertyFactory: RevealProperties | ((context: TriggeredAbilityContext) => RevealProperties) = {}) => new RevealAction(propertyFactory), // chatMessage = false
     sendHome: (propertyFactory: SendHomeProperties | ((context: TriggeredAbilityContext) => SendHomeProperties) = {}) => new SendHomeAction(propertyFactory),
     sacrifice: (propertyFactory: DiscardFromPlayProperties | ((context: TriggeredAbilityContext) => DiscardFromPlayProperties) = {}) => new DiscardFromPlayAction(propertyFactory, true),
+    takeControl: (propertyFactory: TakeControlProperties | ((context: TriggeredAbilityContext) => TakeControlProperties) = {}) => new TakeControlAction(propertyFactory),
     // player actions
     chosenDiscard: (propertyFactory: ChosenDiscardProperties | ((context: TriggeredAbilityContext) => ChosenDiscardProperties) = {}) => new ChosenDiscardAction(propertyFactory), // amount = 1
     deckSearch: (propertyFactory: DeckSearchProperties | ((context: TriggeredAbilityContext) => DeckSearchProperties)) => new DeckSearchAction(propertyFactory), // amount = -1, reveal = true, cardCondition = (card, context) => true
