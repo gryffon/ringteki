@@ -4,11 +4,12 @@ import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
 
 export interface MoveCardProperties extends CardActionProperties {
-    destination: Locations;
+    destination?: Locations;
     switch?: boolean;
     shuffle?: boolean;
     faceup?: boolean;
     bottom?: boolean;
+    changePlayer?: boolean;
 }
 
 export class MoveCardAction extends CardGameAction {
@@ -20,7 +21,8 @@ export class MoveCardAction extends CardGameAction {
         switch: false,
         shuffle: false,
         faceup: false,
-        bottom: false
+        bottom: false,
+        changePlayer: false
     };
     constructor(properties: MoveCardProperties | ((context: AbilityContext) => MoveCardProperties)) {
         super(properties);
@@ -44,15 +46,16 @@ export class MoveCardAction extends CardGameAction {
             let otherCard = card.controller.getDynastyCardInProvince(properties.destination);
             card.owner.moveCard(otherCard, card.location);
         } else if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
-            event.context.refillProvince(card.owner, card.location);
+            context.refillProvince(card.owner, card.location);
         }
-        card.owner.moveCard(card, properties.destination, { bottom: !!properties.bottom });
+        const player = properties.changePlayer && card.controller.opponent ? card.controller.opponent : card.controller;
+        player.moveCard(card, properties.destination, { bottom: !!properties.bottom });
         let target = properties.target;
         if(properties.shuffle && (target.length === 0 || card === target[target.length - 1])) {
             if(properties.destination === Locations.ConflictDeck) {
-                event.card.owner.shuffleConflictDeck();
+                card.owner.shuffleConflictDeck();
             } else if(properties.destination === Locations.DynastyDeck) {
-                event.card.owner.shuffleDynastyDeck();
+                card.owner.shuffleDynastyDeck();
             }
         } else if(properties.faceup) {
             card.facedown = false;
