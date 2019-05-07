@@ -16,7 +16,7 @@ export class DishonorAction extends CardGameAction {
     canAffect(card: BaseCard, context: AbilityContext): boolean {
         if(card.location !== Locations.PlayArea || card.type !== CardTypes.Character || card.isDishonored) {
             return false;
-        } else if(!card.isHonored && !card.checkRestrictions('becomeDishonored', context)) {
+        } else if(!card.isHonored && !card.checkRestrictions('receiveDishonorToken', context)) {
             return false;
         }
         return super.canAffect(card, context);

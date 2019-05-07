@@ -1,11 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const { Elements } = require('../../Constants');
 
 class SeekerOfKnowledge extends DrawCard {
     setupCardAbilities(ability) {
         this.persistentEffect({
-            condition: context => context.source.isAttacking(),
-            match: ring => ring.contested,
-            effect: ability.effects.addElement('air')
+            effect: ability.effects.addElementAsAttacker(Elements.Air)
         });
     }
 }

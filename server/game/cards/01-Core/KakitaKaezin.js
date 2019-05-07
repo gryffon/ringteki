@@ -14,20 +14,12 @@ class KakitaKaezin extends DrawCard {
                 gameAction: ability.actions.duel(context => ({
                     type: DuelTypes.Military,
                     challenger: context.source,
-                    resolutionHandler: (winner, loser) => this.resolutionHandler(context, winner, loser)
+                    gameAction: duel => ability.actions.sendHome({
+                        target: duel.winner === context.source ? context.game.currentConflict.getParticipants(card => card !== duel.winner && card !== duel.loser) : duel.loser
+                    })
                 }))
             }
         });
-    }
-
-    resolutionHandler(context, winner, loser) {
-        if(winner === context.source) {
-            this.game.addMessage('{0} wins the duel, and sends all characters except {0} and {1} home', winner, loser);
-            this.game.applyGameAction(context, { sendHome: this.game.currentConflict.getParticipants(card => ![winner, loser].includes(card)) });
-        } else if(loser === context.source) {
-            this.game.addMessage('{0} loses the duel, and is sent home', loser);
-            this.game.applyGameAction(context, { sendHome: loser });
-        }
     }
 }
 

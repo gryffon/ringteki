@@ -7,6 +7,9 @@ class TargetDependentFateCost extends ReduceableFateCost {
     }
 
     canPay(context) {
+        if(context.source.printedCost === null) {
+            return false;
+        }
         if(!context.targets[this.dependsOn]) {
             // we don't need to check now because this will be checked again once targeting is done
             return true;

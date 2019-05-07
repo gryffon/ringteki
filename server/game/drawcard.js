@@ -9,6 +9,7 @@ const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
 const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
+const StatusToken = require('./StatusToken');
 
 const { Locations, EffectNames, Players, CardTypes, PlayTypes } = require('./Constants');
 
@@ -38,8 +39,7 @@ class DrawCard extends BaseCard {
         this.covert = false;
         this.isConflict = cardData.side === 'conflict';
         this.isDynasty = cardData.side === 'dynasty';
-        this.isHonored = false;
-        this.isDishonored = false;
+        this.personalHonor = null;
 
         this.parseKeywords(cardData.text ? cardData.text.replace(/<[^>]*>/g, '').toLowerCase() : '');
 
@@ -156,8 +156,7 @@ class DrawCard extends BaseCard {
         clone.effects = _.clone(this.effects);
         clone.controller = this.controller;
         clone.bowed = this.bowed;
-        clone.isHonored = this.isHonored;
-        clone.isDishonored = this.isDishonored;
+        clone.personalHonor = this.personalHonor;
         clone.location = this.location;
         clone.parent = this.parent;
         clone.fate = this.fate;
@@ -354,20 +353,36 @@ class DrawCard extends BaseCard {
         this.fate = Math.max(0, this.fate + amount);
     }
 
+    setPersonalHonor(token) {
+        this.personalHonor = token || null;
+    }
+
+    get isHonored() {
+        return !!this.personalHonor && !!this.personalHonor.honored;
+    }
+
     honor() {
         if(this.isDishonored) {
-            this.isDishonored = false;
+            this.makeOrdinary();
         } else {
-            this.isHonored = true;
+            this.setPersonalHonor(new StatusToken(this.game, this, true));
         }
+    }
+
+    get isDishonored() {
+        return !!this.personalHonor && !!this.personalHonor.dishonored;
     }
 
     dishonor() {
         if(this.isHonored) {
-            this.isHonored = false;
+            this.makeOrdinary();
         } else {
-            this.isDishonored = true;
+            this.setPersonalHonor(new StatusToken(this.game, this, false));
         }
+    }
+
+    makeOrdinary() {
+        this.setPersonalHonor();
     }
 
     bow() {
@@ -518,8 +533,7 @@ class DrawCard extends BaseCard {
             this.game.openThenEventWindow(this.game.actions.gainHonor().getEvent(this.controller, this.game.getFrameworkContext()));
         }
 
-        this.isDishonored = false;
-        this.isHonored = false;
+        this.makeOrdinary();
         this.bowed = false;
         this.covert = false;
         this.new = false;
@@ -536,13 +550,25 @@ class DrawCard extends BaseCard {
         return !this.isCovert() && this.checkRestrictions('applyCovert', context);
     }
 
-    canDeclareAsAttacker(conflictType = this.game.currentConflict.conflictType) {
-        return (this.allowGameAction('declareAsAttacker') && this.canParticipateAsAttacker(conflictType) &&
-                this.location === Locations.PlayArea && !this.bowed);
+    canDeclareAsAttacker(conflictType, ring, province) { // eslint-disable-line no-unused-vars
+        if(this.anyEffect(EffectNames.CanOnlyBeDeclaredAsAttackerWithElement)) {
+            const elementsAdded = this.attachments.reduce(
+                (array, attachment) => array.concat(attachment.getEffects(EffectNames.AddElementAsAttacker)),
+                this.getEffects(EffectNames.AddElementAsAttacker)
+            );
+            for(let element of this.getEffects(EffectNames.CanOnlyBeDeclaredAsAttackerWithElement)) {
+                if(!ring.hasElement(element) && !elementsAdded.includes(element)) {
+                    return false;
+                }
+            }
+        }
+        return this.checkRestrictions('declareAsAttacker', this.game.getFrameworkContext()) &&
+            this.canParticipateAsAttacker(conflictType) &&
+            this.location === Locations.PlayArea && !this.bowed;
     }
 
     canDeclareAsDefender(conflictType = this.game.currentConflict.conflictType) {
-        return (this.allowGameAction('declareAsDefender') && this.canParticipateAsDefender(conflictType) &&
+        return (this.checkRestrictions('declareAsDefender', this.game.getFrameworkContext()) && this.canParticipateAsDefender(conflictType) &&
                 this.location === Locations.PlayArea && !this.bowed && !this.covert);
     }
 

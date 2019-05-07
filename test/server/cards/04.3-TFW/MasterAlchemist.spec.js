@@ -78,7 +78,7 @@ describe('Master Alchemist', function() {
                 });
 
                 this.togashiMitsu = this.player1.findCardByName('togashi-mitsu');
-                this.togashiMitsu.isDishonored = true;
+                this.togashiMitsu.dishonor();
                 this.youngRumormonger = this.player2.findCardByName('young-rumormonger');
 
                 this.noMoreActions();

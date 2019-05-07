@@ -1,5 +1,6 @@
 import TriggeredAbilityContext = require('../TriggeredAbilityContext');
 import { GameAction } from './GameAction';
+import { AddTokenAction, AddTokenProperties} from './AddTokenAction';
 import { AttachAction, AttachActionProperties } from './AttachAction';
 import { BowAction, BowActionProperties } from './BowAction';
 import { BreakAction, BreakProperties } from './BreakAction';
@@ -7,6 +8,7 @@ import { CancelAction, CancelActionProperties } from './CancelAction';
 import { CardMenuAction, CardMenuProperties } from './CardMenuAction';
 import { ChooseGameAction, ChooseActionProperties } from './ChooseGameAction';
 import { ChosenDiscardAction, ChosenDiscardProperties } from './ChosenDiscardAction';
+import { ConditionalAction, ConditionalActionProperties } from './ConditionalAction';
 import { CreateTokenAction, CreateTokenProperties } from './CreateTokenAction';
 import { DeckSearchAction,  DeckSearchProperties} from './DeckSearchAction';
 import { DelayedEffectAction, DelayedEffectActionProperties } from './DelayedEffectAction';
@@ -21,6 +23,7 @@ import { FlipDynastyAction, FlipDynastyProperties } from './FlipDynastyAction';
 import { GainFateAction, GainFateProperties } from './GainFateAction';
 import { GainHonorAction, GainHonorProperties } from './GainHonorAction';
 import { HonorAction, HonorProperties } from './HonorAction';
+import { IfAbleAction, IfAbleActionProperties } from './IfAbleAction';
 import { InitiateConflictAction, InitiateConflictProperties } from './InitiateConflictAction';
 import { JointGameAction } from './JointGameAction';
 import { LastingEffectAction, LastingEffectProperties } from './LastingEffectAction';
@@ -32,6 +35,7 @@ import { MenuPromptAction, MenuPromptProperties } from './MenuPromptAction';
 import { ModifyBidAction, ModifyBidProperties } from './ModifyBidAction';
 import { MoveCardAction, MoveCardProperties } from './MoveCardAction';
 import { MoveToConflictAction, MoveToConflictProperties } from './MoveToConflictAction';
+import { MoveTokenAction, MoveTokenProperties } from './MoveTokenAction';
 import { MultipleGameAction } from './MultipleGameAction';
 import { PlaceFateAction, PlaceFateProperties } from './PlaceFateAction';
 import { PlaceFateRingAction, PlaceFateRingProperties } from './PlaceFateRingAction';
@@ -63,7 +67,8 @@ import { TransferHonorAction, TransferHonorProperties } from './TransferHonorAct
 import { LoseFateProperties, LoseFateAction } from './LoseFateAction';
 
 const GameActions = {
-    // card actions
+    // card 
+    addToken: (propertyFactory: AddTokenProperties | ((context: TriggeredAbilityContext) => AddTokenProperties) = {}) => new AddTokenAction(propertyFactory),
     attach: (propertyFactory: AttachActionProperties | ((context: TriggeredAbilityContext) => AttachActionProperties) = {}) => new AttachAction(propertyFactory), // attachment
     bow: (propertyFactory: BowActionProperties | ((context: TriggeredAbilityContext) => BowActionProperties) = {}) => new BowAction(propertyFactory),
     break: (propertyFactory: BreakProperties | ((context: TriggeredAbilityContext) => BreakProperties) = {}) => new BreakAction(propertyFactory),
@@ -72,7 +77,6 @@ const GameActions = {
     delayedEffect: (propertyFactory: DelayedEffectActionProperties | ((context: TriggeredAbilityContext) => DelayedEffectActionProperties)) => new DelayedEffectAction(propertyFactory), // when, message, gameAction, handler
     discardCard: (propertyFactory: DiscardCardProperties | ((context: TriggeredAbilityContext) => DiscardCardProperties) = {}) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory: DiscardFromPlayProperties | ((context: TriggeredAbilityContext) => DiscardFromPlayProperties) = {}) => new DiscardFromPlayAction(propertyFactory),
-    discardStatusToken: (propertyFactory: DiscardStatusProperties | ((context: TriggeredAbilityContext) => DiscardStatusProperties) = {}) => new DiscardStatusAction(propertyFactory),
     dishonor: (propertyFactory: DishonorProperties | ((context: TriggeredAbilityContext) => DishonorProperties) = {}) => new DishonorAction(propertyFactory),
     duel: (propertyFactory: DuelProperties | ((context: TriggeredAbilityContext) => DuelProperties)) => new DuelAction(propertyFactory), // type, challenger, resolutionHandler, costHandler
     flipDynasty: (propertyFactory: FlipDynastyProperties | ((context: TriggeredAbilityContext) => FlipDynastyProperties) = {}) => new FlipDynastyAction(propertyFactory),
@@ -120,17 +124,22 @@ const GameActions = {
     selectRing: (propertyFactory: SelectRingProperties | ((context: TriggeredAbilityContext) => SelectRingProperties)) => new SelectRingAction(propertyFactory),
     takeFateFromRing: (propertyFactory: TakeFateRingProperties | ((context: TriggeredAbilityContext) => TakeFateRingProperties) = {}) => new TakeFateRingAction(propertyFactory), // amount = 1
     takeRing: (propertyFactory: TakeRingProperties | ((context: TriggeredAbilityContext) => TakeRingProperties) = {}) => new TakeRingAction(propertyFactory),
+    // status token actions
+    discardStatusToken: (propertyFactory: DiscardStatusProperties | ((context: TriggeredAbilityContext) => DiscardStatusProperties) = {}) => new DiscardStatusAction(propertyFactory),
+    moveStatusToken: (propertyFactory: MoveTokenProperties | ((context: TriggeredAbilityContext) => MoveTokenProperties)) => new MoveTokenAction(propertyFactory),
     // general actions
     cancel: (propertyFactory: CancelActionProperties | ((context: TriggeredAbilityContext) => CancelActionProperties) = {}) => new CancelAction(propertyFactory),
     switchConflictType: (propertyFactory: SwitchConflictTypeProperties | ((context: TriggeredAbilityContext) => SwitchConflictTypeProperties) = {}) => new SwitchConflictTypeAction(propertyFactory),
     // meta actions
     cardMenu: (propertyFactory: CardMenuProperties | ((context: TriggeredAbilityContext) => CardMenuProperties)) => new CardMenuAction(propertyFactory),
     chooseAction: (propertyFactory: ChooseActionProperties | ((context: TriggeredAbilityContext) => ChooseActionProperties)) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
-    jointAction: (gameActions: GameAction[]) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
+    conditional: (propertyFactory: ConditionalActionProperties | ((context: TriggeredAbilityContext) => ConditionalActionProperties)) => new ConditionalAction(propertyFactory),
+    ifAble: (propertyFactory: IfAbleActionProperties | ((context: TriggeredAbilityContext) => IfAbleActionProperties)) => new IfAbleAction(propertyFactory),
+    joint: (gameActions: GameAction[]) => new JointGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     multiple: (gameActions: GameAction[]) => new MultipleGameAction(gameActions), // takes an array of gameActions, not a propertyFactory
     menuPrompt: (propertyFactory: MenuPromptProperties | ((context: TriggeredAbilityContext) => MenuPromptProperties)) => new MenuPromptAction(propertyFactory),
     selectCard: (propertyFactory: SelectCardProperties | ((context: TriggeredAbilityContext) => SelectCardProperties)) => new SelectCardAction(propertyFactory),
-    sequentialAction: (gameActions: GameAction[]) => new SequentialAction(gameActions) // takes an array of gameActions, not a propertyFactory
+    sequential: (gameActions: GameAction[]) => new SequentialAction(gameActions) // takes an array of gameActions, not a propertyFactory
 };
 
 export = GameActions;

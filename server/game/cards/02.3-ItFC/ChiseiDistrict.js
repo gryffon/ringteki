@@ -1,13 +1,13 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
+const { Locations, ConflictTypes } = require('../../Constants');
 
 class ChiseiDistrict extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             targetLocation: Locations.Provinces,
-            condition: () => this.game.isDuringConflict('military'),
             match: (card, context) => card.isProvince && card.location === context.source.location,
-            effect: ability.effects.cardCannot('initiateConflict')
+            effect: AbilityDsl.effects.cannotHaveConflictsDeclaredOfType(ConflictTypes.Military)
         });
     }
 }

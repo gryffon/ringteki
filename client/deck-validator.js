@@ -15,6 +15,7 @@ const officialRoles = {
 };
 
 const openRoles = [
+    'support-of-the-crane',
     'support-of-the-phoenix',
     'support-of-the-scorpion',
     'support-of-the-unicorn'
@@ -96,6 +97,7 @@ const roleRules = {
     'seeker-of-fire': rulesForSeekerRole('fire'),
     'seeker-of-void': rulesForSeekerRole('void'),
     'seeker-of-water': rulesForSeekerRole('water'),
+    'support-of-the-crane': rulesForSupportRole('crane'),
     'support-of-the-phoenix': rulesForSupportRole('phoenix'),
     'support-of-the-scorpion': rulesForSupportRole('scorpion'),
     'support-of-the-unicorn': rulesForSupportRole('unicorn')
