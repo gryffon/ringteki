@@ -1,19 +1,22 @@
 const restrictedList = {
-    version: '1.7',
+    version: '9',
     cards: [
         'guest-of-honor',
         'niten-master',
         'young-rumormonger',
         'rebuild',
+        'steward-of-law',
         'mirumoto-s-fury',
         'for-greater-glory',
         'forged-edict',
         'charge',
+        'embrace-the-void',
         'pathfinder-s-blade',
         'feast-or-famine',
         'policy-debate',
         'a-fate-worse-than-death',
         'isawa-tadaka',
+        'secluded-shrine',
         'void-fist'
     ]
 };

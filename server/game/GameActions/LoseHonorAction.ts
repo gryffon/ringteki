@@ -24,7 +24,7 @@ export class LoseHonorAction extends PlayerAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties: LoseHonorProperties = this.getProperties(context);
-        return ['lose ' + properties.amount + ' honor', []];
+        return ['make {0} lose ' + properties.amount + ' honor', [properties.target]];
     }
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {

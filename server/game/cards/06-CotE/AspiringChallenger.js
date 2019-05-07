@@ -11,11 +11,9 @@ class AspiringChallenger extends DrawCard {
             title: 'Initiate a Military duel',
             initiateDuel: {
                 type: DuelTypes.Military,
-                message: '{0} wins the duel and is honored',
-                messageArgs: context => context.game.currentDuel.winner,
-                gameAction: AbilityDsl.actions.honor(context => ({
-                    target: context.game.currentDuel.winner
-                }))
+                gameAction: duel => AbilityDsl.actions.honor({
+                    target: duel.winner
+                })
             }
         });
     }

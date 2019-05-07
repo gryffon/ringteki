@@ -5,7 +5,8 @@ describe('InitateConflictPrompt: ', function() {
         this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'raiseEvent', 'promptWithHandlerMenu', 'getFrameworkContext']);
         this.fireRing = { element: 'fire' };
         this.gameSpy.rings = { fire: this.fireRing};
-        this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan']);
+        this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan', 'getLegalConflictTypes', 'hasLegalConflictDeclaration']);
+        this.playerSpy.getLegalConflictTypes.and.returnValue(['military', 'political']);
         this.playerSpy.cardsInPlay = [];
         this.conflictSpy = jasmine.createSpyObj('conflict', ['calculateSkill', 'removeFromConflict', 'addAttacker', 'setDeclarationComplete']);
         this.conflictSpy.attackers = [];
@@ -113,42 +114,22 @@ describe('InitateConflictPrompt: ', function() {
                 });
             });
 
-            describe('if it\'s broken, ', function() {
-                beforeEach(function() {
-                    this.cardSpy.isBroken = true;
-                });
-
-                it('should return false', function() {
-                    expect(this.prompt.onCardClicked(this.playerSpy, this.cardSpy)).toBe(false);
-                });
-            });
-
             describe('if a conflict can\'t be initiated here, ', function() {
                 beforeEach(function() {
-                    this.cardSpy.checkRestrictions.and.returnValue(false);
+                    this.playerSpy.hasLegalConflictDeclaration.and.returnValue(false);
                 });
 
                 it('should return false', function() {
-                    expect(this.prompt.onCardClicked(this.playerSpy, this.cardSpy)).toBe(false);
-                });
-            });
-
-            describe('if it\'s the stronghold province and fewer than 3 provinces have been broken, ', function() {
-                beforeEach(function() {
-                    this.cardSpy.location = 'stronghold province';
-                    this.allCardsSpy = jasmine.createSpyObj('allCards', ['filter']);
-                    this.allCardsSpy.filter.and.returnValue(2);
-                    this.gameSpy.allCards = this.allCardsSpy;
-                });
-
-                it('should return false', function() {
+                    expect(this.playerSpy.hasLegalConflictDeclaration).toHaveBeenCalledWith({
+                        type: undefined, ring: undefined, province: this.cardSpy
+                    });
                     expect(this.prompt.onCardClicked(this.playerSpy, this.cardSpy)).toBe(false);
                 });
             });
 
             describe('if a conflict can be initiated here', function() {
                 beforeEach(function() {
-                    this.cardSpy.checkRestrictions.and.returnValue(true);
+                    this.playerSpy.hasLegalConflictDeclaration.and.returnValue(true);
                     this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
                 });
 
@@ -160,6 +141,9 @@ describe('InitateConflictPrompt: ', function() {
                     });
 
                     it('should return true', function() {
+                        expect(this.playerSpy.hasLegalConflictDeclaration).toHaveBeenCalledWith({
+                            type: undefined, ring: undefined, province: this.cardSpy
+                        });
                         expect(this.returnValue).toBe(true);
                     });
 
@@ -173,6 +157,9 @@ describe('InitateConflictPrompt: ', function() {
                 });
 
                 it('should return true', function() {
+                    expect(this.playerSpy.hasLegalConflictDeclaration).toHaveBeenCalledWith({
+                        type: undefined, ring: undefined, province: this.cardSpy
+                    });
                     expect(this.returnValue).toBe(true);
                 });
 
@@ -196,6 +183,10 @@ describe('InitateConflictPrompt: ', function() {
                 beforeEach(function() {
                     this.cardSpy.controller = this.playerSpy;
                     this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
+                });
+
+                it('should call getLegalConflictTypes', function() {
+                    expect(this.playerSpy.getLegalConflictTypes).toHaveBeenCalled();
                 });
 
                 it('should call canDeclareAsAttacker', function() {

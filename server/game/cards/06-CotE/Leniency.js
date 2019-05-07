@@ -18,6 +18,7 @@ class Leniency extends DrawCard {
                     replacementGameAction: AbilityDsl.actions.putIntoPlay()
                 })
             },
+            cannotBeMirrored: true,
             effect: 'put {0} into play instead of resolving the ring effect'
         });
     }

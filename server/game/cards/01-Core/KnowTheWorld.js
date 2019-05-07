@@ -6,7 +6,7 @@ class KnowTheWorld extends DrawCard {
         this.action({
             title: 'Switch a claimed ring with an unclaimed one',
             effect: 'switch a claimed ring with an unclaimed one',
-            gameAction: AbilityDsl.actions.jointAction([
+            gameAction: AbilityDsl.actions.joint([
                 AbilityDsl.actions.selectRing(context => ({
                     activePromptTitle: 'Choose a ring to return',
                     ringCondition: ring => ring.claimedBy === context.player.name,

@@ -56,7 +56,7 @@ describe('Clarity of Purpose', function() {
                     });
 
                     it('should prevent opponents\' card effects from bowing', function() {
-                        this.adeptOfTheWaves.isDishonored = true;
+                        this.adeptOfTheWaves.dishonor();
                         expect(this.player2).toHavePrompt('Conflict Action Window');
                         this.player2.clickCard(this.forShame);
                         expect(this.player2).toHavePrompt('Conflict Action Window');

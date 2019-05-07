@@ -15,7 +15,10 @@ class IuchiWayfinder extends DrawCard {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,
                 controller: Players.Opponent,
-                gameAction: AbilityDsl.actions.lookAt()
+                gameAction: AbilityDsl.actions.lookAt(context => ({
+                    message: '{0} sees {1} in {2}',
+                    messageArgs: (cards) => [context.source, cards[0], cards[0].location]
+                }))
             })
         });
     }

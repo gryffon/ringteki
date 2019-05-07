@@ -25,14 +25,17 @@ export enum Decks {
 
 export enum EffectNames {
     AbilityRestrictions = 'abilityRestrictions',
+    AddElementAsAttacker = 'addElementAsAttacker',
     AddFaction = 'addFaction',
     AddGloryToBothSkills = 'addGloryToBothSkills',
     AddKeyword = 'addKeyword',
     AddTrait = 'addTrait',
     Blank = 'blank',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
+    CanOnlyBeDeclaredAsAttackerWithElement = 'canOnlyBeDeclaredAsAttackerWithElement',
     CannotBeAttacked = 'cannotBeAttacked',
     CannotBidInDuels = 'cannotBidInDuels',
+    CannotHaveConflictsDeclaredOfType = 'cannotHaveConflictsDeclaredOfType',
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
@@ -80,12 +83,14 @@ export enum EffectNames {
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
     AlternateFatePool = 'alternateFatePool',
+    CannotDeclareConflictsOfType = 'cannotDeclareConflictsOfType',
     CanPlayFromOwn = 'canPlayFromOwn',
     CanPlayFromOpponents = 'canPlayFromOpponents',
     ChangePlayerGloryModifier = 'gloryModifier',
     ChangePlayerSkillModifier = 'conflictSkillModifier',
     GainActionPhasePriority = 'actionPhasePriority',
     CostReducer = 'costReducer',
+    ModifyCardsDrawnInDrawPhase = 'modifyCardsDrawnInDrawPhase',
     SetMaxConflicts = 'maxConflicts',
     ShowTopConflictCard = 'showTopConflictCard',
     ContributeToConflict = 'contribute',
@@ -120,6 +125,7 @@ export enum TargetModes {
     Ring = 'ring',
     Select = 'select',
     Ability = 'ability',
+    Token = 'token',
     AutoSingle = 'autoSingle',
     Exactly = 'exactly',
     MaxStat = 'maxStat',
@@ -192,6 +198,7 @@ export enum EventNames {
     OnCardsDiscarded = 'onCardsDiscarded',
     OnCardsDiscardedFromHand = 'onCardsDiscardedFromHand',
     OnCardLeavesPlay = 'onCardLeavesPlay',
+    OnAddTokenToCard = 'onAddTokenToCard',
     OnMoveToConflict = 'onMoveToConflict',
     OnSendHome = 'onSendHome',
     OnCardPlayed = 'onCardPlayed',
@@ -209,7 +216,8 @@ export enum EventNames {
     OnDeckSearch = 'onDeckSearch',
     OnEffectApplied = 'onEffectApplied',
     OnDiscardFavor = 'onDiscardFavor',
-    OnCardStatusDiscarded = 'onCardStatusDiscarded',
+    OnStatusTokenDiscarded = 'onStatusTokenDiscarded',
+    OnStatusTokenMoved = 'onStatusTokenMoved',
     OnCardsDrawn = 'onCardsDrawn',
     OnLookAtCards = 'onLookAtCards',
     OnModifyBid = 'onModifyBid',
@@ -248,4 +256,8 @@ export enum Elements {
 export enum ConflictTypes {
     Military = 'military',
     Political = 'political'
+};
+
+export enum TokenTypes {
+    Honor = 'honor'
 };

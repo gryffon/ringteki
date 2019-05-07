@@ -4,7 +4,7 @@ const ActionWindow = require('./actionwindow.js');
 const HonorBidPrompt = require('./honorbidprompt.js');
 const GameActions = require('../GameActions/GameActions');
 
-const { Phases } = require('../Constants');
+const { Phases, EffectNames } = require('../Constants');
 
 /*
 II Draw Phase
@@ -28,13 +28,15 @@ class DrawPhase extends Phase {
     }
 
     displayHonorBidPrompt() {
-        this.game.queueStep(new HonorBidPrompt(this.game, 'Choose how many cards to draw'));
+        this.game.queueStep(new HonorBidPrompt(this.game, 'Choose how much honor to bid in the draw phase'));
     }
 
     drawConflictCards() {
         for(let player of this.game.getPlayers()) {
-            this.game.addMessage('{0} draws {1} cards for the draw phase', player, player.honorBid);
-            GameActions.draw({ amount: player.honorBid }).resolve(player, this.game.getFrameworkContext());
+            const min = player.honorBid === 0 ? 0 : 1;
+            const amount = Math.max(player.honorBid + player.sumEffects(EffectNames.ModifyCardsDrawnInDrawPhase), min);
+            this.game.addMessage('{0} draws {1} cards for the draw phase', player, amount);
+            GameActions.draw({ amount }).resolve(player, this.game.getFrameworkContext());
         }
     }
 }

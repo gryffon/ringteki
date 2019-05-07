@@ -1,6 +1,6 @@
 const CardAbility = require('./CardAbility.js');
 const Costs = require('./costs.js');
-const { AbilityTypes } = require('./Constants');
+const { AbilityTypes, CardTypes } = require('./Constants');
 
 /**
  * Represents an action ability provided by card text.
@@ -51,7 +51,7 @@ class CardAction extends CardAbility {
             return 'phase';
         }
 
-        if(!ignoredRequirements.includes('player') && context.player !== this.card.controller && !this.anyPlayer) {
+        if(!ignoredRequirements.includes('player') && this.card.type !== CardTypes.Event && context.player !== this.card.controller && !this.anyPlayer) {
             return 'player';
         }
 

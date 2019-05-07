@@ -56,6 +56,24 @@ describe('Fire Tensai Acolyte', function() {
                 this.player1.clickCard(this.acolyte);
                 expect(this.game.currentConflict.attackers).toContain(this.acolyte);
             });
+
+            it('should let you declare an attack with only the acolyte with the fire ring', function () {
+                this.masahiro.bow();
+                this.player1.pass();
+                this.player2.pass();
+                this.player1.clickRing('fire');
+                this.player1.clickCard(this.acolyte);
+                expect(this.player1).toHavePrompt('Military Fire Conflict');
+            });
+
+            it('should not let you pick the fire ring declare acolyte as an attacking then change the ring and keep him in the conflict', function () {
+                this.player1.pass();
+                this.player2.pass();
+                this.player1.clickRing('fire');
+                this.player1.clickCard(this.acolyte);
+                this.player1.clickRing('void');
+                expect(this.game.currentConflict.attackers).not.toContain(this.acolyte);
+            });
         });
     });
 });

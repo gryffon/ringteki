@@ -13,11 +13,9 @@ class DaringChallenger extends DrawCard {
             title: 'Initiate a Military duel',
             initiateDuel: {
                 type: DuelTypes.Military,
-                message: '1 fate is placed on {0} due to winning the duel',
-                messageArgs: context => context.game.currentDuel.winner,
-                gameAction: AbilityDsl.actions.placeFate(context => ({
-                    target: context.game.currentDuel.winner
-                }))
+                gameAction: duel => AbilityDsl.actions.placeFate({
+                    target: duel.winner
+                })
             }
         });
     }

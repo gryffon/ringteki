@@ -19,6 +19,7 @@ const ModeToSelector = {
     exactly: p => new ExactlyXCardSelector(p.numCards, p),
     maxStat: p => new MaxStatCardSelector(p),
     single: p => new SingleCardSelector(p),
+    token: p => new SingleCardSelector(p),
     unlimited: p => new UnlimitedCardSelector(p),
     upTo: p => new UpToXCardSelector(p.numCards, p)
 };

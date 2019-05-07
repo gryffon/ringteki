@@ -8,7 +8,7 @@ export interface MenuPromptProperties extends GameActionProperties {
     player?: Players;
     gameAction: GameAction;
     choices: string[] | ((properties: any) => string[]);
-    choiceHandler: (choice: string, displayMessage: boolean, properties: object) => object;
+    choiceHandler: (choice: string, displayMessage: boolean, properties: MenuPromptProperties) => object;
 }
 
 export class MenuPromptAction extends GameAction {
