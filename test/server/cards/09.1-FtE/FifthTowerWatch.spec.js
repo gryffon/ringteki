@@ -9,7 +9,8 @@ describe('Fifth Tower Watch', function() {
                         hand: ['way-of-the-crab']
                     },
                     player2: {
-                        inPlay: ['doji-whisperer', 'daidoji-nerishma']
+                        inPlay: ['doji-whisperer', 'daidoji-nerishma'],
+                        hand: ['way-of-the-crab', 'hiruma-ambusher']
                     }
                 });
 
@@ -20,11 +21,25 @@ describe('Fifth Tower Watch', function() {
 
                 this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
                 this.daidojiNerishma = this.player2.findCardByName('daidoji-nerishma');
+                this.hirumaAmbusher = this.player2.findCardByName('hiruma-ambusher');
+                this.wayOfTheCrab2 = this.player2.findCardByName('way-of-the-crab');
             });
 
             it('should trigger when you sacrifice a character', function() {
                 this.player1.clickCard(this.wayOfTheCrab);
                 this.player1.clickCard(this.fifthTowerWatch);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.fifthTowerWatch);
+            });
+
+            it('should trigger when you sacrifice a character even if initiated by an opponent\'s event', function() {
+                this.player1.pass();
+                this.player2.clickCard(this.hirumaAmbusher);
+                this.player2.clickPrompt('0');
+                this.player1.pass();
+                this.player2.clickCard(this.wayOfTheCrab2);
+                this.player2.clickCard(this.hirumaAmbusher);
+                this.player1.clickCard(this.kaiuInventor);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.fifthTowerWatch);
             });
