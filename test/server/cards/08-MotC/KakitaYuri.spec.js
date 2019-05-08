@@ -78,6 +78,20 @@ describe('Kakita Yuri', function() {
                 expect(this.player2).not.toHavePrompt('Triggered Abilities');
                 expect(this.player2).not.toBeAbleToSelect(this.ivoryKingdomsUnicorn);
             });
+
+            fit('should not resolve the effect if the duel is a draw', function() {
+                this.initiateConflict({
+                    attackers: [this.kakitaYuri],
+                    defenders: [this.borderRider, this.iuchiFarseer]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.kakitaYuri);
+                this.player2.clickCard(this.iuchiFarseer);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+                expect(this.getChatLogs(4)).toContain('The duel has no effect');
+                expect(this.getChatLogs(4)).toContain('The duel ends in a draw');
+            });
         });
     });
 });
