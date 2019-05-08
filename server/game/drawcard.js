@@ -5,6 +5,7 @@ const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
+const PlayDisguisedCharacterAction = require('./PlayDisguisedCharacterAction');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
 const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
@@ -70,10 +71,13 @@ class DrawCard extends BaseCard {
 
         this.printedKeywords = [];
         this.allowedAttachmentTraits = [];
+        this.diguisedKeywordTraits = [];
 
         _.each(potentialKeywords, keyword => {
             if(_.contains(ValidKeywords, keyword)) {
                 this.printedKeywords.push(keyword);
+            } else if(keyword.startsWith('disguised ')) {
+                this.diguisedKeywordTraits.push(keyword.replace('disguised ', ''));
             } else if(keyword.startsWith('no attachments except')) {
                 var traits = keyword.replace('no attachments except ', '');
                 this.allowedAttachmentTraits = traits.split(' or ');
@@ -487,9 +491,12 @@ class DrawCard extends BaseCard {
         }
         let actions = [];
         if(this.type === CardTypes.Character) {
+            if(this.diguisedKeywordTraits.length > 0) {
+                actions.push(new PlayDisguisedCharacterAction(this));
+            }
             if(player.getDuplicateInPlay(this)) {
                 actions.push(new DuplicateUniqueAction(this));
-            } else if(this.isDynasty && location !== Locations.Hand) {
+            } else if(this.isDynasty) {
                 actions.push(new DynastyCardAction(this));
             } else {
                 actions.push(new PlayCharacterAction(this));
