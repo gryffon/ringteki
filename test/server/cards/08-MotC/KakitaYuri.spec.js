@@ -79,7 +79,7 @@ describe('Kakita Yuri', function() {
                 expect(this.player2).not.toBeAbleToSelect(this.ivoryKingdomsUnicorn);
             });
 
-            fit('should not resolve the effect if the duel is a draw', function() {
+            it('should not resolve the effect if the duel is a draw', function() {
                 this.initiateConflict({
                     attackers: [this.kakitaYuri],
                     defenders: [this.borderRider, this.iuchiFarseer]
