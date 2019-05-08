@@ -10,7 +10,7 @@ describe('A Perfect Cut', function() {
                     },
                     player2: {
                         inPlay: ['doji-whisperer', 'daidoji-uji'],
-                        hand: ['try-again-tomorrow', ]
+                        hand: ['try-again-tomorrow']
                     }
                 });
                 this.togashiInitiate = this.player1.findCardByName('togashi-initiate');
@@ -18,7 +18,7 @@ describe('A Perfect Cut', function() {
                 this.aPerfectCut = this.player1.findCardByName('a-perfect-cut');
                 this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
                 this.daidojiUji = this.player2.findCardByName('daidoji-uji');
-                this.tryAgainTomorrow = this.player2.findCardByName('try-again-tomorrow')
+                this.tryAgainTomorrow = this.player2.findCardByName('try-again-tomorrow');
                 this.noMoreActions();
             });
 

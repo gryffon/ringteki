@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { TargetModes, CardTypes, ConflictTypes, Players } = require('../../Constants');
+const { CardTypes, ConflictTypes, Players } = require('../../Constants');
 
 class APerfectCut extends DrawCard {
     setupCardAbilities(ability) {
@@ -19,8 +19,8 @@ class APerfectCut extends DrawCard {
                 gameAction: ability.actions.delayedEffect({
                     target: context.target,
                     when: {
-                        afterConflict: event => 
-                            context.target.isParticipating() && 
+                        afterConflict: event =>
+                            context.target.isParticipating() &&
                             context.target.controller === event.conflict.winner &&
                             context.target.allowGameAction('honor')
                     },
