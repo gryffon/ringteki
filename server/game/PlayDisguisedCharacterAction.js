@@ -1,4 +1,4 @@
-const BaseAction = require('./baseaction');
+const BaseAction = require('./BaseAction.js');
 const ReduceableFateCost = require('./costs/ReduceableFateCost');
 
 const Costs = require('./costs');
