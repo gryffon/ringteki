@@ -9,7 +9,7 @@ class ShibaSophist extends DrawCard {
             effect: 'look at the top five cards of their deck',
             gameAction: AbilityDsl.actions.deckSearch({
                 amount: 5,
-                cardCondition: card => card.hasTrait(this.game.currentConflict.ring.element)
+                cardCondition: card => this.game.currentConflict.elements.some(element => card.hasTrait(element))
             })
         });
     }
