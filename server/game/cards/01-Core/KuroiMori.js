@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const ProvinceCard = require('../../provincecard.js');
 const AbilityDsl = require('../../abilitydsl');
 const { TargetModes } = require('../../Constants');
