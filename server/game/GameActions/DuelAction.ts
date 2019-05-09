@@ -35,16 +35,16 @@ export class DuelAction extends CardGameAction {
         if(!properties.challenger) {
             properties.challenger = context.source;
         }
-        if(properties.refuseGameAction && typeof(properties.gameAction) === 'function') {
-            properties.refuseGameAction = (properties.refuseGameAction as any)(context);
+        if(properties.refuseGameAction && !(properties.refuseGameAction instanceof GameAction)) {
+            properties.refuseGameAction = properties.refuseGameAction(context);
         }
         return properties;
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context);
-        if(properties.target instanceof Array) {
-            let targets = properties.target as BaseCard[];
+        if(!(properties.target instanceof BaseCard)) {
+            let targets = properties.target;
             let indices = [...Array(targets.length + 1).keys()].map(x => '{' + x++ + '}').slice(1);
             return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. ' + indices.join(' and '), [properties.challenger, ...(properties.target as BaseCard[])]];
         }
