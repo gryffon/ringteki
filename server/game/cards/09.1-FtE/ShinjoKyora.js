@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { TargetModes } = require('../../Constants');
+const AbiltyDsl = require('../../abilitydsl');
 
 
 class ShinjoKyora extends DrawCard {
@@ -7,12 +7,12 @@ class ShinjoKyora extends DrawCard {
         this.action({
             title: 'Switch the contested ring',
             condition: context => context.source.isParticipating(),
-            target: {
-                ringCondition: ring => ring.isUnclaimed(),
-                mode: TargetModes.Ring
-            },
-            effect: 'change the conflict ring to {0}',
-            handler: context => this.game.currentConflict.switchElement(context.ring.element)
+            gameAction: AbiltyDsl.actions.selectRing({
+                message: '{0} switches the contested ring with {1}',
+                messageArgs: (ring, player) => [player, ring],
+                gameAction: AbiltyDsl.actions.switchConflictElement()
+            }),
+            effect: 'switch the contested ring with an unclaimed one'
         });
     }
 }
