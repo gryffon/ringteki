@@ -14,6 +14,7 @@ export interface TakeControlProperties extends GameActionProperties {
 
 export class TakeControlAction extends LastingEffectCardAction {
     name = 'takeControl';
+    effect = 'take control of {0}';
     defaultProperties: LastingEffectCardProperties = {
         duration: Durations.Custom,
         effect: null

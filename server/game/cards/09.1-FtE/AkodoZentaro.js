@@ -6,7 +6,7 @@ class AkodoZentaro extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Take control of holding',
-            condition: context => context.source.isParticipating(),
+            condition: context => context.source.isAttacking(),
             target: {
                 cardType: CardTypes.Holding,
                 controller: Players.Opponent,
