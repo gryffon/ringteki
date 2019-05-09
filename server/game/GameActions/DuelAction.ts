@@ -17,6 +17,7 @@ export interface DuelProperties extends CardActionProperties {
     statistic?: (card: DrawCard) => number;
     challengerEffect?;
     targetEffect?;
+    refuseGameAction?: GameAction | ((context: AbilityContext) => GameAction);
 }
 
 export class DuelAction extends CardGameAction {
@@ -33,6 +34,9 @@ export class DuelAction extends CardGameAction {
         let properties = super.getProperties(context, additionalProperties) as DuelProperties;
         if(!properties.challenger) {
             properties.challenger = context.source;
+        }
+        if(properties.refuseGameAction && typeof(properties.gameAction) === 'function') {
+            properties.refuseGameAction = (properties.refuseGameAction as any)(context);
         }
         return properties;
     }
@@ -79,14 +83,28 @@ export class DuelAction extends CardGameAction {
     }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
-        let { target } = this.getProperties(context, additionalProperties);
-        let cards = (target as DrawCard[]).filter(card => this.canAffect(card, context));
-        if(cards.length === 0) {
-            return
+        const { target, refuseGameAction } = this.getProperties(context, additionalProperties);
+        const addDuelEventsHandler = () => {
+            let cards = (target as DrawCard[]).filter(card => this.canAffect(card, context));
+            if(cards.length === 0) {
+                return
+            }
+            let event = this.createEvent(null, context, additionalProperties);
+            this.updateEvent(event, cards, context, additionalProperties);
+            events.push(event);    
+        };
+        if(refuseGameAction) {
+            context.game.promptWithHandlerMenu(context.player.opponent, {
+                activePromptTitle: 'Do you wish to ' + (refuseGameAction as GameAction).getEffectMessage(context) + ' to refuse the duel?',
+                choices: ['Yes', 'No'],
+                handlers: [
+                    () => (refuseGameAction as GameAction).addEventsToArray(events, context, additionalProperties),
+                    addDuelEventsHandler
+                ]
+            });
+        } else {
+            addDuelEventsHandler();
         }
-        let event = this.createEvent(null, context, additionalProperties);
-        this.updateEvent(event, cards, context, additionalProperties);
-        events.push(event);
     }
 
     addPropertiesToEvent(event, cards, context: AbilityContext, additionalProperties): void {
