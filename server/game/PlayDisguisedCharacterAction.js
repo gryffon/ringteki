@@ -7,12 +7,14 @@ const { CardTypes, EventNames, Phases, Players, PlayTypes } = require ('./Consta
 const ChooseDisguisedCharacterCost = function() {
     return {
         canPay: context => context.source.disguisedKeywordTraits.some(trait =>
-            context.player.cardsInPlay.some(card => card.hasTrait(trait))),
+            context.player.cardsInPlay.some(card => card.hasTrait(trait) && card.allowGameAction('discardFromPlay', context))),
         resolve: context => context.game.promptForSelect(context.player, {
             activePromptTitle: 'Choose a character to replace',
             cardType: CardTypes.Character,
             controller: Players.Self,
-            cardCondition: card => context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)),
+            cardCondition: card =>
+                context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
+                card.allowGameAction('discardFromPlay', context),
             context: context,
             onSelect: (player, card) => {
                 context.costs.chooseDisguisedCharacter = card;
@@ -81,14 +83,18 @@ class PlayDisguisedCharacterAction extends BaseAction {
         }
         context.game.queueSimpleStep(() => {
             context.game.addMessage('{0} plays {1}{2} using Disguised, choosing to replace {3}', context.player, context.source, playIntoConflict ? ' into the conflict' : '', replacedCharacter);
-            const gameAction = playIntoConflict ? context.game.actions.putintoConflict() : context.game.actions.putIntoPlay();
-            events.push(gameAction.getEvent(context.source, context));
+            const gameAction = playIntoConflict ? context.game.actions.putintoConflict({ target: context.source }) : context.game.actions.putIntoPlay({ target: context.source });
+            gameAction.addEventsToArray(events, context);
             events.push(context.game.getEvent(EventNames.Unnamed, {}, () => {
                 const moveEvents = [];
                 context.game.actions.placeFate({ target: context.source, origin: replacedCharacter, amount: replacedCharacter.fate }).addEventsToArray(moveEvents, context);
                 for(const attachment of replacedCharacter.attachments.toArray()) {
                     context.game.actions.attach({ target: context.source, attachment: attachment }).addEventsToArray(moveEvents, context);
                 }
+                moveEvents.push(context.game.getEvent(EventNames.Unnamed, {}, () => context.game.openThenEventWindow(context.game.actions.discardFromPlay({
+                    target: replacedCharacter,
+                    cannotBeCancelled: true
+                }))));
                 context.game.openThenEventWindow(moveEvents);
             }));
             context.game.openThenEventWindow(events);

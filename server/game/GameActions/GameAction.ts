@@ -1,6 +1,6 @@
 import AbilityContext = require('../AbilityContext');
 import Event = require('../Events/Event.js');
-import { CardTypes, EventNames } from '../Constants';
+import { CardTypes, EventNames, Stages } from '../Constants';
 
 import BaseCard = require('../basecard');
 import Ring = require ('../ring');
@@ -11,6 +11,7 @@ type PlayerOrRingOrCardOrToken = Player | Ring | BaseCard | StatusToken;
 
 export interface GameActionProperties {
     target?: PlayerOrRingOrCardOrToken | PlayerOrRingOrCardOrToken[];
+    cannotBeCancelled?: boolean;
 }
 
 export class GameAction {
@@ -59,8 +60,9 @@ export class GameAction {
     }
 
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
-        return this.targetType.includes(target.type) && target.checkRestrictions(this.name, context) && 
-            !context.gameActionsResolutionChain.includes(this);
+        const { cannotBeCancelled } = this.getProperties(context, additionalProperties);
+        return this.targetType.includes(target.type) && !context.gameActionsResolutionChain.includes(this) &&
+            (context.stage === Stages.Effect && cannotBeCancelled || target.checkRestrictions(this.name, context));
     }
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
@@ -94,7 +96,8 @@ export class GameAction {
     }
 
     createEvent(target: any, context: AbilityContext, additionalProperties): Event {
-        let event = new Event(EventNames.Unnamed, {});
+        const { cannotBeCancelled } = this.getProperties(context, additionalProperties);
+        const event = new Event(EventNames.Unnamed, { cannotBeCancelled });
         event.checkFullyResolved = eventAtResolution => this.isEventFullyResolved(eventAtResolution, target, context, additionalProperties);
         return event;
     }
