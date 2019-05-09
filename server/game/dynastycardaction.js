@@ -1,7 +1,7 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases, PlayTypes, EventNames } = require('./Constants');
+const { EffectNames, Phases, PlayTypes, EventNames } = require('./Constants');
 
 class DynastyCardAction extends BaseAction {
     constructor(card) {
@@ -35,7 +35,8 @@ class DynastyCardAction extends BaseAction {
     }
 
     executeHandler(context) {
-        let enterPlayEvent = GameActions.putIntoPlay({ fate: context.chooseFate }).getEvent(context.source, context);
+        const extraFate = context.source.sumEffects(EffectNames.GainExtraFateWhenPlayed);
+        let enterPlayEvent = GameActions.putIntoPlay({ fate: context.chooseFate + extraFate }).getEvent(context.source, context);
         let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,

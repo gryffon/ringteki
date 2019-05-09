@@ -12,12 +12,8 @@ class SaadiyahAlMozedu extends DrawCard {
             target: {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,
-                cardCondition: card => !card.isBroken && !card.isConflictProvince()
-            },
-            effect: 'turn {0} facedown',
-            handler: context => {
-                context.target.leavesPlay();
-                context.target.facedown = true;
+                cardCondition: card => !card.isBroken && !card.isConflictProvince(),
+                gameAction: AbilityDsl.actions.turnFacedown()
             }
         });
     }

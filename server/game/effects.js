@@ -42,6 +42,7 @@ const Effects = {
     doesNotBow: () => EffectBuilder.card.static(EffectNames.DoesNotBow),
     doesNotReady: () => EffectBuilder.card.static(EffectNames.DoesNotReady),
     gainAbility: (abilityType, properties) => EffectBuilder.card.static(EffectNames.GainAbility, new GainAbility(abilityType, properties)),
+    gainExtraFateWhenPlayed: (amount = 1) => EffectBuilder.card.flexible(EffectNames.GainExtraFateWhenPlayed, amount),
     gainPlayAction: (playActionClass) => EffectBuilder.card.detached(EffectNames.GainPlayAction, {
         apply: card => {
             let action = new playActionClass(card);
