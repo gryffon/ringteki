@@ -13,6 +13,20 @@ const binaryCardEffects = [
     EffectNames.ShowTopConflictCard
 ];
 
+const MilitaryModifiers = [
+    EffectNames.ModifyBaseMilitarySkill,
+    EffectNames.ModifyMilitarySkill,
+    EffectNames.ModifyMilitarySkillMultiplier,
+    EffectNames.ModifyBothSkills
+];
+
+const PoliticalModifiers = [
+    EffectNames.ModifyBasePoliticalSkill,
+    EffectNames.ModifyPoliticalSkill,
+    EffectNames.ModifyPoliticalSkillMultiplier,
+    EffectNames.ModifyBothSkills
+];
+
 const hasDash = {
     modifyBaseMilitarySkill: card => card.hasDash('military'),
     modifyBasePoliticalSkill: card => card.hasDash('political'),
@@ -45,7 +59,7 @@ const conflictingEffects = {
 };
 
 class StaticEffect {
-    constructor(type = '', value) {
+    constructor(type, value) {
         this.type = type;
         if(value instanceof EffectValue) {
             this.value = value;
@@ -82,6 +96,18 @@ class StaticEffect {
 
     canBeApplied(target) {
         return !hasDash[this.type] || !hasDash[this.type](target, this.value);
+    }
+
+    isMilitaryModifier() {
+        return MilitaryModifiers.includes(this.type);
+    }
+
+    isPoliticalModifier() {
+        return PoliticalModifiers.includes(this.type);
+    }
+
+    isModifier() {
+        return this.isMilitaryModifier() || this.isPoliticalModifier();
     }
 
     checkConflictingEffects(type, target) {
