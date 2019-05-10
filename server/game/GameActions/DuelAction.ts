@@ -96,6 +96,7 @@ export class DuelAction extends CardGameAction {
         if(refuseGameAction) {
             context.game.promptWithHandlerMenu(context.player.opponent, {
                 activePromptTitle: 'Do you wish to ' + (refuseGameAction as GameAction).getEffectMessage(context) + ' to refuse the duel?',
+                context: context,
                 choices: ['Yes', 'No'],
                 handlers: [
                     () => (refuseGameAction as GameAction).addEventsToArray(events, context, additionalProperties),
