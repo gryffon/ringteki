@@ -25,7 +25,7 @@ class ActionWindow extends UiPrompt {
             return false;
         }
 
-        let actions = card.getActions(player);
+        let actions = card.getActions();
 
         let legalActions = actions.filter(action => action.meetsRequirements(action.createContext(player)) === '');
 
