@@ -8,7 +8,7 @@ class DuelToTheDeath extends DrawCard {
             title: 'Initiate a military duel, discarding the loser',
             initiateDuel: {
                 type: DuelTypes.Military,
-                refuseGameAction: context => AbilityDsl.actions.dishonor({ target: context.targets.duelTarget }),
+                refuseGameAction: AbilityDsl.actions.dishonor(context => ({ target: context.targets.duelTarget })),
                 gameAction: duel => AbilityDsl.actions.discardFromPlay({ target: duel.loser })
             }
         });

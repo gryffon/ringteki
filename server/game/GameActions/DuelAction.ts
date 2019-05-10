@@ -17,7 +17,7 @@ export interface DuelProperties extends CardActionProperties {
     statistic?: (card: DrawCard) => number;
     challengerEffect?;
     targetEffect?;
-    refuseGameAction?: GameAction | ((context: AbilityContext) => GameAction);
+    refuseGameAction?: GameAction;
 }
 
 export class DuelAction extends CardGameAction {
@@ -34,9 +34,6 @@ export class DuelAction extends CardGameAction {
         let properties = super.getProperties(context, additionalProperties) as DuelProperties;
         if(!properties.challenger) {
             properties.challenger = context.source;
-        }
-        if(properties.refuseGameAction && !(properties.refuseGameAction instanceof GameAction)) {
-            properties.refuseGameAction = properties.refuseGameAction(context);
         }
         return properties;
     }
@@ -91,15 +88,18 @@ export class DuelAction extends CardGameAction {
             }
             let event = this.createEvent(null, context, additionalProperties);
             this.updateEvent(event, cards, context, additionalProperties);
-            events.push(event);    
+            events.push(event);
         };
-        if(refuseGameAction) {
+        if(refuseGameAction && refuseGameAction.hasLegalTarget(context, additionalProperties)) {
             context.game.promptWithHandlerMenu(context.player.opponent, {
-                activePromptTitle: 'Do you wish to ' + (refuseGameAction as GameAction).getEffectMessage(context) + ' to refuse the duel?',
+                activePromptTitle: 'Do you wish to ' + refuseGameAction.getEffectMessage(context) + ' to refuse the duel?',
                 context: context,
                 choices: ['Yes', 'No'],
                 handlers: [
-                    () => (refuseGameAction as GameAction).addEventsToArray(events, context, additionalProperties),
+                    () => {
+                        context.game.addMessage('{0} chooses the refuse the duel and ', context.player.opponent, refuseGameAction.getEffectMessage(context));
+                        refuseGameAction.addEventsToArray(events, context, additionalProperties);
+                    },
                     addDuelEventsHandler
                 ]
             });
