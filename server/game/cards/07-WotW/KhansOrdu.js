@@ -12,7 +12,7 @@ class KhansOrdu extends ProvinceCard {
             gameAction: AbilityDsl.actions.multiple([
                 AbilityDsl.actions.switchConflictType(context => ({
                     targetConflictType: ConflictTypes.Military,
-                    target: context.game.currentConflict.ring
+                    target: context.game.currentConflict && context.game.currentConflict.ring
                 })),
                 AbilityDsl.actions.playerLastingEffect({
                     targetController: Players.Any,
