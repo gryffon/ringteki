@@ -10,7 +10,7 @@ class PurityOfSpirit extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.hasTrait('bushi') && card.isParticipating(),
-                gameAction: AbilityDsl.actions.sequential([
+                gameAction: AbilityDsl.actions.multiple([
                     AbilityDsl.actions.honor(),
                     AbilityDsl.actions.delayedEffect({
                         when : {
