@@ -31,6 +31,42 @@ describe('Purity of Spirit', function() {
                 expect(this.tsukune.isHonored).toBe(true);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
+
+            it('should remove the honor token after the conflict', function() {
+                this.player2.pass();
+                this.player1.clickCard(this.purity);
+                this.player1.clickCard(this.tsukune);
+                this.noMoreActions();
+                this.player1.clickPrompt('Yes');
+                this.player1.clickPrompt('Gain 2 Honor');
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.tsukune.isHonored).toBe(false);
+            });
+
+            it('should not dishonor her if she is ordinary at the end of conflict', function() {
+                this.tsukune.dishonor();
+                this.player2.pass();
+                this.player1.clickCard(this.purity);
+                this.player1.clickCard(this.tsukune);
+                this.noMoreActions();
+                this.player1.clickPrompt('Yes');
+                this.player1.clickPrompt('Gain 2 Honor');
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.tsukune.isDishonored).toBe(false);
+            });
+
+            it('should discard a dishonor token at the end of the conflict if the character is dishonored during the conflict', function() {
+                this.tsukune.dishonor();
+                this.player2.pass();
+                this.player1.clickCard(this.purity);
+                this.player1.clickCard(this.tsukune);
+                this.player2.clickCard('court-games');
+                this.player2.clickPrompt('Dishonor an opposing character');
+                this.player1.clickCard(this.tsukune);
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.tsukune.isDishonored).toBe(false);
+            });
         });
     });
 });
