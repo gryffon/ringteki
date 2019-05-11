@@ -26,6 +26,7 @@ describe('Yogo Preserver', function() {
             });
 
             it('should only give sincerity to dishonored characters the player control', function() {
+                this.dojiWhisperer.dishonor();
                 expect(this.bayushiManipulator.hasSincerity()).toBe(true);
                 expect(this.yogoPreserver.hasSincerity()).toBe(false);
                 expect(this.dojiWhisperer.hasSincerity()).toBe(false);
