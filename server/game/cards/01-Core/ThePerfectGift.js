@@ -16,7 +16,7 @@ class ThePerfectGift extends DrawCard {
                 AbilityDsl.actions.lookAt(context => ({
                     target: context.player.opponent ? context.player.opponent.conflictDeck.first(4) : [],
                     message: '{0} reveals the top {1} from their conflict deck: {2}',
-                    messageArgs: cards => [context.player, cards.length, cards]
+                    messageArgs: cards => [context.player.opponent, cards.length, cards]
                 })),
                 AbilityDsl.actions.cardMenu(context => ({
                     activePromptTitle: 'Choose a card to give your yourself',
