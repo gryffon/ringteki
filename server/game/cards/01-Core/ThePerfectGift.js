@@ -22,7 +22,7 @@ class ThePerfectGift extends DrawCard {
                     activePromptTitle: 'Choose a card to give to yourself',
                     cards: context.player.conflictDeck.first(4),
                     targets: true,
-                    message: '{0} chooses {1} to give {2}',
+                    message: '{0} chooses {1} to give to {2}',
                     messageArgs: (card, player) => [player, card, context.player],
                     gameAction: AbilityDsl.actions.moveCard({ destination: Locations.Hand })
                 })),
@@ -30,7 +30,7 @@ class ThePerfectGift extends DrawCard {
                     activePromptTitle: 'Choose a card to give your opponent',
                     cards: context.player.opponent ? context.player.opponent.conflictDeck.first(4) : [],
                     targets: true,
-                    message: '{0} chooses {1} to give {2}',
+                    message: '{0} chooses {1} to give to {2}',
                     messageArgs: (card, player) => [player, card, context.player.opponent],
                     gameAction: AbilityDsl.actions.moveCard({ destination: Locations.Hand })
                 }))
