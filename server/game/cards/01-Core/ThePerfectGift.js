@@ -19,7 +19,7 @@ class ThePerfectGift extends DrawCard {
                     messageArgs: cards => [context.player.opponent, cards.length, cards]
                 })),
                 AbilityDsl.actions.cardMenu(context => ({
-                    activePromptTitle: 'Choose a card to give your yourself',
+                    activePromptTitle: 'Choose a card to give to yourself',
                     cards: context.player.conflictDeck.first(4),
                     targets: true,
                     message: '{0} chooses {1} to give {2}',
