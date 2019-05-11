@@ -77,6 +77,7 @@ export enum EffectNames {
     SetProvinceStrength = 'setProvinceStrength',
     TakeControl = 'takeControl',
     TerminalCondition = 'terminalCondition',
+    UnlessActionCost = 'unlessActionCost',
     AddElement = 'addElement',
     CannotDeclareRing = 'cannotDeclare',
     ConsiderRingAsClaimed = 'considerAsClaimed',
