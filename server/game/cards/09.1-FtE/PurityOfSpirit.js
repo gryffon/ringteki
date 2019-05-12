@@ -16,7 +16,7 @@ class PurityOfSpirit extends DrawCard {
                         when : {
                             onConflictFinished: () => true
                         },
-                        gameAction: AbilityDsl.actions.discardStatusToken(context => context.target.personalHonor),
+                        gameAction: AbilityDsl.actions.discardStatusToken(context => ({ target: context.target.personalHonor })),
                         message: 'remove the status token from {0}'
                     })])
             }
