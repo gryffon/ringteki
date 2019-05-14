@@ -71,13 +71,13 @@ class DrawCard extends BaseCard {
 
         this.printedKeywords = [];
         this.allowedAttachmentTraits = [];
-        this.diguisedKeywordTraits = [];
+        this.disguisedKeywordTraits = [];
 
         _.each(potentialKeywords, keyword => {
             if(_.contains(ValidKeywords, keyword)) {
                 this.printedKeywords.push(keyword);
             } else if(keyword.startsWith('disguised ')) {
-                this.diguisedKeywordTraits.push(keyword.replace('disguised ', ''));
+                this.disguisedKeywordTraits.push(keyword.replace('disguised ', ''));
             } else if(keyword.startsWith('no attachments except')) {
                 var traits = keyword.replace('no attachments except ', '');
                 this.allowedAttachmentTraits = traits.split(' or ');
@@ -491,7 +491,7 @@ class DrawCard extends BaseCard {
         }
         let actions = [];
         if(this.type === CardTypes.Character) {
-            if(this.diguisedKeywordTraits.length > 0) {
+            if(this.disguisedKeywordTraits.length > 0) {
                 actions.push(new PlayDisguisedCharacterAction(this));
             }
             if(player.getDuplicateInPlay(this)) {

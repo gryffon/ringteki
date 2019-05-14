@@ -14,7 +14,8 @@ const ChooseDisguisedCharacterCost = function() {
             controller: Players.Self,
             cardCondition: card =>
                 context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
-                card.allowGameAction('discardFromPlay', context),
+                card.allowGameAction('discardFromPlay', context) &&
+                !card.isUnique(),
             context: context,
             onSelect: (player, card) => {
                 context.costs.chooseDisguisedCharacter = card;
@@ -27,8 +28,9 @@ const ChooseDisguisedCharacterCost = function() {
 
 class DisguisedReduceableFateCost extends ReduceableFateCost {
     canPay(context) {
-        const maxCharacterCost = Math.max(context.player.cardsInPlay.map(card =>
-            context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait) ? card.getCost() : 0)));
+        const maxCharacterCost = Math.max(...context.player.cardsInPlay.map(card =>
+            context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) && !card.isUnique() ? card.getCost() : 0)
+        );
         const minCost = Math.max(context.player.getMinimumCost(this.playingType, context) - maxCharacterCost, 0);
         return context.player.fate >= minCost &&
             (minCost === 0 || context.player.checkRestrictions('spendFate', context));
@@ -83,7 +85,7 @@ class PlayDisguisedCharacterAction extends BaseAction {
         }
         context.game.queueSimpleStep(() => {
             context.game.addMessage('{0} plays {1}{2} using Disguised, choosing to replace {3}', context.player, context.source, playIntoConflict ? ' into the conflict' : '', replacedCharacter);
-            const gameAction = playIntoConflict ? context.game.actions.putintoConflict({ target: context.source }) : context.game.actions.putIntoPlay({ target: context.source });
+            const gameAction = playIntoConflict ? context.game.actions.putIntoConflict({ target: context.source }) : context.game.actions.putIntoPlay({ target: context.source });
             gameAction.addEventsToArray(events, context);
             events.push(context.game.getEvent(EventNames.Unnamed, {}, () => {
                 const moveEvents = [];
@@ -91,10 +93,9 @@ class PlayDisguisedCharacterAction extends BaseAction {
                 for(const attachment of replacedCharacter.attachments.toArray()) {
                     context.game.actions.attach({ target: context.source, attachment: attachment }).addEventsToArray(moveEvents, context);
                 }
-                moveEvents.push(context.game.getEvent(EventNames.Unnamed, {}, () => context.game.openThenEventWindow(context.game.actions.discardFromPlay({
-                    target: replacedCharacter,
-                    cannotBeCancelled: true
-                }))));
+                context.game.actions.moveStatusToken({ target: replacedCharacter.personalHonor, recipient: context.source }).addEventsToArray(moveEvents, context);
+                moveEvents.push(context.game.getEvent(EventNames.Unnamed, {}, () =>
+                    context.game.openThenEventWindow(context.game.actions.discardFromPlay({ cannotBeCancelled: true }).getEvent(replacedCharacter, context))));
                 context.game.openThenEventWindow(moveEvents);
             }));
             context.game.openThenEventWindow(events);
