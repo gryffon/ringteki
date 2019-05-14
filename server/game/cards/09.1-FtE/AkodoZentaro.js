@@ -10,6 +10,7 @@ class AkodoZentaro extends DrawCard {
             target: {
                 cardType: CardTypes.Holding,
                 controller: Players.Opponent,
+                location: Locations.Provinces,
                 cardCondition: card => card.location === this.game.currentConflict.conflictProvince.location && !card.isUnique(),
                 gameAction: AbilityDsl.actions.ifAble(context => ({
                     ifAbleAction: AbilityDsl.actions.joint([
