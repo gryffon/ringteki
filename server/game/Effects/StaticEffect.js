@@ -106,7 +106,7 @@ class StaticEffect {
         return PoliticalModifiers.includes(this.type);
     }
 
-    isModifier() {
+    isSkillModifier() {
         return this.isMilitaryModifier() || this.isPoliticalModifier();
     }
 
