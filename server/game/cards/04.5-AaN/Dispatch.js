@@ -10,10 +10,11 @@ class Dispatch extends DrawCard {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isFaction('unicorn'),
                 controller: Players.Self,
-                gameAction: AbilityDsl.actions.multiple([
-                    AbilityDsl.actions.sendHome(),
-                    AbilityDsl.actions.moveToConflict()
-                ])
+                gameAction: AbilityDsl.actions.conditional({
+                    condition: (context, properties) => properties.target[0].inConflict,
+                    trueGameAction: AbilityDsl.actions.sendHome(),
+                    falseGameAction: AbilityDsl.actions.moveToConflict()
+                })
             })
         });
     }
