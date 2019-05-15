@@ -223,6 +223,7 @@ export enum EventNames {
     OnModifyBid = 'onModifyBid',
     OnModifyFate = 'onModifyFate',
     OnSetHonorDial = 'onSetHonorDial',
+    OnSwitchConflictElement = 'onSwitchConflictElement',
     OnSwitchConflictType = 'onSwitchConflictType',
     OnTakeRing = 'onTakeRing',
     Unnamed = 'unnamedEvent'
