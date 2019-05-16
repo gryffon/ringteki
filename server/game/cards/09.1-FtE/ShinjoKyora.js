@@ -1,13 +1,12 @@
-const ProvinceCard = require('../../provincecard.js');
+const DrawCard = require('../../drawcard.js');
 const AbiltyDsl = require('../../abilitydsl');
 
-class ElementalFury extends ProvinceCard {
+
+class ShinjoKyora extends DrawCard {
     setupCardAbilities() {
-        this.reaction({
+        this.action({
             title: 'Switch the contested ring',
-            when: {
-                onCardRevealed: (event, context) => event.card === context.source && this.game.isDuringConflict()
-            },
+            condition: context => context.source.isParticipating(),
             gameAction: AbiltyDsl.actions.selectRing({
                 message: '{0} switches the contested ring with {1}',
                 messageArgs: (ring, player) => [player, ring],
@@ -18,6 +17,6 @@ class ElementalFury extends ProvinceCard {
     }
 }
 
-ElementalFury.id = 'elemental-fury';
+ShinjoKyora.id = 'shinjo-kyora';
 
-module.exports = ElementalFury;
+module.exports = ShinjoKyora;

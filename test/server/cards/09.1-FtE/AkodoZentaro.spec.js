@@ -1,4 +1,4 @@
-describe('Akodo Zentaro', function() {
+﻿describe('Akodo Zentaro', function() {
     integration(function() {
         describe('Akodo Zentaro\'s ability', function() {
             beforeEach(function() {
@@ -148,45 +148,178 @@ describe('Akodo Zentaro', function() {
                     phase: 'dynasty',
                     player1: {
                         inPlay: ['matsu-berserker', 'kitsu-spiritcaller', 'akodo-toturi'],
-                        dynastyDiscard: ['akodo-zentaro'],
-                        hand: ['fine-katana', 'ornate-fan']
+                        dynastyDiscard: ['akodo-zentaro', 'hidden-moon-dojo', 'iron-mine'],
+                        hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice']
                     },
                     player2: {
+                        inPlay: ['brash-samurai']
                     }
                 });
 
                 this.akodoZentaro = this.player1.placeCardInProvince('akodo-zentaro', 'province 1');
+                this.hiddenMoonDojo = this.player1.findCardByName('hidden-moon-dojo');
                 this.matsuBerserker = this.player1.findCardByName('matsu-berserker');
+                this.matsuBerserker.fate = 2;
                 this.kitsuSpiritcaller = this.player1.findCardByName('kitsu-spiritcaller');
                 this.akodoToturi = this.player1.findCardByName('akodo-toturi');
                 this.fineKatana = this.player1.findCardByName('fine-katana');
                 this.ornateFan = this.player1.findCardByName('ornate-fan');
-            });
+                this.peasantsAdvice = this.player1.findCardByName('peasant-s-advice');
+                this.ironMine = this.player1.findCardByName('iron-mine');
 
-            it('should not work during the dynasty phase', function() {
+                this.brashSamurai = this.player2.findCardByName('brash-samurai');
             });
 
             it('should not work outside of the conflict phase', function() {
+                this.player1.togglePromptedActionWindow('draw', true);
+                this.player1.togglePromptedActionWindow('fate', true);
+                this.player1.togglePromptedActionWindow('regroup', true);
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Choose additional fate');
+                expect(this.player1).toHavePromptButton('Cancel');
+                this.player1.clickPrompt('Cancel');
+                this.noMoreActions();
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.pass();
+                this.advancePhases('fate');
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.pass();
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Action Window');
             });
 
             it('should prompt to choose a non-unique character with the \'bushi\' trait', function() {
+                this.advancePhases('conflict');
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Choose a character to replace');
+                expect(this.player1).toBeAbleToSelect(this.matsuBerserker);
+                expect(this.player1).not.toBeAbleToSelect(this.kitsuSpiritcaller);
+                expect(this.player1).not.toBeAbleToSelect(this.akodoToturi);
+                expect(this.player1).not.toBeAbleToSelect(this.brashSamurai);
             });
 
             it('should reduce the cost by the printed cost of the character in play', function() {
+                let fate = this.player1.player.fate;
+                this.advancePhases('conflict');
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.player1.player.fate).toBe(fate - this.akodoZentaro.getCost() + this.matsuBerserker.getCost());
+            });
+
+            it('should put itself into play', function() {
+                this.advancePhases('conflict');
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.akodoZentaro.location).toBe('play area');
+            });
+
+            it('should discard the replaced character', function() {
+                this.advancePhases('conflict');
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.matsuBerserker.location).toBe('dynasty discard pile');
+                expect(this.getChatLogs(1)).toContain('player1 plays Akodo Zentarō using Disguised, choosing to replace Matsu Berserker');
             });
 
             it('should transfer fate', function() {
+                let fate = this.matsuBerserker.fate;
+                this.advancePhases('conflict');
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.akodoZentaro.fate).toBe(fate);
             });
 
             it('should transfer attachments', function() {
+                this.advancePhases('conflict');
+                this.player1.clickCard(this.fineKatana);
+                this.player1.clickCard(this.matsuBerserker);
+                this.player2.pass();
+                this.player1.clickCard(this.ornateFan);
+                this.player1.clickCard(this.matsuBerserker);
+                this.player2.pass();
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.fineKatana.parent).toBe(this.akodoZentaro);
+                expect(this.ornateFan.parent).toBe(this.akodoZentaro);
             });
 
             it('should transfer status tokens', function() {
+                this.advancePhases('conflict');
+                this.player1.clickCard(this.peasantsAdvice);
+                this.player1.clickCard(this.player2.provinces['province 1'].provinceCard);
+                this.player1.clickCard(this.matsuBerserker);
+                this.player1.clickPrompt('Done');
+                expect(this.matsuBerserker.isDishonored).toBe(true);
+                this.player2.pass();
+                expect(this.player1).toHavePrompt('Action Window');
+                let honor = this.player1.player.honor;
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.akodoZentaro.isDishonored).toBe(true);
+                expect(this.player1.player.honor).toBe(honor);
             });
 
-            it('***hidden moon/Uji interaction***', function() {
+            it('should prompt how to play if other play options are available', function() {
+                this.advancePhases('conflict');
+                this.player1.placeCardInProvince(this.hiddenMoonDojo, 'province 2');
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Akodo Zentarō');
+                expect(this.player1).toHavePromptButton('Play this character with Disguise');
+                expect(this.player1).toHavePromptButton('Play this character');
+                expect(this.player1).toHavePromptButton('Cancel');
             });
 
+            it('should prompt to play in or out of the conflict if the replaced character is in a conflict', function() {
+                this.advancePhases('conflict');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.matsuBerserker],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.player1).toHavePromptButton('Conflict');
+                expect(this.player1).toHavePromptButton('Home');
+                this.player1.clickPrompt('Conflict');
+                expect(this.akodoZentaro.isParticipating()).toBe(true);
+            });
+
+            it('should enter play as ready even if the replaced character is bowed', function() {
+                this.advancePhases('conflict');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.matsuBerserker],
+                    defenders: []
+                });
+                this.noMoreActions();
+                this.player1.clickPrompt('No');
+                this.player1.clickPrompt('Don\'t Resolve');
+                expect(this.matsuBerserker.bowed).toBe(true);
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.akodoZentaro.bowed).toBe(false);
+            });
+
+            it('should not allow the discard of the replaced character to be prevented', function() {
+                this.advancePhases('conflict');
+                this.player1.placeCardInProvince(this.ironMine, 'province 2');
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).not.toBeAbleToSelect(this.ironMine);
+                expect(this.matsuBerserker.location).toBe('dynasty discard pile');
+                expect(this.player2).toHavePrompt('Action Window');
+            });
         });
     });
 });
