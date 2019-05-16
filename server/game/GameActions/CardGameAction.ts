@@ -29,26 +29,28 @@ export class CardGameAction extends GameAction {
             if(additionalCosts.length > 0) {
                 let allCostsPaid = true;
                 for(const properties of additionalCosts) {
-                    if(properties.cost.hasLegalTarget(context)) {
-                        context.game.promptWithHandlerMenu(card.controller, {
-                            activePromptTitle: properties.activePromptTitle,
-                            source: card,
-                            choices: ['Yes', 'No'],
-                            handlers: [
-                                () => {
-                                    context.game.addMessage('{0} chooses to {1} in order to {2}', card.controller, properties.cost.getEffectMessage(context), this.getEffectMessage(context, additionalProperties))
-                                    properties.cost.resolve(card, context);
-                                },
-                                () => {
-                                    allCostsPaid = false;
-                                    context.game.addMessage('{0} chooses not to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
-                                }
-                            ]
-                        });    
-                    } else {
-                        allCostsPaid = false;
-                        context.game.addMessage('{0} cannot pay the additional cost required to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
-                    }
+                    context.game.queueSimpleStep(() => {
+                        if(properties.cost.hasLegalTarget(context)) {
+                            context.game.promptWithHandlerMenu(card.controller, {
+                                activePromptTitle: properties.activePromptTitle,
+                                source: card,
+                                choices: ['Yes', 'No'],
+                                handlers: [
+                                    () => {
+                                        context.game.addMessage('{0} chooses to {1} in order to {2}', card.controller, properties.cost.getEffectMessage(context), this.getEffectMessage(context, additionalProperties))
+                                        properties.cost.resolve(card, context);
+                                    },
+                                    () => {
+                                        allCostsPaid = false;
+                                        context.game.addMessage('{0} chooses not to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
+                                    }
+                                ]
+                            });    
+                        } else {
+                            allCostsPaid = false;
+                            context.game.addMessage('{0} cannot pay the additional cost required to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
+                        }    
+                    });
                 }
                 context.game.queueSimpleStep(() => {
                     if(allCostsPaid) {
