@@ -14,7 +14,6 @@ class IronMine extends DrawCard {
             gameAction: AbilityDsl.actions.cancel({
                 replacementGameAction: AbilityDsl.actions.sacrifice(context => ({ target: context.source }))
             })
-
         });
     }
 }

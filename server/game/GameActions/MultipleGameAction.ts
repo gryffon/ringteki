@@ -35,6 +35,11 @@ export class MultipleGameAction extends GameAction {
         let properties = this.getProperties(context, additionalProperties);
         return properties.gameActions.some(gameAction => gameAction.canAffect(target, context, additionalProperties));
     }
+    
+    allTargetsLegal(context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties);
+        return properties.gameActions.some(gameAction => gameAction.hasLegalTarget(context, additionalProperties));
+    }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);

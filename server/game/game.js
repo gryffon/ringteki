@@ -1101,6 +1101,12 @@ class Game extends EventEmitter {
                     // any attachments which are illegally attached
                     card.checkForIllegalAttachments();
                 });
+                for(const holding of player.getHoldingsInPlay()) {
+                    if(holding.getModifiedController() !== holding.controller) {
+                        holding.controller = holding.getModifiedController();
+                    }
+                    holding.checkForIllegalAttachments();
+                }
             }
             if(this.currentConflict) {
                 // conflicts with illegal participants

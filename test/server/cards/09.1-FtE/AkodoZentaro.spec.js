@@ -89,7 +89,7 @@
                 this.player2.pass();
                 this.player1.clickCard(this.akodoZentaro);
                 this.player1.clickCard(this.imperialStorehouse);
-                expect(this.player1).toHavePrompt('Select a Province');
+                expect(this.player1).toHavePrompt('Choose a Province');
                 expect(this.player1).toBeAbleToSelect(this.shamefulDisplay1);
                 expect(this.player1).not.toBeAbleToSelect(this.shamefulDisplay2);
                 expect(this.player1).toBeAbleToSelect(this.shamefulDisplay3);
@@ -122,6 +122,7 @@
                 this.player1.clickCard(this.imperialStorehouse);
                 this.player1.clickCard(this.shamefulDisplay3);
                 expect(this.imperialStorehouse.location).toBe('province 3');
+                expect(this.player1.player.provinceThree.includes(this.imperialStorehouse));
                 expect(this.matsuBerserker.location).toBe('dynasty discard pile');
             });
 

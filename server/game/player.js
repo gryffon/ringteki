@@ -333,9 +333,15 @@ class Player extends GameObject {
      * Returns the total number of holdings controlled by this player
      */
     getNumberOfHoldingsInPlay() {
-        return provinceLocations.reduce((n, province) => {
-            return this.getSourceList(province).filter(card => card.getType() === CardTypes.Holding && !card.facedown).length + n;
-        }, 0);
+        return this.getHoldingsInPlay.length;
+    }
+
+    /**
+     * Returns and array of holdings controlled by this player
+     */
+    getHoldingsInPlay() {
+        return provinceLocations.reduce((array, province) =>
+            array.concat(this.getSourceList(province).filter(card => card.getType() === CardTypes.Holding && !card.facedown)), []);
     }
 
     /**

@@ -598,7 +598,7 @@ class DrawCard extends BaseCard {
     }
 
     getModifiedController() {
-        if(this.location === Locations.PlayArea) {
+        if(this.location === Locations.PlayArea || this.type === CardTypes.Holding && this.location.includes('province')) {
             return this.mostRecentEffect(EffectNames.TakeControl) || this.defaultController;
         }
         return this.owner;
