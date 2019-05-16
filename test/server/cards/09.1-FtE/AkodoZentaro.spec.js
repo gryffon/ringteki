@@ -66,7 +66,7 @@
                 this.player1.clickCard(this.akodoZentaro);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
-                        
+
             it('should prompt to choose a target non-unique holding in the attacked province', function() {
                 this.noMoreActions();
                 this.initiateConflict({
