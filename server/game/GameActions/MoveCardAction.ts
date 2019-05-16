@@ -37,7 +37,7 @@ export class MoveCardAction extends CardGameAction {
         return card.location !== Locations.PlayArea && super.canAffect(card, context);
     }
 
-    eventHandler(event, additionalProperties): void {
+    eventHandler(event, additionalProperties = {}): void {
         let context = event.context;
         let card = event.card;
         event.cardStateWhenMoved = card.createSnapshot();
@@ -45,8 +45,8 @@ export class MoveCardAction extends CardGameAction {
         if(properties.switch) {
             let otherCard = card.controller.getDynastyCardInProvince(properties.destination);
             card.owner.moveCard(otherCard, card.location);
-        } else if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
-            context.refillProvince(card.owner, card.location);
+        } else {
+            this.checkForRefillProvince(card, event, additionalProperties);
         }
         const player = properties.changePlayer && card.controller.opponent ? card.controller.opponent : card.controller;
         player.moveCard(card, properties.destination, { bottom: !!properties.bottom });
