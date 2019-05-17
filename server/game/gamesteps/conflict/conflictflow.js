@@ -192,7 +192,8 @@ class ConflictFlow extends BaseStepWithPipeline {
             if(this.conflict.conflictProvince.facedown) {
                 events.push(this.game.getEvent(EventNames.OnCardRevealed, {
                     card: this.conflict.conflictProvince,
-                    context: this.game.getFrameworkContext(this.conflict.attackingPlayer)
+                    context: this.game.getFrameworkContext(this.conflict.attackingPlayer),
+                    onDeclaration: true
                 }, () => this.conflict.conflictProvince.facedown = false));
             }
         }

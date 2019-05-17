@@ -6,7 +6,7 @@ class ChildOfThePlains extends DrawCard {
             title: 'Get first action',
             when: {
                 onCardRevealed: (event, context) =>
-                    context.source.isAttacking() && this.game.currentConflict.conflictProvince === event.card
+                    context.source.isAttacking() && this.game.currentConflict.conflictProvince === event.card && event.onDeclaration
             },
             effect: 'get the first action in this conflict',
             gameAction: ability.actions.playerLastingEffect({
@@ -16,6 +16,6 @@ class ChildOfThePlains extends DrawCard {
     }
 }
 
-ChildOfThePlains.id = 'child-of-the-plains'; // This is a guess at what the id might be - please check it!!!
+ChildOfThePlains.id = 'child-of-the-plains';
 
 module.exports = ChildOfThePlains;
