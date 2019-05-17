@@ -1,7 +1,8 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class ChildOfThePlains extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.reaction({
             title: 'Get first action',
             when: {
@@ -9,8 +10,8 @@ class ChildOfThePlains extends DrawCard {
                     context.source.isAttacking() && this.game.currentConflict.conflictProvince === event.card && event.onDeclaration
             },
             effect: 'get the first action in this conflict',
-            gameAction: ability.actions.playerLastingEffect({
-                effect:ability.effects.gainActionPhasePriority()
+            gameAction: AbilityDsl.actions.playerLastingEffect({
+                effect: AbilityDsl.effects.gainActionPhasePriority()
             })
         });
     }
