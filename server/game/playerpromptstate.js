@@ -10,7 +10,7 @@ class PlayerPromptState {
         this.promptTitle = '';
         this.buttons = [];
         this.controls = [];
-        this.isConflictInitiation = false;
+        this.isInitiatingConflict = false;
 
         this.selectableCards = [];
         this.selectableRings = [];
@@ -94,7 +94,7 @@ class PlayerPromptState {
     }
 
     setIsConflictInitiation() {
-        this.isConflictInitiation = true;
+        this.isInitiatingConflict = true;
     }
 
     getState() {
@@ -102,7 +102,7 @@ class PlayerPromptState {
             selectCard: this.selectCard,
             selectOrder: this.selectOrder,
             selectRing: this.selectRing,
-            isConflictInitiation: this.isConflictInitiation,
+            isInitiatingConflict: this.isInitiatingConflict,
             menuTitle: this.menuTitle,
             promptTitle: this.promptTitle,
             buttons: this.buttons,

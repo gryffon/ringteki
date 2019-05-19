@@ -360,7 +360,7 @@ export class InnerGameBoard extends React.Component {
                 Object.keys(rings).map((key) => {
                     var ring = rings[key];
                     if(player) {
-                        return !this.ringIsClaimedByUser(ring, player.user) ? null : <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />;
+                        return !this.ringIsClaimedByPlayer(ring, player.user) ? null : <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />;
                     }
                     return <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />;
                 })
@@ -368,30 +368,39 @@ export class InnerGameBoard extends React.Component {
         </div>);
     }
 
-    getCenterBarRings(user, className) {
+    getCenterBarRings(player, className) {
         let rings = this.props.currentGame.rings;
         return (<div className={ className }>
             {
                 Object.keys(rings).map((key) => {
                     var ring = rings[key];
-                    return this.ringIsUnclaimedOrSelectable(ring) || this.activeRingPrompt(user)
-                        ? <Ring owner={ user } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+                    return this.ringIsUnclaimedOrSelectable(ring) || (!this.ringIsClaimed(ring) && this.isInitiatingConflict(player))
+                    || this.activeRingPrompt(player)
+                        ? <Ring owner={ player } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
                         : null;
                 })
             }
         </div>);
     }
 
-    activeRingPrompt(thisPlayer) {
-        return !!thisPlayer.selectRing;
+    activeRingPrompt(player) {
+        return !!player.selectRing && !this.isInitiatingConflict(player);
     }
 
-    ringIsClaimedByUser(ring, user) {
-        return ring.claimed && ring.claimedBy === user.username;
+    isInitiatingConflict(player) {
+        return player.isInitiatingConflict;
+    }
+
+    ringIsClaimed(ring) {
+        return ring.claimed;
+    }
+
+    ringIsClaimedByPlayer(ring, user) {
+        return this.ringIsClaimed(ring) && ring.claimedBy === user.username;
     }
 
     ringIsUnclaimedOrSelectable(ring) {
-        return !ring.claimed || (ring.claimed && ring.unselectable === false);
+        return !this.ringIsClaimed(ring) || (ring.claimed && ring.unselectable === false);
     }
 
     renderCenterBar(thisPlayer, otherPlayer, conflict) {
