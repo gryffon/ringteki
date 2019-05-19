@@ -2,6 +2,7 @@ const AbilityTargetAbility = require('./AbilityTargets/AbilityTargetAbility.js')
 const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
+const AbilityTargetToken = require('./AbilityTargets/AbilityTargetToken.js');
 const { Stages, TargetModes } = require('./Constants.js');
 
 /**
@@ -79,6 +80,8 @@ class BaseAbility {
             return new AbilityTargetRing(name, properties, this);
         } else if(properties.mode === TargetModes.Ability) {
             return new AbilityTargetAbility(name, properties, this);
+        } else if(properties.mode === TargetModes.Token) {
+            return new AbilityTargetToken(name, properties, this);
         }
         return new AbilityTargetCard(name, properties, this);
     }

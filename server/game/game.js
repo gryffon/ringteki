@@ -1020,7 +1020,7 @@ class Game extends EventEmitter {
             return;
         }
 
-        this.addMessage('{0} has left the game', player);
+        this.addMessage('{0} has left the game', playerName);
 
         if(this.isSpectator(player) || !this.started) {
             delete this.playersAndSpectators[playerName];

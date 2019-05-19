@@ -65,11 +65,10 @@ export class PlayCardAction extends CardGameAction {
     }
 
     canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
-        let properties = this.getProperties(context, additionalProperties);
         if(!super.canAffect(card, context)) {
             return false;
         }
-        let actions = card.getActions(context.player, properties.location);
+        let actions = card.getPlayActions();
         return this.getLegalActions(actions, context).length > 0;
     }
 
@@ -92,7 +91,7 @@ export class PlayCardAction extends CardGameAction {
             return;
         }
         let card = properties.target[0];
-        let actions = this.getLegalActions(card.getActions(context.player, properties.location), context);
+        let actions = this.getLegalActions(card.getPlayActions(), context);
         if(actions.length === 1) {
             events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), additionalProperties));
             return;

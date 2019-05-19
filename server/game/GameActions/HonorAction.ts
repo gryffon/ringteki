@@ -16,7 +16,7 @@ export class HonorAction extends CardGameAction {
     canAffect(card: BaseCard, context: AbilityContext): boolean {
         if(card.location !== Locations.PlayArea || card.type !== CardTypes.Character || card.isHonored) {
             return false;
-        } else if(!card.isDishonored && !card.checkRestrictions('becomeHonored', context)) {
+        } else if(!card.isDishonored && !card.checkRestrictions('receiveHonorToken', context)) {
             return false;
         }
         return super.canAffect(card, context);

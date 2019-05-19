@@ -14,8 +14,7 @@ class KakitaToshimoko extends DrawCard {
             initiateDuel: {
                 type: DuelTypes.Military,
                 opponentChoosesDuelTarget: true,
-                message: '{0} sets both players to count 0 total skill for the conflict',
-                messageArgs: context => context.game.currentDuel.winner,
+                message: 'both players count 0 total skill for the conflict',
                 gameAction: AbilityDsl.actions.playerLastingEffect(context => ({
                     targetController: Players.Any,
                     effect: context.game.currentDuel.winner === context.source ? AbilityDsl.effects.setConflictTotalSkill(0) : []

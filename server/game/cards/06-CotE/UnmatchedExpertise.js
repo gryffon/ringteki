@@ -3,7 +3,7 @@ const DrawCard = require('../../drawcard.js');
 class UnmatchedExpertise extends DrawCard {
     setupCardAbilities(ability) {
         this.whileAttached({
-            effect: ability.effects.cardCannot('becomeDishonored')
+            effect: ability.effects.cardCannot('receiveDishonorToken')
         });
         this.forcedReaction({
             title: 'Removed after attached character loses a conflict',

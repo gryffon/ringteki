@@ -6,16 +6,16 @@ class HonorableChallenger extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Initiate a military duel',
-            initiateDuel: context => ({
+            initiateDuel: {
                 type: DuelTypes.Military,
-                resolutionHandler: (winner) => this.resolutionHandler(context, winner)
-            })
+                message: '{0} will not bow as a result of this conflict\'s resolution',
+                messageArgs: duel => duel.winner,
+                gameAction: duel => AbilityDsl.actions.cardLastingEffect({
+                    target: duel.winner,
+                    effect: AbilityDsl.effects.doesNotBow()
+                })
+            }
         });
-    }
-
-    resolutionHandler(context, winner) {
-        this.game.addMessage('{0} wins the duel and will not bow as a result of this conflict\'s resolution', winner);
-        this.game.actions.cardLastingEffect({ effect: AbilityDsl.effects.doesNotBow() }).resolve(winner, context);
     }
 }
 

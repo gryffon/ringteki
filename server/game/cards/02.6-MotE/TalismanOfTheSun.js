@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 const { Locations, Players, CardTypes, EventNames } = require('../../Constants');
 
@@ -14,8 +13,7 @@ class TalismanOfTheSun extends DrawCard {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,
                 controller: Players.Self,
-                cardCondition: card => card !== this.game.currentConflict.conflictProvince && card.canBeAttacked() && (card.location !== Locations.StrongholdProvince ||
-                                        _.size(this.game.provinceCards.filter(card => card.isBroken && card.controller === context.player)) > 2),
+                cardCondition: card => card !== this.game.currentConflict.conflictProvince && card.canBeAttacked(),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} moves the conflict to {1}', context.player, card);
                     card.inConflict = true;
