@@ -22,6 +22,7 @@ class InitiateConflictPrompt extends UiPrompt {
         this.selectedDefenders = [];
         this.covertRemaining = false;
         this.checkForMustSelect();
+        this.choosingPlayer.promptState.setIsConflictInitiation();
     }
 
     continue() {

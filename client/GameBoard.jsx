@@ -368,18 +368,22 @@ export class InnerGameBoard extends React.Component {
         </div>);
     }
 
-    getCenterBarRings(owner, className) {
+    getCenterBarRings(user, className) {
         let rings = this.props.currentGame.rings;
         return (<div className={ className }>
             {
                 Object.keys(rings).map((key) => {
                     var ring = rings[key];
-                    return this.ringIsUnclaimedOrSelectable(ring)
-                        ? <Ring owner={ owner } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
+                    return this.ringIsUnclaimedOrSelectable(ring) || this.activeRingPrompt(user)
+                        ? <Ring owner={ user } ring={ ring } onClick={ this.onRingClick } size={ this.props.user.settings.cardSize } onMenuItemClick={ this.onRingMenuItemClick } />
                         : null;
                 })
             }
         </div>);
+    }
+
+    activeRingPrompt(thisPlayer) {
+        return !!thisPlayer.selectRing;
     }
 
     ringIsClaimedByUser(ring, user) {
@@ -438,7 +442,7 @@ export class InnerGameBoard extends React.Component {
 
 
         return (<div className='center-bar'>
-            { this.getCenterBarRings(null, 'ring-panel') }
+            { this.getCenterBarRings(thisPlayer, 'ring-panel') }
             { conflictElement }
         </div>);
     }
