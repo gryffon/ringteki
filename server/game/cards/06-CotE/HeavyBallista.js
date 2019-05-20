@@ -1,12 +1,13 @@
 const DrawCard = require('../../drawcard.js');
 const { TargetModes, CardTypes, Locations, Players } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class HeavyBallista extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Bow or remove 1 fate',
             condition: context => this.game.isDuringConflict('military') && context.player.isDefendingPlayer(),
-            cost: ability.costs.discardCard(card => card.location === Locations.Hand),
+            cost: AbilityDsl.costs.discardCard({ location: Locations.Hand }),
             targets: {
                 character: {
                     cardType: CardTypes.Character,
@@ -17,8 +18,8 @@ class HeavyBallista extends DrawCard {
                     dependsOn: 'character',
                     player: context => context.targets.character.controller === context.player ? Players.Self : Players.Opponent,
                     choices: {
-                        'Bow': ability.actions.bow(context => ({ target: context.targets.character })),
-                        'Remove 1 Fate': ability.actions.removeFate(context => ({ target: context.targets.character }))
+                        'Bow': AbilityDsl.actions.bow(context => ({ target: context.targets.character })),
+                        'Remove 1 Fate': AbilityDsl.actions.removeFate(context => ({ target: context.targets.character }))
                     }
                 }
             }
