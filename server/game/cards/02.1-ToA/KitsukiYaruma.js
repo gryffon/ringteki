@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, Locations } = require('../../Constants');
 
 class KitsukiYaruma extends DrawCard {
     setupCardAbilities() {
@@ -11,6 +11,7 @@ class KitsukiYaruma extends DrawCard {
             },
             target: {
                 cardType: CardTypes.Province,
+                location: Locations.Provinces,
                 cardCondition: card => !card.isBroken,
                 gameAction: AbilityDsl.actions.turnFacedown()
             }
