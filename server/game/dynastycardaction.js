@@ -32,6 +32,9 @@ class DynastyCardAction extends BaseAction {
 
     displayMessage(context) {
         context.game.addMessage('{0} plays {1} with {2} additional fate', context.player, context.source, context.chooseFate);
+        context.source.effects.filter(effect => effect.type === EffectNames.GainExtraFateWhenPlayed).map(effect =>
+            context.game.addMessage('{0} enters play with {1} additional fate due to {2}', context.source, effect.value.value, effect.context.source)
+        );
     }
 
     executeHandler(context) {
