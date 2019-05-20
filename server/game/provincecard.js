@@ -102,6 +102,10 @@ class ProvinceCard extends BaseCard {
         return false;
     }
 
+    startsGameFaceup() {
+        return false;
+    }
+
     hideWhenFacedown() {
         return false;
     }
