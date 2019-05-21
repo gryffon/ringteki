@@ -7,8 +7,7 @@ class Softskin extends DrawCard {
             effect: AbilityDsl.effects.unlessActionCost({
                 actionName: 'ready',
                 activePromptTitle: 'Discard the top three cards of your conflict deck to ready this character?',
-                cost: card => AbilityDsl.actions.discardCard({ target: card.controller.conflictDeck.first(3) }),
-                canPay: card => card.controller.conflictDeck.size() > 2
+                cost: card => AbilityDsl.actions.discardCard({ target: card.controller.conflictDeck.size() > 2 ? card.controller.conflictDeck.first(3) : [] })
             })
         });
     }

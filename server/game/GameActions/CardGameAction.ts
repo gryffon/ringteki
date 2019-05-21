@@ -32,14 +32,8 @@ export class CardGameAction extends GameAction {
                     if(typeof properties.cost === 'function') {
                         properties.cost = properties.cost(card);
                     }
-                    if(typeof properties.canPay === 'undefined') {
-                        properties.canPay = true;
-                    }
-                    if(typeof properties.canPay === 'function') {
-                        properties.canPay = properties.canPay(card);
-                    }
                     context.game.queueSimpleStep(() => {
-                        if(properties.cost.hasLegalTarget(context) && properties.canPay) {
+                        if(properties.cost.hasLegalTarget(context)) {
                             context.game.promptWithHandlerMenu(card.controller, {
                                 activePromptTitle: properties.activePromptTitle,
                                 source: card,
