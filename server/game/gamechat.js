@@ -41,6 +41,9 @@ class GameChat {
                     if(arg.message) {
                         return output.concat(arg.message);
                     } else if(Array.isArray(arg)) {
+                        if(typeof arg[0] === 'string' && arg[0].includes('{')) {
+                            return output.concat(this.formatMessage(arg[0], arg.slice(1)));
+                        }
                         return output.concat(this.formatArray(arg));
                     } else if(arg.getShortSummary) {
                         return output.concat(arg.getShortSummary());
