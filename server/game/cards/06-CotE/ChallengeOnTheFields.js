@@ -12,7 +12,7 @@ class ChallengeOnTheFields extends DrawCard {
                     context.player.filterCardsInPlay(card => card.isParticipating() && card !== context.targets.challenger).length
                 ),
                 targetEffect: AbilityDsl.effects.modifyBaseMilitarySkill(
-                    context.player.opponent.filterCardsInPlay(card => card.isParticipating() && card !== context.targets.duelTarget).length
+                    context.player.opponent ? context.player.opponent.filterCardsInPlay(card => card.isParticipating() && card !== context.targets.duelTarget).length : 0
                 ),
                 gameAction: duel => AbilityDsl.actions.sendHome({ target: duel.loser })
             })
