@@ -9,6 +9,7 @@ export interface CardMenuProperties extends CardActionProperties {
     activePromptTitle?: string;
     player?: Players;
     cards: BaseCard[];
+    cardCondition?: (card: BaseCard, context: AbilityContext) => boolean;
     choices?: string[];
     handlers?: Function[];
     targets?: boolean;
@@ -26,6 +27,7 @@ export class CardMenuAction extends CardGameAction {
         subActionProperties: card => ({ target: card }),
         targets: false,
         cards: [],
+        cardCondition: () => true,
         gameAction: null
     };
 
@@ -48,6 +50,9 @@ export class CardMenuAction extends CardGameAction {
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
+        if(properties.handlers) {
+            return true;
+        }
         if(properties.gameActionHasLegalTarget) {
             return properties.gameActionHasLegalTarget(context);
         }
@@ -58,10 +63,10 @@ export class CardMenuAction extends CardGameAction {
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
-        let cards = properties.cards.filter(card => 
+        let cardCondition = (card, context) =>
             properties.gameAction.hasLegalTarget(context, Object.assign({}, additionalProperties, properties.subActionProperties(card)))
-        );
-        if(cards.length === 0 || properties.player === Players.Opponent && !context.player.opponent) {
+            && properties.cardCondition(card, context);
+        if((properties.cards.length === 0 && properties.choices.length === 0) || properties.player === Players.Opponent && !context.player.opponent) {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
@@ -77,7 +82,7 @@ export class CardMenuAction extends CardGameAction {
                 }
             }
         };
-        context.game.promptWithHandlerMenu(player, Object.assign(defaultProperties, properties, { cards }))
+        context.game.promptWithHandlerMenu(player, Object.assign(defaultProperties, properties, { cardCondition }))
     }
 
     hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean {
