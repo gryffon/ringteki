@@ -85,6 +85,9 @@ describe('Heavy Ballista', function() {
                     this.player1.clickCard(this.heavyBallista);
                     this.player1.clickCard(this.dojiWhisperer);
                     expect(this.player1).toHavePrompt('Select card to discard');
+                    expect(this.player1).toBeAbleToSelect(this.banzai);
+                    expect(this.player1).not.toBeAbleToSelect(this.borderlandsDefender);
+                    expect(this.player1).not.toBeAbleToSelect(this.heavyBallista);
                     this.player1.clickCard(this.banzai);
                     expect(this.banzai.location).toBe('conflict discard pile');
                 });
