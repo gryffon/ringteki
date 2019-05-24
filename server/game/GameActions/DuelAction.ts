@@ -4,7 +4,6 @@ import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Duel = require('../Duel');
 import DuelFlow = require('../gamesteps/DuelFlow');
-import BaseCard = require('../basecard');
 import { GameAction } from './GameAction';
 
 export interface DuelProperties extends CardActionProperties {
@@ -40,10 +39,10 @@ export class DuelAction extends CardGameAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context);
-        if(!(properties.target instanceof BaseCard)) {
-            let targets = properties.target;
+        if(properties.target instanceof Array) {
+            let targets = properties.target as DrawCard[];
             let indices = [...Array(targets.length + 1).keys()].map(x => '{' + x++ + '}').slice(1);
-            return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. ' + indices.join(' and '), [properties.challenger, ...(properties.target as BaseCard[])]];
+            return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. ' + indices.join(' and '), [properties.challenger, ...(properties.target as DrawCard[])]];
         }
         return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. {1}', [properties.challenger, properties.target]];
     }
@@ -92,12 +91,12 @@ export class DuelAction extends CardGameAction {
         };
         if(refuseGameAction && refuseGameAction.hasLegalTarget(context, additionalProperties)) {
             context.game.promptWithHandlerMenu(context.player.opponent, {
-                activePromptTitle: 'Do you wish to ' + refuseGameAction.getEffectMessage(context) + ' to refuse the duel?',
+                activePromptTitle: 'Do you wish to refuse the duel?',
                 context: context,
                 choices: ['Yes', 'No'],
                 handlers: [
                     () => {
-                        context.game.addMessage('{0} chooses the refuse the duel and ', context.player.opponent, refuseGameAction.getEffectMessage(context));
+                        context.game.addMessage('{0} chooses to refuse the duel and {1}', context.player.opponent, refuseGameAction.getEffectMessage(context));
                         refuseGameAction.addEventsToArray(events, context, additionalProperties);
                     },
                     addDuelEventsHandler

@@ -71,7 +71,7 @@ describe('Duel to the Death', function() {
                 this.player1.clickCard(this.duelToTheDeath);
                 this.player1.clickCard(this.dojiChallenger);
                 this.player1.clickCard(this.mirumotoRaitsugu);
-                expect(this.player2).toHavePrompt('Do you wish to dishononr Mirumoto Raitsugu to refuse the duel?');
+                expect(this.player2).toHavePrompt('Do you wish to refuse the duel?');
                 expect(this.player2).toHavePromptButton('Yes');
                 expect(this.player2).toHavePromptButton('No');
             });
@@ -90,7 +90,7 @@ describe('Duel to the Death', function() {
                 this.player2.clickPrompt('Yes');
                 expect(this.mirumotoRaitsugu.isDishonored).toBe(true);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
-                expect(this.getChatLogs(5)).toContain('...');
+                expect(this.getChatLogs(5)).toContain('player2 chooses to refuse the duel and dishonor Mirumoto Raitsugu');
             });
 
             it('should not prompt your opponent if they cannot be dishonored', function() {
@@ -108,8 +108,8 @@ describe('Duel to the Death', function() {
                 this.player1.clickCard(this.duelToTheDeath);
                 this.player1.clickCard(this.dojiChallenger);
                 this.player1.clickCard(this.mirumotoRaitsugu);
-                expect(this.player1).toHavePrompt('Choose a bid');
-                expect(this.player2).toHavePrompt('Choose a bid');
+                expect(this.player1).toHavePrompt('Honor Bid');
+                expect(this.player2).toHavePrompt('Honor Bid');
             });
 
             it('should discard the loser', function() {
@@ -128,7 +128,7 @@ describe('Duel to the Death', function() {
                 this.player2.clickPrompt('5');
                 expect(this.dojiChallenger.location).toBe('dynasty discard pile');
                 expect(this.mirumotoRaitsugu.location).toBe('play area');
-                expect(this.getChatLogs(5)).toContain('...');
+                expect(this.getChatLogs(5)).toContain('Duel Effect: discard Doji Challenger');
             });
         });
     });
