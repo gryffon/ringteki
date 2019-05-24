@@ -9,11 +9,11 @@ class WarDogMaster extends DrawCard {
                 onConflictDeclared: (event, context) => event.attackers.includes(context.source)
             },
             cost: ability.costs.discardCardSpecific(context => context.player.dynastyDeck.first()),
-            effect: 'give {0} a bonus of {1} to their military skill',
-            effectArgs: context => _.isNumber(context.costs.discardCard.getCost()) ? context.costs.discardCard.getCost() : 0,
+            effect: 'give {0} +{1}{2}',
+            effectArgs: context => [_.isNumber(context.costs.discardCard[0].getCost()) ? context.costs.discardCard[0].getCost() : 0, 'military'],
             handler: context => ability.actions.cardLastingEffect({
                 effect: ability.effects.modifyMilitarySkill(
-                    _.isNumber(context.costs.discardCard.getCost()) ? context.costs.discardCard.getCost() : 0
+                    _.isNumber(context.costs.discardCard[0].getCost()) ? context.costs.discardCard[0].getCost() : 0
                 )
             }).resolve(context.source, context)
         });
