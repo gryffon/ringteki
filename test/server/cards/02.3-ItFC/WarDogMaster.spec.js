@@ -26,6 +26,7 @@ describe('War Dog Master', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 this.player1.clickCard(this.warDogMaster);
                 expect(this.getChatLogs(2)).toContain('player1 uses War Dog Master, discarding Adept of the Waves to give War Dog Master +2military');
+                expect(this.warDogMaster.getMilitarySkill()).toBe(4);
             });
 
             it('should work with a holding', function() {
@@ -37,6 +38,7 @@ describe('War Dog Master', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 this.player1.clickCard(this.warDogMaster);
                 expect(this.getChatLogs(2)).toContain('player1 uses War Dog Master, discarding Favorable Ground to give War Dog Master +0military');
+                expect(this.warDogMaster.getMilitarySkill()).toBe(2);
             });
         });
     });
