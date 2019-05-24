@@ -240,8 +240,6 @@ class DrawCard extends BaseCard {
 
         // get base mill skill + effect modifiers
         let skill = this.sumEffects(EffectNames.ModifyMilitarySkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBaseMilitarySkill();
-        // apply any addGlory effects
-        skill += this.anyEffect(EffectNames.AddGloryToBothSkills) ? this.getGlory() : 0;
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.military_bonus);
@@ -270,8 +268,6 @@ class DrawCard extends BaseCard {
 
         // get base pol skill + effect modifiers
         let skill = this.sumEffects(EffectNames.ModifyPoliticalSkill) + this.sumEffects(EffectNames.ModifyBothSkills) + this.getBasePoliticalSkill();
-        // apply any addGlory effects
-        skill += this.anyEffect(EffectNames.AddGloryToBothSkills) ? this.getGlory() : 0;
         // add attachment bonuses and skill from glory
         skill = this.getSkillFromGlory() + this.attachments.reduce((total, card) => {
             let bonus = parseInt(card.cardData.political_bonus);
