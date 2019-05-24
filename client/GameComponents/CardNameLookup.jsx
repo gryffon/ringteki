@@ -27,7 +27,7 @@ class CardNameLookup extends React.Component {
         return (
             <div>
                 <Typeahead labelKey={ 'label' } options={ [...new Set(Object.values(this.props.cards).map(card => card.name))] } dropup onChange={ this.onCardNameChange } />
-                <button type='button' onClick={ this.onDoneClick } className='btn btn-primary'>Done</button>
+                <button type='button' disabled={ !this.state.cardName } onClick={ this.onDoneClick } className='btn btn-primary'>Done</button>
             </div>);
     }
 }
