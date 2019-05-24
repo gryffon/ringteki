@@ -76,6 +76,10 @@ const Costs = {
      */
     removeFateFromParent: () => new GameActionCost(GameActions.removeFate(context => ({ target: context.source.parent }))),
     /**
+    * Cost that requires removing a card selected by the player from the game.
+    */
+    removeFromGame: properties => getSelectCost(GameActions.removeFromGame(), properties, 'Select card to remove from game'),
+    /**
      * Cost that will dishonor the character that initiated the ability
      */
     dishonorSelf: () => new GameActionCost(GameActions.dishonor()),
