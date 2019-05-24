@@ -20,6 +20,10 @@ class ToshiRanbo extends ProvinceCard {
     cannotBeStrongholdProvince() {
         return true;
     }
+
+    startsGameFaceup() {
+        return true;
+    }
 }
 
 ToshiRanbo.id = 'toshi-ranbo';
