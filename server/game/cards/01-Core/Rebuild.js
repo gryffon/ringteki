@@ -13,15 +13,15 @@ class Rebuild extends DrawCard {
                 activePromptTitle: 'Choose a holding to put into the province',
                 cardType: CardTypes.Holding,
                 location: Locations.DynastyDiscardPile,
-                controller: Players.Self
+                controller: Players.Self,
+                gameAction: ability.actions.moveCard(context => ({
+                    destination: context.costs.moveStateWhenChosen ? context.costs.moveStateWhenChosen.location : Locations.ProvinceOne,
+                    facedown: false
+                }))
             },
             cannotTargetFirst: true,
             cannotBeMirrored: true,
-            effect: 'replace it with {0}',
-            handler: context => {
-                context.player.moveCard(context.target, context.costs.moveStateWhenChosen.location);
-                context.target.facedown = false;
-            }
+            effect: 'replace it with {0}'
         });
     }
 }

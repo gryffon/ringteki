@@ -10,7 +10,7 @@ class KakitaYuri extends DrawCard {
                 type: DuelTypes.Political,
                 opponentChoosesDuelTarget: true,
                 gameAction: duel => AbilityDsl.actions.playerLastingEffect(context => ({
-                    targetController: duel.winner.controller === context.player ? Players.Opponent : Players.Self,
+                    targetController: duel.winner && duel.winner.controller === context.player ? Players.Opponent : Players.Self,
                     duration: Durations.UntilEndOfPhase,
                     effect: duel.winner ? AbilityDsl.effects.cannotDeclareConflictsOfType(ConflictTypes.Military) : []
                 }))

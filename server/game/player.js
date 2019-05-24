@@ -282,11 +282,17 @@ class Player extends GameObject {
         if(conflictRing.length === 0) {
             return false;
         }
+        let cards = properties.attacker ? [properties.attacker] : this.cardsInPlay.toArray();
+        if(!this.opponent) {
+            return conflictType.some(type => conflictRing.some(ring =>
+                cards.some(card => card.canDeclareAsAttacker(type, ring))
+            ));
+        }
         let conflictProvince = properties.province || this.opponent && this.opponent.getProvinces();
         conflictProvince = Array.isArray(conflictProvince) ? conflictProvince : [conflictProvince];
         return conflictType.some(type => conflictRing.some(ring => conflictProvince.some(province =>
             province.canDeclare(type, ring) &&
-            this.cardsInPlay.some(card => card.canDeclareAsAttacker(type, ring, province))
+            cards.some(card => card.canDeclareAsAttacker(type, ring, province))
         )));
     }
 
@@ -964,7 +970,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && provinceLocations.includes(location))) {
+        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && provinceLocations.includes(location) && !provinceLocations.includes(targetLocation))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;

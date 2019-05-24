@@ -4,7 +4,7 @@ describe('InitateConflictPrompt: ', function() {
     beforeEach(function() {
         this.gameSpy = jasmine.createSpyObj('game', ['addMessage', 'raiseEvent', 'promptWithHandlerMenu', 'getFrameworkContext']);
         this.fireRing = { element: 'fire' };
-        this.gameSpy.rings = { fire: this.fireRing};
+        this.gameSpy.rings = { fire: this.fireRing };
         this.playerSpy = jasmine.createSpyObj('player', ['keep', 'mulligan', 'getLegalConflictTypes', 'hasLegalConflictDeclaration']);
         this.playerSpy.getLegalConflictTypes.and.returnValue(['military', 'political']);
         this.playerSpy.cardsInPlay = [];
@@ -185,17 +185,13 @@ describe('InitateConflictPrompt: ', function() {
                     this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
                 });
 
-                it('should call getLegalConflictTypes', function() {
-                    expect(this.playerSpy.getLegalConflictTypes).toHaveBeenCalled();
-                });
-
-                it('should call canDeclareAsAttacker', function() {
-                    expect(this.cardSpy.canDeclareAsAttacker).toHaveBeenCalled();
+                it('should call hasLegalConflictDeclaration', function() {
+                    expect(this.playerSpy.hasLegalConflictDeclaration).toHaveBeenCalled();
                 });
 
                 describe('and it can be declared as an attacker,', function() {
                     beforeEach(function() {
-                        this.cardSpy.canDeclareAsAttacker.and.returnValue(true);
+                        this.playerSpy.hasLegalConflictDeclaration.and.returnValue(true);
                         this.returnValue = this.prompt.onCardClicked(this.playerSpy, this.cardSpy);
                     });
 
@@ -285,7 +281,7 @@ describe('InitateConflictPrompt: ', function() {
 
                 describe('and it can\'t be declared as an attacker,', function() {
                     beforeEach(function() {
-                        this.cardSpy.canDeclareAsAttacker.and.returnValue(false);
+                        this.playerSpy.hasLegalConflictDeclaration.and.returnValue(false);
                     });
 
                     it('should return false', function() {

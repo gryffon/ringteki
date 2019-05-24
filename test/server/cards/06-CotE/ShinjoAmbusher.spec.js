@@ -54,5 +54,68 @@ describe('Shinjo Ambusher', function() {
                 expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
             });
         });
+
+        describe('Shinjo Ambusher with Akodo Toshiro interaction', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['akodo-toshiro'],
+                        hand: ['shinjo-ambusher']
+                    },
+                    player2: {
+                        provinces: ['upholding-authority']
+                    }
+                });
+
+                this.shinjoAmbusher = this.player1.findCardByName('shinjo-ambusher');
+                this.akodoToshiro = this.player1.findCardByName('akodo-toshiro');
+                this.upholdingAuthority = this.player2.findCardByName('upholding-authority', 'province 1');
+            });
+
+            it('should not break the province if Toshiro triggers his ability', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.akodoToshiro],
+                    defenders: [],
+                    province: this.upholdingAuthority
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.shinjoAmbusher);
+                this.player1.clickPrompt('0');
+                this.player1.clickPrompt('Conflict');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.shinjoAmbusher);
+                this.player1.clickCard(this.shinjoAmbusher);
+                this.player2.pass();
+                this.player1.clickCard(this.akodoToshiro);
+                this.noMoreActions();
+                expect(this.player1).not.toHavePrompt('Break Upholding Authority');
+                expect(this.player1).toHavePrompt('Air Ring');
+            });
+
+            it('should allow Shinjo Ambusher to trigger its reaction after Toshiro triggers his', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.akodoToshiro],
+                    defenders: [],
+                    province: this.upholdingAuthority
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.akodoToshiro);
+                this.player2.pass();
+                this.player1.clickCard(this.shinjoAmbusher);
+                this.player1.clickPrompt('0');
+                this.player1.clickPrompt('Conflict');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.shinjoAmbusher);
+                this.player1.clickCard(this.shinjoAmbusher);
+                this.noMoreActions();
+                expect(this.player1).not.toHavePrompt('Break Upholding Authority');
+                expect(this.player1).toHavePrompt('Air Ring');
+            });
+        });
     });
 });

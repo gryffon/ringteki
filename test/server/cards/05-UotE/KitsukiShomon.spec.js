@@ -5,7 +5,7 @@ describe('Kitsuki Shomon', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['kitsuki-shomon', 'doomed-shugenja'],
+                        inPlay: ['kitsuki-shomon', 'doomed-shugenja', 'togashi-yokuni'],
                         dynastyDiscard: ['favorable-ground']
                     },
                     player2: {
@@ -17,7 +17,9 @@ describe('Kitsuki Shomon', function() {
                 this.youngRumormonger = this.player2.placeCardInProvince('young-rumormonger');
                 this.kitsukiShomon = this.player1.findCardByName('kitsuki-shomon');
                 this.doomedShugenja = this.player1.findCardByName('doomed-shugenja');
+                this.togashiYokuni = this.player1.findCardByName('togashi-yokuni');
                 this.kitsukiShomon.bow();
+                this.togashiYokuni.bow();
 
                 this.noMoreActions();
                 this.initiateConflict({
@@ -37,6 +39,25 @@ describe('Kitsuki Shomon', function() {
                 expect(this.doomedShugenja.isDishonored).toBe(false);
                 expect(this.kitsukiShomon.isDishonored).toBe(true);
                 expect(this.kitsukiShomon.bowed).toBe(false);
+            });
+
+            it('should dishonor and ready Yokuni if Shomon\'s ability is copied', function() {
+                this.player2.pass();
+                this.player1.clickCard(this.togashiYokuni);
+                this.player1.clickCard(this.kitsukiShomon);
+                this.player2.clickCard('way-of-the-scorpion');
+                expect(this.player2).toHavePrompt('Way of the Scorpion');
+                this.player2.clickCard(this.doomedShugenja);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.kitsukiShomon);
+                expect(this.player1).toBeAbleToSelect(this.togashiYokuni);
+                this.player1.clickCard(this.togashiYokuni);
+                this.player1.clickPrompt('Pass');
+                expect(this.doomedShugenja.isDishonored).toBe(false);
+                expect(this.kitsukiShomon.isDishonored).toBe(false);
+                expect(this.kitsukiShomon.bowed).toBe(true);
+                expect(this.togashiYokuni.isDishonored).toBe(true);
+                expect(this.togashiYokuni.bowed).toBe(false);
             });
 
             it('should not trigger when Shomon is dishonored', function() {
