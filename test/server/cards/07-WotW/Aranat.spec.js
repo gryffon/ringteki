@@ -21,20 +21,22 @@ describe('Aranat', function() {
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display');
 
                 this.player1.clickCard(this.aranat);
-                this.player1.clickPrompt('1');
             });
 
             it('should trigger when Aranat is played', function() {
+                this.player1.clickPrompt('1');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.aranat);
             });
 
             it('should prompt the opponent to flip provinces', function() {
+                this.player1.clickPrompt('1');
                 this.player1.clickCard(this.aranat);
                 expect(this.player2).toHavePrompt('Aranat');
             });
 
             it('should place fate on Aranat equal to the number of facedown provinces', function() {
+                this.player1.clickPrompt('1');
                 expect(this.fertileFields.facedown).toBe(true);
                 expect(this.aranat.fate).toBe(1);
                 this.player1.clickCard(this.aranat);
@@ -46,6 +48,7 @@ describe('Aranat', function() {
             });
 
             it('should not allow revealing the SH province', function() {
+                this.player1.clickPrompt('1');
                 expect(this.fertileFields.facedown).toBe(true);
                 expect(this.shamefulDisplay.facedown).toBe(true);
                 expect(this.aranat.fate).toBe(1);
@@ -62,6 +65,7 @@ describe('Aranat', function() {
             it('should not give any fate when all provinces are revealed', function() {
                 this.shamefulDisplay.facedown = false;
                 let player2Fate = this.player2.fate;
+                this.player1.clickPrompt('1');
                 expect(this.aranat.fate).toBe(1);
                 this.player1.clickCard(this.aranat);
                 this.player2.clickCard(this.fertileFields);
@@ -78,11 +82,12 @@ describe('Aranat', function() {
             });
 
             it('should not prompt the opponent when all non-SH provinces are revealed', function() {
-                expect(this.aranat.fate).toBe(1);
                 this.fertileFields.facedown = false;
                 this.entrenchedPosition.facedown = false;
                 this.pilgrimage.facedown = false;
                 this.rallyToTheCause.facedown = false;
+                this.player1.clickPrompt('1');
+                expect(this.aranat.fate).toBe(1);
                 this.player1.clickCard(this.aranat);
                 expect(this.aranat.fate).toBe(2);
                 expect(this.player2).toHavePrompt('Play cards from provinces');
