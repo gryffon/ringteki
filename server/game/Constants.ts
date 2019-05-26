@@ -32,6 +32,7 @@ export enum EffectNames {
     Blank = 'blank',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
     CanOnlyBeDeclaredAsAttackerWithElement = 'canOnlyBeDeclaredAsAttackerWithElement',
+    CannotApplyLastingEffects = 'cannotApplyLastingEffects',
     CannotBeAttacked = 'cannotBeAttacked',
     CannotBidInDuels = 'cannotBidInDuels',
     CannotHaveConflictsDeclaredOfType = 'cannotHaveConflictsDeclaredOfType',
