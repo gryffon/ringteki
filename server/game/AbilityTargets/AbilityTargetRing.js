@@ -94,13 +94,11 @@ class AbilityTargetRing {
     }
 
     checkTarget(context) {
-        if(context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
+        if(!context.rings[this.name] || context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
             return false;
         }
-        return context.rings[this.name] &&
-            (this.properties.optional && context.rings[this.name].length === 0 ||
-                this.properties.ringCondition(context.rings[this.name], context)) &&
-            (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+        return this.properties.optional && context.rings[this.name].length === 0 ||
+            this.properties.ringCondition(context.rings[this.name], context);
     }
 
     getChoosingPlayer(context) {
