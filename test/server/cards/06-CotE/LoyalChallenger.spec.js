@@ -10,14 +10,17 @@ describe('Loyal Challenger', function() {
                     },
                     player2: {
                         inPlay: ['doomed-shugenja', 'shosuro-actress'],
-                        hand: ['ornate-fan']
+                        hand: ['ornate-fan', 'assassination']
                     }
                 });
+                this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
                 this.loyalChallenger = this.player1.findCardByName('loyal-challenger', 'play area');
                 this.maiden = this.player1.findCardByName('shrine-maiden');
-                this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
-                this.actress = this.player2.findCardByName('shosuro-actress');
                 this.discardLoyalChallenger = this.player1.findCardByName('loyal-challenger', 'dynasty discard pile');
+
+                this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
+                this.shosuroActress = this.player2.findCardByName('shosuro-actress');
+                this.assassination = this.player2.findCardByName('assassination');
             });
 
             it('should gain 1 honor after winning a conflict', function() {
@@ -44,14 +47,14 @@ describe('Loyal Challenger', function() {
                 expect(this.player1.player.honor).toBe(honor - 1);
             });
 
-            it('should gain the opponent 1 honor if they win after take control with actress', function () {
+            it('should gain the opponent 1 honor if they win after take control with actress', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.maiden],
-                    defenders: [this.actress],
+                    defenders: [this.shosuroActress],
                     type: 'political'
                 });
-                this.player2.clickCard(this.actress);
+                this.player2.clickCard(this.shosuroActress);
                 this.player2.clickCard(this.discardLoyalChallenger);
                 expect(this.discardLoyalChallenger.location).toBe('play area');
                 let honorPlayer1 = this.player1.player.honor;
@@ -62,14 +65,14 @@ describe('Loyal Challenger', function() {
                 expect(this.player2.player.honor).toBe(honorPlayer2 + 1);
             });
 
-            it('should lose the opponent 1 honor if they win after take control with actress', function () {
+            it('should lose the opponent 1 honor if they win after take control with actress', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.maiden],
-                    defenders: [this.actress],
+                    defenders: [this.shosuroActress],
                     type: 'military'
                 });
-                this.player2.clickCard(this.actress);
+                this.player2.clickCard(this.shosuroActress);
                 this.player2.clickCard(this.discardLoyalChallenger);
                 expect(this.discardLoyalChallenger.location).toBe('play area');
                 let honorPlayer1 = this.player1.player.honor;
@@ -81,6 +84,26 @@ describe('Loyal Challenger', function() {
                 expect(this.player2.player.honor).toBe(honorPlayer2 - 1);
             });
 
+            it('should gain its controller 1 honor after winning a conflict if control is transferred', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.loyalChallenger],
+                    defenders: [this.doomedShugenja],
+                    type: 'political'
+                });
+                this.player2.clickCard(this.assassination);
+                this.player2.clickCard(this.loyalChallenger);
+                this.player1.pass();
+                this.player2.clickCard(this.shosuroActress);
+                this.player2.clickCard(this.loyalChallenger);
+                expect(this.loyalChallenger.location).toBe('play area');
+                expect(this.loyalChallenger.controller).toBe(this.player2.player);
+                let honor1 = this.player1.player.honor;
+                let honor2 = this.player2.player.honor;
+                this.noMoreActions();
+                expect(this.player1.player.honor).toBe(honor1);
+                expect(this.player2.player.honor).toBe(honor2 + 1);
+            });
         });
 
         describe('when the target leaves play during the duel', function() {
@@ -160,6 +183,7 @@ describe('Loyal Challenger', function() {
                 this.player2.clickCard(this.agashaSwordsmith);
                 expect(this.player2).toHavePrompt('Agasha Swordsmith');
             });
+
         });
     });
 });

@@ -1,7 +1,7 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases, PlayTypes, EventNames } = require('./Constants');
+const { EffectNames, Phases, PlayTypes, EventNames } = require('./Constants');
 
 class PlayCharacterAction extends BaseAction {
     constructor(card) {
@@ -30,6 +30,7 @@ class PlayCharacterAction extends BaseAction {
     }
 
     executeHandler(context) {
+        const extraFate = context.source.sumEffects(EffectNames.GainExtraFateWhenPlayed);
         let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
@@ -39,7 +40,7 @@ class PlayCharacterAction extends BaseAction {
         });
         let putIntoPlayHandler = () => {
             context.game.addMessage('{0} plays {1} at home with {2} additional fate', context.player, context.source, context.chooseFate);
-            context.game.openEventWindow([GameActions.putIntoPlay({ fate: context.chooseFate }).getEvent(context.source, context), cardPlayedEvent]);
+            context.game.openEventWindow([GameActions.putIntoPlay({ fate: context.chooseFate + extraFate }).getEvent(context.source, context), cardPlayedEvent]);
         };
         if(context.source.allowGameAction('putIntoConflict', context)) {
             context.game.promptWithHandlerMenu(context.player, {

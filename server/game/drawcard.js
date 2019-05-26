@@ -485,17 +485,22 @@ class DrawCard extends BaseCard {
         return false;
     }
 
-    getActions(player, location = this.location) {
-        if(location === Locations.PlayArea) {
+    getActions(location = this.location) {
+        if(location === Locations.PlayArea || this.type === CardTypes.Event) {
             return super.getActions();
         }
-        let actions = [];
+        const actions = this.type === CardTypes.Character ? [new DuplicateUniqueAction(this)] : [];
+        return actions.concat(this.getPlayActions(), super.getActions());
+    }
+
+    getPlayActions() {
+        if(this.type === CardTypes.Event) {
+            return super.getActions();
+        }
+        let actions = this.abilities.playActions.slice();
         if(this.type === CardTypes.Character) {
             if(this.disguisedKeywordTraits.length > 0) {
                 actions.push(new PlayDisguisedCharacterAction(this));
-            }
-            if(player.getDuplicateInPlay(this)) {
-                actions.push(new DuplicateUniqueAction(this));
             } else if(this.isDynasty) {
                 actions.push(new DynastyCardAction(this));
             } else {
@@ -504,7 +509,7 @@ class DrawCard extends BaseCard {
         } else if(this.type === CardTypes.Attachment) {
             actions.push(new PlayAttachmentAction(this));
         }
-        return actions.concat(this.abilities.playActions, super.getActions());
+        return actions;
     }
 
     /**

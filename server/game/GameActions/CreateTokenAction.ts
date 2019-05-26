@@ -13,7 +13,7 @@ export class CreateTokenAction extends CardGameAction {
     targetType = [CardTypes.Character, CardTypes.Holding];
 
     canAffect(card: BaseCard, context: AbilityContext): boolean {
-        if(!card.facedown || ![Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
+        if(!card.facedown || !card.isInProvince() || card.location === Locations.StrongholdProvince) {
             return false;
         } else if(!context.game.isDuringConflict('military')) {
             return false;

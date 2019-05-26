@@ -164,8 +164,12 @@ class InitiateConflictPrompt extends UiPrompt {
                 if(this.conflict.attackers.includes(card)) {
                     return !card.getEffects(EffectNames.MustBeDeclaredAsAttacker).some(effect => effect === 'both' || effect === this.conflict.conflictType);
                 }
-                const availableTypes = this.choosingPlayer.getLegalConflictTypes({ type: this.conflict.conflictType });
-                return availableTypes.some(type => card.canDeclareAsAttacker(type, this.conflict.ring, this.conflict.conflictProvince));
+                return this.choosingPlayer.hasLegalConflictDeclaration({
+                    type: this.conflict.conflictType,
+                    ring: this.conflict.ring,
+                    province: this.conflict.province,
+                    attacker: card
+                });
             }
             return this.selectedDefenders.includes(card) || !card.isCovert() && this.covertRemaining;
         }

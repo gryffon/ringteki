@@ -282,11 +282,17 @@ class Player extends GameObject {
         if(conflictRing.length === 0) {
             return false;
         }
+        let cards = properties.attacker ? [properties.attacker] : this.cardsInPlay.toArray();
+        if(!this.opponent) {
+            return conflictType.some(type => conflictRing.some(ring =>
+                cards.some(card => card.canDeclareAsAttacker(type, ring))
+            ));
+        }
         let conflictProvince = properties.province || this.opponent && this.opponent.getProvinces();
         conflictProvince = Array.isArray(conflictProvince) ? conflictProvince : [conflictProvince];
         return conflictType.some(type => conflictRing.some(ring => conflictProvince.some(province =>
             province.canDeclare(type, ring) &&
-            this.cardsInPlay.some(card => card.canDeclareAsAttacker(type, ring, province))
+            cards.some(card => card.canDeclareAsAttacker(type, ring, province))
         )));
     }
 
@@ -1003,7 +1009,7 @@ class Player extends GameObject {
         }
 
         if(provinceLocations.includes(targetLocation)) {
-            if([Locations.DynastyDeck, Locations.ProvinceDeck].includes(location)) {
+            if([Locations.DynastyDeck].includes(location)) {
                 card.facedown = true;
             }
             if(!this.takenDynastyMulligan && card.isDynasty) {
