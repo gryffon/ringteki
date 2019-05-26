@@ -11,7 +11,6 @@ class PeasantsAdvice extends DrawCard {
             target: {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,
-                cardCondition: card => card.facedown || card.controller.getSourceList(card.location).some(provinceCard => provinceCard.isDynasty && !provinceCard.facedown),
                 gameAction: AbilityDsl.actions.sequential([
                     AbilityDsl.actions.lookAt(),
                     AbilityDsl.actions.selectCard(context => ({
