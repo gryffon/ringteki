@@ -1,4 +1,4 @@
-﻿describe('Akodo Zentaro', function() {
+﻿fdescribe('Akodo Zentaro', function() {
     integration(function() {
         describe('Akodo Zentaro\'s ability', function() {
             beforeEach(function() {
@@ -6,7 +6,7 @@
                     phase: 'conflict',
                     player1: {
                         inPlay: ['akodo-zentaro', 'miya-mystic'],
-                        dynastyDiscard: ['matsu-berserker']
+                        dynastyDiscard: ['matsu-berserker', 'the-imperial-palace']
                     },
                     player2: {
                         inPlay: ['wandering-ronin'],
@@ -140,6 +140,19 @@
                 this.player1.clickCard(this.akodoZentaro);
                 this.player1.clickCard(this.imperialStorehouse);
                 expect(this.imperialStorehouse.location).toBe('dynasty discard pile');
+            });
+
+            it('should discard the chosen holding if the player already controls a unique holding of that name', function() {
+                this.player1.placeCardInProvince('the-imperial-palace', 'province 4');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.akodoZentaro],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.akodoZentaro);
+                this.player1.clickCard(this.theImperialPalace);
+                expect(this.theImperialPalace.location).toBe('dynasty discard pile');
             });
         });
 

@@ -970,7 +970,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && provinceLocations.includes(location))) {
+        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && provinceLocations.includes(location) && !provinceLocations.includes(targetLocation))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;
@@ -996,6 +996,8 @@ class Player extends GameObject {
         } else if(location === Locations.BeingPlayed && card.owner !== this) {
             card.owner.moveCard(card, targetLocation, options);
             return;
+        } else if(card.type === CardTypes.Holding && provinceLocations.includes(targetLocation)) {
+            card.controller = this;
         } else {
             card.controller = card.owner;
         }

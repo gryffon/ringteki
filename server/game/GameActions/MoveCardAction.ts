@@ -1,5 +1,5 @@
 import { CardGameAction, CardActionProperties} from './CardGameAction';
-import { CardTypes, Locations } from '../Constants';
+import { CardTypes, Locations, EffectNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
 
@@ -33,8 +33,10 @@ export class MoveCardAction extends CardGameAction {
         return ['shuffling {0} into their deck', [properties.target]];
     }
 
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        return card.location !== Locations.PlayArea && super.canAffect(card, context);
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+        const { changePlayer } = this.getProperties(context, additionalProperties) as MoveCardProperties;
+        return (!changePlayer || card.checkRestrictions(EffectNames.TakeControl, context) && !card.anotherUniqueInPlay(context.player)) &&
+            card.location !== Locations.PlayArea && super.canAffect(card, context);
     }
 
     eventHandler(event, additionalProperties = {}): void {
@@ -60,5 +62,6 @@ export class MoveCardAction extends CardGameAction {
         } else if(properties.faceup) {
             card.facedown = false;
         }
+        card.checkForIllegalAttachments();
     }
 }

@@ -13,23 +13,20 @@ class AkodoZentaro extends DrawCard {
                 location: Locations.Provinces,
                 cardCondition: card => card.location === this.game.currentConflict.conflictProvince.location && !card.isUnique(),
                 gameAction: AbilityDsl.actions.ifAble(context => ({
-                    ifAbleAction: AbilityDsl.actions.joint([
-                        AbilityDsl.actions.takeControl({ target: context.target, targetLocation: Locations.Provinces }),
-                        AbilityDsl.actions.selectCard({
-                            cardType: CardTypes.Province,
-                            location: Locations.Provinces,
-                            controller: Players.Self,
-                            cardCondition: card => card.location !== Locations.StrongholdProvince && !card.isBroken,
-                            subActionProperties: card => ({ destination: card.location, target: context.player.getDynastyCardInProvince(card.location) }),
-                            gameAction: AbilityDsl.actions.multiple([
-                                AbilityDsl.actions.moveCard({
-                                    target: context.target,
-                                    changePlayer: true
-                                }),
-                                AbilityDsl.actions.discardCard()
-                            ])
-                        })
-                    ]),
+                    ifAbleAction: AbilityDsl.actions.selectCard({
+                        cardType: CardTypes.Province,
+                        location: Locations.Provinces,
+                        controller: Players.Self,
+                        cardCondition: card => card.location !== Locations.StrongholdProvince && !card.isBroken,
+                        subActionProperties: card => ({ destination: card.location, target: context.player.getDynastyCardInProvince(card.location) }),
+                        gameAction: AbilityDsl.actions.multiple([
+                            AbilityDsl.actions.moveCard({
+                                target: context.target,
+                                changePlayer: true
+                            }),
+                            AbilityDsl.actions.discardCard()
+                        ])
+                    }),
                     otherwiseAction: AbilityDsl.actions.discardCard({ target: context.target })
                 }))
             },
