@@ -43,7 +43,7 @@ export class MoveCardAction extends CardGameAction {
         if(properties.switch) {
             let otherCard = card.controller.getDynastyCardInProvince(properties.destination);
             card.owner.moveCard(otherCard, card.location);
-        } else if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
+        } else if(card.isInProvince() && card.location !== Locations.StrongholdProvince) {
             event.context.refillProvince(card.owner, card.location);
         }
         card.owner.moveCard(card, properties.destination, { bottom: !!properties.bottom });

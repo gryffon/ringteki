@@ -186,6 +186,11 @@ class BaseCard extends EffectSource {
         return this.printedFaction === faction || this.getEffects(EffectNames.AddFaction).includes(faction);
     }
 
+    isInProvince(): boolean {
+        return [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, 
+            Locations.ProvinceFour, Locations.StrongholdProvince].includes(this.location);
+    }
+
     applyAnyLocationPersistentEffects(): void {
         _.each(this.persistentEffects, effect => {
             if(effect.location === Locations.Any) {
