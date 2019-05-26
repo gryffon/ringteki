@@ -81,7 +81,7 @@ export class CardGameAction extends GameAction {
     }
 
     checkForRefillProvince(card: BaseCard, event, additionalProperties: any = {}): void {
-        if(![Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
+        if(!card.isInProvince() || card.location === Locations.StrongholdProvince) {
             return;
         }
         const context = !!additionalProperties.replacementEffect ? event.context.event.context : event.context;
