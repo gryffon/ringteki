@@ -1,5 +1,6 @@
+const _ = require('underscore');
 import { CardGameAction } from './CardGameAction';
-import { Durations, Players, EventNames, Locations } from '../Constants';
+import { Durations, EventNames, Locations, EffectNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
 import { LastingEffectGeneralProperties } from './LastingEffectAction';
@@ -34,14 +35,22 @@ export class LastingEffectCardAction extends CardGameAction {
             return false;
         }
         properties.effect = properties.effect.map(factory => factory(context.game, context.source, properties));
-        if(!properties.effect.some(effect => effect.effect.canBeApplied(card))) {
-            return false;
-        }
-        return super.canAffect(card, context);
+        const lastingEffectRestrictions = card.getEffects(EffectNames.CannotApplyLastingEffects);
+        return super.canAffect(card, context) && properties.effect.some(props => 
+            props.effect.canBeApplied(card) && !lastingEffectRestrictions.some(condition => condition(props.effect))
+        );
     }
 
     eventHandler(event, additionalProperties): void {
-        let properties = this.getProperties(event.context, additionalProperties);
-        event.context.source[properties.duration](() => Object.assign({ match: event.card }, properties));
+        const properties = this.getProperties(event.context, additionalProperties);
+        const lastingEffectRestrictions = event.card.getEffects(EffectNames.CannotApplyLastingEffects);
+        const effectProperties = Object.assign({ match: event.card, location: Locations.Any }, _.omit(properties, 'effect'));
+        let effects = properties.effect.map(factory => factory(event.context.game, event.context.source, effectProperties));
+        effects = effects.filter(props =>
+            props.effect.canBeApplied(event.card) && lastingEffectRestrictions.every(condition => condition(props.effect))
+        );
+        for(const effect of effects) {
+            event.context.game.effectEngine.add(effect)
+        }
     }
 }
