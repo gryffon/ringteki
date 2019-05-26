@@ -7,7 +7,6 @@ import { RingAction, RingActionProperties} from './RingAction';
 import { EventNames } from '../Constants';
 
 export interface ResolveElementProperties extends RingActionProperties {
-    optional?: boolean;
     physicalRing?: Ring;
     player?: Player;
 }
@@ -16,7 +15,6 @@ export class ResolveElementAction extends RingAction {
     name = 'resolveElement';
     eventName = EventNames.OnResolveRingElement;
     effect = 'resolve {0} effect';
-    defaultProperties: ResolveElementProperties = { optional: true };
     constructor(properties: ((context: AbilityContext) => ResolveElementProperties) | ResolveElementProperties) {
         super(properties);
     }

@@ -13,9 +13,8 @@ class IllustriousForge extends ProvinceCard {
             gameAction: AbilityDsl.actions.sequential([
                 AbilityDsl.actions.cardMenu(context => ({
                     activePromptTitle: 'Choose an attachment',
-                    cards: context.player.conflictDeck.first(5).filter(card =>
-                        card.type === CardTypes.Attachment
-                    ),
+                    cards: context.player.conflictDeck.first(5),
+                    cardCondition: card => card.type === CardTypes.Attachment,
                     choices: ['Take nothing'],
                     handlers: [() => {
                         this.game.addMessage('{0} takes nothing', context.player);
