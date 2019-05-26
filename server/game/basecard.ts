@@ -191,6 +191,16 @@ class BaseCard extends EffectSource {
             Locations.ProvinceFour, Locations.StrongholdProvince].includes(this.location);
     }
 
+    isInPlay(): boolean {
+        if(this.facedown) {
+            return false;
+        }
+        if([CardTypes.Holding, CardTypes.Province, CardTypes.Stronghold].includes(this.type)) {
+            return this.isInProvince();
+        }
+        return this.location === Locations.PlayArea;
+    }
+
     applyAnyLocationPersistentEffects(): void {
         _.each(this.persistentEffects, effect => {
             if(effect.location === Locations.Any) {

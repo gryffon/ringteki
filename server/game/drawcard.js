@@ -146,7 +146,7 @@ class DrawCard extends BaseCard {
 
     anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (
-            card.location === Locations.PlayArea &&
+            card.isInPlay() &&
             card.printedName === this.printedName &&
             card !== this &&
             (card.owner === player || card.controller === player || card.owner === this.owner)
@@ -501,7 +501,8 @@ class DrawCard extends BaseCard {
         if(this.type === CardTypes.Character) {
             if(this.disguisedKeywordTraits.length > 0) {
                 actions.push(new PlayDisguisedCharacterAction(this));
-            } else if(this.isDynasty) {
+            }
+            if(this.isDynasty) {
                 actions.push(new DynastyCardAction(this));
             } else {
                 actions.push(new PlayCharacterAction(this));

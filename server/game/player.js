@@ -976,7 +976,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && provinceLocations.includes(location) && !provinceLocations.includes(targetLocation))) {
+        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && card.isInProvince() && !provinceLocations.includes(targetLocation))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;
