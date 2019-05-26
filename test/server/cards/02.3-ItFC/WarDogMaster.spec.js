@@ -40,6 +40,17 @@ describe('War Dog Master', function() {
                 expect(this.getChatLogs(2)).toContain('player1 uses War Dog Master, discarding Favorable Ground to give War Dog Master +0military');
                 expect(this.warDogMaster.getMilitarySkill()).toBe(2);
             });
+
+            it('should not resolve if your dynasty deck is empty', function() {
+                this.player1.reduceDeckToNumber('dynasty deck', 0);
+                expect(this.player1.dynastyDeck.length).toBe(0);
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.warDogMaster]
+                });
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player2).toHavePrompt('Choose Defenders');
+            });
         });
     });
 });
