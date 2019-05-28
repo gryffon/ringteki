@@ -23,6 +23,17 @@ class ThenAbility extends BaseAbility {
         });
     }
 
+    checkGameActionsForPotential(context) {
+        if(super.checkGameActionsForPotential(context)) {
+            return true;
+        } else if(this.gameAction.every(gameAction => gameAction.isOptional(context)) && this.properties.then) {
+            const then = typeof(this.properties.then) === 'function' ? this.properties.then(context) : this.properties.then;
+            const thenAbility = new ThenAbility(this.game, this.card, then);
+            return thenAbility.meetsRequirements(thenAbility.createContext(context.player)) === '';
+        }
+        return false;
+    }
+
     displayMessage(context) {
         if(this.properties.message) {
             let messageArgs = [context.player, context.source, context.target];

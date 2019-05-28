@@ -27,6 +27,17 @@ describe('Ancient Master', function() {
                 expect(this.nitenMaster.attachments.size()).toBe(1);
             });
 
+            it('can be played as an attachment, cancelled and then played as a character', function() {
+                this.player1.clickCard(this.ancientMaster);
+                expect(this.player1).toHavePromptButton('Play Ancient Master as an attachment');
+                expect(this.player1).toHavePromptButton('Play this character');
+                this.player1.clickPrompt('Play Ancient Master as an attachment');
+                this.player1.clickPrompt('Cancel');
+                this.player1.clickCard(this.ancientMaster);
+                expect(this.player1).toHavePromptButton('Play Ancient Master as an attachment');
+                expect(this.player1).toHavePromptButton('Play this character');
+            });
+
             it('should trigger its reaction and find kihos', function() {
                 this.player1.clickCard(this.ancientMaster);
                 this.player1.clickPrompt('Play Ancient Master as an attachment');

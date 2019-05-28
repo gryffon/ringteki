@@ -17,7 +17,6 @@ const Effects = {
     // Card effects
     addElementAsAttacker: (element) => EffectBuilder.card.flexible(EffectNames.AddElementAsAttacker, element),
     addFaction: (faction) => EffectBuilder.card.static(EffectNames.AddFaction, faction),
-    addGloryToBothSkills: () => EffectBuilder.card.static(EffectNames.AddGloryToBothSkills),
     addKeyword: (keyword) => EffectBuilder.card.static(EffectNames.AddKeyword, keyword),
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
     blank: () => EffectBuilder.card.static(EffectNames.Blank),
