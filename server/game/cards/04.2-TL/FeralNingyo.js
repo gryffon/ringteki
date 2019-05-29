@@ -10,7 +10,7 @@ class FeralNingyo extends DrawCard {
             location: [Locations.Hand, Locations.PlayArea],
             effect: '{1}return {0} to the deck at the end of the conflict',
             effectArgs: context => [context.source.location !== Locations.PlayArea ? ['put {0} into play into the conflict and ', context.source] : ''],
-            gameAction: AbilityDsl.actions.multiple([
+            gameAction: AbilityDsl.actions.sequential([
                 AbilityDsl.actions.putIntoConflict(context => ({
                     target: context.source
                 })),

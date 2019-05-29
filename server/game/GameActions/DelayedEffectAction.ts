@@ -17,23 +17,22 @@ export class DelayedEffectAction extends CardGameAction {
     eventName = EventNames.OnEffectApplied;
     effect = 'apply a delayed effect to {0}';
 
-    defaultProperties: DelayedEffectActionProperties;
+    defaultProperties: DelayedEffectActionProperties = {
+        when: null,
+        message: null,
+        gameAction: null,
+        location: Locations.PlayArea
+    };
+
     constructor(properties: DelayedEffectActionProperties | ((context: AbilityContext) => DelayedEffectActionProperties)) {
         super(properties);
     }
 
     canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as DelayedEffectActionProperties;
-        if(properties.location) {
-            let inLocation = Array.isArray(properties.location) ? properties.location.includes(card.location) : properties.location === card.location;
-            if(!inLocation) {
-                return false;
-            }
-        }
-        else {
-            if(card.location !== Locations.PlayArea) {
-                return false;
-            }
+        let inLocation = Array.isArray(properties.location) ? properties.location.includes(card.location) : properties.location === card.location;
+        if(!inLocation) {
+            return false;
         }
         return super.canAffect(card, context);
     }
