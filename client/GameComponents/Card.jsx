@@ -6,6 +6,7 @@ import 'jquery-migrate';
 import 'jquery-nearest';
 
 import CardMenu from './CardMenu.jsx';
+import CardStats from './CardStats.jsx';
 import CardCounters from './CardCounters.jsx';
 
 class Card extends React.Component {
@@ -18,7 +19,8 @@ class Card extends React.Component {
 
         this.state = {
             showPopup: false,
-            showMenu: false
+            showMenu: false,
+            showStats: false
         };
 
         this.shortNames = {
@@ -36,12 +38,14 @@ class Card extends React.Component {
         if(this.props.onMouseOver) {
             this.props.onMouseOver(card);
         }
+        this.setState({ showStats: true });
     }
 
     onMouseOut() {
         if(this.props.onMouseOut) {
             this.props.onMouseOut();
         }
+        this.setState({ showStats: false });
     }
 
     onCardDragStart(event, card, source) {
@@ -388,8 +392,13 @@ class Card extends React.Component {
                     <CardCounters counters={ this.getCountersForCard(this.props.card) } />
                 </div>
                 { this.showMenu() ? <CardMenu menu={ this.props.card.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
+                { this.showStats() ? <CardStats text={ this.props.card.name } militarySkillSummary={ this.props.card.militarySkillSummary } politicalSkillSummary={ this.props.card.politicalSkillSummary } /> : null }
                 { this.getPopup() }
             </div>);
+    }
+
+    showStats() {
+        return this.props.card.showStats && this.state.showStats;
     }
 
     onCloseClick(event) {
@@ -521,16 +530,19 @@ Card.propTypes = {
         location: PropTypes.string,
         menu: PropTypes.array,
         militarySkill: PropTypes.number,
+        militarySkillSummary: PropTypes.object,
         name: PropTypes.string,
         new: PropTypes.bool,
         order: PropTypes.number,
         politicalSkill: PropTypes.number,
+        politicalSkillSummary: PropTypes.object,
         popupMenuText: PropTypes.string,
         power: PropTypes.number,
         saved: PropTypes.bool,
         selectable: PropTypes.bool,
         selected: PropTypes.bool,
         showPopup: PropTypes.bool,
+        showStats: PropTypes.bool,
         strength: PropTypes.number,
         tokens: PropTypes.object,
         type: PropTypes.string,
