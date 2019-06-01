@@ -13,7 +13,8 @@ describe('Hidden Moon Dōjō', function() {
                         ]
                     },
                     player2: {
-                        inPlay: []
+                        inPlay: ['enlightened-warrior'],
+                        hand: ['let-go']
                     }
                 });
             });
