@@ -33,8 +33,8 @@ describe('Hiruma Signaller', function() {
                 expect(this.player2).toHavePrompt('Hiruma Signaller');
                 expect(this.player2).toBeAbleToSelect(this.hidaYakamo);
                 this.player2.clickCard(this.hidaYakamo);
-                expect(this.hidaYakamo.bowed).toBeFalsy();
-                expect(this.hidaYakamo.inConflict).toBeTruthy();
+                expect(this.hidaYakamo.bowed).toBe(false);
+                expect(this.hidaYakamo.inConflict).toBe(true);
                 expect(this.hirumaSignaller.location).toBe('dynasty discard pile');
             });
 
@@ -48,12 +48,12 @@ describe('Hiruma Signaller', function() {
                 expect(this.player2).toHavePrompt('Hiruma Signaller');
                 expect(this.player2).toBeAbleToSelect(this.hidaYakamo);
                 this.player2.clickCard(this.hidaYakamo);
-                expect(this.hidaYakamo.bowed).toBeFalsy();
-                expect(this.hidaYakamo.inConflict).toBeTruthy();
+                expect(this.hidaYakamo.bowed).toBe(false);
+                expect(this.hidaYakamo.inConflict).toBe(true);
                 expect(this.hirumaSignaller.location).toBe('dynasty discard pile');
             });
 
-            it('should mova a ready character to the conflict', function() {
+            it('should move a ready character to the conflict', function() {
                 this.initiateConflict({
                     attackers: [this.mirumotoRaitsugu],
                     defenders: [this.hirumaSignaller]
@@ -62,8 +62,8 @@ describe('Hiruma Signaller', function() {
                 expect(this.player2).toHavePrompt('Hiruma Signaller');
                 expect(this.player2).toBeAbleToSelect(this.hidaYakamo);
                 this.player2.clickCard(this.hidaYakamo);
-                expect(this.hidaYakamo.bowed).toBeFalsy();
-                expect(this.hidaYakamo.inConflict).toBeTruthy();
+                expect(this.hidaYakamo.bowed).toBe(false);
+                expect(this.hidaYakamo.inConflict).toBe(true);
                 expect(this.hirumaSignaller.location).toBe('dynasty discard pile');
             });
 
@@ -80,8 +80,8 @@ describe('Hiruma Signaller', function() {
                 this.player2.clickCard(this.hidaYakamo);
                 expect(this.player2).toBeAbleToSelect(this.reprieve);
                 this.player2.clickCard(this.reprieve);
-                expect(this.hidaYakamo.bowed).toBeTruthy();
-                expect(this.hidaYakamo.inConflict).toBeFalsy();
+                expect(this.hidaYakamo.bowed).toBe(true);
+                expect(this.hidaYakamo.inConflict).toBe(false);
                 expect(this.hirumaSignaller.location).toBe('play area');
             });
 

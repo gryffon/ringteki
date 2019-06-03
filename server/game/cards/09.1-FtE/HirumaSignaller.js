@@ -11,7 +11,10 @@ class HirumaSignaller extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
-                gameAction: [AbilityDsl.actions.ready(), AbilityDsl.actions.moveToConflict()]
+                gameAction: AbilityDsl.actions.multiple([
+                    AbilityDsl.actions.ready(),
+                    AbilityDsl.actions.moveToConflict()
+                ])
             },
             effect: 'ready and move {0} to the conflict'
         });
