@@ -5,7 +5,8 @@ describe('Kuni Yori', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['kuni-yori', 'borderlands-defender','vanguard-warrior']
+                        inPlay: ['kuni-yori', 'borderlands-defender','vanguard-warrior'],
+                        hand: ['way-of-the-crab']
                     },
                     player2: {
                         inPlay: ['doji-whisperer'],
