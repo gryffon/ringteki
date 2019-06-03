@@ -17,7 +17,13 @@ class PlayAncientMasterAsAttachment extends PlayAttachmentAction {
 
     resolveTargets(context) {
         context.source.type = CardTypes.Attachment;
-        return super.resolveTargets(context);
+        const targetResults = super.resolveTargets(context);
+        context.game.queueSimpleStep(() => {
+            if(targetResults.cancelled) {
+                context.source.type = CardTypes.Character;
+            }
+        });
+        return targetResults;
     }
 }
 

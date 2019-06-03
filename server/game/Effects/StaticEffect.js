@@ -96,9 +96,6 @@ class StaticEffect {
         if(type === EffectNames.ModifyBothSkills) {
             return this.checkConflictingEffects(EffectNames.ModifyMilitarySkill, target) || this.checkConflictingEffects(EffectNames.ModifyPoliticalSkill, target);
         }
-        if(type === EffectNames.AddGloryToBothSkills) {
-            return this.checkConflictingEffects(EffectNames.ModifyMilitarySkill, target) || this.checkConflictingEffects(EffectNames.ModifyPoliticalSkill, target);
-        }
         if(type === EffectNames.HonorStatusDoesNotModifySkill) {
             return this.checkConflictingEffects(EffectNames.ModifyMilitarySkill, target) || this.checkConflictingEffects(EffectNames.ModifyPoliticalSkill, target);
         }

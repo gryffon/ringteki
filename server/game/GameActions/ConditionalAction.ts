@@ -2,7 +2,7 @@ import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 
 export interface ConditionalActionProperties extends GameActionProperties {
-    condition: ((context: AbilityContext) => boolean) | boolean;
+    condition: ((context: AbilityContext, properties: ConditionalActionProperties) => boolean) | boolean;
     trueGameAction: GameAction;
     falseGameAction: GameAction;
 }
@@ -21,7 +21,7 @@ export class ConditionalAction extends GameAction {
         let properties = this.getProperties(context, additionalProperties);
         let condition = properties.condition;
         if(typeof(condition) === 'function') {
-            condition = condition(context);
+            condition = condition(context, properties);
         }
         return condition ? properties.trueGameAction : properties.falseGameAction;
     }
