@@ -104,8 +104,7 @@ class AbilityTargetAbility {
         if(!context.tokens[this.name] || context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
             return false;
         }
-        return this.selector.canTarget(context.tokens[this.name].card, context) &&
-            (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+        return this.selector.canTarget(context.tokens[this.name].card, context);
     }
 
     getChoosingPlayer(context) {

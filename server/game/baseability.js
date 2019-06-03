@@ -172,8 +172,12 @@ class BaseAbility {
     }
 
     resolveRemainingTargets(context, nextTarget) {
-        let index = this.targets.indexOf(nextTarget);
-        for(let target of this.targets.slice(index)) {
+        const index = this.targets.indexOf(nextTarget);
+        let targets = this.targets.slice();
+        if(targets.slice(0, index).every(target => target.checkTarget(context))) {
+            targets = targets.slice(index);
+        }
+        for(const target of targets) {
             context.game.queueSimpleStep(() => target.resolve(context, {}));
         }
     }
