@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, CardTypes } = require('../../Constants');
+// const { Durations, CardTypes } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class CommandRespect extends DrawCard {
@@ -10,12 +10,8 @@ class CommandRespect extends DrawCard {
                 return context.player.hand.size() < context.player.opponent.hand.size() &&
                 context.game.isDuringConflict();
             },
-            max: AbilityDsl.limit.perConflict(1),
-            gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
-                duration: Durations.UntilEndOfConflict,
-                // condition: () => context.target.isDefending(),
-                effect: AbilityDsl.actions.takeHonor()
-            }))
+            max: AbilityDsl.limit.perConflict(1)
+            // gameAction:
         });
     }
 }
