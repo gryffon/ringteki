@@ -26,7 +26,8 @@ describe('False Loyalites', function() {
             it('should trigger after a opponent wins a conflict', function() {
                 this.initiateConflict({
                     type: 'political',
-                    attackers: [this.shono]
+                    attackers: [this.shono],
+                    defenders: []
                 });
                 this.noMoreActions();
                 expect(this.player2).toHavePrompt('Any Reactions');

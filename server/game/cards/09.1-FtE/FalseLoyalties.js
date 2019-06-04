@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
 const { Players, CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class FalseLoyalties extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.reaction({
             title:'Switch 2 characters your opponent controls',
             when: {
@@ -24,9 +25,9 @@ class FalseLoyalties extends DrawCard {
                     cardType: CardTypes.Character,
                     controller: Players.Opponent,
                     cardCondition: card => !card.isParticipating(),
-                    gameAction: ability.actions.joint([
-                        ability.actions.sendHome(context => ({ target: context.targets.characterInConflict })),
-                        ability.actions.moveToConflict()
+                    gameAction: AbilityDsl.actions.joint([
+                        AbilityDsl.actions.sendHome(context => ({ target: context.targets.characterInConflict })),
+                        AbilityDsl.actions.moveToConflict()
                     ])
                 }
             },
