@@ -1,7 +1,8 @@
 const ProvinceCard = require('../../provincecard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class SceneOfTheCrime extends ProvinceCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.reaction({
             title: 'Look at opponent\'s hand',
             when: {
@@ -9,7 +10,7 @@ class SceneOfTheCrime extends ProvinceCard {
             },
             effect: 'look at {1}\'s hand',
             effectArgs: context => context.player.opponent,
-            gameAction: ability.actions.lookAt(context => ({ target: context.player.opponent.hand.sortBy(card => card.name), chatMessage: true }))
+            gameAction: AbilityDsl.actions.lookAt(context => ({ target: context.player.opponent.hand.sortBy(card => card.name), chatMessage: true }))
         });
     }
 }
