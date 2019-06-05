@@ -1,17 +1,18 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class AdornedBarcha extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Move character into the conflict',
             condition: context => !context.source.parent.isParticipating() && this.game.isDuringConflict('military'),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
-                gameAction: ability.actions.bow()
+                gameAction: AbilityDsl.actions.bow()
             },
-            gameAction: ability.actions.moveToConflict(context => ({ target: context.source.parent }))
+            gameAction: AbilityDsl.actions.moveToConflict(context => ({ target: context.source.parent }))
         });
     }
 
