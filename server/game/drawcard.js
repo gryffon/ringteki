@@ -207,15 +207,15 @@ class DrawCard extends BaseCard {
         let militarySkill = copyEffect ? copyEffect.printedMilitarySkill : this.printedMilitarySkill;
         if(Number.isNaN(militarySkill)) {
             if(copyEffect) {
-                return [{ amount: undefined, display: '-', name: 'base via ' + copyEffect.context.source.name, isBase: true }];
+                return [{ amount: undefined, display: '-', name: 'base via ' + this.getEffectName(copyEffect), isBase: true }];
             }
             return [{ amount: undefined, display: '-', name: 'base', isBase: true }];
         }
 
         // dash effects
-        let dashEffects = this.effects.filter(effect => effect.type === EffectNames.SetDash);
-        if(dashEffects.includes('military')) {
-            return [{ amount: undefined, display: '-', name: '' + dashEffects.map(e => e.context.source.name).join(', '), isBase: true }];
+        let dashEffects = this.effects.filter(effect => effect.type === EffectNames.SetDash && effect.getValue(this) === 'military');
+        if(dashEffects.length > 0) {
+            return [{ amount: undefined, display: '-', name: '' + dashEffects.map(e => this.getEffectName(e)).join(', '), isBase: true }];
         }
 
         // set effects
@@ -223,7 +223,7 @@ class DrawCard extends BaseCard {
         if(setEffects.length > 0) {
             let latestSetEffect = _.last(setEffects);
             let setAmount = latestSetEffect.getValue(this);
-            return [{ amount: setAmount, display: setAmount.toString(), name: 'set by ' + latestSetEffect.context.source.name, isBase: true}];
+            return [{ amount: setAmount, display: setAmount.toString(), name: 'set by ' + this.getEffectName(latestSetEffect), isBase: true}];
         }
 
         let modifiers = [];
@@ -232,26 +232,27 @@ class DrawCard extends BaseCard {
         if(setBaseEffects.length > 0) {
             let latestSetBaseEffect = _.last(setBaseEffects);
             let setBaseAmount = latestSetBaseEffect.getValue(this);
-            modifiers.push({ amount: setBaseAmount, display: setBaseAmount.toString(), name: 'base set by ' + latestSetBaseEffect.context.source.name, isBase: true });
+            modifiers.push({ amount: setBaseAmount, display: setBaseAmount.toString(), name: 'base set by ' + this.getEffectName(latestSetBaseEffect), isBase: true });
+        } else {
+            if(copyEffect) {
+                modifiers.push({ amount: militarySkill, display: '-', name: 'base via ' + this.getEffectName(copyEffect), isBase: true });
+            } else {
+                modifiers.push({ amount: militarySkill, display: militarySkill.toString(), name: 'base', isBase: true });
+            }
         }
-
-        if(copyEffect) {
-            modifiers.push({ amount: militarySkill, display: '-', name: 'base via ' + copyEffect.context.source.name, isBase: true });
-        }
-        modifiers.push({ amount: militarySkill, display: militarySkill.toString(), name: 'base', isBase: true });
 
         // base modifiers
         let baseModifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyBaseMilitarySkill);
         baseModifierEffects.forEach(baseModifierEffect => {
             const value = baseModifierEffect.getValue(this);
-            modifiers.push({ amount: value, display: value.toString(), name: 'to base via ' + baseModifierEffect.context.source.name, isBase: true });
+            modifiers.push({ amount: value, display: value.toString(), name: 'to base via ' + this.getEffectName(baseModifierEffect), isBase: true });
         });
 
         // skill modifiers
         let modifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyMilitarySkill || effect.type === EffectNames.ModifyBothSkills);
         modifierEffects.forEach(modifierEffect => {
             const value = modifierEffect.getValue(this);
-            modifiers.push({ amount: value, display: value.toString(), name: '' + modifierEffect.context.source.name, isBase: false });
+            modifiers.push({ amount: value, display: value.toString(), name: '' + this.getEffectName(modifierEffect), isBase: false });
         });
 
         // attachment bonus
@@ -272,10 +273,17 @@ class DrawCard extends BaseCard {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
             let amount = (multiplier - 1) * currentTotal;
-            modifiers.push({ amount: amount, display: amount.toString(), name: '' + multiplierEffect.context.source.name, isBase: false });
+            modifiers.push({ amount: amount, display: amount.toString(), name: '' + this.getEffectName(multiplierEffect), isBase: false });
         });
 
         return modifiers;
+    }
+
+    getEffectName(effect) {
+        if(effect.context && effect.context.source) {
+            return effect.context.source.name;
+        }
+        return 'unknown';
     }
 
     getPoliticalModifiers() {
@@ -284,15 +292,15 @@ class DrawCard extends BaseCard {
         let politicalSkill = copyEffect ? copyEffect.printedPoliticalSkill : this.printedPoliticalSkill;
         if(Number.isNaN(politicalSkill)) {
             if(copyEffect) {
-                return [{ amount: undefined, display: '-', name: 'base via ' + copyEffect.context.source.name, isBase: true }];
+                return [{ amount: undefined, display: '-', name: 'base via ' + this.getEffectName(copyEffect), isBase: true }];
             }
             return [{ amount: undefined, display: '-', name: 'base', isBase: true }];
         }
 
         // dash effects
-        let dashEffects = this.effects.filter(effect => effect.type === EffectNames.SetDash);
-        if(dashEffects.includes('political')) {
-            return [{ amount: undefined, display: '-', name: '' + dashEffects.map(e => e.context.source.name).join(', '), isBase: true }];
+        let dashEffects = this.effects.filter(effect => effect.type === EffectNames.SetDash && effect.getValue(this) === 'political');
+        if(dashEffects.length > 0) {
+            return [{ amount: undefined, display: '-', name: '' + dashEffects.map(e => this.getEffectName(e)).join(', '), isBase: true }];
         }
 
         // set effects
@@ -300,7 +308,7 @@ class DrawCard extends BaseCard {
         if(setEffects.length > 0) {
             let latestSetEffect = _.last(setEffects);
             let setAmount = latestSetEffect.getValue(this);
-            return [{ amount: setAmount, display: setAmount.toString(), name: 'set by ' + latestSetEffect.context.source.name, isBase: true }];
+            return [{ amount: setAmount, display: setAmount.toString(), name: 'set by ' + this.getEffectName(latestSetEffect), isBase: true }];
         }
 
         let modifiers = [];
@@ -309,26 +317,27 @@ class DrawCard extends BaseCard {
         if(setBaseEffects.length > 0) {
             let latestSetBaseEffect = _.last(setBaseEffects);
             let setBaseAmount = latestSetBaseEffect.getValue(this);
-            modifiers.push({ amount: setBaseAmount, display: setBaseAmount.toString(), name: 'base set by ' + latestSetBaseEffect.context.source.name, isBase: true });
+            modifiers.push({ amount: setBaseAmount, display: setBaseAmount.toString(), name: 'base set by ' + this.getEffectName(latestSetBaseEffect), isBase: true });
+        } else {
+            if(copyEffect) {
+                modifiers.push({ amount: politicalSkill, display: '-', name: 'base via ' + this.getEffectName(copyEffect), isBase: true });
+            } else {
+                modifiers.push({ amount: politicalSkill, display: politicalSkill.toString(), name: 'base', isBase: true });
+            }
         }
-
-        if(copyEffect) {
-            modifiers.push({ amount: politicalSkill, display: '-', name: 'base via ' + copyEffect.context.source.name, isBase: true });
-        }
-        modifiers.push({ amount: politicalSkill, display: politicalSkill.toString(), name: 'base', isBase: true });
 
         // base modifiers
         let baseModifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyBasePoliticalSkill);
         baseModifierEffects.forEach(baseModifierEffect => {
             const value = baseModifierEffect.getValue(this);
-            modifiers.push({ amount: value, display: value.toString(), name: 'to base via ' + baseModifierEffect.context.source.name, isBase: true });
+            modifiers.push({ amount: value, display: value.toString(), name: 'to base via ' + this.getEffectName(baseModifierEffect), isBase: true });
         });
 
         // skill modifiers
         let modifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyPoliticalSkill || effect.type === EffectNames.ModifyBothSkills);
         modifierEffects.forEach(modifierEffect => {
             const value = modifierEffect.getValue(this);
-            modifiers.push({ amount: value, display: value.toString(), name: '' + modifierEffect.context.source.name, isBase: false });
+            modifiers.push({ amount: value, display: value.toString(), name: '' + this.getEffectName(modifierEffect), isBase: false });
         });
 
         // attachment bonus
@@ -349,7 +358,7 @@ class DrawCard extends BaseCard {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
             let amount = (multiplier - 1) * currentTotal;
-            modifiers.push({ amount: amount, display: amount.toString(), name: '' + multiplierEffect.context.source.name, isBase: false });
+            modifiers.push({ amount: amount, display: amount.toString(), name: '' + this.getEffectName(multiplierEffect), isBase: false });
         });
 
         return modifiers;
@@ -362,16 +371,19 @@ class DrawCard extends BaseCard {
                 if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
                     let amount = 0 - this.getGlory();
                     modifiers.push({ amount: amount, display: amount.toString(), name: 'honored (reversed)', isBase: false });
+                } else {
+                    let amount = this.getGlory();
+                    modifiers.push({ amount: amount, display: amount.toString(), name: 'honored', isBase: false });
                 }
-                let amount = this.getGlory();
-                modifiers.push({ amount: amount, display: amount.toString(), name: 'honored', isBase: false });
             } else if(this.isDishonored) {
                 if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
                     let amount = this.getGlory();
                     modifiers.push({ amount: amount, display: amount.toString(), name: 'dishonored (reversed)', isBase: false });
                 }
-                let amount = 0 - this.getGlory();
-                modifiers.push({ amount: amount, display: amount.toString(), name: 'dishonored', isBase: false });
+                else {
+                    let amount = 0 - this.getGlory();
+                    modifiers.push({ amount: amount, display: amount.toString(), name: 'dishonored', isBase: false });
+                }
             }
         }
         return modifiers;
@@ -468,8 +480,8 @@ class DrawCard extends BaseCard {
     getBaseMilitarySkill() {
         let modifiers = this.getMilitaryModifiers().filter(modifier => modifier.isBase);
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
-
-        if(this.isNaN(skill)) {
+        
+        if(Number.isNaN(skill)) {
             return 0;
         }
         return Math.max(0, skill);
@@ -483,7 +495,7 @@ class DrawCard extends BaseCard {
         let modifiers = this.getPoliticalModifiers().filter(modifier => modifier.isBase);
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
 
-        if(this.isNaN(skill)) {
+        if(Number.isNaN(skill)) {
             return 0;
         }
         return Math.max(0, skill);
