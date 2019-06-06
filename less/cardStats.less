@@ -4,6 +4,7 @@
     pointer-events: none;
     min-width: 250px;
     background-color: rgba(0, 0, 0, 0.85);
+    padding: 1px;
 
     & .stat-container {
         border: none;
@@ -42,9 +43,29 @@
 }
 
 .stat-specifics {
-    font-size: 1.2em;
+    font-size: 1.0em;
     flex: 3 1 100%;
     border: 1px solid #336600;
     border-radius: 4px;
-    padding: 5px;
+    padding: 8px;
+}
+
+.stat-specifics .stat-line {
+    display: flex;
+    flex-direction: row;
+    line-height: 4px;
+}
+
+.stat-specifics .stat-sign {
+    min-width: 10px;
+    text-align: center;
+}
+
+.stat-specifics .stat-amount {
+    min-width: 14px;
+    text-align: right;
+}
+
+.stat-specifics .stat-name {
+    margin-left: 5px;
 }
