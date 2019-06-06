@@ -207,9 +207,9 @@ class DrawCard extends BaseCard {
         let militarySkill = copyEffect ? copyEffect.printedMilitarySkill : this.printedMilitarySkill;
         if(Number.isNaN(militarySkill)) {
             if(copyEffect) {
-                return [{ amount: undefined, name: 'Base via ' + this.getEffectName(copyEffect), countsAsBase: true }];
+                return [{ amount: undefined, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true }];
             }
-            return [{ amount: undefined, name: 'Base (printed)', countsAsBase: true }];
+            return [{ amount: undefined, name: 'Base', countsAsBase: true }];
         }
 
         // dash effects
@@ -235,9 +235,9 @@ class DrawCard extends BaseCard {
             modifiers.push({ amount: setBaseAmount, name: 'Base set by ' + this.getEffectName(latestSetBaseEffect), countsAsBase: true });
         } else {
             if(copyEffect) {
-                modifiers.push({ amount: militarySkill, name: 'Base via ' + this.getEffectName(copyEffect), countsAsBase: true });
+                modifiers.push({ amount: militarySkill, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true });
             } else {
-                modifiers.push({ amount: militarySkill, name: 'Base (printed)', countsAsBase: true });
+                modifiers.push({ amount: militarySkill, name: 'Base', countsAsBase: true });
             }
         }
 
@@ -245,7 +245,7 @@ class DrawCard extends BaseCard {
         let baseModifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyBaseMilitarySkill);
         baseModifierEffects.forEach(baseModifierEffect => {
             const value = baseModifierEffect.getValue(this);
-            modifiers.push({ amount: value, name: 'Base via ' + this.getEffectName(baseModifierEffect), countsAsBase: true });
+            modifiers.push({ amount: value, name: 'Base due to ' + this.getEffectName(baseModifierEffect), countsAsBase: true });
         });
 
         // skill modifiers
@@ -292,9 +292,9 @@ class DrawCard extends BaseCard {
         let politicalSkill = copyEffect ? copyEffect.printedPoliticalSkill : this.printedPoliticalSkill;
         if(Number.isNaN(politicalSkill)) {
             if(copyEffect) {
-                return [{ amount: undefined, name: 'Base via ' + this.getEffectName(copyEffect), countsAsBase: true }];
+                return [{ amount: undefined, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true }];
             }
-            return [{ amount: undefined, name: 'Base (printed)', countsAsBase: true }];
+            return [{ amount: undefined, name: 'Base', countsAsBase: true }];
         }
 
         // dash effects
@@ -320,9 +320,9 @@ class DrawCard extends BaseCard {
             modifiers.push({ amount: setBaseAmount, name: 'Base set by ' + this.getEffectName(latestSetBaseEffect), countsAsBase: true });
         } else {
             if(copyEffect) {
-                modifiers.push({ amount: politicalSkill, name: 'Base via ' + this.getEffectName(copyEffect), countsAsBase: true });
+                modifiers.push({ amount: politicalSkill, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true });
             } else {
-                modifiers.push({ amount: politicalSkill, name: 'Base (printed)', countsAsBase: true });
+                modifiers.push({ amount: politicalSkill, name: 'Base', countsAsBase: true });
             }
         }
 
@@ -330,7 +330,7 @@ class DrawCard extends BaseCard {
         let baseModifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyBasePoliticalSkill);
         baseModifierEffects.forEach(baseModifierEffect => {
             const value = baseModifierEffect.getValue(this);
-            modifiers.push({ amount: value, name: 'Base via ' + this.getEffectName(baseModifierEffect), countsAsBase: true });
+            modifiers.push({ amount: value, name: 'Base due to ' + this.getEffectName(baseModifierEffect), countsAsBase: true });
         });
 
         // skill modifiers

@@ -27,12 +27,9 @@ class CardStats extends React.Component {
             var renderModifiers = (modifiers) => {
                 let groupedModifiers = Object.values(_.groupBy(modifiers, 'name'));
                 return groupedModifiers.map((groupedModifier, index) => {
-                    return <p>{ renderGroupedModifier(groupedModifier, index) }</p>;
+                    return renderGroupedModifier(groupedModifier, index);
                 });
             };
-
-            var militaryModifiersDisplay = renderModifiers(this.props.militarySkillSummary.modifiers);
-            var politicalModifiersDisplay = renderModifiers(this.props.politicalSkillSummary.modifiers);
 
             return (
                 <div className='panel menu card--stats '>
@@ -42,7 +39,7 @@ class CardStats extends React.Component {
                             <span className='stat-value'>{ this.props.militarySkillSummary.skill }</span>
                         </div>
                         <div className='stat-specifics'>
-                            { militaryModifiersDisplay }
+                            { renderModifiers(this.props.militarySkillSummary.modifiers) }
                         </div>
                     </div>
                     <div className='stat-container'>
@@ -51,7 +48,7 @@ class CardStats extends React.Component {
                             <span className='stat-value'>{ this.props.politicalSkillSummary.skill }</span>
                         </div>
                         <div className='stat-specifics'>
-                            { politicalModifiersDisplay }
+                            { renderModifiers(this.props.politicalSkillSummary.modifiers) }
                         </div>
                     </div>
                 </div>
