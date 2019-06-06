@@ -1,0 +1,50 @@
+
+.card--stats {
+    opacity: 0;
+    pointer-events: none;
+    min-width: 250px;
+    background-color: rgba(0, 0, 0, 0.85);
+
+    & .stat-container {
+        border: none;
+    }
+}
+  
+.card-frame:hover  .card--stats {
+    opacity: 1;
+    transition-delay: 0.5s;
+}
+
+
+.stat-container {
+    display: flex;
+    flex-direction: row;
+    padding: 0px;
+}
+
+.stat-total {
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    margin-right: 10px;
+    border: 1px solid #336600;
+    border-radius: 4px;
+
+    & .stat--type-icon {
+        margin-bottom: 5px;
+    }
+}
+
+.stat-value {
+    margin-left: 0;
+    align-self: center;
+    font-size: 1.5em;
+}
+
+.stat-specifics {
+    font-size: 1.2em;
+    flex: 3 1 100%;
+    border: 1px solid #336600;
+    border-radius: 4px;
+    padding: 5px;
+}

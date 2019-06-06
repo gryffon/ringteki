@@ -392,13 +392,9 @@ class Card extends React.Component {
                     <CardCounters counters={ this.getCountersForCard(this.props.card) } />
                 </div>
                 { this.showMenu() ? <CardMenu menu={ this.props.card.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
-                { this.showStats() ? <CardStats text={ this.props.card.name } militarySkillSummary={ this.props.card.militarySkillSummary } politicalSkillSummary={ this.props.card.politicalSkillSummary } /> : null }
+                <CardStats text={ this.props.card.name } militarySkillSummary={ this.props.card.militarySkillSummary } politicalSkillSummary={ this.props.card.politicalSkillSummary } />
                 { this.getPopup() }
             </div>);
-    }
-
-    showStats() {
-        return this.props.card.showStats && this.state.showStats;
     }
 
     onCloseClick(event) {
