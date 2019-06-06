@@ -19,8 +19,7 @@ class Card extends React.Component {
 
         this.state = {
             showPopup: false,
-            showMenu: false,
-            showStats: false
+            showMenu: false
         };
 
         this.shortNames = {
@@ -38,14 +37,12 @@ class Card extends React.Component {
         if(this.props.onMouseOver) {
             this.props.onMouseOver(card);
         }
-        this.setState({ showStats: true });
     }
 
     onMouseOut() {
         if(this.props.onMouseOut) {
             this.props.onMouseOut();
         }
-        this.setState({ showStats: false });
     }
 
     onCardDragStart(event, card, source) {
@@ -538,7 +535,6 @@ Card.propTypes = {
         selectable: PropTypes.bool,
         selected: PropTypes.bool,
         showPopup: PropTypes.bool,
-        showStats: PropTypes.bool,
         strength: PropTypes.number,
         tokens: PropTypes.object,
         type: PropTypes.string,
