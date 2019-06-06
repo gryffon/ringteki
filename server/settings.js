@@ -12,6 +12,7 @@ const defaultOptionSettings = {
     cancelOwnAbilities: false,
     orderForcedAbilities: false,
     confirmOneClick: false,
+    disableCardStats: false,
     showStatusInSidebar: false
 };
 
