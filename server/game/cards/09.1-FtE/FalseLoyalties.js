@@ -8,7 +8,7 @@ class FalseLoyalties extends DrawCard {
             title:'Switch 2 characters your opponent controls',
             when: {
                 afterConflict: (event, context) => {
-                    return event.conflict.winner === context.player.opponent &&
+                    return  context.player.opponent && event.conflict.winner === context.player.opponent &&
                     context.player.honor < context.player.opponent.honor;
                 }
             },
