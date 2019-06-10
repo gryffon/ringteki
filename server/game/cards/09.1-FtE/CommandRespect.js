@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, CardTypes } = require('../../Constants');
+const { Durations, CardTypes, Players } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class CommandRespect extends DrawCard {
@@ -15,7 +15,9 @@ class CommandRespect extends DrawCard {
                 return {
                     duration: Durations.UntilEndOfConflict,
                     effect: AbilityDsl.effects.increaseHonorCost({
-                        condition: (futureContext) => futureContext.source.type === CardTypes.Event,
+                        condition: (event) => event.source.type === CardTypes.Event,
+                        type: 'giveOpponentHonor',
+                        targetController: Players.Opponent,
                         amount: 1
                     })
                 };
