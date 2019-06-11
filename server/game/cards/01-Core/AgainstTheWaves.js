@@ -1,14 +1,15 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AgainstTheWaves extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Bow or ready a shugenja',
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.hasTrait('shugenja'),
-                gameAction: [ability.actions.bow(), ability.actions.ready()]
+                gameAction: [AbilityDsl.actions.bow(), AbilityDsl.actions.ready()]
             }
         });
     }
