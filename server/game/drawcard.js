@@ -5,6 +5,7 @@ const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
+const PlayDisguisedCharacterAction = require('./PlayDisguisedCharacterAction');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
 const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
@@ -70,10 +71,13 @@ class DrawCard extends BaseCard {
 
         this.printedKeywords = [];
         this.allowedAttachmentTraits = [];
+        this.disguisedKeywordTraits = [];
 
         _.each(potentialKeywords, keyword => {
             if(_.contains(ValidKeywords, keyword)) {
                 this.printedKeywords.push(keyword);
+            } else if(keyword.startsWith('disguised ')) {
+                this.disguisedKeywordTraits.push(keyword.replace('disguised ', ''));
             } else if(keyword.startsWith('no attachments except')) {
                 var traits = keyword.replace('no attachments except ', '');
                 this.allowedAttachmentTraits = traits.split(' or ');
@@ -142,7 +146,7 @@ class DrawCard extends BaseCard {
 
     anotherUniqueInPlay(player) {
         return this.isUnique() && this.game.allCards.any(card => (
-            card.location === Locations.PlayArea &&
+            card.isInPlay() &&
             card.printedName === this.printedName &&
             card !== this &&
             (card.owner === player || card.controller === player || card.owner === this.owner)
@@ -491,6 +495,9 @@ class DrawCard extends BaseCard {
         }
         let actions = this.abilities.playActions.slice();
         if(this.type === CardTypes.Character) {
+            if(this.disguisedKeywordTraits.length > 0) {
+                actions.push(new PlayDisguisedCharacterAction(this));
+            }
             if(this.isDynasty) {
                 actions.push(new DynastyCardAction(this));
             } else {
@@ -593,7 +600,7 @@ class DrawCard extends BaseCard {
     }
 
     getModifiedController() {
-        if(this.location === Locations.PlayArea) {
+        if(this.location === Locations.PlayArea || this.type === CardTypes.Holding && this.location.includes('province')) {
             return this.mostRecentEffect(EffectNames.TakeControl) || this.defaultController;
         }
         return this.owner;
