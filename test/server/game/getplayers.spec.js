@@ -51,20 +51,6 @@ describe('Game', function() {
         });
 
         describe('when there are two players', function() {
-            xdescribe('and first player is not set', function() {
-                beforeEach(function() {
-                    this.game.playersAndSpectators['test1'] = this.notSetPlayer1;
-                    this.game.playersAndSpectators['test2'] = this.notSetPlayer2;
-
-                    this.players = this.game.getPlayersInFirstPlayerOrder();
-                });
-
-                it('should return the players in key order', function() {
-                    expect(this.players[0]).toBe(this.notSetPlayer1);
-                    expect(this.players[1]).toBe(this.notSetPlayer2);
-                });
-            });
-
             describe('when player 1 is first player', function() {
                 beforeEach(function() {
                     this.game.playersAndSpectators['test1'] = this.setPlayer1;

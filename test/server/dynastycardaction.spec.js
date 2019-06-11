@@ -62,26 +62,6 @@ describe('DynastyCardAction', function () {
             });
         });
 
-        xdescribe('when the card is an event', function() {
-            beforeEach(function() {
-                this.cardSpy.getType.and.returnValue('event');
-            });
-
-            it('should return false', function() {
-                expect(this.action.meetsRequirements(this.context)).toBe(false);
-            });
-        });
-
-        xdescribe('when the card is forbidden from being played in dynasty', function() {
-            beforeEach(function() {
-                this.cardSpy.isDynasty = false;
-            });
-
-            it('should return false', function() {
-                expect(this.action.meetsRequirements(this.context)).toBe(false);
-            });
-        });
-
         describe('when there is another unique copy of that card in play', function() {
             beforeEach(function() {
                 this.cardSpy.anotherUniqueInPlay.and.returnValue(true);

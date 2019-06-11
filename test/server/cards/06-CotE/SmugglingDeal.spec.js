@@ -138,7 +138,7 @@ describe('Smuggling Deal', function() {
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('3');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
-                expect(this.player2.player.honor < this.player1.player.honor).toBe(true);
+                expect(this.player2.player.honor).toBeLessThan(this.player1.player.honor);
                 expect(this.daringChallenger.controller).toBe(this.player1.player);
                 this.player2.clickCard(this.blackmail);
                 this.player2.clickCard(this.daringChallenger);

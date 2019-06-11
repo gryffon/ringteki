@@ -299,10 +299,6 @@ describe('Togashi Yokuni', function() {
                 this.player2.clickPrompt('Yes');
                 expect(this.bayushiManipulator.isDishonored).toBe(true);
             });
-
-            it('should require 2 targets', function() {
-
-            });
         });
 
         describe('Togashi Yokuni/Illustrious Plagiarist interaction', function() {
@@ -467,10 +463,6 @@ describe('Togashi Yokuni', function() {
                 expect(this.player1).toHavePrompt('Air Ring');
                 this.player1.clickPrompt('Gain 2 honor');
                 expect(this.togashiYokuni.location).toBe('dynasty discard pile');
-            });
-
-            it('should require 2 targets', function() {
-
             });
         });
 
