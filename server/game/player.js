@@ -1001,7 +1001,7 @@ class Player extends GameObject {
         }
 
         if(provinceLocations.includes(targetLocation)) {
-            if([Locations.DynastyDeck, Locations.ProvinceDeck].includes(location)) {
+            if([Locations.DynastyDeck].includes(location)) {
                 card.facedown = true;
             }
             if(!this.takenDynastyMulligan && card.isDynasty) {

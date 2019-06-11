@@ -17,8 +17,7 @@ export class LookAtAction extends CardGameAction {
     };
     
     canAffect(card: BaseCard, context: AbilityContext) {
-        let testLocations = [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince, Locations.PlayArea];
-        if(!card.facedown && testLocations.includes(card.location)) {
+        if(!card.facedown && (card.isInProvince() || card.location === Locations.PlayArea)) {
             return false;
         }
         return super.canAffect(card, context);

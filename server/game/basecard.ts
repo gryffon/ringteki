@@ -23,6 +23,7 @@ class BaseCard extends EffectSource {
     printedName: string;
     inConflict: boolean = false;
     type: CardTypes;
+    facedown: boolean;
     
     tokens: object = {};
     menu: _.Underscore<any> = _([]);
@@ -184,6 +185,11 @@ class BaseCard extends EffectSource {
             return this.printedFaction === faction && !this.anyEffect(EffectNames.AddFaction);
         }
         return this.printedFaction === faction || this.getEffects(EffectNames.AddFaction).includes(faction);
+    }
+
+    isInProvince(): boolean {
+        return [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, 
+            Locations.ProvinceFour, Locations.StrongholdProvince].includes(this.location);
     }
 
     applyAnyLocationPersistentEffects(): void {

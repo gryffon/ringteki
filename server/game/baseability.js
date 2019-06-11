@@ -98,12 +98,16 @@ class BaseAbility {
             return 'cost';
         }
         if(this.targets.length === 0) {
-            if(this.gameAction.length > 0 && !this.gameAction.some(gameAction => gameAction.hasLegalTarget(context))) {
+            if(this.gameAction.length > 0 && !this.checkGameActionsForPotential(context)) {
                 return 'condition';
             }
             return '';
         }
         return this.canResolveTargets(context) ? '' : 'target';
+    }
+
+    checkGameActionsForPotential(context) {
+        return this.gameAction.some(gameAction => gameAction.hasLegalTarget(context));
     }
 
     /**

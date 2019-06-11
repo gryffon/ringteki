@@ -11,6 +11,7 @@ type PlayerOrRingOrCardOrToken = Player | Ring | BaseCard | StatusToken;
 
 export interface GameActionProperties {
     target?: PlayerOrRingOrCardOrToken | PlayerOrRingOrCardOrToken[];
+    optional?: boolean;
 }
 
 export class GameAction {
@@ -21,7 +22,7 @@ export class GameAction {
     name = '';
     cost = '';
     effect = '';
-    defaultProperties: GameActionProperties = {};
+    defaultProperties: GameActionProperties = { optional: false };
     getDefaultTargets: (context: AbilityContext) => any = context => this.defaultTargets(context);
 
     constructor(propertyFactory: GameActionProperties | ((context?: AbilityContext) => GameActionProperties) = {}) {
@@ -125,6 +126,11 @@ export class GameAction {
 
     isEventFullyResolved(event: Event, target: any, context: AbilityContext, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
         return !event.cancelled && event.name === this.eventName;
+    }
+
+    isOptional(context: AbilityContext, additionalProperties = {}): boolean {
+        const { optional } = this.getProperties(context, additionalProperties);
+        return optional;
     }
 
     moveFateEventCondition(event): boolean {

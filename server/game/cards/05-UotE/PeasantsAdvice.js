@@ -13,11 +13,14 @@ class PeasantsAdvice extends DrawCard {
                 location: Locations.Provinces,
                 gameAction: AbilityDsl.actions.sequential([
                     AbilityDsl.actions.lookAt(),
-                    AbilityDsl.actions.cardMenu(context => ({
-                        activePromptTitle: 'Choose a card to return to owner\'s deck',
-                        cards: context.target.controller.getSourceList(context.target.location).filter(card => card.isDynasty && !card.facedown),
-                        choices: ['Done'],
-                        handlers: [() => this.game.addMessage('{0} chooses not to return a dynasty card to its owner\'s deck', context.player)],
+                    AbilityDsl.actions.selectCard(context => ({
+                        activePromptTitle: 'Choose a faceup card to return to its owner\'s deck',
+                        cardCondition: card =>
+                            card.location === context.target.location &&
+                            card.controller === context.target.controller &&
+                            card.isDynasty && !card.facedown,
+                        location: Locations.Provinces,
+                        optional: true,
                         message: '{0} chooses to shuffle {1} into its owner\'s deck',
                         messageArgs: card => [context.player, card],
                         gameAction: AbilityDsl.actions.moveCard({
@@ -33,6 +36,6 @@ class PeasantsAdvice extends DrawCard {
     }
 }
 
-PeasantsAdvice.id = 'peasant-s-advice'; // This is a guess at what the id might be - please check it!!!
+PeasantsAdvice.id = 'peasant-s-advice';
 
 module.exports = PeasantsAdvice;

@@ -17,7 +17,6 @@ const Effects = {
     // Card effects
     addElementAsAttacker: (element) => EffectBuilder.card.flexible(EffectNames.AddElementAsAttacker, element),
     addFaction: (faction) => EffectBuilder.card.static(EffectNames.AddFaction, faction),
-    addGloryToBothSkills: () => EffectBuilder.card.static(EffectNames.AddGloryToBothSkills),
     addKeyword: (keyword) => EffectBuilder.card.static(EffectNames.AddKeyword, keyword),
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
     blank: () => EffectBuilder.card.static(EffectNames.Blank),
@@ -43,6 +42,7 @@ const Effects = {
     doesNotBow: () => EffectBuilder.card.static(EffectNames.DoesNotBow),
     doesNotReady: () => EffectBuilder.card.static(EffectNames.DoesNotReady),
     gainAbility: (abilityType, properties) => EffectBuilder.card.static(EffectNames.GainAbility, new GainAbility(abilityType, properties)),
+    gainExtraFateWhenPlayed: (amount = 1) => EffectBuilder.card.flexible(EffectNames.GainExtraFateWhenPlayed, amount),
     gainPlayAction: (playActionClass) => EffectBuilder.card.detached(EffectNames.GainPlayAction, {
         apply: card => {
             let action = new playActionClass(card);

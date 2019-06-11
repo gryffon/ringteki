@@ -91,12 +91,19 @@ class SetupProvincesPrompt extends AllPlayerPrompt {
         }
 
         this.strongholdProvince[player.uuid].inConflict = false;
+        if(!this.strongholdProvince[player.uuid].startsGameFaceup()) {
+            this.strongholdProvince[player.uuid].facedown = true;
+        }
         this.clickedDone[player.uuid] = true;
         this.game.addMessage('{0} has placed their provinces', player);
         player.moveCard(this.strongholdProvince[player.uuid], Locations.StrongholdProvince);
         let provinces = this.selectedCards[player.uuid].concat(_.shuffle(this.selectableCards[player.uuid]));
         for(let i = 1; i < 5; i++) {
-            player.moveCard(provinces[i - 1], 'province ' + i.toString());
+            let provinceCard = provinces[i - 1];
+            if(!provinceCard.startsGameFaceup()) {
+                provinceCard.facedown = true;
+            }
+            player.moveCard(provinceCard, 'province ' + i.toString());
         }
         player.hideProvinceDeck = true;
 

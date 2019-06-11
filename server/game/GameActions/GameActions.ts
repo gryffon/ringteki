@@ -30,6 +30,7 @@ import { LastingEffectAction, LastingEffectProperties } from './LastingEffectAct
 import { LastingEffectCardAction, LastingEffectCardProperties } from './LastingEffectCardAction';
 import { LastingEffectRingAction, LastingEffectRingProperties } from './LastingEffectRingAction';
 import { LookAtAction, LookAtProperties } from './LookAtAction';
+import { LoseFateProperties, LoseFateAction } from './LoseFateAction';
 import { LoseHonorAction, LoseHonorProperties } from './LoseHonorAction';
 import { MenuPromptAction, MenuPromptProperties } from './MenuPromptAction';
 import { ModifyBidAction, ModifyBidProperties } from './ModifyBidAction';
@@ -65,7 +66,7 @@ import { TakeFateRingAction, TakeFateRingProperties } from './TakeFateRingAction
 import { TakeRingAction, TakeRingProperties } from './TakeRingAction';
 import { TransferFateAction, TransferFateProperties } from './TransferFateAction';
 import { TransferHonorAction, TransferHonorProperties } from './TransferHonorAction';
-import { LoseFateProperties, LoseFateAction } from './LoseFateAction';
+import { TurnCardFacedownAction, TurnCardFacedownProperties } from './TurnCardFacedownAction';
 
 const GameActions = {
     // card 
@@ -98,6 +99,7 @@ const GameActions = {
     reveal: (propertyFactory: RevealProperties | ((context: TriggeredAbilityContext) => RevealProperties) = {}) => new RevealAction(propertyFactory), // chatMessage = false
     sendHome: (propertyFactory: SendHomeProperties | ((context: TriggeredAbilityContext) => SendHomeProperties) = {}) => new SendHomeAction(propertyFactory),
     sacrifice: (propertyFactory: DiscardFromPlayProperties | ((context: TriggeredAbilityContext) => DiscardFromPlayProperties) = {}) => new DiscardFromPlayAction(propertyFactory, true),
+    turnFacedown: (propertyFactory: TurnCardFacedownProperties | ((context: TriggeredAbilityContext) => TurnCardFacedownProperties) = {}) => new TurnCardFacedownAction(propertyFactory),
     // player actions
     chosenDiscard: (propertyFactory: ChosenDiscardProperties | ((context: TriggeredAbilityContext) => ChosenDiscardProperties) = {}) => new ChosenDiscardAction(propertyFactory), // amount = 1
     deckSearch: (propertyFactory: DeckSearchProperties | ((context: TriggeredAbilityContext) => DeckSearchProperties)) => new DeckSearchAction(propertyFactory), // amount = -1, reveal = true, cardCondition = (card, context) => true
