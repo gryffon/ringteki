@@ -97,7 +97,9 @@ export enum EffectNames {
     ContributeToConflict = 'contribute',
     ChangeConflictSkillFunction = 'skillFunction',
     ModifyConflictElementsToResolve = 'modifyConflictElementsToResolve',
-    RestrictNumberOfDefenders = 'restrictNumberOfDefenders'
+    RestrictNumberOfDefenders = 'restrictNumberOfDefenders',
+    GiveOpponentHonor = 'giveOpponentHonor',
+    LoseHonor = 'loeHonor'
 };
 
 export enum Durations {
