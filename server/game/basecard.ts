@@ -23,6 +23,7 @@ class BaseCard extends EffectSource {
     printedName: string;
     inConflict: boolean = false;
     type: CardTypes;
+    facedown: boolean;
     
     tokens: object = {};
     menu: _.Underscore<any> = _([]);

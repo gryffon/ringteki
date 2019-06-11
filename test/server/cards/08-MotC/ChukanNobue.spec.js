@@ -66,6 +66,10 @@ describe('Chukan Nobue', function() {
                 expect(this.player2).toBeAbleToSelect('upholding-authority');
                 this.upholdingAuthority = this.player2.clickCard('upholding-authority');
                 expect(this.getChatLogs(2)).toContain('player1 reveals their hand: Ornate Fan');
+                expect(this.player2).toHavePrompt('Choose a card to discard');
+                expect(this.player2).toHaveDisabledPromptButton('Ornate Fan');
+                expect(this.player2).toHavePromptButton('Don\'t discard anything');
+                this.player2.clickPrompt('Don\'t discard anything');
                 this.player1.clickPrompt('yes');
                 expect(this.player1).toHavePrompt('Air Ring');
             });

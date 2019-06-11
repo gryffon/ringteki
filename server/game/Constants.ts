@@ -27,7 +27,6 @@ export enum EffectNames {
     AbilityRestrictions = 'abilityRestrictions',
     AddElementAsAttacker = 'addElementAsAttacker',
     AddFaction = 'addFaction',
-    AddGloryToBothSkills = 'addGloryToBothSkills',
     AddKeyword = 'addKeyword',
     AddTrait = 'addTrait',
     Blank = 'blank',

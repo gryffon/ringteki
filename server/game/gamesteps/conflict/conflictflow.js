@@ -92,7 +92,6 @@ class ConflictFlow extends BaseStepWithPipeline {
         }
 
         _.each(this.conflict.attackers, card => card.inConflict = true);
-        this.game.addMessage('{0} is initiating a {1} conflict at {2}, contesting {3}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictProvince, this.conflict.ring);
         this.game.recordConflict(this.conflict);
     }
 
@@ -165,6 +164,8 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
+        this.game.addMessage('{0} is initiating a {1} conflict at {2}, contesting {3}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictProvince, this.conflict.ring);
+
         let events = [this.game.getEvent(EventNames.OnConflictDeclared, {
             conflict: this.conflict,
             type: this.conflict.conflictType,
@@ -192,7 +193,8 @@ class ConflictFlow extends BaseStepWithPipeline {
             if(this.conflict.conflictProvince.facedown) {
                 events.push(this.game.getEvent(EventNames.OnCardRevealed, {
                     card: this.conflict.conflictProvince,
-                    context: this.game.getFrameworkContext(this.conflict.attackingPlayer)
+                    context: this.game.getFrameworkContext(this.conflict.attackingPlayer),
+                    onDeclaration: true
                 }, () => this.conflict.conflictProvince.facedown = false));
             }
         }
