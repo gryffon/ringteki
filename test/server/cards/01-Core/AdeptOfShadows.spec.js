@@ -17,7 +17,7 @@ describe('Adept of Shadows', function() {
             });
 
             it('should return it to its owner\'s hand', function() {
-                var honor = this.player1.honor;
+                let honor = this.player1.honor;
                 this.player1.clickCard(this.adeptOfShadows);
                 expect(this.player1.honor).toBe(honor - 1);
                 expect(this.adeptOfShadows.location).toBe('hand');

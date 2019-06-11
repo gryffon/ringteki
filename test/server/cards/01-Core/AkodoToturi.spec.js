@@ -1,4 +1,4 @@
-describe('Akodo Gunso', function () {
+describe('Akodo Toturi', function () {
     integration(function () {
         describe('Akodo Toturi\'s ability', function () {
             beforeEach(function () {
