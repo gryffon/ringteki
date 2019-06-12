@@ -3,7 +3,7 @@ import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
 import { EventNames } from '../Constants';
 
-enum Direction {
+export enum Direction {
     Decrease = 'decrease',
     Increase = 'increase',
     Prompt = 'prompt'
