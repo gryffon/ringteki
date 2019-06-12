@@ -109,8 +109,7 @@ class AbilityTargetSelect {
         if(this.properties.targets && context.choosingPlayerOverride && this.getChoosingPlayer(context) === context.player) {
             return false;
         }
-        return context.selects[this.name] && this.isChoiceLegal(context.selects[this.name].choice, context) &&
-               (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+        return !!context.selects[this.name] && this.isChoiceLegal(context.selects[this.name].choice, context);
     }
 
     getChoosingPlayer(context) {

@@ -17,7 +17,7 @@ class MirumotoHitomi extends DrawCard {
                     type: DuelTypes.Military,
                     challenger: context.source,
                     message: '{0} chooses whether to dishonor or bow {1}',
-                    messageArgs: duel => [context.source === duel.winner ? context.player : context.player.opponent, duel.loser],
+                    messageArgs: duel => [context.source === duel.winner ? context.player.opponent : context.player, duel.loser],
                     gameAction: duel => duel.loser && AbilityDsl.actions.multiple([].concat(duel.loser).map(card => AbilityDsl.actions.chooseAction({
                         target: card,
                         player: context.player !== card.controller ? Players.Opponent : Players.Self,

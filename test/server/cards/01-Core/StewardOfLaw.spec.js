@@ -7,6 +7,9 @@ describe('Steward of Law', function() {
                     player1: {
                         inPlay: ['steward-of-law'],
                         hand: ['spies-at-court', 'court-games']
+                    },
+                    player2: {
+                        hand: ['banzai']
                     }
                 });
                 this.noMoreActions();
