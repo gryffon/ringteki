@@ -538,12 +538,12 @@ class DrawCard extends BaseCard {
             this.setPersonalHonor(new StatusToken(this.game, this, false));
         }
     }
-    
+
     makeOrdinary() {
         this.setPersonalHonor();
     }
 
-    get personalHonorStatus {
+    get personalHonorStatus() {
         return this.getPersonalHonorStatus();
     }
 
