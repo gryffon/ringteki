@@ -1,10 +1,11 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class BorderRider extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Ready this character',
-            gameAction: ability.actions.ready()
+            gameAction: AbilityDsl.actions.ready()
         });
     }
 }
