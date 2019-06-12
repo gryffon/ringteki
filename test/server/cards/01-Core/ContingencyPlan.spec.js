@@ -82,11 +82,14 @@ describe('Contingency Plan', function () {
                 expect(this.player2).toBeAbleToSelect(this.contingencyPlan);
                 this.player2.clickCard(this.contingencyPlan);
                 this.player2.clickPrompt('Decrease honor bid');
+                expect(this.getChatLogs(4)).toContain('player2 chooses to decrease their honor bid');
                 this.contingencyPlan2 = this.player2.findCardByName('contingency-plan', 'hand');
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.contingencyPlan2);
                 this.player2.clickCard(this.contingencyPlan2);
                 expect(this.getChatLogs(4)).toContain('player2 chooses to increase their honor bid');
+                expect(this.getChatLogs(6)).toContain('player1 draws 1 cards for the draw phase');
+                expect(this.getChatLogs(6)).toContain('player2 draws 1 cards for the draw phase');
                 expect(this.player2.player.honor).toBe(honor);
                 expect(this.player2.player.hand.size()).toBe(handSizeWithoutContingencyPlans + 1);
             });
