@@ -61,14 +61,15 @@ export class ModifyBidAction extends PlayerAction {
                     context: context,
                     choices: ['Increase honor bid', 'Decrease honor bid'],
                     choiceHandler: choice => {
+                        const event = this.getEvent(player, context, additionalProperties) as any;
                         if(choice === 'Increase honor bid') {
                             context.game.addMessage('{0} chooses to increase their honor bid', player);
-                            additionalProperties.direction = Direction.Increase;
+                            event.direction = Direction.Increase;
                         } else {
                             context.game.addMessage('{0} chooses to decrease their honor bid', player);
-                            additionalProperties.direction = Direction.Decrease;
+                            event.direction = Direction.Decrease;
                         }
-                        events.push(this.getEvent(player, context, additionalProperties));
+                        events.push(event);
                     }
                 });        
             }
