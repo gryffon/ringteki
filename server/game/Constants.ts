@@ -263,3 +263,9 @@ export enum ConflictTypes {
 export enum TokenTypes {
     Honor = 'honor'
 };
+
+export enum PersonalHonorStatus {
+    Ordinary = 'ordinary',
+    Honored = 'honored',
+    Dishonored = 'dishonored'
+};
