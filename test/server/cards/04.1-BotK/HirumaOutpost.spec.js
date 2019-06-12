@@ -94,6 +94,7 @@ describe('Hiruma Outpose', function() {
                 });
                 this.player2.clickCard(this.hirumaOutpost);
                 expect(this.player1.honor).toBe(11);
+                expect(this.getChatLogs(2)).toContain('player2 uses Hiruma Outpost to make player1 lose 1 honor');
             });
         });
     });

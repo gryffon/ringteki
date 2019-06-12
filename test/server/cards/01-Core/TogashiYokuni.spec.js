@@ -103,6 +103,7 @@ describe('Togashi Yokuni', function() {
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 this.player1.clickCard(this.togashiYokuni);
+                expect(this.getChatLogs(1)).toContain('player1 uses Togashi Yokuni\'s gained ability from Shiba Tsukune to resolve up to 2 ring effects');
                 this.player1.clickRing('fire');
                 this.player1.clickRing('water');
                 expect(this.player1).toHavePrompt('Water Ring');
