@@ -29,6 +29,10 @@ class PlayCharacterAction extends BaseAction {
         return super.meetsRequirements(context);
     }
 
+    playIntoConflictOnly() {
+        return false;
+    }
+
     executeHandler(context) {
         const extraFate = context.source.sumEffects(EffectNames.GainExtraFateWhenPlayed);
         let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
@@ -42,19 +46,24 @@ class PlayCharacterAction extends BaseAction {
             context.game.addMessage('{0} plays {1} at home with {2} additional fate', context.player, context.source, context.chooseFate);
             context.game.openEventWindow([GameActions.putIntoPlay({ fate: context.chooseFate + extraFate }).getEvent(context.source, context), cardPlayedEvent]);
         };
+        let putIntoConflictHandler = () => {
+            context.game.addMessage('{0} plays {1} into the conflict with {2} additional fate', context.player, context.source, context.chooseFate);
+            context.game.openEventWindow([GameActions.putIntoConflict({ fate: context.chooseFate }).getEvent(context.source, context), cardPlayedEvent]);
+        };
         if(context.source.allowGameAction('putIntoConflict', context)) {
-            context.game.promptWithHandlerMenu(context.player, {
-                activePromptTitle: 'Where do you wish to play this character?',
-                source: context.source,
-                choices: ['Conflict', 'Home'],
-                handlers: [
-                    () => {
-                        context.game.addMessage('{0} plays {1} into the conflict with {2} additional fate', context.player, context.source, context.chooseFate);
-                        context.game.openEventWindow([GameActions.putIntoConflict({ fate: context.chooseFate }).getEvent(context.source, context), cardPlayedEvent]);
-                    },
-                    putIntoPlayHandler
-                ]
-            });
+            if(this.playIntoConflictOnly()) {
+                putIntoConflictHandler();
+            } else {
+                context.game.promptWithHandlerMenu(context.player, {
+                    activePromptTitle: 'Where do you wish to play this character?',
+                    source: context.source,
+                    choices: ['Conflict', 'Home'],
+                    handlers: [
+                        putIntoConflictHandler,
+                        putIntoPlayHandler
+                    ]
+                });
+            }
         } else {
             putIntoPlayHandler();
         }
