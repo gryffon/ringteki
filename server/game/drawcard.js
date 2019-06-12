@@ -586,8 +586,8 @@ class DrawCard extends BaseCard {
      * Checks whether the passed card meets the attachment restrictions (e.g.
      * Opponent cards only, specific factions, etc) for this card.
      */
-    canAttach(card, context) { // eslint-disable-line no-unused-vars
-        return card && card.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
+    canAttach(parent, context) { // eslint-disable-line no-unused-vars
+        return parent && parent.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
     }
 
     canPlay(context, type) {

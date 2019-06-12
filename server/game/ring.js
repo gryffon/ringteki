@@ -12,6 +12,7 @@ class Ring extends EffectSource {
         this.contested = false;
         this.element = element;
         this.fate = 0;
+        this.attachments = [];
 
         this.menu = _([
             { command: 'flip', text: 'Flip' },
