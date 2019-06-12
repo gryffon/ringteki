@@ -129,9 +129,6 @@ class CardAbility extends ThenAbility {
             return;
         }
         let origin = context.ability && context.ability.origin;
-        if(typeof origin === 'function') {
-            origin = origin(context);
-        }
         // if origin is the same as source then ignore it
         if(origin === context.source) {
             origin = null;
