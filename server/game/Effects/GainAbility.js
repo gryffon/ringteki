@@ -9,7 +9,7 @@ class GainAbility extends EffectValue {
         this.properties = ability;
         this.grantedAbilityLimits = {};
         if(ability.properties) {
-            let newProps = { printedAbility: false, abilityIdentifier: ability.abilityIdentifier };
+            let newProps = { printedAbility: false, abilityIdentifier: ability.abilityIdentifier, origin: ability.card };
             if(ability.properties.limit) {
                 // If the copied ability has a limit, we need to create a new instantiation of it, with the same max and reset event
                 newProps.limit = AbilityLimit.repeatable(ability.properties.limit.max, ability.properties.limit.eventName);

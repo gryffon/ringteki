@@ -49,6 +49,7 @@ class CardAbility extends ThenAbility {
         this.cannotBeMirrored = !!properties.cannotBeMirrored;
         this.max = properties.max;
         this.abilityIdentifier = properties.abilityIdentifier;
+        this.origin = properties.origin;
         if(!this.abilityIdentifier) {
             this.abilityIdentifier = this.printedAbility ? this.card.id + '1' : '';
         }
@@ -127,8 +128,17 @@ class CardAbility extends ThenAbility {
             this.game.addMessage(this.properties.message, ...messageArgs);
             return;
         }
+        let origin = context.ability && context.ability.origin;
+        if(typeof origin === 'function') {
+            origin = origin(context);
+        }
+        // if origin is the same as source then ignore it
+        if(origin === context.source) {
+            origin = null;
+        }
         // Player1 plays Assassination
-        let messageArgs = [context.player, ' ' + messageVerb + ' ', context.source];
+        let gainedAbility = origin ? '\'s gained ability from ' : '';
+        let messageArgs = [context.player, ' ' + messageVerb + ' ', context.source, gainedAbility, origin];
         let costMessages = this.cost.map(cost => {
             if(cost.getCostMessage) {
                 let card = context.costs[cost.getActionName(context)];
@@ -175,7 +185,7 @@ class CardAbility extends ThenAbility {
             // discard Stoic Gunso
             messageArgs.push({ message: this.game.gameChat.formatMessage(effectMessage, effectArgs) });
         }
-        this.game.addMessage('{0}{1}{2}{3}{4}{5}{6}', ...messageArgs);
+        this.game.addMessage('{0}{1}{2}{3}{4}{5}{6}{7}{8}', ...messageArgs);
     }
 
     isCardPlayed() {
