@@ -141,6 +141,14 @@ class GameConfiguration extends React.Component {
                                 onChange={ this.onOptionSettingToggle.bind(this, 'confirmOneClick') }
                                 checked={ this.props.optionSettings.confirmOneClick }
                             />
+                            <Checkbox
+                                name='optionSettings.disableCardStats'
+                                noGroup
+                                label={ 'Disable card hover statistics popup' }
+                                fieldClass='col-sm-6'
+                                onChange={ this.onOptionSettingToggle.bind(this, 'disableCardStats') }
+                                checked={ this.props.optionSettings.disableCardStats }
+                            />
                         </div>
                     </div>
                 </form>
