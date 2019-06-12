@@ -6,6 +6,7 @@ import 'jquery-migrate';
 import 'jquery-nearest';
 
 import CardMenu from './CardMenu.jsx';
+import CardStats from './CardStats.jsx';
 import CardCounters from './CardCounters.jsx';
 
 class Card extends React.Component {
@@ -388,6 +389,7 @@ class Card extends React.Component {
                     <CardCounters counters={ this.getCountersForCard(this.props.card) } />
                 </div>
                 { this.showMenu() ? <CardMenu menu={ this.props.card.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
+                { !this.showMenu() && this.props.showStats ? <CardStats text={ this.props.card.name } militarySkillSummary={ this.props.card.militarySkillSummary } politicalSkillSummary={ this.props.card.politicalSkillSummary } /> : null }
                 { this.getPopup() }
             </div>);
     }
@@ -521,10 +523,12 @@ Card.propTypes = {
         location: PropTypes.string,
         menu: PropTypes.array,
         militarySkill: PropTypes.number,
+        militarySkillSummary: PropTypes.object,
         name: PropTypes.string,
         new: PropTypes.bool,
         order: PropTypes.number,
         politicalSkill: PropTypes.number,
+        politicalSkillSummary: PropTypes.object,
         popupMenuText: PropTypes.string,
         power: PropTypes.number,
         saved: PropTypes.bool,
@@ -552,6 +556,7 @@ Card.propTypes = {
     orientation: PropTypes.oneOf(['horizontal', 'bowed', 'vertical']),
     popupLocation: PropTypes.string,
     size: PropTypes.string,
+    showStats: PropTypes.bool,
     source: PropTypes.oneOf(['hand', 'dynasty discard pile', 'conflict discard pile', 'play area', 'dynasty deck', 'conflict deck', 'province deck', 'province 1', 'province 2', 'province 3', 'province 4', 'attachment', 'stronghold province', 'additional', 'role card']).isRequired,
     style: PropTypes.object,
     title: PropTypes.string,

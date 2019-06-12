@@ -113,8 +113,7 @@ class AbilityTargetAbility {
         }
         return this.properties.cardType === context.targetAbility.card.type &&
                (!this.properties.cardCondition || this.properties.cardCondition(context.targetAbility.card, context)) &&
-               this.abilityCondition(context.targetAbility) &&
-               (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+               this.abilityCondition(context.targetAbility);
     }
 
     getChoosingPlayer(context) {

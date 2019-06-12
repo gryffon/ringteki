@@ -339,9 +339,15 @@ class Player extends GameObject {
      * Returns the total number of holdings controlled by this player
      */
     getNumberOfHoldingsInPlay() {
-        return provinceLocations.reduce((n, province) => {
-            return this.getSourceList(province).filter(card => card.getType() === CardTypes.Holding && !card.facedown).length + n;
-        }, 0);
+        return this.getHoldingsInPlay.length;
+    }
+
+    /**
+     * Returns and array of holdings controlled by this player
+     */
+    getHoldingsInPlay() {
+        return provinceLocations.reduce((array, province) =>
+            array.concat(this.getSourceList(province).filter(card => card.getType() === CardTypes.Holding && !card.facedown)), []);
     }
 
     /**
@@ -970,7 +976,7 @@ class Player extends GameObject {
 
         let location = card.location;
 
-        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && provinceLocations.includes(location) && !provinceLocations.includes(targetLocation))) {
+        if(location === Locations.PlayArea || (card.type === CardTypes.Holding && card.isInProvince() && !provinceLocations.includes(targetLocation))) {
             if(card.owner !== this) {
                 card.owner.moveCard(card, targetLocation, options);
                 return;
@@ -996,6 +1002,8 @@ class Player extends GameObject {
         } else if(location === Locations.BeingPlayed && card.owner !== this) {
             card.owner.moveCard(card, targetLocation, options);
             return;
+        } else if(card.type === CardTypes.Holding && provinceLocations.includes(targetLocation)) {
+            card.controller = this;
         } else {
             card.controller = card.owner;
         }

@@ -39,7 +39,7 @@ export class RemoveFromGameAction extends CardGameAction {
         this.updateLeavesPlayEvent(event, card, context, additionalProperties);
     }
 
-    eventHandler(event): void {
-        this.leavesPlayEventHandler(event);
+    eventHandler(event, additionalProperties = {}): void {
+        this.leavesPlayEventHandler(event, additionalProperties);
     }
 }

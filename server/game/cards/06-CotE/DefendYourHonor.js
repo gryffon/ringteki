@@ -8,8 +8,8 @@ class DefendYourHonor extends DrawCard {
             title: 'Initiate a military duel',
             when: {
                 onInitiateAbilityEffects: (event, context) =>
-                    context.game.isDuringConflict() &&
-                    event.card.type === CardTypes.Event && context.player.opponent
+                    context.game.isDuringConflict() && context.player.opponent &&
+                    event.card.type === CardTypes.Event
             },
             initiateDuel: context => ({
                 type: DuelTypes.Military,

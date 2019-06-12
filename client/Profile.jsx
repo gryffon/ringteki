@@ -311,6 +311,14 @@ class InnerProfile extends React.Component {
                                         onChange={ this.onOptionSettingToggle.bind(this, 'confirmOneClick') }
                                         checked={ this.state.optionSettings.confirmOneClick }
                                     />
+                                    <Checkbox
+                                        name='optionSettings.disableCardStats'
+                                        noGroup
+                                        label={ 'Disable card hover statistics popup' }
+                                        fieldClass='col-sm-6'
+                                        onChange={ this.onOptionSettingToggle.bind(this, 'disableCardStats') }
+                                        checked={ this.state.optionSettings.disableCardStats }
+                                    />
                                 </div>
                             </div>
                         </div>
