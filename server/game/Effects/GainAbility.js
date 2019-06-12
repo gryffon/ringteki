@@ -31,20 +31,21 @@ class GainAbility extends EffectValue {
     }
 
     apply(target) {
+        let properties = Object.assign({ origin: this.context.source }, this.properties);
         if(this.abilityType === AbilityTypes.Persistent) {
             const activeLocations = {
                 'play area': [Locations.PlayArea],
                 'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
             };
-            this.value = this.properties;
+            this.value = properties;
             if(activeLocations[this.value.location].includes(target.location)) {
                 this.value.ref = target.addEffectToEngine(this.value);
             }
             return;
         } else if(this.abilityType === AbilityTypes.Action) {
-            this.value = target.createAction(this.properties);
+            this.value = target.createAction(properties);
         } else {
-            this.value = target.createTriggeredAbility(this.abilityType, this.properties);
+            this.value = target.createTriggeredAbility(this.abilityType, properties);
             this.value.registerEvents();
         }
         if(!this.grantedAbilityLimits[target.uuid]) {
