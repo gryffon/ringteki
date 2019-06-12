@@ -32,6 +32,15 @@ describe('Borderlands Fortification', function () {
                 expect(this.borderlandsFortification.location).toBe('province 3');
             });
 
+            it('should not be able to be triggered twice', function () {
+                this.facedownCard = this.player1.player.getDynastyCardInProvince('province 3');
+                this.player1.clickCard(this.borderlandsFortification);
+                expect(this.player1).toHavePrompt('Borderlands Fortifications');
+                this.player1.clickCard(this.facedownCard);
+                this.player2.pass();
+                this.player1.clickCard(this.borderlandsFortification);
+                expect(this.player1).not.toHavePrompt('Borderlands Fortifications');
+            });
         });
     });
 });
