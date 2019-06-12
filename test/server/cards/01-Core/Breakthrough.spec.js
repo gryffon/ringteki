@@ -10,7 +10,7 @@ describe('Breakthrough', function () {
                     },
                     player2: {
                         inPlay: ['mirumoto-raitsugu'],
-                        provinces: ['shameful-display', 'entrenched-position'],
+                        provinces: ['shameful-display', 'entrenched-position']
                     }
                 });
 
@@ -109,7 +109,7 @@ describe('Breakthrough', function () {
         describe('Waning Hostilities', function () {
             beforeEach(function () {
                 this.setupTest({
-                    phase: 'conflict',
+                    phase: 'draw',
                     player1: {
                         inPlay: ['moto-horde', 'aggressive-moto'],
                         hand: ['breakthrough']
@@ -119,6 +119,8 @@ describe('Breakthrough', function () {
                         hand: ['waning-hostilities']
                     }
                 });
+                this.player1.clickPrompt(1);
+                this.player2.clickPrompt(2);
 
                 this.motoHorde = this.player1.findCardByName('moto-horde');
                 this.aggressiveMoto = this.player1.findCardByName('aggressive-moto');
@@ -126,11 +128,14 @@ describe('Breakthrough', function () {
                 this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
                 this.waningHostilities = this.player2.findCardByName('waning-hostilities');
 
+                this.noMoreActions();
                 this.player2.clickCard(this.waningHostilities);
                 this.noMoreActions();
             });
 
             it('should prevent Breakthrough from triggering', function () {
+                expect(this.player1.player.getConflictOpportunities('total')).toBe(1);
+                expect(this.player2.player.getConflictOpportunities('total')).toBe(1);
                 this.initiateConflict({
                     attackers: [this.motoHorde],
                     defenders: []
