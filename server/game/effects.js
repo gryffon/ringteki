@@ -151,7 +151,8 @@ const Effects = {
     contributeToConflict: (card) => EffectBuilder.conflict.flexible(EffectNames.ContributeToConflict, card),
     changeConflictSkillFunction: (func) => EffectBuilder.conflict.static(EffectNames.ChangeConflictSkillFunction, func), // TODO: Add this to lasting effect checks
     modifyConflictElementsToResolve: (value) => EffectBuilder.conflict.static(EffectNames.ModifyConflictElementsToResolve, value), // TODO: Add this to lasting effect checks
-    restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static(EffectNames.RestrictNumberOfDefenders, value) // TODO: Add this to lasting effect checks
+    restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static(EffectNames.RestrictNumberOfDefenders, value), // TODO: Add this to lasting effect checks
+    resolveConflictEarly: (properties) => EffectBuilder.player.static(EffectNames.ResolveConflictEarly, properties.actionsRemaining)
 };
 
 module.exports = Effects;

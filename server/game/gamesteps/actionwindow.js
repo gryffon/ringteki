@@ -1,5 +1,5 @@
 const UiPrompt = require('./uiprompt.js');
-const { Locations, Players } = require('../Constants');
+const { Locations, Players, EffectNames } = require('../Constants');
 
 class ActionWindow extends UiPrompt {
     constructor(game, title, windowName) {
@@ -116,7 +116,18 @@ class ActionWindow extends UiPrompt {
     pass() {
         this.game.addMessage('{0} passes', this.currentPlayer);
 
-        if(this.prevPlayerPassed || !this.currentPlayer.opponent) {
+        let resolveConflictEarlyEffects = this.currentPlayer.getEffects(EffectNames.ResolveConflictEarly);
+        var resolveConflictEarly = false;
+        for(let i = 0; i < resolveConflictEarlyEffects.length; i++) {
+            if(resolveConflictEarlyEffects[i] > 0) {
+                resolveConflictEarlyEffects[i]--;
+            }
+            if(resolveConflictEarlyEffects[i] === 0) {
+                resolveConflictEarly = true;
+            }
+        }
+
+        if(this.prevPlayerPassed || !this.currentPlayer.opponent || resolveConflictEarly) {
             this.complete();
         }
 
