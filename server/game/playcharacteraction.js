@@ -4,12 +4,13 @@ const GameActions = require('./GameActions/GameActions');
 const { EffectNames, Phases, PlayTypes, EventNames } = require('./Constants');
 
 class PlayCharacterAction extends BaseAction {
-    constructor(card) {
+    constructor(card, intoConflictOnly = false) {
         super(card, [
             Costs.chooseFate(PlayTypes.PlayFromHand),
             Costs.payReduceableFateCost(PlayTypes.PlayFromHand),
             Costs.playLimited()
         ]);
+        this.intoConflictOnly = intoConflictOnly;
         this.title = 'Play this character';
     }
 
@@ -27,10 +28,6 @@ class PlayCharacterAction extends BaseAction {
             return 'unique';
         }
         return super.meetsRequirements(context);
-    }
-
-    playIntoConflictOnly() {
-        return false;
     }
 
     executeHandler(context) {
@@ -51,7 +48,7 @@ class PlayCharacterAction extends BaseAction {
             context.game.openEventWindow([GameActions.putIntoConflict({ fate: context.chooseFate }).getEvent(context.source, context), cardPlayedEvent]);
         };
         if(context.source.allowGameAction('putIntoConflict', context)) {
-            if(this.playIntoConflictOnly()) {
+            if(this.intoConflictOnly) {
                 putIntoConflictHandler();
             } else {
                 context.game.promptWithHandlerMenu(context.player, {

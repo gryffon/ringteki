@@ -1,19 +1,24 @@
-describe('Gateway to Meido', function() {
+﻿describe('Gateway to Meido', function() {
     integration(function() {
-        describe('Gateway to Meidoi\'s constant ability', function() {
+        describe('Gateway to Meido\'s constant ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['doomed-shugenja']
+                        inPlay: ['doomed-shugenja'],
+                        hand: ['grasp-of-earth']
                     },
                     player2: {
+                        inPlay: ['akodo-gunso'],
                         provinces: ['gateway-to-meido'],
-                        dynastyDiscard: ['doji-whisperer']
+                        dynastyDiscard: ['kitsu-warrior', 'akodo-zentaro']
                     }
                 });
                 this.doomedShugenja = this.player1.findCardByName('doomed-shugenja');
-                this.dojiWhisperer = this.player2.findCardByName('doji-whisperer', 'dynasty discard pile');
+                this.graspOfEarth = this.player1.findCardByName('grasp-of-earth');
+                this.akodoGunso = this.player2.findCardByName('akodo-gunso');
+                this.kitsuWarrior = this.player2.findCardByName('kitsu-warrior', 'dynasty discard pile');
+                this.akodoZentaro = this.player2.findCardByName('akodo-zentaro', 'dynasty discard pile');
                 this.gatewayToMeido = this.player2.findCardByName('gateway-to-meido', 'province 1');
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 2');
             });
@@ -25,7 +30,7 @@ describe('Gateway to Meido', function() {
                     defenders: [],
                     province: this.gatewayToMeido
                 });
-                this.player2.clickCard(this.dojiWhisperer);
+                this.player2.clickCard(this.kitsuWarrior);
                 expect(this.player2).toHavePrompt('Choose additional fate');
             });
 
@@ -36,13 +41,13 @@ describe('Gateway to Meido', function() {
                     defenders: [],
                     province: this.gatewayToMeido
                 });
-                this.player2.clickCard(this.dojiWhisperer);
+                this.player2.clickCard(this.kitsuWarrior);
                 this.player2.clickPrompt('1');
                 expect(this.player2).not.toHavePrompt('"Where do you wish to play this character?');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
-                expect(this.dojiWhisperer.location).toBe('play area');
-                expect(this.dojiWhisperer.isParticipating()).toBe(true);
-                expect(this.dojiWhisperer.fate).toBe(1);
+                expect(this.kitsuWarrior.location).toBe('play area');
+                expect(this.kitsuWarrior.isParticipating()).toBe(true);
+                expect(this.kitsuWarrior.fate).toBe(1);
             });
 
             it('should not be active when conflict is not at this province', function() {
@@ -52,8 +57,66 @@ describe('Gateway to Meido', function() {
                     defenders: [],
                     province: this.shamefulDisplay
                 });
-                this.player2.clickCard(this.dojiWhisperer);
+                this.player2.clickCard(this.kitsuWarrior);
                 expect(this.player2).not.toHavePrompt('Choose additional fate');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should allow you to use the disguised keyword when you play from discard', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.doomedShugenja],
+                    defenders: [this.akodoGunso],
+                    province: this.gatewayToMeido
+                });
+                this.player2.clickCard(this.akodoZentaro);
+                expect(this.player2).toHavePrompt('Akodo Zentarō');
+                expect(this.player2).toHavePromptButton('Play this character with Disguise');
+                expect(this.player2).toHavePromptButton('Play this character');
+            });
+
+            it('should only allow you to replace a character in the conflict if using the disguised keyword', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.doomedShugenja],
+                    defenders: [this.akodoGunso],
+                    province: this.gatewayToMeido
+                });
+                this.player2.clickCard(this.akodoZentaro);
+                this.player2.clickPrompt('Play this character with Disguise');
+                expect(this.player2).toHavePrompt('Choose a character to replace');
+                expect(this.player2).toBeAbleToSelect(this.akodoGunso);
+                expect(this.player2).not.toBeAbleToSelect(this.kitsuWarrior);
+                this.player2.clickCard(this.akodoGunso);
+                expect(this.akodoGunso.location).toBe('dynasty discard pile');
+                expect(this.akodoZentaro.isParticipating()).toBe(true);
+            });
+
+            it('should not allow you to play using the disguised keyword if there is no appropriate character in the conflict', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.doomedShugenja],
+                    defenders: [],
+                    province: this.gatewayToMeido
+                });
+                this.player2.clickCard(this.akodoZentaro);
+                expect(this.player2).toHavePrompt('Choose additional fate');
+            });
+
+            it('should not allow characters to be played if grasp of earth has been activated', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.doomedShugenja],
+                    defenders: [],
+                    province: this.gatewayToMeido
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.graspOfEarth);
+                this.player1.clickCard(this.doomedShugenja);
+                this.player2.pass();
+                this.player1.clickCard(this.graspOfEarth);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.kitsuWarrior);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
