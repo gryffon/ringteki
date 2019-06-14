@@ -14,8 +14,16 @@ class Dispatch extends DrawCard {
                     condition: (context, properties) => properties.target[0].inConflict,
                     trueGameAction: AbilityDsl.actions.sendHome(),
                     falseGameAction: AbilityDsl.actions.moveToConflict()
-                })
-            })
+                }),
+                message: '{0} chooses to {3} {1} {2}',
+                messageArgs: (card, player) => [
+                    player,
+                    card,
+                    card.inConflict ? 'home' : 'into the conflict',
+                    card.inConflict ? 'send' : 'move'
+                ]
+            }),
+            effect: 'choose a unicorn character they control into a conflict or home'
         });
     }
 }
