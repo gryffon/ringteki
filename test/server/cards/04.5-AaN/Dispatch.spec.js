@@ -27,7 +27,7 @@ describe('Dispatch', function() {
                 expect(this.player1).not.toBeAbleToSelect('miya-mystic');
                 expect(this.player1).toBeAbleToSelect('moto-youth');
                 expect(this.player1).toBeAbleToSelect('moto-horde');
-                expect(this.getChatLogs(1)).toContain('player1 plays Dispatch to choose a unicorn character they control into a conflict or home');
+                expect(this.getChatLogs(1)).toContain('player1 plays Dispatch to choose a unicorn character they control to move into a conflict or home');
             });
 
             it('should correctly move character in the conflict', function() {

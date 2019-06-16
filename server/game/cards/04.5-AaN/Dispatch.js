@@ -23,7 +23,7 @@ class Dispatch extends DrawCard {
                     card.inConflict ? 'send' : 'move'
                 ]
             }),
-            effect: 'choose a unicorn character they control into a conflict or home'
+            effect: 'choose a unicorn character they control to move into a conflict or home'
         });
     }
 }
