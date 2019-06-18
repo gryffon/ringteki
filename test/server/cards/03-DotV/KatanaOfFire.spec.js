@@ -42,6 +42,7 @@ describe('Katana of Fire', function() {
                         this.player1.clickCard('charge');
                         this.player1.clickCard(this.doomedShugenja);
                     });
+
                     it('should boost adept\'s military skill by 1', function() {
                         expect(this.doomedShugenja.location).toBe('play area');
                         expect(this.adept.getMilitarySkill()).toBe(this.skillBeforeMove + 1);
@@ -53,6 +54,7 @@ describe('Katana of Fire', function() {
                         this.skillBeforeClaim = this.adept.getMilitarySkill();
                         this.player1.claimRing('fire');
                     });
+
                     it('should increase the skill of the character by 2', function() {
                         expect(this.game.rings.fire.isConsideredClaimed(this.player1.player)).toBe(true);
                         expect(this.katana.controllerHasFireRing()).toBe(true);

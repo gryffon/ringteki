@@ -83,6 +83,7 @@ describe('conflict phase', function() {
                     }
                 });
             });
+
             it('should pass the conflict when the player chooses that option', function() {
                 this.stewardOfLaw = this.player1.playCharacterFromHand('steward-of-law');
                 this.noMoreActions();

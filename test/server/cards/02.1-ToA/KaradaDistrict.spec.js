@@ -45,6 +45,7 @@ describe('Karada District', function() {
                         expect(this.player2.fate).toBe(1);
                         expect(this.player1.fate).toBe(4);
                     });
+
                     describe ('and there is a valid target to attach to', function() {
                         it('should prompt the player to choose a character to give the attachment to', function() {
                             expect(this.player2).toHavePrompt('Choose a character to attach Fine Katana to');
@@ -71,6 +72,7 @@ describe('Karada District', function() {
                 beforeEach(function() {
                     this.player2.fate = 0;
                 });
+
                 it('should not allow the event to be played', function() {
                     this.fineKatana = this.player1.playAttachment('fine-katana', 'adept-of-the-waves');
                     this.player2.clickCard(this.karada2);

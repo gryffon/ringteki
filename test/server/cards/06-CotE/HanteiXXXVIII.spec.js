@@ -478,7 +478,6 @@ describe('Hantei XXXVII', function() {
                 beforeEach(function() {
                     this.player2.pass();
                     this.player1.clickCard('banzai');
-                    expect(this.player1).toHavePrompt('Banzai!');
                     this.player1.clickCard(this.asahinaStoryteller);
                 });
 

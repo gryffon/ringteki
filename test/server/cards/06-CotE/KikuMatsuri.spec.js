@@ -31,18 +31,21 @@ describe('Kiku Matsuri', function() {
                     });
                     this.player2.clickCard(this.kikuMatsuri);
                 });
+
                 it('should not be allowed to target two of opponent\'s characters', function() {
                     expect(this.player2).toHavePrompt('Kiku Matsuri');
                     this.player2.clickCard(this.hotaru);
                     expect(this.player2).not.toBeAbleToSelect(this.yoshi);
                     expect(this.player2).toBeAbleToSelect(this.prodigy);
                 });
+
                 it('should not be allowed to target honored characters', function() {
                     expect(this.player2).toHavePrompt('Kiku Matsuri');
                     this.player2.clickCard(this.prodigy);
                     expect(this.player2).not.toBeAbleToSelect(this.kaezin);
                     expect(this.player2).toBeAbleToSelect(this.yoshi);
                 });
+
                 it('should honor character starting in a normal state', function() {
                     expect(this.player2).toHavePrompt('Kiku Matsuri');
                     this.player2.clickCard(this.prodigy);
@@ -50,6 +53,7 @@ describe('Kiku Matsuri', function() {
                     expect(this.prodigy.isHonored).toBe(true);
                     expect(this.yoshi.isHonored).toBe(true);
                 });
+
                 it('should be allowed to target ordinary and dishonored charcters', function() {
                     expect(this.player2).toHavePrompt('Kiku Matsuri');
                     this.player2.clickCard(this.prodigy);
