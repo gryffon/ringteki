@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AdmitDefeat extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Bow a character',
             condition: () =>
@@ -11,7 +12,7 @@ class AdmitDefeat extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isDefending(),
-                gameAction: ability.actions.bow()
+                gameAction: AbilityDsl.actions.bow()
             }
         });
     }

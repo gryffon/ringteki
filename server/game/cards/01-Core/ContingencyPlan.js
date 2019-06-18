@@ -1,13 +1,15 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
+const ModifyBidAction = require('../../GameActions/ModifyBidAction');
 
 class ContingencyPlan extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.reaction({
             title: 'Change your bid by 1',
             when: {
                 onHonorDialsRevealed: () => true
             },
-            gameAction: ability.actions.modifyBid({ direction: 'prompt' })
+            gameAction: AbilityDsl.actions.modifyBid({ direction: ModifyBidAction.Direction.Prompt })
         });
     }
 }
