@@ -37,6 +37,7 @@ export enum EffectNames {
     CannotBidInDuels = 'cannotBidInDuels',
     CannotHaveConflictsDeclaredOfType = 'cannotHaveConflictsDeclaredOfType',
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
+    CannotHaveSkillsReduced = 'cannotHaveSkillsReduced',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
     CopyCharacter = 'copyCharacter',

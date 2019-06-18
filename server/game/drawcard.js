@@ -260,13 +260,15 @@ class DrawCard extends BaseCard {
         });
 
         // attachment bonus
-        let attachmentBonus = this.attachments.reduce((total, card) => {
-            let bonus = parseInt(card.cardData.military_bonus);
-            return bonus ? total + bonus : total;
-        }, 0);
-        if(attachmentBonus !== 0) {
-            modifiers.push({ amount: attachmentBonus, name: 'Attachment Bonus Skill', countsAsBase: false });
-        }
+        this.attachments.forEach(attachment => {
+            let bonus = parseInt(attachment.cardData.miltary_bonus);
+            if(bonus) {
+                if(bonus < 0 && this.anyEffect(EffectNames.CannotHaveSkillsReduced)) {
+                    bonus = 0;
+                }
+                modifiers.push({ amount: bonus, name: 'Attachment Bonus Skill', countsAsBase: false });
+            }
+        });
 
         // skill from glory
         modifiers = modifiers.concat(this.getGloryModifiers());
@@ -345,13 +347,15 @@ class DrawCard extends BaseCard {
         });
 
         // attachment bonus
-        let attachmentBonus = this.attachments.reduce((total, card) => {
-            let bonus = parseInt(card.cardData.political_bonus);
-            return bonus ? total + bonus : total;
-        }, 0);
-        if(attachmentBonus !== 0) {
-            modifiers.push({ amount: attachmentBonus, name: 'Attachment Bonus Skill', countsAsBase: false });
-        }
+        this.attachments.forEach(attachment => {
+            let bonus = parseInt(attachment.cardData.political_bonus);
+            if(bonus) {
+                if(bonus < 0 && this.anyEffect(EffectNames.CannotHaveSkillsReduced)) {
+                    bonus = 0;
+                }
+                modifiers.push({ amount: bonus, name: 'Attachment Bonus Skill', countsAsBase: false });
+            }
+        });
 
         // skill from glory
         modifiers = modifiers.concat(this.getGloryModifiers());
@@ -388,6 +392,13 @@ class DrawCard extends BaseCard {
                     modifiers.push({ amount: amount, name: 'Dishonored', countsAsBase: false });
                 }
             }
+        }
+        if(this.anyEffect(EffectNames.CannotHaveSkillsReduced)) {
+            modifiers.forEach(modifier => {
+                if(modifier.amount < 0) {
+                    modifier.amount = 0;
+                }
+            });
         }
         return modifiers;
     }
