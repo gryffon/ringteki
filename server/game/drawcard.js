@@ -261,7 +261,7 @@ class DrawCard extends BaseCard {
 
         // attachment bonus
         this.attachments.forEach(attachment => {
-            let bonus = parseInt(attachment.cardData.miltary_bonus);
+            let bonus = parseInt(attachment.cardData.military_bonus);
             if(bonus) {
                 if(bonus < 0 && this.anyEffect(EffectNames.CannotHaveSkillsReduced)) {
                     bonus = 0;
