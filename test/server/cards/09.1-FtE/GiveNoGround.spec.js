@@ -79,7 +79,7 @@ describe('Give No Ground', function() {
                 expect(this.getChatLogs(3)).toContain('player2 plays Give No Ground to give +2military to Borderlands Defender and prevent its skills from being reduced');
             });
 
-            it('should not revert any existing skill reduction lasting effects', function() {
+            it('should revert any existing skill reduction lasting effects', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.warriorPoet],
@@ -91,8 +91,8 @@ describe('Give No Ground', function() {
                 expect(this.borderlandsDefender.politicalSkill).toBe(2);
                 this.player2.clickCard(this.giveNoGround);
                 this.player2.clickCard(this.borderlandsDefender);
-                expect(this.borderlandsDefender.militarySkill).toBe(4);
-                expect(this.borderlandsDefender.politicalSkill).toBe(2);
+                expect(this.borderlandsDefender.militarySkill).toBe(5);
+                expect(this.borderlandsDefender.politicalSkill).toBe(3);
             });
 
             it('should prevent skills being reduced by status tokens', function() {

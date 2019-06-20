@@ -1,3 +1,5 @@
+
+
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
@@ -11,6 +13,7 @@ const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 const StatusToken = require('./StatusToken');
+const StatModifier = require('./StatModifier');
 
 const { Locations, EffectNames, Players, CardTypes, PlayTypes } = require('./Constants');
 
@@ -211,15 +214,15 @@ class DrawCard extends BaseCard {
         let militarySkill = copyEffect ? copyEffect.printedMilitarySkill : this.printedMilitarySkill;
         if(Number.isNaN(militarySkill)) {
             if(copyEffect) {
-                return [{ amount: undefined, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true }];
+                return [StatModifier.fromEffect(undefined, copyEffect, true, `Base due to ${StatModifier.getEffectName(copyEffect)}`)];
             }
-            return [{ amount: undefined, name: 'Base', countsAsBase: true }];
+            return [StatModifier.fromCard(undefined, this, 'Base', true)];
         }
 
         // dash effects
         let dashEffects = this.effects.filter(effect => effect.type === EffectNames.SetDash && effect.getValue(this) === 'military');
         if(dashEffects.length > 0) {
-            return [{ amount: undefined, name: '' + dashEffects.map(e => this.getEffectName(e)).join(', '), countsAsBase: true }];
+            return [StatModifier.fromEffect(undefined, dashEffects, true, dashEffects.map(e => StatModifier.getEffectName(e)).join(', '))];
         }
 
         // set effects
@@ -227,7 +230,7 @@ class DrawCard extends BaseCard {
         if(setEffects.length > 0) {
             let latestSetEffect = _.last(setEffects);
             let setAmount = latestSetEffect.getValue(this);
-            return [{ amount: setAmount, name: 'Set by ' + this.getEffectName(latestSetEffect), countsAsBase: true}];
+            return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
         }
 
         let modifiers = [];
@@ -236,12 +239,12 @@ class DrawCard extends BaseCard {
         if(setBaseEffects.length > 0) {
             let latestSetBaseEffect = _.last(setBaseEffects);
             let setBaseAmount = latestSetBaseEffect.getValue(this);
-            modifiers.push({ amount: setBaseAmount, name: 'Base set by ' + this.getEffectName(latestSetBaseEffect), countsAsBase: true });
+            modifiers.push(StatModifier.fromEffect(setBaseAmount, latestSetBaseEffect, true, `Base set by ${StatModifier.getEffectName(latestSetBaseEffect)}`));
         } else {
             if(copyEffect) {
-                modifiers.push({ amount: militarySkill, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true });
+                modifiers.push(StatModifier.fromEffect(militarySkill, copyEffect, true, `Base due to ${StatModifier.getEffectName(copyEffect)}`));
             } else {
-                modifiers.push({ amount: militarySkill, name: 'Base', countsAsBase: true });
+                modifiers.push(StatModifier.fromCard(militarySkill, this, 'Base', true));
             }
         }
 
@@ -249,24 +252,21 @@ class DrawCard extends BaseCard {
         let baseModifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyBaseMilitarySkill);
         baseModifierEffects.forEach(baseModifierEffect => {
             const value = baseModifierEffect.getValue(this);
-            modifiers.push({ amount: value, name: 'Base due to ' + this.getEffectName(baseModifierEffect), countsAsBase: true });
+            modifiers.push(StatModifier.fromEffect(value, baseModifierEffect, true, `Base due to ${StatModifier.getEffectName(baseModifierEffect)}`));
         });
 
         // skill modifiers
         let modifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyMilitarySkill || effect.type === EffectNames.ModifyBothSkills);
         modifierEffects.forEach(modifierEffect => {
             const value = modifierEffect.getValue(this);
-            modifiers.push({ amount: value, name: '' + this.getEffectName(modifierEffect), countsAsBase: false });
+            modifiers.push(StatModifier.fromEffect(value, modifierEffect));
         });
 
         // attachment bonus
         this.attachments.forEach(attachment => {
             let bonus = parseInt(attachment.cardData.military_bonus);
             if(bonus) {
-                if(bonus < 0 && this.anyEffect(EffectNames.CannotHaveSkillsReduced)) {
-                    bonus = 0;
-                }
-                modifiers.push({ amount: bonus, name: 'Attachment Bonus Skill', countsAsBase: false });
+                modifiers.push(StatModifier.fromCard(bonus, attachment, 'Attachment Bonus Skill'));
             }
         });
 
@@ -279,17 +279,21 @@ class DrawCard extends BaseCard {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
             let amount = (multiplier - 1) * currentTotal;
-            modifiers.push({ amount: amount, name: '' + this.getEffectName(multiplierEffect), countsAsBase: false });
+            modifiers.push(StatModifier.fromEffect(amount, multiplierEffect));
+        });
+
+        // cannot have skills affected
+        let cannotEffects = this.effects.filter(effect => effect.type === EffectNames.CannotHaveSkillsModified);
+        cannotEffects.forEach(cannotEffect => {
+            modifiers.forEach(modifier => {
+                if(cannotEffect.value.value(modifier)) {
+                    modifier.amount = 0;
+                    modifier.name = modifier.name + '(' + StatModifier.getEffectName(cannotEffect) + ')';
+                }
+            });
         });
 
         return modifiers;
-    }
-
-    getEffectName(effect) {
-        if(effect.context && effect.context.source) {
-            return effect.context.source.name;
-        }
-        return 'Unknown';
     }
 
     getPoliticalModifiers() {
@@ -298,15 +302,15 @@ class DrawCard extends BaseCard {
         let politicalSkill = copyEffect ? copyEffect.printedPoliticalSkill : this.printedPoliticalSkill;
         if(Number.isNaN(politicalSkill)) {
             if(copyEffect) {
-                return [{ amount: undefined, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true }];
+                return [StatModifier.fromEffect(undefined, copyEffect, true, `Base due to ${StatModifier.getEffectName(copyEffect)}`)];
             }
-            return [{ amount: undefined, name: 'Base', countsAsBase: true }];
+            return [StatModifier.fromCard(undefined, this, 'Base', true)];
         }
 
         // dash effects
         let dashEffects = this.effects.filter(effect => effect.type === EffectNames.SetDash && effect.getValue(this) === 'political');
         if(dashEffects.length > 0) {
-            return [{ amount: undefined, name: '' + dashEffects.map(e => this.getEffectName(e)).join(', '), countsAsBase: true }];
+            return [StatModifier.fromEffect(undefined, dashEffects, true, dashEffects.map(e => StatModifier.getEffectName(e)).join(', '))];
         }
 
         // set effects
@@ -314,7 +318,7 @@ class DrawCard extends BaseCard {
         if(setEffects.length > 0) {
             let latestSetEffect = _.last(setEffects);
             let setAmount = latestSetEffect.getValue(this);
-            return [{ amount: setAmount, name: 'Set by ' + this.getEffectName(latestSetEffect), countsAsBase: true }];
+            return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
         }
 
         let modifiers = [];
@@ -323,12 +327,12 @@ class DrawCard extends BaseCard {
         if(setBaseEffects.length > 0) {
             let latestSetBaseEffect = _.last(setBaseEffects);
             let setBaseAmount = latestSetBaseEffect.getValue(this);
-            modifiers.push({ amount: setBaseAmount, name: 'Base set by ' + this.getEffectName(latestSetBaseEffect), countsAsBase: true });
+            modifiers.push(StatModifier.fromEffect(setBaseAmount, latestSetBaseEffect, true, `Base set by ${StatModifier.getEffectName(latestSetBaseEffect)}`));
         } else {
             if(copyEffect) {
-                modifiers.push({ amount: politicalSkill, name: 'Base due to ' + this.getEffectName(copyEffect), countsAsBase: true });
+                modifiers.push(StatModifier.fromEffect(politicalSkill, copyEffect, true, `Base due to ${StatModifier.getEffectName(copyEffect)}`));
             } else {
-                modifiers.push({ amount: politicalSkill, name: 'Base', countsAsBase: true });
+                modifiers.push(StatModifier.fromCard(politicalSkill, this, 'Base', true));
             }
         }
 
@@ -336,24 +340,21 @@ class DrawCard extends BaseCard {
         let baseModifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyBasePoliticalSkill);
         baseModifierEffects.forEach(baseModifierEffect => {
             const value = baseModifierEffect.getValue(this);
-            modifiers.push({ amount: value, name: 'Base due to ' + this.getEffectName(baseModifierEffect), countsAsBase: true });
+            modifiers.push(StatModifier.fromEffect(value, baseModifierEffect, true, `Base due to ${StatModifier.getEffectName(baseModifierEffect)}`));
         });
 
         // skill modifiers
         let modifierEffects = this.effects.filter(effect => effect.type === EffectNames.ModifyPoliticalSkill || effect.type === EffectNames.ModifyBothSkills);
         modifierEffects.forEach(modifierEffect => {
             const value = modifierEffect.getValue(this);
-            modifiers.push({ amount: value, name: '' + this.getEffectName(modifierEffect), countsAsBase: false });
+            modifiers.push(StatModifier.fromEffect(value, modifierEffect));
         });
 
         // attachment bonus
         this.attachments.forEach(attachment => {
             let bonus = parseInt(attachment.cardData.political_bonus);
             if(bonus) {
-                if(bonus < 0 && this.anyEffect(EffectNames.CannotHaveSkillsReduced)) {
-                    bonus = 0;
-                }
-                modifiers.push({ amount: bonus, name: 'Attachment Bonus Skill', countsAsBase: false });
+                modifiers.push(StatModifier.fromCard(bonus, attachment, 'Attachment Bonus Skill'));
             }
         });
 
@@ -366,7 +367,18 @@ class DrawCard extends BaseCard {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
             let amount = (multiplier - 1) * currentTotal;
-            modifiers.push({ amount: amount, name: '' + this.getEffectName(multiplierEffect), countsAsBase: false });
+            modifiers.push(StatModifier.fromEffect(amount, multiplierEffect));
+        });
+
+        // cannot have skills affected
+        let cannotEffects = this.effects.filter(effect => effect.type === EffectNames.CannotHaveSkillsModified);
+        cannotEffects.forEach(cannotEffect => {
+            modifiers.forEach(modifier => {
+                if(cannotEffect.value.value(modifier)) {
+                    modifier.amount = 0;
+                    modifier.name = modifier.name + '(' + StatModifier.getEffectName(cannotEffect) + ')';
+                }
+            });
         });
 
         return modifiers;
@@ -378,27 +390,20 @@ class DrawCard extends BaseCard {
             if(this.isHonored) {
                 if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
                     let amount = 0 - this.getGlory();
-                    modifiers.push({ amount: amount, name: 'Honored (reversed)', countsAsBase: false });
+                    modifiers.push(StatModifier.fromStatusToken(amount, 'Honored (reversed)'));
                 } else {
                     let amount = this.getGlory();
-                    modifiers.push({ amount: amount, name: 'Honored', countsAsBase: false });
+                    modifiers.push(StatModifier.fromStatusToken(amount, 'Honored'));
                 }
             } else if(this.isDishonored) {
                 if(this.anyEffect(EffectNames.HonorStatusReverseModifySkill)) {
                     let amount = this.getGlory();
-                    modifiers.push({ amount: amount, name: 'Dishonored (reversed)', countsAsBase: false });
+                    modifiers.push(StatModifier.fromStatusToken(amount, 'Dishonored (reversed)'));
                 } else {
                     let amount = 0 - this.getGlory();
-                    modifiers.push({ amount: amount, name: 'Dishonored', countsAsBase: false });
+                    modifiers.push(StatModifier.fromStatusToken(amount, 'Dishonored'));
                 }
             }
-        }
-        if(this.anyEffect(EffectNames.CannotHaveSkillsReduced)) {
-            modifiers.forEach(modifier => {
-                if(modifier.amount < 0) {
-                    modifier.amount = 0;
-                }
-            });
         }
         return modifiers;
     }
@@ -412,7 +417,7 @@ class DrawCard extends BaseCard {
         if(!this.showStats) {
             return;
         }
-        let modifiers = this.getMilitaryModifiers();
+        let modifiers = this.getMilitaryModifiers().map(modifier => Object.assign({}, modifier));
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         return {
             skill: Number.isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
@@ -424,7 +429,8 @@ class DrawCard extends BaseCard {
         if(!this.showStats) {
             return;
         }
-        let modifiers = this.getPoliticalModifiers();
+        let modifiers = this.getPoliticalModifiers().map(modifier => Object.assign({}, modifier));
+        modifiers.forEach(modifier => modifier = Object.assign({}, modifier));
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         return {
             skill: Number.isNaN(skill) ? '-' : Math.max(skill, 0).toString(),

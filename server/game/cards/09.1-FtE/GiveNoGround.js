@@ -17,7 +17,7 @@ class GiveNoGround extends DrawCard {
                     })),
                     AbilityDsl.actions.cardLastingEffect((context) => ({
                         target: context.target,
-                        effect: AbilityDsl.effects.cannotHaveSkillsReduced()
+                        effect: AbilityDsl.effects.cannotHaveSkillsModified(modifier => modifier.amount < 0)
                     })),
                     AbilityDsl.actions.cardLastingEffect((context) => ({
                         target: context.target,

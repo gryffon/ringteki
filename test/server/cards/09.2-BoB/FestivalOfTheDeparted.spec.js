@@ -95,7 +95,7 @@ describe('Festival of the Departed', function() {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
-            it('should keep existing modifiers in place if moved to Festival', function() {
+            it('should not keep existing modifiers in place if moved to Festival', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.brashSamurai],
@@ -110,7 +110,7 @@ describe('Festival of the Departed', function() {
                 this.player2.clickCard(this.talismanOfTheSun);
                 this.player2.clickCard(this.festivalOfTheDeparted);
                 expect(this.game.currentConflict.conflictProvince).toBe(this.festivalOfTheDeparted);
-                expect(this.brashSamurai.getMilitarySkill()).toBe(4);
+                expect(this.brashSamurai.getMilitarySkill()).toBe(2);
             });
         });
     });
