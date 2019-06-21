@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
 const { Locations, Players, TargetModes, CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class Ambush extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Put characters from you hand or provinces into play',
             target: {
@@ -15,7 +16,7 @@ class Ambush extends DrawCard {
                 location: [Locations.Hand, Locations.Provinces],
                 controller: Players.Self,
                 cardCondition: card => card.isFaction('scorpion'),
-                gameAction: ability.actions.putIntoConflict()
+                gameAction: AbilityDsl.actions.putIntoConflict()
             }
         });
     }

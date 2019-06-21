@@ -24,8 +24,6 @@ describe('Yasuki Fuzake', function() {
                 this.asahinaStoryteller.honor();
                 this.yasukiFuzake.dishonor();
                 this.player1.pass();
-                expect(this.dojiChallenger.isHonored).toBe(true);
-                expect(this.yasukiFuzake.isDishonored).toBe(true);
                 this.player2.clickCard('noble-sacrifice');
                 this.player2.clickCard(this.yasukiFuzake);
                 this.player2.clickCard(this.dojiChallenger);

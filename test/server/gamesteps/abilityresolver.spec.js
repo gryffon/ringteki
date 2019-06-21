@@ -44,18 +44,6 @@ describe('AbilityResolver', function() {
             });
         });
 
-        xdescribe('when the ability is an action', function() {
-            beforeEach(function() {
-                this.ability.isAction.and.returnValue(true);
-                this.ability.resolveCosts.and.returnValue([{ resolved: true, value: true }, { resolved: true, value: true }]);
-                this.resolver.continue();
-            });
-
-            it('should mark that an action is being taken', function() {
-                expect(this.game.markActionAsTaken).toHaveBeenCalled();
-            });
-        });
-
         describe('when all costs can be paid', function() {
             beforeEach(function() {
                 this.ability.resolveCosts.and.returnValue([{ resolved: true, value: true }, { resolved: true, value: true }]);
@@ -159,17 +147,6 @@ describe('AbilityResolver', function() {
             it('should report the error', function() {
                 this.resolver.continue();
                 expect(this.game.reportError).toHaveBeenCalledWith(jasmine.any(Error));
-            });
-
-            xdescribe('when the current ability context is for this ability', function() {
-                beforeEach(function() {
-                    this.game.currentAbilityContext = { source: 'card', card: this.context.source };
-                });
-
-                it('should pop the current context', function() {
-                    this.resolver.continue();
-                    expect(this.game.popAbilityContext).toHaveBeenCalled();
-                });
             });
         });
     });

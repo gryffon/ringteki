@@ -39,7 +39,7 @@ describe('Matsu Tsuko', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.matsuTsuko);
-                expect(this.player1.player.honor > this.player2.player.honor).toBe(true);
+                expect(this.player1.player.honor).toBeGreaterThan(this.player2.player.honor);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
@@ -54,7 +54,7 @@ describe('Matsu Tsuko', function() {
                 });
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.matsuTsuko);
-                expect(this.player1.player.honor > this.player2.player.honor).toBe(true);
+                expect(this.player1.player.honor).toBeGreaterThan(this.player2.player.honor);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
@@ -67,7 +67,7 @@ describe('Matsu Tsuko', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.matsuTsuko);
-                expect(this.player1.player.honor === this.player2.player.honor).toBe(true);
+                expect(this.player1.player.honor).toBe(this.player2.player.honor);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
@@ -81,7 +81,7 @@ describe('Matsu Tsuko', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.matsuTsuko);
-                expect(this.player1.player.honor < this.player2.player.honor).toBe(true);
+                expect(this.player1.player.honor).toBeLessThan(this.player2.player.honor);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
@@ -95,7 +95,7 @@ describe('Matsu Tsuko', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.matsuTsuko);
-                expect(this.player1.player.honor > this.player2.player.honor).toBe(true);
+                expect(this.player1.player.honor).toBeGreaterThan(this.player2.player.honor);
                 expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
             });
 

@@ -45,6 +45,7 @@ describe('Menacing Iron Warrior', function() {
                     });
                     originalDojiChallenderPolSkill = this.dojiChallenger.getPoliticalSkill();
                 });
+
                 it('should not be available to activate', function() {
                     this.player2.clickCard(this.menacingIronWarrior);
                     expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
@@ -67,18 +68,21 @@ describe('Menacing Iron Warrior', function() {
                     });
                     this.player2.clickCard(this.menacingIronWarrior);
                 });
+
                 it('should prevent lower military skill chars from triggering abilities', function() {
                     expect(this.player2).toHavePrompt('Waiting for opponent to take an action or pass');
                     this.player1.clickCard(this.asahinaArtisan);
                     expect(this.player1).not.toHavePrompt('Asahina Artisan');
                     expect(this.player1).not.toBeAbleToSelect(this.dojiChallenger);
                 });
+
                 it('should prevent equal military skill chars from triggering abilities', function() {
                     expect(this.player2).toHavePrompt('Waiting for opponent to take an action or pass');
                     this.player1.clickCard(this.dojiChallenger);
                     expect(this.player1).not.toHavePrompt('Doji Challenger');
                     expect(this.player1).not.toBeAbleToSelect(this.dojiWhisperer);
                 });
+
                 it('should not prevent higher military skill chars from triggering abilities', function() {
                     const originalHandSize = this.player1.player.hand.size();
                     expect(this.player2).toHavePrompt('Waiting for opponent to take an action or pass');
@@ -86,16 +90,19 @@ describe('Menacing Iron Warrior', function() {
                     expect(this.player1.player.imperialFavor).toBe('');
                     expect(this.player1.player.hand.size()).toBe(originalHandSize + 3);
                 });
+
                 it('should not prevent own chars from triggering abilities', function() {
                     this.player1.pass();
                     this.player2.clickCard(this.kakitaKaezin);
                     expect(this.player2).toHavePrompt('Waiting for opponent to use Kakita Kaezin');
                 });
+
                 it('should not prevent characters at home from triggering abilities', function() {
                     expect(this.youngHarrier.isDishonored).toBe(false);
                     this.player1.clickCard(this.youngHarrier);
                     expect(this.youngHarrier.isDishonored).toBe(true);
                 });
+
                 it('should not prevent characters added to the conflict after activation from triggering abilities', function() {
                     this.youngHarrier2 = this.player1.playCharacterFromHand('young-harrier');
                     this.player1.clickPrompt('Conflict');
@@ -104,6 +111,7 @@ describe('Menacing Iron Warrior', function() {
                     this.player1.clickCard(this.youngHarrier2);
                     expect(this.youngHarrier2.isDishonored).toBe(true);
                 });
+
                 it('should not prevent characters in future conflicts from triggering abilities', function() {
                     this.player1.pass();
                     this.player2.pass();
