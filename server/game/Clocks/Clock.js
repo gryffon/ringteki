@@ -1,6 +1,7 @@
 class Clock {
     constructor(player, time) {
         this.player = player;
+        this.mainTime = time;
         this.timeLeft = time;
         this.mode = 'off';
         this.timerStart = 0;
