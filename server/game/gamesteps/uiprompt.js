@@ -15,6 +15,7 @@ class UiPrompt extends BaseStep {
 
     complete() {
         this.completed = true;
+        this.game.resetClocks();
     }
 
     setPrompt() {
@@ -24,6 +25,7 @@ class UiPrompt extends BaseStep {
                 player.startClock();
             } else {
                 player.setPrompt(this.waitingPrompt());
+                player.resetClock();
             }
         });
     }

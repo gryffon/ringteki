@@ -39,6 +39,9 @@ class Clock {
         }
     }
 
+    reset() {
+    }
+
     opponentStart() {
         this.timerStart = Date.now();
         this.updateStateId();

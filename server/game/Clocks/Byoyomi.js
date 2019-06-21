@@ -1,8 +1,8 @@
 const ChessClock = require('./ChessClock');
 
 class Byoyomi extends ChessClock {
-    updateTimeLeft(secs) {
-        super.updateTimeLeft(secs - (secs % 30));
+    reset() {
+        this.timeLeft = Math.ceil((this.timeLeft) / 30) * 30;
     }
 }
 
