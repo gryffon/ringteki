@@ -89,6 +89,7 @@ describe('Feral Ningyo', function () {
                 it('should put it into play', function () {
                     this.player1.clickPrompt('Put into play');
                     expect(this.feral.location).toBe('play area');
+                    expect(this.getChatLogs(3)).toContain('player1 uses Feral Ningyo to put Feral Ningyo into play into the conflict and return Feral Ningyo to the deck at the end of the conflict');
                 });
 
                 it('should return to it the conflict deck at the end of the conflict', function () {
@@ -97,6 +98,8 @@ describe('Feral Ningyo', function () {
                     this.player1.clickPrompt('No');
                     this.player1.clickPrompt('Don\'t resolve');
                     expect(this.feral.location).toBe('conflict deck');
+                    expect(this.getChatLogs(2)).toContain('Feral Ningyo returns to the deck and shuffles due to its delayed effect');
+                    expect(this.getChatLogs(1)).toContain('player1 is shuffling their conflict deck');
                 });
 
                 it('should return to it the conflict deck at the end of the conflict even with a card attached', function () {
@@ -117,6 +120,23 @@ describe('Feral Ningyo', function () {
                     this.player1.clickPrompt('No');
                     this.player1.clickPrompt('Don\'t resolve');
                     expect(this.game.emitEvent).toHaveBeenCalledWith('onDeckShuffled', jasmine.anything());
+                });
+
+                it('should be triggerable if played from hand and then triggered in play', function() {
+                    this.player1.clickPrompt('Play this character');
+                    this.player1.clickPrompt('0');
+                    this.player1.clickPrompt('Conflict');
+                    this.player2.pass();
+                    expect(this.player1).toHavePrompt('Conflict Action Window');
+                    this.player1.clickCard(this.feral);
+                    expect(this.player2).toHavePrompt('Conflict Action Window');
+                    expect(this.getChatLogs(3)).toContain('player1 uses Feral Ningyo to return Feral Ningyo to the deck at the end of the conflict');
+                    this.noMoreActions();
+                    this.player1.clickPrompt('No');
+                    this.player1.clickPrompt('Don\'t resolve');
+                    expect(this.feral.location).toBe('conflict deck');
+                    expect(this.getChatLogs(2)).toContain('Feral Ningyo returns to the deck and shuffles due to its delayed effect');
+                    expect(this.getChatLogs(1)).toContain('player1 is shuffling their conflict deck');
                 });
             });
         });

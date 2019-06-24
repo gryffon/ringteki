@@ -9,6 +9,7 @@ export interface DelayedEffectActionProperties extends CardActionProperties {
     when: WhenType;
     message: string;
     gameAction: GameAction;
+    location?: Locations | Locations[];
 }
 
 export class DelayedEffectAction extends CardGameAction {
@@ -16,13 +17,21 @@ export class DelayedEffectAction extends CardGameAction {
     eventName = EventNames.OnEffectApplied;
     effect = 'apply a delayed effect to {0}';
 
-    defaultProperties: DelayedEffectActionProperties;
+    defaultProperties: DelayedEffectActionProperties = {
+        when: null,
+        message: null,
+        gameAction: null,
+        location: Locations.PlayArea
+    };
+
     constructor(properties: DelayedEffectActionProperties | ((context: AbilityContext) => DelayedEffectActionProperties)) {
         super(properties);
     }
 
-    canAffect(card: BaseCard, context: AbilityContext): boolean {
-        if(card.location !== Locations.PlayArea) {
+    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+        let properties = this.getProperties(context, additionalProperties) as DelayedEffectActionProperties;
+        let inLocation = Array.isArray(properties.location) ? properties.location.includes(card.location) : properties.location === card.location;
+        if(!inLocation) {
             return false;
         }
         return super.canAffect(card, context);
