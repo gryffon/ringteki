@@ -132,7 +132,7 @@ class Ring extends EffectSource {
         return Object.assign(state, selectionState);
     }
 
-    getShortSummary() {
+    getShortSummary(card) {
         return Object.assign(super.getShortSummary(), { element: this.element, conflictType: this.conflictType });
     }
 }

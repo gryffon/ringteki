@@ -4,6 +4,7 @@ const AbilityDsl = require('./abilitydsl.js');
 const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
+const PlayAttachmentOnRingAction = require('./playattachmentonringaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
 const PlayDisguisedCharacterAction = require('./PlayDisguisedCharacterAction');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
@@ -661,8 +662,10 @@ class DrawCard extends BaseCard {
             } else {
                 actions.push(new PlayCharacterAction(this));
             }
-        } else if(this.type === CardTypes.Attachment) {
+        } else if(this.type === CardTypes.Attachment && this.id !== 'greater-understanding') {
             actions.push(new PlayAttachmentAction(this));
+        } else if(this.type === CardTypes.Attachment && this.id === 'greater-understanding') {
+            actions.push(new PlayAttachmentOnRingAction(this));
         }
         return actions;
     }
