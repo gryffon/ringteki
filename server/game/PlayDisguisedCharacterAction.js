@@ -2,7 +2,7 @@ const BaseAction = require('./BaseAction.js');
 const ReduceableFateCost = require('./costs/ReduceableFateCost');
 
 const Costs = require('./costs');
-const { CardTypes, EventNames, Phases, Players, PlayTypes } = require ('./Constants');
+const { CardTypes, EventNames, Phases, Players, PlayTypes, EffectNames } = require ('./Constants');
 
 const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
     return {
@@ -76,6 +76,7 @@ class PlayDisguisedCharacterAction extends BaseAction {
     }
 
     executeHandler(context) {
+        const extraFate = context.source.sumEffects(EffectNames.GainExtraFateWhenPlayed);
         const events = [context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
@@ -98,7 +99,7 @@ class PlayDisguisedCharacterAction extends BaseAction {
         }
         context.game.queueSimpleStep(() => {
             context.game.addMessage('{0} plays {1}{2} using Disguised, choosing to replace {3}', context.player, context.source, intoConflict ? ' into the conflict' : '', replacedCharacter);
-            const gameAction = intoConflict ? context.game.actions.putIntoConflict({ target: context.source }) : context.game.actions.putIntoPlay({ target: context.source });
+            const gameAction = intoConflict ? context.game.actions.putIntoConflict({ target: context.source, fate: extraFate }) : context.game.actions.putIntoPlay({ target: context.source, fate: extraFate });
             gameAction.addEventsToArray(events, context);
             events.push(context.game.getEvent(EventNames.Unnamed, {}, () => {
                 const moveEvents = [];
