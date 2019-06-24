@@ -105,6 +105,15 @@ describe('Infiltrator', function() {
                     expect(this.masterOfTheSpear.controller).toBe(this.player2.player);
                     expect(this.player2.fate).toBe(0);
                 });
+
+                it('should not be triggerable if your opponent\'s deck is empty', function() {
+                    this.player1.reduceDeckToNumber('conflict deck', 0);
+                    this.infiltrator = this.player2.playAttachment('infiltrator', this.matsuBerserker);
+                    this.player1.pass();
+                    expect(this.player2).toHavePrompt('Conflict Action Window');
+                    this.player2.clickCard(this.infiltrator);
+                    expect(this.player2).toHavePrompt('Conflict Action Window');
+                });
             });
         });
     });
