@@ -43,7 +43,10 @@ class AbilityTargetSelect {
     }
 
     getGameAction(context) {
-        let choice = this.properties.choices[context.selects[this.name] && context.selects[this.name].choice];
+        if(!context.selects[this.name]) {
+            return [];
+        }
+        let choice = this.properties.choices[context.selects[this.name].choice];
         if(typeof choice !== 'function') {
             return choice;
         }
