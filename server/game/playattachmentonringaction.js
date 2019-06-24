@@ -1,13 +1,14 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases, PlayTypes, EventNames } = require('./Constants');
+const { Phases, PlayTypes, EventNames, TargetModes } = require('./Constants');
 
 class PlayAttachmentToRingAction extends BaseAction {
     constructor(card) {
         super(card, [Costs.payTargetDependentFateCost('target', PlayTypes.PlayFromHand), Costs.playLimited()], {
-            gameAction: GameActions.attach(context => ({ attachment: context.source })),
-            cardCondition: (card, context) => context.source.canPlayOn(card)
+            gameAction: GameActions.attachToRing(context => ({ attachment: context.source })),
+            ringCondition: (ring, context) => context.source.canPlayOn(ring),
+            mode: TargetModes.Ring
         });
         this.title = 'Play this attachment';
     }
@@ -28,6 +29,10 @@ class PlayAttachmentToRingAction extends BaseAction {
         return super.meetsRequirements(context);
     }
 
+    canResolveTargets(context) {
+        return true;
+    }
+
     displayMessage(context) {
         context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target);
     }
@@ -40,7 +45,7 @@ class PlayAttachmentToRingAction extends BaseAction {
             originalLocation: context.source.location,
             playType: PlayTypes.PlayFromHand
         });
-        context.game.openEventWindow([context.game.actions.attach({ attachment: context.source }).getEvent(context.target, context), cardPlayedEvent]);
+        context.game.openEventWindow([context.game.actions.attachToRing({attachment: context.source}).getEvent(context.ring, context), cardPlayedEvent]);
     }
 
     isCardPlayed() {

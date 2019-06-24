@@ -2,7 +2,7 @@ import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Ring = require('../ring');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations, CardTypes, EventNames }  from '../Constants';
+import { Locations, EventNames }  from '../Constants';
 
 export interface AttachToRingActionProperties extends CardActionProperties {
     attachment?: DrawCard,
@@ -26,7 +26,7 @@ export class AttachToRingAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties) as AttachToRingActionProperties;
         if(!context || !context.player || !ring) {
             return false;
-        } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(context.target, context)) {
+        } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(ring, context)) {
             return false;
         }
         return super.canAffect(ring, context);
