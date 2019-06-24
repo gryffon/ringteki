@@ -15,6 +15,9 @@ class ShamefulDisplay extends ProvinceCard {
             },
             effect: 'change the personal honor of {0}',
             handler: context => {
+                if(!context.target) {
+                    return;
+                }
                 if(context.target.every(card => !card.allowGameAction('honor', context))) {
                     this.game.promptForSelect(context.player, {
                         activePromptTitle: 'Choose a character to dishonor',
