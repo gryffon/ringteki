@@ -39,6 +39,7 @@ describe('Duelist Training', function() {
                 this.player1.clickCard(this.seppunGuardsman);
                 expect(this.player1).toHavePrompt('Honor Bid');
                 expect(this.player2).toHavePrompt('Honor Bid');
+                expect(this.getChatLogs(1)).toContain('player1 uses Giver of Gifts\'s gained ability from Duelist Training to initiate a military duel : Giver of Gifts vs. Seppun Guardsman');
             });
 
             it('should offer players a choice of how to pay the difference in bids', function() {
