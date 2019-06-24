@@ -29,10 +29,7 @@ describe('Discourage Pursuit', function() {
                 this.player1.clickCard(this.toturi);
                 expect(this.player1).toBeAbleToSelect('shosuro-miyako');
                 this.player1.clickCard('shosuro-miyako');
-
-
                 expect(this.toturi.getMilitarySkill()).toBe(2);
-
             });
 
             it('should not trigger without a shinobi in play', function() {
@@ -44,10 +41,6 @@ describe('Discourage Pursuit', function() {
                 this.player1.moveCard('shosuro-miyako', 'dynasty discard pile');
                 this.player1.clickCard('discourage-pursuit');
                 expect(this.player1).not.toHavePrompt('Choose a character');
-            });
-
-            it('should have DEF effect on GHI', function() {
-
             });
         });
     });

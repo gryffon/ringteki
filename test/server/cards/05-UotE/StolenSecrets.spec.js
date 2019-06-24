@@ -116,33 +116,29 @@ describe('Stolen Secrets', function() {
                 });
 
                 describe('if there are exactly 2 cards in deck', function () {
-                    beforeEach(function () {
-                        for(var i = this.player2.conflictDeck.length - 1; i >= 2; i--) {
-                            this.player2.moveCard(this.player2.conflictDeck[i], 'hand');
-                        }
+                    beforeEach(function() {
+                        this.player2.reduceDeckToNumber('conflict deck', 2);
+                    });
+
+                    it('should not prompt to place the remaining card', function() {
                         expect(this.player2.conflictDeck.length).toBe(2);
                         this.player1.clickCard(this.stolenSecrets);
                         this.player1.clickCard(this.favoredNiece);
                         this.player1.clickPrompt(this.kamiUnleashed.name);
-                    });
-
-                    it('should not prompt to place the remaining card', function () {
                         expect(this.player1).not.toHavePrompt('Which card do you want to be on top?');
                     });
                 });
 
                 describe('if there are exactly 3 cards in deck', function () {
-                    beforeEach(function () {
-                        for(var i = this.player2.conflictDeck.length - 1; i >= 3; i--) {
-                            this.player2.moveCard(this.player2.conflictDeck[i], 'hand');
-                        }
+                    beforeEach(function() {
+                        this.player2.reduceDeckToNumber('conflict deck', 3);
+                    });
+
+                    it('should prompt to place the top card only', function() {
                         expect(this.player2.conflictDeck.length).toBe(3);
                         this.player1.clickCard(this.stolenSecrets);
                         this.player1.clickCard(this.favoredNiece);
                         this.player1.clickPrompt(this.kamiUnleashed.name);
-                    });
-
-                    it('should prompt to place the top card only', function () {
                         expect(this.player1).toHavePrompt('Which card do you want to be on top?');
                         expect(this.player1).toHavePromptButton(this.fingerOfJade.name);
                         expect(this.player1).toHavePromptButton(this.tattooedWanderer.name);

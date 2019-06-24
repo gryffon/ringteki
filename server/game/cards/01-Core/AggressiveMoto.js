@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AggressiveMoto extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
-            effect: ability.effects.cardCannot('declareAsDefender')
+            effect: AbilityDsl.effects.cardCannot('declareAsDefender')
         });
     }
 }

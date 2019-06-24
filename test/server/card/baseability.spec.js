@@ -142,23 +142,6 @@ describe('BaseAbility', function () {
             this.context.copy = () => this.context;
         });
 
-        xdescribe('when the cost does not have a resolve method', function() {
-            beforeEach(function() {
-                this.ability.cost = [this.noResolveCost];
-                this.noResolveCost.canPay.and.returnValue('value1');
-
-                this.results = this.ability.resolveCosts(this.context);
-            });
-
-            it('should call canPay on the cost', function() {
-                expect(this.noResolveCost.canPay).toHaveBeenCalledWith(this.context);
-            });
-
-            it('should return the cost in resolved format', function() {
-                expect(this.results).toEqual([{ resolved: true, value: 'value1' }]);
-            });
-        });
-
         describe('when the cost has a resolve method', function() {
             beforeEach(function() {
                 this.ability.cost = [this.resolveCost];
@@ -258,38 +241,6 @@ describe('BaseAbility', function () {
             this.ability.resolveTargets(this.context, this.targetResults);
             expect(this.gameSpy.promptForSelect).toHaveBeenCalledWith(this.player, { target: 1, onSelect: jasmine.any(Function), onCancel: jasmine.any(Function), selector: jasmine.any(Object), mustSelect: jasmine.any(Array), context: this.context, waitingPromptTitle: jasmine.any(String), buttons: jasmine.any(Array), onMenuCommand: jasmine.any(Function), mode: 'single', location: 'any', gameAction: [] });
             expect(this.gameSpy.promptForSelect).toHaveBeenCalledWith(this.player, { target: 2, onSelect: jasmine.any(Function), onCancel: jasmine.any(Function), selector: jasmine.any(Object), mustSelect: jasmine.any(Array), context: this.context, waitingPromptTitle: jasmine.any(String), buttons: jasmine.any(Array), onMenuCommand: jasmine.any(Function), mode: 'single', location: 'any', gameAction: [] });
-        });
-
-        xdescribe('the select prompt', function() {
-            beforeEach(function() {
-                this.ability.resolveTargets(this.context, this.targetResults);
-                var call = this.gameSpy.promptForSelect.calls.mostRecent();
-                this.lastPromptProperties = call.args[1];
-            });
-
-            describe('when a card is selected', function() {
-                beforeEach(function() {
-                    this.lastPromptProperties.onSelect(this.player, 'foo');
-                });
-
-                it('should set the result value', function() {
-                    expect(this.context.targets.target1).toBe('foo');
-                });
-            });
-
-            describe('when the prompt is cancelled', function() {
-                beforeEach(function() {
-                    this.lastPromptProperties.onCancel();
-                });
-
-                it('should resolve the result', function() {
-                    expect(this.lastResult.resolved).toBe(true);
-                });
-
-                it('should not set the result value', function() {
-                    expect(this.lastResult.value).toBeFalsy();
-                });
-            });
         });
     });
 });

@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
 const { Locations, Players, TargetModes, CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class CavalryReserves extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Put Cavalry into play from your discard',
             condition: () => this.game.isDuringConflict('military'),
@@ -16,7 +17,7 @@ class CavalryReserves extends DrawCard {
                 location: Locations.DynastyDiscardPile,
                 controller: Players.Self,
                 cardCondition: card => card.hasTrait('cavalry'),
-                gameAction: ability.actions.putIntoConflict()
+                gameAction: AbilityDsl.actions.putIntoConflict()
             }
         });
     }

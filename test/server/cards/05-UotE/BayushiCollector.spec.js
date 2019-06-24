@@ -45,10 +45,6 @@ describe('Bayushi Collector', function() {
                 expect(this.fan.location).toBe('conflict discard pile');
                 expect(this.liar.isDishonored).toBe(false);
             });
-
-            it('should have DEF effect on GHI', function() {
-
-            });
         });
     });
 });

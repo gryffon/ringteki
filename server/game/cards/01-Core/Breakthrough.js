@@ -1,7 +1,8 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class Breakthrough extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.reaction({
             title: 'Declare a new conflict',
             when: {
@@ -10,7 +11,7 @@ class Breakthrough extends DrawCard {
                     this.game.getConflicts(context.player).filter(conflict => !conflict.passed).length === 1 &&
                     event.conflict.conflictProvince.isBroken
             },
-            gameAction: ability.actions.initiateConflict({ canPass: false })
+            gameAction: AbilityDsl.actions.initiateConflict({ canPass: false })
         });
     }
 }

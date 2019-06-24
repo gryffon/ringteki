@@ -114,6 +114,7 @@ describe('Kyuden Isawa', function() {
             it('should allow you to use Kyuden Isawa on Maze of Illusion', function() {
                 this.player1.clickCard('kyuden-isawa');
                 this.player1.clickCard('maze-of-illusion', 'conflict discard pile');
+                expect(this.player1).toHavePrompt('Maze of Illusion');
             });
         });
     });
