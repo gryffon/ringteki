@@ -27,7 +27,7 @@ describe('Hida Yakamo', function() {
 
         it('should bow as a result of military conflict resolution when equally honorable as opponent', function() {
             this.player2.pass();
-            expect(this.player1.player.honor >= this.player2.player.honor).toBe(true);
+            expect(this.player1.player.honor).toBeGreaterThanOrEqual(this.player2.player.honor);
             expect(this.hidaYakamo.bowed).toBe(false);
             this.player1.pass();
             expect(this.player1).toHavePrompt('Action Window');
@@ -39,7 +39,7 @@ describe('Hida Yakamo', function() {
             this.player2.clickCard(this.hidaYakamo);
             this.player1.clickPrompt('1');
             this.player2.clickPrompt('5');
-            expect(this.player1.player.honor >= this.player2.player.honor).toBe(true);
+            expect(this.player1.player.honor).toBeGreaterThanOrEqual(this.player2.player.honor);
             expect(this.hidaYakamo.location).toBe('dynasty discard pile');
         });
 
@@ -48,7 +48,7 @@ describe('Hida Yakamo', function() {
             this.player2.clickCard(this.hidaYakamo);
             this.player1.clickPrompt('5');
             this.player2.clickPrompt('1');
-            expect(this.player1.player.honor < this.player2.player.honor).toBe(true);
+            expect(this.player1.player.honor).toBeLessThan(this.player2.player.honor);
             expect(this.hidaYakamo.location).toBe('play area');
             this.player1.pass();
             this.player2.pass();
@@ -63,7 +63,7 @@ describe('Hida Yakamo', function() {
             this.player2.clickCard(this.hidaYakamo);
             this.player1.clickPrompt('2');
             this.player2.clickPrompt('1');
-            expect(this.player1.player.honor < this.player2.player.honor).toBe(true);
+            expect(this.player1.player.honor).toBeLessThan(this.player2.player.honor);
             expect(this.hidaYakamo.isDishonored).toBe(false);
             expect(this.agashaSumiko.isHonored).toBe(true);
         });

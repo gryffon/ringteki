@@ -33,14 +33,6 @@ describe('Time For War', function() {
                 this.kamayari = this.player2.clickCard('kamayari');
                 expect(this.matsuBerserker.attachments.toArray()).toContain(this.kamayari);
             });
-
-            it('should not trigger under ABC circumstances', function() {
-
-            });
-
-            it('should have DEF effect on GHI', function() {
-
-            });
         });
     });
 });

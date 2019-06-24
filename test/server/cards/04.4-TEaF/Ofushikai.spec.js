@@ -95,6 +95,7 @@ describe('Ofushikai', function() {
                     this.player1.clickCard(this.shibaTsukune);
                     expect(this.player1).toHavePrompt('Choose a character');
                     this.player1.clickCard(this.crisisBreaker);
+                    expect(this.getChatLogs(3)).toContain('player1 uses Shiba Tsukune\'s gained ability from Ofushikai to send Crisis Breaker home');
                     expect(this.player2).toHavePrompt('Conflict Action Window');
                     expect(this.crisisBreaker.inConflict).toBe(false);
                     let cannotParticipateAsAttackerEffects = this.crisisBreaker.effects.filter(effect => effect.type === 'cannotParticipateAsAttacker' && effect.duration === 'untilEndOfPhase');

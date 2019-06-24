@@ -15,10 +15,17 @@ class AlibiArtist extends DrawCard {
                     activePromptTitle: 'Choose a card to put in your hand',
                     context: context,
                     cards: context.player.conflictDeck.first(2),
+                    choices: context.player.conflictDeck.size() === 1 ? ['Take Nothing'] : [],
+                    handlers: [() => {
+                        this.game.addMessage('{0} puts a card on the bottom of their conflict deck', context.player);
+                    }],
                     cardHandler: card => {
-                        this.game.addMessage('{0} takes one card to their hand and puts the other on the bottom of their deck', context.player);
+                        this.game.addMessage('{0} puts a card in their hand', context.player);
                         context.player.moveCard(card, Locations.Hand);
-                        this.game.queueSimpleStep(() => context.player.moveCard(context.player.conflictDeck.first(), Locations.ConflictDeck, { bottom: true }));
+                        if(context.player.conflictDeck.size() > 0) {
+                            this.game.queueSimpleStep(() => context.player.moveCard(context.player.conflictDeck.first(), Locations.ConflictDeck, { bottom: true }));
+                            this.game.addMessage('{0} puts a card on the bottom of their conflict deck', context.player);
+                        }
                     }
                 });
             }

@@ -27,6 +27,7 @@ describe('Dispatch', function() {
                 expect(this.player1).not.toBeAbleToSelect('miya-mystic');
                 expect(this.player1).toBeAbleToSelect('moto-youth');
                 expect(this.player1).toBeAbleToSelect('moto-horde');
+                expect(this.getChatLogs(1)).toContain('player1 plays Dispatch to choose a unicorn character they control to move into a conflict or home');
             });
 
             it('should correctly move character in the conflict', function() {
@@ -39,6 +40,7 @@ describe('Dispatch', function() {
                 this.player1.clickCard('dispatch');
                 this.player1.clickCard('moto-horde');
                 expect(this.horde.isParticipating()).toBe(true);
+                expect(this.getChatLogs(3)).toContain('player1 chooses to move Moto Horde into the conflict');
             });
 
             it('should correctly send character home', function() {
@@ -51,6 +53,7 @@ describe('Dispatch', function() {
                 this.player1.clickCard('dispatch');
                 this.player1.clickCard('moto-horde');
                 expect(this.horde.isParticipating()).toBe(false);
+                expect(this.getChatLogs(3)).toContain('player1 chooses to send Moto Horde home');
             });
         });
     });

@@ -131,9 +131,7 @@ class AbilityTargetCard {
             cards = [cards];
         }
         return (cards.every(card => this.selector.canTarget(card, context, context.choosingPlayerOverride || this.getChoosingPlayer(context))) &&
-                this.selector.hasEnoughSelected(cards) &&
-                !this.selector.hasExceededLimit(cards)) &&
-                (!this.dependentTarget || this.dependentTarget.checkTarget(context));
+                this.selector.hasEnoughSelected(cards) && !this.selector.hasExceededLimit(cards));
     }
 
     getChoosingPlayer(context) {

@@ -8,7 +8,7 @@ const defaultTime = {
     timer: '60',
     chess: '40',
     hourglass: '15',
-    byoyomi: '10'
+    byoyomi: '0'
 };
 
 class InnerNewGame extends React.Component {
@@ -29,6 +29,8 @@ class InnerNewGame extends React.Component {
             clocks: false,
             selectedClockType: 'timer',
             clockTimer: 60,
+            byoyomiPeriods: 5,
+            byoyomiTimePeriod: 30,
             selectedGameType: 'casual',
             password: ''
         };
@@ -69,7 +71,9 @@ class InnerNewGame extends React.Component {
 
         let clocks = {
             type: this.state.clocks ? this.state.selectedClockType : 'none',
-            time: this.state.clocks ? this.state.clockTimer : 0
+            time: this.state.clocks ? this.state.clockTimer : 0,
+            periods: this.state.clocks ? this.state.byoyomiPeriods : 0,
+            timePeriod: this.state.clocks ? this.state.byoyomiTimePeriod : 0
         };
 
         this.props.socket.emit('newgame', {
@@ -126,10 +130,20 @@ class InnerNewGame extends React.Component {
                 </div>
                 <div className='row'>
                     <div className='col-sm-8'>
-                        <label>Clock Timer</label>
+                        <label>Main Time (Minutes)</label>
                         <input className='form-control' value={ this.state.clockTimer } onChange={ event => this.setState({ clockTimer: event.target.value.replace(/\D/,'') }) }/>
                     </div>
                 </div>
+                { this.state.selectedClockType === 'byoyomi' &&
+                    <div className='row'>
+                        <div className='col-sm-8'>
+                            <label>Number of Byoyomi Periods</label>
+                            <input className='form-control' value={ this.state.byoyomiPeriods } onChange={ event => this.setState({ byoyomiPeriods: event.target.value.replace(/\D/, '') }) }/>
+                            <label>Byoyomi Time Period (Seconds)</label>
+                            <input className='form-control' value={ this.state.byoyomiTimePeriod } onChange={ event => this.setState({ byoyomiTimePeriod: event.target.value.replace(/\D/, '') }) }/>
+                        </div>
+                    </div>
+                }
             </div>
         );
     }

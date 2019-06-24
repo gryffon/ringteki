@@ -19,37 +19,6 @@ describe('BaseCard', function () {
         });
     });
 
-    xdescribe('doAction()', function() {
-        describe('when there is no action for the card', function() {
-            beforeEach(function() {
-                this.card.abilities.actions = [];
-            });
-
-            it('does not crash', function() {
-                expect(() => this.card.doAction('player', 0)).not.toThrow();
-            });
-        });
-
-        describe('when there are actions for the card', function() {
-            beforeEach(function() {
-                this.actionSpy1 = jasmine.createSpyObj('action', ['execute']);
-                this.actionSpy2 = jasmine.createSpyObj('action', ['execute']);
-                this.card.abilities.actions = [this.actionSpy1, this.actionSpy2];
-            });
-
-            it('should call execute on the action with the appropriate index', function() {
-                this.card.doAction('player', 1);
-                expect(this.actionSpy2.execute).toHaveBeenCalledWith('player', 1);
-            });
-
-            it('should handle out of bounds indices', function() {
-                this.card.doAction('player', 3);
-                expect(this.actionSpy1.execute).not.toHaveBeenCalled();
-                expect(this.actionSpy2.execute).not.toHaveBeenCalled();
-            });
-        });
-    });
-
     describe('getSummary', function() {
         describe('when is active player', function() {
             beforeEach(function () {
@@ -135,46 +104,6 @@ describe('BaseCard', function () {
 
                 it('should return facedown', function() {
                     expect(this.summary.facedown).toBe(true);
-                });
-            });
-        });
-    });
-
-    xdescribe('allowGameAction()', function() {
-        describe('when there are no restrictions', function() {
-            it('should return true', function() {
-                expect(this.card.allowGameAction('kill')).toBe(true);
-            });
-        });
-
-        describe('when there are restrictions', function() {
-            beforeEach(function() {
-                this.game.getCurrentAbilityContext.and.returnValue({ context: 1 });
-                this.restrictionSpy1 = jasmine.createSpyObj('restriction', ['isMatch']);
-                this.restrictionSpy2 = jasmine.createSpyObj('restriction', ['isMatch']);
-                this.card.addAbilityRestriction(this.restrictionSpy1);
-                this.card.addAbilityRestriction(this.restrictionSpy2);
-            });
-
-            it('should check each restriction', function() {
-                this.card.allowGameAction('kill', { context: 1 });
-                expect(this.restrictionSpy1.isMatch).toHaveBeenCalledWith('kill', { context: 1 });
-                expect(this.restrictionSpy2.isMatch).toHaveBeenCalledWith('kill', { context: 1 });
-            });
-
-            describe('and there are no matching restrictions', function() {
-                it('should return true', function() {
-                    expect(this.card.allowGameAction('kill')).toBe(true);
-                });
-            });
-
-            describe('and at least one matches', function() {
-                beforeEach(function() {
-                    this.restrictionSpy2.isMatch.and.returnValue(true);
-                });
-
-                it('should return false', function() {
-                    expect(this.card.allowGameAction('kill')).toBe(false);
                 });
             });
         });

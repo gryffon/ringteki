@@ -48,7 +48,7 @@ describe('Sage of Gisei Toshi', function() {
                     this.player1.player.honor = 9;
                     this.player2.player.honor = 10;
                     this.player2.pass();
-                    expect(this.player1.player.honor < this.player2.player.honor).toBe(true);
+                    expect(this.player1.player.honor).toBeLessThan(this.player2.player.honor);
                     expect(this.player1).toHavePrompt('Conflict Action Window');
                     this.player1.clickCard(this.sageOfGiseiToshi);
                     expect(this.player1).toHavePrompt('Conflict Action Window');

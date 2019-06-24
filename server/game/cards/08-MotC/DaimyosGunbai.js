@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Locations, DuelTypes, CardTypes, Players } = require('../../Constants');
+const { Locations, DuelTypes } = require('../../Constants');
 
 class DaimyosGunbai extends DrawCard {
     setupCardAbilities() {
@@ -8,32 +8,20 @@ class DaimyosGunbai extends DrawCard {
             title: 'Initiate a military duel and attach this to the winner',
             condition: context => context.game.isDuringConflict(),
             location: Locations.Hand,
-            targets: {
-                challenger: {
-                    cardType: CardTypes.Character,
-                    controller: Players.Self,
-                    cardCondition: card => card.isParticipating()
-                },
-                duelTarget: {
-                    dependsOn: 'challenger',
-                    cardType: CardTypes.Character,
-                    controller: Players.Opponent,
-                    player: Players.Opponent,
-                    cardCondition: card => card.isParticipating(),
-                    gameAction: AbilityDsl.actions.sequential([
-                        AbilityDsl.actions.duel(context => ({
-                            type: DuelTypes.Military,
-                            challenger: context.targets.challenger,
-                            gameAction: duel => AbilityDsl.actions.attach(context => ({
-                                target: duel.winner,
-                                attachment: context.source
-                            }))
-                        })),
-                        AbilityDsl.actions.discardCard(context => ({
-                            target: context.source.location === 'hand' ? context.source : []
-                        }))
-                    ])
-                }
+            initiateDuel: {
+                type: DuelTypes.Military,
+                opponentChoosesDuelTarget: true,
+                gameAction: duel => AbilityDsl.actions.attach(context => ({
+                    target: duel.winner,
+                    attachment: context.source
+                }))
+            },
+            then: {
+                thenCondition: () => true,
+                gameAction: AbilityDsl.actions.discardCard(context => ({
+                    target: context.source.location === Locations.Hand ? context.source : []
+                })),
+                message: context => context.source.location === Locations.Hand ? '{0} discards {1}' : null
             }
         });
     }
