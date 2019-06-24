@@ -12,7 +12,7 @@ const PrideAbility = require('./KeywordAbilities/PrideAbility');
 const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 const StatusToken = require('./StatusToken');
 
-const { Locations, EffectNames, Players, CardTypes, PlayTypes, PersonalHonorStatus } = require('./Constants');
+const { Locations, EffectNames, Players, CardTypes, PlayTypes } = require('./Constants');
 
 const ValidKeywords = [
     'ancestral',
@@ -541,19 +541,6 @@ class DrawCard extends BaseCard {
 
     makeOrdinary() {
         this.setPersonalHonor();
-    }
-
-    get personalHonorStatus() {
-        return this.getPersonalHonorStatus();
-    }
-
-    getPersonalHonorStatus() {
-        if(this.isHonored) {
-            return PersonalHonorStatus.Honored;
-        } else if(this.isDishonored) {
-            return PersonalHonorStatus.Dishonored;
-        }
-        return PersonalHonorStatus.Ordinary;
     }
 
     bow() {

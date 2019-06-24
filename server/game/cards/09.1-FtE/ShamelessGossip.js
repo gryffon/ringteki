@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Players, CardTypes, PersonalHonorStatus } = require('../../Constants');
+const { Players, CardTypes } = require('../../Constants');
 
 class ShamelessGossip extends DrawCard {
     setupCardAbilities() {
@@ -12,7 +12,7 @@ class ShamelessGossip extends DrawCard {
                     activePromptTitle: 'Choose a Character to move a status token from',
                     cardType: CardTypes.Character,
                     controller: Players.Any,
-                    cardCondition: card => card.personalHonorStatus !== PersonalHonorStatus.Ordinary
+                    cardCondition: card => card.isHonored || card.isDishonored
                 },
                 second: {
                     activePromptTitle: 'Choose a Character to move the status token to',
@@ -20,8 +20,7 @@ class ShamelessGossip extends DrawCard {
                     cardType: CardTypes.Character,
                     cardCondition: (card, context) =>
                         card.controller === context.targets.first.controller &&
-                        card !== context.targets.first &&
-                        card.personalHonorStatus !== context.targets.first.personalHonorStatus,
+                        card !== context.targets.first,
                     gameAction: AbilityDsl.actions.moveStatusToken(context => ({
                         target: context.targets.first.personalHonor,
                         recipient: context.targets.second
