@@ -126,7 +126,8 @@ class Ring extends EffectSource {
             selected: this.game.currentConflict && this.game.currentConflict.conflictRing === this.element,
             element: this.element,
             fate: this.fate,
-            menu: this.getMenu()
+            menu: this.getMenu(),
+            attachments: this.attachments
         };
 
         return Object.assign(state, selectionState);
