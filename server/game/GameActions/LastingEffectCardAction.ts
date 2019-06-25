@@ -37,15 +37,8 @@ export class LastingEffectCardAction extends CardGameAction {
         }
         properties.effect = properties.effect.map(factory => factory(context.game, context.source, properties));
         const lastingEffectRestrictions = card.getEffects(EffectNames.CannotApplyLastingEffects);
-        const skillModificationRestrictions = card.getEffects(EffectNames.CannotHaveSkillsModified);
-        let cannotHaveSkillsModified = properties.effect.some(props => 
-            props.effect.isSkillModifier() && skillModificationRestrictions.some(condition => 
-                condition(StatModifier.fromEffect(props.effect.getValue(), props.effect))
-            )
-        )
         return super.canAffect(card, context) && properties.effect.some(props => 
-            props.effect.canBeApplied(card) && !lastingEffectRestrictions.some(condition => condition(props.effect)) &&
-            !cannotHaveSkillsModified
+            props.effect.canBeApplied(card) && !lastingEffectRestrictions.some(condition => condition(props.effect))
         );
     }
 

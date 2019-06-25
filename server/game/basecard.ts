@@ -66,7 +66,7 @@ class BaseCard extends EffectSource {
     get actions(): CardAction[] {
         let actions = this.abilities.actions;
         if(this.anyEffect(EffectNames.CopyCharacter)) {
-            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
+            let mostRecentEffect = _.last(this.getEffects().filter(effect => effect.type === EffectNames.CopyCharacter));
             actions = mostRecentEffect.value.getActions(this);
         }
         let effectActions = this.getEffects(EffectNames.GainAbility).filter(ability => ability.abilityType === AbilityTypes.Action);
@@ -77,7 +77,7 @@ class BaseCard extends EffectSource {
         const TriggeredAbilityTypes = [AbilityTypes.ForcedInterrupt, AbilityTypes.ForcedReaction, AbilityTypes.Interrupt, AbilityTypes.Reaction, AbilityTypes.WouldInterrupt];
         let reactions =  this.abilities.reactions;
         if(this.anyEffect(EffectNames.CopyCharacter)) {
-            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
+            let mostRecentEffect = _.last(this.getEffects().filter(effect => effect.type === EffectNames.CopyCharacter));
             reactions = mostRecentEffect.value.getReactions(this);
         }
         let effectReactions = this.getEffects(EffectNames.GainAbility).filter(ability => TriggeredAbilityTypes.includes(ability.abilityType));
@@ -87,7 +87,7 @@ class BaseCard extends EffectSource {
     get persistentEffects(): any[] {
         let gainedPersistentEffects = this.getEffects(EffectNames.GainAbility).filter(ability => ability.abilityType === AbilityTypes.Persistent);
         if(this.anyEffect(EffectNames.CopyCharacter)) {
-            let mostRecentEffect = _.last(this.effects.filter(effect => effect.type === EffectNames.CopyCharacter));
+            let mostRecentEffect = _.last(this.getEffects().filter(effect => effect.type === EffectNames.CopyCharacter));
             return gainedPersistentEffects.concat(mostRecentEffect.value.getPersistentEffects());
         }
         return this.isBlank() ? gainedPersistentEffects : this.abilities.persistentEffects.concat(gainedPersistentEffects);
@@ -160,7 +160,6 @@ class BaseCard extends EffectSource {
         if(!allowedLocations.includes(location)) {
             throw new Error(`'${location}' is not a supported effect location.`);
         }
-
         this.abilities.persistentEffects.push(_.extend({ duration: Durations.Persistent, location: location }, properties));
     }
 
@@ -287,7 +286,7 @@ class BaseCard extends EffectSource {
     }
 
     getModifiedLimitMax(player: Player, ability: CardAbility, max: number): number {
-        const effects = this.effects.filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
+        const effects = this.getEffects().filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
         return effects.reduce((total, effect) => {
             const value = effect.getValue(this);
             if((value === true || value === ability) && effect.context.player === player) {

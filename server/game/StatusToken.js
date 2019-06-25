@@ -1,12 +1,47 @@
-const GameObject = require('./GameObject');
+const EffectSource = require('./EffectSource');
+const AbilityDsl = require('./abilitydsl');
+const { Players, Durations } = require('./Constants');
 
-class StatusToken extends GameObject {
+class StatusToken extends EffectSource {
     constructor(game, card, isHonored) {
         super(game, isHonored ? 'Honored Token' : 'Dishonored Token');
         this.honored = !!isHonored;
         this.dishonored = !isHonored;
         this.card = card;
         this.type = 'token';
+        this.persistentEffects = [];
+
+        this.applyHonorEffects();
+    }
+
+    applyHonorEffects() {
+        if(!this.card) {
+            return;
+        }
+        let amount = this.honored ? card => card.getGlory() : card => 0 - card.getGlory();
+        let effect = {
+            match: this.card,
+            effect: AbilityDsl.effects.modifyBothSkills(amount)
+        };
+        this.persistentEffects.push(effect);
+        effect.ref = this.addEffectToEngine(effect);
+        this.game.effectEngine.checkEffects();
+    }
+
+    removeHonorEffects() {
+        this.persistentEffects.forEach(effect => {
+            this.removeEffectFromEngine(effect.ref);
+            effect.ref = [];
+        });
+        this.persistentEffects = [];
+    }
+
+    setCard(card) {
+        if(card !== this.card) {
+            this.removeHonorEffects();
+            this.card = card;
+            this.applyHonorEffects();
+        }
     }
 }
 
