@@ -370,7 +370,7 @@ class DrawCard extends BaseCard {
         let doesNotModifyEffects = this.getEffects().filter(effect => effect.type === EffectNames.HonorStatusDoesNotModifySkill);
         if(doesNotModifyEffects.length > 0) {
             modifiers.forEach(modifier => {
-                if(modifier.type === 'token') {
+                if(modifier.type === 'token' && modifier.amount !== 0) {
                     modifier.amount = 0;
                     modifier.name += ` (${doesNotModifyEffects[0]})`;
                 }
@@ -379,7 +379,7 @@ class DrawCard extends BaseCard {
         let reverseEffects = this.getEffects().filter(effect => effect.type === EffectNames.HonorStatusReverseModifySkill);
         if(reverseEffects.length > 0) {
             modifiers.forEach(modifier => {
-                if(modifier.type === 'token') {
+                if(modifier.type === 'token' && modifier.amount !== 0) {
                     modifier.amount = 0 - modifier.amount;
                     modifier.name += ` (${reverseEffects[0]})`;
                 }
