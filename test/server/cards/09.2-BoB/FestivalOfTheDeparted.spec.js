@@ -9,8 +9,8 @@ describe('Festival of the Departed', function() {
                         hand: ['challenge-on-the-fields', 'a-perfect-cut', 'speak-to-the-heart']
                     },
                     player2: {
-                        inPlay: ['tattooed-wanderer', 'agasha-swordsmith'],
-                        hand: ['hurricane-punch', 'banzai', 'talisman-of-the-sun'],
+                        inPlay: ['tattooed-wanderer', 'agasha-swordsmith', 'matsu-berserker'],
+                        hand: ['hurricane-punch', 'banzai', 'way-of-the-lion', 'talisman-of-the-sun'],
                         provinces: ['festival-of-the-departed']
                     }
                 });
@@ -24,14 +24,16 @@ describe('Festival of the Departed', function() {
 
                 this.tattooedWanderer = this.player2.findCardByName('tattooed-wanderer');
                 this.agashaSwordsmith = this.player2.findCardByName('agasha-swordsmith');
+                this.matsuBerserker = this.player2.findCardByName('matsu-berserker');
                 this.hurricanePunch = this.player2.findCardByName('hurricane-punch');
                 this.banzai = this.player2.findCardByName('banzai');
+                this.wayOfTheLion = this.player2.findCardByName('way-of-the-lion');
                 this.talismanOfTheSun = this.player2.findCardByName('talisman-of-the-sun');
                 this.festivalOfTheDeparted = this.player2.findCardByName('festival-of-the-departed');
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 2');
             });
 
-            it('should prevent characters from increasing their military skill', function() {
+            it('should prevent characters from increasing their military skill (+X modifiers)', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.brashSamurai],
@@ -39,6 +41,17 @@ describe('Festival of the Departed', function() {
                 });
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 this.player2.clickCard(this.banzai);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should prevent characters from increasing their military skill (base +X modifiers)', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.brashSamurai],
+                    defenders: [this.matsuBerserker]
+                });
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.wayOfTheLion);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
@@ -99,7 +112,7 @@ describe('Festival of the Departed', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.brashSamurai],
-                    defenders: [this.tattooedWanderer],
+                    defenders: [this.tattooedWanderer, this.matsuBerserker],
                     province: this.shamefulDisplay
                 });
                 this.player2.clickCard(this.talismanOfTheSun);
@@ -107,10 +120,14 @@ describe('Festival of the Departed', function() {
                 this.player1.clickCard(this.aPerfectCut);
                 this.player1.clickCard(this.brashSamurai);
                 expect(this.brashSamurai.getMilitarySkill()).toBe(4);
+                this.player2.clickCard(this.wayOfTheLion);
+                this.player2.clickCard(this.matsuBerserker);
+                expect(this.matsuBerserker.getMilitarySkill()).toBe(6);
                 this.player2.clickCard(this.talismanOfTheSun);
                 this.player2.clickCard(this.festivalOfTheDeparted);
                 expect(this.game.currentConflict.conflictProvince).toBe(this.festivalOfTheDeparted);
                 expect(this.brashSamurai.getMilitarySkill()).toBe(2);
+                expect(this.matsuBerserker.getMilitarySkill()).toBe(3);
             });
         });
     });
