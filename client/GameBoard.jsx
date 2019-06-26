@@ -425,7 +425,15 @@ export class InnerGameBoard extends React.Component {
         console.log('Ring attachment thisplayer', playerRingAttachments);
         console.log('Ring attachment otherplayer', opponentRingAttachments);
         return <div>
+            { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true))}
         </div>;
+    }
+
+    renderRingAttachments(element, attachments, amController) {
+        return attachments.map(card => <Card key={ card.uuid } source='play area' card={ card } disableMouseOver={ card.facedown && !card.code }
+        onMenuItemClick={ this.onMenuItemClick } onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut }
+        showStats={ false }
+        onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ amController } />)
     }
 
     getControlledRingAttachments(rings, player) {
