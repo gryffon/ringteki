@@ -10,14 +10,8 @@ class BayushiYunako extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => !card.hasDash(),
-                gameAction: AbilityDsl.actions.cardLastingEffect(context => {
-                    let diff = context.target.baseMilitarySkill - context.target.basePoliticalSkill;
-                    return {
-                        effect: [
-                            AbilityDsl.effects.modifyBaseMilitarySkill(-diff),
-                            AbilityDsl.effects.modifyBasePoliticalSkill(diff)
-                        ]
-                    };
+                gameAction: AbilityDsl.actions.cardLastingEffect({
+                    effect: AbilityDsl.effects.switchBaseSkills()
                 })
             },
             effect: 'switch {0}\'s military and political skill'

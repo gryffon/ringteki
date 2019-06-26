@@ -123,6 +123,7 @@ describe('Festival of the Departed', function() {
                 this.player2.clickCard(this.wayOfTheLion);
                 this.player2.clickCard(this.matsuBerserker);
                 expect(this.matsuBerserker.getMilitarySkill()).toBe(6);
+                this.player1.pass();
                 this.player2.clickCard(this.talismanOfTheSun);
                 this.player2.clickCard(this.festivalOfTheDeparted);
                 expect(this.game.currentConflict.conflictProvince).toBe(this.festivalOfTheDeparted);

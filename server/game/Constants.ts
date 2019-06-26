@@ -76,6 +76,7 @@ export enum EffectNames {
     SetMilitarySkill = 'setMilitarySkill',
     SetPoliticalSkill = 'setPoliticalSkill',
     SetProvinceStrength = 'setProvinceStrength',
+    SwitchBaseSkills = 'switchBaseSkills',
     SuppressEffects = 'suppressEffects',
     TakeControl = 'takeControl',
     TerminalCondition = 'terminalCondition',
@@ -264,4 +265,10 @@ export enum ConflictTypes {
 
 export enum TokenTypes {
     Honor = 'honor'
+};
+
+export enum StatTypes {
+    Military = 'military',
+    Political = 'political',
+    Glory = 'glory'
 };

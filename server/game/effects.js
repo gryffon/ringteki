@@ -79,6 +79,7 @@ const Effects = {
     setMilitarySkill: (value) => EffectBuilder.card.static(EffectNames.SetMilitarySkill, value),
     setPoliticalSkill: (value) => EffectBuilder.card.static(EffectNames.SetPoliticalSkill, value),
     setProvinceStrength: (value) => EffectBuilder.card.static(EffectNames.SetProvinceStrength, value),
+    switchBaseSkills: () => EffectBuilder.card.static(EffectNames.SwitchBaseSkills),
     suppressEffects: (condition) => EffectBuilder.card.static(EffectNames.SuppressEffects, condition),
     takeControl: (player) => EffectBuilder.card.static(EffectNames.TakeControl, player),
     terminalCondition: (properties) => EffectBuilder.card.detached(EffectNames.TerminalCondition, {
