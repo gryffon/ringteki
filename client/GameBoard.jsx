@@ -414,7 +414,32 @@ export class InnerGameBoard extends React.Component {
         return (<div className='center-bar'>
             { this.getRings(null, 'ring-panel') }
             { conflictElement }
+            { this.getRingAttachments(thisPlayer, otherPlayer)}
         </div>);
+    }
+
+    getRingAttachments(thisPlayer, otherPlayer) {
+        var opponentRingAttachments =  !!otherPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), otherPlayer);
+        var playerRingAttachments = !!thisPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), thisPlayer);
+
+        console.log('Ring attachment thisplayer', playerRingAttachments);
+        console.log('Ring attachment otherplayer', opponentRingAttachments);
+        return <div>
+        </div>;
+    }
+
+    getControlledRingAttachments(rings, player) {
+        var ownedRingAttachments = [];
+        var reducer = (ownedAttachments, ring) => {
+            ownedAttachments[ring.element] = (ring.attachments && ring.attachments.filter(card => this.isControlledByPlayer(card, player)));
+            return ownedAttachments;
+        };
+
+        return rings.reduce(reducer, ownedRingAttachments);
+    } 
+    
+    isControlledByPlayer(card, player) {
+        return card.controller.id === player.id;
     }
 
     renderSidebar(thisPlayer, otherPlayer) {

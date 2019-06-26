@@ -93,7 +93,6 @@ class Ring extends React.Component {
     }
 
     render() {
-        console.log('RING ===>', this.props.ring)
         let size = this.props.size;
         if(this.props.ring.claimed) {
             size = 'small';
