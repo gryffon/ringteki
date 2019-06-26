@@ -100,7 +100,6 @@ class DrawCard extends BaseCard {
         let militaryBonus = parseInt(this.cardData.military_bonus);
         if(militaryBonus) {
             this.persistentEffect({
-                condition: () => true,
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
                 effect: AbilityDsl.effects.modifyMilitarySkill(militaryBonus)
@@ -109,7 +108,6 @@ class DrawCard extends BaseCard {
         let politicalBonus = parseInt(this.cardData.political_bonus);
         if(politicalBonus) {
             this.persistentEffect({
-                condition: () => true,
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
                 effect: AbilityDsl.effects.modifyPoliticalSkill(politicalBonus)
@@ -507,7 +505,9 @@ class DrawCard extends BaseCard {
     }
 
     setPersonalHonor(token) {
-        !token && this.personalHonor && this.personalHonor.setCard(null);
+        if(!token && this.personalHonor) {
+            this.personalHonor.setCard(null);
+        }
         this.personalHonor = token || null;
     }
 
