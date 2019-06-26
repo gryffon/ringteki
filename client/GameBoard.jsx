@@ -424,26 +424,63 @@ export class InnerGameBoard extends React.Component {
 
         console.log('Ring attachment thisplayer', playerRingAttachments);
         console.log('Ring attachment otherplayer', opponentRingAttachments);
-        return <div>
-            { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true))}
+        return <div className="ring-attachments__container">
+            <div className="ring-attachments__container-inner">
+                <div className="ring-attachments ring-attachments--opponent">
+                    { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true))}
+                </div>
+                <div className="ring-attachments ring-attachments--me">        
+                    { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true))}
+                </div>
+            </div>
         </div>;
     }
 
     renderRingAttachments(element, attachments, amController) {
-        return attachments.map(card => <Card key={ card.uuid } source='play area' card={ card } disableMouseOver={ card.facedown && !card.code }
-        onMenuItemClick={ this.onMenuItemClick } onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut }
-        showStats={ false }
-        onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ amController } />)
+        let ringAttachmentWidthModifier = 0.8
+        let attachmentOffset = 13 * ringAttachmentWidthModifier;
+        let cardLayer = 10;
+        switch(this.props.user.settings.cardSize) {
+            case 'large':
+                attachmentOffset *= 1.4;
+                cardHeight *= 1.4;
+                break;
+            case 'small':
+                attachmentOffset *= 0.8;
+                cardHeight *= 0.8;
+                break;
+            case 'x-large':
+                attachmentOffset *= 2;
+                cardHeight *= 2;
+                break;
+        }
+
+        return attachments.length
+            ? <div id={'ring-attachments-' + element} className="ring-attachments--element">
+                <img className="ring-attachments__ring-symbol" src={"/img/military-" + element + '.png'}></img>
+                { 
+                    attachments.map((card, index) => {
+                        return <div className={index !== 0 ? "ring-attachment--stacked" : "ring-attachment"} style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }>
+                            <Card key={ card.uuid } source='play area' card={ card } disableMouseOver={ card.facedown && !card.code }
+                                onMenuItemClick={ this.onMenuItemClick } onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut }
+                                showStats={ false }
+                                onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ amController }
+                            />
+                        </div>
+                    })
+                }
+            </div>
+            : null;
     }
 
     getControlledRingAttachments(rings, player) {
         var ownedRingAttachments = [];
-        var reducer = (ownedAttachments, ring) => {
+        var getOwnedAttachmentsByElement = (ownedAttachments, ring) => {
             ownedAttachments[ring.element] = (ring.attachments && ring.attachments.filter(card => this.isControlledByPlayer(card, player)));
             return ownedAttachments;
         };
 
-        return rings.reduce(reducer, ownedRingAttachments);
+        return rings.reduce(getOwnedAttachmentsByElement, ownedRingAttachments);
     } 
     
     isControlledByPlayer(card, player) {
