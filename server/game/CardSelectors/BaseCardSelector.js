@@ -36,9 +36,11 @@ class BaseCardSelector {
             return context.game.allCards.toArray();
         }
         let attachments = context.player.cardsInPlay.reduce((array, card) => array.concat(card.attachments.toArray()), []);
-        attachments.concat(context.source.game.rings.map(ring => ring.attachments));
+
+        if(context.source.game.rings)
+            attachments.concat(...Object.values(context.source.game.rings).map(ring => ring.attachments.toArray()));
         if(context.player.opponent) {
-            attachments = attachments.concat(...context.player.opponent.cardsInPlay.map(card => card.attachments.toArray()));
+            attachments.concat(...context.player.opponent.cardsInPlay.map(card => card.attachments.toArray()));
         }
         let possibleCards = [];
         if(this.controller !== Players.Opponent) {

@@ -1,3 +1,5 @@
+@ring-attachment-height: @card-height * 0.8;
+@ring-attachment-width: @card-width * 0.8;
 
 .ring-attachments__container {
     position: relative;
@@ -13,13 +15,13 @@
     transform: translateY(-50%);
 
     & .card.vertical {
-        height: @card-height * 0.8;
-        width: @card-width * 0.8;
+        height: @ring-attachment-height;
+        width: @ring-attachment-width;
     }
 
     & .card-image.vertical {
-        height: @card-height * 0.8;
-        width: @card-width * 0.8;
+        height: @ring-attachment-height;
+        width: @ring-attachment-width;
     }
 }
 
@@ -33,6 +35,7 @@
     box-sizing: border-box;
     margin-bottom: 4px;
     position: relative;
+    min-height: @ring-attachment-height;
 }
 
 .ring-attachments--me {
@@ -40,6 +43,7 @@
     align-self: flex-end;
     box-sizing: border-box;
     position: relative;
+    min-height: @ring-attachment-height;
 }
 
 .ring-attachments--element {

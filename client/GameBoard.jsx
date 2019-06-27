@@ -422,12 +422,10 @@ export class InnerGameBoard extends React.Component {
         var opponentRingAttachments =  !!otherPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), otherPlayer);
         var playerRingAttachments = !!thisPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), thisPlayer);
 
-        console.log('Ring attachment thisplayer', playerRingAttachments);
-        console.log('Ring attachment otherplayer', opponentRingAttachments);
         return <div className="ring-attachments__container">
             <div className="ring-attachments__container-inner">
                 <div className="ring-attachments ring-attachments--opponent">
-                    { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true))}
+                    { Object.keys(opponentRingAttachments).map(key => this.renderRingAttachments(key, opponentRingAttachments[key], true))}
                 </div>
                 <div className="ring-attachments ring-attachments--me">        
                     { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true))}
