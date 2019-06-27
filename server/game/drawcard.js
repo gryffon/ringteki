@@ -326,7 +326,7 @@ class DrawCard extends BaseCard {
     getMilitaryModifiers() {
 
         let baseSkillModifiers = this.getBaseSkillModifiers();
-        if(Number.isNaN(baseSkillModifiers.baseMilitarySkill)) {
+        if(isNaN(baseSkillModifiers.baseMilitarySkill)) {
             return baseSkillModifiers.baseMilitaryModifiers;
         }
 
@@ -364,7 +364,7 @@ class DrawCard extends BaseCard {
 
     getPoliticalModifiers() {
         let baseSkillModifiers = this.getBaseSkillModifiers();
-        if(Number.isNaN(baseSkillModifiers.basePoliticalSkill)) {
+        if(isNaN(baseSkillModifiers.basePoliticalSkill)) {
             return baseSkillModifiers.basePoliticalModifiers;
         }
 
@@ -432,7 +432,7 @@ class DrawCard extends BaseCard {
         let modifiers = this.getMilitaryModifiers().map(modifier => Object.assign({}, modifier));
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         return {
-            skill: Number.isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
+            skill: isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
             modifiers: modifiers
         };
     }
@@ -445,7 +445,7 @@ class DrawCard extends BaseCard {
         modifiers.forEach(modifier => modifier = Object.assign({}, modifier));
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         return {
-            skill: Number.isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
+            skill: isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
             modifiers: modifiers
         };
     }
@@ -484,7 +484,7 @@ class DrawCard extends BaseCard {
     getMilitarySkill(floor = true) {
         let modifiers = this.getMilitaryModifiers();
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
-        if(Number.isNaN(skill)) {
+        if(isNaN(skill)) {
             return 0;
         }
         return floor ? Math.max(0, skill) : skill;
@@ -497,7 +497,7 @@ class DrawCard extends BaseCard {
     getPoliticalSkill(floor = true) {
         let modifiers = this.getPoliticalModifiers();
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
-        if(Number.isNaN(skill)) {
+        if(isNaN(skill)) {
             return 0;
         }
         return floor ? Math.max(0, skill) : skill;
@@ -509,7 +509,7 @@ class DrawCard extends BaseCard {
 
     getBaseMilitarySkill() {
         let skill = this.getBaseSkillModifiers().baseMilitarySkill;
-        if(Number.isNaN(skill)) {
+        if(isNaN(skill)) {
             return 0;
         }
         return Math.max(0, skill);
@@ -521,7 +521,7 @@ class DrawCard extends BaseCard {
 
     getBasePoliticalSkill() {
         let skill = this.getBaseSkillModifiers().basePoliticalSkill;
-        if(Number.isNaN(skill)) {
+        if(isNaN(skill)) {
             return 0;
         }
         return Math.max(0, skill);
