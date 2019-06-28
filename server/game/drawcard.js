@@ -595,6 +595,10 @@ class DrawCard extends BaseCard {
         return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context);
     }
 
+    mustAttachToRing() {
+        return false;
+    }
+
     /**
      * Checks whether an attachment can be played on a given card.  Intended to be
      * used by cards inheriting this class
@@ -662,9 +666,9 @@ class DrawCard extends BaseCard {
             } else {
                 actions.push(new PlayCharacterAction(this));
             }
-        } else if(this.type === CardTypes.Attachment && this.id !== 'greater-understanding') {
+        } else if(this.type === CardTypes.Attachment && !this.mustAttachToRing()) {
             actions.push(new PlayAttachmentAction(this));
-        } else if(this.type === CardTypes.Attachment && this.id === 'greater-understanding') {
+        } else if(this.type === CardTypes.Attachment && this.mustAttachToRing()) {
             actions.push(new PlayAttachmentOnRingAction(this));
         }
         return actions;

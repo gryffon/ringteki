@@ -19,6 +19,9 @@ class GreaterUnderstanding extends DrawCard {
     canPlayOn(source) {
         return source && source.getType() === 'ring' && this.getType() === CardTypes.Attachment;
     }
+    mustAttachToRing() {
+        return true;
+    }
 }
 
 GreaterUnderstanding.id = 'greater-understanding';
