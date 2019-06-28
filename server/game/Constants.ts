@@ -267,9 +267,3 @@ export enum ConflictTypes {
 export enum TokenTypes {
     Honor = 'honor'
 };
-
-export enum StatTypes {
-    Military = 'military',
-    Political = 'political',
-    Glory = 'glory'
-};

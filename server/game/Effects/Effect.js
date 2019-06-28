@@ -88,9 +88,6 @@ class Effect {
         if(this.duration !== Durations.Persistent) {
             return true;
         }
-        if(this.source.type === 'token') {
-            return true;
-        }
         let effectOnSource = this.source.persistentEffects.some(effect => effect.ref && effect.ref.includes(this));
         return !this.source.facedown && effectOnSource;
     }

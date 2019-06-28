@@ -339,8 +339,8 @@ class DrawCard extends BaseCard {
         this.adjustHonorStatusModifiers(modifiers);
 
         // multipliers
-        let multiplerEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyMilitarySkillMultiplier);
-        multiplerEffects.forEach(multiplierEffect => {
+        let multiplierEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyMilitarySkillMultiplier);
+        multiplierEffects.forEach(multiplierEffect => {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
             let amount = (multiplier - 1) * currentTotal;
@@ -377,8 +377,8 @@ class DrawCard extends BaseCard {
         this.adjustHonorStatusModifiers(modifiers);
 
         // multipliers
-        let multiplerEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyPoliticalSkillMultiplier);
-        multiplerEffects.forEach(multiplierEffect => {
+        let multiplierEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyPoliticalSkillMultiplier);
+        multiplierEffects.forEach(multiplierEffect => {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
             let amount = (multiplier - 1) * currentTotal;
