@@ -44,7 +44,7 @@ class BaseCardSelector {
             attachments = attachments.concat(allRingAttachments);
         }
         if(context.player.opponent) {
-            attachments.concat(...context.player.opponent.cardsInPlay.map(card => card.attachments.toArray()));
+            attachments = attachments.concat(...context.player.opponent.cardsInPlay.map(card => card.attachments.toArray()));
         }
         let possibleCards = [];
         if(this.controller !== Players.Opponent) {

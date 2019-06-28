@@ -9,9 +9,9 @@ class AbilityTargetRing {
         this.ringCondition = (ring, context) => {
             let contextCopy = context.copy();
             contextCopy.rings[this.name] = ring;
-            // if(this.name === 'target') {
-            //     contextCopy.ring = ring;
-            // }
+            if(this.name === 'target') {
+                contextCopy.ring = ring;
+            }
             if(context.stage === Stages.PreTarget && this.dependentCost && !this.dependentCost.canPay(contextCopy)) {
                 return false;
             }

@@ -26,7 +26,7 @@ export class AttachAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties) as AttachActionProperties;
         if(!context || !context.player || !card || card.location !== Locations.PlayArea) {
             return false;
-        } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(context.target, context)) {
+        } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context)) {
             return false;
         }
         return card.allowAttachment(properties.attachment) && super.canAffect(card, context);
