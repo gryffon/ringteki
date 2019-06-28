@@ -3,7 +3,7 @@ const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
 const AbilityTargetToken = require('./AbilityTargets/AbilityTargetToken.js');
-const { Stages, TargetModes } = require('./Constants.js');
+const { EffectNames, Stages, TargetModes } = require('./Constants.js');
 
 /**
  * Base class representing an ability that can be done by the player. This
@@ -117,11 +117,19 @@ class BaseAbility {
      */
     canPayCosts(context) {
         let contextCopy = context.copy({ stage: Stages.Cost });
-        return this.cost.every(cost => cost.canPay(contextCopy));
+        return this.getCosts(context).every(cost => cost.canPay(contextCopy));
+    }
+
+    getCosts(context) {
+        if(context.player.anyEffect(EffectNames.AdditionalCost)) {
+            let additionalCosts = context.player.getEffects(EffectNames.AdditionalCost).map(effect => effect(context));
+            return this.cost.concat(...additionalCosts);
+        }
+        return this.cost;
     }
 
     resolveCosts(events, context, results) {
-        for(let cost of this.cost) {
+        for(let cost of this.getCosts(context)) {
             context.game.queueSimpleStep(() => {
                 if(!results.cancelled) {
                     if(cost.addEventsToArray) {
