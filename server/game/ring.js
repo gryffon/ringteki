@@ -138,6 +138,10 @@ class Ring extends EffectSource {
     getShortSummary(card) {
         return Object.assign(super.getShortSummary(), { element: this.element, conflictType: this.conflictType });
     }
+
+    removeAttachment(card) {
+        this.attachments = this.attachments.filter(attachment => attachment.uuid !== card.uuid)
+    }
 }
 
 module.exports = Ring;
