@@ -115,6 +115,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             this.cancelled = true;
             return;
         }
+        this.preCostsFate = this.context.player.fate;
         if(this.costEvents.length > 0) {
             this.game.openEventWindow(this.costEvents);
         }
@@ -128,6 +129,8 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             this.game.addMessage('{0} attempted to use {1}, but did not successfully pay the required costs', this.context.player, this.context.source);
         }
+        let chooseFate = this.context.chooseFate === undefined ? 0 : this.context.chooseFate;
+        this.context.spentFate = this.preCostsFate - this.context.player.fate - chooseFate;
     }
 
     resolveTargets() {

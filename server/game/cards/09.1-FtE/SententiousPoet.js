@@ -9,7 +9,7 @@ class SententiousPoet extends DrawCard {
                 onCardPlayed: (event, context) =>
                     event.player === context.player.opponent &&
                     context.source.isParticipating() &&
-                    (event.context.costs.fate > 0 || event.context.costs.targetDependentFate > 0)
+                    event.context.spentFate > 0
             },
             gameAction: AbilityDsl.actions.gainFate()
         });
