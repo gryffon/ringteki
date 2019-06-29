@@ -3,7 +3,7 @@ const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
 const AbilityTargetToken = require('./AbilityTargets/AbilityTargetToken.js');
-const { EffectNames, Stages, TargetModes } = require('./Constants.js');
+const { Stages, TargetModes } = require('./Constants.js');
 
 /**
  * Base class representing an ability that can be done by the player. This
@@ -120,11 +120,7 @@ class BaseAbility {
         return this.getCosts(context).every(cost => cost.canPay(contextCopy));
     }
 
-    getCosts(context) {
-        if(context.player.anyEffect(EffectNames.AdditionalCost)) {
-            let additionalCosts = context.player.getEffects(EffectNames.AdditionalCost).map(effect => effect(context));
-            return this.cost.concat(...additionalCosts);
-        }
+    getCosts(context) { // eslint-disable-line no-unused-vars
         return this.cost;
     }
 
