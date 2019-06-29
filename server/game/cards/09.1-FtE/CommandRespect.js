@@ -14,11 +14,12 @@ class CommandRespect extends DrawCard {
             gameAction: AbilityDsl.actions.playerLastingEffect(() => {
                 return {
                     duration: Durations.UntilEndOfConflict,
-                    effect: AbilityDsl.effects.increaseHonorCost({
-                        condition: (event) => event.source.type === CardTypes.Event,
-                        type: EffectNames.GiveOpponentHonor,
-                        targetController: Players.Opponent,
-                        amount: 1
+                    effect: AbilityDsl.effects.AdditionalCost((context) => {
+                        if(context.source.type === CardTypes.Event) {
+                            return [AbilityDsl.costs.giveHonorToOpponent(1)];
+                        } else {
+                            return [];
+                        }
                     })
                 };
             })
