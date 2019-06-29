@@ -12,7 +12,7 @@ class MomentOfPerfectBeauty extends DrawCard {
             gameAction: AbilityDsl.actions.playerLastingEffect({
                 duration: Durations.UntilEndOfConflict,
                 targetController: Players.Opponent,
-                effect: AbilityDsl.effects.resolveConflictEarly({ actionsRemaining: 1 })
+                effect: AbilityDsl.effects.resolveConflictEarly()
             })
         });
     }

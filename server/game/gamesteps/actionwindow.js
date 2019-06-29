@@ -116,18 +116,7 @@ class ActionWindow extends UiPrompt {
     pass() {
         this.game.addMessage('{0} passes', this.currentPlayer);
 
-        let resolveConflictEarlyEffects = this.currentPlayer.getEffects(EffectNames.ResolveConflictEarly);
-        var resolveConflictEarly = false;
-        for(let i = 0; i < resolveConflictEarlyEffects.length; i++) {
-            if(resolveConflictEarlyEffects[i] > 0) {
-                resolveConflictEarlyEffects[i]--;
-            }
-            if(resolveConflictEarlyEffects[i] === 0) {
-                resolveConflictEarly = true;
-            }
-        }
-
-        if(this.prevPlayerPassed || !this.currentPlayer.opponent || resolveConflictEarly) {
+        if(this.prevPlayerPassed || !this.currentPlayer.opponent) {
             this.complete();
         }
 
@@ -137,6 +126,10 @@ class ActionWindow extends UiPrompt {
 
     nextPlayer() {
         let otherPlayer = this.game.getOtherPlayer(this.currentPlayer);
+
+        if(this.currentPlayer.anyEffect(EffectNames.ResolveConflictEarly)) {
+            this.complete();
+        }
 
         if(otherPlayer) {
             this.currentPlayer = otherPlayer;

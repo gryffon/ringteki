@@ -59,7 +59,7 @@ describe('MomentOfPerfectBeauty', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.momentofbeauty);
                 this.player2.pass();
-                expect(this.player1).not.toHavePrompt('Conflict Action Window');
+                expect(this.player1).toHavePrompt('Break Shameful Display');
             });
 
             it('should end conflict if other player plays a card', function() {
@@ -71,12 +71,12 @@ describe('MomentOfPerfectBeauty', function() {
                 this.dojichallenger.honor();
                 this.player2.pass();
                 this.player1.clickCard(this.momentofbeauty);
-                this.player2.clickCard(this.finekatana);
-                expect(this.player1).not.toHavePrompt('Conflict Action Window');
+                this.player2.playAttachment('fine-katana', 'adept-of-the-waves');
+                expect(this.player1).toHavePrompt('Break Shameful Display');
             });
 
             // Unsure if hawk tattoo interaction is correct. Awaiting official ruling one way or the other
-            it('should not end conflict if other player plays hawk tattoo', function() {
+            it('should end conflict even if other player triggers hawk tattoo', function() {
                 this.initiateConflict({
                     attackers: ['doji-challenger'],
                     defenders: ['adept-of-the-waves'],
@@ -87,7 +87,8 @@ describe('MomentOfPerfectBeauty', function() {
                 this.player1.clickCard(this.momentofbeauty);
                 this.player2.playAttachment('hawk-tattoo', 'tattooed-wanderer');
                 this.player2.clickCard(this.hawktattoo);
-                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.player2).toHavePrompt('Waiting for opponent to use Air Ring');
+                expect(this.player1).toHavePrompt('Choose an effect to resolve');
             });
         });
     });
