@@ -422,7 +422,7 @@ export class InnerGameBoard extends React.Component {
         var opponentRingAttachments = !!otherPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), otherPlayer);
         var playerRingAttachments = !!thisPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), thisPlayer);
 
-        return <div className='ring-attachments__container'>
+        return (<div className='ring-attachments__container'>
             <div className='ring-attachments__container-inner'>
                 <div className='ring-attachments ring-attachments--opponent'>
                     { Object.keys(opponentRingAttachments).map(key => this.renderRingAttachments(key, opponentRingAttachments[key], true)) }
@@ -431,7 +431,7 @@ export class InnerGameBoard extends React.Component {
                     { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true)) }
                 </div>
             </div>
-        </div>;
+        </div>);
     }
 
     renderRingAttachments(element, attachments, amController) {
@@ -477,11 +477,9 @@ export class InnerGameBoard extends React.Component {
 
         return rings.reduce(getOwnedAttachmentsByElement, ownedRingAttachments);
     }
-    
     isControlledByPlayer(card, player) {
         return card.controller.id === player.id;
     }
-
     renderSidebar(thisPlayer, otherPlayer) {
         let size = this.props.user.settings.cardSize;
         return (
