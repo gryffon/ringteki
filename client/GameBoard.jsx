@@ -414,42 +414,39 @@ export class InnerGameBoard extends React.Component {
         return (<div className='center-bar'>
             { this.getRings(null, 'ring-panel') }
             { conflictElement }
-            { this.getRingAttachments(thisPlayer, otherPlayer)}
+            { this.getRingAttachments(thisPlayer, otherPlayer) }
         </div>);
     }
 
     getRingAttachments(thisPlayer, otherPlayer) {
-        var opponentRingAttachments =  !!otherPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), otherPlayer);
+        var opponentRingAttachments = !!otherPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), otherPlayer);
         var playerRingAttachments = !!thisPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), thisPlayer);
 
         return <div className="ring-attachments__container">
             <div className="ring-attachments__container-inner">
                 <div className="ring-attachments ring-attachments--opponent">
-                    { Object.keys(opponentRingAttachments).map(key => this.renderRingAttachments(key, opponentRingAttachments[key], true))}
+                    { Object.keys(opponentRingAttachments).map(key => this.renderRingAttachments(key, opponentRingAttachments[key], true)) }
                 </div>
-                <div className="ring-attachments ring-attachments--me">        
-                    { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true))}
+                <div className="ring-attachments ring-attachments--me">
+                    { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true)) }
                 </div>
             </div>
         </div>;
     }
 
     renderRingAttachments(element, attachments, amController) {
-        let ringAttachmentWidthModifier = 0.8
+        let ringAttachmentWidthModifier = 0.8;
         let attachmentOffset = 13 * ringAttachmentWidthModifier;
         let cardLayer = 10;
         switch(this.props.user.settings.cardSize) {
             case 'large':
                 attachmentOffset *= 1.4;
-                cardHeight *= 1.4;
                 break;
             case 'small':
                 attachmentOffset *= 0.8;
-                cardHeight *= 0.8;
                 break;
             case 'x-large':
                 attachmentOffset *= 2;
-                cardHeight *= 2;
                 break;
         }
 
@@ -457,14 +454,14 @@ export class InnerGameBoard extends React.Component {
             ? <div id={'ring-attachments-' + element} className="ring-attachments--element" style={ {marginLeft: ((attachments.length - 1) * attachmentOffset) + 'px'}} >
                 <img className="ring-attachments__ring-symbol" src={"/img/military-" + element + '.png'}></img>
                 { 
-                    attachments.map((card, index) => {
-                        return <div className={index !== 0 ? "ring-attachment--stacked" : "ring-attachment"} style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }>
+                    attachments.map((card, index) => { 
+                        return <div className={ index !== 0 ? 'ring-attachment--stacked' : 'ring-attachment' } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }>
                             <Card key={ card.uuid } source='play area' card={ card } disableMouseOver={ card.facedown && !card.code }
                                 onMenuItemClick={ this.onMenuItemClick } onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut }
                                 showStats={ false }
                                 onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ amController }
                             />
-                        </div>
+                        </div> 
                     })
                 }
             </div>

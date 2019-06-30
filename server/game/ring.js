@@ -127,7 +127,7 @@ class Ring extends EffectSource {
             element: this.element,
             fate: this.fate,
             menu: this.getMenu(),
-            attachments: this.attachments.length 
+            attachments: this.attachments.length
                 ? this.attachments.map(attachment => attachment.getSummary(activePlayer, true))
                 : this.attachments
         };
@@ -135,12 +135,12 @@ class Ring extends EffectSource {
         return Object.assign(state, selectionState);
     }
 
-    getShortSummary(card) {
+    getShortSummary() {
         return Object.assign(super.getShortSummary(), { element: this.element, conflictType: this.conflictType });
     }
 
     removeAttachment(card) {
-        this.attachments = this.attachments.filter(attachment => attachment.uuid !== card.uuid)
+        this.attachments = this.attachments.filter(attachment => attachment.uuid !== card.uuid);
     }
 }
 
