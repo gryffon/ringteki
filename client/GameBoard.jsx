@@ -422,12 +422,12 @@ export class InnerGameBoard extends React.Component {
         var opponentRingAttachments = !!otherPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), otherPlayer);
         var playerRingAttachments = !!thisPlayer && !!this.props.currentGame.rings && this.getControlledRingAttachments(Object.values(this.props.currentGame.rings), thisPlayer);
 
-        return <div className="ring-attachments__container">
-            <div className="ring-attachments__container-inner">
-                <div className="ring-attachments ring-attachments--opponent">
+        return <div className='ring-attachments__container'>
+            <div className='ring-attachments__container-inner'>
+                <div className='ring-attachments ring-attachments--opponent'>
                     { Object.keys(opponentRingAttachments).map(key => this.renderRingAttachments(key, opponentRingAttachments[key], true)) }
                 </div>
-                <div className="ring-attachments ring-attachments--me">
+                <div className='ring-attachments ring-attachments--me'>
                     { Object.keys(playerRingAttachments).map(key => this.renderRingAttachments(key, playerRingAttachments[key], true)) }
                 </div>
             </div>
@@ -451,17 +451,17 @@ export class InnerGameBoard extends React.Component {
         }
 
         return attachments.length
-            ? <div id={'ring-attachments-' + element} className="ring-attachments--element" style={ {marginLeft: ((attachments.length - 1) * attachmentOffset) + 'px'}} >
-                <img className="ring-attachments__ring-symbol" src={"/img/military-" + element + '.png'}></img>
-                { 
-                    attachments.map((card, index) => { 
-                        return <div className={ index !== 0 ? 'ring-attachment--stacked' : 'ring-attachment' } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }>
+            ? <div id={ 'ring-attachments-' + element } className='ring-attachments--element' style={ {marginLeft: ((attachments.length - 1) * attachmentOffset) + 'px'} } >
+                <img className='ring-attachments__ring-symbol' src={ '/img/military-' + element + '.png' }></img>
+                {
+                    attachments.map((card, index) => {
+                        return (<div className={ index !== 0 ? 'ring-attachment--stacked' : 'ring-attachment' } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }>
                             <Card key={ card.uuid } source='play area' card={ card } disableMouseOver={ card.facedown && !card.code }
                                 onMenuItemClick={ this.onMenuItemClick } onMouseOver={ this.onMouseOver } onMouseOut={ this.onMouseOut }
                                 showStats={ false }
                                 onClick={ this.onCardClick } onDragDrop={ this.onDragDrop } size={ this.props.user.settings.cardSize } isMe={ amController }
                             />
-                        </div> 
+                        </div>);
                     })
                 }
             </div>
@@ -476,7 +476,7 @@ export class InnerGameBoard extends React.Component {
         };
 
         return rings.reduce(getOwnedAttachmentsByElement, ownedRingAttachments);
-    } 
+    }
     
     isControlledByPlayer(card, player) {
         return card.controller.id === player.id;

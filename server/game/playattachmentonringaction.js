@@ -29,7 +29,7 @@ class PlayAttachmentToRingAction extends BaseAction {
         return super.meetsRequirements(context);
     }
 
-    canResolveTargets(context) {
+    canResolveTargets() {
         return true;
     }
 
