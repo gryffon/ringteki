@@ -24,7 +24,6 @@ class StatusToken extends EffectSource {
         };
         this.persistentEffects.push(effect);
         effect.ref = this.addEffectToEngine(effect);
-        this.game.effectEngine.checkEffects();
     }
 
     removeHonorEffects() {

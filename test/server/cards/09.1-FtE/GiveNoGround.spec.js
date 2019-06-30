@@ -97,13 +97,13 @@ describe('Give No Ground', function() {
 
             it('should prevent skills being reduced by status tokens', function() {
                 this.borderlandsDefender.dishonor();
-                expect(this.borderlandsDefender.militarySkill).toBe(2);
-                expect(this.borderlandsDefender.politicalSkill).toBe(2);
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.warriorPoet],
                     defenders: [this.borderlandsDefender]
                 });
+                expect(this.borderlandsDefender.militarySkill).toBe(2);
+                expect(this.borderlandsDefender.politicalSkill).toBe(2);
                 this.player2.clickCard(this.giveNoGround);
                 this.player2.clickCard(this.borderlandsDefender);
                 expect(this.borderlandsDefender.militarySkill).toBe(5);
