@@ -68,9 +68,10 @@ class ReduceableFateCost {
     }
 
     pay(context) {
-        context.costs.spentFate = this.getReducedCost(context) + (context.costs.spentFate || 0);
+        let fate = this.getReducedCost(context);
+        context.costs.spentFate = fate + (context.costs.spentFate || 0);
         context.player.markUsedReducers(this.playingType, context.source);
-        context.player.fate -= this.getFinalFatecost(context, context.costs.fate);
+        context.player.fate -= this.getFinalFatecost(context, fate);
     }
 
     getFinalFatecost(context, reducedCost) {

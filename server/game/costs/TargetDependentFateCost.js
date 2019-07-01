@@ -23,9 +23,10 @@ class TargetDependentFateCost extends ReduceableFateCost {
     }
 
     pay(context) {
-        context.costs.spentFate = this.getReducedCost(context) + (context.costs.spentFate || 0);
+        let fate = this.getReducedCost(context);
+        context.costs.spentFate = fate + (context.costs.spentFate || 0);
         context.player.markUsedReducers(this.playingType, context.source, context.targets[this.dependsOn]);
-        context.player.fate -= this.getFinalFatecost(context, context.costs.targetDependentFate);
+        context.player.fate -= this.getFinalFatecost(context, fate);
     }
 
 

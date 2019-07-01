@@ -150,7 +150,7 @@ const Costs = {
                 return context.player.fate >= amount && (amount === 0 || context.player.checkRestrictions('spendFate', context));
             },
             pay: function(context) {
-                context.costs.spentFate = this.getReducedCost(context) + (context.costs.spentFate || 0);
+                context.costs.spentFate = context.source.getCost() + (context.costs.spentFate || 0);
                 context.player.fate -= context.source.getCost();
             },
             canIgnoreForTargeting: true

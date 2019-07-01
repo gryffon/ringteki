@@ -53,7 +53,7 @@ describe('Costs.payReduceableFateCost', function() {
             });
 
             it('should mark the fate cost as the reduced cost', function() {
-                expect(this.context.costs.fate).toBe(3);
+                expect(this.context.costs.spentFate).toBe(3);
             });
 
             it('should spend the players fate', function() {
