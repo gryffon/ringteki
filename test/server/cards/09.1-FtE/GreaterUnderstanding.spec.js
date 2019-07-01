@@ -26,7 +26,6 @@ describe('Greater Understanding', function() {
                 this.masterAlchemist = this.player1.findCardByName('master-alchemist');
                 this.greaterUnderstanding = this.player1.findCardByName('greater-understanding');
                 this.handToHand = this.player1.findCardByName('hand-to-hand');
-                
                 this.karadaDistrict = this.player2.placeCardInProvince('karada-district', 'province 1');
                 this.bayushiShoju = this.player2.findCardByName('bayushi-shoju');
                 this.bayushiSCollector = this.player2.findCardByName('bayushi-collector');
@@ -38,8 +37,7 @@ describe('Greater Understanding', function() {
                 this.player1.clickRing('fire');
                 expect(this.game.rings['fire'].attachments).toContain(this.greaterUnderstanding);
 
-                this.player2.pass()
-
+                this.player2.pass();
                 this.player1.clickCard(this.letGo);
                 expect(this.player1).toBeAbleToSelect(this.greaterUnderstanding);
             });
@@ -59,7 +57,7 @@ describe('Greater Understanding', function() {
 
             it('should not be able to be discarded by Bayushi Collector', function() {
                 this.togashiYokuni.dishonor();
-                
+
                 this.player1.clickCard(this.greaterUnderstanding);
                 this.player1.clickRing('fire');
                 this.player2.pass();
