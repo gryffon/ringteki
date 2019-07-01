@@ -5,23 +5,18 @@ const AbilityDsl = require('../../abilitydsl');
 class CommandRespect extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'takes honors from opponent when they play an event',
-            condition: context => {
-                return context.player.hand.size() < context.player.opponent.hand.size() &&
-                context.game.isDuringConflict();
-            },
+            title: 'Take honor from opponent when they play an event',
+            condition: context => context.game.isDuringConflict() && context.player.opponent &&
+                context.player.hand.size() < context.player.opponent.hand.size(),
             max: AbilityDsl.limit.perConflict(1),
-            gameAction: AbilityDsl.actions.playerLastingEffect(() => {
-                return {
-                    targetController: Players.Opponent,
-                    effect: AbilityDsl.effects.additionalCost((context) => {
-                        if(context.source.type === CardTypes.Event) {
-                            return [AbilityDsl.costs.giveHonorToOpponent(1)];
-                        }
-                        return [];
-                    })
-                };
-            })
+            effect: 'force {1} to give them an honor as an additional cost to play an event until the end of the conflict',
+            effectArgs: context => context.player.opponent,
+            gameAction: AbilityDsl.actions.playerLastingEffect(() => ({
+                targetController: Players.Opponent,
+                effect: AbilityDsl.effects.additionalCost(context =>
+                    context.source.type === CardTypes.Event ? [AbilityDsl.costs.giveHonorToOpponent(1)] : []
+                )
+            }))
         });
     }
 }
