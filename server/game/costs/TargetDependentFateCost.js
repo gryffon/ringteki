@@ -1,4 +1,6 @@
 const ReduceableFateCost = require('./ReduceableFateCost');
+const Event = require('../Events/Event');
+const { EventNames } = require('../Constants');
 
 class TargetDependentFateCost extends ReduceableFateCost {
     constructor(playingType, targetName) {
@@ -22,14 +24,13 @@ class TargetDependentFateCost extends ReduceableFateCost {
         return context.player.getReducedCost(this.playingType, context.source, context.targets[this.dependsOn]);
     }
 
-    pay(context) {
-        let fate = this.getReducedCost(context);
-        context.costs.spentFate = fate + (context.costs.spentFate || 0);
-        context.player.markUsedReducers(this.playingType, context.source, context.targets[this.dependsOn]);
-        context.player.fate -= this.getFinalFatecost(context, fate);
+    payEvent(context) {
+        const amount = context.costs.targetDependentFate = this.getReducedCost(context);
+        return new Event(EventNames.OnSpendFate, { amount, context }, event => {
+            event.context.player.markUsedReducers(this.playingType, event.context.source, event.context.targets[this.dependsOn]);
+            event.context.player.fate -= this.getFinalFatecost(context, amount);    
+        });
     }
-
-
 }
 
 module.exports = TargetDependentFateCost;

@@ -1,3 +1,6 @@
+const Event = require('../Events/Event');
+const { EventNames } = require('../Constants');
+
 class ReduceableFateCost {
     constructor(playingType) {
         this.playingType = playingType;
@@ -66,12 +69,13 @@ class ReduceableFateCost {
             }
         });
     }
-
-    pay(context) {
-        let fate = this.getReducedCost(context);
-        context.costs.spentFate = fate + (context.costs.spentFate || 0);
-        context.player.markUsedReducers(this.playingType, context.source);
-        context.player.fate -= this.getFinalFatecost(context, fate);
+    
+    payEvent(context) {
+        const amount = context.costs.fate = this.getReducedCost(context);
+        return new Event(EventNames.OnSpendFate, { amount, context }, event => {
+            event.context.player.markUsedReducers(this.playingType, event.context.source);
+            event.context.player.fate -= this.getFinalFatecost(context, amount);    
+        });
     }
 
     getFinalFatecost(context, reducedCost) {
