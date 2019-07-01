@@ -5,19 +5,22 @@ describe('Sententious Poet', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['sententious-poet', 'utaku-tetsuko']
+                        inPlay: ['sententious-poet', 'utaku-tetsuko'],
+                        hand: ['for-shame']
                     },
                     player2: {
-                        inPlay: ['wandering-ronin', 'daidoji-uji'],
+                        inPlay: ['wandering-ronin', 'daidoji-uji', 'ascetic-visionary'],
                         hand: ['tattooed-wanderer', 'fine-katana'],
                         dynastyDiscard: ['doji-whisperer']
                     }
                 });
                 this.sententiousPoet = this.player1.findCardByName('sententious-poet');
                 this.utakuTetsuko = this.player1.findCardByName('utaku-tetsuko');
+                this.forShame = this.player1.findCardByName('for-shame');
                 this.wanderingRonin = this.player2.findCardByName('wandering-ronin');
                 this.tattooedWanderer = this.player2.findCardByName('tattooed-wanderer');
                 this.daidojiUji = this.player2.findCardByName('daidoji-uji');
+                this.asceticVisionary = this.player2.findCardByName('ascetic-visionary');
                 this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
                 this.fineKatana = this.player2.findCardByName('fine-katana');
             });
@@ -31,7 +34,6 @@ describe('Sententious Poet', function() {
                 this.player2.clickCard(this.tattooedWanderer);
                 this.player2.clickPrompt('Play this character');
                 this.player2.clickPrompt('0');
-                this.player2.clickPrompt('Conflict');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.sententiousPoet);
             });
@@ -92,6 +94,26 @@ describe('Sententious Poet', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
+            it('should not trigger when a card has not been played', function() {
+                this.noMoreActions();
+                this.player1.passConflict();
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.asceticVisionary],
+                    defenders: [this.sententiousPoet]
+                });
+                this.player1.clickCard(this.forShame);
+                this.player1.clickCard(this.asceticVisionary);
+                this.player2.clickPrompt('Bow this character');
+                expect(this.asceticVisionary.bowed).toBe(true);
+                this.player2.clickCard(this.asceticVisionary);
+                this.player2.clickCard(this.asceticVisionary);
+                this.player2.clickRing('fire');
+                expect(this.asceticVisionary.bowed).toBe(false);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
             it('should give you 1 fate', function() {
                 this.noMoreActions();
                 this.initiateConflict({
@@ -101,7 +123,6 @@ describe('Sententious Poet', function() {
                 this.player2.clickCard(this.tattooedWanderer);
                 this.player2.clickPrompt('Play this character');
                 this.player2.clickPrompt('0');
-                this.player2.clickPrompt('Conflict');
                 let fate = this.player1.player.fate;
                 this.player1.clickCard(this.sententiousPoet);
                 expect(this.player1.player.fate).toBe(fate + 1);

@@ -149,7 +149,8 @@ const Costs = {
                 let amount = context.source.getCost();
                 return context.player.fate >= amount && (amount === 0 || context.player.checkRestrictions('spendFate', context));
             },
-            pay: function (context) {
+            pay: function(context) {
+                context.costs.spentFate = this.getReducedCost(context) + (context.costs.spentFate || 0);
                 context.player.fate -= context.source.getCost();
             },
             canIgnoreForTargeting: true

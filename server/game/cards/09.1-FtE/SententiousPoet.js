@@ -6,10 +6,10 @@ class SententiousPoet extends DrawCard {
         this.reaction({
             title: 'Gain 1 fate',
             when: {
-                onCardPlayed: (event, context) =>
+                onCostsPaid: (event, context) =>
                     event.player === context.player.opponent &&
                     context.source.isParticipating() &&
-                    event.context.spentFate > 0
+                    event.context.costs.spentFate > 0
             },
             gameAction: AbilityDsl.actions.gainFate()
         });
@@ -19,4 +19,3 @@ class SententiousPoet extends DrawCard {
 SententiousPoet.id = 'sententious-poet';
 
 module.exports = SententiousPoet;
-

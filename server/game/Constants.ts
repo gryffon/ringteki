@@ -166,6 +166,7 @@ export enum EventNames {
     OnMoveFate = 'onMoveFate',
     OnBeginRound = 'onBeginRound',
     OnCharacterEntersPlay = 'onCharacterEntersPlay',
+    OnCostsPaid = 'onCostsPaid',
     OnInitiateAbilityEffects = 'onInitiateAbilityEffects',
     OnCardAbilityInitiated = 'onCardAbilityInitiated',
     OnCardAbilityTriggered = 'onCardAbilityTriggered',
