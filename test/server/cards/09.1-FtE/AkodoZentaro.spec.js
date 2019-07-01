@@ -150,7 +150,7 @@
                     player1: {
                         inPlay: ['matsu-berserker', 'kitsu-spiritcaller', 'akodo-toturi'],
                         dynastyDiscard: ['akodo-zentaro', 'hidden-moon-dojo', 'iron-mine'],
-                        hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice']
+                        hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice', 'court-mask']
                     },
                     player2: {
                         inPlay: ['brash-samurai']
@@ -166,6 +166,7 @@
                 this.fineKatana = this.player1.findCardByName('fine-katana');
                 this.ornateFan = this.player1.findCardByName('ornate-fan');
                 this.peasantsAdvice = this.player1.findCardByName('peasant-s-advice');
+                this.courtMask = this.player1.findCardByName('court-mask');
                 this.ironMine = this.player1.findCardByName('iron-mine');
 
                 this.brashSamurai = this.player2.findCardByName('brash-samurai');
@@ -255,10 +256,10 @@
 
             it('should transfer status tokens', function() {
                 this.advancePhases('conflict');
-                this.player1.clickCard(this.peasantsAdvice);
-                this.player1.clickCard(this.player2.provinces['province 1'].provinceCard);
+                this.player1.clickCard(this.courtMask);
                 this.player1.clickCard(this.matsuBerserker);
-                this.player1.clickPrompt('Done');
+                this.player2.pass();
+                this.player1.clickCard(this.courtMask);
                 expect(this.matsuBerserker.isDishonored).toBe(true);
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Action Window');
