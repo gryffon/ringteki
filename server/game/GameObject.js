@@ -23,17 +23,29 @@ class GameObject {
     }
 
     getEffects(type) {
-        let filteredEffects = this.effects.filter(effect => effect.type === type);
+        let suppressedEffects = this.getSuppressedEffects();
+        let filteredEffects = this.effects.filter(effect => effect.type === type && !suppressedEffects.includes(effect));
         return filteredEffects.map(effect => effect.getValue(this));
     }
 
+    getRawEffects() {
+        let suppressedEffects = this.getSuppressedEffects();
+        return this.effects.filter(effect => !suppressedEffects.includes(effect));
+    }
+
+    getSuppressedEffects() {
+        let suppressingEffects = this.effects.filter(effect => effect.type === EffectNames.SuppressEffects);
+        let suppressedEffects = this.effects.filter(effect => suppressingEffects.some(suppressingEffect => suppressingEffect.value.value(effect)));
+        return suppressedEffects;
+    }
+
     sumEffects(type) {
-        let filteredEffects = this.effects.filter(effect => effect.type === type);
-        return filteredEffects.reduce((total, effect) => total + effect.getValue(this), 0);
+        let filteredEffects = this.getEffects(type);
+        return filteredEffects.reduce((total, effect) => total + effect, 0);
     }
 
     anyEffect(type) {
-        return this.effects.filter(effect => effect.type === type).length > 0;
+        return this.getEffects(type).length > 0;
     }
 
     mostRecentEffect(type) {
@@ -92,6 +104,10 @@ class GameObject {
             facedown: this.facedown,
             type: this.getType()
         };
+    }
+
+    isParticipating() {
+        return false;
     }
 
 }

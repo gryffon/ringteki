@@ -117,11 +117,15 @@ class BaseAbility {
      */
     canPayCosts(context) {
         let contextCopy = context.copy({ stage: Stages.Cost });
-        return this.cost.every(cost => cost.canPay(contextCopy));
+        return this.getCosts(context).every(cost => cost.canPay(contextCopy));
+    }
+
+    getCosts(context) { // eslint-disable-line no-unused-vars
+        return this.cost;
     }
 
     resolveCosts(events, context, results) {
-        for(let cost of this.cost) {
+        for(let cost of this.getCosts(context)) {
             context.game.queueSimpleStep(() => {
                 if(!results.cancelled) {
                     if(cost.addEventsToArray) {

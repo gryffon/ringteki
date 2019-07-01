@@ -126,8 +126,8 @@ class Effect {
     getDebugInfo() {
         return {
             source: this.source.name,
-            targets: _.map(this.targets, target => target.name),
-            active: this.duration !== Durations.Persistent || !this.source.isBlank(),
+            targets: _.map(this.targets, target => target.name).join(','),
+            active: this.isEffectActive(),
             condition: this.condition(this.context),
             effect: this.effect.getDebugInfo()
         };

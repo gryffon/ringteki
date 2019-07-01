@@ -22,7 +22,7 @@ export class ReturnToHandAction extends CardGameAction {
         event.destination = Locations.Hand;
     }
 
-    eventHandler(event): void {
-        this.leavesPlayEventHandler(event);
+    eventHandler(event, additionalProperties = {}): void {
+        this.leavesPlayEventHandler(event, additionalProperties);
     }
 }

@@ -13,7 +13,7 @@ export class CreateTokenAction extends CardGameAction {
     targetType = [CardTypes.Character, CardTypes.Holding];
 
     canAffect(card: BaseCard, context: AbilityContext): boolean {
-        if(!card.facedown || ![Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(card.location)) {
+        if(!card.facedown || !card.isInProvince() || card.location === Locations.StrongholdProvince) {
             return false;
         } else if(!context.game.isDuringConflict('military')) {
             return false;
@@ -21,12 +21,12 @@ export class CreateTokenAction extends CardGameAction {
         return super.canAffect(card, context);
     }
 
-    eventHandler(event): void {
+    eventHandler(event, additionalProperties = {}): void {
         let context = event.context;
         let card = event.card;
         let token = context.game.createToken(card);
         card.owner.removeCardFromPile(card);
-        context.refillProvince(card.owner, card.location);
+        this.checkForRefillProvince(card, event, additionalProperties);
         card.moveTo(Locations.RemovedFromGame);
         card.owner.moveCard(token, Locations.PlayArea);
         if(context.player.isAttackingPlayer()) {

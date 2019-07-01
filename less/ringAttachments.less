@@ -1,0 +1,73 @@
+@ring-attachment-height: @card-height * 0.8;
+@ring-attachment-width: @card-width * 0.8;
+
+.ring-attachments__container {
+    position: relative;
+    margin-left: 10px;
+}
+.ring-attachments__container-inner {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: fit-content;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+
+    & .card.vertical {
+        height: @ring-attachment-height;
+        width: @ring-attachment-width;
+    }
+
+    & .card-image.vertical {
+        height: @ring-attachment-height;
+        width: @ring-attachment-width;
+    }
+}
+
+.ring-attachments {
+    display: flex;
+    justify-content: space-between;
+}
+
+.ring-attachments--opponent {
+    align-self: flex-start;
+    box-sizing: border-box;
+    margin-bottom: 4px;
+    position: relative;
+    min-height: @ring-attachment-height;
+}
+
+.ring-attachments--me {
+    margin-top: 4px;
+    align-self: flex-end;
+    box-sizing: border-box;
+    position: relative;
+    min-height: @ring-attachment-height;
+}
+
+.ring-attachments--element {
+    position: relative;
+    pointer-events: none;
+}
+
+.ring-attachments__ring-symbol {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 2em;
+    width: 2em;
+    z-index: 100;
+}
+
+.ring-attachment {
+    pointer-events: all;
+}
+
+.ring-attachment--stacked {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: all;
+}

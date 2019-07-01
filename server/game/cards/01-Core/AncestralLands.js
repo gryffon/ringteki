@@ -1,10 +1,11 @@
 const ProvinceCard = require('../../provincecard.js');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AncestralLands extends ProvinceCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: () => this.game.isDuringConflict('political'),
-            effect: ability.effects.modifyProvinceStrength(5)
+            effect: AbilityDsl.effects.modifyProvinceStrength(5)
         });
     }
 }

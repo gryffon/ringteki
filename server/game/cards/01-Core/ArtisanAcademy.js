@@ -1,14 +1,15 @@
 const DrawCard = require('../../drawcard.js');
 const { Locations, Decks, Phases, Durations } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class ArtisanAcademy extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Make top card of conflict deck playable',
             phase: Phases.Conflict,
             condition: context => context.player.conflictDeck.size() > 0,
             effect: 'reveal the top card of their conflict deck',
-            gameAction: ability.actions.playerLastingEffect(context => {
+            gameAction: AbilityDsl.actions.playerLastingEffect(context => {
                 let topCard = context.player.conflictDeck.first();
                 return {
                     duration: Durations.Custom,
@@ -18,8 +19,8 @@ class ArtisanAcademy extends DrawCard {
                         onDeckShuffled: event => event.player === context.player && event.deck === Decks.ConflictDeck
                     },
                     effect: [
-                        ability.effects.showTopConflictCard(),
-                        ability.effects.canPlayFromOwn(Locations.ConflictDeck, [topCard])
+                        AbilityDsl.effects.showTopConflictCard(),
+                        AbilityDsl.effects.canPlayFromOwn(Locations.ConflictDeck, [topCard])
                     ]
                 };
             })

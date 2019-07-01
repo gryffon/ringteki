@@ -1,6 +1,7 @@
 import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
+import Ring = require('../ring');
 import EffectSource = require('../EffectSource');
 import { CardTypes, Locations } from '../Constants.js';
 
@@ -9,7 +10,7 @@ export interface CardActionProperties extends GameActionProperties {
 }
 
 export class CardGameAction extends GameAction {
-    targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role];
+    targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role, 'ring'];
 
     defaultTargets(context: AbilityContext): EffectSource[] {
         return [context.source];
@@ -19,8 +20,8 @@ export class CardGameAction extends GameAction {
         return this.canAffect(event.card, event.context, additionalProperties);
     }
 
-    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}) {
-        return super.canAffect(card, context, additionalProperties);
+    canAffect(target: BaseCard | Ring, context: AbilityContext, additionalProperties = {}) {
+        return super.canAffect(target, context, additionalProperties);
     }
 
     addPropertiesToEvent(event, card: BaseCard, context: AbilityContext, additionalProperties = {}): void {
@@ -71,14 +72,20 @@ export class CardGameAction extends GameAction {
         }
     }
 
-    leavesPlayEventHandler(event): void {
-        if([Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(event.card.location)) {
-            event.context.refillProvince(event.context.player, event.card.location);
-        }
+    leavesPlayEventHandler(event, additionalProperties = {}): void {
+        this.checkForRefillProvince(event.card, event, additionalProperties);
         if(!event.card.owner.isLegalLocationForCard(event.card, event.destination)) {
             event.card.game.addMessage('{0} is not a legal location for {1} and it is discarded', event.destination, event.card);
             event.destination = event.card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile;
         }
         event.card.owner.moveCard(event.card, event.destination, event.options || {});
+    }
+
+    checkForRefillProvince(card: BaseCard, event, additionalProperties: any = {}): void {
+        if(!card.isInProvince() || card.location === Locations.StrongholdProvince) {
+            return;
+        }
+        const context = !!additionalProperties.replacementEffect ? event.context.event.context : event.context;
+        context.refillProvince(card.controller, card.location);
     }
 }

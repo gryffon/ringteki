@@ -761,7 +761,6 @@ class PlayerInteractionWrapper {
     checkUnserializableGameState() {
         let state = this.game.getState(this.player.name);
         let results = detectBinary(state);
-
         if(results.length !== 0) {
             throw new Error('Unable to serialize game state back to client:\n' + JSON.stringify(results));
         }

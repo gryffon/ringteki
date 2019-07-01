@@ -40,11 +40,9 @@ export class DiscardCardAction extends CardGameAction {
         event.context = context;
     }
 
-    eventHandler(event): void {
+    eventHandler(event, additionalProperties = {}): void {
         for(const card of event.cards) {
-            if(card.location.includes('province')) {
-                event.context.refillProvince(card.controller, card.location);
-            }
+            this.checkForRefillProvince(card, event, additionalProperties);
             card.controller.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
         }
     }
