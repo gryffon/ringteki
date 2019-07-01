@@ -227,6 +227,7 @@ export enum EventNames {
     OnSwitchConflictElement = 'onSwitchConflictElement',
     OnSwitchConflictType = 'onSwitchConflictType',
     OnTakeRing = 'onTakeRing',
+    OnSpendFate = 'onSpendFate',
     Unnamed = 'unnamedEvent'
 };
 

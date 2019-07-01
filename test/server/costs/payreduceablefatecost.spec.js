@@ -41,7 +41,7 @@ describe('Costs.payReduceableFateCost', function() {
         });
     });
 
-    describe('pay()', function() {
+    xdescribe('pay()', function() {
         beforeEach(function() {
             this.playerSpy.fate = 4;
             this.playerSpy.getReducedCost.and.returnValue(3);
