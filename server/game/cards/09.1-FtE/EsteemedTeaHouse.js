@@ -10,7 +10,7 @@ class EsteemedTeaHouse extends DrawCard {
                     context.player.anyCardsInPlay(card => card.isParticipating() && card.hasTrait('courtier')),
             target: {
                 cardType: CardTypes.Attachment,
-                cardCondition: card => card.parent && card.parent.isParticipating(),
+                cardCondition: card => card.parent && card.parent.type === CardTypes.Character && card.parent.isParticipating(),
                 gameAction: AbilityDsl.actions.returnToHand()
             },
             gameAction: AbilityDsl.actions.playerLastingEffect(context => ({

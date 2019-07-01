@@ -6,7 +6,7 @@ class GreaterUnderstanding extends DrawCard {
     setupCardAbilities() {
         this.reaction({
             when: {
-                onMoveFate: (event, context) => event.recepient === context.source.parent,
+                onMoveFate: (event) => event.recipient === this.parent,
                 onPlaceFateOnUnclaimedRings: () => !this.parent.claimed
             },
             title: 'Resolve the attached ring\'s effect',
