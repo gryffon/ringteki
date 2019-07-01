@@ -1,5 +1,5 @@
 const UiPrompt = require('./uiprompt.js');
-const { Locations, Players } = require('../Constants');
+const { Locations, Players, EffectNames } = require('../Constants');
 
 class ActionWindow extends UiPrompt {
     constructor(game, title, windowName) {
@@ -126,6 +126,10 @@ class ActionWindow extends UiPrompt {
 
     nextPlayer() {
         let otherPlayer = this.game.getOtherPlayer(this.currentPlayer);
+
+        if(this.currentPlayer.anyEffect(EffectNames.ResolveConflictEarly)) {
+            this.complete();
+        }
 
         if(otherPlayer) {
             this.currentPlayer = otherPlayer;
