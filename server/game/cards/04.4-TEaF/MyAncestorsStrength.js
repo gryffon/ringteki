@@ -23,12 +23,12 @@ class MyAncestorsStrength extends DrawCard {
                         let effects = [];
                         let ancestor = context.targets.ancestor;
                         if(ancestor.hasDash('military')) {
-                            effects.push(ability.effects.setDash('military'));
+                            effects.push(ability.effects.setBaseDash('military'));
                         } else {
                             effects.push(ability.effects.setBaseMilitarySkill(ancestor.militarySkill));
                         }
                         if(ancestor.hasDash('political')) {
-                            effects.push(ability.effects.setDash('political'));
+                            effects.push(ability.effects.setBaseDash('political'));
                         } else {
                             effects.push(ability.effects.setBasePoliticalSkill(ancestor.politicalSkill));
                         }

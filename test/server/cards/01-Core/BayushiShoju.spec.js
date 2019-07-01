@@ -84,8 +84,8 @@ describe('Bayushi Shoju', function() {
                 });
 
                 it('Yogo Outcast should not be discarded by Shoju\'s effect', function() {
-                    expect(this.yogoOutcast.getPoliticalSkill()).toBe(3);
                     this.player1.playAttachment('fiery-madness', this.yogoOutcast);
+                    expect(this.yogoOutcast.getPoliticalSkill()).toBe(1);
                     expect(this.yogoOutcast.location).toBe('play area');
                     this.player2.clickCard('noble-sacrifice');
                     this.player2.clickPrompt('Pay Costs First');
