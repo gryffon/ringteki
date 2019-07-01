@@ -2,7 +2,7 @@ const AbilityLimit = require('./abilitylimit.js');
 const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, PlayTypes, Players, TargetModes } = require('./Constants');
+const { Locations, CardTypes, EffectNames, PlayTypes, Players, TargetModes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
@@ -104,6 +104,15 @@ class CardAbility extends ThenAbility {
         }
 
         return super.meetsRequirements(context);
+    }
+
+    getCosts(context) {
+        const costs = super.getCosts(context);
+        if(!context.subResolution && context.player.anyEffect(EffectNames.AdditionalCost)) {
+            let additionalCosts = context.player.getEffects(EffectNames.AdditionalCost).map(effect => effect(context));
+            return costs.concat(...additionalCosts);
+        }
+        return costs;
     }
 
     getReducedCost(context) {
