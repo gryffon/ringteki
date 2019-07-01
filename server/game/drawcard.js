@@ -4,6 +4,7 @@ const AbilityDsl = require('./abilitydsl.js');
 const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
+const PlayAttachmentOnRingAction = require('./playattachmentonringaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
 const PlayDisguisedCharacterAction = require('./PlayDisguisedCharacterAction');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
@@ -608,12 +609,16 @@ class DrawCard extends BaseCard {
      * Checks whether the passed card meets the attachment restrictions (e.g.
      * Opponent cards only, specific factions, etc) for this card.
      */
-    canAttach(card, context) { // eslint-disable-line no-unused-vars
-        return card && card.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
+    canAttach(parent, context) { // eslint-disable-line no-unused-vars
+        return parent && parent.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
     }
 
     canPlay(context, type) {
         return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context);
+    }
+
+    mustAttachToRing() {
+        return false;
     }
 
     /**
@@ -683,8 +688,10 @@ class DrawCard extends BaseCard {
             } else {
                 actions.push(new PlayCharacterAction(this));
             }
-        } else if(this.type === CardTypes.Attachment) {
+        } else if(this.type === CardTypes.Attachment && !this.mustAttachToRing()) {
             actions.push(new PlayAttachmentAction(this));
+        } else if(this.type === CardTypes.Attachment && this.mustAttachToRing()) {
+            actions.push(new PlayAttachmentOnRingAction(this));
         }
         return actions;
     }
@@ -811,7 +818,8 @@ class DrawCard extends BaseCard {
             covert: this.covert,
             showStats: this.showStats,
             militarySkillSummary: this.militarySkillSummary,
-            politicalSkillSummary: this.politicalSkillSummary
+            politicalSkillSummary: this.politicalSkillSummary,
+            controller: this.controller.getShortSummary()
         });
     }
 }

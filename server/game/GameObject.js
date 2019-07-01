@@ -106,6 +106,10 @@ class GameObject {
         };
     }
 
+    isParticipating() {
+        return false;
+    }
+
 }
 
 module.exports = GameObject;

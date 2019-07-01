@@ -2,6 +2,7 @@ import TriggeredAbilityContext = require('../TriggeredAbilityContext');
 import { GameAction } from './GameAction';
 import { AddTokenAction, AddTokenProperties} from './AddTokenAction';
 import { AttachAction, AttachActionProperties } from './AttachAction';
+import { AttachToRingAction, AttachToRingActionProperties } from './AttachToRingAction';
 import { BowAction, BowActionProperties } from './BowAction';
 import { BreakAction, BreakProperties } from './BreakAction';
 import { CancelAction, CancelActionProperties } from './CancelAction';
@@ -73,6 +74,7 @@ const GameActions = {
     // card 
     addToken: (propertyFactory: AddTokenProperties | ((context: TriggeredAbilityContext) => AddTokenProperties) = {}) => new AddTokenAction(propertyFactory),
     attach: (propertyFactory: AttachActionProperties | ((context: TriggeredAbilityContext) => AttachActionProperties) = {}) => new AttachAction(propertyFactory), // attachment
+    attachToRing: (propertyFactory: AttachToRingActionProperties | ((context: TriggeredAbilityContext) => AttachToRingActionProperties) = {}) => new AttachToRingAction(propertyFactory), // attachment on a ring
     bow: (propertyFactory: BowActionProperties | ((context: TriggeredAbilityContext) => BowActionProperties) = {}) => new BowAction(propertyFactory),
     break: (propertyFactory: BreakProperties | ((context: TriggeredAbilityContext) => BreakProperties) = {}) => new BreakAction(propertyFactory),
     cardLastingEffect: (propertyFactory: LastingEffectCardProperties | ((context: TriggeredAbilityContext) => LastingEffectCardProperties)) => new LastingEffectCardAction(propertyFactory),

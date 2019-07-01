@@ -12,6 +12,7 @@ class Ring extends EffectSource {
         this.contested = false;
         this.element = element;
         this.fate = 0;
+        this.attachments = [];
 
         this.menu = _([
             { command: 'flip', text: 'Flip' },
@@ -125,7 +126,10 @@ class Ring extends EffectSource {
             selected: this.game.currentConflict && this.game.currentConflict.conflictRing === this.element,
             element: this.element,
             fate: this.fate,
-            menu: this.getMenu()
+            menu: this.getMenu(),
+            attachments: this.attachments.length
+                ? this.attachments.map(attachment => attachment.getSummary(activePlayer, true))
+                : this.attachments
         };
 
         return Object.assign(state, selectionState);
@@ -133,6 +137,10 @@ class Ring extends EffectSource {
 
     getShortSummary() {
         return Object.assign(super.getShortSummary(), { element: this.element, conflictType: this.conflictType });
+    }
+
+    removeAttachment(card) {
+        this.attachments = this.attachments.filter(attachment => attachment.uuid !== card.uuid);
     }
 }
 
