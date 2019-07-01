@@ -14,7 +14,7 @@ class MomentOfPerfectBeauty extends DrawCard {
                 targetController: Players.Opponent,
                 effect: AbilityDsl.effects.resolveConflictEarly()
             }),
-            effect: 'resolve the conflict after {1]\'s next action', 
+            effect: 'resolve the conflict after {1]\'s next action',
             effectArgs: context => [context.player.opponent]
         });
     }
