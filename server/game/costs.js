@@ -4,7 +4,7 @@ const TargetDependentFateCost = require('./costs/TargetDependentFateCost');
 const GameActions = require('./GameActions/GameActions');
 const GameActionCost = require('./costs/GameActionCost');
 const MetaActionCost = require('./costs/MetaActionCost');
-const Event = require('./Events/event.js');
+const Event = require('./Events/Event');
 const { EventNames, Locations } = require('./Constants');
 
 function getSelectCost(action, properties, activePromptTitle) {
