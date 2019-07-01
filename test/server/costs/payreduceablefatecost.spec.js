@@ -41,7 +41,7 @@ describe('Costs.payReduceableFateCost', function() {
         });
     });
 
-    xdescribe('pay()', function() {
+    describe('payEvent()', function() {
         beforeEach(function() {
             this.playerSpy.fate = 4;
             this.playerSpy.getReducedCost.and.returnValue(3);
@@ -49,19 +49,11 @@ describe('Costs.payReduceableFateCost', function() {
 
         describe('when there is no duplicate in play', function() {
             beforeEach(function() {
-                this.cost.pay(this.context);
+                this.cost.payEvent(this.context);
             });
 
             it('should mark the fate cost as the reduced cost', function() {
-                expect(this.context.costs.spentFate).toBe(3);
-            });
-
-            it('should spend the players fate', function() {
-                expect(this.playerSpy.fate).toBe(1);
-            });
-
-            it('should mark any reducers as used', function() {
-                expect(this.playerSpy.markUsedReducers).toHaveBeenCalledWith('playing-type', this.cardSpy);
+                expect(this.context.costs.fate).toBe(3);
             });
         });
     });
