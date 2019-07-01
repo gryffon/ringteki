@@ -5,24 +5,26 @@ describe('Sententious Poet', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['sententious-poet', 'utaku-tetsuko'],
-                        hand: ['for-shame']
+                        inPlay: ['sententious-poet', 'utaku-tetsuko']
                     },
                     player2: {
-                        inPlay: ['wandering-ronin', 'daidoji-uji', 'ascetic-visionary'],
-                        hand: ['tattooed-wanderer', 'fine-katana'],
-                        dynastyDiscard: ['doji-whisperer']
+                        inPlay: ['wandering-ronin', 'daidoji-uji', 'master-alchemist'],
+                        hand: ['tattooed-wanderer', 'fine-katana', 'warm-welcome'],
+                        conflictDiscard: ['finger-of-jade'],
+                        dynastyDiscard: ['doji-whisperer', 'mantis-tenkinja']
                     }
                 });
                 this.sententiousPoet = this.player1.findCardByName('sententious-poet');
                 this.utakuTetsuko = this.player1.findCardByName('utaku-tetsuko');
-                this.forShame = this.player1.findCardByName('for-shame');
                 this.wanderingRonin = this.player2.findCardByName('wandering-ronin');
-                this.tattooedWanderer = this.player2.findCardByName('tattooed-wanderer');
                 this.daidojiUji = this.player2.findCardByName('daidoji-uji');
-                this.asceticVisionary = this.player2.findCardByName('ascetic-visionary');
-                this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
+                this.masterAlchemist = this.player2.findCardByName('master-alchemist');
+                this.tattooedWanderer = this.player2.findCardByName('tattooed-wanderer');
                 this.fineKatana = this.player2.findCardByName('fine-katana');
+                this.warmWelcome = this.player2.findCardByName('warm-welcome');
+                this.fingerOfJade = this.player2.findCardByName('finger-of-jade');
+                this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
+                this.mantisTenkinja = this.player2.findCardByName('mantis-tenkinja');
             });
 
             it('should trigger when a character is played with a cost of 1 fate', function() {
@@ -96,22 +98,31 @@ describe('Sententious Poet', function() {
 
             it('should not trigger when a card has not been played', function() {
                 this.noMoreActions();
-                this.player1.passConflict();
+                this.initiateConflict({
+                    attackers: [this.sententiousPoet],
+                    defenders: []
+                });
+                this.player2.clickCard(this.masterAlchemist);
+                this.player2.clickCard(this.wanderingRonin);
+                this.player2.clickRing('fire');
+                expect(this.player2).toHavePrompt('Master Alchemist');
+            });
+
+            it('should trigger when costs are paid when a card is played by an ability', function() {
+                this.player1.player.showBid = 5;
+                this.player2.player.showBid = 4;
+                this.player2.moveCard(this.mantisTenkinja, 'play area');
                 this.noMoreActions();
                 this.initiateConflict({
-                    attackers: [this.asceticVisionary],
-                    defenders: [this.sententiousPoet]
+                    attackers: [this.sententiousPoet],
+                    defenders: []
                 });
-                this.player1.clickCard(this.forShame);
-                this.player1.clickCard(this.asceticVisionary);
-                this.player2.clickPrompt('Bow this character');
-                expect(this.asceticVisionary.bowed).toBe(true);
-                this.player2.clickCard(this.asceticVisionary);
-                this.player2.clickCard(this.asceticVisionary);
-                this.player2.clickRing('fire');
-                expect(this.asceticVisionary.bowed).toBe(false);
-                expect(this.player1).not.toHavePrompt('Triggered Abilities');
-                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.warmWelcome);
+                this.player2.clickCard(this.fingerOfJade);
+                this.player2.clickCard(this.mantisTenkinja);
+                this.player2.clickCard(this.wanderingRonin);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.sententiousPoet);
             });
 
             it('should give you 1 fate', function() {
