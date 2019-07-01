@@ -173,6 +173,17 @@ class InnerPendingGame extends React.Component {
         this.props.zoomCard(card);
     }
 
+    getClock() {
+        let game = this.props.currentGame;
+        if(!game.clocks || game.clocks.type === 'none') {
+            return;
+        }
+        if(game.clocks.type === 'byoyomi') {
+            return `Clock: ${game.clocks.time} mins + ${game.clocks.periods} x ${game.clocks.timePeriod} secs (byoyomi)`;
+        }
+        return 'Clock: ' + game.clocks.time + ' mins (' + (game.clocks.type) + ')';
+    }
+
     render() {
         if(this.props.currentGame && this.props.currentGame.started) {
             return <div>Loading game in progress, please wait...</div>;
@@ -240,7 +251,7 @@ class InnerPendingGame extends React.Component {
                                 { game.allowSpectators ? 'Spectators can chat: ' + (game.spectatorSquelch ? 'No' : 'Yes') : null }
                             </div>
                             <div>
-                                { game.clocks && game.clocks.type !== 'none' ? 'Clock: ' + game.clocks.time + ' mins (' + (game.clocks.type) + ')' : null }
+                                { this.getClock() }
                             </div>
                         </div>
                     </div>

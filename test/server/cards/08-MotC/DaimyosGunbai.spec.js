@@ -70,6 +70,7 @@ describe('Daimyo\'s Gunbai', function() {
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('3');
                 expect(this.daimyosGunbai.location).toBe('conflict discard pile');
+                expect(this.getChatLogs(3)).toContain('player1 discards Daimyō\'s Gunbai');
             });
 
             it('should discard Gunbai if there is already one in play from the same controller', function() {

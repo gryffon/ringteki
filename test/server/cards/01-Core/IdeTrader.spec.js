@@ -168,6 +168,7 @@ describe('Ide Trader', function() {
                 this.player2.pass();
                 this.shinjoTatsuo = this.player1.clickCard('shinjo-tatsuo');
                 expect(this.player1).toHavePrompt('Shinjo Tatsuo');
+                this.player1.clickCard(this.shinjoTatsuo);
                 this.player1.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.ideTrader);
@@ -184,6 +185,7 @@ describe('Ide Trader', function() {
                 expect(this.player1.fate).toBe(0);
                 this.shinjoTatsuo = this.player1.clickCard('shinjo-tatsuo');
                 expect(this.player1).toHavePrompt('Shinjo Tatsuo');
+                this.player1.clickCard(this.shinjoTatsuo);
                 this.player1.clickCard(this.ideTrader);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.ideTrader);

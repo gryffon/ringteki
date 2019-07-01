@@ -34,6 +34,7 @@ describe('Illustrious Plagiarist', function() {
                 expect(this.player1).toHavePrompt('Illustrious Plagiarist');
                 expect(this.player1).toBeAbleToSelect(this.dojiChallenger);
                 this.player1.clickCard(this.dojiChallenger);
+                expect(this.getChatLogs(3)).toContain('player1 uses Illustrious Plagiarist\'s gained ability from A Fate Worse Than Death to bow, dishonor, blank, move home, and remove a fate from Doji Challenger');
                 expect(this.dojiChallenger.isDishonored).toBe(true);
                 expect(this.dojiChallenger.bowed).toBe(true);
             });

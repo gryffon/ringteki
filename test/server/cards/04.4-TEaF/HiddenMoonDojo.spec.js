@@ -42,6 +42,8 @@ describe('Hidden Moon Dōjō', function() {
                 this.player1.clickCard(this.bayushiLiar);
                 expect(this.bayushiLiar.facedown).toBe(false);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.getChatLogs(4)).toContain('player1 uses Hidden Moon Dōjō to turn a card in an adjacent province faceup');
+                expect(this.getChatLogs(4)).toContain('player1 chooses to turn Bayushi Liar in province 1 faceup');
             });
 
             it('should trigger any abilities on being flipped', function() {

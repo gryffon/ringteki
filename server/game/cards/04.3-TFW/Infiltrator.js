@@ -7,9 +7,9 @@ class Infiltrator extends DrawCard {
             condition: () => this.game.isDuringConflict(),
             effect: 'look at the top card of an opponent\'s deck and play or discard it',
             gameAction: ability.actions.chooseAction(context => {
-                let topCard = context.controlsTarget = context.player.opponent.conflictDeck.first();
+                let topCard = context.controlsTarget = context.player.opponent && context.player.opponent.conflictDeck.first();
                 return {
-                    activePromptTitle: 'Choose an action for ' + topCard.name,
+                    activePromptTitle: topCard && 'Choose an action for ' + topCard.name,
                     choices: {
                         'Play this card': ability.actions.playCard({ target: topCard }),
                         'Discard this card': ability.actions.discardCard({ target: topCard })

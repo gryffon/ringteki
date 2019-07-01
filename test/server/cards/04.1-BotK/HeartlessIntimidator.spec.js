@@ -76,6 +76,15 @@ describe('Heartless Intimidator', function () {
                 this.player1.clickCard(this.heartless);
             });
 
+            it('should not trigger when your opponent\'s deck is empty', function() {
+                this.player2.reduceDeckToNumber('conflict deck', 0);
+                expect(this.player2.conflictDeck.length).toBe(0);
+                this.player1.clickPrompt('Pass');
+                this.player2.clickCard('adept-of-shadows');
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).toHavePrompt('Action Window');
+            });
+
             describe('when it is activated', function () {
                 beforeEach(function () {
                     this.player1.clickPrompt('Pass');
