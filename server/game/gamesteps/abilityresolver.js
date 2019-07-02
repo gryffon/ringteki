@@ -75,6 +75,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.queueStep(new SimpleStep(this.game, () => this.payCosts()));
         this.queueStep(new SimpleStep(this.game, () => this.checkCostsWerePaid()));
         this.queueStep(new SimpleStep(this.game, () => this.resolveTargets()));
+        this.queueStep(new SimpleStep(this.game, () => this.checkForCancel()));
         this.queueStep(new SimpleStep(this.game, () => this.initiateAbilityEffects()));
         this.queueStep(new SimpleStep(this.game, () => this.executeHandler()));
         this.queueStep(new SimpleStep(this.game, () => this.moveEventCardToDiscard()));
@@ -142,10 +143,10 @@ class AbilityResolver extends BaseStepWithPipeline {
             this.cancelled = true;
         } else if(this.targetResults.delayTargeting) {
             // Targeting was delayed due to an opponent needing to choose targets (which shouldn't happen until costs have been paid), so continue
-            this.context.ability.resolveRemainingTargets(this.context, this.targetResults.delayTargeting);
+            this.targetResults = this.context.ability.resolveRemainingTargets(this.context, this.targetResults.delayTargeting);
         } else if(this.targetResults.payCostsFirst || !this.context.ability.checkAllTargets(this.context)) {
             // Targeting was stopped by the player choosing to pay costs first, or one of the chosen targets is no longer legal. Retarget from scratch
-            this.context.ability.resolveTargets(this.context);
+            this.targetResults = this.context.ability.resolveTargets(this.context);
         }
     }
 
