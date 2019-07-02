@@ -9,7 +9,7 @@ class GainAbility extends EffectValue {
         this.properties = ability;
         this.grantedAbilityLimits = {};
         if(ability.properties) {
-            let newProps = { printedAbility: false, abilityIdentifier: ability.abilityIdentifier };
+            let newProps = { printedAbility: false, abilityIdentifier: ability.abilityIdentifier, origin: ability.card };
             if(ability.properties.limit) {
                 // If the copied ability has a limit, we need to create a new instantiation of it, with the same max and reset event
                 newProps.limit = AbilityLimit.repeatable(ability.properties.limit.max, ability.properties.limit.eventName);
@@ -31,20 +31,21 @@ class GainAbility extends EffectValue {
     }
 
     apply(target) {
+        let properties = Object.assign({ origin: this.context.source }, this.properties);
         if(this.abilityType === AbilityTypes.Persistent) {
             const activeLocations = {
                 'play area': [Locations.PlayArea],
                 'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
             };
-            this.value = this.properties;
+            this.value = properties;
             if(activeLocations[this.value.location].includes(target.location)) {
                 this.value.ref = target.addEffectToEngine(this.value);
             }
             return;
         } else if(this.abilityType === AbilityTypes.Action) {
-            this.value = target.createAction(this.properties);
+            this.value = target.createAction(properties);
         } else {
-            this.value = target.createTriggeredAbility(this.abilityType, this.properties);
+            this.value = target.createTriggeredAbility(this.abilityType, properties);
             this.value.registerEvents();
         }
         if(!this.grantedAbilityLimits[target.uuid]) {

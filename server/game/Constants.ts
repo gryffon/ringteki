@@ -66,6 +66,7 @@ export enum EffectNames {
     MustBeChosen = 'mustBeChosen',
     MustBeDeclaredAsAttacker = 'mustBeDeclaredAsAttacker',
     MustBeDeclaredAsDefender = 'mustBeDeclaredAsDefender',
+    SetBaseDash = 'setBaseDash',
     SetBaseMilitarySkill = 'setBaseMilitarySkill',
     SetBasePoliticalSkill = 'setBasePoliticalSkill',
     SetBaseProvinceStrength = 'setBaseProvinceStrength',
@@ -76,14 +77,16 @@ export enum EffectNames {
     SetMilitarySkill = 'setMilitarySkill',
     SetPoliticalSkill = 'setPoliticalSkill',
     SetProvinceStrength = 'setProvinceStrength',
+    SwitchBaseSkills = 'switchBaseSkills',
+    SuppressEffects = 'suppressEffects',
     TakeControl = 'takeControl',
     TerminalCondition = 'terminalCondition',
-    UnlessActionCost = 'unlessActionCost',
     AddElement = 'addElement',
     CannotDeclareRing = 'cannotDeclare',
     ConsiderRingAsClaimed = 'considerAsClaimed',
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
+    AdditionalCost = 'additionalCost',
     AlternateFatePool = 'alternateFatePool',
     CannotDeclareConflictsOfType = 'cannotDeclareConflictsOfType',
     CanPlayFromOwn = 'canPlayFromOwn',
@@ -98,7 +101,8 @@ export enum EffectNames {
     ContributeToConflict = 'contribute',
     ChangeConflictSkillFunction = 'skillFunction',
     ModifyConflictElementsToResolve = 'modifyConflictElementsToResolve',
-    RestrictNumberOfDefenders = 'restrictNumberOfDefenders'
+    RestrictNumberOfDefenders = 'restrictNumberOfDefenders',
+    ResolveConflictEarly = 'resolveConflictEarly'
 };
 
 export enum Durations {
@@ -229,6 +233,7 @@ export enum EventNames {
     OnSwitchConflictElement = 'onSwitchConflictElement',
     OnSwitchConflictType = 'onSwitchConflictType',
     OnTakeRing = 'onTakeRing',
+    OnSpendFate = 'onSpendFate',
     Unnamed = 'unnamedEvent'
 };
 

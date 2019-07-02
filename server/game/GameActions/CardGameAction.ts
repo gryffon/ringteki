@@ -1,16 +1,18 @@
 import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
-import { CardTypes, EffectNames, Locations } from '../Constants.js';
+import Ring = require('../ring');
+import EffectSource = require('../EffectSource');
+import { CardTypes, Locations } from '../Constants.js';
 
 export interface CardActionProperties extends GameActionProperties {
     target?: BaseCard | BaseCard[];
 }
 
 export class CardGameAction extends GameAction {
-    targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role];
+    targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role, 'ring'];
 
-    defaultTargets(context: AbilityContext): BaseCard[] {
+    defaultTargets(context: AbilityContext): EffectSource[] {
         return [context.source];
     }
 
@@ -18,52 +20,8 @@ export class CardGameAction extends GameAction {
         return this.canAffect(event.card, event.context, additionalProperties);
     }
 
-    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
-        return super.canAffect(card, context, additionalProperties);
-    }
-
-    addEventsToArray(events: any[], context: AbilityContext, additionalProperties ={}): void {
-        const { target } = this.getProperties(context, additionalProperties);
-        for(const card of target as BaseCard[]) {
-            const additionalCosts = card.getEffects(EffectNames.UnlessActionCost).filter(properties => properties.actionName === this.name);
-            if(additionalCosts.length > 0) {
-                let allCostsPaid = true;
-                for(const properties of additionalCosts) {
-                    if(typeof properties.cost === 'function') {
-                        properties.cost = properties.cost(card);
-                    }
-                    context.game.queueSimpleStep(() => {
-                        if(properties.cost.hasLegalTarget(context)) {
-                            context.game.promptWithHandlerMenu(card.controller, {
-                                activePromptTitle: properties.activePromptTitle,
-                                source: card,
-                                choices: ['Yes', 'No'],
-                                handlers: [
-                                    () => {
-                                        context.game.addMessage('{0} chooses to {1} in order to {2}', card.controller, properties.cost.getEffectMessage(context), this.getEffectMessage(context, additionalProperties))
-                                        properties.cost.resolve(card, context);
-                                    },
-                                    () => {
-                                        allCostsPaid = false;
-                                        context.game.addMessage('{0} chooses not to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
-                                    }
-                                ]
-                            });    
-                        } else {
-                            allCostsPaid = false;
-                            context.game.addMessage('{0} cannot pay the additional cost required to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
-                        }    
-                    });
-                }
-                context.game.queueSimpleStep(() => {
-                    if(allCostsPaid) {
-                        events.push(this.getEvent(card, context, additionalProperties));
-                    }
-                })
-            } else {
-                events.push(this.getEvent(card, context, additionalProperties));
-            }
-        }
+    canAffect(target: BaseCard | Ring, context: AbilityContext, additionalProperties = {}) {
+        return super.canAffect(target, context, additionalProperties);
     }
 
     addPropertiesToEvent(event, card: BaseCard, context: AbilityContext, additionalProperties = {}): void {

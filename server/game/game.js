@@ -308,6 +308,10 @@ class Game extends EventEmitter {
         _.each(this.getPlayers(), player => player.stopClock());
     }
 
+    resetClocks() {
+        _.each(this.getPlayers(), player => player.resetClock());
+    }
+
     /**
      * This function is called from the client whenever a card is clicked
      * @param {String} sourcePlayer - name of the clicking player

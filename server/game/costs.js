@@ -4,7 +4,8 @@ const TargetDependentFateCost = require('./costs/TargetDependentFateCost');
 const GameActions = require('./GameActions/GameActions');
 const GameActionCost = require('./costs/GameActionCost');
 const MetaActionCost = require('./costs/MetaActionCost');
-const { Locations } = require('./Constants');
+const Event = require('./Events/Event');
+const { EventNames, Locations } = require('./Constants');
 
 function getSelectCost(action, properties, activePromptTitle) {
     return new MetaActionCost(GameActions.selectCard(Object.assign({ gameAction: action }, properties)), activePromptTitle);
@@ -75,10 +76,6 @@ const Costs = {
      * Cost that will discard a fate from the card's parent
      */
     removeFateFromParent: () => new GameActionCost(GameActions.removeFate(context => ({ target: context.source.parent }))),
-    /**
-    * Cost that requires removing a card selected by the player from the game.
-    */
-    removeFromGame: properties => getSelectCost(GameActions.removeFromGame(), properties, 'Select card to remove from game'),
     /**
      * Cost that will dishonor the character that initiated the ability
      */
@@ -153,8 +150,9 @@ const Costs = {
                 let amount = context.source.getCost();
                 return context.player.fate >= amount && (amount === 0 || context.player.checkRestrictions('spendFate', context));
             },
-            pay: function (context) {
-                context.player.fate -= context.source.getCost();
+            payEvent: function (context) {
+                const amount = context.source.getCost();
+                return new Event(EventNames.OnSpendFate, { amount, context }, event => event.context.player.fate -= event.amount);
             },
             canIgnoreForTargeting: true
         };

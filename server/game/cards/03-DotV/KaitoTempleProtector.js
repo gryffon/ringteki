@@ -20,12 +20,12 @@ class KaitoTempleProtector extends DrawCard {
                 gameAction: ability.actions.cardLastingEffect(context => {
                     let effects = [];
                     if(context.target.hasDash('military')) {
-                        effects.push(ability.effects.setDash('military'));
+                        effects.push(ability.effects.setBaseDash('military'));
                     } else {
                         effects.push(ability.effects.setBaseMilitarySkill(context.target.militarySkill));
                     }
                     if(context.target.hasDash('political')) {
-                        effects.push(ability.effects.setDash('political'));
+                        effects.push(ability.effects.setBaseDash('political'));
                     } else {
                         effects.push(ability.effects.setBasePoliticalSkill(context.target.politicalSkill));
                     }

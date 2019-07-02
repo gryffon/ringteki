@@ -3,6 +3,7 @@ import { CardGameAction } from './CardGameAction';
 import { Durations, EventNames, Locations, EffectNames } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
+import StatModifier = require('../StatModifier');
 import { LastingEffectGeneralProperties } from './LastingEffectAction';
 
 export interface LastingEffectCardProperties extends LastingEffectGeneralProperties {

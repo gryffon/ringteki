@@ -8,9 +8,14 @@ class FestivalOfTheDeparted extends ProvinceCard {
             condition: context => context.source.isConflictProvince(),
             match: card => card.type === CardTypes.Character,
             targetController: Players.Any,
-            effect: AbilityDsl.effects.cannotApplyLastingEffects(effect =>
-                effect.context.source.type === CardTypes.Event && effect.isSkillModifier() && effect.getValue() > 0
-            )
+            effect: [
+                AbilityDsl.effects.suppressEffects(effect =>
+                    effect.context.source.type === CardTypes.Event && effect.isSkillModifier() && effect.getValue() > 0
+                ),
+                AbilityDsl.effects.cannotApplyLastingEffects(effect =>
+                    effect.context.source.type === CardTypes.Event && effect.isSkillModifier() && effect.getValue() > 0
+                )
+            ]
         });
     }
 }

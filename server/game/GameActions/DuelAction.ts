@@ -4,6 +4,7 @@ import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Duel = require('../Duel');
 import DuelFlow = require('../gamesteps/DuelFlow');
+import BaseCard = require('../basecard');
 import { GameAction } from './GameAction';
 
 export interface DuelProperties extends CardActionProperties {
@@ -16,7 +17,6 @@ export interface DuelProperties extends CardActionProperties {
     statistic?: (card: DrawCard) => number;
     challengerEffect?;
     targetEffect?;
-    refuseGameAction?: GameAction;
 }
 
 export class DuelAction extends CardGameAction {
@@ -40,9 +40,9 @@ export class DuelAction extends CardGameAction {
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context);
         if(properties.target instanceof Array) {
-            let targets = properties.target as DrawCard[];
+            let targets = properties.target as BaseCard[];
             let indices = [...Array(targets.length + 1).keys()].map(x => '{' + x++ + '}').slice(1);
-            return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. ' + indices.join(' and '), [properties.challenger, ...(properties.target as DrawCard[])]];
+            return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. ' + indices.join(' and '), [properties.challenger, ...(properties.target as BaseCard[])]];
         }
         return ['initiate a ' + properties.type.toString() + ' duel : {0} vs. {1}', [properties.challenger, properties.target]];
     }
@@ -79,32 +79,14 @@ export class DuelAction extends CardGameAction {
     }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
-        const { target, refuseGameAction } = this.getProperties(context, additionalProperties);
-        const addDuelEventsHandler = () => {
-            let cards = (target as DrawCard[]).filter(card => this.canAffect(card, context));
-            if(cards.length === 0) {
-                return
-            }
-            let event = this.createEvent(null, context, additionalProperties);
-            this.updateEvent(event, cards, context, additionalProperties);
-            events.push(event);
-        };
-        if(refuseGameAction && refuseGameAction.hasLegalTarget(context, additionalProperties)) {
-            context.game.promptWithHandlerMenu(context.player.opponent, {
-                activePromptTitle: 'Do you wish to refuse the duel?',
-                context: context,
-                choices: ['Yes', 'No'],
-                handlers: [
-                    () => {
-                        context.game.addMessage('{0} chooses to refuse the duel and {1}', context.player.opponent, refuseGameAction.getEffectMessage(context));
-                        refuseGameAction.addEventsToArray(events, context, additionalProperties);
-                    },
-                    addDuelEventsHandler
-                ]
-            });
-        } else {
-            addDuelEventsHandler();
+        let { target } = this.getProperties(context, additionalProperties);
+        let cards = (target as DrawCard[]).filter(card => this.canAffect(card, context));
+        if(cards.length === 0) {
+            return
         }
+        let event = this.createEvent(null, context, additionalProperties);
+        this.updateEvent(event, cards, context, additionalProperties);
+        events.push(event);
     }
 
     addPropertiesToEvent(event, cards, context: AbilityContext, additionalProperties): void {

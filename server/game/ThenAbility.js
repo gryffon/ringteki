@@ -35,7 +35,11 @@ class ThenAbility extends BaseAbility {
     }
 
     displayMessage(context) {
-        if(this.properties.message) {
+        let message = this.properties.message;
+        if(typeof message === 'function') {
+            message = message(context);
+        }
+        if(message) {
             let messageArgs = [context.player, context.source, context.target];
             if(this.properties.messageArgs) {
                 let args = this.properties.messageArgs;
@@ -44,7 +48,7 @@ class ThenAbility extends BaseAbility {
                 }
                 messageArgs = messageArgs.concat(args);
             }
-            this.game.addMessage(this.properties.message, ...messageArgs);
+            this.game.addMessage(message, ...messageArgs);
         }
     }
 
