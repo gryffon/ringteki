@@ -51,8 +51,8 @@ export class GameAction {
         return [this.cost, []];
     }
 
-    getEffectMessage(context: AbilityContext): [string, any[]] {
-        let { target } = this.getProperties(context);
+    getEffectMessage(context: AbilityContext, additionalProperties = {}): [string, any[]] {
+        let { target } = this.getProperties(context, additionalProperties);
         return [this.effect, [target]];
     }
 
