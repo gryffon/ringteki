@@ -210,8 +210,8 @@
             });
 
             it('should reduce the cost by the printed cost of the character in play', function() {
-                let fate = this.player1.player.fate;
                 this.advancePhases('conflict');
+                let fate = this.player1.player.fate;
                 this.player1.clickCard(this.akodoZentaro);
                 this.player1.clickCard(this.matsuBerserker);
                 expect(this.player1.player.fate).toBe(fate - this.akodoZentaro.getCost() + this.matsuBerserker.getCost());
