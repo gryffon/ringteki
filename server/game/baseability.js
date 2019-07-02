@@ -181,9 +181,11 @@ class BaseAbility {
         if(targets.slice(0, index).every(target => target.checkTarget(context))) {
             targets = targets.slice(index);
         }
+        let targetResults = {};
         for(const target of targets) {
-            context.game.queueSimpleStep(() => target.resolve(context, {}));
+            context.game.queueSimpleStep(() => target.resolve(context, targetResults));
         }
+        return targetResults;
     }
 
     hasLegalTargets(context) {
