@@ -46,6 +46,10 @@ class DisguisedReduceableFateCost extends ReduceableFateCost {
         return context.player.fate >= minCost &&
             (minCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
+
+    getReducedCost(context) {
+        return Math.max(super.getReducedCost(context) - context.costs.chooseDisguisedCharacter.getCost(), 0);
+    }
 }
 
 class PlayDisguisedCharacterAction extends BaseAction {
