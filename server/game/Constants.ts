@@ -81,6 +81,7 @@ export enum EffectNames {
     SuppressEffects = 'suppressEffects',
     TakeControl = 'takeControl',
     TerminalCondition = 'terminalCondition',
+    UnlessActionCost = 'unlessActionCost',
     AddElement = 'addElement',
     CannotDeclareRing = 'cannotDeclare',
     ConsiderRingAsClaimed = 'considerAsClaimed',
