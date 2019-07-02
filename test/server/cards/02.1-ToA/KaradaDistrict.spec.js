@@ -206,7 +206,7 @@ describe('Karada District', function() {
             });
         });
 
-        fdescribe('Karada District in Manual mode', function() {
+        describe('Karada District in Manual mode', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
