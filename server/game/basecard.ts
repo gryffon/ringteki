@@ -415,7 +415,7 @@ class BaseCard extends EffectSource {
         // OR This is not my card, and it's either facedown or hidden from me
         if(isActivePlayer ? this.facedown && this.hideWhenFacedown() : (this.facedown || hideWhenFaceup || this.anyEffect(EffectNames.HideWhenFaceUp))) {
             let state = {
-                controller: this.controller.name,
+                controller: this.controller.getShortSummary(),
                 facedown: true,
                 inConflict: this.inConflict,
                 location: this.location
