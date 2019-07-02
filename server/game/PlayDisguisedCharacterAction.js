@@ -39,11 +39,9 @@ class DisguisedReduceableFateCost extends ReduceableFateCost {
 
     canPay(context) {
         const maxCharacterCost = Math.max(...context.player.cardsInPlay.map(card =>
-            context.source.disguisedKeywordTraits.some(trait =>
-                card.hasTrait(trait)) &&
-                !card.isUnique() ? card.getCost() : 0 &&
-                (!this.intoConflictOnly || card.isParticipating()))
-        );
+            context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
+            (!this.intoConflictOnly || card.isParticipating()) && !card.isUnique() ? card.getCost() : 0
+        ));
         const minCost = Math.max(context.player.getMinimumCost(this.playingType, context) - maxCharacterCost, 0);
         return context.player.fate >= minCost &&
             (minCost === 0 || context.player.checkRestrictions('spendFate', context));
