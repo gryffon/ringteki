@@ -202,7 +202,7 @@ export class InnerGameBoard extends React.Component {
         if(card && card.uuid) {
             this.props.sendGameMessage('cardClicked', card.uuid);
         } else if(card && card.location && card.controller) {
-            this.props.sendGameMessage('facedownCardClicked', card.location, card.controller, card.isProvince);
+            this.props.sendGameMessage('facedownCardClicked', card.location, card.controller.name, card.isProvince);
         }
     }
 
