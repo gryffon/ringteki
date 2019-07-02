@@ -268,6 +268,7 @@
                 this.player1.clickCard(this.matsuBerserker);
                 expect(this.akodoZentaro.isDishonored).toBe(true);
                 expect(this.player1.player.honor).toBe(honor);
+                expect(this.akodoZentaro.getMilitarySkill()).toBe(1);
             });
 
             it('should prompt how to play if other play options are available', function() {
