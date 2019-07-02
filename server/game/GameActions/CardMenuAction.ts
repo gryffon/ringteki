@@ -14,7 +14,7 @@ export interface CardMenuProperties extends CardActionProperties {
     handlers?: Function[];
     targets?: boolean;
     message?: string;
-    messageArgs?: (card: BaseCard, player: Player, cards: BaseCard[]) => any[];
+    messageArgs?: (card: BaseCard, player: Player) => any[];
     subActionProperties?: (card: BaseCard) => any;
     gameAction: GameAction;
     gameActionHasLegalTarget?: (context: AbilityContext) => boolean;
@@ -78,8 +78,7 @@ export class CardMenuAction extends CardGameAction {
             cardHandler: (card: BaseCard): void => {
                 properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.subActionProperties(card)));
                 if(properties.message) {
-                    let cards = properties.cards.filter(card => cardCondition(card, context));
-                    context.game.addMessage(properties.message, ...properties.messageArgs(card, player, cards))
+                    context.game.addMessage(properties.message, ...properties.messageArgs(card, player))
                 }
             }
         };
