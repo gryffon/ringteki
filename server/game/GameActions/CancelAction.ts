@@ -27,12 +27,13 @@ export class CancelAction extends GameAction {
             return false;
         }
         let { replacementGameAction } = this.getProperties(context);
-        return !replacementGameAction || replacementGameAction.hasLegalTarget(context, additionalProperties);
+        return !context.event.cannotBeCancelled &&
+            (!replacementGameAction || replacementGameAction.hasLegalTarget(context, additionalProperties));
     }
 
     addEventsToArray(events: any[], context: TriggeredAbilityContext, additionalProperties = {}): void {
         let event = this.createEvent(null, context, additionalProperties);
-        event.context = context;
+        super.addPropertiesToEvent(event, null, context, additionalProperties);
         event.replaceHandler(event => this.eventHandler(event, additionalProperties));
         events.push(event);
     }
@@ -42,7 +43,7 @@ export class CancelAction extends GameAction {
         if(replacementGameAction) {
             let events = []
             let eventWindow = event.context.event.window;
-            replacementGameAction.addEventsToArray(events, event.context, additionalProperties)
+            replacementGameAction.addEventsToArray(events, event.context, Object.assign({ replacementEffect: true }, additionalProperties));
             event.context.game.queueSimpleStep(() => {
                 if(!event.context.event.isSacrifice && events.length === 1) {
                     event.context.event.replacementEvent = events[0];
@@ -57,7 +58,8 @@ export class CancelAction extends GameAction {
 
     canAffect(target: any, context: TriggeredAbilityContext, additionalProperties = {}): boolean {
         let { replacementGameAction } = this.getProperties(context, additionalProperties);
-        return !replacementGameAction || replacementGameAction.canAffect(target, context, additionalProperties);
+        return !context.event.cannotBeCancelled &&
+            !replacementGameAction || replacementGameAction.canAffect(target, context, additionalProperties);
     }
 
     defaultTargets(context: TriggeredAbilityContext): any[] {

@@ -1,17 +1,18 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AsahinaArtisan extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Give a character +0/+3',
             condition: () => this.game.isDuringConflict(),
-            cost: ability.costs.bowSelf(),
+            cost: AbilityDsl.costs.bowSelf(),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: (card, context) => card !== context.source && card.isFaction('crane'),
-                gameAction: ability.actions.cardLastingEffect(() => ({
-                    effect: ability.effects.modifyPoliticalSkill(3)
+                gameAction: AbilityDsl.actions.cardLastingEffect(() => ({
+                    effect: AbilityDsl.effects.modifyPoliticalSkill(3)
                 }))
             },
             effect: 'give {0} +3{1} skill',

@@ -3,7 +3,7 @@ import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
 import { EventNames } from '../Constants';
 
-enum Direction {
+export enum Direction {
     Decrease = 'decrease',
     Increase = 'increase',
     Prompt = 'prompt'
@@ -32,7 +32,7 @@ export class ModifyBidAction extends PlayerAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties: ModifyBidProperties = this.getProperties(context);
-        if(properties.direction = Direction.Prompt) {
+        if(properties.direction === Direction.Prompt) {
             return['modify their honor bid by {0}', [properties.amount]];
         }
         return ['{0} their bid by {1}', [properties.direction, properties.amount]];
@@ -53,22 +53,24 @@ export class ModifyBidAction extends PlayerAction {
         }
         for(const player of properties.target as Player[]) {
             if(player.honorBid === 0) {
-                additionalProperties.direction = Direction.Increase;
+                const event = this.getEvent(player, context, additionalProperties) as any;
+                event.direction = Direction.Increase;
                 context.game.addMessage('{0} chooses to increase their honor bid', player);
-                events.push(this.getEvent(player, context, additionalProperties));
+                events.push(event);
             } else {
                 context.game.promptWithHandlerMenu(player, {
                     context: context,
                     choices: ['Increase honor bid', 'Decrease honor bid'],
                     choiceHandler: choice => {
+                        const event = this.getEvent(player, context, additionalProperties) as any;
                         if(choice === 'Increase honor bid') {
                             context.game.addMessage('{0} chooses to increase their honor bid', player);
-                            additionalProperties.direction = Direction.Increase;
+                            event.direction = Direction.Increase;
                         } else {
                             context.game.addMessage('{0} chooses to decrease their honor bid', player);
-                            additionalProperties.direction = Direction.Decrease;
+                            event.direction = Direction.Decrease;
                         }
-                        events.push(this.getEvent(player, context, additionalProperties));
+                        events.push(event);
                     }
                 });        
             }

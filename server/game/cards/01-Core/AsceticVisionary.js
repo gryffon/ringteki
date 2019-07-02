@@ -1,16 +1,17 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AsceticVisionary extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Ready a character',
-            cost: ability.costs.payFateToRing(1),
+            cost: AbilityDsl.costs.payFateToRing(1),
             condition: context => context.source.isAttacking(),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.hasTrait('monk') || card.attachments.any(card => card.hasTrait('monk')),
-                gameAction: ability.actions.ready()
+                gameAction: AbilityDsl.actions.ready()
             }
         });
     }

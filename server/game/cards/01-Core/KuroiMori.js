@@ -1,5 +1,5 @@
-const _ = require('underscore');
 const ProvinceCard = require('../../provincecard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { TargetModes } = require('../../Constants');
 
 class KuroiMori extends ProvinceCard {
@@ -10,27 +10,17 @@ class KuroiMori extends ProvinceCard {
             target: {
                 mode: TargetModes.Select,
                 choices: {
-                    'Switch the contested ring': () => _.any(this.game.rings, ring => ring.isUnclaimed()),
-                    'Switch the conflict type': () => true
+                    'Switch the contested ring': AbilityDsl.actions.selectRing({
+                        activePromptTitle: 'Choose a ring to switch with the contested ring',
+                        message: '{0} switches the contested ring with {1}',
+                        messageArgs: (ring, player) => [player, ring],
+                        gameAction: AbilityDsl.actions.switchConflictElement()
+                    }),
+                    'Switch the conflict type': AbilityDsl.actions.switchConflictType()
                 }
             },
             effect: '{1}',
-            effectArgs: context => context.select.toLowerCase(),
-            handler: context => {
-                if(context.select === 'Switch the contested ring') {
-                    this.game.promptForRingSelect(context.player, {
-                        context: context,
-                        ringCondition: ring => ring.isUnclaimed(),
-                        onSelect: (player, ring) => {
-                            this.game.addMessage('{0} switches the conflict ring to {1}', player, ring);
-                            this.game.currentConflict.switchElement(ring.element);
-                            return true;
-                        }
-                    });
-                } else {
-                    this.game.currentConflict.switchType();
-                }
-            }
+            effectArgs: context => context.select.toLowerCase()
         });
     }
 }

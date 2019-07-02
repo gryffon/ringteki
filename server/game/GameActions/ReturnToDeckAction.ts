@@ -47,8 +47,8 @@ export class ReturnToDeckAction extends CardGameAction {
         }
     }
 
-    eventHandler(event): void {
-        this.leavesPlayEventHandler(event);
+    eventHandler(event, additionalProperties = {}): void {
+        this.leavesPlayEventHandler(event, additionalProperties);
         if(event.shuffle) {
             if(event.destination === Locations.DynastyDeck) {
                 event.card.owner.shuffleDynastyDeck();

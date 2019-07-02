@@ -9,6 +9,7 @@ export interface DelayedEffectActionProperties extends CardActionProperties {
     when: WhenType;
     message: string;
     gameAction: GameAction;
+    messageArgs?: any[] | ((context: AbilityContext) => any[]);
     location?: Locations | Locations[];
 }
 

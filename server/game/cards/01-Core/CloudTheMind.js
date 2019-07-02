@@ -1,10 +1,11 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class CloudTheMind extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.whileAttached({
-            effect: ability.effects.blank()
+            effect: AbilityDsl.effects.blank()
         });
     }
 

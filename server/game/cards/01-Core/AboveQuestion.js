@@ -1,9 +1,10 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AboveQuestion extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.whileAttached({
-            effect: ability.effects.cardCannot({
+            effect: AbilityDsl.effects.cardCannot({
                 cannot: 'target',
                 restricts: 'opponentsEvents',
                 source: this

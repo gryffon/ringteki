@@ -65,11 +65,8 @@ export class PutIntoPlayAction extends CardGameAction {
         event.originalLocation = card.location;      
     }
 
-    eventHandler(event): void {
-        if(event.card.location.includes('province')) {
-            event.context.refillProvince(event.card.controller, event.card.location);
-        }
-
+    eventHandler(event, additionalProperties = {}): void {
+        this.checkForRefillProvince(event.card, event, additionalProperties);
         event.card.new = true;
         if(event.fate) {
             event.card.fate = event.fate;

@@ -1,7 +1,7 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases, PlayTypes, EventNames } = require('./Constants');
+const { EffectNames, Phases, PlayTypes, EventNames } = require('./Constants');
 
 class DynastyCardAction extends BaseAction {
     constructor(card) {
@@ -32,10 +32,14 @@ class DynastyCardAction extends BaseAction {
 
     displayMessage(context) {
         context.game.addMessage('{0} plays {1} with {2} additional fate', context.player, context.source, context.chooseFate);
+        context.source.getRawEffects().filter(effect => effect.type === EffectNames.GainExtraFateWhenPlayed).map(effect =>
+            context.game.addMessage('{0} enters play with {1} additional fate due to {2}', context.source, effect.value.value, effect.context.source)
+        );
     }
 
     executeHandler(context) {
-        let enterPlayEvent = GameActions.putIntoPlay({ fate: context.chooseFate }).getEvent(context.source, context);
+        const extraFate = context.source.sumEffects(EffectNames.GainExtraFateWhenPlayed);
+        let enterPlayEvent = GameActions.putIntoPlay({ fate: context.chooseFate + extraFate }).getEvent(context.source, context);
         let cardPlayedEvent = context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,

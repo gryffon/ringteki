@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AdeptOfShadows extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Return to hand',
-            cost: ability.costs.payHonor(1),
-            gameAction: ability.actions.returnToHand()
+            cost: AbilityDsl.costs.payHonor(1),
+            gameAction: AbilityDsl.actions.returnToHand()
         });
     }
 }

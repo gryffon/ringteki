@@ -3,10 +3,10 @@ const AbilityDsl = require('../../abilitydsl');
 const { TargetModes } = require('../../Constants');
 
 class CityOfTheOpenHand extends StrongholdCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Gain 1 honor or make opponent lose 1 honor',
-            cost: ability.costs.bowSelf(),
+            cost: AbilityDsl.costs.bowSelf(),
             condition: context => context.player.opponent && context.player.honor < context.player.opponent.honor,
             target: {
                 mode: TargetModes.Select,

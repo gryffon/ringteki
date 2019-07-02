@@ -32,8 +32,7 @@ class CardEffect extends Effect {
         if(this.targetLocation === Locations.Any) {
             return this.game.allCards.filter(card => this.match(card, this.context));
         } else if(this.targetLocation === Locations.Provinces) {
-            let cards = this.game.allCards.filter(card =>
-                [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince].includes(card.location));
+            let cards = this.game.allCards.filter(card => card.isInProvince());
             return cards.filter(card => this.match(card, this.context));
         } else if(this.targetLocation === Locations.PlayArea) {
             return this.game.findAnyCardsInPlay(card => this.match(card, this.context));
