@@ -1,4 +1,3 @@
-const _ = require('underscore');
 import React from 'react';
 import PropTypes from 'prop-types';
 
