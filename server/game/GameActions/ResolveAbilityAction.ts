@@ -78,16 +78,16 @@ export class ResolveAbilityAction extends CardGameAction {
         if(!super.canAffect(card, context) || !ability || !properties.subResolution && player.isAbilityAtMax(ability.maxIdentifier)) {
             return false;
         }
-        let newContext = ability.createContext(player, context.event);
+        let newContext = ability.createContext(player, context.event && context.event.context.event);
         if(ability.targets.length === 0) {
-            return ability.gameAction.length === 0 || ability.gameAction.some(action => action.hasLegalTarget(newContext));
+            return ability.gameAction.length === 0 || ability.gameAction.some(action => action.hasLegalTarget(newContext));;
         }
         return ability.canResolveTargets(newContext);
     }
 
     eventHandler(event, additionalProperties): void {
         let properties = this.getProperties(event.context, additionalProperties) as ResolveAbilityProperties;
-        let newContext = (properties.ability as TriggeredAbility).createContext(properties.player || event.context.player, event.context.event);
+        let newContext = (properties.ability as TriggeredAbility).createContext(properties.player || event.context.player, event.context.event && event.context.event.context.event);
         newContext.subResolution = !!properties.subResolution;
         event.context.game.queueStep(new NoCostsAbilityResolver(event.context.game, newContext));
     }
