@@ -2,6 +2,7 @@ import TriggeredAbilityContext = require('../TriggeredAbilityContext');
 import TriggeredAbility = require('../triggeredability');
 import AbilityResolver = require('../gamesteps/abilityresolver');
 import CardAbility = require('../CardAbility');
+import Event = require('../Events/Event');
 import DrawCard = require('../drawcard');
 import Player = require('../player');
 import SimpleStep = require('../gamesteps/simplestep');
@@ -53,7 +54,8 @@ class NoCostsAbilityResolver extends AbilityResolver {
 export interface ResolveAbilityProperties extends CardActionProperties {
     ability: CardAbility,
     subResolution?: boolean,
-    player?: Player
+    player?: Player,
+    event?: Event
 }
 
 export class ResolveAbilityAction extends CardGameAction {
@@ -75,10 +77,11 @@ export class ResolveAbilityAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties) as ResolveAbilityProperties;
         let ability = properties.ability as TriggeredAbility;
         let player = properties.player || context.player;
+        let newContextEvent = properties.event;
         if(!super.canAffect(card, context) || !ability || !properties.subResolution && player.isAbilityAtMax(ability.maxIdentifier)) {
             return false;
         }
-        let newContext = ability.createContext(player, context.event && context.event.context.event);
+        let newContext = ability.createContext(player, newContextEvent);
         if(ability.targets.length === 0) {
             return ability.gameAction.length === 0 || ability.gameAction.some(action => action.hasLegalTarget(newContext));;
         }
@@ -87,7 +90,9 @@ export class ResolveAbilityAction extends CardGameAction {
 
     eventHandler(event, additionalProperties): void {
         let properties = this.getProperties(event.context, additionalProperties) as ResolveAbilityProperties;
-        let newContext = (properties.ability as TriggeredAbility).createContext(properties.player || event.context.player, event.context.event && event.context.event.context.event);
+        let player = properties.player || event.context.player;
+        let newContextEvent = properties.event;
+        let newContext = (properties.ability as TriggeredAbility).createContext(player, newContextEvent);
         newContext.subResolution = !!properties.subResolution;
         event.context.game.queueStep(new NoCostsAbilityResolver(event.context.game, newContext));
     }
