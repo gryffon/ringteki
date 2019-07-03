@@ -83,7 +83,7 @@ export class ResolveAbilityAction extends CardGameAction {
         }
         let newContext = ability.createContext(player, newContextEvent);
         if(ability.targets.length === 0) {
-            return ability.gameAction.length === 0 || ability.gameAction.some(action => action.hasLegalTarget(newContext));;
+            return ability.gameAction.length === 0 || ability.gameAction.some(action => action.hasLegalTarget(newContext));
         }
         return ability.canResolveTargets(newContext);
     }
