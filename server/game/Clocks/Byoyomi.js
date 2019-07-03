@@ -14,6 +14,14 @@ class Byoyomi extends ChessClock {
             this.timeLeft = this.periods * this.timePeriod;
         }
     }
+
+    getState() {
+        let state = super.getState();
+        return Object.assign({
+            periods: this.periods,
+            timePeriod: this.timePeriod
+        }, state);
+    }
 }
 
 module.exports = Byoyomi;

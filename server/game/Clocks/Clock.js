@@ -71,7 +71,8 @@ class Clock {
         return {
             mode: this.mode,
             timeLeft: this.timeLeft,
-            stateId: this.stateId
+            stateId: this.stateId,
+            mainTime: this.mainTime
         };
     }
 }
