@@ -343,7 +343,7 @@ class Player extends GameObject {
      * Returns the total number of holdings controlled by this player
      */
     getNumberOfHoldingsInPlay() {
-        return this.getHoldingsInPlay.length;
+        return this.getHoldingsInPlay().length;
     }
 
     /**
