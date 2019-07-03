@@ -53,7 +53,9 @@ export class PlayerStatsBox extends React.Component {
                     secondsLeft={ this.props.clockState.timeLeft } mode={ this.props.clockState.mode } stateId={ this.props.clockState.stateId }
                     periods={ this.props.clockState.periods } mainTime={ this.props.clockState.mainTime } timePeriod={ this.props.clockState.timePeriod }
                 />
-                <ClockPopup mainTime={ this.props.clockState.mainTime } periods={ this.props.clockState.periods } timePeriod={ this.props.clockState.timePeriod } />
+                <ClockPopup
+                    mainTime={ this.props.clockState.mainTime } periods={ this.props.clockState.periods } timePeriod={ this.props.clockState.timePeriod }
+                    clockName={ this.props.clockState.name } />
             </div>
         );
 

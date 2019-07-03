@@ -36,12 +36,12 @@ class Clock extends React.Component {
     }
 
     getFormattedClock() {
-        if(!this.state.periods) {
+        if(!this.state.periods || this.state.timeLeft <= 0) {
             return formattedSeconds(this.state.timeLeft);
         }
         let stage = '';
         let timeLeftInPeriod = 0;
-        if(this.state.timeLeft >= this.state.periods * this.state.timePeriod) {
+        if(this.state.timeLeft > this.state.periods * this.state.timePeriod) {
             stage = 'M';
             timeLeftInPeriod = this.state.timeLeft - this.state.periods * this.state.timePeriod;
         } else {
@@ -49,7 +49,9 @@ class Clock extends React.Component {
             if(stage === 1) {
                 stage = 'SD';
             }
-            timeLeftInPeriod = this.state.timeLeft % this.state.timePeriod;
+            timeLeftInPeriod = this.state.timeLeft % this.state.timePeriod === 0 ?
+                this.state.timePeriod :
+                this.state.timeLeft % this.state.timePeriod;
         }
         return `${formattedSeconds(timeLeftInPeriod)} (${stage})`;
     }

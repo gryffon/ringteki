@@ -4,6 +4,7 @@ class ChessClock extends Clock {
     constructor(player, time) {
         super(player, time);
         this.mode = 'stop';
+        this.name = 'Chess Clock';
     }
 
     start() {

@@ -6,6 +6,7 @@ class Byoyomi extends ChessClock {
         this.periods = periods;
         this.timePeriod = timePeriod;
         this.timeLeft = time + (periods * timePeriod);
+        this.name = 'Byoyomi';
     }
 
     reset() {

@@ -5,7 +5,7 @@ class ClockPopup extends React.Component {
     render() {
         return (
             <div className='clock--popup'>
-                Timer Settings
+                <div>{ this.props.clockName }</div>
                 <ul>
                     { this.props.mainTime ? <li>Main Time (Minutes): { this.props.mainTime / 60 }</li> : '' }
                     { this.props.periods ? <li>Number of Byoyomi Periods: { this.props.periods }</li> : '' }
@@ -18,6 +18,7 @@ class ClockPopup extends React.Component {
 
 ClockPopup.displayName = 'ClockPopup';
 ClockPopup.propTypes = {
+    clockName: PropTypes.string,
     mainTime: PropTypes.number,
     periods: PropTypes.number,
     timePeriod: PropTypes.number
