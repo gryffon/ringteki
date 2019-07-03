@@ -4,33 +4,34 @@ const { Locations, CardTypes, EventNames, AbilityTypes } = require('../../Consta
 
 class HidaKisada extends DrawCard {
     setupCardAbilities() {
-        this.canCancel = false;
+        this.firstActionEvent = null;
         this.abilityRegistrar = new EventRegistrar(this.game, this);
+        this.abilityRegistrar.register([{
+            [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.WouldInterrupt]: 'onInitiateAbilityEffectsWouldInterrupt'
+        }]);
         this.abilityRegistrar.register([{
             [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.OtherEffects]: 'onInitiateAbilityEffectsOtherEffects'
         }]);
         this.abilityRegistrar.register([
-            EventNames.OnConflictDeclared,
-            EventNames.OnConflictFinished
+            EventNames.OnConflictDeclared
         ]);
     }
 
-    onInitiateAbilityEffectsOtherEffects(event) {
-        if(this.canCancel && event.context.ability.abilityType === 'action' && !event.context.ability.cannotBeCancelled && event.context.player !== this.controller) {
-            if(!event.cancelled && this.location === Locations.PlayArea && !this.isBlank() && !this.game.conflictRecord.some(conflict => conflict.winner === this.controller.opponent)) {
-                event.cancel();
-                this.game.addMessage('{0} attempts to initiate {1}{2}, but {3} cancels it', event.context.player, event.card, event.card.type === CardTypes.Event ? '' : '\'s ability', this);
-            }
-            this.canCancel = false;
+    onInitiateAbilityEffectsWouldInterrupt(event) {
+        if(!this.firstActionEvent && this.game.isDuringConflict() && event.context.ability.abilityType === 'action' && !event.context.ability.cannotBeCancelled && event.context.player !== this.controller) {
+            this.firstActionEvent = event;
         }
     }
 
-    onConflictFinished() {
-        this.canCancel = false;
+    onInitiateAbilityEffectsOtherEffects(event) {
+        if(event === this.firstActionEvent && !event.cancelled && this.location === Locations.PlayArea && !this.isBlank() && !this.game.conflictRecord.some(conflict => conflict.winner === this.controller.opponent)) {
+            event.cancel();
+            this.game.addMessage('{0} attempts to initiate {1}{2}, but {3} cancels it', event.context.player, event.card, event.card.type === CardTypes.Event ? '' : '\'s ability', this);
+        }
     }
 
     onConflictDeclared() {
-        this.canCancel = true;
+        this.firstActionEvent = null;
     }
 }
 

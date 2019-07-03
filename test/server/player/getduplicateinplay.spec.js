@@ -25,7 +25,7 @@ describe('Player', function() {
             });
 
             it('should return undefined', function() {
-                expect(this.isDupe).toBeUndefined;
+                expect(this.isDupe).toBeUndefined();
             });
         });
 

@@ -1,6 +1,5 @@
 # Ringteki
 
-
 Web based implementation of The Legend of the Five Rings LCG
 
 ## FAQ
@@ -45,6 +44,7 @@ Check out the [About page](https://jigoku.online/about)  of a Ringteki live depl
 * Node.js 8
 * MongoDB
 * ZeroMQ Libraries
+* TypeScript
 
 ```
 Clone the repository

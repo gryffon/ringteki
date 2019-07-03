@@ -1,20 +1,18 @@
 const ProvinceCard = require('../../provincecard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class AlongTheRiverOfGold extends ProvinceCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'switch a character\'s base skills',
             condition: () => this.game.currentConflict && this.game.currentConflict.conflictProvince.getElement() === 'water',
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating() && !card.hasDash(),
-                gameAction: ability.actions.cardLastingEffect(context => ({
-                    effect: [
-                        ability.effects.modifyBaseMilitarySkill(context.target.basePoliticalSkill - context.target.baseMilitarySkill),
-                        ability.effects.modifyBasePoliticalSkill(context.target.baseMilitarySkill - context.target.basePoliticalSkill)
-                    ]
-                }))
+                gameAction: AbilityDsl.actions.cardLastingEffect({
+                    effect: AbilityDsl.effects.switchBaseSkills()
+                })
             },
             effect: 'switch {0}\'s military and political skill'
         });

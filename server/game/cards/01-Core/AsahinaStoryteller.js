@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class AsahinaStoryteller extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             match: card => card.getType() === CardTypes.Character && card.isHonored && card.isFaction('crane'),
-            effect: ability.effects.addKeyword('sincerity')
+            effect: AbilityDsl.effects.addKeyword('sincerity')
         });
     }
 }

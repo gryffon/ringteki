@@ -7,7 +7,7 @@ class BayushiCollector extends DrawCard {
             title: 'Discard an attachment and a status token',
             target: {
                 cardType: CardTypes.Attachment,
-                cardCondition: card => card.parent && card.parent.isDishonored,
+                cardCondition: card => card.parent && card.parent.type === CardTypes.Character && card.parent.isDishonored,
                 gameAction: [ability.actions.discardFromPlay(),
                     ability.actions.discardStatusToken(context => ({
                         target: context.target.parent.personalHonor}))

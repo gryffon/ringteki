@@ -1,6 +1,7 @@
 import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 import BaseCard = require('../basecard');
+import Ring = require('../ring');
 import EffectSource = require('../EffectSource');
 import { CardTypes, Locations } from '../Constants.js';
 
@@ -9,7 +10,7 @@ export interface CardActionProperties extends GameActionProperties {
 }
 
 export class CardGameAction extends GameAction {
-    targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role];
+    targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding, CardTypes.Event, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role, 'ring'];
 
     defaultTargets(context: AbilityContext): EffectSource[] {
         return [context.source];
@@ -19,8 +20,8 @@ export class CardGameAction extends GameAction {
         return this.canAffect(event.card, event.context, additionalProperties);
     }
 
-    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}) {
-        return super.canAffect(card, context, additionalProperties);
+    canAffect(target: BaseCard | Ring, context: AbilityContext, additionalProperties = {}) {
+        return super.canAffect(target, context, additionalProperties);
     }
 
     addPropertiesToEvent(event, card: BaseCard, context: AbilityContext, additionalProperties = {}): void {

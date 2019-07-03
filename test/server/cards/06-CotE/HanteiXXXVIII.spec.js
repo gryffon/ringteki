@@ -23,7 +23,7 @@ describe('Hantei XXXVII', function() {
                             'ambush', 'backhanded-compliment', 'court-games', 'duelist-training',
                             'noble-sacrifice', 'policy-debate', 'taryu-jiai', 'the-perfect-gift',
                             'bayushi-kachiko', 'soul-beyond-reproach', 'peasant-s-advice',
-                            'warriors-of-the-wind', 'favored-mount'
+                            'warriors-of-the-wind', 'favored-mount', 'defend-your-honor'
                         ]
                     }
                 });
@@ -450,27 +450,63 @@ describe('Hantei XXXVII', function() {
                 });
             });
 
-            describe('when Warriors of the Wind is played', function () {
-                beforeEach(function () {
+            describe('when Warriors of the Wind is played', function() {
+                beforeEach(function() {
                     this.player2.playAttachment(this.favoredMount, this.utakuKamoko);
                     this.player1.pass();
                     this.player2.clickCard(this.favoredMount);
                     this.player1.pass();
                 });
 
-                it('should allow Hantei to be triggered', function () {
+                it('should allow Hantei to be triggered', function() {
                     this.player2.clickCard(this.warriorsOfTheWind);
                     expect(this.player1).toHavePrompt('Triggered Abilities');
                     expect(this.player1).toBeAbleToSelect(this.hantei);
                 });
 
-                it('should allow Hantei controller to choose targets for the post-then effect', function () {
+                it('should allow Hantei controller to choose targets for the post-then effect', function() {
                     expect(this.utakuKamoko.isParticipating()).toBe(true);
                     this.player2.clickCard(this.warriorsOfTheWind);
                     this.player1.clickCard(this.hantei);
                     expect(this.utakuKamoko.isParticipating()).toBe(false);
                     expect(this.player1).toHavePrompt('Choose characters');
                     expect(this.player1).toHavePromptButton('Done');
+                });
+            });
+
+            describe('when Defend your Honor is played', function() {
+                beforeEach(function() {
+                    this.player2.pass();
+                    this.player1.clickCard('banzai');
+                    this.player1.clickCard(this.asahinaStoryteller);
+                });
+
+                it('should allow Hantei to be triggered', function() {
+                    expect(this.player2).toHavePrompt('Triggered Abilities');
+                    expect(this.player2).toBeAbleToSelect('defend-your-honor');
+                    this.player2.clickCard('defend-your-honor');
+                    this.player2.clickCard(this.prudentChallenger);
+                    expect(this.player1).toHavePrompt('Triggered Abilities');
+                    expect(this.player1).toBeAbleToSelect(this.hantei);
+                });
+
+                it('should allow Hantei\'s controller to choose both duel participants', function() {
+                    this.player2.clickCard('defend-your-honor');
+                    this.player2.clickCard(this.prudentChallenger);
+                    this.player1.clickCard(this.hantei);
+                    expect(this.player1).toHavePrompt('Defend Your Honor');
+                    expect(this.player1).toBeAbleToSelect(this.prudentChallenger);
+                    expect(this.player1).toBeAbleToSelect(this.dojiGiftGiver);
+                    expect(this.player1).toBeAbleToSelect(this.kitsukiInvestigator);
+                    expect(this.player1).toBeAbleToSelect(this.guardianKami);
+                    expect(this.player1).not.toBeAbleToSelect(this.asahinaStoryteller);
+                    this.player1.clickCard(this.guardianKami);
+                    expect(this.player1).toHavePrompt('Defend Your Honor');
+                    expect(this.player1).not.toBeAbleToSelect(this.prudentChallenger);
+                    expect(this.player1).not.toBeAbleToSelect(this.dojiGiftGiver);
+                    expect(this.player1).not.toBeAbleToSelect(this.kitsukiInvestigator);
+                    expect(this.player1).not.toBeAbleToSelect(this.guardianKami);
+                    expect(this.player1).toBeAbleToSelect(this.asahinaStoryteller);
                 });
             });
         });

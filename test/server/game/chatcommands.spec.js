@@ -85,39 +85,5 @@ describe('ChatCommands', function() {
                 });
             });
         });
-
-        xdescribe('with a /discard command', function() {
-            describe('with no arguments', function() {
-                it('should discard 1 card', function () {
-                    this.chatCommands.executeCommand(this.playerSpy, '/discard', ['/discard']);
-
-                    expect(this.playerSpy.discardAtRandom).toHaveBeenCalledWith(1);
-                });
-            });
-
-            describe('with a string argument', function() {
-                it('should discard 1 card', function () {
-                    this.chatCommands.executeCommand(this.playerSpy, '/discard', ['/discard', 'test']);
-
-                    expect(this.playerSpy.discardAtRandom).toHaveBeenCalledWith(1);
-                });
-            });
-
-            describe('with a negative argument', function() {
-                it('should discard 1 card', function () {
-                    this.chatCommands.executeCommand(this.playerSpy, '/discard', ['/discard', '-1']);
-
-                    expect(this.playerSpy.discardAtRandom).toHaveBeenCalledWith(1);
-                });
-            });
-
-            describe('with a valid argument', function() {
-                it('should discard the passed amount of cards', function () {
-                    this.chatCommands.executeCommand(this.playerSpy, '/discard', ['/discard', '3']);
-
-                    expect(this.playerSpy.discardAtRandom).toHaveBeenCalledWith(3);
-                });
-            });
-        });
     });
 });

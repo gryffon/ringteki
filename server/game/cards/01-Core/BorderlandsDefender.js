@@ -1,15 +1,16 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class BorderlandsDefender extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: context => context.source.isDefending(),
             effect: [
-                ability.effects.cardCannot({
+                AbilityDsl.effects.cardCannot({
                     cannot: 'sendHome',
                     restricts: 'opponentsCardEffects'
                 }),
-                ability.effects.cardCannot({
+                AbilityDsl.effects.cardCannot({
                     cannot: 'bow',
                     restricts: 'opponentsCardEffects'
                 })

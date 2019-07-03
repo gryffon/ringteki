@@ -10,6 +10,7 @@ describe('Volcanic Troll', function() {
                 });
                 this.volcanicTroll = this.player1.findCardByName('volcanic-troll');
             });
+
             it('should lose it\'s bonus during a fire conflict', function() {
                 this.noMoreActions();
                 this.initiateConflict({

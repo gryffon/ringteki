@@ -122,7 +122,7 @@
                 this.player1.clickCard(this.imperialStorehouse);
                 this.player1.clickCard(this.shamefulDisplay3);
                 expect(this.imperialStorehouse.location).toBe('province 3');
-                expect(this.player1.player.provinceThree.includes(this.imperialStorehouse));
+                expect(this.player1.player.provinceThree.toArray()).toContain(this.imperialStorehouse);
                 expect(this.matsuBerserker.location).toBe('dynasty discard pile');
             });
 
@@ -150,7 +150,7 @@
                     player1: {
                         inPlay: ['matsu-berserker', 'kitsu-spiritcaller', 'akodo-toturi'],
                         dynastyDiscard: ['akodo-zentaro', 'hidden-moon-dojo', 'iron-mine'],
-                        hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice']
+                        hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice', 'court-mask']
                     },
                     player2: {
                         inPlay: ['brash-samurai']
@@ -166,6 +166,7 @@
                 this.fineKatana = this.player1.findCardByName('fine-katana');
                 this.ornateFan = this.player1.findCardByName('ornate-fan');
                 this.peasantsAdvice = this.player1.findCardByName('peasant-s-advice');
+                this.courtMask = this.player1.findCardByName('court-mask');
                 this.ironMine = this.player1.findCardByName('iron-mine');
 
                 this.brashSamurai = this.player2.findCardByName('brash-samurai');
@@ -209,8 +210,8 @@
             });
 
             it('should reduce the cost by the printed cost of the character in play', function() {
-                let fate = this.player1.player.fate;
                 this.advancePhases('conflict');
+                let fate = this.player1.player.fate;
                 this.player1.clickCard(this.akodoZentaro);
                 this.player1.clickCard(this.matsuBerserker);
                 expect(this.player1.player.fate).toBe(fate - this.akodoZentaro.getCost() + this.matsuBerserker.getCost());
@@ -255,10 +256,10 @@
 
             it('should transfer status tokens', function() {
                 this.advancePhases('conflict');
-                this.player1.clickCard(this.peasantsAdvice);
-                this.player1.clickCard(this.player2.provinces['province 1'].provinceCard);
+                this.player1.clickCard(this.courtMask);
                 this.player1.clickCard(this.matsuBerserker);
-                this.player1.clickPrompt('Done');
+                this.player2.pass();
+                this.player1.clickCard(this.courtMask);
                 expect(this.matsuBerserker.isDishonored).toBe(true);
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Action Window');
@@ -267,6 +268,7 @@
                 this.player1.clickCard(this.matsuBerserker);
                 expect(this.akodoZentaro.isDishonored).toBe(true);
                 expect(this.player1.player.honor).toBe(honor);
+                expect(this.akodoZentaro.getMilitarySkill()).toBe(1);
             });
 
             it('should prompt how to play if other play options are available', function() {

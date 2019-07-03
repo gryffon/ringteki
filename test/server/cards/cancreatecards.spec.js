@@ -16,7 +16,7 @@ describe('All Cards:', function() {
     });
 
     _.each(cards, cardClass => {
-        it('should be able to create \'' + cardClass.name + '\' and set it up', function() {
+        it('should be able to create \'' + cardClass.name + '\' and set it up', function() { //eslint-disable-line jasmine/missing-expect
             // No explicit assertion - if this throws an exception it will fail
             // and give us a better stacktrace than the expect().not.toThrow()
             // assertion.

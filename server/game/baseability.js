@@ -117,11 +117,15 @@ class BaseAbility {
      */
     canPayCosts(context) {
         let contextCopy = context.copy({ stage: Stages.Cost });
-        return this.cost.every(cost => cost.canPay(contextCopy));
+        return this.getCosts(context).every(cost => cost.canPay(contextCopy));
+    }
+
+    getCosts(context) { // eslint-disable-line no-unused-vars
+        return this.cost;
     }
 
     resolveCosts(events, context, results) {
-        for(let cost of this.cost) {
+        for(let cost of this.getCosts(context)) {
             context.game.queueSimpleStep(() => {
                 if(!results.cancelled) {
                     if(cost.addEventsToArray) {
@@ -172,10 +176,16 @@ class BaseAbility {
     }
 
     resolveRemainingTargets(context, nextTarget) {
-        let index = this.targets.indexOf(nextTarget);
-        for(let target of this.targets.slice(index)) {
-            context.game.queueSimpleStep(() => target.resolve(context, {}));
+        const index = this.targets.indexOf(nextTarget);
+        let targets = this.targets.slice();
+        if(targets.slice(0, index).every(target => target.checkTarget(context))) {
+            targets = targets.slice(index);
         }
+        let targetResults = {};
+        for(const target of targets) {
+            context.game.queueSimpleStep(() => target.resolve(context, targetResults));
+        }
+        return targetResults;
     }
 
     hasLegalTargets(context) {

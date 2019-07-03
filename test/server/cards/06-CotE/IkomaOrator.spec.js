@@ -30,7 +30,7 @@ describe('Ikoma Orator', function() {
 
             describe('when controller has more honor', function() {
                 it('should have +2 political skill', function() {
-                    expect(this.player1.player.honor > this.player2.player.honor).toBe(true);
+                    expect(this.player1.player.honor).toBeGreaterThan(this.player2.player.honor);
                     expect(this.ikomaOrator.getPoliticalSkill()).toBe(this.ikomaOrator.getBasePoliticalSkill() + 2);
                 });
             });
@@ -40,7 +40,7 @@ describe('Ikoma Orator', function() {
                     this.player2.pass();
                     this.player1.clickCard(this.assassination);
                     this.player1.clickCard(this.bayushiLiar);
-                    expect(this.player1.player.honor < this.player2.player.honor).toBe(true);
+                    expect(this.player1.player.honor).toBeLessThan(this.player2.player.honor);
                     expect(this.ikomaOrator.getPoliticalSkill()).toBe(this.ikomaOrator.getBasePoliticalSkill());
                 });
             });
@@ -53,7 +53,7 @@ describe('Ikoma Orator', function() {
                     this.player1.clickPrompt('Lose 1 honor to resolve this ability again');
                     this.player1.clickCard(this.ikomaOrator);
                     this.player1.clickPrompt('Done');
-                    expect(this.player1.player.honor === this.player2.player.honor).toBe(true);
+                    expect(this.player1.player.honor).toBe(this.player2.player.honor);
                     expect(this.ikomaOrator.getPoliticalSkill()).toBe(this.ikomaOrator.getBasePoliticalSkill());
                 });
             });

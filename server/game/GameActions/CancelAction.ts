@@ -23,6 +23,9 @@ export class CancelAction extends GameAction {
     }
 
     hasLegalTarget(context: TriggeredAbilityContext, additionalProperties = {}): boolean {
+        if(!context.event || context.event.cancelled) {
+            return false;
+        }
         let { replacementGameAction } = this.getProperties(context);
         return !context.event.cannotBeCancelled &&
             (!replacementGameAction || replacementGameAction.hasLegalTarget(context, additionalProperties));

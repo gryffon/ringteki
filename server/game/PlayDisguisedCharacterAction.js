@@ -2,12 +2,16 @@ const BaseAction = require('./BaseAction.js');
 const ReduceableFateCost = require('./costs/ReduceableFateCost');
 
 const Costs = require('./costs');
-const { CardTypes, EventNames, Phases, Players, PlayTypes } = require ('./Constants');
+const { CardTypes, EventNames, Phases, Players, PlayTypes, EffectNames } = require ('./Constants');
 
-const ChooseDisguisedCharacterCost = function() {
+const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
     return {
         canPay: context => context.source.disguisedKeywordTraits.some(trait =>
-            context.player.cardsInPlay.some(card => card.hasTrait(trait) && card.allowGameAction('discardFromPlay', context))),
+            context.player.cardsInPlay.some(card =>
+                card.hasTrait(trait) &&
+                card.allowGameAction('discardFromPlay', context) &&
+                (!intoConflictOnly || card.isParticipating())
+            )),
         resolve: context => context.game.promptForSelect(context.player, {
             activePromptTitle: 'Choose a character to replace',
             cardType: CardTypes.Character,
@@ -15,7 +19,8 @@ const ChooseDisguisedCharacterCost = function() {
             cardCondition: card =>
                 context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
                 card.allowGameAction('discardFromPlay', context) &&
-                !card.isUnique(),
+                !card.isUnique() &&
+                (!intoConflictOnly || card.isParticipating()),
             context: context,
             onSelect: (player, card) => {
                 context.costs.chooseDisguisedCharacter = card;
@@ -27,25 +32,35 @@ const ChooseDisguisedCharacterCost = function() {
 };
 
 class DisguisedReduceableFateCost extends ReduceableFateCost {
+    constructor(playingType, intoConflictOnly) {
+        super(playingType);
+        this.intoConflictOnly = intoConflictOnly;
+    }
+
     canPay(context) {
         const maxCharacterCost = Math.max(...context.player.cardsInPlay.map(card =>
-            context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) && !card.isUnique() ? card.getCost() : 0)
-        );
+            context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
+            (!this.intoConflictOnly || card.isParticipating()) && !card.isUnique() ? card.getCost() : 0
+        ));
         const minCost = Math.max(context.player.getMinimumCost(this.playingType, context) - maxCharacterCost, 0);
         return context.player.fate >= minCost &&
             (minCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
+
+    getReducedCost(context) {
+        return Math.max(super.getReducedCost(context) - context.costs.chooseDisguisedCharacter.getCost(), 0);
+    }
 }
 
 class PlayDisguisedCharacterAction extends BaseAction {
-    constructor(card) {
-        const playType = card.isDynasty ? PlayTypes.PlayFromProvince : PlayTypes.PlayFromHand;
+    constructor(card, playType = card.isDynasty ? PlayTypes.PlayFromProvince : PlayTypes.PlayFromHand, intoConflictOnly = false) {
         super(card, [
-            ChooseDisguisedCharacterCost(),
-            new DisguisedReduceableFateCost(playType),
+            ChooseDisguisedCharacterCost(intoConflictOnly),
+            new DisguisedReduceableFateCost(playType, intoConflictOnly),
             Costs.playLimited()
         ]);
         this.playType = playType;
+        this.intoConflictOnly = intoConflictOnly;
         this.title = 'Play this character with Disguise';
     }
 
@@ -63,6 +78,7 @@ class PlayDisguisedCharacterAction extends BaseAction {
     }
 
     executeHandler(context) {
+        const extraFate = context.source.sumEffects(EffectNames.GainExtraFateWhenPlayed);
         const events = [context.game.getEvent(EventNames.OnCardPlayed, {
             player: context.player,
             card: context.source,
@@ -71,21 +87,21 @@ class PlayDisguisedCharacterAction extends BaseAction {
             playType: this.playType
         })];
         const replacedCharacter = context.costs.chooseDisguisedCharacter;
-        let playIntoConflict = false;
-        if(replacedCharacter.inConflict) {
+        let intoConflict = this.intoConflictOnly;
+        if(replacedCharacter.inConflict && !this.intoConflictOnly) {
             context.game.promptWithHandlerMenu(context.player, {
                 activePromptTitle: 'Where do you wish to play this character?',
                 source: context.source,
                 choices: ['Conflict', 'Home'],
                 handlers: [
-                    () => playIntoConflict = true,
+                    () => intoConflict = true,
                     () => true
                 ]
             });
         }
         context.game.queueSimpleStep(() => {
-            context.game.addMessage('{0} plays {1}{2} using Disguised, choosing to replace {3}', context.player, context.source, playIntoConflict ? ' into the conflict' : '', replacedCharacter);
-            const gameAction = playIntoConflict ? context.game.actions.putIntoConflict({ target: context.source }) : context.game.actions.putIntoPlay({ target: context.source });
+            context.game.addMessage('{0} plays {1}{2} using Disguised, choosing to replace {3}', context.player, context.source, intoConflict ? ' into the conflict' : '', replacedCharacter);
+            const gameAction = intoConflict ? context.game.actions.putIntoConflict({ target: context.source, fate: extraFate }) : context.game.actions.putIntoPlay({ target: context.source, fate: extraFate });
             gameAction.addEventsToArray(events, context);
             events.push(context.game.getEvent(EventNames.Unnamed, {}, () => {
                 const moveEvents = [];

@@ -45,6 +45,7 @@ describe('Karada District', function() {
                         expect(this.player2.fate).toBe(1);
                         expect(this.player1.fate).toBe(4);
                     });
+
                     describe ('and there is a valid target to attach to', function() {
                         it('should prompt the player to choose a character to give the attachment to', function() {
                             expect(this.player2).toHavePrompt('Choose a character to attach Fine Katana to');
@@ -71,6 +72,7 @@ describe('Karada District', function() {
                 beforeEach(function() {
                     this.player2.fate = 0;
                 });
+
                 it('should not allow the event to be played', function() {
                     this.fineKatana = this.player1.playAttachment('fine-katana', 'adept-of-the-waves');
                     this.player2.clickCard(this.karada2);
@@ -201,6 +203,36 @@ describe('Karada District', function() {
                 expect(this.talismanOfTheSun.location).toBe('play area');
                 expect(this.talismanOfTheSun.parent).toBe(this.borderlandsDefender);
                 expect(this.borderlandsDefender.attachments.toArray()).toContain(this.talismanOfTheSun);
+            });
+        });
+
+        describe('Karada District in Manual mode', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['borderlands-defender'],
+                        hand: ['talisman-of-the-sun']
+                    },
+                    player2: {
+                        inPlay: ['bayushi-liar'],
+                        hand: ['calling-in-favors'],
+                        dynastyDiscard: ['karada-district']
+                    }
+                });
+                this.game.manualMode = true;
+                this.karadaDistrict = this.player2.placeCardInProvince('karada-district');
+                this.borderlandsDefender = this.player1.findCardByName('borderlands-defender');
+            });
+
+            it('should cancel the ability if cancel is selected', function() {
+                this.talismanOfTheSun = this.player1.playAttachment('talisman-of-the-sun', 'borderlands-defender');
+                this.player2.clickCard(this.karadaDistrict);
+                expect(this.player2).toHavePromptButton('Pay costs first');
+                this.player2.clickPrompt('Pay costs first');
+                expect(this.player2).toHavePromptButton('Cancel Prompt');
+                this.player2.clickPrompt('Cancel Prompt');
+                expect(this.player1).toHavePrompt('Action Window');
             });
         });
     });
