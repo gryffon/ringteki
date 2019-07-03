@@ -10,7 +10,7 @@ describe('Kaiu Shuichi', function() {
                         dynastyDeck: ['imperial-storehouse']
                     },
                     player2: {
-                        dynastyDeck: ['karada-district'],
+                        dynastyDeck: ['karada-district']
                     }
                 });
 
@@ -18,8 +18,6 @@ describe('Kaiu Shuichi', function() {
                 this.kaiuEnvoy = this.player1.findCardByName('kaiu-envoy');
                 this.imperialStorehouse = this.player1.placeCardInProvince('imperial-storehouse', 'province 1');
                 this.karadaDistrict = this.player2.placeCardInProvince('karada-district', 'province 1');
-
-                
             });
 
             it('should be activatable there is any holding in play', function() {
@@ -49,7 +47,7 @@ describe('Kaiu Shuichi', function() {
 
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.imperialStorehouse);
-                this.player2.pass()
+                this.player2.pass();
                 this.player1.clickCard(this.kaiuShuichi);
                 expect(this.player1.fate).toBe(2);
             });
