@@ -13,8 +13,8 @@ class GreaterUnderstanding extends DrawCard {
             gameAction: AbilityDsl.actions.resolveRingEffect(context => ({ target: context.source.parent }))
         });
     }
-    canAttach(ring, context) {
-        return ring.element === context.ring.element;
+    canAttach(ring) {
+        return ring && ring.type === 'ring';
     }
     canPlayOn(source) {
         return source && source.getType() === 'ring' && this.getType() === CardTypes.Attachment;

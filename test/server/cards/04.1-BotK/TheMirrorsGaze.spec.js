@@ -8,7 +8,7 @@ describe('The Mirror\'s Gaze', function() {
                         honor: 11,
                         fate: 4,
                         inPlay: ['asahina-storyteller', 'brash-samurai', 'doji-whisperer'],
-                        hand: ['the-mirror-s-gaze', 'the-mirror-s-gaze', 'banzai', 'ready-for-battle', 'fine-katana'],
+                        hand: ['the-mirror-s-gaze', 'the-mirror-s-gaze', 'banzai', 'ready-for-battle', 'fine-katana', 'for-greater-glory'],
                         conflictDiscardPile: ['banzai']
                     },
                     player2: {
@@ -25,6 +25,7 @@ describe('The Mirror\'s Gaze', function() {
                 this.isawaTadaka = this.player2.placeCardInProvince('isawa-tadaka', 'province 2');
                 this.brashSaumrai = this.player1.findCardByName('brash-samurai');
                 this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
+                this.forGreaterGlory = this.player1.findCardByName('for-greater-glory');
                 this.seppunGuardsman = this.player2.findCardByName('seppun-guardsman');
                 this.mirrorGaze = this.player1.playAttachment('the-mirror-s-gaze', 'asahina-storyteller');
                 this.noMoreActions();
@@ -287,6 +288,26 @@ describe('The Mirror\'s Gaze', function() {
                 this.player1.clickCard(this.fineKatana);
                 expect(this.fineKatana.location).toBe('conflict discard pile');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should be able to copy For Greater Glory', function() {
+                this.player2.pass();
+                this.player1.clickCard('banzai');
+                this.player1.clickCard(this.brashSaumrai);
+                this.player1.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player1.clickCard(this.brashSaumrai);
+                this.player1.clickPrompt('Done');
+                this.player2.clickCard('charge');
+                this.player2.clickCard(this.asakoTsuki);
+                this.player1.clickPrompt('Pass');
+                this.player1.clickCard(this.brashSaumrai);
+                this.gaze2 = this.player2.playAttachment('the-mirror-s-gaze', this.asakoTsuki);
+                this.noMoreActions();
+                this.player1.clickPrompt('No');
+                this.player1.clickCard(this.forGreaterGlory);
+                this.player2.clickPrompt('Pass');
+                this.player2.clickCard(this.gaze2);
+                expect(this.seppunGuardsman.fate).toBe(1);
             });
         });
 
