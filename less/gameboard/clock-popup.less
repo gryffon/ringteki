@@ -1,0 +1,18 @@
+
+.clock--popup {
+    opacity: 0;
+    pointer-events: none;
+    min-width: 300px;
+    background-color: rgba(0, 0, 0, 0.85);
+    padding: 10px;
+    position: relative;
+    margin-right: -300px;
+    cursor: pointer;
+    border: 1px solid rgba(71, 58, 56, 0.65);
+    z-index: 120;
+}
+
+.clock-frame:hover .clock--popup {
+    opacity: 1;
+    transition-delay: 0.2s;
+}
