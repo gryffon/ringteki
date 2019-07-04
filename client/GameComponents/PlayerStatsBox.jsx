@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Clock from './Clock.jsx';
+import ClockPopup from './ClockPopup.jsx';
 
 export class PlayerStatsBox extends React.Component {
     constructor() {
@@ -47,8 +48,14 @@ export class PlayerStatsBox extends React.Component {
 
     render() {
         let clock = (!this.props.clockState || this.props.clockState.mode === 'off') ? null : (
-            <div className='state'>
-                <Clock secondsLeft={ this.props.clockState.timeLeft } mode={ this.props.clockState.mode } stateId={ this.props.clockState.stateId } />
+            <div className='state clock-frame'>
+                <Clock
+                    secondsLeft={ this.props.clockState.timeLeft } mode={ this.props.clockState.mode } stateId={ this.props.clockState.stateId }
+                    periods={ this.props.clockState.periods } mainTime={ this.props.clockState.mainTime } timePeriod={ this.props.clockState.timePeriod }
+                />
+                <ClockPopup
+                    mainTime={ this.props.clockState.mainTime } periods={ this.props.clockState.periods } timePeriod={ this.props.clockState.timePeriod }
+                    clockName={ this.props.clockState.name } />
             </div>
         );
 

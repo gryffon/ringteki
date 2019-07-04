@@ -107,7 +107,7 @@ class GameObject {
     }
 
     isParticipating() {
-        return false;
+        return this.game.currentConflict && this.game.currentConflict.isParticipating(this);
     }
 
 }
