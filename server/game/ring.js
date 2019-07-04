@@ -128,7 +128,7 @@ class Ring extends EffectSource {
             fate: this.fate,
             menu: this.getMenu(),
             attachments: this.attachments.length
-                ? this.attachments.map(attachment => attachment.getSummary(activePlayer, true))
+                ? this.attachments.map(attachment => attachment.getSummary(activePlayer, false))
                 : this.attachments
         };
 
