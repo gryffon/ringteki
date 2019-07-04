@@ -155,7 +155,7 @@ class DeckValidator {
         let cardCountByName = {};
 
         _.each(allCards, cardQuantity => {
-            cardCountByName[cardQuantity.card.name] = cardCountByName[cardQuantity.card.name] || { name: cardQuantity.card.name, faction: cardQuantity.card.clan, influence: cardQuantity.card.influence_cost, limit: cardQuantity.card.deck_limit, count: 0, allowed_clans: cardQuantity.card.allowed_clans };
+            cardCountByName[cardQuantity.card.name] = cardCountByName[cardQuantity.card.name] || { name: cardQuantity.card.name, faction: cardQuantity.card.clan, influence: cardQuantity.card.influence_cost, limit: cardQuantity.card.deck_limit, count: 0 };
             cardCountByName[cardQuantity.card.name].count += cardQuantity.count;
 
             if(!rules.mayInclude(cardQuantity.card) || rules.cannotInclude(cardQuantity.card) || (cardQuantity.card.role_restriction && !rules.roleRestrictions.includes(cardQuantity.card.role_restriction))) {
@@ -244,7 +244,7 @@ class DeckValidator {
             }
         };
         let factionRules = this.getFactionRules(deck.faction.value.toLowerCase());
-        let allianceRules = this.getAllianceRules(deck.alliance.value.toLowerCase(), deck.faction.value.toLowerCase());
+        let allianceRules = this.getAllianceRules(deck.alliance.value.toLowerCase());
         let roleRules = this.getRoleRules(deck.role.length > 0 ? deck.role[0].card : null);
         let strongholdRules = this.getStrongholdRules(deck.stronghold.length > 0 ? deck.stronghold[0].card : null);
         return this.combineValidationRules([standardRules, factionRules, allianceRules, roleRules, strongholdRules]);
@@ -256,9 +256,9 @@ class DeckValidator {
         };
     }
 
-    getAllianceRules(clan, faction) {
+    getAllianceRules(clan) {
         return {
-            mayInclude: card => card.side === 'conflict' && card.clan === clan && card.allowed_clans.includes(faction)
+            mayInclude: card => card.side === 'conflict' && card.clan === clan
         };
     }
 
