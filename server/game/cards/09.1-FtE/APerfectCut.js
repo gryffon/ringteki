@@ -22,7 +22,7 @@ class APerfectCut extends DrawCard {
                                 context.target.controller === event.conflict.winner
                         },
                         gameAction: AbilityDsl.actions.honor(),
-                        message: '{0} is honored due to the delayed effect of {1}',
+                        message: '{1} is honored due to the delayed effect of {0}',
                         messageArgs: [context.source]
                     }))
                 ])
