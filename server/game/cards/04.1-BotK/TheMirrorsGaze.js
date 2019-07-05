@@ -11,7 +11,8 @@ class TheMirrorsGaze extends DrawCard {
             },
             gameAction: ability.actions.resolveAbility(context => ({
                 target: context.event.card,
-                ability: context.event.context.ability
+                ability: context.event.context.ability,
+                event: context.event.context.event
             }))
         });
     }

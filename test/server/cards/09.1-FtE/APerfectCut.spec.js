@@ -85,6 +85,7 @@ describe('A Perfect Cut', function() {
                 this.player2.pass();
                 this.player1.pass();
                 expect(this.kitsukiShomon.isHonored).toBe(true);
+                expect(this.getChatLogs(3)).toContain('Kitsuki Shomon is honored due to the delayed effect of A Perfect Cut');
             });
 
             it('should not honor the chosen character if they lose the conflict', function() {

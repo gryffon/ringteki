@@ -4,6 +4,7 @@ class Timer extends Clock {
     constructor(player, time) {
         super(player, time);
         this.mode = 'down';
+        this.name = 'Timer';
     }
 
     timeRanOut() {

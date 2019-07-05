@@ -528,10 +528,13 @@ class DrawCard extends BaseCard {
     }
 
     setPersonalHonor(token) {
-        if(!token && this.personalHonor) {
+        if(this.personalHonor && token !== this.personalHonor) {
             this.personalHonor.setCard(null);
         }
         this.personalHonor = token || null;
+        if(this.personalHonor) {
+            this.personalHonor.setCard(this);
+        }
     }
 
     get isHonored() {
