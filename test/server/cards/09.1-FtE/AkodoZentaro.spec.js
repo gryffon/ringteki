@@ -150,7 +150,7 @@
                     player1: {
                         inPlay: ['matsu-berserker', 'kitsu-spiritcaller', 'akodo-toturi'],
                         dynastyDiscard: ['akodo-zentaro', 'hidden-moon-dojo', 'iron-mine'],
-                        hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice', 'court-mask']
+                        hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice', 'court-mask', 'assassination']
                     },
                     player2: {
                         inPlay: ['brash-samurai']
@@ -167,6 +167,7 @@
                 this.ornateFan = this.player1.findCardByName('ornate-fan');
                 this.peasantsAdvice = this.player1.findCardByName('peasant-s-advice');
                 this.courtMask = this.player1.findCardByName('court-mask');
+                this.assassination = this.player1.findCardByName('assassination');
                 this.ironMine = this.player1.findCardByName('iron-mine');
 
                 this.brashSamurai = this.player2.findCardByName('brash-samurai');
@@ -207,6 +208,22 @@
                 expect(this.player1).not.toBeAbleToSelect(this.kitsuSpiritcaller);
                 expect(this.player1).not.toBeAbleToSelect(this.akodoToturi);
                 expect(this.player1).not.toBeAbleToSelect(this.brashSamurai);
+            });
+
+            it('should not activate if there are no legal targets', function() {
+                this.advancePhases('conflict');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.matsuBerserker, this.kitsuSpiritcaller, this.akodoToturi],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.assassination);
+                this.player1.clickCard(this.matsuBerserker);
+                expect(this.matsuBerserker.location).toBe('dynasty discard pile');
+                this.player2.pass();
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
             it('should reduce the cost by the printed cost of the character in play', function() {

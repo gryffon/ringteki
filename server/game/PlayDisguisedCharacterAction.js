@@ -10,6 +10,7 @@ const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
             context.player.cardsInPlay.some(card =>
                 card.hasTrait(trait) &&
                 card.allowGameAction('discardFromPlay', context) &&
+                !card.isUnique() &&
                 (!intoConflictOnly || card.isParticipating())
             )),
         resolve: context => context.game.promptForSelect(context.player, {
