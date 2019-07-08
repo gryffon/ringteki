@@ -11,7 +11,6 @@ class ChatCommands {
             '/honor': this.honor,
             '/dishonor': this.dishonor,
             '/discard': this.discard,
-            '/cancel-prompt': this.cancelPrompt,
             '/token': this.setToken,
             '/reveal': this.reveal,
             '/duel': this.duel,
@@ -170,12 +169,6 @@ class ChatCommands {
         this.game.addMessage('{0} uses the /discard command to discard {1} card{2} at random', player, num, num > 1 ? 's' : '');
 
         GameActions.discardAtRandom({ amount: num }).resolve(player, this.game.getFrameworkContext());
-    }
-
-    cancelPrompt(player) {
-        this.game.addMessage('{0} uses the /cancel-prompt to skip the current step.', player);
-        this.game.pipeline.cancelStep();
-        this.game.cancelPromptUsed = true;
     }
 
     setToken(player, args) {
