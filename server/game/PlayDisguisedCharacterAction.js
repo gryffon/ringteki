@@ -48,6 +48,9 @@ class DisguisedReduceableFateCost extends ReduceableFateCost {
     }
 
     getReducedCost(context) {
+        if(!context.costs.chooseDisguisedCharacter) {
+            return;
+        }
         return Math.max(super.getReducedCost(context) - context.costs.chooseDisguisedCharacter.getCost(), 0);
     }
 }
