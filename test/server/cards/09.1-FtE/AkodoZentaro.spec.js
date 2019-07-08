@@ -226,6 +226,21 @@
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
+            it('should allow you to manually cancel', function() {
+                this.advancePhases('conflict');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.matsuBerserker, this.kitsuSpiritcaller, this.akodoToturi],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.game.manualMode = true;
+                this.player1.clickCard(this.akodoZentaro);
+                expect(this.player1).toHavePrompt('Choose a character to replace');
+                this.player1.clickPrompt('Cancel Prompt');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
             it('should reduce the cost by the printed cost of the character in play', function() {
                 this.advancePhases('conflict');
                 let fate = this.player1.player.fate;

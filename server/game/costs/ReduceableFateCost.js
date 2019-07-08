@@ -19,7 +19,7 @@ class ReduceableFateCost {
         let alternatePools = context.player.getAlternateFatePools(this.playingType, context.source);
         let alternatePoolTotal = alternatePools.reduce((total, pool) => total + pool.fate, 0);
         let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
-        if(context.game.cancelPromptUsed || this.getReducedCost(context) > maxPlayerFate + alternatePoolTotal) {
+        if(this.getReducedCost(context) > maxPlayerFate + alternatePoolTotal) {
             result.cancelled = true;
         } else if(!result.cancelled && alternatePools.length > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
             let properties = {

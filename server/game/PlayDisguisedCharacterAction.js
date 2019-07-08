@@ -91,6 +91,9 @@ class PlayDisguisedCharacterAction extends BaseAction {
             playType: this.playType
         })];
         const replacedCharacter = context.costs.chooseDisguisedCharacter;
+        if(!replacedCharacter) {
+            return;
+        }
         let intoConflict = this.intoConflictOnly;
         if(replacedCharacter.inConflict && !this.intoConflictOnly) {
             context.game.promptWithHandlerMenu(context.player, {
