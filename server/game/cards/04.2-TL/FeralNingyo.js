@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations } = require('../../Constants');
+const { Durations, Locations } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class FeralNingyo extends DrawCard {
@@ -14,14 +14,19 @@ class FeralNingyo extends DrawCard {
                 AbilityDsl.actions.putIntoConflict(context => ({
                     target: context.source
                 })),
-                AbilityDsl.actions.delayedEffect(context => ({
+                AbilityDsl.actions.cardLastingEffect(context => ({
                     target: context.source,
                     location: [Locations.Hand, Locations.PlayArea],
-                    when: {
-                        onConflictFinished: () => true
-                    },
-                    message: '{0} returns to the deck and shuffles due to its delayed effect',
-                    gameAction: AbilityDsl.actions.returnToDeck({ shuffle: true })
+                    duration: Durations.UntilEndOfPhase,
+                    effect: AbilityDsl.effects.delayedEffect({
+                        when: {
+                            onConflictFinished: () => true
+                        },
+                        message: '{0} returns to the deck and shuffles due to its delayed effect',
+                        messageArgs: context => [context.source],
+                        gameAction: AbilityDsl.actions.returnToDeck({ shuffle: true })
+                    })
+
                 }))
             ])
         });

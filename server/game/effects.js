@@ -31,14 +31,7 @@ const Effects = {
     cardCannot: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(Object.assign({ type: properties.cannot || properties }, properties))),
     copyCharacter: (character) => EffectBuilder.card.static(EffectNames.CopyCharacter, new CopyCharacter(character)),
     customDetachedCard: (properties) => EffectBuilder.card.detached(EffectNames.CustomEffect, properties),
-    delayedEffect: (properties) => EffectBuilder.card.detached(EffectNames.DelayedEffect, {
-        apply: (card, context) => {
-            properties.target = card;
-            properties.context = properties.context || context;
-            return context.source.delayedEffect(() => properties);
-        },
-        unapply: (card, context, effect) => context.game.effectEngine.removeDelayedEffect(effect)
-    }),
+    delayedEffect: (properties) => EffectBuilder.card.static(EffectNames.DelayedEffect, properties),
     doesNotBow: () => EffectBuilder.card.static(EffectNames.DoesNotBow),
     doesNotReady: () => EffectBuilder.card.static(EffectNames.DoesNotReady),
     gainAbility: (abilityType, properties) => EffectBuilder.card.static(EffectNames.GainAbility, new GainAbility(abilityType, properties)),
@@ -83,14 +76,6 @@ const Effects = {
     switchBaseSkills: () => EffectBuilder.card.static(EffectNames.SwitchBaseSkills),
     suppressEffects: (condition) => EffectBuilder.card.static(EffectNames.SuppressEffects, condition),
     takeControl: (player) => EffectBuilder.card.static(EffectNames.TakeControl, player),
-    terminalCondition: (properties) => EffectBuilder.card.detached(EffectNames.TerminalCondition, {
-        apply: (card, context) => {
-            properties.target = card;
-            properties.context = properties.context || context;
-            return context.source.terminalCondition(() => properties);
-        },
-        unapply: (card, context, effect) => context.game.effectEngine.removeTerminalCondition(effect)
-    }),
     // Ring effects
     addElement: (element) => EffectBuilder.ring.flexible(EffectNames.AddElement, element),
     cannotBidInDuels: num => EffectBuilder.player.static(EffectNames.CannotBidInDuels, num),
@@ -140,6 +125,7 @@ const Effects = {
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
     modifyCardsDrawnInDrawPhase: (amount) => EffectBuilder.player.flexible(EffectNames.ModifyCardsDrawnInDrawPhase, amount),
     playerCannot: (properties) => EffectBuilder.player.static(EffectNames.AbilityRestrictions, new Restriction(Object.assign({ type: properties.cannot || properties }, properties))),
+    playerDelayedEffect: (properties) => EffectBuilder.player.static(EffectNames.DelayedEffect, properties),
     reduceCost: (properties) => EffectBuilder.player.detached(EffectNames.CostReducer, {
         apply: (player, context) => player.addCostReducer(context.source, properties),
         unapply: (player, context, reducer) => player.removeCostReducer(reducer)

@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { CardTypes } = require('../../Constants');
+const { Durations, CardTypes } = require('../../Constants');
 
 class PurityOfSpirit extends DrawCard {
     setupCardAbilities() {
@@ -12,14 +12,18 @@ class PurityOfSpirit extends DrawCard {
                 cardCondition: card => card.hasTrait('bushi') && card.isParticipating(),
                 gameAction: AbilityDsl.actions.multiple([
                     AbilityDsl.actions.honor(),
-                    AbilityDsl.actions.delayedEffect({
-                        when : {
-                            onConflictFinished: () => true
-                        },
-                        gameAction: AbilityDsl.actions.discardStatusToken(context => ({ target: context.target.personalHonor })),
-                        message: '{2} removes the {3} from {1} due to the delayed effect of {0}',
-                        messageArgs: context => [context.player, context.target.personalHonor]
-                    })])
+                    AbilityDsl.actions.cardLastingEffect(context => ({
+                        duration: Durations.UntilEndOfPhase,
+                        effect: AbilityDsl.effects.delayedEffect({
+                            when : {
+                                onConflictFinished: () => true
+                            },
+                            gameAction: AbilityDsl.actions.discardStatusToken({ target: context.target.personalHonor }),
+                            message: '{0} is removed from {1} due to the delayed effect of {2}',
+                            messageArgs: [context.target.personalHonor, context.target, context.source]    
+                        })
+                    }))
+                ])
             }
         });
     }
