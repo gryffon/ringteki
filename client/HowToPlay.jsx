@@ -73,7 +73,6 @@ class HowToPlay extends React.Component {
                     <p>The following manual commands have been implemented in order to allow for a smoother gameplay experience:
                     </p>
                     <ul>
-                        <li>/cancel-prompt - Clear the current prompt and resume the game flow.  Use with caution and only when the prompt is 'stuck' and you are unable to continue</li>
                         <li>/discard x - Discards x cards randomly from your hand</li>
                         <li>/draw x - Draws x cards from your deck to your hand</li>
                         <li>/give-control - Give control of a card to your opponent.  Use with caution</li>

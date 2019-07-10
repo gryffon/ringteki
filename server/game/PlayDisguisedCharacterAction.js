@@ -10,9 +10,10 @@ const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
             context.player.cardsInPlay.some(card =>
                 card.hasTrait(trait) &&
                 card.allowGameAction('discardFromPlay', context) &&
+                !card.isUnique() &&
                 (!intoConflictOnly || card.isParticipating())
             )),
-        resolve: context => context.game.promptForSelect(context.player, {
+        resolve: (context, results) => context.game.promptForSelect(context.player, {
             activePromptTitle: 'Choose a character to replace',
             cardType: CardTypes.Character,
             controller: Players.Self,
@@ -24,6 +25,10 @@ const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
             context: context,
             onSelect: (player, card) => {
                 context.costs.chooseDisguisedCharacter = card;
+                return true;
+            },
+            onCancel: () => {
+                results.cancelled = true;
                 return true;
             }
         }),
@@ -87,6 +92,9 @@ class PlayDisguisedCharacterAction extends BaseAction {
             playType: this.playType
         })];
         const replacedCharacter = context.costs.chooseDisguisedCharacter;
+        if(!replacedCharacter) {
+            return;
+        }
         let intoConflict = this.intoConflictOnly;
         if(replacedCharacter.inConflict && !this.intoConflictOnly) {
             context.game.promptWithHandlerMenu(context.player, {

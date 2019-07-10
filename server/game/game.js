@@ -63,7 +63,6 @@ class Game extends EventEmitter {
         this.currentConflict = null;
         this.currentDuel = null;
         this.manualMode = false;
-        this.cancelPromptUsed = false;
         this.currentPhase = '';
         this.password = details.password;
         this.roundNumber = 0;
@@ -1185,8 +1184,7 @@ class Game extends EventEmitter {
                     };
                 }),
                 started: this.started,
-                winner: this.winner ? this.winner.name : undefined,
-                cancelPromptUsed: this.cancelPromptUsed
+                winner: this.winner ? this.winner.name : undefined
             };
         }
 
