@@ -135,13 +135,15 @@ class BaseAbility {
                             cost.resolve(context, results);
                         }
                         context.game.queueSimpleStep(() => {
-                            let newEvents = cost.payEvent ? cost.payEvent(context) : context.game.getEvent('payCost', {}, () => cost.pay(context));
-                            if(Array.isArray(newEvents)) {
-                                for(let event of newEvents) {
-                                    events.push(event);
+                            if(!results.cancelled) {
+                                let newEvents = cost.payEvent ? cost.payEvent(context) : context.game.getEvent('payCost', {}, () => cost.pay(context));
+                                if(Array.isArray(newEvents)) {
+                                    for(let event of newEvents) {
+                                        events.push(event);
+                                    }
+                                } else {
+                                    events.push(newEvents);
                                 }
-                            } else {
-                                events.push(newEvents);
                             }
                         });
                     }
