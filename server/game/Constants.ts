@@ -173,7 +173,6 @@ export enum EventNames {
     OnCardAbilityTriggered = 'onCardAbilityTriggered',
     OnConflictInitiated = 'onConflictInitiated',
     OnDuelInitiated = 'onDuelInitiated',
-    OnSelectRingWithFate = 'onSelectRingWithFate',
     OnConflictDeclared = 'onConflictDeclared',
     OnCovertResolved = 'onCovertResolved',
     OnCardRevealed = 'onCardRevealed',
