@@ -9,7 +9,7 @@ describe('A New Name', function() {
                         hand: ['a-new-name']
                     },
                     player2: {
-                        inPlay: ['adept-of-the-waves', 'miya-mystic'],
+                        inPlay: ['adept-of-the-waves', 'miya-mystic']
                     }
                 });
 
