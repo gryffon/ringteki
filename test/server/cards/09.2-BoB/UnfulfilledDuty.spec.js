@@ -17,7 +17,7 @@ describe('Unfulfilled Duty', function() {
                 this.borderRider = this.player1.findCardByName('border-rider');
                 this.borderRider.fate = 1;
                 this.borderRider.bowed = true;
-                this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');                
+                this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
                 this.daidojiUji = this.player1.findCardByName('daidoji-uji');
                 this.daidojiUji.bowed = true;
                 this.dojiChallenger = this.player1.findCardByName('doji-challenger');
@@ -72,7 +72,7 @@ describe('Unfulfilled Duty', function() {
                 expect(this.dojiChallenger.bowed).toBe(false);
                 expect(this.brashSamurai.bowed).toBe(false);
                 expect(this.naiveStudent.bowed).toBe(false);
-                expect(this.getChatLogs(1)).toContain('player1 plays Earth Becomes Sky to ready Doji Challenger, Brash Samurai and Naive Student');
+                expect(this.getChatLogs(1)).toContain('player1 plays Unfulfilled Duty to ready Doji Challenger, Brash Samurai and Naive Student');
             });
         });
     });
