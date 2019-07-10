@@ -238,7 +238,7 @@
                 this.player1.clickCard(this.akodoZentaro);
                 expect(this.player1).toHavePrompt('Choose a character to replace');
                 this.player1.clickPrompt('Cancel Prompt');
-                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
             it('should reduce the cost by the printed cost of the character in play', function() {

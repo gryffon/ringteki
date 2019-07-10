@@ -13,7 +13,7 @@ const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
                 !card.isUnique() &&
                 (!intoConflictOnly || card.isParticipating())
             )),
-        resolve: context => context.game.promptForSelect(context.player, {
+        resolve: (context, results) => context.game.promptForSelect(context.player, {
             activePromptTitle: 'Choose a character to replace',
             cardType: CardTypes.Character,
             controller: Players.Self,
@@ -25,6 +25,10 @@ const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
             context: context,
             onSelect: (player, card) => {
                 context.costs.chooseDisguisedCharacter = card;
+                return true;
+            },
+            onCancel: () => {
+                results.cancelled = true;
                 return true;
             }
         }),
@@ -49,9 +53,6 @@ class DisguisedReduceableFateCost extends ReduceableFateCost {
     }
 
     getReducedCost(context) {
-        if(!context.costs.chooseDisguisedCharacter) {
-            return;
-        }
         return Math.max(super.getReducedCost(context) - context.costs.chooseDisguisedCharacter.getCost(), 0);
     }
 }
