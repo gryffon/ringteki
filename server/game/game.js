@@ -677,8 +677,8 @@ class Game extends EventEmitter {
         this.queueStep(new SelectRingPrompt(this, player, properties));
     }
 
-    promptForHonorBid(activePromptTitle, costHandler, prohibitedBids) {
-        this.queueStep(new HonorBidPrompt(this, activePromptTitle, costHandler, prohibitedBids));
+    promptForHonorBid(activePromptTitle, costHandler, prohibitedBids, duel = null) {
+        this.queueStep(new HonorBidPrompt(this, activePromptTitle, costHandler, prohibitedBids, duel));
     }
 
     /**

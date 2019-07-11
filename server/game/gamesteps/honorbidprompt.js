@@ -3,11 +3,12 @@ const GameActions = require('../GameActions/GameActions');
 const { EventNames } = require('../Constants');
 
 class HonorBidPrompt extends AllPlayerPrompt {
-    constructor(game, menuTitle, costHandler, prohibitedBids = {}) {
+    constructor(game, menuTitle, costHandler, prohibitedBids = {}, duel = null) {
         super(game);
         this.menuTitle = menuTitle || 'Choose a bid';
         this.costHandler = costHandler;
         this.prohibitedBids = prohibitedBids;
+        this.duel = duel;
         this.bid = {};
     }
 
@@ -23,7 +24,7 @@ class HonorBidPrompt extends AllPlayerPrompt {
         let completed = super.continue();
 
         if(completed) {
-            this.game.raiseEvent(EventNames.OnHonorDialsRevealed, {}, () => {
+            this.game.raiseEvent(EventNames.OnHonorDialsRevealed, { duel: this.duel }, () => {
                 for(const player of this.game.getPlayers()) {
                     player.honorBidModifier = 0;
                     this.game.actions.setHonorDial({ value: this.bid[player.uuid]}).resolve(player, this.game.getFrameworkContext());
