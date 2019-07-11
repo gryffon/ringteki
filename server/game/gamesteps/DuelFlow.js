@@ -46,7 +46,7 @@ class DuelFlow extends BaseStepWithPipeline {
         for(const player of this.game.getPlayers()) {
             prohibitedBids[player.uuid] = [...new Set(player.getEffects(EffectNames.CannotBidInDuels))];
         }
-        this.game.promptForHonorBid('Choose your bid for the duel\n' + this.duel.getTotalsForDisplay(), this.costHandler, prohibitedBids);
+        this.game.promptForHonorBid('Choose your bid for the duel\n' + this.duel.getTotalsForDisplay(), this.costHandler, prohibitedBids, this.duel);
     }
 
     modifyDuelingSkill() {
