@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { CardTypes } = require('../../Constants')
+const { CardTypes } = require('../../Constants');
 
 class AkodoKaede extends DrawCard {
     setupCardAbilities() {
