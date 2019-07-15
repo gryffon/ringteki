@@ -18,12 +18,12 @@ export class OpponentGainHonorAction extends PlayerAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties: OpponentGainHonorProperties = this.getProperties(context);
-        return ['both players gain ' + properties.amount + ' honor', []];
+        return [context.player.opponent + ' gain ' + properties.amount + ' honor', []];
     }
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties: OpponentGainHonorProperties = this.getProperties(context, additionalProperties);
-        return properties.amount === 0 ? false : super.canAffect(player, context) && super.canAffect(player.opponent, context);
+        return properties.amount === 0 ? false : super.canAffect(context.player.opponent, context);
     }
 
     defaultTargets(context: AbilityContext): Player[] {
