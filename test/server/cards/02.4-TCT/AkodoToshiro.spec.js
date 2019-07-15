@@ -37,7 +37,7 @@ describe('Akodo Toshiro', function() {
                 expect(this.player1).toHavePrompt('Air Ring');
             });
 
-            it('should prompt the player which effect to resolve at the end of the conflict', function() {
+            fit('should prompt the player which effect to resolve at the end of the conflict', function() {
                 this.noMoreActions();
                 this.player1.clickPrompt('Don\'t resolve');
                 expect(this.player1).toHavePrompt('Order Simultaneous effects');

@@ -14,17 +14,20 @@ class AkodoToshiro extends DrawCard {
                     targetLocation: Locations.Provinces,
                     effect: AbilityDsl.effects.cardCannot('break')
                 })),
-                AbilityDsl.actions.cardLastingEffect({ effect: [
-                    AbilityDsl.effects.modifyMilitarySkill(5),
-                    AbilityDsl.effects.delayedEffect({
-                        when: {
-                            onConflictFinished: (event, context) => !context.player.cardsInPlay.any(card => card.hasTrait('commander'))
-                        },
-                        message: '{0} is discarded due to his delayed effect',
-                        messageArgs: context => [context.source],
-                        gameAction: AbilityDsl.actions.discardFromPlay()
-                    })
-                ]})
+                AbilityDsl.actions.cardLastingEffect(context => ({
+                    target: context.source,
+                    effect: [
+                        AbilityDsl.effects.modifyMilitarySkill(5),
+                        AbilityDsl.effects.delayedEffect({
+                            when: {
+                                onConflictFinished: () => !context.player.cardsInPlay.any(card => card.hasTrait('commander'))
+                            },
+                            message: '{0} is discarded due to his delayed effect',
+                            messageArgs: [context.source],
+                            gameAction: AbilityDsl.actions.discardFromPlay()
+                        })
+                    ]
+                }))
             ])
         });
     }

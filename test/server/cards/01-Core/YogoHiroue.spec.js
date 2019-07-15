@@ -42,16 +42,17 @@ describe('Yogo Hiroue', function() {
 
             it('should let the player trigger the delayed effect for a friendly character', function() {
                 this.yogoOutcast = this.player1.clickCard('yogo-outcast');
-                expect(this.game.effectEngine.delayedEffects.length).toBe(1);
+                expect(this.yogoOutcast.getEffects('delayedEffect').length).toBe(1);
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Yogo Hiroue');
                 this.player1.clickPrompt('Yes');
                 expect(this.yogoOutcast.isDishonored).toBe(true);
+                expect(this.yogoHiroue.isDishonored).toBe(false);
             });
 
             it('should let the player trigger the delayed effect for an enemy character', function() {
                 this.player1.clickCard(this.seppunGuardsman);
-                expect(this.game.effectEngine.delayedEffects.length).toBe(1);
+                expect(this.seppunGuardsman.getEffects('delayedEffect').length).toBe(1);
                 this.player2.pass();
                 this.player1.playCharacterFromHand('unassuming-yojimbo');
                 this.player1.clickPrompt('Conflict');
@@ -63,7 +64,7 @@ describe('Yogo Hiroue', function() {
 
             it('should trigger the delayed effect even if the card is no longer in the conflict', function() {
                 this.player1.clickCard(this.seppunGuardsman);
-                expect(this.game.effectEngine.delayedEffects.length).toBe(1);
+                expect(this.seppunGuardsman.getEffects('delayedEffect').length).toBe(1);
                 this.player2.clickCard(this.favorableGround);
                 this.player2.clickCard(this.seppunGuardsman);
                 expect(this.seppunGuardsman.inConflict).toBe(false);
@@ -76,13 +77,28 @@ describe('Yogo Hiroue', function() {
                 expect(this.seppunGuardsman.isDishonored).toBe(true);
             });
 
+            it('should not dishonor the character if the player chooses not to', function() {
+                this.player1.clickCard(this.seppunGuardsman);
+                expect(this.seppunGuardsman.getEffects('delayedEffect').length).toBe(1);
+                this.player2.clickCard(this.favorableGround);
+                this.player2.clickCard(this.seppunGuardsman);
+                expect(this.seppunGuardsman.inConflict).toBe(false);
+                expect(this.game.currentConflict.defenders).not.toContain(this.seppunGuardsman);
+                this.player1.playCharacterFromHand('unassuming-yojimbo');
+                this.player1.clickPrompt('Conflict');
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Yogo Hiroue');
+                this.player1.clickPrompt('No');
+                expect(this.seppunGuardsman.isDishonored).toBe(false);
+            });
+
             it('should not trigger the delayed effect if the card has left play', function() {
                 this.player1.clickCard(this.seppunGuardsman);
-                expect(this.game.effectEngine.delayedEffects.length).toBe(1);
+                expect(this.seppunGuardsman.getEffects('delayedEffect').length).toBe(1);
                 this.player2.pass();
                 this.player1.clickCard('assassination');
                 this.player1.clickCard(this.seppunGuardsman);
-                expect(this.game.effectEngine.delayedEffects.length).toBe(0);
+                expect(this.seppunGuardsman.getEffects('delayedEffect').length).toBe(0);
                 this.player2.pass();
                 this.player1.playCharacterFromHand('unassuming-yojimbo');
                 this.player1.clickPrompt('Conflict');
@@ -92,12 +108,12 @@ describe('Yogo Hiroue', function() {
 
             it('should not trigger the delayed effect if the card returns to play', function() {
                 this.player1.clickCard(this.seppunGuardsman);
-                expect(this.game.effectEngine.delayedEffects.length).toBe(1);
+                expect(this.seppunGuardsman.getEffects('delayedEffect').length).toBe(1);
                 this.player2.pass();
                 this.player1.clickCard('assassination');
                 this.player1.clickCard(this.seppunGuardsman);
                 expect(this.seppunGuardsman.location).toBe('dynasty discard pile');
-                expect(this.game.effectEngine.delayedEffects.length).toBe(0);
+                expect(this.seppunGuardsman.getEffects('delayedEffect').length).toBe(0);
                 this.player2.clickCard('kitsu-spiritcaller');
                 this.player2.clickCard(this.seppunGuardsman);
                 expect(this.seppunGuardsman.inConflict).toBe(true);

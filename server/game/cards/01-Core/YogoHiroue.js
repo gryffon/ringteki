@@ -22,7 +22,7 @@ class YogoHiroue extends DrawCard {
                             activePromptTitle: 'Dishonor ' + context.target.name + '?',
                             choices: ['Yes', 'No'],
                             choiceHandler: (choice, displayMessage) => {
-                                if(displayMessage) {
+                                if(displayMessage && choice === 'Yes') {
                                     context.game.addMessage('{0} chooses to dishonor {1} due to {2}\'s delayed effect', context.player, context.target, context.source);
                                 }
                                 return { target: (choice === 'Yes' ? context.target : []) };
