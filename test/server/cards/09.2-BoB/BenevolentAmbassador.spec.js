@@ -5,11 +5,13 @@ describe('Benevolent Ambassador', function () {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['benevolent-ambassador']
+                        inPlay: ['benevolent-ambassador'],
+                        honor: 8
                     },
                     player2: {
-                        inPlay: ['yogo-hiroue'],
-                        hand: ['fine-katana']
+                        inPlay: ['yogo-hiroue', 'shrine-maiden'],
+                        hand: ['fine-katana'],
+                        honor: 12
                     }
                 });
 
@@ -21,7 +23,7 @@ describe('Benevolent Ambassador', function () {
             it('should trigger if the ambassador wins the conflict', function() {
                 this.initiateConflict({
                     attackers: [this.ambassador],
-                    defenders: []
+                    defenders: ['shrine-maiden']
                 }),
 
                 this.noMoreActions();
@@ -31,7 +33,7 @@ describe('Benevolent Ambassador', function () {
             it('should give both players one honor', function() {
                 this.initiateConflict({
                     attackers: [this.ambassador],
-                    defenders: []
+                    defenders: ['shrine-maiden']
                 }),
                 this.noMoreActions();
                 let player1Honor = this.player1.honor;
