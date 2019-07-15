@@ -1,6 +1,6 @@
 describe('Akodo Kaede', function() {
     integration(function() {
-        describe('Akodo Kaede\'s triggered ability', function() {
+        describe('Akodo Kaede\'s ability', function() {
             beforeEach(function () {
                 this.setupTest({
                     phase: 'conflict',
@@ -9,7 +9,7 @@ describe('Akodo Kaede', function() {
                         hand: ['assassination']
                     },
                     player2: {
-                        inPlay: ['bayushi-aramoro'],
+                        inPlay: ['bayushi-aramoro', 'shrine-maiden'],
                         hand: ['fiery-madness', 'i-can-swim']
                     }
                 });
@@ -59,6 +59,21 @@ describe('Akodo Kaede', function() {
                 this.player2.clickCard(this.kaede);
                 expect(this.player1).not.toBeAbleToSelect(this.kaede);
                 expect(this.kaede.location).toBe('dynasty discard pile');
+            });
+
+            it('should make her immune to ring effects', function() {
+                this.noMoreActions();
+                this.player1.clickPrompt('Gain 2 Honor');
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    ring: 'fire',
+                    attackers: ['shrine-maiden'],
+                    defenders: []
+                });
+                this.noMoreActions();
+                expect(this.player2).toHavePrompt('Fire Ring');
+                expect(this.player2).not.toBeAbleToSelect(this.kaede);
             });
         });
     });
