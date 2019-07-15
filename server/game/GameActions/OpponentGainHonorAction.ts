@@ -3,26 +3,26 @@ import AbilityContext = require('../AbilityContext');
 import Player = require('../player');
 import { EventNames } from '../Constants';
 
-export interface BothPlayersGainHonorProperties extends PlayerActionProperties {
+export interface OpponentGainHonorProperties extends PlayerActionProperties {
     amount?: number;
 }
 
-export class BothPlayersGainHonorAction extends PlayerAction {
-    defaultProperties: BothPlayersGainHonorProperties = { amount: 1 };
+export class OpponentGainHonorAction extends PlayerAction {
+    defaultProperties: OpponentGainHonorProperties = { amount: 1 };
 
     name: string = 'gainHonor';
     eventName = EventNames.OnModifyHonor;
-    constructor(propertyFactory: BothPlayersGainHonorProperties | ((context: AbilityContext) => BothPlayersGainHonorProperties)) {
+    constructor(propertyFactory: OpponentGainHonorProperties | ((context: AbilityContext) => OpponentGainHonorProperties)) {
         super(propertyFactory);
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
-        let properties: BothPlayersGainHonorProperties = this.getProperties(context);
+        let properties: OpponentGainHonorProperties = this.getProperties(context);
         return ['both players gain ' + properties.amount + ' honor', []];
     }
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
-        let properties: BothPlayersGainHonorProperties = this.getProperties(context, additionalProperties);
+        let properties: OpponentGainHonorProperties = this.getProperties(context, additionalProperties);
         return properties.amount === 0 ? false : super.canAffect(player, context) && super.canAffect(player.opponent, context);
     }
 
@@ -31,12 +31,12 @@ export class BothPlayersGainHonorAction extends PlayerAction {
     }
 
     addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
-        let { amount } = this.getProperties(context, additionalProperties) as BothPlayersGainHonorProperties;        
+        let { amount } = this.getProperties(context, additionalProperties) as OpponentGainHonorProperties;        
         super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
     }
 
     eventHandler(event): void {
-        event.player.modifyHonor(event.amount) && event.player.opponent.modifyHonor(event.amount);
+        event.player.opponent.modifyHonor(event.amount);
     }
 }
