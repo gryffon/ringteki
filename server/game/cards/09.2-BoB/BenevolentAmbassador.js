@@ -6,7 +6,7 @@ class BenevolentAmbassador extends DrawCard {
         this.reaction({
             title: 'give both players honor',
             when: {
-                afterConflict: (event, context) => context.player.opponent && context.source.isParticipating() && event.conflict.winner === context.player
+                afterConflict: (event, context) => context.source.isParticipating() && event.conflict.winner === context.player
             },
             gameAction: AbilityDsl.actions.gainHonor(context => {
                 return { target: [context.player, context.player.opponent]};
