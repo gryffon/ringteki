@@ -5,7 +5,7 @@ describe('Benevolent Ambassador', function () {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['benevolent-ambassador'],
+                        inPlay: ['benevolent-ambassador', 'isawa-tadaka'],
                         honor: 8
                     },
                     player2: {
@@ -49,6 +49,15 @@ describe('Benevolent Ambassador', function () {
                     defenders: [this.maiden]
                 }),
                 this.player2.playAttachment('fine-katana', this.maiden);
+                this.noMoreActions();
+                expect(this.player1).not.toBeAbleToSelect(this.ambassador);
+            });
+
+            it('should not trigger if it is at home', function() {
+                this.initiateConflict({
+                    attackers: ['isawa-tadaka'],
+                    defenders: []
+                });
                 this.noMoreActions();
                 expect(this.player1).not.toBeAbleToSelect(this.ambassador);
             });
