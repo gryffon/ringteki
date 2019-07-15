@@ -10,7 +10,7 @@ describe('Akodo Kaede', function() {
                     },
                     player2: {
                         inPlay: ['bayushi-aramoro'],
-                        hand: ['fiery-madness']
+                        hand: ['fiery-madness', 'noble-sacrifice']
                     }
                 });
                 this.hidaGuardian = this.player1.findCardByName('hida-guardian');
@@ -23,7 +23,7 @@ describe('Akodo Kaede', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    attackers: [this.hidaGuardian, this.borderlandsDefender],
+                    attackers: [this.hidaGuardian, this.borderlandsDefender, this.kaede],
                     defenders: [this.bayushiAramoro]
                 });
             });
@@ -49,6 +49,17 @@ describe('Akodo Kaede', function() {
                 this.player1.clickCard(this.kaede);
                 expect(this.hidaGuardian.location).toBe('dynasty discard pile');
                 expect(this.kaede.fate).toBe(0);
+            });
+
+            it('should not let kaede save herself', function() {
+                this.bayushiAramoro.honor();
+                this.kaede.dishonor();
+                this.player2.clickCard('noble-sacrifice');
+                this.player2.clickPrompt('Pay Costs First');
+                this.player2.clickCard(this.bayushiAramoro);
+                this.player2.clickCard(this.kaede);
+                expect(this.player1).not.toBeAbleToSelect(this.kaede);
+                expect(this.kaede.location).toBe('dynasty discard pile');
             });
         });
     });
