@@ -17,7 +17,7 @@ describe('Akodo Kaede', function() {
                 this.borderlandsDefender = this.player1.findCardByName('borderlands-defender');
                 this.assassination = this.player1.findCardByName('assassination');
                 this.kaede = this.player1.findCardByName('akodo-kaede');
-
+                this.kaede.fate = 1;
                 this.bayushiAramoro = this.player2.findCardByName('bayushi-aramoro');
 
                 this.noMoreActions();
@@ -48,6 +48,7 @@ describe('Akodo Kaede', function() {
                 this.player2.clickCard(this.hidaGuardian);
                 this.player1.clickCard(this.kaede);
                 expect(this.hidaGuardian.location).toBe('dynasty discard pile');
+                expect(this.kaede.fate).toBe(0);
             });
         });
     });
