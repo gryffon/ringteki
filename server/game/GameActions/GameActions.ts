@@ -23,6 +23,7 @@ import { DuelAction, DuelProperties } from './DuelAction';
 import { FlipDynastyAction, FlipDynastyProperties } from './FlipDynastyAction';
 import { GainFateAction, GainFateProperties } from './GainFateAction';
 import { GainHonorAction, GainHonorProperties } from './GainHonorAction';
+import { BothPlayersGainHonorAction, BothPlayersGainHonorProperties } from './BothPlayersGainHonorAction';
 import { HonorAction, HonorProperties } from './HonorAction';
 import { IfAbleAction, IfAbleActionProperties } from './IfAbleAction';
 import { InitiateConflictAction, InitiateConflictProperties } from './InitiateConflictAction';
@@ -111,6 +112,7 @@ const GameActions = {
     draw: (propertyFactory: DrawProperties | ((context: TriggeredAbilityContext) => DrawProperties) = {}) => new DrawAction(propertyFactory), // amount = 1
     gainFate: (propertyFactory: GainFateProperties | ((context: TriggeredAbilityContext) => GainFateProperties) = {}) => new GainFateAction(propertyFactory), // amount = 1
     gainHonor: (propertyFactory: GainHonorProperties | ((context: TriggeredAbilityContext) => GainHonorProperties) = {}) => new GainHonorAction(propertyFactory), // amount = 1
+    bothPlayersGainHonor: (propertyFactory: BothPlayersGainHonorProperties | ((context: TriggeredAbilityContext) => BothPlayersGainHonorProperties) = {}) => new BothPlayersGainHonorAction(propertyFactory), // amount = 1
     initiateConflict: (propertyFactory: InitiateConflictProperties | ((context: TriggeredAbilityContext) => InitiateConflictProperties) = {}) => new InitiateConflictAction(propertyFactory), // canPass = true
     loseFate: (propertyFactory: LoseFateProperties | ((context: TriggeredAbilityContext) => LoseFateProperties) = {}) => new LoseFateAction(propertyFactory),
     loseHonor: (propertyFactory: LoseHonorProperties | ((context: TriggeredAbilityContext) => LoseHonorProperties) = {}) => new LoseHonorAction(propertyFactory), // amount = 1
