@@ -1,6 +1,6 @@
 describe('Akodo Kaede', function() {
     integration(function() {
-        describe('Akodo Kaede\'s ability', function() {
+        describe('Akodo Kaede\'s triggered ability', function() {
             beforeEach(function () {
                 this.setupTest({
                     phase: 'conflict',
@@ -10,7 +10,7 @@ describe('Akodo Kaede', function() {
                     },
                     player2: {
                         inPlay: ['bayushi-aramoro'],
-                        hand: ['fiery-madness', 'noble-sacrifice']
+                        hand: ['fiery-madness', 'i-can-swim']
                     }
                 });
                 this.hidaGuardian = this.player1.findCardByName('hida-guardian');
@@ -52,11 +52,10 @@ describe('Akodo Kaede', function() {
             });
 
             it('should not let kaede save herself', function() {
-                this.bayushiAramoro.honor();
+                this.player1.player.showBid = 1;
+                this.player2.player.showBid = 5;
                 this.kaede.dishonor();
-                this.player2.clickCard('noble-sacrifice');
-                this.player2.clickPrompt('Pay Costs First');
-                this.player2.clickCard(this.bayushiAramoro);
+                this.player2.clickCard('i-can-swim');
                 this.player2.clickCard(this.kaede);
                 expect(this.player1).not.toBeAbleToSelect(this.kaede);
                 expect(this.kaede.location).toBe('dynasty discard pile');
