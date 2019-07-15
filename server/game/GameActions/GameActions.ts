@@ -56,7 +56,7 @@ import { ReturnToDeckAction, ReturnToDeckProperties } from './ReturnToDeckAction
 import { ReturnToHandAction, ReturnToHandProperties } from './ReturnToHandAction';
 import { RevealAction, RevealProperties } from './RevealAction';
 import { SelectCardAction, SelectCardProperties } from './SelectCardAction';
-import { SelectRingAction, SelectRingProperties } from './SelectRingActions';
+import { SelectRingAction, SelectRingProperties } from './SelectRingAction';
 import { SendHomeAction, SendHomeProperties } from './SendHomeAction';
 import { SequentialAction } from './SequentialAction';
 import { SetDialAction, SetDialProperties } from './SetDialAction';

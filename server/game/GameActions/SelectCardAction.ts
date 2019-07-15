@@ -67,34 +67,39 @@ export class SelectCardAction extends CardGameAction {
     }
 
     addEventsToArray(events, context: AbilityContext, additionalProperties = {}): void {
-        let properties = this.getProperties(context, additionalProperties);
+        const properties = this.getProperties(context, additionalProperties);
         if(properties.player === Players.Opponent && !context.player.opponent) {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;
-        let mustSelect = [];
-        if(properties.targets) {
-            player = context.choosingPlayerOverride || player;
-            mustSelect = properties.selector.getAllLegalTargets(context, player).filter(card =>
-                card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
-            );
+        if(properties.targets && context.choosingPlayerOverride) {
+            player = context.choosingPlayerOverride;
         }
+        const legalTargets = properties.selector.getAllLegalTargets(context, player);
+        const onSelect = (player, cards) => {
+            if(properties.message) {
+                context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
+            }
+            properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.subActionProperties(cards)));
+            return true;
+        };
+        if(properties.mode === TargetModes.AutoSingle && legalTargets.length === 1) {
+            onSelect(player, legalTargets[0]);
+            return;
+        }
+        const mustSelect = !properties.targets ? [] : legalTargets.filter(card =>
+            card.getEffects(EffectNames.MustBeChosen).some(restriction => restriction.isMatch('target', context))
+        );
         if(!properties.selector.hasEnoughTargets(context, player)) {
             return;
         }
-        let defaultProperties = {
+        const defaultProperties = {
             context: context,
             selector: properties.selector,
             mustSelect: mustSelect,
             buttons: properties.cancelHandler ? [{ text: 'Cancel', arg: 'cancel' }] : [],
             onCancel: properties.cancelHandler,
-            onSelect: (player, cards) => {
-                if(properties.message) {
-                    context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
-                }
-                properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.subActionProperties(cards)));
-                return true;
-            }
+            onSelect: onSelect
         };
         context.game.promptForSelect(player, Object.assign(defaultProperties, properties));
     }
