@@ -1,0 +1,149 @@
+describe('Hiruma Yoshino', function() {
+    integration(function() {
+        describe('Hiruma Yoshino\'s ability', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['hiruma-yoshino', 'borderlands-defender'],
+                        dynastyDiscard: ['hida-kisada', 'eager-scout']
+                    },
+                    player2: {
+                        inPlay: ['matsu-berserker'],
+                        dynastyDiscard: ['akodo-toturi', 'favorable-ground', 'venerable-historian']
+                    }
+                });
+
+                this.hirumaYoshino = this.player1.findCardByName('hiruma-yoshino');
+                this.borderlandsDefender = this.player1.findCardByName('borderlands-defender');
+                this.hidaKisada = this.player1.findCardByName('hida-kisada', 'dynasty discard pile');
+                this.eagerScout = this.player1.findCardByName('eager-scout', 'dynasty discard pile');
+                this.player1.placeCardInProvince(this.hidaKisada, 'province 1');
+                this.player1.placeCardInProvince(this.eagerScout, 'province 2');
+                this.P1shamefulDisplay2 = this.player1.findCardByName('shameful-display', 'province 2');
+
+                this.matsuBerserker = this.player2.findCardByName('matsu-berserker');
+                this.akodoToturi = this.player2.findCardByName('akodo-toturi', 'dynasty discard pile');
+                this.favorableGround = this.player2.findCardByName('favorable-ground', 'dynasty discard pile');
+                this.venerableHistorian = this.player2.findCardByName('venerable-historian', 'dynasty discard pile');
+                this.P2shamefulDisplay2 = this.player2.findCardByName('shameful-display', 'province 2');
+                this.P2shamefulDisplay3 = this.player2.findCardByName('shameful-display', 'province 3');
+                this.player2.placeCardInProvince(this.akodoToturi, 'province 1');
+                this.player2.placeCardInProvince(this.favorableGround, 'province 2');
+                this.player2.placeCardInProvince(this.venerableHistorian, 'province 3');
+            });
+
+            it('should not trigger outside of a military conflict', function() {
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Action Window');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino],
+                    defenders: [],
+                    type: 'political'
+                });
+                this.player2.pass();
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should not trigger if Hiruma Yoshino is not participating', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.borderlandsDefender],
+                    defenders: []
+                });
+                this.player2.pass();
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should not trigger if there is no character in the attacked province', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino],
+                    defenders: [],
+                    province: this.P2shamefulDisplay2
+                });
+                this.player2.pass();
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should prompt to target a character card in the attacked province', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Choose a character');
+                expect(this.player1).toBeAbleToSelect(this.akodoToturi);
+                expect(this.player1).not.toBeAbleToSelect(this.hidaKisada);
+            });
+
+            it('should add the printed military skill of the target character to your side for the conflict', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.hirumaYoshino);
+                this.player1.clickCard(this.akodoToturi);
+                expect(this.game.currentConflict.attackerSkill).toBe(9);
+                expect(this.getChatLogs(3)).toContain('player1 uses Hiruma Yoshino to contribute Akodo Toturi\'s printed military skill of 6 to their side of the conflict');
+            });
+
+            it('should work when defending', function() {
+                this.noMoreActions();
+                this.player1.passConflict();
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.matsuBerserker],
+                    defenders: [this.hirumaYoshino]
+                });
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Choose a character');
+                expect(this.player1).not.toBeAbleToSelect(this.akodoToturi);
+                expect(this.player1).toBeAbleToSelect(this.hidaKisada);
+                this.player1.clickCard(this.hidaKisada);
+                expect(this.game.currentConflict.defenderSkill).toBe(10);
+                expect(this.getChatLogs(3)).toContain('player1 uses Hiruma Yoshino to contribute Hida Kisada\'s printed military skill of 7 to their side of the conflict');
+            });
+
+            it('should not trigger if the character in the attacked province has zero military skill', function() {
+                this.noMoreActions();
+                this.player1.passConflict();
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.matsuBerserker],
+                    defenders: [this.hirumaYoshino],
+                    province: this.P1shamefulDisplay2
+                });
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should not trigger if the character in the attacked province has dash military skill', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino],
+                    defenders: [],
+                    province: this.P2shamefulDisplay3
+                });
+                this.player2.pass();
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+        });
+    });
+});
+
