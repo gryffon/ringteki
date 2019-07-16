@@ -5,13 +5,13 @@ const AbilityDsl = require('../../abilitydsl');
 class UtakuRumaru extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
-            match: (card) => card.isHonored(),
+            match: (card) => card.isHonored,
             targetController: Players.Self,
             effect: AbilityDsl.effects.modifyGlory(1)
         });
 
         this.persistentEffect({
-            match: (card) => card.isDishonored(),
+            match: (card) => card.isDishonored,
             targetController: Players.Self,
             effect: AbilityDsl.effects.modifyGlory(-1)
         });
