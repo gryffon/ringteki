@@ -50,7 +50,7 @@ describe('Benevolent Ambassador', function () {
                 }),
                 this.player2.playAttachment('fine-katana', this.maiden);
                 this.noMoreActions();
-                expect(this.player1).not.toBeAbleToSelect(this.ambassador);
+                expect(this.player1).toHavePrompt('Action Window');
             });
 
             it('should not trigger if it is at home', function() {
@@ -59,7 +59,7 @@ describe('Benevolent Ambassador', function () {
                     defenders: []
                 });
                 this.noMoreActions();
-                expect(this.player1).not.toBeAbleToSelect(this.ambassador);
+                expect(this.player1).toHavePrompt('Break Shameful Display');
             });
         });
     });

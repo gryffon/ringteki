@@ -4,13 +4,13 @@ const AbilityDsl = require('../../abilitydsl');
 class BenevolentAmbassador extends DrawCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'give both players honor',
+            title: 'Give both players honor',
             when: {
                 afterConflict: (event, context) => context.source.isParticipating() && event.conflict.winner === context.player
             },
-            gameAction: AbilityDsl.actions.gainHonor(context => {
-                return { target: [context.player, context.player.opponent]};
-            })
+            gameAction: AbilityDsl.actions.gainHonor(context => ({
+                target: [context.player, context.player.opponent]
+            }))
         });
     }
 }
