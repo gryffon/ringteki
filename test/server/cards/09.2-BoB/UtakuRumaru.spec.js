@@ -23,16 +23,19 @@ describe('Utaku Rumaru', function() {
 
             it('static ability should increase the glory of your honored characters', function() {
                 this.adept.honor();
+                this.game.checkGameState(true);
                 expect(this.adept.glory).toBe(3);
             });
 
             it('static ability should decrease glory for dishonored characters', function() {
                 this.rumaru.dishonor();
+                this.game.checkGameState(true);
                 expect(this.rumaru.glory).toBe(2);
             });
 
             it('should not effect opponent characters glory', function() {
                 this.outrider.honor();
+                this.game.checkGameState(true);
                 expect(this.outrider.glory).toBe(2);
             });
 
