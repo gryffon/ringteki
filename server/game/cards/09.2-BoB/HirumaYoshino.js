@@ -13,9 +13,11 @@ class HirumaYoshino extends DrawCard {
                 cardCondition: card => card.location === this.game.currentConflict.conflictProvince.location &&
                     card.controller === this.game.currentConflict.conflictProvince.controller &&
                     card.printedMilitarySkill > 0,
-                gameAction: AbilityDsl.actions.playerLastingEffect(context => ({
-                    effect: AbilityDsl.effects.changePlayerSkillModifier(context.target.printedMilitarySkill)
-                }))
+                gameAction: AbilityDsl.actions.cardLastingEffect({
+                    targetLocation: Locations.Provinces,
+                    condition: context => context.game.isDuringConflict('military'),
+                    effect: AbilityDsl.effects.contributeToConflict((card, context) => context.player)
+                })
             },
             effect: 'contribute {0}\'s printed {1} skill of {2} to their side of the conflict',
             effectArgs: context => ['military', context.target.printedMilitarySkill]

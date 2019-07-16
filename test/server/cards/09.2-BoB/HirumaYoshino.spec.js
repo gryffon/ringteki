@@ -5,17 +5,19 @@ describe('Hiruma Yoshino', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['hiruma-yoshino', 'borderlands-defender'],
+                        inPlay: ['hiruma-yoshino', 'borderlands-defender', 'humble-magistrate'],
                         dynastyDiscard: ['hida-kisada', 'eager-scout']
                     },
                     player2: {
                         inPlay: ['matsu-berserker'],
+                        hand: ['charge'],
                         dynastyDiscard: ['akodo-toturi', 'favorable-ground', 'venerable-historian']
                     }
                 });
 
                 this.hirumaYoshino = this.player1.findCardByName('hiruma-yoshino');
                 this.borderlandsDefender = this.player1.findCardByName('borderlands-defender');
+                this.humbleMagistrate = this.player1.findCardByName('humble-magistrate');
                 this.hidaKisada = this.player1.findCardByName('hida-kisada', 'dynasty discard pile');
                 this.eagerScout = this.player1.findCardByName('eager-scout', 'dynasty discard pile');
                 this.player1.placeCardInProvince(this.hidaKisada, 'province 1');
@@ -23,6 +25,7 @@ describe('Hiruma Yoshino', function() {
                 this.P1shamefulDisplay2 = this.player1.findCardByName('shameful-display', 'province 2');
 
                 this.matsuBerserker = this.player2.findCardByName('matsu-berserker');
+                this.charge = this.player2.findCardByName('charge');
                 this.akodoToturi = this.player2.findCardByName('akodo-toturi', 'dynasty discard pile');
                 this.favorableGround = this.player2.findCardByName('favorable-ground', 'dynasty discard pile');
                 this.venerableHistorian = this.player2.findCardByName('venerable-historian', 'dynasty discard pile');
@@ -142,6 +145,34 @@ describe('Hiruma Yoshino', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.hirumaYoshino);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should no longer contribute skill if the targeted character is moved from the province', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.hirumaYoshino);
+                this.player1.clickCard(this.akodoToturi);
+                expect(this.game.currentConflict.attackerSkill).toBe(9);
+                this.player2.clickCard(this.charge);
+                this.player2.clickCard(this.akodoToturi);
+                expect(this.akodoToturi.location).toBe('play area');
+                expect(this.game.currentConflict.attackerSkill).toBe(3);
+            });
+
+            it('should not contribute if there is a constant effect that prevents contribution (magistrates)', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino, this.humbleMagistrate],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.hirumaYoshino);
+                this.player1.clickCard(this.akodoToturi);
+                expect(this.game.currentConflict.attackerSkill).toBe(2);
             });
         });
     });
