@@ -11,7 +11,8 @@ describe('Hiruma Yoshino', function() {
                     player2: {
                         inPlay: ['matsu-berserker'],
                         hand: ['charge'],
-                        dynastyDiscard: ['akodo-toturi', 'favorable-ground', 'venerable-historian']
+                        dynastyDiscard: ['akodo-toturi', 'favorable-ground', 'venerable-historian'],
+                        provinces: ['shameful-display', 'shameful-display', 'shameful-display', 'sanpuku-seido']
                     }
                 });
 
@@ -31,6 +32,7 @@ describe('Hiruma Yoshino', function() {
                 this.venerableHistorian = this.player2.findCardByName('venerable-historian', 'dynasty discard pile');
                 this.P2shamefulDisplay2 = this.player2.findCardByName('shameful-display', 'province 2');
                 this.P2shamefulDisplay3 = this.player2.findCardByName('shameful-display', 'province 3');
+                this.P2sanpukuSeido4 = this.player2.findCardByName('sanpuku-seido', 'province 4');
                 this.player2.placeCardInProvince(this.akodoToturi, 'province 1');
                 this.player2.placeCardInProvince(this.favorableGround, 'province 2');
                 this.player2.placeCardInProvince(this.venerableHistorian, 'province 3');

@@ -35,6 +35,7 @@ export enum EffectNames {
     CannotApplyLastingEffects = 'cannotApplyLastingEffects',
     CannotBeAttacked = 'cannotBeAttacked',
     CannotBidInDuels = 'cannotBidInDuels',
+    CannotContribute = 'cannotContribute',
     CannotHaveConflictsDeclaredOfType = 'cannotHaveConflictsDeclaredOfType',
     CannotHaveOtherRestrictedAttachments = 'cannotHaveOtherRestrictedAttachments',
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',

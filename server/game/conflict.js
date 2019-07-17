@@ -269,8 +269,13 @@ class Conflict extends GameObject {
 
     calculateSkillFor(cards) {
         let skillFunction = this.mostRecentEffect(EffectNames.ChangeConflictSkillFunction) || (card => card.getSkill(this.conflictType));
+        let cannotContributeFunctions = this.getEffects(EffectNames.CannotContribute);
         return cards.reduce((sum, card) => {
-            if(card.bowed || !card.allowGameAction('countForResolution')) {
+            let cannotContribute = card.bowed;
+            if(!cannotContribute) {
+                cannotContribute = cannotContributeFunctions.some(func => func(card));
+            }
+            if(cannotContribute) {
                 return sum;
             }
             return sum + skillFunction(card);
