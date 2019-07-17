@@ -11,7 +11,7 @@ describe('Hiruma Yoshino', function() {
                     player2: {
                         inPlay: ['matsu-berserker'],
                         hand: ['charge'],
-                        dynastyDiscard: ['akodo-toturi', 'favorable-ground', 'venerable-historian'],
+                        dynastyDiscard: ['akodo-toturi', 'favorable-ground', 'venerable-historian', 'akodo-makoto'],
                         provinces: ['shameful-display', 'shameful-display', 'shameful-display', 'sanpuku-seido']
                     }
                 });
@@ -30,12 +30,14 @@ describe('Hiruma Yoshino', function() {
                 this.akodoToturi = this.player2.findCardByName('akodo-toturi', 'dynasty discard pile');
                 this.favorableGround = this.player2.findCardByName('favorable-ground', 'dynasty discard pile');
                 this.venerableHistorian = this.player2.findCardByName('venerable-historian', 'dynasty discard pile');
+                this.akodoMakoto = this.player2.findCardByName('akodo-makoto', 'dynasty discard pile');
                 this.P2shamefulDisplay2 = this.player2.findCardByName('shameful-display', 'province 2');
                 this.P2shamefulDisplay3 = this.player2.findCardByName('shameful-display', 'province 3');
                 this.P2sanpukuSeido4 = this.player2.findCardByName('sanpuku-seido', 'province 4');
                 this.player2.placeCardInProvince(this.akodoToturi, 'province 1');
                 this.player2.placeCardInProvince(this.favorableGround, 'province 2');
                 this.player2.placeCardInProvince(this.venerableHistorian, 'province 3');
+                this.player2.placeCardInProvince(this.akodoMakoto, 'province 4');
             });
 
             it('should not trigger outside of a military conflict', function() {
@@ -175,6 +177,20 @@ describe('Hiruma Yoshino', function() {
                 this.player1.clickCard(this.hirumaYoshino);
                 this.player1.clickCard(this.akodoToturi);
                 expect(this.game.currentConflict.attackerSkill).toBe(2);
+            });
+
+            it('should contibute the target\'s glory if the conflict is at Sanpuku Seido ', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.hirumaYoshino],
+                    defenders: [],
+                    province: this.P2sanpukuSeido4
+                });
+                this.player2.pass();
+                expect(this.game.currentConflict.attackerSkill).toBe(2);
+                this.player1.clickCard(this.hirumaYoshino);
+                this.player1.clickCard(this.akodoMakoto);
+                expect(this.game.currentConflict.attackerSkill).toBe(3);
             });
         });
     });
