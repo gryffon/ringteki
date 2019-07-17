@@ -207,13 +207,16 @@ class DrawCard extends BaseCard {
         return isNaN(baseSkillModifiers.baseMilitarySkill) || isNaN(baseSkillModifiers.basePoliticalSkill);
     }
 
+    /**
+     * Direct the skill query to the correct sub function.
+     * @param  {string} type - The type of the skill; military or political
+     * @return {number} The chosen skill value
+     */
     getSkill(type) {
-        /**
-         * Direct the skill query to the correct sub function.
-         * @param  {string} type - The type of the skill; military or political
-         * @return {integer} The chosen skill value
-         */
-        if(type === 'military') {
+        let skillFunction = this.mostRecentEffect(EffectNames.ChangeSkillFunction);
+        if(skillFunction) {
+            return skillFunction(this);
+        } else if(type === 'military') {
             return this.getMilitarySkill();
         } else if(type === 'political') {
             return this.getPoliticalSkill();
