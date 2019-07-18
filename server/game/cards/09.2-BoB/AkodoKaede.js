@@ -13,7 +13,7 @@ class AkodoKaede extends DrawCard {
         this.wouldInterrupt({
             title: 'Prevent a character from leaving play',
             when: {
-                onCardLeavesPlay: (event, context) => event.card.type === CardTypes.Character && event.card.uuid !== context.source.uuid
+                onCardLeavesPlay: (event, context) => event.card.type === CardTypes.Character && event.card !== context.source
             },
             effect: 'prevent {1} from leaving play',
             effectArgs: context => context.event.card,
