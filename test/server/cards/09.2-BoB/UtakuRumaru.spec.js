@@ -97,7 +97,7 @@ describe('Utaku Rumaru', function() {
                 expect(this.player1).not.toBeAbleToSelect(this.scholar);
             });
 
-            it('should not let you honor your opponent characters', function() {
+            it('should let you honor your opponent characters', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.rumaru, this.adept],
@@ -105,7 +105,7 @@ describe('Utaku Rumaru', function() {
                 });
                 this.noMoreActions();
                 this.player1.clickCard(this.rumaru);
-                expect(this.player1).not.toBeAbleToSelect(this.outrider);
+                expect(this.player1).toBeAbleToSelect(this.outrider);
             });
         });
     });
