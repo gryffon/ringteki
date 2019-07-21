@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, Elements } = require('../../Constants');
 
 class MasterAlchemist extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Honor or dishonor a character',
-            cost: ability.costs.payFateToRing(1, ring => ring.element === 'fire'),
+            cost: ability.costs.payFateToRing(1, ring => ring.hasElement(Elements.Fire)),
             condition: () => this.game.isDuringConflict(),
             target: {
                 activePromptTitle: 'Choose a character to honor or dishonor',
