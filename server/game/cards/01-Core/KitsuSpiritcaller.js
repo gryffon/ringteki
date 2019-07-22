@@ -25,7 +25,7 @@ class KitsuSpiritcaller extends DrawCard {
                         },
                         message: '{0} returns to the bottom of the deck due to {1}\'s effect',
                         messageArgs: [context.target, context.source],
-                        gameAction: AbilityDsl.actions.returnToDeck({ bottom: true })    
+                        gameAction: AbilityDsl.actions.returnToDeck({ bottom: true })
                     })
                 })
             })

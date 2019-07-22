@@ -22,7 +22,7 @@ class APerfectCut extends DrawCard {
                             },
                             gameAction: AbilityDsl.actions.honor(),
                             message: '{0} is honored due to the delayed effect of {1}',
-                            messageArgs: [context.target, context.source]  
+                            messageArgs: [context.target, context.source]
                         })
                     ]
                 }))

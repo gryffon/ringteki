@@ -18,7 +18,7 @@ class BreachOfEtiquette extends DrawCard {
                         message: '{1} loses 1 honor due to {0}',
                         messageArgs: effectContext => [context.player, effectContext.source],
                         multipleTrigger: true,
-                        gameAction: AbilityDsl.actions.loseHonor(),
+                        gameAction: AbilityDsl.actions.loseHonor()
                     })
                 })),
                 AbilityDsl.actions.playerLastingEffect(context => ({
@@ -31,7 +31,7 @@ class BreachOfEtiquette extends DrawCard {
                         message: '{1} loses 1 honor due to {0}',
                         messageArgs: effectContext => [context.player.opponent, effectContext.source],
                         multipleTrigger: true,
-                        gameAction: AbilityDsl.actions.loseHonor(),
+                        gameAction: AbilityDsl.actions.loseHonor()
                     })
                 }))
             ])

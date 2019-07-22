@@ -26,13 +26,13 @@ class EffectEngine {
         let effectsToTrigger = [];
         const effectsToRemove = [];
         for(const effect of this.effects.filter(effect => effect.effect.type === EffectNames.DelayedEffect)) {
-            const properties  = effect.effect.getValue();
+            const properties = effect.effect.getValue();
             if(properties.condition) {
                 if(properties.condition(effect.context)) {
                     effectsToTrigger.push(effect);
                 }
             } else {
-                const triggeringEvents = events.filter(event => properties.when[event.name])
+                const triggeringEvents = events.filter(event => properties.when[event.name]);
                 if(triggeringEvents.length > 0) {
                     if(!properties.multipleTrigger && effect.duration !== Durations.Persistent) {
                         effectsToRemove.push(effect);
