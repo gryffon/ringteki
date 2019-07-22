@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Locations } = require('../../Constants');
+const { Durations, Locations } = require('../../Constants');
 
 class AkodoToshiro extends DrawCard {
     setupCardAbilities() {
@@ -16,17 +16,19 @@ class AkodoToshiro extends DrawCard {
                 })),
                 AbilityDsl.actions.cardLastingEffect(context => ({
                     target: context.source,
-                    effect: [
-                        AbilityDsl.effects.modifyMilitarySkill(5),
-                        AbilityDsl.effects.delayedEffect({
-                            when: {
-                                onConflictFinished: () => !context.player.cardsInPlay.any(card => card.hasTrait('commander'))
-                            },
-                            message: '{0} is discarded due to his delayed effect',
-                            messageArgs: [context.source],
-                            gameAction: AbilityDsl.actions.discardFromPlay()
-                        })
-                    ]
+                    effect: AbilityDsl.effects.modifyMilitarySkill(5)
+                })),
+                AbilityDsl.actions.cardLastingEffect(context => ({
+                    target: context.source,
+                    duration: Durations.UntilEndOfRound,
+                    effect: AbilityDsl.effects.delayedEffect({
+                        when: {
+                            onConflictFinished: () => !context.player.cardsInPlay.any(card => card.hasTrait('commander'))
+                        },
+                        message: '{0} is discarded due to his delayed effect',
+                        messageArgs: [context.source],
+                        gameAction: AbilityDsl.actions.discardFromPlay()
+                    })
                 }))
             ])
         });

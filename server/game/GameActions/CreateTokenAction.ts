@@ -3,6 +3,7 @@ import { CardGameAction, CardActionProperties } from "./CardGameAction";
 import { Locations, CardTypes, EventNames } from '../Constants';
 import AbilityContext = require("../AbilityContext");
 import BaseCard = require('../basecard');
+import Effects = require('../effects');
 
 export interface CreateTokenProperties extends CardActionProperties {
 }
@@ -34,14 +35,15 @@ export class CreateTokenAction extends CardGameAction {
         } else {
             context.game.currentConflict.addDefender(token);
         }
-        context.source.delayedEffect(() => ({
-            target: token,
-            context: context,
-            when: {
-                onConflictFinished: () => true
-            },
-            message: '{1} returns to the deep',
-            gameAction: context.game.actions.discardFromPlay()
-        }));
+        context.game.actions.cardLastingEffect({
+            effect: Effects.delayedEffect({
+                when: {
+                    onConflictFinished: () => true
+                },
+                message: '{0} returns to the deep',
+                messageArgs: [token],
+                gameAction: context.game.actions.discardFromPlay()    
+            })
+        }).resolve(token, context);
     }
 }

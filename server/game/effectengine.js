@@ -26,7 +26,6 @@ class EffectEngine {
         let effectsToTrigger = [];
         const effectsToRemove = [];
         for(const effect of this.effects.filter(effect => effect.effect.type === EffectNames.DelayedEffect)) {
-            console.log(effect.context.source.name);
             const properties  = effect.effect.getValue();
             if(properties.condition) {
                 if(properties.condition(effect.context)) {
@@ -34,7 +33,6 @@ class EffectEngine {
                 }
             } else {
                 const triggeringEvents = events.filter(event => properties.when[event.name])
-                console.log(triggeringEvents, triggeringEvents.some(event => properties.when[event.name](event, effect.context)));
                 if(triggeringEvents.length > 0) {
                     if(!properties.multipleTrigger && effect.duration !== Durations.Persistent) {
                         effectsToRemove.push(effect);
@@ -45,7 +43,6 @@ class EffectEngine {
                 }
             }
         }
-        console.log(effectsToTrigger, effectsToRemove);
         effectsToTrigger = effectsToTrigger.map(effect => {
             const properties = effect.effect.getValue();
             const context = effect.context;
@@ -64,6 +61,7 @@ class EffectEngine {
                     const actionEvents = [];
                     properties.gameAction.addEventsToArray(actionEvents, context);
                     this.game.queueSimpleStep(() => this.game.openThenEventWindow(actionEvents));
+                    this.game.queueSimpleStep(() => context.refill());
                 }
             };
         });

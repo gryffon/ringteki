@@ -26,7 +26,6 @@ class FeralNingyo extends DrawCard {
                         messageArgs: context => [context.source],
                         gameAction: AbilityDsl.actions.returnToDeck({ shuffle: true })
                     })
-
                 }))
             ])
         });
