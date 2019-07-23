@@ -233,7 +233,8 @@ class Conflict extends GameObject {
             Locations.ProvinceOne,
             Locations.ProvinceTwo,
             Locations.ProvinceThree,
-            Locations.ProvinceFour
+            Locations.ProvinceFour,
+            Locations.StrongholdProvince
         ];
 
         let additionalContributingCards = this.game.findAnyCardsInAnyList(card =>
@@ -268,7 +269,7 @@ class Conflict extends GameObject {
     }
 
     calculateSkillFor(cards) {
-        let skillFunction = this.mostRecentEffect(EffectNames.ChangeConflictSkillFunction) || (card => card.getSkill(this.conflictType));
+        let skillFunction = this.mostRecentEffect(EffectNames.ChangeConflictSkillFunction) || (card => card.getContributionToConflict(this.conflictType));
         let cannotContributeFunctions = this.getEffects(EffectNames.CannotContribute);
         return cards.reduce((sum, card) => {
             let cannotContribute = card.bowed;
