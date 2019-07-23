@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { CardTypes } = require('../../Constants');
 
 class YogoHiroue extends DrawCard {
@@ -11,22 +12,23 @@ class YogoHiroue extends DrawCard {
                 gameAction: ability.actions.moveToConflict()
             },
             then: context => ({
-                gameAction: ability.actions.delayedEffect({
+                gameAction: AbilityDsl.actions.cardLastingEffect({
                     target: context.target,
-                    when: {
-                        afterConflict: event => event.conflict.winner === context.player && context.target.allowGameAction('dishonor')
-                    },
-                    handler: () => this.game.promptWithHandlerMenu(context.player, {
-                        activePromptTitle: 'Dishonor ' + context.target.name + '?',
-                        context: context,
-                        choices: ['Yes', 'No'],
-                        handlers: [
-                            () => {
-                                this.game.addMessage('{0} chooses to dishonor {1} due to {2}\'s delayed effect', context.player, context.target, context.source);
-                                this.game.applyGameAction(context, { dishonor: context.target });
+                    effect: AbilityDsl.effects.delayedEffect({
+                        when: {
+                            afterConflict: event => event.conflict.winner === context.player
+                        },
+                        gameAction: AbilityDsl.actions.menuPrompt({
+                            activePromptTitle: 'Dishonor ' + context.target.name + '?',
+                            choices: ['Yes', 'No'],
+                            choiceHandler: (choice, displayMessage) => {
+                                if(displayMessage && choice === 'Yes') {
+                                    context.game.addMessage('{0} chooses to dishonor {1} due to {2}\'s delayed effect', context.player, context.target, context.source);
+                                }
+                                return { target: (choice === 'Yes' ? context.target : []) };
                             },
-                            () => true
-                        ]
+                            gameAction: AbilityDsl.actions.dishonor()
+                        })
                     })
                 })
             })
