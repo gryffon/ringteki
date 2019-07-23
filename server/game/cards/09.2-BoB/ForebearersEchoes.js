@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes, Locations, Players } = require('../../Constants');
+const { CardTypes, Durations, Locations, Players } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class ForebearersEchoes extends DrawCard {
@@ -16,15 +16,18 @@ class ForebearersEchoes extends DrawCard {
                     AbilityDsl.actions.putIntoConflict(context => ({
                         target: context.target
                     })),
-                    AbilityDsl.actions.delayedEffect(context => ({
+                    AbilityDsl.actions.cardLastingEffect(context => ({
                         target: context.target,
+                        duration: Durations.UntilEndOfPhase,
                         location: [Locations.DynastyDiscardPile, Locations.PlayArea],
-                        when: {
-                            onConflictFinished: () => true
-                        },
-                        message: '{1} returns to the bottom of the dynasty deck due to the delayed effect of {0}',
-                        messageArgs: [context.source],
-                        gameAction: AbilityDsl.actions.returnToDeck({ bottom: true })
+                        effect: AbilityDsl.effects.delayedEffect({
+                            when: {
+                                onConflictFinished: () => true
+                            },
+                            message: '{1} returns to the bottom of the dynasty deck due to the delayed effect of {0}',
+                            messageArgs: [context.source, context.target],
+                            gameAction: AbilityDsl.actions.returnToDeck({ bottom: true })
+                        })
                     }))
                 ])
             }
