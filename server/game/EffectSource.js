@@ -1,9 +1,7 @@
 const _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
-const DelayedEffect = require('./DelayedEffect.js');
 const GameObject = require('./GameObject');
-const TerminalCondition = require('./TerminalCondition.js');
 
 const { Locations, Durations } = require('./Constants');
 
@@ -55,24 +53,6 @@ class EffectSource extends GameObject {
     lastingEffect(propertyFactory) {
         let properties = propertyFactory(AbilityDsl);
         this.addEffectToEngine(Object.assign({ duration: Durations.Custom, location: Locations.Any }, properties));
-    }
-
-    /**
-     * Applies a delayed effect
-     */
-    delayedEffect(propertyFactory) {
-        let effect = new DelayedEffect(this.game, this, propertyFactory(AbilityDsl));
-        this.game.effectEngine.addDelayedEffect(effect);
-        return effect;
-    }
-
-    /**
-     * Applies a terminal condition
-     */
-    terminalCondition(propertyFactory) {
-        let effect = new TerminalCondition(this.game, this, propertyFactory(AbilityDsl));
-        this.game.effectEngine.addTerminalCondition(effect);
-        return effect;
     }
 
     /*

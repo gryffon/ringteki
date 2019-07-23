@@ -12,7 +12,6 @@ import { ChosenDiscardAction, ChosenDiscardProperties } from './ChosenDiscardAct
 import { ConditionalAction, ConditionalActionProperties } from './ConditionalAction';
 import { CreateTokenAction, CreateTokenProperties } from './CreateTokenAction';
 import { DeckSearchAction,  DeckSearchProperties} from './DeckSearchAction';
-import { DelayedEffectAction, DelayedEffectActionProperties } from './DelayedEffectAction';
 import { DiscardFavorAction, DiscardFavorProperties } from './DiscardFavorAction';
 import { DiscardFromPlayAction, DiscardFromPlayProperties } from './DiscardFromPlayAction';
 import { DiscardCardAction, DiscardCardProperties } from './DiscardCardAction';
@@ -23,6 +22,7 @@ import { DuelAction, DuelProperties } from './DuelAction';
 import { FlipDynastyAction, FlipDynastyProperties } from './FlipDynastyAction';
 import { GainFateAction, GainFateProperties } from './GainFateAction';
 import { GainHonorAction, GainHonorProperties } from './GainHonorAction';
+import { HandlerAction, HandlerProperties } from './HandlerAction';
 import { HonorAction, HonorProperties } from './HonorAction';
 import { IfAbleAction, IfAbleActionProperties } from './IfAbleAction';
 import { InitiateConflictAction, InitiateConflictProperties } from './InitiateConflictAction';
@@ -79,7 +79,6 @@ const GameActions = {
     break: (propertyFactory: BreakProperties | ((context: TriggeredAbilityContext) => BreakProperties) = {}) => new BreakAction(propertyFactory),
     cardLastingEffect: (propertyFactory: LastingEffectCardProperties | ((context: TriggeredAbilityContext) => LastingEffectCardProperties)) => new LastingEffectCardAction(propertyFactory),
     createToken: (propertyFactory: CreateTokenProperties | ((context: TriggeredAbilityContext) => CreateTokenProperties) = {}) => new CreateTokenAction(propertyFactory),
-    delayedEffect: (propertyFactory: DelayedEffectActionProperties | ((context: TriggeredAbilityContext) => DelayedEffectActionProperties)) => new DelayedEffectAction(propertyFactory), // when, message, gameAction, handler
     discardCard: (propertyFactory: DiscardCardProperties | ((context: TriggeredAbilityContext) => DiscardCardProperties) = {}) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory: DiscardFromPlayProperties | ((context: TriggeredAbilityContext) => DiscardFromPlayProperties) = {}) => new DiscardFromPlayAction(propertyFactory),
     dishonor: (propertyFactory: DishonorProperties | ((context: TriggeredAbilityContext) => DishonorProperties) = {}) => new DishonorAction(propertyFactory),
@@ -138,6 +137,7 @@ const GameActions = {
     moveStatusToken: (propertyFactory: MoveTokenProperties | ((context: TriggeredAbilityContext) => MoveTokenProperties)) => new MoveTokenAction(propertyFactory),
     // general actions
     cancel: (propertyFactory: CancelActionProperties | ((context: TriggeredAbilityContext) => CancelActionProperties) = {}) => new CancelAction(propertyFactory),
+    handler: (propertyFactory: HandlerProperties | ((context: TriggeredAbilityContext) => HandlerProperties)) => new HandlerAction(propertyFactory),
     // meta actions
     cardMenu: (propertyFactory: CardMenuProperties | ((context: TriggeredAbilityContext) => CardMenuProperties)) => new CardMenuAction(propertyFactory),
     chooseAction: (propertyFactory: ChooseActionProperties | ((context: TriggeredAbilityContext) => ChooseActionProperties)) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'
