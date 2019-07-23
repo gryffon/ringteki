@@ -1,27 +1,32 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
+const { Durations, Locations, Players } = require('../../Constants');
 
 class KitsuSpiritcaller extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Resurrect a character',
             condition: () => this.game.isDuringConflict(),
-            cost: ability.costs.bowSelf(),
+            cost: AbilityDsl.costs.bowSelf(),
             target: {
                 activePromptTitle: 'Choose a character from a discard pile',
                 location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile],
                 controller: Players.Self,
-                gameAction: ability.actions.putIntoConflict()
+                gameAction: AbilityDsl.actions.putIntoConflict()
             },
             effect: 'call {0} back from the dead until the end of the conflict',
             then: context => ({
-                gameAction: ability.actions.delayedEffect({
+                gameAction: AbilityDsl.actions.cardLastingEffect({
                     target: context.target,
-                    when: {
-                        onConflictFinished: () => true
-                    },
-                    message: '{1} returns to the bottom of the deck due to {0}\'s effect',
-                    gameAction: ability.actions.returnToDeck({ bottom: true })
+                    duration: Durations.UntilEndOfPhase,
+                    effect: AbilityDsl.effects.delayedEffect({
+                        when: {
+                            onConflictFinished: () => true
+                        },
+                        message: '{0} returns to the bottom of the deck due to {1}\'s effect',
+                        messageArgs: [context.target, context.source],
+                        gameAction: AbilityDsl.actions.returnToDeck({ bottom: true })
+                    })
                 })
             })
         });

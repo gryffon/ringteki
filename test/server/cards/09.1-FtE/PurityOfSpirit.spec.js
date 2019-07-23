@@ -50,7 +50,7 @@ describe('Purity of Spirit', function() {
                 this.noMoreActions();
                 this.player1.clickPrompt('Yes');
                 this.player1.clickPrompt('Gain 2 Honor');
-                expect(this.getChatLogs(5)).toContain('player1 removes the Honored Token from Shiba Tsukune due to the delayed effect of Purity of Spirit');
+                expect(this.getChatLogs(5)).toContain('Honored Token is removed from Shiba Tsukune due to the delayed effect of Purity of Spirit');
             });
 
             it('should discard a dishonor token at the end of the conflict if the character is dishonored during the conflict', function() {

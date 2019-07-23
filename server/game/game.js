@@ -1109,8 +1109,6 @@ class Game extends EventEmitter {
                 // conflicts with illegal participants
                 this.currentConflict.checkForIllegalParticipants();
             }
-            // any terminal conditions which have met their condition
-            this.effectEngine.checkTerminalConditions();
         }
         if(events.length > 0) {
             // check for any delayed effects which need to fire

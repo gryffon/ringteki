@@ -104,8 +104,10 @@ export class GameAction {
     }
 
     resolve(target: PlayerOrRingOrCardOrToken, context: AbilityContext): void {
-        this.setDefaultTarget(() => target);
-        let events = [];
+        if(target) {
+            this.setDefaultTarget(() => target);
+        }
+        const events = [];
         this.addEventsToArray(events, context);
         context.game.queueSimpleStep(() => context.game.openEventWindow(events));
     }

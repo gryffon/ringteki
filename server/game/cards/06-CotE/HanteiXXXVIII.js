@@ -5,9 +5,10 @@ const { CardTypes } = require('../../Constants');
 class HanteiXXXVIII extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
-            effect: AbilityDsl.effects.terminalCondition({
+            effect: AbilityDsl.effects.delayedEffect({
                 condition:  context => context.player.opponent && !!context.player.opponent.imperialFavor,
                 message: '{0} is discarded from play as its controller\'s opponent has the imperial favor',
+                messageArgs: context => [context.source],
                 gameAction: AbilityDsl.actions.discardFromPlay()
             })
         });
