@@ -106,6 +106,10 @@ class GameObject {
         };
     }
 
+    getShortSummaryForControls(activePlayer) {
+        return this.getShortSummary(activePlayer);
+    }
+
     isParticipating() {
         return this.game.currentConflict && this.game.currentConflict.isParticipating(this);
     }
