@@ -105,25 +105,6 @@ describe('Forebearer\'s Echoes', function() {
                 this.player1.clickPrompt('Don\'t Resolve');
                 expect(this.dojiWhisperer.location).toBe('dynasty discard pile');
             });
-
-            it('should not return the target to the bottom of the deck at the end of the conflict if it is now immune to events', function() {
-                this.noMoreActions();
-                this.initiateConflict({
-                    attackers: [this.dojiChallenger],
-                    defenders: [this.sincereChallenger]
-                });
-                this.player2.pass();
-                this.player1.clickCard(this.forebearersEchoes);
-                this.player1.clickCard(this.dojiWhisperer);
-                this.player2.clickCard(this.sincereChallenger);
-                this.player2.clickCard(this.dojiWhisperer);
-                this.player1.clickPrompt('5');
-                this.player2.clickPrompt('1');
-                this.noMoreActions();
-                this.player1.clickPrompt('Don\'t Resolve');
-                expect(this.player1).toHavePrompt('Action Window');
-                expect(this.dojiWhisperer.location).toBe('play area');
-            });
         });
     });
 });
