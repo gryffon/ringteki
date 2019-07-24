@@ -9,7 +9,7 @@ describe('A Perfect Cut', function() {
                         hand: ['a-perfect-cut']
                     },
                     player2: {
-                        inPlay: ['doji-whisperer', 'daidoji-uji'],
+                        inPlay: ['doji-whisperer', 'daidoji-uji', 'sincere-challenger'],
                         hand: ['try-again-tomorrow']
                     }
                 });
@@ -18,6 +18,7 @@ describe('A Perfect Cut', function() {
                 this.aPerfectCut = this.player1.findCardByName('a-perfect-cut');
                 this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
                 this.daidojiUji = this.player2.findCardByName('daidoji-uji');
+                this.sincereChallenger = this.player2.findCardByName('sincere-challenger');
                 this.tryAgainTomorrow = this.player2.findCardByName('try-again-tomorrow');
                 this.noMoreActions();
             });
@@ -121,6 +122,25 @@ describe('A Perfect Cut', function() {
                 this.player1.pass();
                 this.player2.pass();
                 expect(this.kitsukiShomon.isHonored).toBe(false);
+            });
+
+            it('should not honor the chosen character if they become immune to events', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.togashiInitiate, this.kitsukiShomon],
+                    defenders: [this.sincereChallenger]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.aPerfectCut);
+                this.player1.clickCard(this.kitsukiShomon);
+                this.player2.clickCard(this.sincereChallenger);
+                this.player2.clickCard(this.kitsukiShomon);
+                this.player1.clickPrompt('5');
+                this.player2.clickPrompt('1');
+                expect(this.getChatLogs(3)).toContain('Duel Effect: Kitsuki Shomon is immune to events until the end of the conflict');
+                this.noMoreActions();
+                expect(this.kitsukiShomon.isHonored).toBe(false);
+                expect(this.getChatLogs(2)).not.toContain('Kitsuki Shomon is honored due to the delayed effect of A Perfect Cut');
             });
         });
     });
