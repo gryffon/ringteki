@@ -89,9 +89,9 @@ export class PlayerStatsBox extends React.Component {
                 <div className='player-stats__resources'>
                     <div className='stats-row'>
                         <div className='state'>
-                            <div className={'stat-image ' + this.props.size} style={handImageStyle} />
+                            <div className={ 'stat-image ' + this.props.size } style={ handImageStyle } />
                             <div>:</div>
-                            <div className='stat-value'>{this.props.handSize}</div>
+                            <div className='stat-value'>{ this.props.handSize }</div>
                         </div>
                     </div>
                     <div className='stats-row'>
