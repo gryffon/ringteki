@@ -110,8 +110,7 @@ describe('Fury of the Damned', function() {
                 this.noMoreActions();
                 this.player1.clickPrompt('No');
                 this.player1.clickPrompt('Don\'t Resolve');
-                expect(this.getChatLogs(2)).toContain('Brash Samurai is sacrificed due to Fury of the Damned\'s delayed effect');
-                expect(this.getChatLogs(1)).toContain('Doji Challenger is sacrificed due to Fury of the Damned\'s delayed effect');
+                expect(this.getChatLogs(1)).toContain('Brash Samurai and Doji Challenger are sacrificed due to Fury of the Damned\'s delayed effect');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.fifthTowerWatch);
                 this.player1.clickCard(this.fifthTowerWatch);
