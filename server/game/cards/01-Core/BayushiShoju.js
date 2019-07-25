@@ -15,10 +15,10 @@ class BayushiShoju extends DrawCard {
                 gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
                     effect: [
                         AbilityDsl.effects.modifyPoliticalSkill(-1),
-                        AbilityDsl.effects.terminalCondition({
-                            context: context,
+                        AbilityDsl.effects.delayedEffect({
                             condition: () => context.target.getPoliticalSkill() < 1,
-                            message: '{1} is discarded due to {0}\'s lasting effect',
+                            message: '{0} is discarded due to {1}\'s lasting effect',
+                            messageArgs: [context.target, context.source],
                             gameAction: AbilityDsl.actions.discardFromPlay()
                         })
                     ]
