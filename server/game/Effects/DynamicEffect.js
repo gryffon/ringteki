@@ -15,6 +15,9 @@ class DynamicEffect extends StaticEffect {
     recalculate(target) {
         let oldValue = this.getValue(target);
         let newValue = this.setValue(target, this.calculate(target, this.context));
+        if(typeof oldValue === 'function' && typeof newValue === 'function') {
+            return oldValue.toString() !== newValue.toString();
+        }
         if(Array.isArray(oldValue) && Array.isArray(newValue)) {
             return JSON.stringify(oldValue) !== JSON.stringify(newValue);
         }

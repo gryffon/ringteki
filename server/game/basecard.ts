@@ -240,7 +240,7 @@ class BaseCard extends EffectSource {
             'play area': [Locations.PlayArea],
             'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
         };
-        if(from === Locations.PlayArea || this.type === CardTypes.Holding && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
+        if(!activeLocations[Locations.Provinces].includes(from) || !activeLocations[Locations.Provinces].includes(to)) {
             this.removeLastingEffects();
         }
         _.each(this.persistentEffects, effect => {
