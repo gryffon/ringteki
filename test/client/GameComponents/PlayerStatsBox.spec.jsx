@@ -35,24 +35,19 @@ describe('The <PlayerStatsBox /> component', () => {
             document.createElement('div')
         );
 
-        it('should render fate and honor stats without buttons', () => {
-            const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
+        it('should render hand size, fate and honor stats without buttons', () => {
+            const images = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
-            expect(fateImage.length).toBe(2);
-            expect(fateImage[0].style.getPropertyValue('background-image'))
+            expect(images.length).toBe(3);
+            expect(images[0].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/conflictcard.png)');
+            expect(images[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Fate.png)');
-            expect(fateImage[1].style.getPropertyValue('background-image'))
+            expect(images[2].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(0);
         });
-
-        it('should render hand size', () => {
-            const handSize = TestUtils.scryRenderedDOMComponentsWithClass(component, 'hand-size');
-
-            expect(handSize.length).toBe(1);
-            expect(handSize[0].innerText).toBe('Hand Size: 4');
-        });
-
+        
         it('should render conflicts remaining', () => {
             const conflicts = TestUtils.scryRenderedDOMComponentsWithClass(component, 'conflicts-remaining');
 
@@ -76,14 +71,16 @@ describe('The <PlayerStatsBox /> component', () => {
             document.createElement('div')
         );
 
-        it('should render fate and honor stats with buttons', () => {
-            const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
+        it('should render hand size, fate and honor stats with buttons', () => {
+            const images = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
-            expect(fateImage.length).toBe(2);
-            expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Honor.png)');
-            expect(fateImage[1].style.getPropertyValue('background-image'))
+            expect(images.length).toBe(3);
+            expect(images[0].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/conflictcard.png)');
+            expect(images[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Fate.png)');
+            expect(images[2].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(4);
         });
 
@@ -111,21 +108,16 @@ describe('The <PlayerStatsBox /> component', () => {
         );
 
         it('should render fate and honor stats without buttons', () => {
-            const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
+            const images = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
-            expect(fateImage.length).toBe(2);
-            expect(fateImage[0].style.getPropertyValue('background-image'))
+            expect(images.length).toBe(3);
+            expect(images[0].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/conflictcard.png)');
+            expect(images[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Fate.png)');
-            expect(fateImage[1].style.getPropertyValue('background-image'))
+            expect(images[2].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(0);
-        });
-
-        it('should render hand size', () => {
-            const handSize = TestUtils.scryRenderedDOMComponentsWithClass(component, 'hand-size');
-
-            expect(handSize.length).toBe(1);
-            expect(handSize[0].innerText).toBe('Hand Size: 4');
         });
 
         it('should render conflicts remaining', () => {
@@ -152,21 +144,16 @@ describe('The <PlayerStatsBox /> component', () => {
         );
 
         it('should render fate and honor stats without buttons', () => {
-            const fateImage = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
+            const images = TestUtils.scryRenderedDOMComponentsWithClass(component, 'stat-image');
 
-            expect(fateImage.length).toBe(2);
-            expect(fateImage[0].style.getPropertyValue('background-image'))
-                .toBe('url(http://localhost:9877/img/Honor.png)');
-            expect(fateImage[1].style.getPropertyValue('background-image'))
+            expect(images.length).toBe(3);
+            expect(images[0].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/conflictcard.png)');
+            expect(images[1].style.getPropertyValue('background-image'))
                 .toBe('url(http://localhost:9877/img/Fate.png)');
+            expect(images[2].style.getPropertyValue('background-image'))
+                .toBe('url(http://localhost:9877/img/Honor.png)');
             expect(TestUtils.scryRenderedDOMComponentsWithClass(component, 'btn-stat').length).toBe(0);
-        });
-
-        it('should render hand size', () => {
-            const handSize = TestUtils.scryRenderedDOMComponentsWithClass(component, 'hand-size');
-
-            expect(handSize.length).toBe(1);
-            expect(handSize[0].innerText).toBe('Hand Size: 4');
         });
 
         it('should render conflicts remaining', () => {
