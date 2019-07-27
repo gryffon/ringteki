@@ -229,6 +229,15 @@ class Game extends EventEmitter {
     }
 
     /**
+     * Returns all cards from anywhere in the game matching the passed predicate
+     * @param {Function} predicate - card => Boolean
+     * @returns {Array} Array of DrawCard objects
+     */
+    findAnyCardsInAnyList(predicate) {
+        return this.allCards.filter(predicate);
+    }
+
+    /**
      * Returns all cards (i.e. characters) which matching the passed predicated
      * function from either players 'in play' area.
      * @param {Function} predicate - card => Boolean
@@ -677,8 +686,8 @@ class Game extends EventEmitter {
         this.queueStep(new SelectRingPrompt(this, player, properties));
     }
 
-    promptForHonorBid(activePromptTitle, costHandler, prohibitedBids) {
-        this.queueStep(new HonorBidPrompt(this, activePromptTitle, costHandler, prohibitedBids));
+    promptForHonorBid(activePromptTitle, costHandler, prohibitedBids, duel = null) {
+        this.queueStep(new HonorBidPrompt(this, activePromptTitle, costHandler, prohibitedBids, duel));
     }
 
     /**

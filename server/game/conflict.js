@@ -2,7 +2,7 @@ const _ = require('underscore');
 const GameObject = require('./GameObject');
 const Player = require('./player.js');
 const Settings = require('../settings.js');
-const { EffectNames, EventNames } = require('./Constants');
+const { CardTypes, EffectNames, EventNames, Locations } = require('./Constants');
 
 class Conflict extends GameObject {
     constructor(game, attackingPlayer, defendingPlayer, ring = null, conflictProvince = null, forcedDeclaredType = null) {
@@ -228,12 +228,26 @@ class Conflict extends GameObject {
             return stateChanged;
         }
 
-        let additionalCharacters = this.getEffects(EffectNames.ContributeToConflict);
+        const contributingLocations = [
+            Locations.PlayArea,
+            Locations.ProvinceOne,
+            Locations.ProvinceTwo,
+            Locations.ProvinceThree,
+            Locations.ProvinceFour,
+            Locations.StrongholdProvince
+        ];
+
+        let additionalContributingCards = this.game.findAnyCardsInAnyList(card =>
+            card.type === CardTypes.Character &&
+            contributingLocations.includes(card.location) &&
+            card.anyEffect(EffectNames.ContributeToConflict)
+        );
 
         if(this.attackingPlayer.anyEffect(EffectNames.SetConflictTotalSkill)) {
             this.attackerSkill = this.attackingPlayer.mostRecentEffect(EffectNames.SetConflictTotalSkill);
         } else {
-            let additionalAttackers = additionalCharacters.filter(card => card.controller === this.attackingPlayer);
+            let additionalAttackers = additionalContributingCards
+                .filter(card => card.getEffects(EffectNames.ContributeToConflict).some(value => value === this.attackingPlayer));
             this.attackerSkill = this.calculateSkillFor(this.attackers.concat(additionalAttackers)) + this.attackingPlayer.skillModifier;
             if(this.attackingPlayer.imperialFavor === this.conflictType && this.attackers.length > 0) {
                 this.attackerSkill++;
@@ -243,7 +257,8 @@ class Conflict extends GameObject {
         if(this.defendingPlayer.anyEffect(EffectNames.SetConflictTotalSkill)) {
             this.defenderSkill = this.defendingPlayer.mostRecentEffect(EffectNames.SetConflictTotalSkill);
         } else {
-            let additionalDefenders = additionalCharacters.filter(card => card.controller === this.defendingPlayer);
+            let additionalDefenders = additionalContributingCards
+                .filter(card => card.getEffects(EffectNames.ContributeToConflict).some(value => value === this.defendingPlayer));
             this.defenderSkill = this.calculateSkillFor(this.defenders.concat(additionalDefenders)) + this.defendingPlayer.skillModifier;
             if(this.defendingPlayer.imperialFavor === this.conflictType && this.defenders.length > 0) {
                 this.defenderSkill++;
@@ -254,9 +269,14 @@ class Conflict extends GameObject {
     }
 
     calculateSkillFor(cards) {
-        let skillFunction = this.mostRecentEffect(EffectNames.ChangeConflictSkillFunction) || (card => card.getSkill(this.conflictType));
+        let skillFunction = this.mostRecentEffect(EffectNames.ChangeConflictSkillFunction) || (card => card.getContributionToConflict(this.conflictType));
+        let cannotContributeFunctions = this.getEffects(EffectNames.CannotContribute);
         return cards.reduce((sum, card) => {
-            if(card.bowed || !card.allowGameAction('countForResolution')) {
+            let cannotContribute = card.bowed;
+            if(!cannotContribute) {
+                cannotContribute = cannotContributeFunctions.some(func => func(card));
+            }
+            if(cannotContribute) {
                 return sum;
             }
             return sum + skillFunction(card);

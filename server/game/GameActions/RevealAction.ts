@@ -1,4 +1,5 @@
 import AbilityContext = require('../AbilityContext');
+import DrawCard = require('../drawcard');
 import BaseCard = require('../basecard');
 import Player = require('../player');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
@@ -7,6 +8,7 @@ import { Locations, EventNames }  from '../Constants';
 export interface RevealProperties extends CardActionProperties {
     chatMessage?: boolean;
     player?: Player;
+    onDeclaration?: boolean;
 }
 
 export class RevealAction extends CardGameAction {
@@ -24,6 +26,12 @@ export class RevealAction extends CardGameAction {
             return false;
         }
         return super.canAffect(card, context);
+    }
+
+    addPropertiesToEvent(event, card: BaseCard, context: AbilityContext, additionalProperties): void {
+        let { onDeclaration } = this.getProperties(context, additionalProperties) as RevealProperties;
+        event.onDeclaration = onDeclaration;
+        super.addPropertiesToEvent(event, card, context, additionalProperties);
     }
 
     eventHandler(event, additionalProperties): void {

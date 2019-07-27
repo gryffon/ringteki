@@ -207,12 +207,20 @@ class DrawCard extends BaseCard {
         return isNaN(baseSkillModifiers.baseMilitarySkill) || isNaN(baseSkillModifiers.basePoliticalSkill);
     }
 
+    getContributionToConflict(type) {
+        let skillFunction = this.mostRecentEffect(EffectNames.ChangeContributionFunction);
+        if(skillFunction) {
+            return skillFunction(this);
+        }
+        return this.getSkill(type);
+    }
+
+    /**
+     * Direct the skill query to the correct sub function.
+     * @param  {string} type - The type of the skill; military or political
+     * @return {number} The chosen skill value
+     */
     getSkill(type) {
-        /**
-         * Direct the skill query to the correct sub function.
-         * @param  {string} type - The type of the skill; military or political
-         * @return {integer} The chosen skill value
-         */
         if(type === 'military') {
             return this.getMilitarySkill();
         } else if(type === 'political') {
@@ -223,8 +231,8 @@ class DrawCard extends BaseCard {
     getBaseSkillModifiers() {
         const baseModifierEffects = [
             EffectNames.CopyCharacter,
-            EffectNames.ModifyBaseMilitarySkill,
-            EffectNames.ModifyBasePoliticalSkill,
+            EffectNames.ModifyBaseMilitarySkillMultiplier,
+            EffectNames.ModifyBasePoliticalSkillMultiplier,
             EffectNames.SetBaseMilitarySkill,
             EffectNames.SetBasePoliticalSkill,
             EffectNames.SetBaseDash,
@@ -277,14 +285,14 @@ class DrawCard extends BaseCard {
                     basePoliticalModifiers.push(StatModifier.fromEffect(polChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
                 }
-                case EffectNames.ModifyBaseMilitarySkill: {
-                    const milChange = effect.getValue(this);
+                case EffectNames.ModifyBaseMilitarySkillMultiplier: {
+                    const milChange = (effect.getValue(this) - 1) * baseMilitarySkill;
                     baseMilitarySkill += milChange;
                     baseMilitaryModifiers.push(StatModifier.fromEffect(milChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
                 }
-                case EffectNames.ModifyBasePoliticalSkill: {
-                    const polChange = effect.getValue(this);
+                case EffectNames.ModifyBasePoliticalSkillMultiplier: {
+                    const polChange = (effect.getValue(this) - 1) * basePoliticalSkill;
                     basePoliticalSkill += polChange;
                     basePoliticalModifiers.push(StatModifier.fromEffect(polChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
