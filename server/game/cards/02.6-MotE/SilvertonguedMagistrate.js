@@ -1,13 +1,13 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class SilverTonguedMagistrate extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: context => context.source.isAttacking(),
-            match: (card, context) => card.fate === 0 && card !== context.source,
-            targetController: Players.Any,
-            effect: ability.effects.cardCannot('countForResolution')
+            effect: AbilityDsl.effects.cannotContribute((conflict, context) => {
+                return card => card.fate === 0 && card !== context.source;
+            })
         });
     }
 }

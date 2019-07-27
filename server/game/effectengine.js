@@ -50,14 +50,14 @@ class EffectEngine {
             return {
                 title: context.source.name + '\'s effect' + (targets.length === 1 ? ' on ' + targets[0].name : ''),
                 handler: () => {
-                    if(properties.message) {
+                    properties.gameAction.setDefaultTarget(() => targets);
+                    if(properties.message && properties.gameAction.hasLegalTarget(context)) {
                         let messageArgs = properties.messageArgs || [];
                         if(typeof messageArgs === 'function') {
                             messageArgs = messageArgs(context);
                         }
                         this.game.addMessage(properties.message, ...messageArgs);
                     }
-                    properties.gameAction.setDefaultTarget(() => targets);
                     const actionEvents = [];
                     properties.gameAction.addEventsToArray(actionEvents, context);
                     this.game.queueSimpleStep(() => this.game.openThenEventWindow(actionEvents));

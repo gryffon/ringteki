@@ -1,13 +1,13 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class EnigmaticMagistrate extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: context => context.source.isAttacking(),
-            match: card => card.getCost() === 0 || card.getCost() && card.getCost() % 2 === 0,
-            targetController: Players.Any,
-            effect: ability.effects.cardCannot('countForResolution')
+            effect: AbilityDsl.effects.cannotContribute(() => {
+                return card => card.getCost() === 0 || card.getCost() && card.getCost() % 2 === 0;
+            })
         });
     }
 }

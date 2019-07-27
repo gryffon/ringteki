@@ -29,6 +29,8 @@ const Effects = {
     cannotParticipateAsAttacker: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsAttacker, type),
     cannotParticipateAsDefender: (type = 'both') => EffectBuilder.card.static(EffectNames.CannotParticipateAsDefender, type),
     cardCannot: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(Object.assign({ type: properties.cannot || properties }, properties))),
+    changeContributionFunction: (func) => EffectBuilder.card.static(EffectNames.ChangeContributionFunction, func),
+    contributeToConflict: (player) => EffectBuilder.card.flexible(EffectNames.ContributeToConflict, player),
     copyCharacter: (character) => EffectBuilder.card.static(EffectNames.CopyCharacter, new CopyCharacter(character)),
     customDetachedCard: (properties) => EffectBuilder.card.detached(EffectNames.CustomEffect, properties),
     delayedEffect: (properties) => EffectBuilder.card.static(EffectNames.DelayedEffect, properties),
@@ -50,8 +52,8 @@ const Effects = {
     honorStatusReverseModifySkill: () => EffectBuilder.card.flexible(EffectNames.HonorStatusReverseModifySkill),
     immunity: (properties) => EffectBuilder.card.static(EffectNames.AbilityRestrictions, new Restriction(properties)),
     increaseLimitOnAbilities: (abilities) => EffectBuilder.card.static(EffectNames.IncreaseLimitOnAbilities, abilities),
-    modifyBaseMilitarySkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseMilitarySkill, value),
-    modifyBasePoliticalSkill: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBasePoliticalSkill, value),
+    modifyBaseMilitarySkillMultiplier: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseMilitarySkillMultiplier, value),
+    modifyBasePoliticalSkillMultiplier: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBasePoliticalSkillMultiplier, value),
     modifyBaseProvinceStrength: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBaseProvinceStrength, value),
     modifyBothSkills: (value) => EffectBuilder.card.flexible(EffectNames.ModifyBothSkills, value),
     modifyGlory: (value) => EffectBuilder.card.flexible(EffectNames.ModifyGlory, value),
@@ -76,6 +78,7 @@ const Effects = {
     switchBaseSkills: () => EffectBuilder.card.static(EffectNames.SwitchBaseSkills),
     suppressEffects: (condition) => EffectBuilder.card.static(EffectNames.SuppressEffects, condition),
     takeControl: (player) => EffectBuilder.card.static(EffectNames.TakeControl, player),
+    unlessActionCost: (properties) => EffectBuilder.card.static(EffectNames.UnlessActionCost, properties),
     // Ring effects
     addElement: (element) => EffectBuilder.ring.flexible(EffectNames.AddElement, element),
     cannotBidInDuels: num => EffectBuilder.player.static(EffectNames.CannotBidInDuels, num),
@@ -139,7 +142,7 @@ const Effects = {
     setConflictTotalSkill: (value) => EffectBuilder.player.static(EffectNames.SetConflictTotalSkill, value),
     showTopConflictCard: () => EffectBuilder.player.static(EffectNames.ShowTopConflictCard),
     // Conflict effects
-    contributeToConflict: (card) => EffectBuilder.conflict.flexible(EffectNames.ContributeToConflict, card),
+    cannotContribute: (func) => EffectBuilder.conflict.dynamic(EffectNames.CannotContribute, func),
     changeConflictSkillFunction: (func) => EffectBuilder.conflict.static(EffectNames.ChangeConflictSkillFunction, func), // TODO: Add this to lasting effect checks
     modifyConflictElementsToResolve: (value) => EffectBuilder.conflict.static(EffectNames.ModifyConflictElementsToResolve, value), // TODO: Add this to lasting effect checks
     restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static(EffectNames.RestrictNumberOfDefenders, value), // TODO: Add this to lasting effect checks

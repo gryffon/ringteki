@@ -4,10 +4,11 @@ const DrawCard = require('../../../build/server/game/drawcard.js');
 
 describe('Conflict', function() {
     beforeEach(function() {
-        this.gameSpy = jasmine.createSpyObj('game', ['applyGameAction', 'on', 'raiseEvent', 'reapplyStateDependentEffects', 'getFrameworkContext']);
+        this.gameSpy = jasmine.createSpyObj('game', ['applyGameAction', 'findAnyCardsInAnyList', 'on', 'raiseEvent', 'reapplyStateDependentEffects', 'getFrameworkContext']);
         this.gameSpy.applyGameAction.and.callFake((type, card, handler) => {
             handler(card);
         });
+        this.gameSpy.findAnyCardsInAnyList.and.returnValue([]);
         this.effectEngineSpy = jasmine.createSpyObj('effectEngine', ['checkEffects']);
         this.gameSpy.effectEngine = this.effectEngineSpy;
 
