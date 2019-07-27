@@ -231,8 +231,8 @@ class DrawCard extends BaseCard {
     getBaseSkillModifiers() {
         const baseModifierEffects = [
             EffectNames.CopyCharacter,
-            EffectNames.ModifyBaseMilitarySkill,
-            EffectNames.ModifyBasePoliticalSkill,
+            EffectNames.ModifyBaseMilitarySkillMultiplier,
+            EffectNames.ModifyBasePoliticalSkillMultiplier,
             EffectNames.SetBaseMilitarySkill,
             EffectNames.SetBasePoliticalSkill,
             EffectNames.SetBaseDash,
@@ -285,14 +285,14 @@ class DrawCard extends BaseCard {
                     basePoliticalModifiers.push(StatModifier.fromEffect(polChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
                 }
-                case EffectNames.ModifyBaseMilitarySkill: {
-                    const milChange = effect.getValue(this);
+                case EffectNames.ModifyBaseMilitarySkillMultiplier: {
+                    const milChange = (effect.getValue(this) - 1) * baseMilitarySkill;
                     baseMilitarySkill += milChange;
                     baseMilitaryModifiers.push(StatModifier.fromEffect(milChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
                 }
-                case EffectNames.ModifyBasePoliticalSkill: {
-                    const polChange = effect.getValue(this);
+                case EffectNames.ModifyBasePoliticalSkillMultiplier: {
+                    const polChange = (effect.getValue(this) - 1) * basePoliticalSkill;
                     basePoliticalSkill += polChange;
                     basePoliticalModifiers.push(StatModifier.fromEffect(polChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
