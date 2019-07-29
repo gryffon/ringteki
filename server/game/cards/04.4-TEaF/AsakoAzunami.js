@@ -1,5 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
+const { CardTypes } = require('../../Constants');
 
 class AsakoAzunami extends DrawCard {
     setupCardAbilities() {
@@ -13,6 +14,7 @@ class AsakoAzunami extends DrawCard {
                 replacementGameAction: AbilityDsl.actions.multiple([
                     AbilityDsl.actions.selectCard({
                         activePromptTitle: 'Choose a character to bow',
+                        cardType: CardTypes.Character,
                         optional: true,
                         gameAction: AbilityDsl.actions.bow(),
                         targets: true,
@@ -21,6 +23,7 @@ class AsakoAzunami extends DrawCard {
                     }),
                     AbilityDsl.actions.selectCard({
                         activePromptTitle: 'Choose a character to ready',
+                        cardType: CardTypes.Character,
                         optional: true,
                         gameAction: AbilityDsl.actions.ready(),
                         targets: true,
