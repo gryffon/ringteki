@@ -71,14 +71,14 @@ export class PutIntoPlayAction extends CardGameAction {
         if(event.fate) {
             event.card.fate = event.fate;
         }
-        
-        event.context.player.moveCard(event.card, Locations.PlayArea);
-        
+
         if(event.status === 'honored') {
             event.card.honor();
         } else if(event.status === 'dishonored') {
             event.card.dishonor();
         }
+
+        event.context.player.moveCard(event.card, Locations.PlayArea);
 
         if(event.intoConflict) {
             if(event.context.player.isAttackingPlayer()) {
