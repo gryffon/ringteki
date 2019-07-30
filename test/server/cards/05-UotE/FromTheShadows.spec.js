@@ -135,7 +135,7 @@ describe('From the Shadows', function() {
                         });
                     });
 
-                   describe('when Shosuro Sadako is chosen', function() {
+                    describe('when Shosuro Sadako is chosen', function() {
                         beforeEach(function() {
                             this.player2.clickCard(this.shosuroSadako);
                         });
