@@ -489,7 +489,7 @@ class DrawCard extends BaseCard {
         let gloryEffects = this.getRawEffects().filter(effect => gloryModifierEffects.includes(effect.type));
 
         let gloryModifiers = [];
-        
+
         // set effects
         let setEffects = gloryEffects.filter(effect => effect.type === EffectNames.SetGlory);
         if(setEffects.length > 0) {
