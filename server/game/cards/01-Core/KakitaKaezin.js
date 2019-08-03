@@ -15,7 +15,7 @@ class KakitaKaezin extends DrawCard {
                     type: DuelTypes.Military,
                     challenger: context.source,
                     gameAction: duel => ability.actions.sendHome({
-                        target: duel.winner === context.source ? context.game.currentConflict.getParticipants(card => card !== duel.winner && card !== duel.loser) : duel.loser
+                        target: duel.winner === context.source ? context.game.currentConflict.getParticipants(card => !duel.isInvolved(card)) : duel.loser
                     })
                 }))
             }
