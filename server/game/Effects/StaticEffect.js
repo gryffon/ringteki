@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const EffectValue = require('./EffectValue');
-const { EffectNames, Durations } = require('../Constants');
+const { CardTypes, EffectNames, Durations } = require('../Constants');
 
 const binaryCardEffects = [
     EffectNames.Blank,
@@ -95,6 +95,9 @@ class StaticEffect {
     }
 
     canBeApplied(target) {
+        if(target.facedown && target.type !== CardTypes.Province) {
+            return false;
+        }
         return !hasDash[this.type] || !hasDash[this.type](target, this.value);
     }
 
