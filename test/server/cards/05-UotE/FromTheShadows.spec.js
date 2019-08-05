@@ -134,6 +134,19 @@ describe('From the Shadows', function() {
                             });
                         });
                     });
+
+                    describe('when Shosuro Sadako is chosen', function() {
+                        beforeEach(function() {
+                            this.player2.clickCard(this.shosuroSadako);
+                        });
+
+                        it('should put Shosuro Sadako into play dishonored', function() {
+                            expect(this.shosuroSadako.inConflict).toBe(true);
+                            expect(this.game.currentConflict.defenders).toContain(this.shosuroSadako);
+                            expect(this.shosuroSadako.isDishonored).toBe(true);
+                            expect(this.shosuroSadako.getMilitarySkill()).toBe(4);
+                        });
+                    });
                 });
             });
         });
