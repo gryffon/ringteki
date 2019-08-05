@@ -730,7 +730,12 @@ class Player extends GameObject {
             case Locations.ProvinceDeck:
                 return this.provinceDeck;
             case Locations.Provinces:
-                return _(_.union(this.provinceOne.value(), this.provinceTwo.value(), this.provinceThree.value(), this.provinceFour.value(), this.strongholdProvince.value()));
+                return _(this.provinceOne.value().concat(
+                    this.provinceTwo.value(),
+                    this.provinceThree.value(),
+                    this.provinceFour.value(),
+                    this.strongholdProvince.value()
+                ));
             default:
                 if(this.additionalPiles[source]) {
                     return this.additionalPiles[source].cards;
