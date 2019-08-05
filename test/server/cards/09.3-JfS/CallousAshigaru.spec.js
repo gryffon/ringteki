@@ -1,5 +1,3 @@
-const _ = require('underscore');
-
 describe('Callous Ashigaru', function() {
     integration(function() {
         describe('Callous Ashigaru', function() {
