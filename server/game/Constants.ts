@@ -54,6 +54,7 @@ export enum EffectNames {
     HonorStatusDoesNotModifySkill = 'honorStatusDoesNotModifySkill',
     HonorStatusReverseModifySkill = 'honorStatusReverseModifySkill',
     IncreaseLimitOnAbilities = 'increaseLimitOnAbilities',
+    LoseKeyword = 'loseKeyword',
     ModifyBaseMilitarySkillMultiplier = 'modifyBaseMilitarySkillMultiplier',
     ModifyBasePoliticalSkillMultiplier = 'modifyBasePoliticalSkillMultiplier',
     ModifyBaseProvinceStrength = 'modifyBaseProvinceStrength',
