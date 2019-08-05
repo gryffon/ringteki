@@ -22,7 +22,6 @@ describe('Yogo Preserver', function() {
                 this.player1.clickCard(this.callingInFavors);
                 this.player1.clickCard(this.fineKatana);
                 this.player1.clickCard(this.bayushiManipulator);
-                expect(this.bayushiManipulator.isDishonored).toBe(true);
             });
 
             it('should only give sincerity to dishonored characters the player control', function() {

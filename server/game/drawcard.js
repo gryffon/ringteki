@@ -748,6 +748,11 @@ class DrawCard extends BaseCard {
         super.leavesPlay();
     }
 
+    updateEffects(from, to) {
+        super.updateEffects(from, to);
+        this.setPersonalHonor(this.personalHonor);
+    }
+
     resetForConflict() {
         this.covert = false;
         this.inConflict = false;

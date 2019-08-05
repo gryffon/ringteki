@@ -85,6 +85,20 @@ describe('Hiruma Yoshino', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
+            it('should not trigger if the card in the attacked province is facedown', function() {
+                this.hidaKisada.facedown = true;
+                this.noMoreActions();
+                this.player1.passConflict();
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.matsuBerserker],
+                    defenders: [this.hirumaYoshino]
+                });
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.hirumaYoshino);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
             it('should prompt to target a character card in the attacked province', function() {
                 this.noMoreActions();
                 this.initiateConflict({
@@ -95,7 +109,12 @@ describe('Hiruma Yoshino', function() {
                 this.player1.clickCard(this.hirumaYoshino);
                 expect(this.player1).toHavePrompt('Choose a character');
                 expect(this.player1).toBeAbleToSelect(this.akodoToturi);
+                expect(this.player1).not.toBeAbleToSelect(this.favorableGround);
+                expect(this.player1).not.toBeAbleToSelect(this.venerableHistorian);
+                expect(this.player1).not.toBeAbleToSelect(this.akodoMakoto);
                 expect(this.player1).not.toBeAbleToSelect(this.hidaKisada);
+                expect(this.player1).not.toBeAbleToSelect(this.eagerScout);
+                expect(this.player1).not.toBeAbleToSelect(this.crisisBreaker);
             });
 
             it('should add the printed military skill of the target character to your side for the conflict', function() {

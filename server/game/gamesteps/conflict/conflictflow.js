@@ -179,7 +179,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.game.actions.takeFateFromRing({
                 origin: ring,
                 recipient: this.conflict.attackingPlayer,
-                fate: ring.fate
+                amount: ring.fate
             }).addEventsToArray(events, this.game.getFrameworkContext(this.conflict.attackingPlayer));
             this.game.addMessage('{0} takes {1} fate from {2}', this.conflict.attackingPlayer, ring.fate, ring);
         }

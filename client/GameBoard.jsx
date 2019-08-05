@@ -452,7 +452,7 @@ export class InnerGameBoard extends React.Component {
 
         return attachments.length
             ? <div id={ 'ring-attachments-' + element } className='ring-attachments--element' style={ {marginLeft: ((attachments.length - 1) * attachmentOffset) + 'px'} } >
-                <img className='ring-attachments__ring-symbol' src={ '/img/military-' + element + '.png' }></img>
+                <img className='ring-attachments__ring-symbol' src={ '/img/military-' + element + '.png' } />
                 {
                     attachments.map((card, index) => {
                         return (<div className={ index !== 0 ? 'ring-attachment--stacked' : 'ring-attachment' } style={ {marginLeft: (-1 * (index * attachmentOffset)) + 'px', zIndex: (cardLayer - index)} }>

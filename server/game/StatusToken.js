@@ -35,11 +35,9 @@ class StatusToken extends EffectSource {
     }
 
     setCard(card) {
-        if(card !== this.card) {
-            this.removeHonorEffects();
-            this.card = card;
-            this.applyHonorEffects();
-        }
+        this.removeHonorEffects();
+        this.card = card;
+        this.applyHonorEffects();
     }
 }
 
