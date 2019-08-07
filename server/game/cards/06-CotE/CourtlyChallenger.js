@@ -8,7 +8,12 @@ class CourtlyChallenger extends DrawCard {
             effect: [
                 AbilityDsl.effects.delayedEffect({
                     when: {
-                        afterDuel: (event, context) => event.winner && event.winner === context.source
+                        afterDuel: (event, context) => {
+                            if(Array.isArray(event.winner)) {
+                                return event.winner.some(card => card === context.source);
+                            }
+                            return event.winner === context.source;
+                        }
                     },
                     message: '{0} is honored due to winning a duel',
                     messageArgs: context => [context.source],

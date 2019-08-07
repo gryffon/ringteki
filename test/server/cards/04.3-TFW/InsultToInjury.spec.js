@@ -6,10 +6,10 @@ describe('Insult to Injury', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['doji-hotaru', 'doji-challenger'],
-                        hand: ['insult-to-injury','policy-debate']
+                        hand: ['insult-to-injury', 'policy-debate']
                     },
                     player2: {
-                        inPlay: ['mirumoto-raitsugu']
+                        inPlay: ['mirumoto-raitsugu', 'mirumoto-hitomi']
                     }
                 });
                 this.noMoreActions();
@@ -18,10 +18,11 @@ describe('Insult to Injury', function() {
                 this.insultToInjury = this.player1.findCardByName('insult-to-injury');
                 this.policyDebate = this.player1.findCardByName('policy-debate');
                 this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
+                this.mirumotoHitomi = this.player2.findCardByName('mirumoto-hitomi');
 
                 this.initiateConflict({
                     attackers: [this.dojiHotaru, this.dojiChallenger],
-                    defenders: [this.mirumotoRaitsugu]
+                    defenders: [this.mirumotoRaitsugu, this.mirumotoHitomi]
                 });
             });
 
@@ -81,6 +82,17 @@ describe('Insult to Injury', function() {
                 it('should dishonor the loser of the duel', function () {
                     expect(this.mirumotoRaitsugu.isDishonored).toBeTruthy();
                 });
+            });
+
+            it('should trigger if there is more than one winner of the duel and at least one is a duelist', function() {
+                this.player2.clickCard(this.mirumotoHitomi);
+                this.player2.clickCard(this.dojiHotaru);
+                this.player2.clickCard(this.dojiChallenger);
+                this.player2.clickPrompt('Done');
+                this.player2.clickPrompt('1');
+                this.player1.clickPrompt('5');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.insultToInjury);
             });
         });
     });
