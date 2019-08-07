@@ -15,7 +15,7 @@ class IsawaHeiko extends DrawCard {
             },
             target: {
                 cardType: CardTypes.Character,
-                cardCondition: card => !card.hasDash(),
+                cardCondition: card => !card.hasDash() && card.isParticipating(),
                 gameAction: AbilityDsl.actions.cardLastingEffect({
                     effect: AbilityDsl.effects.switchBaseSkills()
                 })
