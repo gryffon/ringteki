@@ -40,7 +40,8 @@ class PlayAttachmentAction extends BaseAction {
             originalLocation: context.source.location,
             playType: PlayTypes.PlayFromHand
         });
-        context.game.openEventWindow([context.game.actions.attach({ attachment: context.source }).getEvent(context.target, context), cardPlayedEvent]);
+        let takeControl = context.source.controller !== context.player;
+        context.game.openEventWindow([context.game.actions.attach({ attachment: context.source, takeControl: takeControl }).getEvent(context.target, context), cardPlayedEvent]);
     }
 
     isCardPlayed() {
