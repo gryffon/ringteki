@@ -6,7 +6,7 @@ import { Locations, CardTypes, EventNames }  from '../Constants';
 
 export interface AttachActionProperties extends CardActionProperties {
     attachment?: DrawCard,
-    changePlayer?: boolean
+    takeControl?: boolean
 }
 
 export class AttachAction extends CardGameAction {
@@ -14,7 +14,7 @@ export class AttachAction extends CardGameAction {
     eventName = EventNames.OnCardAttached;
     targetType = [CardTypes.Character];
     defaultProperties: AttachActionProperties = {
-        changePlayer: false
+        takeControl: false
     };
 
     constructor(properties: ((context: AbilityContext) => AttachActionProperties) | AttachActionProperties) {
@@ -23,7 +23,7 @@ export class AttachAction extends CardGameAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as AttachActionProperties;
-        if(properties.changePlayer) {
+        if(properties.takeControl) {
             return ['take control of and attach {2}\'s {1} to {0}', [properties.target, properties.attachment, (properties.attachment as DrawCard).parent]];
         }
         return ['attach {1} to {0}', [properties.target, properties.attachment]];
@@ -34,6 +34,8 @@ export class AttachAction extends CardGameAction {
         if(!context || !context.player || !card || card.location !== Locations.PlayArea) {
             return false;
         } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context)) {
+            return false;
+        } else if(properties.takeControl && properties.attachment.controller === context.player) {
             return false;
         }
         return card.allowAttachment(properties.attachment) && super.canAffect(card, context);
@@ -67,7 +69,7 @@ export class AttachAction extends CardGameAction {
         }
         event.parent.attachments.push(event.card);
         event.card.parent = event.parent;
-        if(properties.changePlayer) {
+        if(properties.takeControl) {
             event.card.controller = event.context.player;
             event.card.updateEffectContexts();
         }

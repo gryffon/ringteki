@@ -15,7 +15,7 @@ class CallingInFavors extends DrawCard {
                 ifAbleAction: AbilityDsl.actions.attach({
                     target: context.costs.dishonor,
                     attachment: context.target,
-                    changePlayer: true
+                    takeControl: true
                 }),
                 otherwiseAction: AbilityDsl.actions.discardFromPlay({ target: context.target })
             }))
