@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
-const { CardTypes, Elements } = require('../../Constants');
+const { CardTypes, Elements, Durations } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class IsawaHeiko extends DrawCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'Switch a character\'s M and P skill',
+            title: 'Switch a character\'s base skills',
             when: {
                 onCardPlayed: (event, context) => {
                     return event.card.hasTrait(Elements.Water) &&
@@ -17,6 +17,7 @@ class IsawaHeiko extends DrawCard {
                 cardType: CardTypes.Character,
                 cardCondition: card => !card.hasDash() && card.isParticipating(),
                 gameAction: AbilityDsl.actions.cardLastingEffect({
+                    duration: Durations.UntilEndOfPhase,
                     effect: AbilityDsl.effects.switchBaseSkills()
                 })
             },

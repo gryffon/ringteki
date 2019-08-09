@@ -74,7 +74,7 @@ describe('Isawa Heiko', function () {
                 expect(this.makoto.getPoliticalSkill()).toBe(4);
             });
 
-            it('should target characters at home', function() {
+            it('should not target characters at home', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
                 this.player1.clickCard(this.solemn);
