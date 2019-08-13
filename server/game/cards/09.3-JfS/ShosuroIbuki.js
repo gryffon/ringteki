@@ -11,7 +11,7 @@ class ShosuroIbuki extends DrawCard {
                     context.source.isParticipating()
             },
             gameAction: AbilityDsl.actions.removeFate(context => ({
-                target: context.game.currentConflict.getParticipants(participant => participant.uuid != context.source.uuid),
+                target: context.game.currentConflict.getParticipants(participant => participant.uuid !== context.source.uuid),
                 amount: 1
             })),
             effect: 'remove one fate from each other participating character'
