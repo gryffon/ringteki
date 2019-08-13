@@ -17,7 +17,6 @@ describe('Ujik Tactics', function () {
                 this.motoNergui = this.player1.findCardByName('moto-nergui');
                 this.iuchiWayfinder = this.player1.findCardByName('iuchi-wayfinder');
                 this.ujikTactics = this.player1.findCardByName('ujik-tactics');
-                
                 this.goblin = this.player2.findCardByName('goblin-sneak');
 
                 this.noMoreActions();
