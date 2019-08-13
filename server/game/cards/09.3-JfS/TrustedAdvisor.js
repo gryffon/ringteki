@@ -6,12 +6,12 @@ class TrustedAdvisor extends DrawCard {
         this.reaction({
             title: 'Draw a card',
             when: {
-                onMoveFate: (event, context) => context.source.isParticipating() && 
-                    event.origin && event.origin.type === 'ring' && 
-                    event.recipient && event.recipient == context.player
+                onMoveFate: (event, context) => context.source.isParticipating() &&
+                    event.origin && event.origin.type === 'ring' &&
+                    event.recipient && event.recipient === context.player
             },
             gameAction: AbilityDsl.actions.draw(),
-            effect: 'draw a card',
+            effect: 'draw a card'
         });
     }
 }

@@ -32,7 +32,7 @@ describe('Trusted Advisor', function() {
                 expect(this.player1).toBeAbleToSelect(this.trustedAdvisor);
 
                 this.player1.clickCard(this.trustedAdvisor);
-                expect(this.player1.hand.length).toBe(handSize + 1)
+                expect(this.player1.hand.length).toBe(handSize + 1);
             });
 
             it('should not trigger when an opponent gains fate during a conflict in which Trusted Advisor is participating', function() {
