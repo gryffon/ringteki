@@ -16,7 +16,7 @@ describe('Isawa Heiko', function () {
                 this.solemnScholar = this.player1.findCardByName('solemn-scholar');
                 this.strideTheWaves = this.player1.findCardByName('stride-the-waves');
 
-                this.akodoKage = this.player2.findCardByName('akodo-kage')
+                this.akodoKage = this.player2.findCardByName('akodo-kage');
 
                 this.player1.claimRing('water');
 
@@ -34,7 +34,7 @@ describe('Isawa Heiko', function () {
                 this.player2.pass();
 
                 expect(this.player1).toHavePrompt('Conflict Action Window');
-                expect(this.strideTheWaves.parent).toBe(this.solemnScholar)
+                expect(this.strideTheWaves.parent).toBe(this.solemnScholar);
 
                 this.player1.clickCard(this.strideTheWaves);
                 expect(this.solemnScholar.inConflict).toBe(false);

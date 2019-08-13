@@ -9,21 +9,21 @@ class StrideTheWaves extends DrawCard {
             condition: context => this.game.isDuringConflict() &&
                 this.game.rings.water.isConsideredClaimed(context.player),
             gameAction: AbilityDsl.actions.conditional({
-                condition: (context, properties) => context.source.parent.inConflict,
+                condition: context => context.source.parent.inConflict,
                 trueGameAction: AbilityDsl.actions.sendHome(context => ({
                     target: context.source.parent
                 })),
                 falseGameAction: AbilityDsl.actions.moveToConflict(context => ({
-                    target: context.source.parent,
+                    target: context.source.parent
                 }))
             }),
             effect: '{3} {2} {1}',
-            effectArgs: (context, player) => [
+            effectArgs: context => [
                 context.source.parent,
                 context.source.parent.inConflict ? 'home' : 'into the conflict',
                 context.source.parent.inConflict ? 'send' : 'move'
             ]
-        })
+        });
     }
 }
 
