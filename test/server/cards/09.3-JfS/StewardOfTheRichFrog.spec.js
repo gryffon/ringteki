@@ -80,7 +80,7 @@ describe('Steward of the Rich Frog', function() {
 
                 expect(this.player2).toHavePromptButton('Honor a friendly character');
                 expect(this.player2).not.toHavePromptButton('Dishonor an opposing character');
-                this.player2.clickPrompt('Honor a friendly character');                
+                this.player2.clickPrompt('Honor a friendly character');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.forgedEdict);
                 expect(this.player1).toHavePromptButton('Pass');
@@ -114,7 +114,7 @@ describe('Steward of the Rich Frog', function() {
                 this.forgedEdict = this.player1.findCardByName('forged-edict');
 
                 this.forShame = this.player2.findCardByName('for-shame');
-                this.courtGames = this.player2.findCardByName('court-games');                
+                this.courtGames = this.player2.findCardByName('court-games');
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
@@ -154,9 +154,9 @@ describe('Steward of the Rich Frog', function() {
 
                 this.player1.clickCard(this.stewardOfTheRichFrog);
 
-                expect(this.stewardOfTheRichFrog.isDishonored).toBe(true)
+                expect(this.stewardOfTheRichFrog.isDishonored).toBe(true);
             });
-            
+
             it('when the opponent attempts to play Court Games, the player controlling Steward can dishonor his character to play Forged Edict', function() {
                 this.player2.clickCard(this.courtGames);
 
@@ -171,7 +171,7 @@ describe('Steward of the Rich Frog', function() {
                 this.player1.clickCard(this.forgedEdict);
                 this.player1.clickCard(this.stewardOfTheRichFrog);
 
-                expect(this.stewardOfTheRichFrog.isDishonored).toBe(true)
+                expect(this.stewardOfTheRichFrog.isDishonored).toBe(true);
             });
         });
     });
