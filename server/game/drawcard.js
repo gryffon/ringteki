@@ -403,7 +403,7 @@ class DrawCard extends BaseCard {
             modifiers.forEach(modifier => {
                 if(modifier.type === 'token' && modifier.amount !== 0) {
                     modifier.amount = 0;
-                    modifier.name += ` (${doesNotModifyEffects[0]})`;
+                    modifier.name += ` (${StatModifier.getEffectName(doesNotModifyEffects[0])})`;
                 }
             });
         }
@@ -412,7 +412,7 @@ class DrawCard extends BaseCard {
             modifiers.forEach(modifier => {
                 if(modifier.type === 'token' && modifier.amount !== 0) {
                     modifier.amount = 0 - modifier.amount;
-                    modifier.name += ` (${reverseEffects[0]})`;
+                    modifier.name += ` (${StatModifier.getEffectName(reverseEffects[0])})`;
                 }
             });
         }
