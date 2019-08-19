@@ -85,6 +85,7 @@ describe('Infiltrator', function() {
                     expect(this.player2).toHavePrompt('Honored Blade');
                     this.player2.clickCard(this.matsuBerserker);
                     expect(this.honoredBlade.location).toBe('play area');
+                    expect(this.honoredBlade.controller).toBe(this.player2.player);
                     expect(this.matsuBerserker.attachments.toArray()).toContain(this.honoredBlade);
                     expect(this.player2.fate).toBe(2);
                 });
