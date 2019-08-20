@@ -5,7 +5,7 @@ describe('Ujik Tactics', function () {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['border-rider', 'moto-nergui', 'iuchi-wayfinder'],
+                        inPlay: ['border-rider', 'moto-nergui', 'iuchi-wayfinder', 'shinjo-ambusher'],
                         hand: ['ujik-tactics']
                     },
                     player2: {
@@ -15,6 +15,7 @@ describe('Ujik Tactics', function () {
 
                 this.borderRider = this.player1.findCardByName('border-rider');
                 this.motoNergui = this.player1.findCardByName('moto-nergui');
+                this.shinjoAmbusher = this.player1.findCardByName('shinjo-ambusher');
                 this.iuchiWayfinder = this.player1.findCardByName('iuchi-wayfinder');
                 this.ujikTactics = this.player1.findCardByName('ujik-tactics');
                 this.goblin = this.player2.findCardByName('goblin-sneak');
@@ -33,6 +34,7 @@ describe('Ujik Tactics', function () {
 
                 expect(this.borderRider.getMilitarySkill()).toBe(3);
                 expect(this.iuchiWayfinder.getMilitarySkill()).toBe(2);
+                expect(this.shinjoAmbusher.getMilitarySkill()).toBe(3);
 
                 expect(this.motoNergui.getMilitarySkill()).toBe(2);
             });
