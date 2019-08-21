@@ -7,7 +7,15 @@ class DistinguishedDojo extends DrawCard {
         this.reaction({
             title: 'Place an honor token',
             when: {
-                afterDuel: (event, context) => event.winner && event.winner.controller === context.source.controller
+                afterDuel: (event, context) => {
+                    if(!event.winner) {
+                        return false;
+                    }
+                    if(Array.isArray(event.winner)) {
+                        return event.winner.some(card => card.controller === context.source.controller);
+                    }
+                    return event.winner.controller === context.source.controller;
+                }
             },
             limit: AbilityDsl.limit.perRound(3),
             gameAction: AbilityDsl.actions.addToken(),

@@ -6,7 +6,7 @@ class KitsukiYuikimi extends DrawCard {
         this.reaction({
             title: 'Cannot be targeted by opponent\'s triggered abilities',
             when: {
-                onMoveFate: (event, context) => context.source.isParticipating() && event.origin.type === 'ring' && context.player.opponent
+                onMoveFate: (event, context) => context.source.isParticipating() && event.origin && event.origin.type === 'ring' && context.player.opponent
             },
             gameAction: AbilityDsl.actions.cardLastingEffect({
                 effect: AbilityDsl.effects.cardCannot({

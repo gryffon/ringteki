@@ -153,7 +153,8 @@
                         hand: ['fine-katana', 'ornate-fan', 'peasant-s-advice', 'court-mask', 'assassination']
                     },
                     player2: {
-                        inPlay: ['brash-samurai']
+                        inPlay: ['brash-samurai'],
+                        hand: ['above-question']
                     }
                 });
 
@@ -171,6 +172,7 @@
                 this.ironMine = this.player1.findCardByName('iron-mine');
 
                 this.brashSamurai = this.player2.findCardByName('brash-samurai');
+                this.aboveQuestion = this.player2.findCardByName('above-question');
             });
 
             it('should not work outside of the conflict phase', function() {
@@ -276,7 +278,8 @@
                 this.advancePhases('conflict');
                 this.player1.clickCard(this.fineKatana);
                 this.player1.clickCard(this.matsuBerserker);
-                this.player2.pass();
+                this.player2.clickCard(this.aboveQuestion);
+                this.player2.clickCard(this.matsuBerserker);
                 this.player1.clickCard(this.ornateFan);
                 this.player1.clickCard(this.matsuBerserker);
                 this.player2.pass();
@@ -284,6 +287,8 @@
                 this.player1.clickCard(this.matsuBerserker);
                 expect(this.fineKatana.parent).toBe(this.akodoZentaro);
                 expect(this.ornateFan.parent).toBe(this.akodoZentaro);
+                expect(this.aboveQuestion.parent).toBe(this.akodoZentaro);
+                expect(this.aboveQuestion.controller).toBe(this.player2.player);
             });
 
             it('should transfer status tokens', function() {

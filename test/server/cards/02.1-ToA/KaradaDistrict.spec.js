@@ -48,7 +48,7 @@ describe('Karada District', function() {
 
                     describe ('and there is a valid target to attach to', function() {
                         it('should prompt the player to choose a character to give the attachment to', function() {
-                            expect(this.player2).toHavePrompt('Choose a character to attach Fine Katana to');
+                            expect(this.player2).toHavePrompt('Choose a character');
                         });
 
                         describe('If the player chooses a character to attach to', function() {
@@ -91,6 +91,7 @@ describe('Karada District', function() {
                     this.player2.clickCard(this.karada2);
                     this.player2.clickCard(this.fineKatana);
                     expect(this.fineKatana.location).toBe('conflict discard pile');
+                    expect(this.getChatLogs(1)).toContain('player2 uses Karada District, giving 1 fate to player1 to discard Fine Katana');
                 });
             });
 
@@ -124,6 +125,8 @@ describe('Karada District', function() {
 
                     expect(this.watchCommander.controller).toBe(this.player2.player);
                     expect(this.miyaMystic.attachments.toArray()).toContain(this.watchCommander);
+                    expect(this.getChatLogs(2)).toContain('player2 uses Karada District, giving 1 fate to player1 to choose a target for Watch Commander');
+                    expect(this.getChatLogs(1)).toContain('player2 chooses to attach Watch Commander to Miya Mystic');
                 });
             });
 

@@ -6,19 +6,26 @@ import { Locations, CardTypes, EventNames }  from '../Constants';
 
 export interface AttachActionProperties extends CardActionProperties {
     attachment?: DrawCard,
+    takeControl?: boolean
 }
 
 export class AttachAction extends CardGameAction {
     name = 'attach';
     eventName = EventNames.OnCardAttached;
     targetType = [CardTypes.Character];
-    
+    defaultProperties: AttachActionProperties = {
+        takeControl: false
+    };
+
     constructor(properties: ((context: AbilityContext) => AttachActionProperties) | AttachActionProperties) {
         super(properties);
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as AttachActionProperties;
+        if(properties.takeControl) {
+            return ['take control of and attach {2}\'s {1} to {0}', [properties.target, properties.attachment, (properties.attachment as DrawCard).parent]];
+        }
         return ['attach {1} to {0}', [properties.target, properties.attachment]];
     }
 
@@ -27,6 +34,8 @@ export class AttachAction extends CardGameAction {
         if(!context || !context.player || !card || card.location !== Locations.PlayArea) {
             return false;
         } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context)) {
+            return false;
+        } else if(properties.takeControl && properties.attachment.controller === context.player) {
             return false;
         }
         return card.allowAttachment(properties.attachment) && super.canAffect(card, context);
@@ -49,7 +58,8 @@ export class AttachAction extends CardGameAction {
         event.context = context;
     }
 
-    eventHandler(event): void {
+    eventHandler(event, additionalProperties = {}): void {
+        let properties = this.getProperties(event.context, additionalProperties) as AttachActionProperties;
         if(event.card.location === Locations.PlayArea) {
             event.card.parent.removeAttachment(event.card);
         } else {
@@ -59,7 +69,7 @@ export class AttachAction extends CardGameAction {
         }
         event.parent.attachments.push(event.card);
         event.card.parent = event.parent;
-        if(event.card.controller !== event.context.player) {
+        if(properties.takeControl) {
             event.card.controller = event.context.player;
             event.card.updateEffectContexts();
         }

@@ -52,6 +52,7 @@ describe('Calling In Favors', function() {
 
                         it('should transfer control of the attachment', function() {
                             expect(this.fineKatana.controller).toBe(this.player2.player);
+                            expect(this.getChatLogs(1)).toContain('player2 plays Calling in Favors, dishonoring Miya Mystic to take control of and attach Adept of the Waves\'s Fine Katana to Miya Mystic');
                         });
 
                         it('should attach the target to the character', function() {
@@ -102,6 +103,7 @@ describe('Calling In Favors', function() {
                     expect(this.asceticVisionary.isDishonored).toBe(true);
                     expect(this.asceticVisionary.attachments.toArray()).not.toContain(this.fineKatana);
                     expect(this.fineKatana.location).toBe('conflict discard pile');
+                    expect(this.getChatLogs(1)).toContain('player2 plays Calling in Favors, dishonoring Ascetic Visionary to discard Fine Katana');
                 });
             });
 

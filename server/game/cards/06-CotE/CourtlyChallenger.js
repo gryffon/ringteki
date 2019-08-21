@@ -8,7 +8,12 @@ class CourtlyChallenger extends DrawCard {
             effect: [
                 AbilityDsl.effects.delayedEffect({
                     when: {
-                        afterDuel: (event, context) => event.winner && event.winner === context.source
+                        afterDuel: (event, context) => {
+                            if(Array.isArray(event.winner)) {
+                                return event.winner.some(card => card === context.source);
+                            }
+                            return event.winner === context.source;
+                        }
                     },
                     message: '{0} is honored due to winning a duel',
                     messageArgs: context => [context.source],
@@ -16,7 +21,12 @@ class CourtlyChallenger extends DrawCard {
                 }),
                 AbilityDsl.effects.delayedEffect({
                     when: {
-                        afterDuel: (event, context) => event.loser && event.loser === context.source
+                        afterDuel: (event, context) => {
+                            if(Array.isArray(event.loser)) {
+                                return event.loser.some(card => card === context.source);
+                            }
+                            return event.loser === context.source;
+                        }
                     },
                     message: '{0} is dishonored due to losing a duel',
                     messageArgs: context => [context.source],

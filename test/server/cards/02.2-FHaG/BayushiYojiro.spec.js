@@ -75,6 +75,14 @@ describe('Bayushi Yojiro', function() {
                 expect(this.youngHarrier.isHonored).toBe(true);
                 expect(this.youngHarrier.getMilitarySkill()).toBe(1);
                 expect(this.youngHarrier.getPoliticalSkill()).toBe(1);
+                expect(this.youngHarrier.getMilitaryModifiers().some(modifier =>
+                    modifier.name === 'Honored Token (Bayushi Yojiro)' &&
+                    modifier.amount === 0
+                )).toBe(true);
+                expect(this.youngHarrier.getPoliticalModifiers().some(modifier =>
+                    modifier.name === 'Honored Token (Bayushi Yojiro)' &&
+                    modifier.amount === 0
+                )).toBe(true);
             });
 
             it('should stop honor status adding honor on leaving play', function() {
