@@ -1,5 +1,4 @@
 import { CardTypes } from '../../Constants.js';
-
 const DrawCard = require('../../drawcard.js');
 const { Locations } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
@@ -20,10 +19,14 @@ class ShinjoGunso extends DrawCard {
                 cards: context.player.dynastyDeck.first(5),
                 cardCondition: card => card.type === CardTypes.Character && card.printedCost <= 2,
                 choices: ['Don\'t choose a character'],
-                handler: context => {
-                        this.game.applyGameAction(context, { moveCard: context.player.dynastyDeck.first(5) });
-                        this.game.addMessage('{0} chooses not to put a character into play', context.player);
-                },
+                handlers: [
+                    function() {
+                        context.player.dynastyDeck.first(5).forEach(card => { 
+                            context.player.moveCard(card, Locations.DynastyDiscardPile);
+                        });
+                        context.game.addMessage('{0} chooses not to put a character into play', context.player);
+                    }
+                ],
                 subActionProperties: card => ({ target: card }),
                 gameAction: AbilityDsl.actions.sequential([
                     AbilityDsl.actions.putIntoPlay(),
@@ -33,7 +36,7 @@ class ShinjoGunso extends DrawCard {
                         destination: Locations.DynastyDiscardPile
                     }))
                 ])
-            }))          
+            }))
         });
     }
 }
