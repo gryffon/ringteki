@@ -53,7 +53,7 @@ describe('Doji Hotaru 2', function () {
             });
 
             it('should not trigger when the player plays a card', function() {
-                this.player2.pass()
+                this.player2.pass();
 
                 this.player1.clickCard(this.wotc);
                 this.player1.clickCard(this.dojiHotaru);

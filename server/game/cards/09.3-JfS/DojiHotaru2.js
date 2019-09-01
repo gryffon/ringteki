@@ -1,5 +1,4 @@
 const DrawCard = require('../../drawcard.js');
-const { TargetModes } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class DojiHotaru2 extends DrawCard {
