@@ -25,7 +25,7 @@ class StrideTheWaves extends DrawCard {
             ]
         });
     }
-    
+
     canAttach(card, context) {
         if(card.controller !== context.player) {
             return false;
