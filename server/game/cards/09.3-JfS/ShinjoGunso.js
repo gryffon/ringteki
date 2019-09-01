@@ -21,7 +21,7 @@ class ShinjoGunso extends DrawCard {
                 choices: ['Don\'t choose a character'],
                 handlers: [
                     function() {
-                        context.player.dynastyDeck.first(5).forEach(card => { 
+                        context.player.dynastyDeck.first(5).forEach(card => {
                             context.player.moveCard(card, Locations.DynastyDiscardPile);
                         });
                         context.game.addMessage('{0} chooses not to put a character into play', context.player);
