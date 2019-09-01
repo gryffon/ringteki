@@ -7,7 +7,8 @@ describe('Shinjo Gunso', function() {
                     player1: {
                         honor: 20,
                         fate: 10,
-                        dynastyDeck: ['shinjo-gunso', 'keeper-initiate', 'utaku-tetsuko', 'shinjo-shono', 'moto-nergui', 'border-rider']
+                        inPlay: ['shinjo-gunso'],
+                        dynastyDeck: ['border-rider', 'keeper-initiate', 'moto-youth', 'moto-chagatai', 'moto-nergui', 'utaku-yumino', 'battle-maiden-recruit', 'utaku-tetsuko',]
                     }
                 });
 
@@ -29,12 +30,12 @@ describe('Shinjo Gunso', function() {
 
                 this.player1.clickCard(this.shinjoGunso);
 
-                expect(this.player1).toHavePromptButton('Keeper Initiate');
-                expect(this.player1).toHavePromptButton('Border Rider');
-                expect(this.player1).toHaveDisabledPromptButton('Utaku Tetsuko');
-                expect(this.player1).toHaveDisabledPromptButton('Shinjo Shono');
+                expect(this.player1).toHavePromptButton('Adept of the Waves (3)');
                 expect(this.player1).toHaveDisabledPromptButton('Moto Nergui');
                 expect(this.player1).toHavePromptButton('Don\'t choose a character');
+
+                this.player1.clickPrompt('Adept of the Waves (3)');
+                expect(this.player1.dynastyDiscardPile).toContain('adept-of-the-waves');
             });
         });
     });
