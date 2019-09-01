@@ -17,8 +17,7 @@ class DojiHotaru2 extends DrawCard {
             title: 'Gain 1 honor',
             when: {
                 onCardPlayed: (event, context) => {
-                    return context.game.isDuringConflict() &&
-                        context.source.isParticipating() &&
+                    return context.source.isParticipating() &&
                         event.player === context.player.opponent;
                 }
             },
