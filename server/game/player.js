@@ -230,6 +230,15 @@ class Player extends GameObject {
     }
 
     /**
+     * Returns the dynasty card from the passed province name
+     * @param {String} location - one of 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'
+     */
+    getDynastyCardsInProvince(location) {
+        let province = this.getSourceList(location);
+        return province.filter(card => card.isDynasty);
+    }
+
+    /**
      * Returns the province card from the passed province name
      * @param {String} location - one of 'province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'
      */
@@ -720,6 +729,13 @@ class Player extends GameObject {
                 return this.strongholdProvince;
             case Locations.ProvinceDeck:
                 return this.provinceDeck;
+            case Locations.Provinces:
+                return _(this.provinceOne.value().concat(
+                    this.provinceTwo.value(),
+                    this.provinceThree.value(),
+                    this.provinceFour.value(),
+                    this.strongholdProvince.value()
+                ));
             default:
                 if(this.additionalPiles[source]) {
                     return this.additionalPiles[source].cards;
