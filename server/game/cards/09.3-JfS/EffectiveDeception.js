@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl');
 class EffectiveDeception extends ProvinceCard {
     setupCardAbilities() {
         this.wouldInterrupt({
-            title: 'Cancel conflict province ability',
+            title: 'Cancel triggered ability',
             when: {
                 onInitiateAbilityEffects: (event, context) => context.source.isConflictProvince()
             },
