@@ -10,7 +10,7 @@ class IntoTheForbiddenCity extends ProvinceCard {
             target: {
                 cardType: CardTypes.Attachment,
                 cardCondition: card => card.parent && card.parent.isAttacking(),
-                gameAction: AbilityDsl.actions.discardCard()
+                gameAction: AbilityDsl.actions.discardFromPlay()
             }
         });
     }
