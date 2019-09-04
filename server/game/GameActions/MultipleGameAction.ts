@@ -19,8 +19,8 @@ export class MultipleGameAction extends GameAction {
         let message = '{0}';
         for(var i = 1; i < legalGameActions.length; i++) {
             message += i === legalGameActions.length - 1 ?
-                ', ' :
-                ' and ';
+                ' and ' :
+                ', ';
             message += '{' + i + '}';
         }
         return [message, legalGameActions.map(action => action.getEffectMessage(context))];
