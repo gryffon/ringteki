@@ -83,7 +83,6 @@ describe('Shosuro Miyako 2', function() {
                 this.player1.clickCard(this.shosuroMiyako);
                 this.player1.clickCard(this.dojiWhisperer);
                 this.player1.clickCard(this.shosuroMiyako);
-                this.player1.clickPrompt('Shosuro Miyako being played'); // shouldn't need to be here
                 expect(this.player1).toHavePrompt('Choose a character');
                 expect(this.player1).not.toBeAbleToSelect(this.alibiArtist);
                 expect(this.player1).not.toBeAbleToSelect(this.dojiWhisperer);
@@ -96,7 +95,6 @@ describe('Shosuro Miyako 2', function() {
                 this.player1.clickCard(this.shosuroMiyako);
                 this.player1.clickCard(this.dojiWhisperer);
                 this.player1.clickCard(this.shosuroMiyako);
-                this.player1.clickPrompt('Shosuro Miyako being played'); // shouldn't need to be here
                 this.player1.clickCard(this.adeptOfTheWaves);
                 expect(this.adeptOfTheWaves.isDishonored).toBe(true);
                 expect(this.getChatLogs(1)).toContain('player1 uses Shosuro Miyako to dishonor Adept of the Waves');

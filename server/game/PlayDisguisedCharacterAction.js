@@ -120,10 +120,6 @@ class PlayDisguisedCharacterAction extends BaseAction {
     isCardPlayed() {
         return true;
     }
-
-    isCardAbility() {
-        return true;
-    }
 }
 
 module.exports = PlayDisguisedCharacterAction;
