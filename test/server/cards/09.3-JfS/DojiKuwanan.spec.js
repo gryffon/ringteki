@@ -54,5 +54,39 @@ describe('Doji Kuwanan', function () {
                 expect(this.player1).not.toBeAbleToSelect(this.lionsPrideBrawler);
             });
         });
+        describe('Doji Kuwanan doesn\'t like Hotaru', function () {
+            beforeEach(function () {
+                this.setupTest({
+                    phase: 'dynasty',
+                    fate: 15,
+                    player1: {
+                        inPlay: ['doji-kuwanan'],
+                        dynastyDeck: ['doji-hotaru-2', 'doji-hotaru']
+                    }
+                });
+
+                this.kuwanan = this.player1.findCardByName('doji-kuwanan');
+
+                this.dojiHotaruV2 = this.player1.placeCardInProvince('doji-hotaru-2', 'province 1');
+                this.dojiHotaru = this.player1.placeCardInProvince('doji-hotaru', 'province 2');
+            })
+
+            it('so he kills her if she enters play', function() {
+                this.player1.clickCard(this.dojiHotaru);
+                this.player1.clickPrompt('0');
+                this.player2.pass();
+
+                expect(this.dojiHotaru.location).toBe('dynasty discard pile');
+            });
+
+            it('so they both kill each other if Hotaru is also angry.', function() {
+                this.player1.clickCard(this.dojiHotaruV2);
+                this.player1.clickPrompt('0');
+                this.player2.pass();
+
+                expect(this.kuwanan.location).toBe('dynasty discard pile');
+                expect(this.dojiHotaruV2.location).toBe('dynasty discard pile');
+            });
+        });
     });
 });
