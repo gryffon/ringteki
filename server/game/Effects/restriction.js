@@ -11,6 +11,9 @@ const checkRestrictions = {
         context.source.type === CardTypes.Event && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
     copiesOfX: (context, effect) => context.source.name === effect.params,
     events: context => context.source.type === CardTypes.Event,
+    eventsWithSameClan: (context, effect, card) =>
+        context.source.type === CardTypes.Event &&
+        card.isFaction(context.source.getPrintedFaction()),
     nonSpellEvents: context => context.source.type === CardTypes.Event && !context.source.hasTrait('spell'),
     opponentsCardEffects: (context, effect) =>
         context.player === effect.context.player.opponent && (context.ability.isCardAbility() || !context.ability.isCardPlayed()) &&

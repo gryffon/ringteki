@@ -11,7 +11,7 @@ class ConflictBetweenKin extends ProvinceCard {
             effect: [
                 AbilityDsl.effects.cardCannot({
                     cannot: 'target',
-                    restricts: 'events'
+                    restricts: 'eventsWithSameClan'
                 }),
                 AbilityDsl.effects.cardCannot({
                     cannot: 'target',
