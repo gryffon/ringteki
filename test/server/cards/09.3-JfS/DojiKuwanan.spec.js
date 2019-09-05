@@ -61,7 +61,8 @@ describe('Doji Kuwanan', function () {
                     fate: 15,
                     player1: {
                         inPlay: ['doji-kuwanan'],
-                        dynastyDeck: ['doji-hotaru-2', 'doji-hotaru']
+                        dynastyDeck: ['doji-hotaru-2', 'doji-hotaru'],
+                        hand: ['reprieve']
                     }
                 });
 
@@ -69,7 +70,7 @@ describe('Doji Kuwanan', function () {
 
                 this.dojiHotaruV2 = this.player1.placeCardInProvince('doji-hotaru-2', 'province 1');
                 this.dojiHotaru = this.player1.placeCardInProvince('doji-hotaru', 'province 2');
-            })
+            });
 
             it('so he kills her if she enters play', function() {
                 this.player1.clickCard(this.dojiHotaru);

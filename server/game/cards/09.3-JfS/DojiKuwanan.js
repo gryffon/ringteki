@@ -1,4 +1,3 @@
-const _ = require('underscore');
 
 import { CardTypes } from '../../Constants.js';
 const DrawCard = require('../../drawcard.js');

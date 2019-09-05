@@ -75,7 +75,7 @@ describe('Doji Hotaru 2', function () {
 
                 this.dojiHotaruV2 = this.player1.findCardByName('doji-hotaru-2');
                 this.kuwanan = this.player1.placeCardInProvince('doji-kuwanan', 'province 1');
-            })
+            });
 
             it('and Kuwanan doesn\'t like Hotaru so they kill each other if they are both in play.', function() {
                 this.player1.clickCard(this.kuwanan);
