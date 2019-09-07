@@ -42,7 +42,7 @@ describe('Fortified Assembly', function() {
 
                 this.player2.clickCard(this.fortifiedAssembly);
                 expect(this.fortifiedAssembly.getTokenCount('honor')).toBe(1);
-                expect(this.fortifiedAssembly.getStrength()).toBe(5)
+                expect(this.fortifiedAssembly.getStrength()).toBe(5);
             });
         });
     });
