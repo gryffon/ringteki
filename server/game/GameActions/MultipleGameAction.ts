@@ -15,7 +15,15 @@ export class MultipleGameAction extends GameAction {
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
         let { gameActions } = this.getProperties(context);
-        return ['{0}', gameActions.map(action => action.getEffectMessage(context))];
+        let legalGameActions = gameActions.filter(action => action.hasLegalTarget(context));
+        let message = '{0}';
+        for(var i = 1; i < legalGameActions.length; i++) {
+            message += i === legalGameActions.length - 1 ?
+                ' and ' :
+                ', ';
+            message += '{' + i + '}';
+        }
+        return [message, legalGameActions.map(action => action.getEffectMessage(context))];
     }
 
     getProperties(context: AbilityContext, additionalProperties = {}): MultipleActionProperties {
