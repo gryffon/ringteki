@@ -482,7 +482,7 @@ class DrawCard extends BaseCard {
         ];
 
         // glory undefined (Holding etc.)
-        if(!this.printedGlory) {
+        if(this.printedGlory === undefined) {
             return [];
         }
 
