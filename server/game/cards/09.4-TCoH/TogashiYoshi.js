@@ -1,7 +1,6 @@
 import { TargetModes } from '../../Constants.js';
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { CardTypes } = require('../../Constants');
 
 class TogashiYoshi extends DrawCard {
     setupCardAbilities() {

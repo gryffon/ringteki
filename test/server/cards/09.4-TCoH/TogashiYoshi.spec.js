@@ -35,7 +35,7 @@ describe('Togashi Yoshi', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.togashiYoshi);
 
-                this.player1.clickCard(this.togashiYoshi)
+                this.player1.clickCard(this.togashiYoshi);
 
                 this.player1.clickRing('air');
                 expect(this.player1.fate).toBe(7);
@@ -56,7 +56,7 @@ describe('Togashi Yoshi', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.togashiYoshi);
 
-                this.player1.clickCard(this.togashiYoshi)
+                this.player1.clickCard(this.togashiYoshi);
 
                 this.player1.clickRing('air');
                 expect(this.player1.fate).toBe(7);
