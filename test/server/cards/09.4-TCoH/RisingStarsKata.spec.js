@@ -6,7 +6,7 @@ describe('Rising Stars Kata', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['mirumoto-hitomi'],
-                        hand: ['rising-stars-kata',  'rising-stars-kata']
+                        hand: ['rising-stars-kata', 'rising-stars-kata']
                     },
                     player2: {
                         inPlay: ['shrine-maiden']

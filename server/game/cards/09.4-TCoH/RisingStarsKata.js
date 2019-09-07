@@ -20,8 +20,8 @@ class RisingStarsKata extends DrawCard {
                     duration: Durations.UntilEndOfConflict,
                     effect: this.duelWinnersThisConflict.includes(context.target) ?
                         AbilityDsl.effects.modifyMilitarySkill(5) :
-                        AbilityDsl.effects.modifyMilitarySkill(3),
-                })),
+                        AbilityDsl.effects.modifyMilitarySkill(3)
+                }))
             },
             effect: 'give {0} +{1} military skill until the end of the conflict',
             effectArgs: context => [this.duelWinnersThisConflict.includes(context.target) ? 5 : 3],
