@@ -2,14 +2,13 @@ import { Durations } from '../../Constants.js';
 
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { CardTypes } = require('../../Constants');
 
 class RighteousDelegate extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'increase the skill of each non-bushi and decrease the skill of each bushi',
             condition: context => context.source.isParticipating(),
-            effect: 'give all participating bushi characters -1{1} \/ -1{2} and give all participating non-bushi characters +1{1} \/ +1{2}',
+            effect: 'give all participating bushi characters -1{1} / -1{2} and give all participating non-bushi characters +1{1} / +1{2}',
             effectArgs: () => ['military', 'political'],
             gameAction: AbilityDsl.actions.multiple([
                 AbilityDsl.actions.cardLastingEffect(context => ({
