@@ -118,7 +118,9 @@ class DrawCard extends BaseCard {
     }
 
     hasKeyword(keyword) {
-        return this.getEffects(EffectNames.AddKeyword).includes(keyword.toLowerCase());
+        let addKeywordEffects = this.getEffects(EffectNames.AddKeyword).filter(effectValue => effectValue === keyword.toLowerCase());
+        let loseKeywordEffects = this.getEffects(EffectNames.LoseKeyword).filter(effectValue => effectValue === keyword.toLowerCase());
+        return addKeywordEffects.length > loseKeywordEffects.length;
     }
 
     hasPrintedKeyword(keyword) {
@@ -858,6 +860,13 @@ class DrawCard extends BaseCard {
             return this.mostRecentEffect(EffectNames.TakeControl) || this.defaultController;
         }
         return this.owner;
+    }
+
+    canDisguise(card, context, intoConflictOnly) {
+        return this.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
+            card.allowGameAction('discardFromPlay', context) &&
+            !card.isUnique() &&
+            (!intoConflictOnly || card.isParticipating());
     }
 
     play() {
