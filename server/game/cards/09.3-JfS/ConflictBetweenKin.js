@@ -15,7 +15,7 @@ class ConflictBetweenKin extends ProvinceCard {
                 }),
                 AbilityDsl.effects.cardCannot({
                     cannot: 'target',
-                    restricts: 'attachmentWithSameClan'
+                    restricts: 'attachmentsWithSameClan'
                 })
             ]
         });
