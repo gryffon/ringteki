@@ -62,5 +62,28 @@ describe('Doji Hotaru 2', function () {
                 expect(this.player1).not.toBeAbleToSelect(this.dojiHotaru);
             });
         });
+        describe('Doji Hotaru doesn\'t like Kuwanan', function () {
+            beforeEach(function () {
+                this.setupTest({
+                    phase: 'dynasty',
+                    fate: 15,
+                    player1: {
+                        inPlay: ['doji-hotaru-2'],
+                        dynastyDeck: ['doji-kuwanan']
+                    }
+                });
+
+                this.dojiHotaruV2 = this.player1.findCardByName('doji-hotaru-2');
+                this.kuwanan = this.player1.placeCardInProvince('doji-kuwanan', 'province 1');
+            });
+
+            it('and Kuwanan doesn\'t like Hotaru so they kill each other if they are both in play.', function() {
+                this.player1.clickCard(this.kuwanan);
+                this.player1.clickPrompt('0');
+
+                expect(this.kuwanan.location).toBe('dynasty discard pile');
+                expect(this.dojiHotaruV2.location).toBe('dynasty discard pile');
+            });
+        });
     });
 });
