@@ -3,22 +3,28 @@ const EffectValue = require('./EffectValue');
 const { CardTypes } = require('../Constants');
 
 const checkRestrictions = {
+    attachmentsWithSameClan: (context, effect, card) =>
+        context.source.type === CardTypes.Attachment &&
+        card.isFaction(context.source.getPrintedFaction()),
     characters: context => context.source.type === CardTypes.Character,
     copiesOfDiscardEvents: context =>
         context.source.type === CardTypes.Event && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
-    copiesOfX: (context, player, source, params) => context.source.name === params,
+    copiesOfX: (context, effect) => context.source.name === effect.params,
     events: context => context.source.type === CardTypes.Event,
+    eventsWithSameClan: (context, effect, card) =>
+        context.source.type === CardTypes.Event &&
+        card.isFaction(context.source.getPrintedFaction()),
     nonSpellEvents: context => context.source.type === CardTypes.Event && !context.source.hasTrait('spell'),
-    opponentsCardEffects: (context, player) =>
-        context.player === player.opponent && (context.ability.isCardAbility() || !context.ability.isCardPlayed()) &&
+    opponentsCardEffects: (context, effect) =>
+        context.player === effect.context.player.opponent && (context.ability.isCardAbility() || !context.ability.isCardPlayed()) &&
         [CardTypes.Event, CardTypes.Character, CardTypes.Holding, CardTypes.Attachment, CardTypes.Stronghold, CardTypes.Province, CardTypes.Role].includes(context.source.type),
-    opponentsEvents: (context, player) =>
-        context.player && context.player === player.opponent && context.source.type === CardTypes.Event,
-    opponentsRingEffects: (context, player) =>
-        context.player && context.player === player.opponent && context.source.type === 'ring',
-    opponentsTriggeredAbilities: (context, player) =>
-        context.player === player.opponent && context.ability.isTriggeredAbility(),
-    source: (context, player, source) => context.source === source
+    opponentsEvents: (context, effect) =>
+        context.player && context.player === effect.context.player.opponent && context.source.type === CardTypes.Event,
+    opponentsRingEffects: (context, effect) =>
+        context.player && context.player === effect.context.player.opponent && context.source.type === 'ring',
+    opponentsTriggeredAbilities: (context, effect) =>
+        context.player === effect.context.player.opponent && context.ability.isTriggeredAbility(),
+    source: (context, effect) => context.source === effect.context.source
 };
 
 class Restriction extends EffectValue {
@@ -38,11 +44,11 @@ class Restriction extends EffectValue {
         return this;
     }
 
-    isMatch(type, abilityContext) {
-        return (!this.type || this.type === type) && this.checkCondition(abilityContext);
+    isMatch(type, context, card) {
+        return (!this.type || this.type === type) && this.checkCondition(context, card);
     }
 
-    checkCondition(context) {
+    checkCondition(context, card) {
         if(!this.restriction) {
             return true;
         } else if(!context) {
@@ -50,8 +56,7 @@ class Restriction extends EffectValue {
         } else if(!checkRestrictions[this.restriction]) {
             return context.source.hasTrait(this.restriction);
         }
-        let player = this.context.player || this.context.source && this.context.source.controller;
-        return checkRestrictions[this.restriction](context, player, this.context.source, this.params);
+        return checkRestrictions[this.restriction](context, this, card);
     }
 }
 

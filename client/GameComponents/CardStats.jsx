@@ -57,7 +57,7 @@ class CardStats extends React.Component {
                 { this.props.glorySummary &&
                     <div className='stat-container'>
                         <div className='stat-total'>
-                            <img className='icon-glory stat--type-icon' src='/img/Glory.png' />
+                            <img className='icon-glory stat--type-icon' src='/img/glory.png' />
                             <span className='stat-value'>{ this.props.glorySummary.stat }</span>
                         </div>
                         <div className='stat-specifics'>
