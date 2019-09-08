@@ -7,11 +7,11 @@ class DojiKuwanan extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
             effect: AbilityDsl.effects.delayedEffect({
-                condition:  context => context.player && context.player.cardsInPlay.toArray().find(card => card.printedName === 'Doji Hotaru'),
+                condition:  context => context.player && context.player.cardsInPlay.toArray().find(card => card.name === 'Doji Hotaru'),
                 message: '{1} is discarded from play as its controller controls {0}',
-                messageArgs: context => [context.source, context.player.cardsInPlay.find(card => card.printedName === 'Doji Hotaru')],
+                messageArgs: context => [context.source, context.player.cardsInPlay.find(card => card.name === 'Doji Hotaru')],
                 gameAction: AbilityDsl.actions.discardFromPlay(context => ({
-                    target: context.player.cardsInPlay.find(card => card.printedName === 'Doji Hotaru')
+                    target: context.player.cardsInPlay.find(card => card.name === 'Doji Hotaru')
                 }))
             })
         });
