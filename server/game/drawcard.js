@@ -806,6 +806,13 @@ class DrawCard extends BaseCard {
         return this.owner;
     }
 
+    canDisguise(card, context, intoConflictOnly) {
+        return this.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
+            card.allowGameAction('discardFromPlay', context) &&
+            !card.isUnique() &&
+            (!intoConflictOnly || card.isParticipating());
+    }
+
     play() {
     //empty function so playcardaction doesn't crash the game
     }
