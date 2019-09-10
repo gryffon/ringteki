@@ -31,7 +31,7 @@ describe('Ide Ryoma', function() {
             it('should correctly target characters', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.ryoma);
-                expect(this.player1).toHavePrompt('choose one character to bow and one to ready');
+                expect(this.player1).toHavePrompt('Choose one character to bow and one to ready');
                 expect(this.player1).not.toBeAbleToSelect(this.kudaka);
                 expect(this.player1).not.toBeAbleToSelect(this.historian);
                 expect(this.player1).toBeAbleToSelect(this.shono);

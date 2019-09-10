@@ -5,20 +5,20 @@ const AbilityDsl = require('../../abilitydsl');
 class IdeRyoma extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title:'Switch 2 characters you control',
+            title: 'choose one character to bow and one to ready',
             condition: (context) => context.source.isParticipating(),
             targets: {
                 bowedCharacter: {
-                    activePromptTitle: 'Choose a participating character to send home',
+                    activePromptTitle: 'Choose a character to ready',
                     cardType: CardTypes.Character,
                     controller: Players.Any,
                     cardCondition: card => card.bowed
                 },
                 readiedCharacter: {
                     dependsOn: 'bowedCharacter',
-                    activePromptTitle: 'Choose a character to move to the conflict',
+                    activePromptTitle: 'Choose a character to bow controlled by the same player',
                     cardType: CardTypes.Character,
-                    controller: Players.Self,
+                    controller: Players.Any,
                     cardCondition: (card, context) => !card.bowed && card.controller === context.target.bowedCharacter.controller,
                     gameAction: AbilityDsl.actions.joint([
                         AbilityDsl.actions.ready(context => ({ target: context.targets.bowedCharacter })),
