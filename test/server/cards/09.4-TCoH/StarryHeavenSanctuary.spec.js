@@ -6,7 +6,8 @@ describe('Starry Heaven Sanctuary', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['hida-guardian', 'borderlands-defender', 'akodo-kaede'],
-                        dynastyDeck: ['starry-heaven-sanctuary', 'jurojin-s-curse'],
+                        dynastyDeck: ['starry-heaven-sanctuary'],
+                        hand: ['jurojin-s-curse', 'consumed-by-five-fires', 'karmic-twist'],
                         fate: 6
                     },
                     player2: {
@@ -36,23 +37,18 @@ describe('Starry Heaven Sanctuary', function() {
                 expect(this.player1).toBeAbleToSelect(this.starryHeavenSanctuary);
 
                 this.player1.clickCard(this.starryHeavenSanctuary);
-                this.player1.clickPrompt('onMoveFate');
                 expect(this.player1.fate).toBe(8);
             });
 
-            it('should give be able to trigger if 4 fate was removed during the fate phase, even if it was moved by another effect', function () {
+            it('should not be able to trigger if 4 fate was not remove simultaneously', function () {
                 this.hidaGuardian.fate = 0;
                 this.akodoKaede.fate = 1;
 
                 this.flow.finishConflictPhase();
                 this.player1.clickCard(this.hidaGuardian);
                 this.player1.clickCard(this.akodoKaede);
-                expect(this.player1).toHavePrompt('Triggered Abilities');
-                expect(this.player1).toBeAbleToSelect(this.starryHeavenSanctuary);
-
-                this.player1.clickCard(this.starryHeavenSanctuary);
-                this.player1.clickPrompt('onMoveFate');
-                expect(this.player1.fate).toBe(8);
+                expect(this.player1).toHavePrompt('Discard Dynasty Cards');
+                expect(this.player1.fate).toBe(6);
             });
 
             it('should not be able to trigger if 3 or less fate was removed', function () {
@@ -66,25 +62,61 @@ describe('Starry Heaven Sanctuary', function() {
                 expect(this.player1.fate).toBe(6);
             });
 
+            it('should trigger from events which move or remove fate also', function() {
+                this.player1.player.promptedActionWindows.fate = true;
+
+                this.bayushiAramoro.fate = 4;
+                this.shrineMaiden.fate = 3;
+                this.borderlandsDefender.fate = 1;
+                this.hidaGuardian.fate = 5;
+                this.flow.finishConflictPhase();
+
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.starryHeavenSanctuary);
+                this.player1.clickPrompt('Pass');
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard('consumed-by-five-fires');
+                expect(this.player1).toHavePrompt('Consumed By Five Fires');
+                this.player1.clickCard(this.bayushiAramoro);
+                this.player1.clickPrompt('3');
+                this.player1.clickCard(this.shrineMaiden);
+                this.player1.clickPrompt('2');
+                expect(this.bayushiAramoro.fate).toBe(0);
+                expect(this.shrineMaiden.fate).toBe(0);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.starryHeavenSanctuary);
+                this.player1.clickPrompt('Pass');
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard('karmic-twist');
+                expect(this.player1).toHavePrompt('Karmic Twist');
+                this.player1.clickCard(this.hidaGuardian);
+                this.player1.clickCard(this.borderlandsDefender);
+                expect(this.hidaGuardian.fate).toBe(0);
+                expect(this.borderlandsDefender.fate).toBe(4);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.starryHeavenSanctuary);
+
+            });
+
             it('should see an additional fate phase as a seperate fate phase', function () {
                 this.hidaGuardian.fate = 0;
                 this.akodoKaede.fate = 0;
                 this.shrineMaiden.fate = 0;
                 this.bayushiAramoro.fate = 2;
                 this.borderlandsDefender.fate = 2;
+                expect(this.player1).toHavePrompt('Action Window');
                 this.player1.playAttachment(this.jurojinsCurse, this.borderlandsDefender);
+                expect(this.jurojinsCurse.location).toBe('play area');
 
                 this.flow.finishConflictPhase();
                 this.player1.clickCard(this.hidaGuardian);
                 this.player1.clickCard(this.akodoKaede);
                 this.player2.clickCard(this.shrineMaiden);
 
-                expect(this.player1).toHavePrompt('Triggered Abilities');
-                expect(this.player1).toBeAbleToSelect(this.jurojinsCurse);
-                this.player1.clickCard(this.jurojinsCurse)
-
-                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).toHavePrompt('Discard Dynasty Cards');
                 expect(this.player1.fate).toBe(6);
+                expect(this.borderlandsDefender.fate).toBe(0);
+                expect(this.bayushiAramoro.fate).toBe(0);
             });
         });
     });
