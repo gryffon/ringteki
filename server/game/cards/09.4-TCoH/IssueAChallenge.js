@@ -5,7 +5,7 @@ const AbilityDsl = require('../../abilitydsl');
 class IssueAChallenge extends DrawCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'Prevent a character from leaving play',
+            title: 'Prevent more than 1 declared defender',
             when: {
                 onConflictDeclared: (event, context) => context.game.currentConflict.getNumberOfParticipantsFor(context.source.controller) === 1 &&
                     context.game.currentConflict.getParticipants(participant => participant.hasTrait('bushi') && participant.controller === context.player).length === 1
