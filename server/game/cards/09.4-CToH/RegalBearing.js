@@ -22,7 +22,7 @@ class RegalBearing extends DrawCard {
     }
 
     getHonorDialDifference(context) {
-        if(!!context.player.opponent)
+        if(!context.player.opponent)
             return 0;
 
         return Math.abs(context.player.showBid - context.player.opponent.showBid);
