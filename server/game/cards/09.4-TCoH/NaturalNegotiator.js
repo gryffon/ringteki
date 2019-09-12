@@ -9,6 +9,7 @@ class NaturalNegotiator extends DrawCard {
             effect: 'switch {1}\'s base {2} and {3} skill',
             effectArgs: context => [context.source.parent, 'military', 'political'],
             cost: AbilityDsl.costs.giveHonorToOpponent(),
+            condition: context => context.game.isDuringConflict(),
             gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
                 duration: Durations.UntilEndOfConflict,
                 target: context.source.parent,
