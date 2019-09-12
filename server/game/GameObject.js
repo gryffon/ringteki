@@ -61,7 +61,7 @@ class GameObject {
 
 
     checkRestrictions(actionType, context) {
-        return !this.getEffects(EffectNames.AbilityRestrictions).some(restriction => restriction.isMatch(actionType, context));
+        return !this.getEffects(EffectNames.AbilityRestrictions).some(restriction => restriction.isMatch(actionType, context, this));
     }
 
     isUnique() {

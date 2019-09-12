@@ -5,7 +5,7 @@ class MarkOfShame extends DrawCard {
         this.reaction({
             title: 'Dishonor attached character',
             when: {
-                onCardAttached: (event, context) => event.card === context.source
+                onCardPlayed: (event, context) => event.card === context.source
             },
             gameAction: ability.actions.dishonor(context => ({ target: context.source.parent })),
             then: context => ({

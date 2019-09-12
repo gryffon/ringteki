@@ -437,7 +437,7 @@ export class InnerGameBoard extends React.Component {
     renderRingAttachments(element, attachments, amController) {
         let ringAttachmentWidthModifier = 0.8;
         let attachmentOffset = 13 * ringAttachmentWidthModifier;
-        let cardLayer = 10;
+        let cardLayer = 45;
         switch(this.props.user.settings.cardSize) {
             case 'large':
                 attachmentOffset *= 1.4;

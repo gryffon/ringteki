@@ -1,5 +1,5 @@
 import AbilityContext = require('../AbilityContext');
-import BaseCard = require('../basecard');
+import DrawCard = require('../drawcard');
 import Player = require('../player');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Players } from '../Constants';
@@ -8,14 +8,14 @@ import { GameAction } from './GameAction';
 export interface CardMenuProperties extends CardActionProperties {
     activePromptTitle?: string;
     player?: Players;
-    cards: BaseCard[];
-    cardCondition?: (card: BaseCard, context: AbilityContext) => boolean;
+    cards: DrawCard[];
+    cardCondition?: (card: DrawCard, context: AbilityContext) => boolean;
     choices?: string[];
     handlers?: Function[];
     targets?: boolean;
     message?: string;
-    messageArgs?: (card: BaseCard, player: Player, cards: BaseCard[]) => any[];
-    subActionProperties?: (card: BaseCard) => any;
+    messageArgs?: (card: DrawCard, player: Player, cards: DrawCard[]) => any[];
+    subActionProperties?: (card: DrawCard) => any;
     gameAction: GameAction;
     gameActionHasLegalTarget?: (context: AbilityContext) => boolean;
 }
@@ -41,7 +41,7 @@ export class CardMenuAction extends CardGameAction {
         return properties;
     }
 
-    canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
+    canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
         return properties.cards.some(c => 
             properties.gameAction.canAffect(card, context, Object.assign({}, additionalProperties, properties.subActionProperties(c)))
@@ -75,7 +75,7 @@ export class CardMenuAction extends CardGameAction {
         }
         let defaultProperties = {
             context: context,
-            cardHandler: (card: BaseCard): void => {
+            cardHandler: (card: DrawCard): void => {
                 properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.subActionProperties(card)));
                 if(properties.message) {
                     let cards = properties.cards.filter(card => cardCondition(card, context));

@@ -234,7 +234,7 @@ class Card extends React.Component {
 
         let attachmentOffset = 13;
         let cardHeight = 84;
-        let cardLayer = 10;
+        let cardLayer = 45;
         switch(this.props.size) {
             case 'large':
                 attachmentOffset *= 1.4;

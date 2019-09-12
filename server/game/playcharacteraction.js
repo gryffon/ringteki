@@ -27,6 +27,9 @@ class PlayCharacterAction extends BaseAction {
         if(context.source.anotherUniqueInPlay(context.player)) {
             return 'unique';
         }
+        if(!context.player.checkRestrictions('playCharacter', context)) {
+            return 'restriction';
+        }
         return super.meetsRequirements(context);
     }
 

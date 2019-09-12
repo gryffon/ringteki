@@ -42,7 +42,9 @@ export class SequentialAction extends GameAction {
             if(gameAction.hasLegalTarget(context, additionalProperties)) {
                 let eventsForThisAction = [];
                 context.game.queueSimpleStep(() => gameAction.addEventsToArray(eventsForThisAction, context));
-                context.game.queueSimpleStep(() => context.game.openEventWindow(eventsForThisAction));
+                if(gameAction !== properties.gameActions[properties.gameActions.length - 1]) {
+                    context.game.queueSimpleStep(() => context.game.openEventWindow(eventsForThisAction));
+                }
                 context.game.queueSimpleStep(() => {
                     for(const event of eventsForThisAction) {
                         events.push(event);
