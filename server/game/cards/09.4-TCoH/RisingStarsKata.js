@@ -23,8 +23,8 @@ class RisingStarsKata extends DrawCard {
                         AbilityDsl.effects.modifyMilitarySkill(3)
                 }))
             },
-            effect: 'give {0} +{1} military skill until the end of the conflict',
-            effectArgs: context => [this.duelWinnersThisConflict.includes(context.target) ? 5 : 3],
+            effect: 'give {0} +{1} {2} skill until the end of the conflict',
+            effectArgs: context => [this.duelWinnersThisConflict.includes(context.target) ? 5 : 3, 'military'],
             max: AbilityDsl.limit.perConflict(1)
         });
     }
@@ -34,6 +34,13 @@ class RisingStarsKata extends DrawCard {
     }
 
     afterDuel(event) {
+        if(Array.isArray(event.duel.winner)) {
+            this.duel.winner.forEach(duelWinner => {
+                if(this.duelWinnersThisConflict.indexOf(duelWinner) === -1) {
+                    this.abilities.duelWinnersThisConflict.push(duelWinner);
+                }
+            });
+        }
         if(event.duel.winner) {
             this.duelWinnersThisConflict.push(event.duel.winner);
         }
