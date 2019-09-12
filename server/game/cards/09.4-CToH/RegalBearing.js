@@ -4,8 +4,8 @@ const AbilityDsl = require('../../abilitydsl');
 class RegalBearing extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Drop your bid to 1 and then draw cards equal to the difference between honor dials',
-            condition: context => context.game.currentConflict.conflictType === 'political' &&
+            title: 'Lower bid and draw bid difference as cards',
+            condition: context => context.game.isDuringConflict('political') &&
                 context.player.anyCardsInPlay(card => card.isParticipating() && card.hasTrait('courtier')),
             effect: 'set their bid dial to 1 and draw {1} cards.',
             effectArgs: context => this.getHonorDialDifference(context),
@@ -22,6 +22,9 @@ class RegalBearing extends DrawCard {
     }
 
     getHonorDialDifference(context) {
+        if(!!context.player.opponent)
+            return 0;
+
         return Math.abs(context.player.showBid - context.player.opponent.showBid);
     }
 }
