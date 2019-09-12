@@ -6,7 +6,7 @@ const AbilityDsl = require('../../abilitydsl');
 class RighteousDelegate extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'increase the skill of each non-bushi and decrease the skill of each bushi',
+            title: 'Weaken bushi, empower non-bushi',
             condition: context => context.source.isParticipating(),
             effect: 'give all participating bushi characters -1{1} / -1{2} and give all participating non-bushi characters +1{1} / +1{2}',
             effectArgs: () => ['military', 'political'],
