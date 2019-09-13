@@ -8,32 +8,35 @@ class IdeRyoma extends DrawCard {
             title: 'Choose one character to bow and one to ready',
             condition: (context) => context.source.isParticipating(),
             targets: {
-                toBeReadied: {
-                    activePromptTitle: 'Choose a character to ready',
-                    cardType: CardTypes.Character,
-                    controller: Players.Any
-                },
                 toBeBowed: {
-                    dependsOn: 'toBeReadied',
-                    activePromptTitle: 'Choose a character to bow controlled by the same player',
+                    activePromptTitle: 'Choose a character to bow',
+                    cardType: CardTypes.Character,
+                    controller: Players.Any,
+                    cardCondition: card => card.bowed === false
+                },
+                toBeReadied: {
+                    dependsOn: 'toBeBowed',
+                    activePromptTitle: 'Choose a character to readied controlled by the same player',
                     cardType: CardTypes.Character,
                     controller: Players.Any,
                     cardCondition: (card, context) => {
-                        let bowedChar = context.targets.toBeReadied;
-                        if(card.controller === bowedChar.controller) {
-                            if(bowedChar.isFaction('unicorn') && !card.isFaction('unicorn')) {
+                        let readiedChar = context.targets.toBeBowed;
+                        if(card.controller === readiedChar.controller) {
+                            if(readiedChar.isFaction('unicorn') && !card.isFaction('unicorn')) {
                                 return true;
-                            } else if(!bowedChar.isFaction('unicorn') && card.isFaction('unicorn')) {
+                            } else if(!readiedChar.isFaction('unicorn') && card.isFaction('unicorn')) {
                                 return true;
                             }
                             return false;
                         }
                         return false;
                     },
-                    gameAction: AbilityDsl.actions.joint([
-                        AbilityDsl.actions.ready(context => ({ target: context.targets.toBeReadied })),
-                        AbilityDsl.actions.bow()
-                    ])
+                    gameAction: AbilityDsl.actions.menuPrompt(context => {
+                        return {
+                            activePromptTitle: 'choose a character to bow',
+                            choices: [context.targets.toBeReadied, context.targets.toBeBowed],
+                        };
+                    })
                 }
             },
             effect: 'readies {1} and bows {2}',
