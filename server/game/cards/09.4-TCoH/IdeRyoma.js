@@ -9,10 +9,12 @@ class IdeRyoma extends DrawCard {
             condition: (context) => context.source.isParticipating(),
             targets: {
                 unicorn: {
+                    activePromptTitle: 'Choose a unicorn character',
                     cardType: CardTypes.Character,
                     cardCondition: card => card.isFaction('unicorn')
                 },
                 nonunicorn: {
+                    activePromptTitle: 'Choose a non-unicorn character',
                     dependsOn: 'unicorn',
                     cardType: CardTypes.Character,
                     cardCondition: (card, context) => !card.isFaction('unicorn') && card.controller === context.targets.unicorn.controller
@@ -23,11 +25,11 @@ class IdeRyoma extends DrawCard {
                 cardCondition: card => Object.values(context.targets).includes(card),
                 gameAction: AbilityDsl.actions.bow()
             })),
-            then: {
-                gameAction: AbilityDsl.actions.ready(context => ({
-                    target: Object.values(context.targets).filter(card => !context.events.some(event => event.card === card))
+            then: context => ({
+                gameAction: AbilityDsl.actions.ready(() => ({
+                    target: Object.values(context.targets).filter(card => context.events.every(event => event.card !== card))
                 }))
-            }
+            })
         });
     }
 }

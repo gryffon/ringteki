@@ -32,11 +32,11 @@ describe('Ide Ryoma', function() {
             it('should correctly target characters', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.ryoma);
-                expect(this.player1).toHavePrompt('Choose a character');
+                expect(this.player1).toHavePrompt('Choose a unicorn character');
                 expect(this.player1).toBeAbleToSelect(this.shono);
                 expect(this.player1).toBeAbleToSelect(this.ryoma);
                 this.player1.clickCard(this.shono);
-                expect(this.player1).toHavePrompt('Choose a character');
+                expect(this.player1).toHavePrompt('Choose a non-unicorn character');
                 expect(this.player1).toBeAbleToSelect(this.kudaka);
                 expect(this.player1).not.toBeAbleToSelect(this.ryoma);
                 expect(this.player1).not.toBeAbleToSelect(this.historian);
