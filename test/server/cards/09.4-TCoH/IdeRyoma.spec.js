@@ -69,6 +69,14 @@ describe('Ide Ryoma', function() {
                 expect(this.historian.bowed).toBe(true);
                 expect(this.wayfinder.bowed).toBe(false);
             });
+
+            it('should not be able to target two bow characters', function() {
+                this.shono.bowed = true;
+                this.player2.pass();
+                this.player1.clickCard(this.ryoma);
+                this.player1.clickCard(this.shono);
+                expect(this.player1).not.toBeAbleToSelect(this.kudaka);
+            });
         });
     });
 });
