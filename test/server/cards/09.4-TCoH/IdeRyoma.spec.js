@@ -50,10 +50,9 @@ describe('Ide Ryoma', function() {
             it('should bow the selected character and ready the other', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.ryoma);
+                this.player1.clickCard(this.shono);
                 this.player1.clickCard(this.kudaka);
                 this.player1.clickCard(this.shono);
-                this.player1.clickPrompt('Pay costs first');
-                this.player1.clickPrompt('Shinjo Shono');
                 expect(this.kudaka.bowed).toBe(false);
                 expect(this.shono.bowed).toBe(true);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
