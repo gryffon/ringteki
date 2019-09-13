@@ -52,9 +52,11 @@ describe('Ide Ryoma', function() {
                 this.player1.clickCard(this.ryoma);
                 this.player1.clickCard(this.kudaka);
                 this.player1.clickCard(this.shono);
-                this.player1.clickCard(this.shono);
+                this.player1.clickPrompt('Pay costs first');
+                this.player1.clickPrompt('Shinjo Shono');
                 expect(this.kudaka.bowed).toBe(false);
                 expect(this.shono.bowed).toBe(true);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
 
             it('should bow one of two readied characters', function() {
