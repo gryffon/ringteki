@@ -17,7 +17,11 @@ class IdeRyoma extends DrawCard {
                     activePromptTitle: 'Choose a non-unicorn character',
                     dependsOn: 'unicorn',
                     cardType: CardTypes.Character,
-                    cardCondition: (card, context) => !card.isFaction('unicorn') && card.controller === context.targets.unicorn.controller && !(card.bowed && context.targets.unicorn.bowed)
+                    cardCondition: (card, context) => (
+                        !card.isFaction('unicorn') &&
+                        card.controller === context.targets.unicorn.controller &&
+                        !(card.bowed && context.targets.unicorn.bowed)
+                    )
                 }
             },
             gameAction: AbilityDsl.actions.selectCard(context => ({
