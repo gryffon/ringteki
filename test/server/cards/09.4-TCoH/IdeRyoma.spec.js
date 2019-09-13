@@ -32,25 +32,27 @@ describe('Ide Ryoma', function() {
             it('should correctly target characters', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.ryoma);
-                expect(this.player1).toHavePrompt('Choose a character to bow');
+                expect(this.player1).toHavePrompt('Choose a character');
                 expect(this.player1).toBeAbleToSelect(this.shono);
-                expect(this.player1).toBeAbleToSelect(this.historian);
+                expect(this.player1).toBeAbleToSelect(this.ryoma);
+                this.player1.clickCard(this.shono);
+                expect(this.player1).toHavePrompt('Choose a character');
                 expect(this.player1).toBeAbleToSelect(this.kudaka);
-                expect(this.player1).toBeAbleToSelect(this.ryoma);
-                this.player1.clickCard(this.kudaka);
-                expect(this.player1).toHavePrompt('Choose a character to readied controlled by the same player');
-                expect(this.player1).toBeAbleToSelect(this.shono);
-                expect(this.player1).toBeAbleToSelect(this.ryoma);
+                expect(this.player1).not.toBeAbleToSelect(this.ryoma);
                 expect(this.player1).not.toBeAbleToSelect(this.historian);
                 expect(this.player1).not.toBeAbleToSelect(this.wayfinder);
-
+                this.player1.clickCard(this.kudaka);
+                expect(this.player1).toHavePrompt('Choose a character to bow');
+                expect(this.player1).toBeAbleToSelect(this.shono);
+                expect(this.player1).not.toBeAbleToSelect(this.kudaka);
             });
 
             it('should bow the selected character and ready the other', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.ryoma);
-                this.player1.clickCard(this.shono);
                 this.player1.clickCard(this.kudaka);
+                this.player1.clickCard(this.shono);
+                this.player1.clickCard(this.shono);
                 expect(this.kudaka.bowed).toBe(false);
                 expect(this.shono.bowed).toBe(true);
             });
@@ -60,8 +62,9 @@ describe('Ide Ryoma', function() {
                 expect(this.historian.bowed).toBe(false);
                 expect(this.wayfinder.bowed).toBe(false);
                 this.player1.clickCard(this.ryoma);
-                this.player1.clickCard(this.historian);
                 this.player1.clickCard(this.wayfinder);
+                this.player1.clickCard(this.historian);
+                this.player1.clickCard(this.historian);
                 expect(this.historian.bowed).toBe(true);
                 expect(this.wayfinder.bowed).toBe(false);
             });

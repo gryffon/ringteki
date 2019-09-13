@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, CardTypes } = require('../../Constants');
+const { CardTypes } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class IdeRyoma extends DrawCard {
@@ -8,39 +8,26 @@ class IdeRyoma extends DrawCard {
             title: 'Choose one character to bow and one to ready',
             condition: (context) => context.source.isParticipating(),
             targets: {
-                toBeBowed: {
-                    activePromptTitle: 'Choose a character to bow',
+                unicorn: {
                     cardType: CardTypes.Character,
-                    controller: Players.Any,
-                    cardCondition: card => card.bowed === false
+                    cardCondition: card => card.isFaction('unicorn')
                 },
-                toBeReadied: {
-                    dependsOn: 'toBeBowed',
-                    activePromptTitle: 'Choose a character to readied controlled by the same player',
+                nonunicorn: {
+                    dependsOn: 'unicorn',
                     cardType: CardTypes.Character,
-                    controller: Players.Any,
-                    cardCondition: (card, context) => {
-                        let readiedChar = context.targets.toBeBowed;
-                        if(card.controller === readiedChar.controller) {
-                            if(readiedChar.isFaction('unicorn') && !card.isFaction('unicorn')) {
-                                return true;
-                            } else if(!readiedChar.isFaction('unicorn') && card.isFaction('unicorn')) {
-                                return true;
-                            }
-                            return false;
-                        }
-                        return false;
-                    },
-                    gameAction: AbilityDsl.actions.menuPrompt(context => {
-                        return {
-                            activePromptTitle: 'choose a character to bow',
-                            choices: [context.targets.toBeReadied, context.targets.toBeBowed],
-                        };
-                    })
+                    cardCondition: (card, context) => !card.isFaction('unicorn') && card.controller === context.targets.unicorn.controller
                 }
             },
-            effect: 'readies {1} and bows {2}',
-            effectArgs: context => [context.targets.toBeReadied, context.targets.toBeBowed]
+            gameAction: AbilityDsl.actions.selectCard(context => ({
+                activePromptTitle: 'Choose a character to bow',
+                cardCondition: card => Object.values(context.targets).includes(card),
+                gameAction: AbilityDsl.actions.bow()
+            })),
+            then: {
+                gameAction: AbilityDsl.actions.ready(context => ({
+                    target: Object.values(context.targets).filter(card => !context.events.some(event => event.card === card))
+                }))
+            }
         });
     }
 }
