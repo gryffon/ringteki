@@ -17,18 +17,16 @@ class IdeRyoma extends DrawCard {
                     activePromptTitle: 'Choose a non-unicorn character',
                     dependsOn: 'unicorn',
                     cardType: CardTypes.Character,
-                    cardCondition: (card, context) => (
+                    cardCondition: (card, context) =>
                         !card.isFaction('unicorn') &&
-                        card.controller === context.targets.unicorn.controller &&
-                        !(card.bowed && context.targets.unicorn.bowed)
-                    )
+                        card.controller === context.targets.unicorn.controller,
+                    gameAction: AbilityDsl.actions.selectCard(context => ({
+                        activePromptTitle: 'Choose a character to bow',
+                        cardCondition: card => Object.values(context.targets).includes(card),
+                        gameAction: AbilityDsl.actions.bow()
+                    })),
                 }
             },
-            gameAction: AbilityDsl.actions.selectCard(context => ({
-                activePromptTitle: 'Choose a character to bow',
-                cardCondition: card => Object.values(context.targets).includes(card),
-                gameAction: AbilityDsl.actions.bow()
-            })),
             then: context => ({
                 gameAction: AbilityDsl.actions.ready(() => ({
                     target: Object.values(context.targets).filter(card => context.events.every(event => event.card !== card))
