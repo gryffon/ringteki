@@ -32,7 +32,7 @@ describe('Hantei Daisetsu', function() {
                 this.player1.clickCard(this.hanteiDaisetsu);
                 this.player1.clickCard(this.henshinDisciple);
 
-                expect(this.getChatLogs(10)).toContain('player1 uses Hantei Daisetsu to treat Henshin Disciple as if it\'s text box were blank until the end of the conflict')
+                expect(this.getChatLogs(10)).toContain('player1 uses Hantei Daisetsu to treat Henshin Disciple as if it\'s text box were blank until the end of the conflict');
                 expect(this.henshinDisciple.isBlank()).toBe(true);
             });
 
