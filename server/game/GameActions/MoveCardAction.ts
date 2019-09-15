@@ -15,7 +15,6 @@ export interface MoveCardProperties extends CardActionProperties {
 export class MoveCardAction extends CardGameAction {
     name = 'move';
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Event, CardTypes.Holding];
-    effect = 'move {0}';
     defaultProperties: MoveCardProperties = {
         destination: null,
         switch: false,
@@ -31,6 +30,20 @@ export class MoveCardAction extends CardGameAction {
     getCostMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as MoveCardProperties;        
         return ['shuffling {0} into their deck', [properties.target]];
+    }
+
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let properties = this.getProperties(context) as MoveCardProperties;
+        let destinationController = Array.isArray(properties.target) ?
+            (properties.changePlayer ? properties.target[0].controller.opponent : properties.target[0].controller) :
+            (properties.changePlayer ? properties.target.controller.opponent : properties.target.controller);
+        if(properties.shuffle) {
+            return ['shuffle {0} into {1}\'s {2}', [properties.target, destinationController, properties.destination]]
+        }
+        return [
+            'move {0} to ' + (properties.bottom ? 'the bottom of ' : '') + '{1}\'s {2}',
+            [properties.target, destinationController, properties.destination]
+        ];
     }
 
     canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
