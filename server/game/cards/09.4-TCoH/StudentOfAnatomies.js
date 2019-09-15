@@ -16,10 +16,10 @@ class StudentOfAnatomies extends DrawCard {
                 gameAction: AbilityDsl.actions.cardLastingEffect({
                     duration: Durations.UntilEndOfPhase,
                     effect: AbilityDsl.effects.blank()
-                }),
+                })
             },
             effect: 'treat {1} as if it\'s printed text box were blank until the end of the phase',
-            effectArgs: context => context.target,
+            effectArgs: context => context.target
         });
     }
 }

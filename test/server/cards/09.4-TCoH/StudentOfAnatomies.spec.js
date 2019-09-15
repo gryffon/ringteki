@@ -29,9 +29,9 @@ describe('Student of Anatomies', function() {
             });
 
             it('blanks a character, but it should only last until the end of the phase.', function () {
-                this.agashaSwordsmith.fate = 1
-                this.studentOfAnatomies.fate = 1
-                this.eagerScout.fate = 1
+                this.agashaSwordsmith.fate = 1;
+                this.studentOfAnatomies.fate = 1;
+                this.eagerScout.fate = 1;
                 this.player1.clickCard(this.studentOfAnatomies);
                 this.player1.clickCard(this.agashaSwordsmith);
                 this.player1.clickCard(this.eagerScout);
