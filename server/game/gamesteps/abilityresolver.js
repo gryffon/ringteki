@@ -13,6 +13,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.context = context;
         this.canCancel = true;
         this.initiateAbility = false;
+        this.passPriority = false;
         this.events = [];
         this.provincesToRefill = [];
         this.targetResults = {};
@@ -116,6 +117,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             this.cancelled = true;
             return;
         }
+        this.passPriority = true;
         if(this.costEvents.length > 0) {
             this.game.openEventWindow(this.costEvents);
         }
@@ -156,6 +158,10 @@ class AbilityResolver extends BaseStepWithPipeline {
                 event.cancel();
             }
             return;
+        }
+
+        if(this.context.ability.isCardPlayed() && this.context.source.isLimited) {
+            this.context.player.limitedPlayed += 1;
         }
 
         // Increment limits (limits aren't used up on cards in hand)
