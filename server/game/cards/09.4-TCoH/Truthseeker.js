@@ -37,9 +37,9 @@ class Truthseeker extends DrawCard {
             case 'Opponent\'s Conflict Deck':
                 return [context.player.opponent, 'conflict deck'];
             case 'Your Dynasty Deck':
-                [context.player, 'dynasty deck'];
+                return [context.player, 'dynasty deck'];
             case 'Your Conflict Deck':
-                [context.player, 'conflict deck'];
+                return [context.player, 'conflict deck'];
         }
     }
 
@@ -56,8 +56,22 @@ class Truthseeker extends DrawCard {
         }
     }
 
+    mapChoiceToDeck = context => {
+        switch(context.select) {
+            case 'Opponent\'s Dynasty Deck':
+                return context.player.opponent.dynastyDeck;
+            case 'Opponent\'s Conflict Deck':
+                return context.player.opponent.conflictDeck;
+            case 'Your Dynasty Deck':
+                return context.player.dynastyDeck;
+            case 'Your Conflict Deck':
+                return context.player.conflictDeck;
+        }
+    }
+
     truthSeekerPrompt(context, promptCards, orderedCards, promptTitle) {
         const orderPrompt = ['first', 'second'];
+        let deckToReorder = this.mapChoiceToDeck(context);
         this.game.promptWithHandlerMenu(context.player, {
             activePromptTitle: promptTitle,
             context: context,
@@ -66,12 +80,12 @@ class Truthseeker extends DrawCard {
                 orderedCards.push(card);
                 promptCards = promptCards.filter(c => c !== card);
                 if(promptCards.length > 1) {
-                    this.miyaLibraryPrompt(context, promptCards, orderedCards, 'Which card do you want to be the ' + orderPrompt[orderedCards.length] + ' card?');
+                    this.truthSeekerPrompt(context, promptCards, orderedCards, 'Which card do you want to be the ' + orderPrompt[orderedCards.length] + ' card?');
                     return;
                 } else if(promptCards.length === 1) {
                     orderedCards.push(promptCards[0]);
                 }
-                context.player.dynastyDeck.splice(0, 3, ...orderedCards);
+                deckToReorder.splice(0, 3, ...orderedCards);
             }
         });
     }
