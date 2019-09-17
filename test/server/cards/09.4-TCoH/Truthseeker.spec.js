@@ -1,6 +1,6 @@
-describe('Togashi Yoshi', function() {
+describe('Truthseeker', function() {
     integration(function() {
-        describe('Togashi Yoshi\'s ability', function() {
+        describe('Truthseeker\'s ability', function() {
             beforeEach(function () {
                 this.setupTest({
                     phase: 'dynasty',
