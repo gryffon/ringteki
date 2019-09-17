@@ -1,6 +1,5 @@
 import { Locations, TargetModes } from '../../Constants.js';
 const DrawCard = require('../../drawcard.js');
-const AbilityDsl = require('../../abilitydsl');
 
 class Truthseeker extends DrawCard {
     setupCardAbilities() {
