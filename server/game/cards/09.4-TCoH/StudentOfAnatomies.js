@@ -12,13 +12,13 @@ class StudentOfAnatomies extends DrawCard {
                 cardType: CardTypes.Character
             }),
             target: {
-                cardCondition: (card) => card.type === CardTypes.Character,
+                cardType: CardTypes.Character,
                 gameAction: AbilityDsl.actions.cardLastingEffect({
                     duration: Durations.UntilEndOfPhase,
                     effect: AbilityDsl.effects.blank()
                 })
             },
-            effect: 'treat {1} as if it\'s printed text box were blank until the end of the phase',
+            effect: 'treat {1} as if its printed text box were blank until the end of the phase',
             effectArgs: context => context.target
         });
     }
