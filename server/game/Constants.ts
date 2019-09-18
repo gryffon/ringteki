@@ -30,6 +30,7 @@ export enum EffectNames {
     AddKeyword = 'addKeyword',
     AddTrait = 'addTrait',
     Blank = 'blank',
+    CalculatePrintedMilitarySkill = 'calculatePrintedMilitarySkill',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
     CanOnlyBeDeclaredAsAttackerWithElement = 'canOnlyBeDeclaredAsAttackerWithElement',
     CannotApplyLastingEffects = 'cannotApplyLastingEffects',

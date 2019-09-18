@@ -20,6 +20,7 @@ const Effects = {
     addKeyword: (keyword) => EffectBuilder.card.static(EffectNames.AddKeyword, keyword),
     addTrait: (trait) => EffectBuilder.card.static(EffectNames.AddTrait, trait),
     blank: () => EffectBuilder.card.static(EffectNames.Blank),
+    calculatePrintedMilitarySkill: (func) => EffectBuilder.card.static(EffectNames.CalculatePrintedMilitarySkill, func),
     canBeSeenWhenFacedown: () => EffectBuilder.card.static(EffectNames.CanBeSeenWhenFacedown),
     canOnlyBeDeclaredAsAttackerWithElement: (element) => EffectBuilder.card.flexible(EffectNames.CanOnlyBeDeclaredAsAttackerWithElement, element),
     cannotApplyLastingEffects: (condition) => EffectBuilder.card.static(EffectNames.CannotApplyLastingEffects, condition),
