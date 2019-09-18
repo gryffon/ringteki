@@ -5,7 +5,7 @@ const { Phases, PlayTypes, EventNames } = require('./Constants');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card) {
-        super(card, [Costs.payTargetDependentFateCost('target', PlayTypes.PlayFromHand), Costs.playLimited()], {
+        super(card, [Costs.payTargetDependentFateCost('target', PlayTypes.PlayFromHand)], {
             gameAction: GameActions.attach(context => ({ attachment: context.source })),
             cardCondition: (card, context) => context.source.canPlayOn(card)
         });

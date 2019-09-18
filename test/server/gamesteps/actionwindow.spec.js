@@ -29,6 +29,7 @@ describe('ActionWindow', function() {
         describe('when it is the current player',function() {
             beforeEach(function() {
                 this.prompt.menuCommand(this.player2, 'pass');
+                this.game.continue();
             });
 
             it('should make the next player be the current player', function() {
@@ -43,36 +44,6 @@ describe('ActionWindow', function() {
 
             it('should not change the current player', function() {
                 expect(this.prompt.currentPlayer).toBe(this.player2);
-            });
-        });
-    });
-
-    describe('markActionAsTaken()', function() {
-        describe('when a player takes an action', function() {
-            beforeEach(function() {
-                // Complete the window for player 2
-                this.prompt.menuCommand(this.player2, 'pass');
-
-                // Player 1 takes an action
-                this.prompt.markActionAsTaken();
-            });
-
-            it('should rotate the current player', function() {
-                expect(this.prompt.currentPlayer).toBe(this.player2);
-            });
-
-            it('should re-prompt other players once the current player is done', function() {
-                this.prompt.menuCommand(this.player2, 'pass');
-                expect(this.prompt.currentPlayer).toBe(this.player1);
-                expect(this.prompt.isComplete()).toBe(false);
-            });
-
-            it('should require two consecutive passes before completing', function() {
-                // Complete without taking action
-                this.prompt.menuCommand(this.player2, 'pass');
-                this.prompt.menuCommand(this.player1, 'pass');
-
-                expect(this.prompt.isComplete()).toBe(true);
             });
         });
     });
