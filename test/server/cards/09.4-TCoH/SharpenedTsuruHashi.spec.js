@@ -35,6 +35,17 @@ describe('Sharpened Tsuruhashi', function() {
                 this.player1.clickCard(this.sharpenedTsuruhashi);
                 expect(this.sharpenedTsuruhashi.location).toBe('hand');
             });
+
+            it('should not be able to return to your hand if the character was simply discarded', function () {
+                this.player2.pass();
+
+                this.player1.clickCard(this.assassination);
+                this.player1.clickCard(this.vanguardWarrior);
+
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.sharpenedTsuruhashi.location).toBe('conflict discard pile');
+                expect(this.vanguardWarrior.location).toBe('dynasty discard pile');
+            });
         });
     });
 });

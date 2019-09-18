@@ -9,11 +9,10 @@ class SharpenedTsuruhashi extends DrawCard {
             when: {
                 onCardLeavesPlay: (event, context) => event.isSacrifice && event.card === context.source.parent
             },
-            gameAction: AbilityDsl.actions.moveCard(context => ({
-                destination: Locations.Hand,
+            gameAction: AbilityDsl.actions.returnToHand(context => ({
                 target: context.source
             })),
-            effect: 'it to their hand.'
+            effect: 'return it to their hand.'
         });
     }
 }
