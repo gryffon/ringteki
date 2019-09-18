@@ -1,4 +1,3 @@
-import { Locations } from '../../Constants.js';
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 
