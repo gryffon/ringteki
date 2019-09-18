@@ -1,6 +1,6 @@
 import { CardGameAction, CardActionProperties } from "./CardGameAction";
 
-import { Locations, CardTypes, EventNames } from '../Constants';
+import { Locations, CardTypes, Durations } from '../Constants';
 import AbilityContext = require("../AbilityContext");
 import BaseCard = require('../basecard');
 import Effects = require('../effects');
@@ -36,6 +36,7 @@ export class CreateTokenAction extends CardGameAction {
             context.game.currentConflict.addDefender(token);
         }
         context.game.actions.cardLastingEffect({
+            duration: Durations.UntilEndOfPhase,
             effect: Effects.delayedEffect({
                 when: {
                     onConflictFinished: () => true

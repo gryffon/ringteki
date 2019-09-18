@@ -5,7 +5,7 @@ const { CardTypes } = require('../Constants');
 const checkRestrictions = {
     attachmentsWithSameClan: (context, effect, card) =>
         context.source.type === CardTypes.Attachment &&
-        card.isFaction(context.source.getPrintedFaction()),
+        context.source.getPrintedFaction() !== 'neutral' && card.isFaction(context.source.getPrintedFaction()),
     characters: context => context.source.type === CardTypes.Character,
     copiesOfDiscardEvents: context =>
         context.source.type === CardTypes.Event && context.player.conflictDiscardPile.any(card => card.name === context.source.name),
@@ -13,7 +13,7 @@ const checkRestrictions = {
     events: context => context.source.type === CardTypes.Event,
     eventsWithSameClan: (context, effect, card) =>
         context.source.type === CardTypes.Event &&
-        card.isFaction(context.source.getPrintedFaction()),
+        context.source.getPrintedFaction() !== 'neutral' && card.isFaction(context.source.getPrintedFaction()),
     nonSpellEvents: context => context.source.type === CardTypes.Event && !context.source.hasTrait('spell'),
     opponentsCardEffects: (context, effect) =>
         context.player === effect.context.player.opponent && (context.ability.isCardAbility() || !context.ability.isCardPlayed()) &&

@@ -10,6 +10,9 @@ class SpecializedDefenses extends DrawCard {
                     return false;
                 }
                 let element = this.game.currentConflict.conflictProvince.element;
+                if(element === 'all') {
+                    return true;
+                }
                 return this.game.rings[element].isConsideredClaimed(context.player) ||
                        this.game.currentConflict.ring.getElements().includes(element);
             },

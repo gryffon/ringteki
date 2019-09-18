@@ -87,10 +87,10 @@ class TriggeredAbilityWindow extends ForcedTriggeredAbilityWindow {
         return false;
     }
 
-    resolveAbility(context) {
+    postResolutionUpdate(resolver) {
+        super.postResolutionUpdate(resolver);
         this.prevPlayerPassed = false;
         this.currentPlayer = this.currentPlayer.opponent || this.currentPlayer;
-        super.resolveAbility(context);
     }
 
     getPromptForSelectProperties() {

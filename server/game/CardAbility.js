@@ -60,7 +60,7 @@ class CardAbility extends ThenAbility {
         }
 
         if(card.getType() === CardTypes.Event) {
-            this.cost = this.cost.concat(Costs.payReduceableFateCost(PlayTypes.PlayFromHand), Costs.playLimited());
+            this.cost = this.cost.concat(Costs.payReduceableFateCost(PlayTypes.PlayFromHand));
         }
     }
 
@@ -102,6 +102,10 @@ class CardAbility extends ThenAbility {
 
         if(this.max && context.player.isAbilityAtMax(this.maxIdentifier)) {
             return 'max';
+        }
+
+        if(this.isCardPlayed() && this.card.isLimited() && context.player.limitedPlayed >= context.player.maxLimited) {
+            return 'limited';
         }
 
         return super.meetsRequirements(context);

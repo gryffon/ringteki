@@ -1,7 +1,6 @@
 const BaseAction = require('./BaseAction.js');
 const ReduceableFateCost = require('./costs/ReduceableFateCost');
 
-const Costs = require('./costs');
 const { CardTypes, EventNames, Phases, Players, PlayTypes, EffectNames } = require ('./Constants');
 
 const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
@@ -52,8 +51,7 @@ class PlayDisguisedCharacterAction extends BaseAction {
     constructor(card, playType = card.isDynasty ? PlayTypes.PlayFromProvince : PlayTypes.PlayFromHand, intoConflictOnly = false) {
         super(card, [
             ChooseDisguisedCharacterCost(intoConflictOnly),
-            new DisguisedReduceableFateCost(playType, intoConflictOnly),
-            Costs.playLimited()
+            new DisguisedReduceableFateCost(playType, intoConflictOnly)
         ]);
         this.playType = playType;
         this.intoConflictOnly = intoConflictOnly;

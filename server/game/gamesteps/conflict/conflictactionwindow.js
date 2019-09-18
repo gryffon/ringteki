@@ -51,13 +51,12 @@ class ConflictActionWindow extends ActionWindow {
         };
     }
 
-    markActionAsTaken() {
+    postResolutionUpdate(resolver) {
+        super.postResolutionUpdate(resolver);
         if(!this.game.manualMode) {
             this.displayTotals = true;
         }
-        super.markActionAsTaken();
     }
-
 }
 
 module.exports = ConflictActionWindow;
