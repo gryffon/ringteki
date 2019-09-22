@@ -4,7 +4,7 @@ const Conflict = require('../conflict.js');
 const ActionWindow = require('./actionwindow.js');
 const GameActions = require('../GameActions/GameActions');
 
-const { Phases, EventNames } = require('../Constants');
+const { Phases } = require('../Constants');
 
 /*
 III Conflict Phase
