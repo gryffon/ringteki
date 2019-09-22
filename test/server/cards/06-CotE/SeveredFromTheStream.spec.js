@@ -62,13 +62,14 @@ describe('Severed From the Stream', function() {
                 expect(this.game.rings.void.claimedBy).toBe(this.player2.player.name);
             });
 
-            it('should not trigger if player\'s glory counts are equal ', function() {
+            it('should trigger if player\'s glory counts are equal ', function() {
                 this.player2.claimRing('water');
                 expect(this.player1.player.getGloryCount()).toBe(2 + 2);
                 expect(this.player2.player.getGloryCount()).toBe(2 + 2);
                 expect(this.player1).toHavePrompt('Action Window');
                 this.player1.clickCard(this.severedFromTheStream);
-                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player2).toHavePrompt('Action Window');
+                expect(this.getChatLogs(1)).toContain('player1 plays Severed from the Stream to perform a glory count');
                 expect(this.game.rings.air.claimedBy).toBe(this.player1.player.name);
                 expect(this.game.rings.fire.claimedBy).toBe(this.player1.player.name);
                 expect(this.game.rings.void.claimedBy).toBe(this.player2.player.name);

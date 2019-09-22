@@ -60,23 +60,16 @@ class ConflictPhase extends Phase {
     }
 
     claimImperialFavor() {
-        let gloryTotals = this.game.getPlayersInFirstPlayerOrder().map(player => {
-            return player.getGloryCount();
-        });
-        let winner = this.game.getFirstPlayer();
-        if(winner.opponent) {
-            if(gloryTotals[0] === gloryTotals[1]) {
-                this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', gloryTotals[0]);
-                this.game.raiseEvent(EventNames.OnFavorGloryTied);
-                return;
-            } else if(gloryTotals[0] < gloryTotals[1]) {
-                winner = winner.opponent;
-                this.game.addMessage('{0} succesfully claims the Emperor\'s favor with total glory of {1} vs {2}', winner, gloryTotals[1], gloryTotals[0]);
-            } else {
-                this.game.addMessage('{0} succesfully claims the Emperor\'s favor with total glory of {1} vs {2}', winner, gloryTotals[0], gloryTotals[1]);
+        this.game.actions.performGloryCount({
+            postHandler: event => {
+                if(event.winner) {
+                    this.game.addMessage('{0} succesfully claims the Emperor\'s favor with total glory of {1} vs {2}', event.winner, event.winnerTotal, event.loserTotal);
+                    event.winner.claimImperialFavor();
+                } else {
+                    this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', event.winnerTotal);
+                }
             }
-        }
-        winner.claimImperialFavor();
+        }).resolve(null, this.game.getFrameworkContext());
     }
 }
 

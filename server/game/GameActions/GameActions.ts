@@ -22,6 +22,7 @@ import { DuelAction, DuelProperties } from './DuelAction';
 import { FlipDynastyAction, FlipDynastyProperties } from './FlipDynastyAction';
 import { GainFateAction, GainFateProperties } from './GainFateAction';
 import { GainHonorAction, GainHonorProperties } from './GainHonorAction';
+import { GloryCountAction, GloryCountProperties } from './GloryCountAction';
 import { HandlerAction, HandlerProperties } from './HandlerAction';
 import { HonorAction, HonorProperties } from './HonorAction';
 import { IfAbleAction, IfAbleActionProperties } from './IfAbleAction';
@@ -138,6 +139,7 @@ const GameActions = {
     // general actions
     cancel: (propertyFactory: CancelActionProperties | ((context: TriggeredAbilityContext) => CancelActionProperties) = {}) => new CancelAction(propertyFactory),
     handler: (propertyFactory: HandlerProperties | ((context: TriggeredAbilityContext) => HandlerProperties)) => new HandlerAction(propertyFactory),
+    performGloryCount: (propertyFactory: GloryCountProperties | ((context: TriggeredAbilityContext) => GloryCountProperties) = {}) => new GloryCountAction(propertyFactory),
     // meta actions
     cardMenu: (propertyFactory: CardMenuProperties | ((context: TriggeredAbilityContext) => CardMenuProperties)) => new CardMenuAction(propertyFactory),
     chooseAction: (propertyFactory: ChooseActionProperties | ((context: TriggeredAbilityContext) => ChooseActionProperties)) => new ChooseGameAction(propertyFactory), // choices, activePromptTitle = 'Select one'

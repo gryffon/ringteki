@@ -5,11 +5,12 @@ class SeveredFromTheStream extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Return player\'s rings',
-            gameAction: AbilityDsl.actions.returnRing(context => {
-                if(context.player.opponent && context.player.getGloryCount() < context.player.opponent.getGloryCount()) {
-                    return { target: context.player.getClaimedRings() };
-                } else if(context.player.opponent && context.player.getGloryCount() > context.player.opponent.getGloryCount()) {
-                    return { target: context.player.opponent.getClaimedRings() };
+            gameAction: AbilityDsl.actions.performGloryCount({
+                postHandler: event => {
+                    if(event.loser) {
+                        this.game.addMessage('{0} loses the glory count, and all their rings are returned to the unclaimed pool', event.loser);
+                        AbilityDsl.actions.returnRing().resolve(event.loser.getClaimedRings(), event.context);
+                    }
                 }
             })
         });
