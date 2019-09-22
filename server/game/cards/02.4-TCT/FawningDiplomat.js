@@ -1,5 +1,4 @@
 const AbilityDsl = require('../../abilitydsl.js');
-
 const DrawCard = require('../../drawcard.js');
 
 class FawningDiplomat extends DrawCard {
