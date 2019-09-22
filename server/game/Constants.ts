@@ -237,6 +237,7 @@ export enum EventNames {
     OnSwitchConflictType = 'onSwitchConflictType',
     OnTakeRing = 'onTakeRing',
     OnSpendFate = 'onSpendFate',
+    OnPassActionPhasePriority = 'onPassActionPhasePriority',
     OnGloryCount = 'onGloryCount',
     OnClaimFavor = 'onClaimFavor',
     Unnamed = 'unnamedEvent'

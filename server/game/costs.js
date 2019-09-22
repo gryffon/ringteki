@@ -114,38 +114,6 @@ const Costs = {
      */
     discardImperialFavor: () => new GameActionCost(GameActions.loseImperialFavor(context => ({ target: context.player }))),
     /**
-     * Cost that ensures that the player can still play a Limited card this
-     * round.
-     */
-    playLimited: function () {
-        return {
-            canPay: function (context) {
-                return !context.source.isLimited() || context.player.limitedPlayed < context.player.maxLimited;
-            },
-            pay: function (context) {
-                if(context.source.isLimited()) {
-                    context.player.limitedPlayed += 1;
-                }
-            },
-            canIgnoreForTargeting: true
-        };
-    },
-
-    /**
-     * Cost that represents using your action in an ActionWindow
-     */
-    useInitiateAction: function () {
-        return {
-            canPay: function () {
-                return true;
-            },
-            pay: function (context) {
-                context.game.markActionAsTaken();
-            },
-            canIgnoreForTargeting: true
-        };
-    },
-    /**
      * Cost that will pay the exact printed fate cost for the card.
      */
     payPrintedFateCost: function () {

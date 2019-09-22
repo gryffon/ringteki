@@ -67,8 +67,8 @@ describe('CardAction', function () {
                     this.action = new CardAction(this.gameSpy, this.cardSpy, this.properties);
                 });
 
-                it('should add the play event cost', function() {
-                    expect(this.action.cost.length).toBe(4);
+                it('should add the reduced fate cost', function() {
+                    expect(this.action.cost.length).toBe(2);
                 });
             });
         });

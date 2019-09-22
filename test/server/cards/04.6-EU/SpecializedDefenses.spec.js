@@ -10,12 +10,14 @@ describe('Specialized Defenses', function() {
                         dynastyDiscard: ['isawa-kaede']
                     },
                     player2: {
-                        provinces: ['kuroi-mori'],
+                        provinces: ['kuroi-mori', 'toshi-ranbo'],
                         hand: ['specialized-defenses']
                     }
                 });
                 this.isawaKaede = this.player1.placeCardInProvince('isawa-kaede');
                 this.kuroiMori = this.player2.findCardByName('kuroi-mori');
+                this.toshiRanbo = this.player2.findCardByName('toshi-ranbo');
+                this.specializedDefenses = this.player2.findCardByName('specialized-defenses');
             });
 
             it('should not be playable outside of a conflict', function () {
@@ -68,6 +70,18 @@ describe('Specialized Defenses', function() {
                     expect(this.player1).toHavePrompt('Conflict Action Window');
                     expect(this.kuroiMori.strength).toBe(8);
                 });
+            });
+
+            it('should interact correctly with Toshi Ranbo', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    province: this.toshiRanbo,
+                    attackers: ['matsu-berserker'],
+                    defenders: []
+                });
+                this.player2.clickCard(this.specializedDefenses);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.toshiRanbo.strength).toBe(6);
             });
         });
     });

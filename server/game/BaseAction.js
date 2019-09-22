@@ -1,11 +1,9 @@
 const AbilityContext = require('./AbilityContext');
 const BaseAbility = require('./baseability.js');
-const Costs = require('./costs.js');
 const { Stages } = require('./Constants.js');
 
 class BaseAction extends BaseAbility {
     constructor(card, costs = [], target) {
-        costs.push(Costs.useInitiateAction());
         let properties = { cost: costs };
         if(target) {
             properties.target = target;
@@ -14,6 +12,14 @@ class BaseAction extends BaseAbility {
         this.card = card;
         this.abilityType = 'action';
         this.cannotBeCancelled = true;
+    }
+
+    meetsRequirements(context) {
+        if(this.isCardPlayed() && this.card.isLimited() && context.player.limitedPlayed >= context.player.maxLimited) {
+            return 'limited';
+        }
+
+        return super.meetsRequirements(context);
     }
 
     createContext(player = this.card.controller) {
