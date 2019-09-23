@@ -11,7 +11,7 @@ export interface ClaimFavorProperties extends PlayerActionProperties {
 export class ClaimFavorAction extends PlayerAction {
     name = 'discardFavor';
     eventName = EventNames.OnClaimFavor;
-    effect = '{0} succesfully claims the Emperor\'s favor.';
+    effect = 'claim the Emperor\'s favor';
 
     hasLegalTarget(): boolean {
         return true;

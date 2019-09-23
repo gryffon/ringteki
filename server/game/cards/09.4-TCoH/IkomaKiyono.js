@@ -10,7 +10,6 @@ class IkomaKiyono extends DrawCard {
                     return context.player && context.player.opponent && context.player.honor > context.player.opponent.honor;
                 }
             },
-            effect: 'ready for the incoming glory count.',
             gameAction: AbilityDsl.actions.ready()
         });
     }

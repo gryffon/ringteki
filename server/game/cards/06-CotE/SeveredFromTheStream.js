@@ -6,7 +6,7 @@ class SeveredFromTheStream extends DrawCard {
         this.action({
             title: 'Return player\'s rings',
             gameAction: AbilityDsl.actions.performGloryCount({
-                gameAction: winner => winner && AbilityDsl.actions.returnRing({
+                gameAction: winner => winner && winner.opponent && AbilityDsl.actions.returnRing({
                     target: winner.opponent.getClaimedRings()
                 })
             })
