@@ -87,6 +87,7 @@ describe('EsteemedTeaHouse', function() {
                 this.player1.clickPrompt('Done');
                 this.player2.player.promptedActionWindows.fate = true;
                 this.player2.clickPrompt('Done');
+                expect(this.player2).toHavePrompt('Action Window');
                 this.player2.clickCard(this.ornatefan);
                 this.player2.clickCard(this.adept);
                 expect(this.ornatefan.location).toBe('play area');

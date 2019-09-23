@@ -7,8 +7,7 @@ class PlayCharacterAction extends BaseAction {
     constructor(card, intoConflictOnly = false) {
         super(card, [
             Costs.chooseFate(PlayTypes.PlayFromHand),
-            Costs.payReduceableFateCost(PlayTypes.PlayFromHand),
-            Costs.playLimited()
+            Costs.payReduceableFateCost(PlayTypes.PlayFromHand)
         ]);
         this.intoConflictOnly = intoConflictOnly;
         this.title = 'Play this character';
