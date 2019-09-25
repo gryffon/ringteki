@@ -5,13 +5,17 @@ describe('Truthseeker', function() {
                 this.setupTest({
                     phase: 'dynasty',
                     player1: {
-                        dynastyDiscard: ['truthseeker']
+                        dynastyDiscard: ['truthseeker'],
+                        hand: ['assassination', 'fine-katana', 'ornate-fan']
                     },
                     player2: {
                         inPlay: ['asahina-artisan']
                     }
                 });
                 this.truthseeker = this.player1.placeCardInProvince('truthseeker', 'province 1');
+                this.ornateFan = this.player1.moveCard('ornate-fan', 'conflict deck');
+                this.fineKatana = this.player1.moveCard('fine-katana', 'conflict deck');
+                this.assassination = this.player1.moveCard('assassination', 'conflict deck');
             });
 
             it('should be allowed to trigger as soon as the character enters play', function () {
@@ -43,11 +47,20 @@ describe('Truthseeker', function() {
                 this.player1.clickCard(this.truthseeker);
                 this.player1.clickPrompt('Your Conflict Deck');
                 expect(this.player1).toHavePrompt('Select the card you would like to place on top of the deck.');
-                expect(this.player1).toHavePromptButton('Supernatural Storm (3)');
-                this.player1.clickPrompt('Supernatural Storm (3)');
-                expect(this.player1).toHavePromptButton('Supernatural Storm (2)');
-                this.player1.clickPrompt('Supernatural Storm (2)');
+                expect(this.player1).toHavePromptButton('Assassination');
+                expect(this.player1).toHavePromptButton('Ornate Fan');
+                expect(this.player1).toHavePromptButton('Fine Katana');
+                this.player1.clickPrompt('Fine Katana');
+                expect(this.player1).toHavePromptButton('Assassination');
+                expect(this.player1).toHavePromptButton('Ornate Fan');
+                this.player1.clickPrompt('Ornate Fan');
                 expect(this.player2).toHavePrompt('Play cards from provinces');
+
+                let topCards = this.player1.conflictDeck.slice(0, 3);
+
+                expect(topCards[0]).toBe(this.fineKatana);
+                expect(topCards[1]).toBe(this.ornateFan);
+                expect(topCards[2]).toBe(this.assassination);
             });
         });
     });

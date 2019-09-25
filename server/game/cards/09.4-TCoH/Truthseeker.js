@@ -7,8 +7,7 @@ class Truthseeker extends DrawCard {
             title: 'Look at top 3 cards',
             when: {
                 onCharacterEntersPlay: (event, context) =>
-                    event.card === context.source &&
-                    [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(event.originalLocation)
+                    event.card === context.source
             },
             target: {
                 mode: TargetModes.Select,
