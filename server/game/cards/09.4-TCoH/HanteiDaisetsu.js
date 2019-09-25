@@ -6,7 +6,7 @@ class HanteiDaisetsu extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Blank a participating character',
-            condition: context => context.game.isDuringConflict('political'),
+            condition: context => context.source.isParticipating() && context.game.isDuringConflict('political'),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
@@ -15,7 +15,7 @@ class HanteiDaisetsu extends DrawCard {
                     duration: Durations.UntilEndOfConflict
                 })
             },
-            effect: 'treat {1} as if it\'s text box were blank until the end of the conflict',
+            effect: 'treat {1} as if its text box were blank until the end of the conflict',
             effectArgs: context => [context.target]
         });
     }
