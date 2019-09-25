@@ -1,4 +1,4 @@
-import { Locations, TargetModes } from '../../Constants.js';
+import { TargetModes } from '../../Constants.js';
 const DrawCard = require('../../drawcard.js');
 
 class Truthseeker extends DrawCard {
