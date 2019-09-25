@@ -32,7 +32,7 @@ describe('Hantei Daisetsu', function() {
                 this.player1.clickCard(this.hanteiDaisetsu);
                 this.player1.clickCard(this.henshinDisciple);
 
-                expect(this.getChatLogs(10)).toContain('player1 uses Hantei Daisetsu to treat Henshin Disciple as if it\'s text box were blank until the end of the conflict');
+                expect(this.getChatLogs(10)).toContain('player1 uses Hantei Daisetsu to treat Henshin Disciple as if its text box were blank until the end of the conflict');
                 expect(this.henshinDisciple.isBlank()).toBe(true);
             });
 
@@ -75,6 +75,21 @@ describe('Hantei Daisetsu', function() {
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.hanteiDaisetsu, this.callowDelegate],
+                    defenders: [this.henshinDisciple]
+                });
+
+                this.player2.pass();
+                this.player1.clickCard(this.hanteiDaisetsu);
+                this.player1.clickCard(this.shrineMaiden);
+
+                expect(this.player1).not.toBeAbleToSelect(this.shrineMaiden);
+                expect(this.shrineMaiden.isBlank()).toBe(false);
+            });
+
+            it('should not be able to be triggered when Daisetsu isn\'t participating', function() {
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.callowDelegate],
                     defenders: [this.henshinDisciple]
                 });
 
