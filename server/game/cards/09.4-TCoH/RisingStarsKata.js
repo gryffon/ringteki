@@ -40,8 +40,7 @@ class RisingStarsKata extends DrawCard {
                     this.duelWinnersThisConflict.push(duelWinner);
                 }
             });
-        }
-        else if(event.duel.winner) {
+        } else if(event.duel.winner) {
             this.duelWinnersThisConflict.push(event.duel.winner);
         }
     }
