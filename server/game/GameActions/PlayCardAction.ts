@@ -21,15 +21,23 @@ class PlayCardResolver extends AbilityResolver {
     checkForCancel() {
         super.checkForCancel();
         if(this.cancelled && this.gameActionProperties.resetOnCancel) {
-            this.playGameAction.cancelAction(this.gameActionContext);
+            this.playGameAction.cancelAction(this.gameActionContext, this.gameActionProperties);
             this.cancelPressed = true;
+        }
+    }
+    
+    resolveCosts() {
+        if(this.gameActionProperties.payCosts) {
+            super.resolveCosts();
         }
     }
 
     payCosts() {
-        super.payCosts();
+        if(this.gameActionProperties.payCosts) {
+            super.payCosts();
+        }
         if(this.cancelled && this.gameActionProperties.resetOnCancel) {
-            this.playGameAction.cancelAction(this.gameActionContext);
+            this.playGameAction.cancelAction(this.gameActionContext, this.gameActionProperties);
             this.cancelPressed = true;
         }
     }
@@ -44,8 +52,9 @@ class PlayCardResolver extends AbilityResolver {
 
 export interface PlayCardProperties extends CardActionProperties {
     resetOnCancel?: boolean;
-    postHandler?: (card: DrawCard) => void;
+    postHandler?: (context: AbilityContext) => void;
     location?: Locations;
+    payCosts?: boolean;
 }
 
 export class PlayCardAction extends CardGameAction {
@@ -54,7 +63,8 @@ export class PlayCardAction extends CardGameAction {
     defaultProperties: PlayCardProperties = {
         resetOnCancel: false,
         postHandler: () => true,
-        location: Locations.Hand
+        location: Locations.Hand,
+        payCosts: true
     };
     constructor(properties: ((context: AbilityContext) => PlayCardProperties) | PlayCardProperties) {
         super(properties);
@@ -81,8 +91,10 @@ export class PlayCardAction extends CardGameAction {
         });
     }
 
-    cancelAction(context: AbilityContext): void {
-        context.ability.executeHandler(context);
+    cancelAction(context: AbilityContext, properties: PlayCardProperties): void {
+        if(properties.parentAction) {
+            properties.parentAction.resolve(null, context);
+        }
     }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
@@ -99,7 +111,7 @@ export class PlayCardAction extends CardGameAction {
         context.game.promptWithHandlerMenu(context.player, {
             source: card,
             choices: actions.map(action => action.title).concat(properties.resetOnCancel ? 'Cancel' : []),
-            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), additionalProperties))).concat(() => this.cancelAction(context))
+            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), additionalProperties))).concat(() => this.cancelAction(context, properties))
         });
     }
 

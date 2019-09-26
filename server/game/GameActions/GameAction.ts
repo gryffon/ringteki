@@ -13,6 +13,7 @@ export interface GameActionProperties {
     target?: PlayerOrRingOrCardOrToken | PlayerOrRingOrCardOrToken[];
     cannotBeCancelled?: boolean;
     optional?: boolean;
+    parentAction?: GameAction;
 }
 
 export class GameAction {
@@ -23,7 +24,7 @@ export class GameAction {
     name = '';
     cost = '';
     effect = '';
-    defaultProperties: GameActionProperties = { optional: false };
+    defaultProperties: GameActionProperties = { cannotBeCancelled: false, optional: false };
     getDefaultTargets: (context: AbilityContext) => any = context => this.defaultTargets(context);
 
     constructor(propertyFactory: GameActionProperties | ((context?: AbilityContext) => GameActionProperties) = {}) {
