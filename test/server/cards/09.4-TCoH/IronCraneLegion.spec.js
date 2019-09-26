@@ -29,7 +29,7 @@ describe('Iron Crane Legion', function() {
                 });
 
                 it('should give Iron Crane Legion a base military skill equal to the number of cards your opponent has in hand', function() {
-                    expect(this.ironCraneLegion.getBaseMilitarySkill()).toBe(3);
+                    expect(this.ironCraneLegion.getBaseMilitarySkill()).toBe(this.player2.hand.length);
                 });
 
                 it('should set military skill to zero when Unmask is played on Iron Crane Legion', function() {
