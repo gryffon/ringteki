@@ -140,6 +140,48 @@ describe('Storied Defeat', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
         });
+
+        describe('Storied Defeat with Mirumoto Hitomi', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['mirumoto-hitomi'],
+                        hand: ['storied-defeat']
+                    },
+                    player2: {
+                        inPlay: ['doji-whisperer', 'doji-challenger']
+                    }
+                });
+                this.mirumotoHitomi = this.player1.findCardByName('mirumoto-hitomi');
+                this.storiedDefeat = this.player1.findCardByName('storied-defeat');
+                this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
+                this.dojiChallenger = this.player2.findCardByName('doji-challenger');
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.mirumotoHitomi],
+                    defenders: [this.dojiWhisperer, this.dojiChallenger]
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.mirumotoHitomi);
+                this.player1.clickCard(this.dojiWhisperer);
+                this.player1.clickCard(this.dojiChallenger);
+                this.player1.clickPrompt('Done');
+                this.player1.clickPrompt('5');
+                this.player2.clickPrompt('1');
+                this.player2.clickPrompt('Dishonor this character');
+                this.player2.clickPrompt('Dishonor this character');
+                this.player2.pass();
+            });
+
+            it('should allow multiple losers of a duel to be targeted by Storied Defeat', function() {
+                this.player1.clickCard(this.storiedDefeat);
+                expect(this.player1).toHavePrompt('Storied Defeat');
+                expect(this.player1).toBeAbleToSelect(this.dojiWhisperer);
+                expect(this.player1).toBeAbleToSelect(this.dojiChallenger);
+            });
+        });
     });
 });
 
