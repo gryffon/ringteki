@@ -78,23 +78,30 @@ export class PlayCardAction extends CardGameAction {
         if(!super.canAffect(card, context)) {
             return false;
         }
-        let actions = card.getPlayActions();
-        return this.getLegalActions(actions, context).length > 0;
+        const properties = this.getProperties(context, additionalProperties);
+        const actions = card.getPlayActions();
+        return this.getLegalActions(actions, context, properties).length > 0;
     }
 
-    getLegalActions(actions, context) {
+    getLegalActions(actions: any[], context: AbilityContext, properties: PlayCardProperties) {
         // filter actions to exclude actions which involve this game action, or which are not legal
         return actions.filter(action => {
+            const ignoredRequirements = ['location', 'player'];
+            if(!properties.payCosts) {
+                ignoredRequirements.push('cost');
+            }
             let newContext = action.createContext(context.player);
             newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
-            return !action.meetsRequirements(newContext, ['location', 'player']);
+            return !action.meetsRequirements(newContext, ignoredRequirements);
         });
     }
 
-    cancelAction(context: AbilityContext, properties: PlayCardProperties): void {
+
+    cancelAction(context: AbilityContext, properties: PlayCardProperties): number {
         if(properties.parentAction) {
             properties.parentAction.resolve(null, context);
         }
+        return 0;
     }
 
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
@@ -103,7 +110,7 @@ export class PlayCardAction extends CardGameAction {
             return;
         }
         let card = properties.target[0];
-        let actions = this.getLegalActions(card.getPlayActions(), context);
+        let actions = this.getLegalActions(card.getPlayActions(), context, properties);
         if(actions.length === 1) {
             events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), additionalProperties));
             return;
