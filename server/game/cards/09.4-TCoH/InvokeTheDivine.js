@@ -1,13 +1,14 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 
-const { Locations } = require('../../Constants');
+const { Locations, Players } = require('../../Constants');
 
 class InvokeTheDivine extends DrawCard {
     setupCardAbilities() {
         const getSelectCardAction = (fate, spellsCast) => AbilityDsl.actions.selectCard({
             location: Locations.Hand,
-            cardCondition: card => card.hasTrait('spell') && card.getCost() < fate,
+            controller: Players.Self,
+            cardCondition: card => card.hasTrait('spell') && card.getCost() <= fate,
             optional: spellsCast > 0,
             gameAction: AbilityDsl.actions.playCard({
                 resetOnCancel: true,
