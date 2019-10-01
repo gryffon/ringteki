@@ -7,7 +7,7 @@ class EmissaryOfLies extends DrawCard {
             title: 'try to name a card in your opponents hand',
             target: {
                 cardType: CardTypes.Character,
-                cardCondition: (card, context) => card.isParticipating() && card.controler === context.player.opponent
+                cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent
             },
             handler: context => this.game.promptWithMenu(context.player.opponent, this, {
                 source: context.source,
@@ -23,11 +23,11 @@ class EmissaryOfLies extends DrawCard {
 
     selectCardName(player, cardName, source) {
         this.game.addMessage('{0} names {1} - {2} must choose to reveal their hand', player, cardName, player.opponent);
-        this.game.promptWithHandlerMenu(source.controler, {
-            choices: ['yes', 'no'],
+        this.game.promptWithHandlerMenu(source.controller, {
+            choices: ['Yes', 'No'],
             handlers: [(context) => {
-                let handCardNames = context.player.hand.map(card => card.id);
-                this.game.addMessage(handCardNames);
+                let handCardNames = source.controller.hand.map(card => card.name);
+                this.game.addMessage(handCardNames.join(', '));
                 if(handCardNames.includes(cardName)) {
                     this.game.applyGameAction(context, {
                         sendHome: context.target
@@ -36,7 +36,7 @@ class EmissaryOfLies extends DrawCard {
                 }
                 return true;
             }, () => true],
-            activePromptTitle: 'Did you want to reveal your hand',
+            activePromptTitle: 'Do you want to reveal your hand',
             waitingPromptTitle: 'Waiting for opponent to choose to reveal their hand or not'
         });
         return true;
