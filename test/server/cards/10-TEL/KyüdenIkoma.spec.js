@@ -72,7 +72,7 @@ describe('Kyüden Ikoma', function() {
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
-            it('should not trigger when you lose a conflict without an attacking character', function() {
+            it('should not trigger when you lose a conflict on defense', function() {
                 this.noMoreActions();
                 this.player1.passConflict();
                 this.noMoreActions();
