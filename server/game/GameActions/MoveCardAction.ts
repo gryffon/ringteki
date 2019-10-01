@@ -10,6 +10,7 @@ export interface MoveCardProperties extends CardActionProperties {
     faceup?: boolean;
     bottom?: boolean;
     changePlayer?: boolean;
+    discardDestinationCards?: boolean;
 }
 
 export class MoveCardAction extends CardGameAction {
@@ -21,7 +22,8 @@ export class MoveCardAction extends CardGameAction {
         shuffle: false,
         faceup: false,
         bottom: false,
-        changePlayer: false
+        changePlayer: false,
+        discardDestinationCards: false
     };
     constructor(properties: MoveCardProperties | ((context: AbilityContext) => MoveCardProperties)) {
         super(properties);
@@ -64,7 +66,10 @@ export class MoveCardAction extends CardGameAction {
             this.checkForRefillProvince(card, event, additionalProperties);
         }
         const player = properties.changePlayer && card.controller.opponent ? card.controller.opponent : card.controller;
-        player.moveCard(card, properties.destination, { bottom: !!properties.bottom });
+        if(properties.discardDestinationCards && [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(properties.destination)) {
+            player.moveCard(player.getDynastyCardInProvince(card.location), Locations.DynastyDiscardPile);
+        }
+        player.moveCard(card, properties.destination, { bottom: !!properties.bottom, discardDestinationCards: !!properties.discardDestinationCards });
         let target = properties.target;
         if(properties.shuffle && (target.length === 0 || card === target[target.length - 1])) {
             if(properties.destination === Locations.ConflictDeck) {

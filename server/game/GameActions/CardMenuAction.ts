@@ -76,7 +76,6 @@ export class CardMenuAction extends CardGameAction {
         let defaultProperties = {
             context: context,
             cardHandler: (card: DrawCard): void => {
-                context.target = card;
                 properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.subActionProperties(card)));
                 if(properties.message) {
                     let cards = properties.cards.filter(card => cardCondition(card, context));
