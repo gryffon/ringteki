@@ -47,7 +47,7 @@ describe('Kyüden Ikoma', function() {
 
                 this.player1.clickCard(this.kaiuShuichi);
 
-                expect(this.getChatLogs(10)).toContain('player1 uses Kyūden Ikoma, bowing Kyūden Ikoma to bow Kaiu Shuichi.')
+                expect(this.getChatLogs(10)).toContain('player1 uses Kyūden Ikoma, bowing Kyūden Ikoma to bow Kaiu Shuichi.');
                 expect(this.kaiuShuichi.bowed).toBe(true);
             });
 
