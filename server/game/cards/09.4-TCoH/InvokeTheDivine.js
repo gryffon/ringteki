@@ -10,14 +10,15 @@ class InvokeTheDivine extends DrawCard {
             controller: Players.Self,
             cardCondition: card => card.hasTrait('spell') && card.getCost() <= fate,
             optional: spellsCast > 0,
-            gameAction: AbilityDsl.actions.playCard({
+            gameAction: AbilityDsl.actions.playCard(invokeContext => ({
                 resetOnCancel: true,
+                payCosts: false,
                 postHandler: context => {
                     if(spellsCast < 2) {
-                        getSelectCardAction(fate - context.source.getCost(), spellsCast + 1).resolve(null, context);
+                        getSelectCardAction(fate - context.source.getCost(), spellsCast + 1).resolve(null, invokeContext);
                     }
                 }
-            })
+            }))
         });
         this.action({
             title: 'Play 3 spells',

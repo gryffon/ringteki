@@ -42,8 +42,21 @@ class PlayCardResolver extends AbilityResolver {
         }
     }
 
-    executeHandler() {
-        super.executeHandler();
+    moveEventCardToDiscard() {
+        if(this.context.source.location === Locations.BeingPlayed) {
+            const location = this.initiateAbility && this.gameActionProperties.destination || Locations.ConflictDiscardPile;
+            if(location === Locations.RemovedFromGame) {
+                this.game.addMessage('{0} is removed from the game by {1}\'s effect', this.context.source, this.gameActionContext.source);
+            }
+            if(location === Locations.ConflictDeck && this.gameActionProperties.destinationOptions.bottom) {
+                this.game.addMessage('{0} is placed on the bottom of {1}\'s deck by {2}\'s effect', this.context.source, this.context.player, this.gameActionContext.source);
+            }
+            this.context.player.moveCard(this.context.source, location, this.gameActionProperties.destinationOptions);
+        }
+    }
+
+    refillProvinces() {
+        super.refillProvinces();
         if(!this.cancelPressed) {
             this.game.queueSimpleStep(() => this.gameActionProperties.postHandler(this.context));
         }
@@ -54,6 +67,8 @@ export interface PlayCardProperties extends CardActionProperties {
     resetOnCancel?: boolean;
     postHandler?: (context: AbilityContext) => void;
     location?: Locations;
+    destination?: Locations;
+    destinationOptions?: object;
     payCosts?: boolean;
 }
 
@@ -64,6 +79,7 @@ export class PlayCardAction extends CardGameAction {
         resetOnCancel: false,
         postHandler: () => true,
         location: Locations.Hand,
+        destinationOptions: {},
         payCosts: true
     };
     constructor(properties: ((context: AbilityContext) => PlayCardProperties) | PlayCardProperties) {
