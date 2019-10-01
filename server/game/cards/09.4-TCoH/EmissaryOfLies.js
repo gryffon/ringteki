@@ -23,10 +23,11 @@ class EmissaryOfLies extends DrawCard {
 
     selectCardName(player, cardName, source) {
         this.game.addMessage('{0} names {1} - {2} must choose to reveal their hand', player, cardName, player.opponent);
+        let opponent = player.opponent;
         this.game.promptWithHandlerMenu(source.controller, {
             choices: ['Yes', 'No'],
             handlers: [(context) => {
-                let handCardNames = source.controller.hand.map(card => card.name);
+                let handCardNames = opponent.hand.map(card => card.name);
                 this.game.addMessage(handCardNames.join(', '));
                 if(handCardNames.includes(cardName)) {
                     this.game.applyGameAction(context, {
