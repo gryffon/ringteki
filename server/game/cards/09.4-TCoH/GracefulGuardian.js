@@ -11,7 +11,9 @@ class GracefulGuardian extends DrawCard {
             effect: 'increase the cost of cards played by 1 for each player\'s next action opportunity',
             gameAction: AbilityDsl.actions.playerLastingEffect(context => ({
                 targetController: Players.Any,
-                effect: AbilityDsl.effects.increaseCost(),
+                effect: AbilityDsl.effects.increaseCost({
+                    amount: 1
+                }),
                 until: {
                     onPassActionPhasePriority: event => event.player === context.player
                 }
