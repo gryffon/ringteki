@@ -65,7 +65,7 @@ describe('Emissary of lies\'', function() {
                 this.player1.clickCard(this.emissary);
                 this.player1.clickCard(this.tsukune);
                 this.player2.chooseCardInPrompt(this.banzai.name, 'card-name');
-                this.player1.clickCard('Yes');
+                this.player1.clickPrompt('Yes');
                 expect(this.game.currentConflict.defenders).not.toContain(this.tsukune);
             });
 
