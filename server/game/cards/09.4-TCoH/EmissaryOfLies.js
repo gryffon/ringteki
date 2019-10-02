@@ -4,7 +4,7 @@ const { CardTypes } = require('../../Constants');
 class EmissaryOfLies extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'try to name a card in your opponents hand',
+            title: 'Move a character home',
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent
@@ -31,7 +31,13 @@ class EmissaryOfLies extends DrawCard {
             choices: ['Yes', 'No'],
             handlers: [() => {
                 let handCardNames = opponent.hand.map(card => card.name);
-                this.game.addMessage('{0}\'s hand is: ' + handCardNames.join(', '), opponent);
+                // this.game.addMessage('{0}\'s hand is: ' + handCardNames.join(', '), opponent);
+                this.game.applyGameAction(this.originalContext, {
+                    lookAt: () => ({
+                        target: opponent.hand.sortBy(card => card.name),
+                        chatMessage: true
+                    })
+                });
                 if(!handCardNames.includes(cardName)) {
                     this.game.applyGameAction(this.originalContext, {
                         sendHome: this.originalContext.target
