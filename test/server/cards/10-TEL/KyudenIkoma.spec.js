@@ -47,7 +47,7 @@ describe('Kyüden Ikoma', function() {
 
                 this.player1.clickCard(this.kaiuShuichi);
 
-                expect(this.getChatLogs(10)).toContain('player1 uses Kyūden Ikoma, bowing Kyūden Ikoma to bow Kaiu Shuichi.')
+                expect(this.getChatLogs(10)).toContain('player1 uses Kyūden Ikoma, bowing Kyūden Ikoma to bow Kaiu Shuichi.');
                 expect(this.kaiuShuichi.bowed).toBe(true);
             });
 
@@ -72,7 +72,7 @@ describe('Kyüden Ikoma', function() {
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
-            it('should not trigger when you lose a conflict without an attacking character', function() {
+            it('should not trigger when you lose a conflict on defense', function() {
                 this.noMoreActions();
                 this.player1.passConflict();
                 this.noMoreActions();
