@@ -30,7 +30,7 @@ class EmbraceDeath extends DrawCard {
                 }
             },
             effect: '{1} {0}',
-            effectArgs: context => context.target.fate > 0 ? 'remove 1 fate from' : 'discard',
+            effectArgs: context => context.target.fate > 0 ? 'remove 1 fate from' : 'discard'
         });
     }
 }
