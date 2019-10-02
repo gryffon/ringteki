@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl');
 class KensonNoGakka extends ProvinceCard {
     setupCardAbilities() {
         this.reaction({
-            title: "Honor all defenders",
+            title: 'Honor all defenders',
             when: {
                 afterConflict: (event, context) => context.source.isConflictProvince()
                     && event.conflict.loser === context.player

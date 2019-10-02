@@ -33,7 +33,7 @@ describe('Conflict Between Kin', function() {
                     attackers: [this.brashSamurai],
                     defenders: [this.dojiHotaru, this.keeperInitiate],
                     province: this.kensonNoGakka
-                })
+                });
 
                 this.player2.pass();
                 this.player1.clickCard(this.brashSamurai);
@@ -56,7 +56,7 @@ describe('Conflict Between Kin', function() {
                     attackers: [this.brashSamurai],
                     defenders: [this.asahinaArtisan, this.keeperInitiate, this.dojiWhisperer],
                     province: this.kensonNoGakka
-                })
+                });
 
                 this.player2.pass();
                 this.player1.pass();
@@ -77,7 +77,7 @@ describe('Conflict Between Kin', function() {
                     type: 'military',
                     attackers: [this.callowDelegate],
                     defenders: [this.brashSamurai]
-                })
+                });
 
                 this.player1.pass();
                 this.player2.pass();
