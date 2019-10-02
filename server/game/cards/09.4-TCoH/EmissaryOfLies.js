@@ -31,17 +31,9 @@ class EmissaryOfLies extends DrawCard {
             choices: ['Yes', 'No'],
             handlers: [() => {
                 let handCardNames = opponent.hand.map(card => card.name);
-                // this.game.addMessage('{0}\'s hand is: ' + handCardNames.join(', '), opponent);
-                this.game.applyGameAction(this.originalContext, {
-                    lookAt: () => ({
-                        target: opponent.hand.sortBy(card => card.name),
-                        chatMessage: true
-                    })
-                });
+                this.game.actions.lookAt().resolve(opponent.hand.sortBy(card => card.name), this.originalContext);
                 if(!handCardNames.includes(cardName)) {
-                    this.game.applyGameAction(this.originalContext, {
-                        sendHome: this.originalContext.target
-                    });
+                    this.game.actions.sendHome().resolve(this.originalContext.target, this.originalContext);
                     return true;
                 }
                 return true;
