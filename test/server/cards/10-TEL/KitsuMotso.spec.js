@@ -14,7 +14,7 @@ describe('Matsu Gohei', function() {
             });
 
             this.kitsuMotso = this.player1.findCardByName('kitsu-motso');
-            this.assassination = this.player1.findCardByName('assassination')
+            this.assassination = this.player1.findCardByName('assassination');
 
             this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
             this.agashaSwordsmith = this.player2.findCardByName('agasha-swordsmith');
@@ -46,7 +46,7 @@ describe('Matsu Gohei', function() {
             this.player2.pass();
             this.player1.clickCard(this.kitsuMotso);
             expect(this.agashaSwordsmith.location).toBe('dynasty discard pile');
-            expect(this.player1).toHavePrompt('Choose a character to move in')
+            expect(this.player1).toHavePrompt('Choose a character to move in');
             this.player1.clickCard(this.mirumotoRaitsugu);
             expect(this.mirumotoRaitsugu.isParticipating()).toBe(true);
         });
@@ -66,7 +66,7 @@ describe('Matsu Gohei', function() {
             this.player2.pass();
             this.player1.clickCard(this.kitsuMotso);
             expect(this.agashaSwordsmith.location).toBe('dynasty discard pile');
-            expect(this.player1).toHavePrompt('Choose a character to move in')
+            expect(this.player1).toHavePrompt('Choose a character to move in');
             this.player1.clickCard(this.mirumotoRaitsugu);
             expect(this.mirumotoRaitsugu.isParticipating()).toBe(true);
         });
