@@ -3,6 +3,7 @@ import { GameAction } from './GameAction';
 import { AddTokenAction, AddTokenProperties} from './AddTokenAction';
 import { AttachAction, AttachActionProperties } from './AttachAction';
 import { AttachToRingAction, AttachToRingActionProperties } from './AttachToRingAction';
+import { AttachToProvinceAction, AttachToProvinceActionProperties } from './AttachToProvinceAction';
 import { BowAction, BowActionProperties } from './BowAction';
 import { BreakAction, BreakProperties } from './BreakAction';
 import { CancelAction, CancelActionProperties } from './CancelAction';
@@ -71,9 +72,10 @@ import { TransferHonorAction, TransferHonorProperties } from './TransferHonorAct
 import { TurnCardFacedownAction, TurnCardFacedownProperties } from './TurnCardFacedownAction';
 
 const GameActions = {
-    // card 
+    // card
     addToken: (propertyFactory: AddTokenProperties | ((context: TriggeredAbilityContext) => AddTokenProperties) = {}) => new AddTokenAction(propertyFactory),
     attach: (propertyFactory: AttachActionProperties | ((context: TriggeredAbilityContext) => AttachActionProperties) = {}) => new AttachAction(propertyFactory), // attachment
+    attachToProvince: (propertyFactory: AttachToProvinceActionProperties | ((context: TriggeredAbilityContext) => AttachToProvinceActionProperties)) => new AttachToProvinceAction(propertyFactory), // attachment on a province
     attachToRing: (propertyFactory: AttachToRingActionProperties | ((context: TriggeredAbilityContext) => AttachToRingActionProperties) = {}) => new AttachToRingAction(propertyFactory), // attachment on a ring
     bow: (propertyFactory: BowActionProperties | ((context: TriggeredAbilityContext) => BowActionProperties) = {}) => new BowAction(propertyFactory),
     break: (propertyFactory: BreakProperties | ((context: TriggeredAbilityContext) => BreakProperties) = {}) => new BreakAction(propertyFactory),

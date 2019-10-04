@@ -9,6 +9,7 @@ class ProvinceCard extends BaseCard {
 
         this.isProvince = true;
         this.isBroken = false;
+        this.attachments = [];
         this.menu = _([{ command: 'break', text: 'Break/unbreak this province' }, { command: 'hide', text: 'Flip face down' }]);
     }
 
@@ -115,7 +116,8 @@ class ProvinceCard extends BaseCard {
 
         return _.extend(baseSummary, {
             isProvince: this.isProvince,
-            isBroken: this.isBroken
+            isBroken: this.isBroken,
+            attachments: this.attachments
         });
     }
 
