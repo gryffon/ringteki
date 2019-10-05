@@ -17,14 +17,13 @@ class TotalWarfare extends DrawCard {
             }
         });
     }
-    canAttach(province) {
-        return province && province.type === 'province';
-    }
+
     canPlayOn(source) {
         return source && source.getType() === 'province' && this.getType() === CardTypes.Attachment;
     }
-    mustAttachToProvince() {
-        return true;
+
+    canAttach(parent, context) { // eslint-disable-line no-unused-vars
+        return parent && parent.getType() === CardTypes.Province && this.getType() === CardTypes.Attachment;
     }
 }
 

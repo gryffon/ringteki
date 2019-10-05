@@ -5,7 +5,6 @@ const BaseCard = require('./basecard');
 const DynastyCardAction = require('./dynastycardaction.js');
 const PlayAttachmentAction = require('./playattachmentaction.js');
 const PlayAttachmentOnRingAction = require('./playattachmentonringaction.js');
-const PlayAttachmentOnProvinceAction = require('./playattachmentonprovinceaction.js');
 const PlayCharacterAction = require('./playcharacteraction.js');
 const PlayDisguisedCharacterAction = require('./PlayDisguisedCharacterAction');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
@@ -759,8 +758,6 @@ class DrawCard extends BaseCard {
             }
         } else if(this.type === CardTypes.Attachment && this.mustAttachToRing()) {
             actions.push(new PlayAttachmentOnRingAction(this));
-        } else if(this.type === CardTypes.Attachment && this.mustAttachToProvince()) {
-            actions.push(new PlayAttachmentOnProvinceAction(this));
         } else if(this.type === CardTypes.Attachment) {
             actions.push(new PlayAttachmentAction(this));
         }

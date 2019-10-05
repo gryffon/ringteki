@@ -12,7 +12,7 @@ export interface AttachActionProperties extends CardActionProperties {
 export class AttachAction extends CardGameAction {
     name = 'attach';
     eventName = EventNames.OnCardAttached;
-    targetType = [CardTypes.Character];
+    targetType = [CardTypes.Character, CardTypes.Province];
     defaultProperties: AttachActionProperties = {
         takeControl: false
     };
@@ -31,7 +31,7 @@ export class AttachAction extends CardGameAction {
 
     canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as AttachActionProperties;
-        if(!context || !context.player || !card || card.location !== Locations.PlayArea) {
+        if(!context || !context.player || !card || card.location !== Locations.PlayArea && card.type !== CardTypes.Province) {
             return false;
         } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context)) {
             return false;
@@ -40,7 +40,8 @@ export class AttachAction extends CardGameAction {
         }
         return card.allowAttachment(properties.attachment) && super.canAffect(card, context);
     }
-    
+
+
     checkEventCondition(event, additionalProperties): boolean {
         return this.canAffect(event.parent, event.context, additionalProperties);
     }

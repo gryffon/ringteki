@@ -121,6 +121,16 @@ class ProvinceCard extends BaseCard {
         });
     }
 
+    allowAttachment(attachment) {
+        if(_.any(this.allowedAttachmentTraits, trait => attachment.hasTrait(trait))) {
+            return true;
+        }
+
+        return (
+            this.isBlank() ||
+            this.allowedAttachmentTraits.length === 0
+        );
+    }
 }
 
 module.exports = ProvinceCard;
