@@ -68,7 +68,7 @@ describe('Ardent Omoidasu', function() {
             expect(this.player2.honor).toBe(8);
         });
 
-        it('should not allow to trigger when the controller itself dishonors him', function() {
+        it('should allow to trigger when a character gets dishonored by a ring effect', function() {
             this.noMoreActions();
             this.player1.passConflict();
             this.noMoreActions();
