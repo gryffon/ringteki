@@ -26,6 +26,7 @@ class PrepareForWar extends DrawCard {
                         AbilityDsl.actions.menuPrompt(context => ({
                             activePromptTitle: 'Do you wish to discard the status token?',
                             choices: ['Yes', 'No'],
+                            optional: true,
                             choiceHandler: (choice, displayMessage) => {
                                 if(displayMessage && choice === 'Yes') {
                                     this.game.addMessage('{0} chooses to discard the status token from {1}', context.player, context.target);
@@ -34,7 +35,7 @@ class PrepareForWar extends DrawCard {
                                 return { target: (choice === 'Yes' ? context.target.personalHonor : []) };
                             },
                             player: Players.Self,
-                            gameAction: AbilityDsl.actions.discardStatusToken()
+                            gameAction: AbilityDsl.actions.discardStatusToken(),
                         }))
                     ]),
                     AbilityDsl.actions.honor(context => ({
