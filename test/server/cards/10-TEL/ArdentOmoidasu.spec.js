@@ -52,7 +52,7 @@ describe('Ardent Omoidasu', function() {
                 province: this.shamefulDisplay,
                 ring: 'fire'
             });
-            
+
             this.player2.clickCard(this.shamefulDisplay);
             this.player2.clickCard(this.ardentOmoidasu);
             this.player2.clickCard(this.mirumotoRaitsugu);
@@ -72,14 +72,14 @@ describe('Ardent Omoidasu', function() {
             this.noMoreActions();
             this.player1.passConflict();
             this.noMoreActions();
-            
+
             this.initiateConflict({
                 type: 'military',
                 defenders: [this.ardentOmoidasu],
                 attackers: [this.mirumotoRaitsugu],
                 ring: 'fire'
             });
-            
+
             this.noMoreActions();
 
             this.player2.clickCard(this.ardentOmoidasu);

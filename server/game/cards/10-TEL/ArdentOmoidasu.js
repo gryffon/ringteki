@@ -6,7 +6,7 @@ class ArdentOmoidasu extends DrawCard {
         this.reaction({
             title: 'Steal 2 honor',
             when: {
-                onCardDishonored: (event, context) => event.card.controller == context.player
+                onCardDishonored: (event, context) => event.card.controller === context.player
                     && event.context.player === context.player.opponent
             },
             gameAction: AbilityDsl.actions.takeHonor({
