@@ -5,11 +5,13 @@ describe('Matsu Tsuko', function() {
                 phase: 'conflict',
                 player1: {
                     inPlay: ['matsu-tsuko-2', 'akodo-toturi'],
-                    hand: ['way-of-the-lion']
+                    hand: ['way-of-the-lion'],
+                    honor: 12
                 },
                 player2: {
                     inPlay: ['mirumoto-raitsugu'],
-                    provinces: ['public-forum', 'entrenched-position']
+                    provinces: ['public-forum', 'entrenched-position'],
+                    honor: 10
                 }
             });
 
@@ -96,6 +98,26 @@ describe('Matsu Tsuko', function() {
 
             this.player1.clickCard(this.matsuTsuko);
             expect(this.entrenchedPosition.isBroken).toBe(false);
+        });
+
+        it('should not allow you to break the province when winning and tsuko is participating but you are less honorable', function() {
+            this.player2.honor = 20;
+
+            this.initiateConflict({
+                attackers: [this.matsuTsuko],
+                defenders: [this.mirumotoRaitsugu],
+                province: this.entrenchedPosition
+            });
+
+            this.noMoreActions();
+
+            expect(this.player1).not.toHavePrompt('Triggered Abilities');
+            expect(this.player1).not.toBeAbleToSelect(this.matsuTsuko);
+
+            this.player1.clickCard(this.matsuTsuko);
+            this.player1.clickPrompt('Don\'t Resolve');
+            expect(this.entrenchedPosition.isBroken).toBe(false);
+            expect(this.player1).toHavePrompt('Action Window');
         });
     });
 });

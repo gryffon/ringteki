@@ -10,6 +10,7 @@ class MatsuTsuko2 extends DrawCard {
                 afterConflict: (event, context) => event.conflict.winner === context.player
                     && context.source.isAttacking()
                     && event.conflict.conflictProvince.location !== Locations.StrongholdProvince
+                    && context.player.opponent && context.player.getTotalHonor() > context.player.opponent.getTotalHonor()
             },
             gameAction: AbilityDsl.actions.break(context => ({
                 target: context.game.currentConflict.conflictProvince
