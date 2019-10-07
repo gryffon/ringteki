@@ -13,16 +13,16 @@ class EmperorsSummons extends ProvinceCard {
                 cards: context.player.dynastyDeck.filter(card => card.type === CardTypes.Character),
                 choices: ['Select nothing'],
                 handlers: [() => this.game.addMessage('{0} selects nothing from their deck', context.player)],
-                gameAction: AbilityDsl.actions.selectCard(selectContext => ({
+                gameAction: AbilityDsl.actions.selectCard({
                     cardType: CardTypes.Province,
                     location: Locations.Provinces,
                     controller: Players.Self,
                     cardCondition: card => card.location !== Locations.StrongholdProvince,
                     subActionProperties: card => ({ destination: card.location }),
-                    gameAction: AbilityDsl.actions.moveCard({ target: selectContext.target, discardDestinationCards: true }),
+                    gameAction: AbilityDsl.actions.moveCard({ discardDestinationCards: true }),
                     message: '{1} chooses to place {2} in {0} discarding {3}',
                     messageArgs: (card, player, properties) => [card.location, player, properties.target, player.getDynastyCardInProvince(card.location)]
-                }))
+                })
             })),
             effect: 'choose a character to place in a province'
         });
