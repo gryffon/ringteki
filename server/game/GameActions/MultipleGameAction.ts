@@ -52,9 +52,11 @@ export class MultipleGameAction extends GameAction {
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         for(const gameAction of properties.gameActions) {
-            if(gameAction.hasLegalTarget(context, additionalProperties)) {
-                gameAction.addEventsToArray(events, context, additionalProperties);
-            }
+            context.game.queueSimpleStep(() => {
+                if(gameAction.hasLegalTarget(context, additionalProperties)) {
+                    gameAction.addEventsToArray(events, context, additionalProperties);
+                }    
+            });
         }
     }
 

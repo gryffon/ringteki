@@ -11,7 +11,7 @@ export class DiscardStatusAction extends TokenAction {
     cost = 'discarding {0}\'s status token';
 
     eventHandler(event): void {
-        if(event.token.card.personalHonor === event.token) {
+        if(event.token.card && event.token.card.personalHonor === event.token) {
             event.token.card.makeOrdinary();
         }
     }

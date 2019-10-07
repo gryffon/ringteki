@@ -1,4 +1,4 @@
-describe('Matsu Gohei', function() {
+describe('Prepare for War', function() {
     integration(function() {
         beforeEach(function() {
             this.setupTest({
