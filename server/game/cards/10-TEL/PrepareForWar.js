@@ -6,7 +6,7 @@ const AbilityDsl = require('../../abilitydsl.js');
 class PrepareForWar extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: "Remove honor token and any attachment",
+            title: 'Remove honor token and any attachment',
             target: {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
@@ -30,12 +30,12 @@ class PrepareForWar extends DrawCard {
                             choiceHandler: (choice, displayMessage) => {
                                 if(displayMessage && choice === 'Yes') {
                                     this.game.addMessage('{0} chooses to discard the status token from {1}', context.player, context.target);
-                                };
+                                }
 
                                 return { target: (choice === 'Yes' ? context.target.personalHonor : []) };
                             },
                             player: Players.Self,
-                            gameAction: AbilityDsl.actions.discardStatusToken(),
+                            gameAction: AbilityDsl.actions.discardStatusToken()
                         }))
                     ]),
                     AbilityDsl.actions.honor(context => ({
@@ -43,7 +43,7 @@ class PrepareForWar extends DrawCard {
                     }))
                 ])
             }
-        })
+        });
     }
 }
 
