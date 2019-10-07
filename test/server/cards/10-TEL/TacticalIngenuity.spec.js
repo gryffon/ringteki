@@ -14,7 +14,7 @@ describe('Tactical Ingenuity', function() {
             this.zentaro = this.player1.findCardByName('akodo-zentaro');
             this.matsuBerseker = this.player1.findCardByName('matsu-berserker');
             this.tacticalIngenuity = this.player1.findCardByName('tactical-ingenuity');
-            this.wayOfTheLion = this.player1.findCardByName('way-of-the-lion', 'conflict deck')
+            this.wayOfTheLion = this.player1.findCardByName('way-of-the-lion', 'conflict deck');
         });
 
         it('should only be allowed to trigger in a conflict', function() {
