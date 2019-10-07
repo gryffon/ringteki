@@ -11,7 +11,7 @@ describe('Graceful Guardian', function() {
                     },
                     player2: {
                         inPlay: ['graceful-guardian'],
-                        hand: ['way-of-the-crane', 'ornate-fan'],
+                        hand: ['way-of-the-crane', 'ornate-fan', 'voice-of-honor'],
                         fate: 4
                     }
                 });
@@ -22,6 +22,7 @@ describe('Graceful Guardian', function() {
 
                 this.gracefulGuardian = this.player2.findCardByName('graceful-guardian');
                 this.wayOfTheCrane = this.player2.findCardByName('way-of-the-crane');
+                this.voiceOfHonor = this.player2.findCardByName('voice-of-honor');
                 this.ornateFan = this.player2.findCardByName('ornate-fan');
 
                 this.noMoreActions();
@@ -54,6 +55,23 @@ describe('Graceful Guardian', function() {
                 this.player2.clickCard(this.gracefulGuardian);
 
                 expect(this.player2.fate).toBe(3);
+            });
+
+            it('should also increase the cost of any interrupts/reactions during the next action opportunities by each player by 1.', function () {
+                this.player2.clickCard(this.wayOfTheCrane);
+                this.player2.clickCard(this.gracefulGuardian);
+                this.player1.pass();
+
+                this.player2.clickCard(this.gracefulGuardian);
+                this.player1.clickCard(this.againstTheWaves);
+                this.player1.clickCard(this.solemn);
+
+                expect(this.player1.fate).toBe(2);
+                this.player2.clickCard(this.voiceOfHonor);
+                expect(this.player2.fate).toBe(3);
+
+                expect(this.solemn.bowed).toBe(false);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
             });
         });
     });
