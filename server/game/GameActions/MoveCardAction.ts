@@ -67,7 +67,10 @@ export class MoveCardAction extends CardGameAction {
         }
         const player = properties.changePlayer && card.controller.opponent ? card.controller.opponent : card.controller;
         if(properties.discardDestinationCards && [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(properties.destination)) {
-            player.moveCard(player.getDynastyCardInProvince(card.location), Locations.DynastyDiscardPile);
+            let cardsToDiscard = player.getSourceList(properties.destination).filter(card => card.isDynasty);
+            for(const card of cardsToDiscard) {
+                player.moveCard(card, Locations.DynastyDiscardPile);
+            }
         }
         player.moveCard(card, properties.destination, { bottom: !!properties.bottom, discardDestinationCards: !!properties.discardDestinationCards });
         let target = properties.target;

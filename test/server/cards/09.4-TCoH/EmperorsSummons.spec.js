@@ -66,6 +66,7 @@ describe('Emperor\'s Summons', function() {
 
             it('should place the selected charater in the chosen province, discarding each other card in that province', function() {
                 this.noMoreActions();
+                const cardsInDiscard = this.player2.player.dynastyDiscardPile.size();
                 this.player1.clickCard(this.brashSamurai);
                 this.player1.clickRing('fire');
                 this.player1.clickCard(this.emperorsSummons);
@@ -74,7 +75,7 @@ describe('Emperor\'s Summons', function() {
                 this.player2.clickPrompt('Mirumoto Raitsugu');
                 this.player2.clickCard(this.shamefulDisplay);
                 expect(this.mirumotoRaitsugu.location).toBe('province 2');
-                expect(this.player2.dynastyDiscard.length).toBe(1);
+                expect(this.player2.player.dynastyDiscardPile.size()).toBe(cardsInDiscard + 1);
                 expect(this.getChatLogs(2)).toContain('player2 chooses to place Mirumoto Raitsugu in province 2 discarding Adept of the Waves');
             });
         });
