@@ -125,7 +125,7 @@ export class GameAction {
 
     eventHandler(event: any, additionalProperties = {}): void { // eslint-disable-line no-unused-vars
     }
-    
+
     checkEventCondition(event: Event, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
         return true;
     }
@@ -150,7 +150,7 @@ export class GameAction {
         if(event.recipient) {
             if(event.recipient.type === CardTypes.Character && !event.recipient.allowGameAction('placeFate', event.context)) {
                 return false;
-            } 
+            }
         }
         return (!!event.origin || !!event.recipient);
     }
