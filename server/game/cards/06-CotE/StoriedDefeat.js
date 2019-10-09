@@ -49,7 +49,13 @@ class StoriedDefeat extends DrawCard {
     }
 
     afterDuel(event) {
-        if(event.duel.loser) {
+        if(Array.isArray(event.duel.loser)) {
+            event.duel.loser.forEach(duelLoser => {
+                if(this.duelLosersThisConflict.indexOf(duelLoser) === -1) {
+                    this.duelLosersThisConflict.push(duelLoser);
+                }
+            });
+        } else if(event.duel.loser) {
             this.duelLosersThisConflict.push(event.duel.loser);
         }
     }
