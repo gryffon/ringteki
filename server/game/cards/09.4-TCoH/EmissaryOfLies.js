@@ -5,6 +5,7 @@ class EmissaryOfLies extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Move a character home',
+            condition: context => context.source.isParticipating(),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent
@@ -38,7 +39,7 @@ class EmissaryOfLies extends DrawCard {
                 }
                 return true;
             }, () => true],
-            activePromptTitle: 'Do you want to reveal your hand',
+            activePromptTitle: 'Do you want to reveal your hand?',
             waitingPromptTitle: 'Waiting for opponent to choose to reveal their hand or not'
         });
         return true;
