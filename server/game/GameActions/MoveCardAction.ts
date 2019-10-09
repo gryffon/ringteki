@@ -72,7 +72,7 @@ export class MoveCardAction extends CardGameAction {
                 player.moveCard(card, Locations.DynastyDiscardPile);
             }
         }
-        player.moveCard(card, properties.destination, { bottom: !!properties.bottom, discardDestinationCards: !!properties.discardDestinationCards });
+        player.moveCard(card, properties.destination, { bottom: !!properties.bottom });
         let target = properties.target;
         if(properties.shuffle && (target.length === 0 || card === target[target.length - 1])) {
             if(properties.destination === Locations.ConflictDeck) {
