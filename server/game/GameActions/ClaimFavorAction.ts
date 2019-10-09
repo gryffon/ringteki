@@ -9,7 +9,7 @@ export interface ClaimFavorProperties extends PlayerActionProperties {
 }
 
 export class ClaimFavorAction extends PlayerAction {
-    name = 'discardFavor';
+    name = 'claimFavor';
     eventName = EventNames.OnClaimFavor;
     effect = 'claim the Emperor\'s favor';
 
@@ -19,9 +19,8 @@ export class ClaimFavorAction extends PlayerAction {
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties) as ClaimFavorProperties;
-        let target = properties.target;
 
-        return player && !player.imperialFavor && super.canAffect(player, context);
+        return !!player && !player.imperialFavor && super.canAffect(player, context);
     }
 
     getProperties(context: AbilityContext, additionalProperties = {}): ClaimFavorProperties {
