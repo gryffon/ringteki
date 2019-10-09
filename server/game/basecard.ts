@@ -174,7 +174,7 @@ class BaseCard extends EffectSource {
 
     getTraits(): string[] {
         let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
-        let traits = copyEffect ? copyEffect.traits : this.traits;
+        let traits = copyEffect ? copyEffect.traits : this.getEffects(EffectNames.Blank).some(blankTraits => blankTraits) ? [] : this.traits;
         return _.uniq(traits.concat(this.getEffects(EffectNames.AddTrait)));
     }
 
