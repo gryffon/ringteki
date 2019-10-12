@@ -33,7 +33,7 @@ describe('Those Who Serve', function() {
             expect(this.player1.fate).toBe(4); // 10 - 1 TWS - 0 TA - 1 GT - 4 fate on characters
         });
 
-        it('should not work past dynasty phase', function() {
+        it('should not have its effect last beyond dynasty phase', function() {
             this.player1.clickCard(this.thoseWhoServe);
             this.player2.pass(); // player2 gets passing fate
             this.player1.pass();
@@ -42,6 +42,19 @@ describe('Those Who Serve', function() {
             this.player1.clickCard(this.ikomaReservist);
             this.player1.clickPrompt('0');
             expect(this.player1.fate).toBe(8); // 10 - 1 TWS - 1 IR
+        });
+
+        it('should not be playable outside of dynasty phase', function() {
+            this.player1.pass(); // player1 gets passing fate
+            this.player2.pass();
+            this.player1.clickPrompt('1'); // Bid
+            this.player2.clickPrompt('1'); // Bid
+            this.player1.clickCard(this.thoseWhoServe);
+            this.player1.pass(); // Can pass because TWS could not be played
+            this.player2.pass();
+            this.player1.clickCard(this.ikomaReservist);
+            this.player1.clickPrompt('0');
+            expect(this.player1.fate).toBe(10); // 10 - 1 IR + 1 passing fate
         });
     });
 });
