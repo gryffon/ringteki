@@ -11,7 +11,7 @@ class PeasantsAdvice extends DrawCard {
             target: {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,
-                gameAction: AbilityDsl.actions.sequential([
+                gameAction: AbilityDsl.actions.multiple([
                     AbilityDsl.actions.lookAt(),
                     AbilityDsl.actions.selectCard(context => ({
                         activePromptTitle: 'Choose a faceup card to return to its owner\'s deck',

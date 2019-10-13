@@ -53,15 +53,14 @@ describe('Peasant\'s Advice', function() {
                 this.player1.clickCard('peasant-s-advice');
                 this.player1.clickCard(this.shamefulDisplay);
                 this.seppunGuardsman = this.player1.clickCard('seppun-guardsman');
-                expect(this.getChatLogs(5)).toContain('Peasant\'s Advice sees Shameful Display');
                 expect(this.player1).toHavePrompt('Choose a faceup card to return to its owner\'s deck');
                 expect(this.player1).toHavePromptButton('Done');
                 expect(this.player1).toBeAbleToSelect(this.shibaTsukune);
                 this.player1.clickCard(this.shibaTsukune);
                 expect(this.player2).toHavePrompt('Action Window');
                 expect(this.getChatLogs(5)).toContain('Peasant\'s Advice sees Shameful Display');
-                expect(this.getChatLogs(2)).toContain('player1 chooses to shuffle Shiba Tsukune into its owner\'s deck');
-                expect(this.getChatLogs(1)).toContain('player2 is shuffling their dynasty deck');
+                expect(this.getChatLogs(5)).toContain('player1 chooses to shuffle Shiba Tsukune into its owner\'s deck');
+                expect(this.getChatLogs(5)).toContain('player2 is shuffling their dynasty deck');
                 expect(this.shibaTsukune.location).toBe('dynasty deck');
                 expect(this.player2.player.getDynastyCardInProvince('province 1')).not.toBeUndefined();
             });
