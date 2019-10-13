@@ -884,8 +884,6 @@ class Game extends EventEmitter {
      * @param {String} eventName
      * @param {Object} params - parameters for this event
      * @param {Function} handler - (Event + params) => undefined
-     * @returns {Event} - this allows the caller to track Event.resolved and
-     * tell whether or not the handler resolved successfully
      */
     raiseEvent(eventName, params = {}, handler = () => true) {
         let event = this.getEvent(eventName, params, handler);
