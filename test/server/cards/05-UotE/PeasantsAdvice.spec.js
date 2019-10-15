@@ -61,7 +61,8 @@ describe('Peasant\'s Advice', function() {
                 expect(this.getChatLogs(5)).toContain('Peasant\'s Advice sees Shameful Display');
                 expect(this.getChatLogs(5)).toContain('player1 chooses to shuffle Shiba Tsukune into its owner\'s deck');
                 expect(this.getChatLogs(5)).toContain('player2 is shuffling their dynasty deck');
-                expect(this.shibaTsukune.location).toBe('dynasty deck');
+                expect(this.shibaTsukune.location === 'dynasty deck' || 
+                    this.shibaTsukune.location === 'province 1' && this.shibaTsukune.facedown).toBe(true);
                 expect(this.player2.player.getDynastyCardInProvince('province 1')).not.toBeUndefined();
             });
 
