@@ -24,7 +24,7 @@ class IdeRyoma extends DrawCard {
                         activePromptTitle: 'Choose a character to bow',
                         cardCondition: card => Object.values(context.targets).includes(card),
                         gameAction: AbilityDsl.actions.bow()
-                    })),
+                    }))
                 }
             },
             then: context => ({
