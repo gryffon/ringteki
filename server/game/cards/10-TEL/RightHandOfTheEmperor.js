@@ -5,11 +5,11 @@ const AbilityDsl = require('../../abilitydsl');
 
 class RightHandOfTheEmperor extends DrawCard {
     setupCardAbilities() {
-        // this.persistentEffect({
-        //     condition: context => context.player.honor > context.player.opponent.honor,
-        //     location: Locations.ConflictDiscardPile,
-        //     effect: AbilityDsl.effects.canPlayFromOwn(Locations.ConflictDiscardPile, this)
-        // });
+        this.persistentEffect({
+            condition: context => context.player.honor > context.player.opponent.honor,
+            location: Locations.ConflictDiscardPile,
+            effect: AbilityDsl.effects.canPlayFromOwn(Locations.ConflictDiscardPile, [this])
+        });
         this.action({
             title: 'Ready characters',
             target: {
