@@ -6,7 +6,7 @@ describe('Right Hand of the Emperor', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['brash-samurai', 'border-rider', 'doji-whisperer', 'daidoji-uji', 'doji-challenger', 'guest-of-honor', 'moto-youth', 'kakita-toshimoko'],
-                        hand: ['right-hand-of-the-emperor', 'sharpen-the-mind'],
+                        hand: ['right-hand-of-the-emperor', 'sharpen-the-mind']
                     },
                     player2: {
                         inPlay: ['naive-student','doji-kuwanan'],
@@ -190,7 +190,7 @@ describe('Right Hand of the Emperor', function() {
                 this.player1.clickCard(this.sharpenTheMind);
                 this.player1.clickCard(this.rightHandOfTheEmperor);
                 this.player2.pass();
-                
+
                 this.player1.clickCard(this.rightHandOfTheEmperor);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
@@ -213,7 +213,7 @@ describe('Right Hand of the Emperor', function() {
                 this.player1.clickCard(this.sharpenTheMind);
                 this.player1.clickCard(this.rightHandOfTheEmperor);
                 this.player2.pass();
-                
+
                 this.player1.clickCard(this.rightHandOfTheEmperor);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
