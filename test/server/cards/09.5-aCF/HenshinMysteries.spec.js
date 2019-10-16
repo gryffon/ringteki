@@ -59,6 +59,14 @@ describe('Henshin Mysteries', function() {
                 expect(this.henshinMysteries.isBroken).toBe(true);
                 expect(this.game.rings.air.claimed).toBe(false);
             });
+
+            it('should not stop the ring effect', function() {
+                let honor = this.player1.honor;
+                this.noMoreActions();
+                this.player1.clickPrompt('Gain 2 Honor');
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player1.honor).toBe(honor + 2);
+            });
         });
     });
 });
