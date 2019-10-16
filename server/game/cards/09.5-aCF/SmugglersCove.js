@@ -10,7 +10,11 @@ class SmugglersCove extends ProvinceCard {
             target: {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
-                gameAction: [AbilityDsl.actions.sendHome(), AbilityDsl.actions.moveToConflict()]
+                gameAction: AbilityDsl.actions.conditional({
+                    condition: (context) => context.target.isParticipating(),
+                    trueGameAction: AbilityDsl.actions.sendHome(),
+                    falseGameAction: AbilityDsl.actions.moveToConflict()
+                })
             }
         });
     }
