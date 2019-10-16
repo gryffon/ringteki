@@ -694,12 +694,6 @@ class DrawCard extends BaseCard {
         if(!parent || parent.getType() !== CardTypes.Character || this.getType() !== CardTypes.Attachment) {
             return false;
         }
-        if(this.anyEffect(EffectNames.AttachmentLimit)) {
-            const limit = Math.max(...this.getEffects(EffectNames.AttachmentLimit));
-            if(parent.attachments.filter(card => card.id === this.id && card !== this).length > limit - 1) {
-                return false;
-            }
-        }
         if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller) {
             return false;
         } else if(this.anyEffect(EffectNames.AttachmentUniqueRestriction) && !parent.isUnique()) {
@@ -735,6 +729,17 @@ class DrawCard extends BaseCard {
         ));
         for(const effectCard of this.getEffects(EffectNames.CannotHaveOtherRestrictedAttachments)) {
             illegalAttachments = illegalAttachments.concat(this.attachments.filter(card => card.isRestricted() && card !== effectCard));
+        }
+        for(const card of this.attachments.filter(card => card.anyEffect(EffectNames.AttachmentLimit))) {
+            const limit = Math.max(...card.getEffects(EffectNames.AttachmentLimit));
+            const matchingAttachments = this.attachments.filter(attachment => attachment.id === card.id);
+            illegalAttachments.concat(matchingAttachments.slice(0, matchingAttachments.length - limit));
+        }
+        for(const object of this.attachments.reduce((array, card) => array.concat(card.getEffects(EffectNames.AttachmentRestrictTraitAmount)), [])) {
+            for(const trait of Object.keys(object)) {
+                const matchingAttachments = this.attachments.filter(attachment => attachment.hasTrait(trait));
+                illegalAttachments.concat(matchingAttachments.slice(0, matchingAttachments.length - object[trait]));
+            }
         }
         illegalAttachments = _.uniq(illegalAttachments);
         if(this.attachments.filter(card => card.isRestricted()).length > 2) {

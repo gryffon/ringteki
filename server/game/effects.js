@@ -22,6 +22,7 @@ const Effects = {
     attachmentFactionRestriction: (factions) => EffectBuilder.card.static(EffectNames.AttachmentFactionRestriction, factions),
     attachmentLimit: (amount) => EffectBuilder.card.static(EffectNames.AttachmentLimit, amount),
     attachmentMyControlOnly: () => EffectBuilder.card.static(EffectNames.AttachmentMyControlOnly),
+    attachmentRestrictTraitAmount: (object) => EffectBuilder.card.static(EffectNames.AttachmentRestrictTraitAmount, object),
     attachmentTraitRestriction: (traits) => EffectBuilder.card.static(EffectNames.AttachmentTraitRestriction, traits),
     attachmentUniqueRestriction: () => EffectBuilder.card.static(EffectNames.AttachmentUniqueRestriction),
     blank: (blankTraits = false) => EffectBuilder.card.static(EffectNames.Blank, blankTraits),
