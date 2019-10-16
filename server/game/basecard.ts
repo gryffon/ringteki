@@ -150,7 +150,7 @@ class BaseCard extends EffectSource {
      * is both in play and not blank.
      */
     persistentEffect(properties: PersistentEffectProps): void {
-        const allowedLocations = [Locations.Any, Locations.PlayArea, Locations.Provinces];
+        const allowedLocations = [Locations.Any, Locations.ConflictDiscardPile, Locations.PlayArea, Locations.Provinces];
         const defaultLocationForType = {
             province: Locations.Provinces,
             holding: Locations.Provinces,
@@ -265,6 +265,7 @@ class BaseCard extends EffectSource {
 
     updateEffects(from: Locations, to: Locations) {
         const activeLocations = {
+            'conflict discard pile': [Locations.ConflictDiscardPile],
             'play area': [Locations.PlayArea],
             'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
         };
