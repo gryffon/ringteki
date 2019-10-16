@@ -3,6 +3,10 @@ const { Durations, CardTypes, PlayTypes } = require('../../Constants');
 
 class DaimyosFavor extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.action({
             title: 'Bow to reduce attachment cost',
             cost: ability.costs.bowSelf(),
@@ -19,13 +23,6 @@ class DaimyosFavor extends DrawCard {
                 })
             }))
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

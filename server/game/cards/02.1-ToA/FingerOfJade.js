@@ -3,6 +3,10 @@ const AbilityDsl = require('../../abilitydsl');
 
 class FingerOfJade extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.wouldInterrupt({
             title: 'Cancel an ability',
             when: {
@@ -11,13 +15,6 @@ class FingerOfJade extends DrawCard {
             cost: AbilityDsl.costs.sacrificeSelf(),
             gameAction: AbilityDsl.actions.cancel()
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

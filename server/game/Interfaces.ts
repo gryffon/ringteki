@@ -142,12 +142,19 @@ export interface TriggeredAbilityProps extends AbilityProps {
 
 export interface PersistentEffectProps {
     location?: Locations | Locations[];
-    duration?: Durations;
     condition?: (context: AbilityContext) => boolean;
     match?: (card: BaseCard, context?: AbilityContext) => boolean;
     targetController?: Players;
     targetLocation?: Locations;
     effect: Function | Function[];
+};
+
+export interface AttachmentConditionProps {
+    limit?: number;
+    myControl?: boolean;
+    unique?: boolean;
+    faction?: string | string[];
+    trait?: string | string[];
 };
 
 interface HonoredToken {

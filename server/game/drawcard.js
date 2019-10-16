@@ -674,7 +674,25 @@ class DrawCard extends BaseCard {
      * Opponent cards only, specific factions, etc) for this card.
      */
     canAttach(parent, context) { // eslint-disable-line no-unused-vars
-        return parent && parent.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
+        if(!parent || parent.getType() !== CardTypes.Character || this.getType() !== CardTypes.Attachment) {
+            return false;
+        }
+        if(this.anyEffect(EffectNames.AttachmentLimit)) {
+            const limit = Math.max(...this.getEffects(EffectNames.AttachmentLimit));
+            if(parent.attachments.filter(card => card.id === this.id && card !== this).length > limit - 1) {
+                return false;
+            }
+        }
+        if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller) {
+            return false;
+        } else if(this.anyEffect(EffectNames.AttachmentUniqueRestriction) && !parent.isUnique()) {
+            return false;
+        } else if(this.getEffects(EffectNames.AttachmentFactionRestriction).some(factions => !factions.some(faction => parent.isFaction(faction)))) {
+            return false;
+        } else if(this.getEffects(EffectNames.AttachmentTraitRestriction).some(traits => !traits.some(trait => parent.hasTrait(trait)))) {
+            return false;
+        }
+        return true;
     }
 
     canPlay(context, type) {
