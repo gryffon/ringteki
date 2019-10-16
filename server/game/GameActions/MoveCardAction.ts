@@ -10,19 +10,20 @@ export interface MoveCardProperties extends CardActionProperties {
     faceup?: boolean;
     bottom?: boolean;
     changePlayer?: boolean;
+    discardDestinationCards?: boolean;
 }
 
 export class MoveCardAction extends CardGameAction {
     name = 'move';
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Event, CardTypes.Holding];
-    effect = 'move {0}';
     defaultProperties: MoveCardProperties = {
         destination: null,
         switch: false,
         shuffle: false,
         faceup: false,
         bottom: false,
-        changePlayer: false
+        changePlayer: false,
+        discardDestinationCards: false
     };
     constructor(properties: MoveCardProperties | ((context: AbilityContext) => MoveCardProperties)) {
         super(properties);
@@ -31,6 +32,20 @@ export class MoveCardAction extends CardGameAction {
     getCostMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as MoveCardProperties;        
         return ['shuffling {0} into their deck', [properties.target]];
+    }
+
+    getEffectMessage(context: AbilityContext): [string, any[]] {
+        let properties = this.getProperties(context) as MoveCardProperties;
+        let destinationController = Array.isArray(properties.target) ?
+            (properties.changePlayer ? properties.target[0].controller.opponent : properties.target[0].controller) :
+            (properties.changePlayer ? properties.target.controller.opponent : properties.target.controller);
+        if(properties.shuffle) {
+            return ['shuffle {0} into {1}\'s {2}', [properties.target, destinationController, properties.destination]]
+        }
+        return [
+            'move {0} to ' + (properties.bottom ? 'the bottom of ' : '') + '{1}\'s {2}',
+            [properties.target, destinationController, properties.destination]
+        ];
     }
 
     canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
@@ -51,6 +66,12 @@ export class MoveCardAction extends CardGameAction {
             this.checkForRefillProvince(card, event, additionalProperties);
         }
         const player = properties.changePlayer && card.controller.opponent ? card.controller.opponent : card.controller;
+        if(properties.discardDestinationCards && [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour].includes(properties.destination)) {
+            let cardsToDiscard = player.getSourceList(properties.destination).filter(card => card.isDynasty);
+            for(const card of cardsToDiscard) {
+                player.moveCard(card, Locations.DynastyDiscardPile);
+            }
+        }
         player.moveCard(card, properties.destination, { bottom: !!properties.bottom });
         let target = properties.target;
         if(properties.shuffle && (target.length === 0 || card === target[target.length - 1])) {

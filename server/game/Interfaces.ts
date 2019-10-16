@@ -131,7 +131,7 @@ export type WhenType = {
     [EventName in EventNames]?: (event: any, context?: TriggeredAbilityContext) => boolean;
 };
 
-export interface TriggeredAbilityProps extends AbilityProps {
+interface TriggeredAbilityWhenProps extends AbilityProps {
     when: WhenType;
     collectiveTrigger?: boolean;
     target?: TriggeredAbilityTarget & TriggeredAbilityTarget;
@@ -139,6 +139,17 @@ export interface TriggeredAbilityProps extends AbilityProps {
     handler?: (context: TriggeredAbilityContext) => void;
     then?: ((context?: TriggeredAbilityContext) => object) | object;
 };
+
+interface TriggeredAbilityAggregateWhenProps extends AbilityProps {
+    aggregateWhen: (events: any[], context: TriggeredAbilityContext) => boolean;
+    collectiveTrigger?: boolean;
+    target?: TriggeredAbilityTarget & TriggeredAbilityTarget;
+    targets?: TriggeredAbilityTargets;
+    handler?: (context: TriggeredAbilityContext) => void;
+    then?: ((context?: TriggeredAbilityContext) => object) | object;
+};
+
+export type TriggeredAbilityProps = TriggeredAbilityWhenProps | TriggeredAbilityAggregateWhenProps;
 
 export interface PersistentEffectProps {
     location?: Locations | Locations[];
