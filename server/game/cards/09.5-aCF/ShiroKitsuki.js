@@ -4,8 +4,12 @@ const AbilityDsl = require('../../abilitydsl');
 
 class ShiroKitsuki extends StrongholdCard {
     setupCardAbilities() {
-        this.action({
+        this.reaction({
             title: 'Name a card that your opponent cannot play for the phase',
+            when: {
+                onConflictDeclared: () => true
+            },
+            limit: AbilityDsl.limit.unlimitedPerConflict(),
             handler: context => this.game.promptWithMenu(context.player, this, {
                 source: context.source,
                 activePrompt: {
