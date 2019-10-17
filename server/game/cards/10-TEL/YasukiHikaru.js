@@ -7,7 +7,7 @@ class YasukiHikaru extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Send home character',
-            condition: context => context.source.isParticipating() && context.source.isDefending(),
+            condition: context => context.source.isDefending(),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.getMilitarySkill() > context.source.getMilitarySkill(),
