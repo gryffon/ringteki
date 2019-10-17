@@ -9,7 +9,6 @@ class IsawaHeiko extends DrawCard {
             when: {
                 onCardPlayed: (event, context) => {
                     return event.card.hasTrait(Elements.Water) &&
-                        context.game.isDuringConflict() &&
                         event.player === context.player;
                 }
             },
