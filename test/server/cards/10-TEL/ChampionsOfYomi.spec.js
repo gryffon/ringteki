@@ -64,6 +64,7 @@ describe('Champions of Yomi', function() {
                 expect(this.player1).toBeAbleToSelect(this.yojinNoShiro);
                 this.player1.clickCard(this.yojinNoShiro);
                 expect(this.player1).toHavePrompt('Action Window');
+                expect(this.yojinNoShiro.bowed).toBe(true);
                 expect(this.championsOfYomi.location).toBe('play area');
                 expect(this.championsOfYomi.bowed).toBe(false);
             });
