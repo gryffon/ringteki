@@ -5,7 +5,7 @@ class ThoseWhoServe extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Reduce the cost of your characters by 1 this phase',
-            condition: context => context.game.currentPhase === Phases.Dynasty,
+            phase: Phases.Dynasty,
             effect: 'reduce the cost of their characters by 1 this phase',
             gameAction: ability.actions.playerLastingEffect({
                 duration: Durations.UntilEndOfPhase,
