@@ -309,5 +309,85 @@ describe('Right Hand of the Emperor', function() {
                 expect(this.player1.player.conflictDeck.last()).toBe(this.rightHandOfTheEmperor);
             });
         });
+
+        describe('Right Hand of the Emperor played by non-owner interaction', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['border-rider', 'doji-challenger'],
+                        hand: ['voice-of-honor', 'way-of-the-crane', 'assassination', 'right-hand-of-the-emperor', 'censure', 'levy']
+                    },
+                    player2: {
+                        inPlay: ['brash-samurai','doji-kuwanan'],
+                        hand: ['stolen-secrets']
+                    }
+                });
+                this.player1.fate = 30;
+                this.player2.fate = 30;
+                this.borderRider = this.player1.findCardByName('border-rider');
+                this.dojiChallenger = this.player1.findCardByName('doji-challenger');
+                this.brashSamurai = this.player2.findCardByName('brash-samurai');
+                this.brashSamurai.fate = 2;
+                this.dojiKuwanan = this.player2.findCardByName('doji-kuwanan');
+                this.dojiKuwanan.bowed = true;
+
+                this.rightHandOfTheEmperor = this.player1.findCardByName('right-hand-of-the-emperor', 'hand');
+                this.assassination = this.player1.findCardByName('assassination', 'hand');
+                this.censure = this.player1.findCardByName('censure', 'hand');
+                this.levy = this.player1.findCardByName('levy', 'hand');
+
+                this.player1.player.moveCard(this.rightHandOfTheEmperor, 'conflict deck');
+                this.player1.player.moveCard(this.assassination, 'conflict deck');
+                this.player1.player.moveCard(this.censure, 'conflict deck');
+                this.player1.player.moveCard(this.levy, 'conflict deck');
+                this.noMoreActions();
+
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.borderRider],
+                    defenders: [this.brashSamurai]
+                });
+
+                this.player2.clickCard('stolen-secrets');
+                this.player2.clickCard(this.brashSamurai);
+                this.player2.clickPrompt(this.rightHandOfTheEmperor.name);
+                this.player2.clickPrompt(this.assassination.name);
+                this.player2.clickPrompt(this.censure.name);
+            });
+
+            it('should go to the bottom of owners deck if played by non-owner', function() {
+                this.player1.pass();
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Choose characters');
+                this.player2.clickCard(this.dojiKuwanan);
+                expect(this.player2).toHavePromptButton('Done');
+                this.player2.clickPrompt('Done');
+                expect(this.dojiKuwanan.bowed).toBe(false);
+                expect(this.player1.player.conflictDeck.last()).toBe(this.rightHandOfTheEmperor);
+                expect(this.getChatLogs(3)).toContain('player2 plays Right Hand of the Emperor to ready Doji Kuwanan. Right Hand of the Emperor is placed on the bottom of player1\'s conflict deck');
+            });
+
+            it('should go to the owners discard if played by non-owner and cancelled', function() {
+
+                this.player1.clickCard('way-of-the-crane');
+                this.player1.clickCard(this.dojiChallenger);
+                expect(this.dojiChallenger.isHonored).toBe(true);
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Choose characters');
+                this.player2.clickCard(this.dojiKuwanan);
+                expect(this.player2).toHavePromptButton('Done');
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect('voice-of-honor');
+                this.player1.clickCard('voice-of-honor');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.dojiKuwanan.bowed).toBe(true);
+                expect(this.rightHandOfTheEmperor.location).toBe('conflict discard pile');
+                expect(this.player1.player.conflictDiscardPile.toArray()).toContain(this.rightHandOfTheEmperor);
+            });
+        });
     });
 });
