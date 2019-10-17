@@ -6,8 +6,7 @@ class MotoAriq extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Move a ready character to the conflict',
-            condition: context => context.game.isDuringConflict()
-                && context.source.isParticipating()
+            condition: context => context.source.isParticipating()
                 && context.player.opponent
                 && context.player.opponent.honor > context.player.honor,
             target: {
