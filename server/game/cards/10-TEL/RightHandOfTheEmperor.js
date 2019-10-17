@@ -20,7 +20,7 @@ class RightHandOfTheEmperor extends DrawCard {
                 numCards: 0,
                 cardType: CardTypes.Character,
                 controller: Players.Self,
-                cardCondition: card => card.hasTrait('bushi') && card.bowed,
+                cardCondition: card => card.hasTrait('bushi'),
                 gameAction: AbilityDsl.actions.multiple([
                     AbilityDsl.actions.ready(),
                     AbilityDsl.actions.moveCard(context => ({

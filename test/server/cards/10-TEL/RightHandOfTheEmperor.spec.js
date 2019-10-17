@@ -66,7 +66,7 @@ describe('Right Hand of the Emperor', function() {
                 expect(this.player1).toHavePrompt('Choose characters');
             });
 
-            it('should prompt you to target bowed bushi characters you control', function() {
+            it('should prompt you to target bushi characters you control', function() {
                 this.player1.clickCard(this.rightHandOfTheEmperor);
                 expect(this.player1).toHavePrompt('Choose characters');
                 expect(this.player1).toBeAbleToSelect(this.brashSamurai);
@@ -78,13 +78,23 @@ describe('Right Hand of the Emperor', function() {
                 expect(this.player1).not.toBeAbleToSelect(this.naiveStudent);
                 expect(this.player1).toBeAbleToSelect(this.motoYouth);
                 expect(this.player1).not.toBeAbleToSelect(this.dojiKuwanan);
-                expect(this.player1).not.toBeAbleToSelect(this.kakitaToshimoko);
+                expect(this.player1).toBeAbleToSelect(this.kakitaToshimoko);
             });
 
             it('should not allow you to select zero characters', function() {
                 this.player1.clickCard(this.rightHandOfTheEmperor);
                 expect(this.player1).toHavePrompt('Choose characters');
                 expect(this.player1).not.toHavePromptButton('Done');
+            });
+
+            it('should allow you to select only standing characters and go to the bottom of the deck', function() {
+                this.player1.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player1).toHavePrompt('Choose characters');
+                this.player1.clickCard(this.kakitaToshimoko);
+                expect(this.player1).toHavePromptButton('Done');
+                this.player1.clickPrompt('Done');
+                expect(this.getChatLogs(1)).toContain('player1 plays Right Hand of the Emperor to ready Kakita Toshimoko. Right Hand of the Emperor is placed on the bottom of player1\'s conflict deck');
+                expect(this.player1.player.conflictDeck.last()).toBe(this.rightHandOfTheEmperor);
             });
 
             it('should not allow you to target characters greater than a total of 6 fate cost', function() {
