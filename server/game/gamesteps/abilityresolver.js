@@ -161,7 +161,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         }
 
         if(this.context.ability.isCardPlayed()) {
-            if(this.context.source.isLimited) {
+            if(this.context.source.isLimited()) {
                 this.context.player.limitedPlayed += 1;
             }
             if(this.game.currentConflict) {
