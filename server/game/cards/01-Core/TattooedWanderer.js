@@ -9,18 +9,18 @@ class PlayTattooedWandererAsAttachment extends PlayAttachmentAction {
     }
 
     canResolveTargets(context) {
-        context.source.type = CardTypes.Attachment;
+        context.source.printedType = CardTypes.Attachment;
         let result = super.canResolveTargets(context);
-        context.source.type = CardTypes.Character;
+        context.source.printedType = CardTypes.Character;
         return result;
     }
 
     resolveTargets(context) {
-        context.source.type = CardTypes.Attachment;
+        context.source.printedType = CardTypes.Attachment;
         const targetResults = super.resolveTargets(context);
         context.game.queueSimpleStep(() => {
             if(targetResults.cancelled) {
-                context.source.type = CardTypes.Character;
+                context.source.printedType = CardTypes.Character;
             }
         });
         return targetResults;
@@ -36,7 +36,7 @@ class TattooedWanderer extends DrawCard {
     }
 
     leavesPlay() {
-        this.type = CardTypes.Character;
+        this.printedType = CardTypes.Character;
         super.leavesPlay();
     }
 }
