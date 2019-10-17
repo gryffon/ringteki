@@ -8,19 +8,29 @@ class CourtlyChallenger extends DrawCard {
             effect: [
                 AbilityDsl.effects.delayedEffect({
                     when: {
-                        afterDuel: (event, context) => event.winner && event.winner === context.source
+                        afterDuel: (event, context) => {
+                            if(Array.isArray(event.winner)) {
+                                return event.winner.some(card => card === context.source);
+                            }
+                            return event.winner === context.source;
+                        }
                     },
-                    multipleTrigger: true,
                     message: '{0} is honored due to winning a duel',
-                    gameAction: AbilityDsl.actions.honor(context => ({ target: context.source }))
+                    messageArgs: context => [context.source],
+                    gameAction: AbilityDsl.actions.honor()
                 }),
                 AbilityDsl.effects.delayedEffect({
                     when: {
-                        afterDuel: (event, context) => event.loser && event.loser === context.source
+                        afterDuel: (event, context) => {
+                            if(Array.isArray(event.loser)) {
+                                return event.loser.some(card => card === context.source);
+                            }
+                            return event.loser === context.source;
+                        }
                     },
-                    multipleTrigger: true,
                     message: '{0} is dishonored due to losing a duel',
-                    gameAction: AbilityDsl.actions.dishonor(context => ({ target: context.source }))
+                    messageArgs: context => [context.source],
+                    gameAction: AbilityDsl.actions.dishonor()
                 })
             ]
         });

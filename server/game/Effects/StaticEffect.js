@@ -1,6 +1,6 @@
 const _ = require('underscore');
 const EffectValue = require('./EffectValue');
-const { EffectNames, Durations } = require('../Constants');
+const { CardTypes, EffectNames, Durations } = require('../Constants');
 
 const binaryCardEffects = [
     EffectNames.Blank,
@@ -14,22 +14,22 @@ const binaryCardEffects = [
 ];
 
 const MilitaryModifiers = [
-    EffectNames.ModifyBaseMilitarySkill,
+    EffectNames.ModifyBaseMilitarySkillMultiplier,
     EffectNames.ModifyMilitarySkill,
     EffectNames.ModifyMilitarySkillMultiplier,
     EffectNames.ModifyBothSkills
 ];
 
 const PoliticalModifiers = [
-    EffectNames.ModifyBasePoliticalSkill,
+    EffectNames.ModifyBasePoliticalSkillMultiplier,
     EffectNames.ModifyPoliticalSkill,
     EffectNames.ModifyPoliticalSkillMultiplier,
     EffectNames.ModifyBothSkills
 ];
 
 const hasDash = {
-    modifyBaseMilitarySkill: card => card.hasDash('military'),
-    modifyBasePoliticalSkill: card => card.hasDash('political'),
+    modifyBaseMilitarySkillMultiplier: card => card.hasDash('military'),
+    modifyBasePoliticalSkillMultiplier: card => card.hasDash('political'),
     modifyBothSkills: card => card.hasDash('military') && card.hasDash('political'),
     modifyMilitarySkill: card => card.hasDash('military'),
     modifyMilitarySkillMultiplier: card => card.hasDash('military'),
@@ -43,8 +43,8 @@ const hasDash = {
 };
 
 const conflictingEffects = {
-    modifyBaseMilitarySkill: card => card.effects.filter(effect => effect.type === EffectNames.SetBaseMilitarySkill),
-    modifyBasePoliticalSkill: card => card.effects.filter(effect => effect.type === EffectNames.SetBasePoliticalSkill),
+    modifyBaseMilitarySkillMultiplier: card => card.effects.filter(effect => effect.type === EffectNames.SetBaseMilitarySkill),
+    modifyBasePoliticalSkillMultiplier: card => card.effects.filter(effect => effect.type === EffectNames.SetBasePoliticalSkill),
     modifyGlory: card => card.effects.filter(effect => effect.type === EffectNames.SetGlory),
     modifyMilitarySkill: card => card.effects.filter(effect => effect.type === EffectNames.SetMilitarySkill),
     modifyMilitarySkillMultiplier: card => card.effects.filter(effect => effect.type === EffectNames.SetMilitarySkill),
@@ -95,6 +95,9 @@ class StaticEffect {
     }
 
     canBeApplied(target) {
+        if(target.facedown && target.type !== CardTypes.Province) {
+            return false;
+        }
         return !hasDash[this.type] || !hasDash[this.type](target, this.value);
     }
 

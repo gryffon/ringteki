@@ -149,7 +149,7 @@ class BaseCard extends EffectSource {
      * is both in play and not blank.
      */
     persistentEffect(properties: PersistentEffectProps): void {
-        const allowedLocations = [Locations.Any, Locations.PlayArea, Locations.Provinces];
+        const allowedLocations = [Locations.Any, Locations.ConflictDiscardPile, Locations.PlayArea, Locations.Provinces];
         const defaultLocationForType = {
             province: Locations.Provinces,
             holding: Locations.Provinces,
@@ -237,10 +237,11 @@ class BaseCard extends EffectSource {
 
     updateEffects(from: Locations, to: Locations) {
         const activeLocations = {
+            'conflict discard pile': [Locations.ConflictDiscardPile],
             'play area': [Locations.PlayArea],
             'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
         };
-        if(from === Locations.PlayArea || this.type === CardTypes.Holding && activeLocations[Locations.Provinces].includes(from) && !activeLocations[Locations.Provinces].includes(to)) {
+        if(!activeLocations[Locations.Provinces].includes(from) || !activeLocations[Locations.Provinces].includes(to)) {
             this.removeLastingEffects();
         }
         _.each(this.persistentEffects, effect => {
@@ -404,7 +405,7 @@ class BaseCard extends EffectSource {
         if(this.facedown && (activePlayer !== this.controller || this.hideWhenFacedown())) {
             return { facedown: true, isDynasty: this.isDynasty, isConflict: this.isConflict };
         }
-        return super.getShortSummary();
+        return super.getShortSummaryForControls(activePlayer);
     }
 
     getSummary(activePlayer, hideWhenFaceup) {

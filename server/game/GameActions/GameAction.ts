@@ -13,6 +13,7 @@ export interface GameActionProperties {
     target?: PlayerOrRingOrCardOrToken | PlayerOrRingOrCardOrToken[];
     cannotBeCancelled?: boolean;
     optional?: boolean;
+    parentAction?: GameAction;
 }
 
 export class GameAction {
@@ -23,7 +24,7 @@ export class GameAction {
     name = '';
     cost = '';
     effect = '';
-    defaultProperties: GameActionProperties = { optional: false };
+    defaultProperties: GameActionProperties = { cannotBeCancelled: false, optional: false };
     getDefaultTargets: (context: AbilityContext) => any = context => this.defaultTargets(context);
 
     constructor(propertyFactory: GameActionProperties | ((context?: AbilityContext) => GameActionProperties) = {}) {
@@ -104,8 +105,10 @@ export class GameAction {
     }
 
     resolve(target: PlayerOrRingOrCardOrToken, context: AbilityContext): void {
-        this.setDefaultTarget(() => target);
-        let events = [];
+        if(target) {
+            this.setDefaultTarget(() => target);
+        }
+        const events = [];
         this.addEventsToArray(events, context);
         context.game.queueSimpleStep(() => context.game.openEventWindow(events));
     }
@@ -122,7 +125,7 @@ export class GameAction {
 
     eventHandler(event: any, additionalProperties = {}): void { // eslint-disable-line no-unused-vars
     }
-    
+
     checkEventCondition(event: Event, additionalProperties = {}): boolean { // eslint-disable-line no-unused-vars
         return true;
     }
@@ -147,7 +150,7 @@ export class GameAction {
         if(event.recipient) {
             if(event.recipient.type === CardTypes.Character && !event.recipient.allowGameAction('placeFate', event.context)) {
                 return false;
-            } 
+            }
         }
         return (!!event.origin || !!event.recipient);
     }

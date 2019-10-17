@@ -1,12 +1,13 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class KaitoKosori extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: context =>
                 context.player.cardsInPlay.any(card => card.isParticipating()) &&
                 this.game.currentConflict.hasElement('air') && !context.source.isParticipating(),
-            effect: ability.effects.contributeToConflict((conflict, context) => context.source)
+            effect: AbilityDsl.effects.contributeToConflict((card, context) => context.player)
         });
     }
 }

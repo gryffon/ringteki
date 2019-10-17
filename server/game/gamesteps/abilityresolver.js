@@ -13,6 +13,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.context = context;
         this.canCancel = true;
         this.initiateAbility = false;
+        this.passPriority = false;
         this.events = [];
         this.provincesToRefill = [];
         this.targetResults = {};
@@ -116,6 +117,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             this.cancelled = true;
             return;
         }
+        this.passPriority = true;
         if(this.costEvents.length > 0) {
             this.game.openEventWindow(this.costEvents);
         }
@@ -158,6 +160,10 @@ class AbilityResolver extends BaseStepWithPipeline {
             return;
         }
 
+        if(this.context.ability.isCardPlayed() && this.context.source.isLimited) {
+            this.context.player.limitedPlayed += 1;
+        }
+
         // Increment limits (limits aren't used up on cards in hand)
         if(this.context.ability.limit && this.context.source.location !== Locations.Hand &&
            (!this.context.cardStateWhenInitiated || this.context.cardStateWhenInitiated.location === this.context.source.location)) {
@@ -171,7 +177,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.context.ability.isTriggeredAbility()) {
             // If this is an event, move it to 'being played', and queue a step to send it to the discard pile after it resolves
             if(this.context.ability.isCardPlayed()) {
-                this.context.player.moveCard(this.context.source, Locations.BeingPlayed);
+                this.game.actions.moveCard({ destination: Locations.BeingPlayed }).resolve(this.context.source, this.context);
             }
             this.game.openEventWindow(new InitiateCardAbilityEvent({ card: this.context.source, context: this.context }, () => this.initiateAbility = true));
         } else {

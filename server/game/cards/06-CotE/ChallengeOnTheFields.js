@@ -8,10 +8,10 @@ class ChallengeOnTheFields extends DrawCard {
             title: 'Initiate a military duel',
             initiateDuel: context => ({
                 type: DuelTypes.Military,
-                challengerEffect: AbilityDsl.effects.modifyBaseMilitarySkill(
+                challengerEffect: AbilityDsl.effects.modifyMilitarySkill(
                     context.player.filterCardsInPlay(card => card.isParticipating() && card !== context.targets.challenger).length
                 ),
-                targetEffect: AbilityDsl.effects.modifyBaseMilitarySkill(
+                targetEffect: AbilityDsl.effects.modifyMilitarySkill(
                     context.player.opponent ? context.player.opponent.filterCardsInPlay(card => card.isParticipating() && card !== context.targets.duelTarget).length : 0
                 ),
                 gameAction: duel => AbilityDsl.actions.sendHome({ target: duel.loser })

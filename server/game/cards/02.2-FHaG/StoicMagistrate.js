@@ -1,13 +1,13 @@
 const DrawCard = require('../../drawcard.js');
-const { Players } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class StoicMagistrate extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             condition: context => context.source.isDefending(),
-            match: card => card.costLessThan(3),
-            targetController: Players.Any,
-            effect: ability.effects.cardCannot('countForResolution')
+            effect: AbilityDsl.effects.cannotContribute(() => {
+                return card => card.costLessThan(3);
+            })
         });
     }
 }

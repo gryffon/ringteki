@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 const EventRegistrar = require('./eventregistrar.js');
-const { Locations, Durations, EventNames } = require('./Constants');
+const { EffectNames, Durations, EventNames } = require('./Constants');
 
 class EffectEngine {
     constructor(game) {
@@ -9,8 +9,6 @@ class EffectEngine {
         this.events = new EventRegistrar(game, this);
         this.events.register([EventNames.OnConflictFinished, EventNames.OnPhaseEnded, EventNames.OnRoundEnded, EventNames.OnDuelFinished]);
         this.effects = [];
-        this.delayedEffects = [];
-        this.terminalConditions = [];
         this.customDurationEvents = [];
         this.newEffect = false;
     }
@@ -24,40 +22,54 @@ class EffectEngine {
         return effect;
     }
 
-    addTerminalCondition(effect) {
-        this.terminalConditions.push(effect);
-    }
-
-    removeTerminalCondition(effect) {
-        this.terminalConditions = this.terminalConditions.filter(e => e !== effect);
-    }
-
-    addDelayedEffect(effect) {
-        this.delayedEffects.push(effect);
-    }
-
-    removeDelayedEffect(effect) {
-        this.delayedEffects = this.delayedEffects.filter(e => e !== effect);
-    }
-
     checkDelayedEffects(events) {
-        this.delayedEffects = this.delayedEffects.filter(effect => !effect.target || effect.target.type === 'player' || effect.target.location === Locations.PlayArea);
-        let effectsToTrigger = this.delayedEffects.filter(effect => effect.checkEffect(events));
-        if(effectsToTrigger.length > 0) {
-            this.game.openSimultaneousEffectWindow(effectsToTrigger.map(effect => ({
-                title: effect.source.name + '\'s effect' + (effect.target ? ' on ' + effect.target.name : ''),
-                handler: () => effect.executeHandler()
-            })));
-        }
-    }
-
-    checkTerminalConditions() {
-        let effectsToTrigger = this.terminalConditions.filter(effect => effect.checkCondition());
-        if(effectsToTrigger.length > 0) {
-            let eventWindow = this.game.openThenEventWindow([]);
-            for(let effect of effectsToTrigger) {
-                eventWindow.addEvent(effect.getEvent());
+        let effectsToTrigger = [];
+        const effectsToRemove = [];
+        for(const effect of this.effects.filter(effect => effect.effect.type === EffectNames.DelayedEffect)) {
+            const properties = effect.effect.getValue();
+            if(properties.condition) {
+                if(properties.condition(effect.context)) {
+                    effectsToTrigger.push(effect);
+                }
+            } else {
+                const triggeringEvents = events.filter(event => properties.when[event.name]);
+                if(triggeringEvents.length > 0) {
+                    if(!properties.multipleTrigger && effect.duration !== Durations.Persistent) {
+                        effectsToRemove.push(effect);
+                    }
+                    if(triggeringEvents.some(event => properties.when[event.name](event, effect.context))) {
+                        effectsToTrigger.push(effect);
+                    }
+                }
             }
+        }
+        effectsToTrigger = effectsToTrigger.map(effect => {
+            const properties = effect.effect.getValue();
+            const context = effect.context;
+            const targets = effect.targets;
+            return {
+                title: context.source.name + '\'s effect' + (targets.length === 1 ? ' on ' + targets[0].name : ''),
+                handler: () => {
+                    properties.gameAction.setDefaultTarget(() => targets);
+                    if(properties.message && properties.gameAction.hasLegalTarget(context)) {
+                        let messageArgs = properties.messageArgs || [];
+                        if(typeof messageArgs === 'function') {
+                            messageArgs = messageArgs(context);
+                        }
+                        this.game.addMessage(properties.message, ...messageArgs);
+                    }
+                    const actionEvents = [];
+                    properties.gameAction.addEventsToArray(actionEvents, context);
+                    this.game.queueSimpleStep(() => this.game.openThenEventWindow(actionEvents));
+                    this.game.queueSimpleStep(() => context.refill());
+                }
+            };
+        });
+        if(effectsToRemove.length > 0) {
+            this.unapplyAndRemove(effect => effectsToRemove.includes(effect));
+        }
+        if(effectsToTrigger.length > 0) {
+            this.game.openSimultaneousEffectWindow(effectsToTrigger);
         }
     }
 
@@ -149,10 +161,7 @@ class EffectEngine {
     }
 
     getDebugInfo() {
-        return {
-            effects: this.effects.map(effect => effect.getDebugInfo()),
-            delayedEffects: this.delayedEffects.map(effect => effect.getDebugInfo())
-        };
+        return this.effects.map(effect => effect.getDebugInfo());
     }
 }
 

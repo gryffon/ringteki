@@ -9,13 +9,13 @@ class NitenPupil extends DrawCard {
             when: {
                 onHonorDialsRevealed: (event, context) => event.duel && event.duel.isInvolved(context.source)
             },
-            gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
+            gameAction: AbilityDsl.actions.cardLastingEffect({
                 effect: [
-                    AbilityDsl.effects.modifyBaseMilitarySkill(context.source.getBaseMilitarySkill()),
-                    AbilityDsl.effects.modifyBasePoliticalSkill(context.source.getBasePoliticalSkill())
+                    AbilityDsl.effects.modifyBaseMilitarySkillMultiplier(2),
+                    AbilityDsl.effects.modifyBasePoliticalSkillMultiplier(2)
                 ],
                 duration: Durations.UntilEndOfPhase
-            })),
+            }),
             effect: 'double {0}\'s base {1} and {2} skills',
             effectArgs: ['military', 'political']
         });

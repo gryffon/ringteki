@@ -5,7 +5,15 @@ class ProvingGround extends DrawCard {
         this.reaction({
             title: 'Draw a card after winning a duel',
             when: {
-                afterDuel: (event, context) => event.winner && event.winner.controller === context.player
+                afterDuel: (event, context) => {
+                    if(!event.winner) {
+                        return false;
+                    }
+                    if(Array.isArray(event.winner)) {
+                        return event.winner.some(card => card.controller === context.player);
+                    }
+                    return event.winner.controller === context.player;
+                }
             },
             gameAction: ability.actions.draw(),
             limit: ability.limit.perRound(2)

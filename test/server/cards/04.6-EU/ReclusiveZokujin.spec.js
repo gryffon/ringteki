@@ -134,6 +134,7 @@ describe('Reclusive Zokujin', function() {
                 expect(this.player1).toBeAbleToSelect(this.reclusiveZokujin);
                 expect(this.player1).not.toBeAbleToSelect('otomo-courtier');
                 this.player1.clickPrompt('Cancel');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.playCharacterFromHand('tattooed-wanderer');
                 this.player1.clickPrompt('Home');
             });

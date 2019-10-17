@@ -1,27 +1,18 @@
 const BaseAction = require('./BaseAction.js');
 const ReduceableFateCost = require('./costs/ReduceableFateCost');
 
-const Costs = require('./costs');
 const { CardTypes, EventNames, Phases, Players, PlayTypes, EffectNames } = require ('./Constants');
 
 const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
     return {
-        canPay: context => context.source.disguisedKeywordTraits.some(trait =>
-            context.player.cardsInPlay.some(card =>
-                card.hasTrait(trait) &&
-                card.allowGameAction('discardFromPlay', context) &&
-                !card.isUnique() &&
-                (!intoConflictOnly || card.isParticipating())
-            )),
+        canPay: context => context.player.cardsInPlay.some(card =>
+            context.source.canDisguise(card, context, intoConflictOnly)
+        ),
         resolve: (context, results) => context.game.promptForSelect(context.player, {
             activePromptTitle: 'Choose a character to replace',
             cardType: CardTypes.Character,
             controller: Players.Self,
-            cardCondition: card =>
-                context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
-                card.allowGameAction('discardFromPlay', context) &&
-                !card.isUnique() &&
-                (!intoConflictOnly || card.isParticipating()),
+            cardCondition: card => context.source.canDisguise(card, context, intoConflictOnly),
             context: context,
             onSelect: (player, card) => {
                 context.costs.chooseDisguisedCharacter = card;
@@ -44,8 +35,7 @@ class DisguisedReduceableFateCost extends ReduceableFateCost {
 
     canPay(context) {
         const maxCharacterCost = Math.max(...context.player.cardsInPlay.map(card =>
-            context.source.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
-            (!this.intoConflictOnly || card.isParticipating()) && !card.isUnique() ? card.getCost() : 0
+            context.source.canDisguise(card, context) ? card.getCost() : 0
         ));
         const minCost = Math.max(context.player.getMinimumCost(this.playingType, context) - maxCharacterCost, 0);
         return context.player.fate >= minCost &&
@@ -61,8 +51,7 @@ class PlayDisguisedCharacterAction extends BaseAction {
     constructor(card, playType = card.isDynasty ? PlayTypes.PlayFromProvince : PlayTypes.PlayFromHand, intoConflictOnly = false) {
         super(card, [
             ChooseDisguisedCharacterCost(intoConflictOnly),
-            new DisguisedReduceableFateCost(playType, intoConflictOnly),
-            Costs.playLimited()
+            new DisguisedReduceableFateCost(playType, intoConflictOnly)
         ]);
         this.playType = playType;
         this.intoConflictOnly = intoConflictOnly;
@@ -127,10 +116,6 @@ class PlayDisguisedCharacterAction extends BaseAction {
     }
 
     isCardPlayed() {
-        return true;
-    }
-
-    isCardAbility() {
         return true;
     }
 }

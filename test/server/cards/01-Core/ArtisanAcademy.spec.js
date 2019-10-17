@@ -82,14 +82,7 @@ describe('Artisan Academy', function() {
             it('should stop the top card being visible once the phase ends', function() {
                 this.player1.clickCard(this.artisanAcademy);
                 expect(this.player1.player.isTopConflictCardShown()).toBe(true);
-                this.noMoreActions();
-                this.player1.passConflict();
-                this.noMoreActions();
-                this.noMoreActions();
-                this.player1.passConflict();
-                this.noMoreActions();
-                this.noMoreActions();
-                this.player1.clickPrompt('Military');
+                this.flow.finishConflictPhase();
                 expect(this.player1.player.isTopConflictCardShown()).toBe(false);
             });
         });

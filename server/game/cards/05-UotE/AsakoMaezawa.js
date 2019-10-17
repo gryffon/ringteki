@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl');
 
 class AsakoMaezawa extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Double a character\'s base political skill',
             condition: context => context.source.isParticipating() && context.player.opponent && (
@@ -14,9 +15,9 @@ class AsakoMaezawa extends DrawCard {
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating(),
-                gameAction: ability.actions.cardLastingEffect(context => ({
-                    effect: ability.effects.modifyBasePoliticalSkill(context.target.getBasePoliticalSkill())
-                }))
+                gameAction: AbilityDsl.actions.cardLastingEffect({
+                    effect: AbilityDsl.effects.modifyBasePoliticalSkillMultiplier(2)
+                })
             },
             effect: 'double {0}\'s base {1} skill',
             effectArgs: () => ['political']

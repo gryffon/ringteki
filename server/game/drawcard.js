@@ -34,9 +34,10 @@ class DrawCard extends BaseCard {
         this.attachments = _([]);
         this.parent = null;
 
-        this.printedMilitarySkill = parseInt(cardData.military);
-        this.printedPoliticalSkill = parseInt(cardData.political);
+        this.printedMilitarySkill = this.getPrintedSkill('military');
+        this.printedPoliticalSkill = this.getPrintedSkill('political');
         this.printedCost = this.cardData.cost;
+        this.printedGlory = parseInt(cardData.glory);
         this.fate = 0;
         this.bowed = false;
         this.covert = false;
@@ -62,6 +63,14 @@ class DrawCard extends BaseCard {
             this.abilities.reactions.push(new CourtesyAbility(this.game, this));
             this.abilities.reactions.push(new PrideAbility(this.game, this));
             this.abilities.reactions.push(new SincerityAbility(this.game, this));
+        }
+    }
+
+    getPrintedSkill(type) {
+        if(type === 'military') {
+            return this.cardData.military === null ? NaN : isNaN(parseInt(this.cardData.military)) ? 0 : parseInt(this.cardData.military);
+        } else if(type === 'political') {
+            return this.cardData.political === null ? NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
         }
     }
 
@@ -117,7 +126,9 @@ class DrawCard extends BaseCard {
     }
 
     hasKeyword(keyword) {
-        return this.getEffects(EffectNames.AddKeyword).includes(keyword.toLowerCase());
+        let addKeywordEffects = this.getEffects(EffectNames.AddKeyword).filter(effectValue => effectValue === keyword.toLowerCase());
+        let loseKeywordEffects = this.getEffects(EffectNames.LoseKeyword).filter(effectValue => effectValue === keyword.toLowerCase());
+        return addKeywordEffects.length > loseKeywordEffects.length;
     }
 
     hasPrintedKeyword(keyword) {
@@ -207,12 +218,20 @@ class DrawCard extends BaseCard {
         return isNaN(baseSkillModifiers.baseMilitarySkill) || isNaN(baseSkillModifiers.basePoliticalSkill);
     }
 
+    getContributionToConflict(type) {
+        let skillFunction = this.mostRecentEffect(EffectNames.ChangeContributionFunction);
+        if(skillFunction) {
+            return skillFunction(this);
+        }
+        return this.getSkill(type);
+    }
+
+    /**
+     * Direct the skill query to the correct sub function.
+     * @param  {string} type - The type of the skill; military or political
+     * @return {number} The chosen skill value
+     */
     getSkill(type) {
-        /**
-         * Direct the skill query to the correct sub function.
-         * @param  {string} type - The type of the skill; military or political
-         * @return {integer} The chosen skill value
-         */
         if(type === 'military') {
             return this.getMilitarySkill();
         } else if(type === 'political') {
@@ -223,8 +242,9 @@ class DrawCard extends BaseCard {
     getBaseSkillModifiers() {
         const baseModifierEffects = [
             EffectNames.CopyCharacter,
-            EffectNames.ModifyBaseMilitarySkill,
-            EffectNames.ModifyBasePoliticalSkill,
+            EffectNames.CalculatePrintedMilitarySkill,
+            EffectNames.ModifyBaseMilitarySkillMultiplier,
+            EffectNames.ModifyBasePoliticalSkillMultiplier,
             EffectNames.SetBaseMilitarySkill,
             EffectNames.SetBasePoliticalSkill,
             EffectNames.SetBaseDash,
@@ -232,41 +252,49 @@ class DrawCard extends BaseCard {
         ];
 
         let baseEffects = this.getRawEffects().filter(effect => baseModifierEffects.includes(effect.type));
-        let baseMilitaryModifiers = [StatModifier.fromCard(this.printedMilitarySkill, this, 'Base', false)];
-        let basePoliticalModifiers = [StatModifier.fromCard(this.printedPoliticalSkill, this, 'Base', false)];
+        let baseMilitaryModifiers = [StatModifier.fromCard(this.printedMilitarySkill, this, 'Printed skill', false)];
+        let basePoliticalModifiers = [StatModifier.fromCard(this.printedPoliticalSkill, this, 'Printed skill', false)];
         let baseMilitarySkill = this.printedMilitarySkill;
         let basePoliticalSkill = this.printedPoliticalSkill;
 
         baseEffects.forEach(effect => {
             switch(effect.type) {
+                case EffectNames.CalculatePrintedMilitarySkill: {
+                    let skillFunction = effect.getValue(this);
+                    let calculatedSkillValue = skillFunction(this);
+                    baseMilitarySkill = calculatedSkillValue;
+                    baseMilitaryModifiers = baseMilitaryModifiers.filter(mod => !mod.name.startsWith('Printed skill'));
+                    baseMilitaryModifiers.push(StatModifier.fromEffect(baseMilitarySkill, effect, false, `Printed skill due to ${StatModifier.getEffectName(effect)}`));
+                    break;
+                }
                 case EffectNames.CopyCharacter: {
                     let copiedCard = effect.getValue(this);
-                    baseMilitarySkill = copiedCard.printedMilitarySkill;
-                    basePoliticalSkill = copiedCard.printedPoliticalSkill;
+                    baseMilitarySkill = copiedCard.getPrintedSkill('military');
+                    basePoliticalSkill = copiedCard.getPrintedSkill('political');
                     // replace existing base or copied modifier
-                    baseMilitaryModifiers = baseMilitaryModifiers.filter(mod => !(mod.name === 'Base' || mod.name.startsWith('Base copied from')));
-                    basePoliticalModifiers = basePoliticalModifiers.filter(mod => !(mod.name === 'Base' || mod.name.startsWith('Base copied from')));
-                    baseMilitaryModifiers.push(StatModifier.fromEffect(baseMilitarySkill, effect, false, `Base copied from ${copiedCard.name} due to ${StatModifier.getEffectName(effect)}`));
-                    basePoliticalModifiers.push(StatModifier.fromEffect(basePoliticalSkill, effect, false, `Base copied from to ${copiedCard.name} due to ${StatModifier.getEffectName(effect)}`));
+                    baseMilitaryModifiers = baseMilitaryModifiers.filter(mod => !mod.name.startsWith('Printed skill'));
+                    basePoliticalModifiers = basePoliticalModifiers.filter(mod => !mod.name.startsWith('Printed skill'));
+                    baseMilitaryModifiers.push(StatModifier.fromEffect(baseMilitarySkill, effect, false, `Printed skill from ${copiedCard.name} due to ${StatModifier.getEffectName(effect)}`));
+                    basePoliticalModifiers.push(StatModifier.fromEffect(basePoliticalSkill, effect, false, `Printed skill from ${copiedCard.name} due to ${StatModifier.getEffectName(effect)}`));
                     break;
                 }
                 case EffectNames.SetBaseDash:
                     if(effect.getValue(this) === 'military') {
                         baseMilitaryModifiers.push(StatModifier.fromEffect(undefined, effect, true, StatModifier.getEffectName(effect)));
-                        baseMilitarySkill = undefined;
+                        baseMilitarySkill = NaN;
                     }
                     if(effect.getValue(this) === 'political') {
                         basePoliticalModifiers.push(StatModifier.fromEffect(undefined, effect, true, StatModifier.getEffectName(effect)));
-                        basePoliticalSkill = undefined;
+                        basePoliticalSkill = NaN;
                     }
                     break;
                 case EffectNames.SetBaseMilitarySkill:
                     baseMilitarySkill = effect.getValue(this);
-                    baseMilitaryModifiers.push(StatModifier.fromEffect(baseMilitarySkill, effect, true, `Set by ${StatModifier.getEffectName(effect)}`));
+                    baseMilitaryModifiers.push(StatModifier.fromEffect(baseMilitarySkill, effect, true, `Base set by ${StatModifier.getEffectName(effect)}`));
                     break;
                 case EffectNames.SetBasePoliticalSkill:
                     basePoliticalSkill = effect.getValue(this);
-                    basePoliticalModifiers.push(StatModifier.fromEffect(basePoliticalSkill, effect, true, `Set by ${StatModifier.getEffectName(effect)}`));
+                    basePoliticalModifiers.push(StatModifier.fromEffect(basePoliticalSkill, effect, true, `Base set by ${StatModifier.getEffectName(effect)}`));
                     break;
                 case EffectNames.SwitchBaseSkills: {
                     const milChange = Math.max(basePoliticalSkill, 0) - Math.max(baseMilitarySkill, 0);
@@ -277,14 +305,14 @@ class DrawCard extends BaseCard {
                     basePoliticalModifiers.push(StatModifier.fromEffect(polChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
                 }
-                case EffectNames.ModifyBaseMilitarySkill: {
-                    const milChange = effect.getValue(this);
+                case EffectNames.ModifyBaseMilitarySkillMultiplier: {
+                    const milChange = (effect.getValue(this) - 1) * baseMilitarySkill;
                     baseMilitarySkill += milChange;
                     baseMilitaryModifiers.push(StatModifier.fromEffect(milChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
                 }
-                case EffectNames.ModifyBasePoliticalSkill: {
-                    const polChange = effect.getValue(this);
+                case EffectNames.ModifyBasePoliticalSkillMultiplier: {
+                    const polChange = (effect.getValue(this) - 1) * basePoliticalSkill;
                     basePoliticalSkill += polChange;
                     basePoliticalModifiers.push(StatModifier.fromEffect(polChange, effect, false, `Base due to ${StatModifier.getEffectName(effect)}`));
                     break;
@@ -395,7 +423,7 @@ class DrawCard extends BaseCard {
             modifiers.forEach(modifier => {
                 if(modifier.type === 'token' && modifier.amount !== 0) {
                     modifier.amount = 0;
-                    modifier.name += ` (${doesNotModifyEffects[0]})`;
+                    modifier.name += ` (${StatModifier.getEffectName(doesNotModifyEffects[0])})`;
                 }
             });
         }
@@ -404,7 +432,7 @@ class DrawCard extends BaseCard {
             modifiers.forEach(modifier => {
                 if(modifier.type === 'token' && modifier.amount !== 0) {
                     modifier.amount = 0 - modifier.amount;
-                    modifier.name += ` (${reverseEffects[0]})`;
+                    modifier.name += ` (${StatModifier.getEffectName(reverseEffects[0])})`;
                 }
             });
         }
@@ -421,7 +449,7 @@ class DrawCard extends BaseCard {
         let modifiers = this.getMilitaryModifiers().map(modifier => Object.assign({}, modifier));
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         return {
-            skill: isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
+            stat: isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
             modifiers: modifiers
         };
     }
@@ -434,7 +462,20 @@ class DrawCard extends BaseCard {
         modifiers.forEach(modifier => modifier = Object.assign({}, modifier));
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         return {
-            skill: isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
+            stat: isNaN(skill) ? '-' : Math.max(skill, 0).toString(),
+            modifiers: modifiers
+        };
+    }
+
+    get glorySummary() {
+        if(!this.showStats) {
+            return;
+        }
+        let modifiers = this.getGloryModifiers().map(modifier => Object.assign({}, modifier));
+        modifiers.forEach(modifier => modifier = Object.assign({}, modifier));
+        let stat = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
+        return {
+            stat: Math.max(stat, 0).toString(),
             modifiers: modifiers
         };
     }
@@ -444,19 +485,56 @@ class DrawCard extends BaseCard {
     }
 
     getGlory() {
-        /**
-         * Get this card's glory.
-         * @return {integer} The military skill value
-         */
-        if(this.cardData.glory !== null && this.cardData.glory !== undefined) {
-            if(this.anyEffect(EffectNames.SetGlory)) {
-                return Math.max(0, this.mostRecentEffect(EffectNames.SetGlory));
-            }
-            let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
-            let glory = copyEffect ? copyEffect.getGlory() : this.cardData.glory;
-            return Math.max(0, this.sumEffects(EffectNames.ModifyGlory) + glory);
+        let gloryModifiers = this.getGloryModifiers();
+        let glory = gloryModifiers.reduce((total, modifier) => total + modifier.amount, 0);
+        if(isNaN(glory)) {
+            return 0;
         }
-        return 0;
+        return Math.max(0, glory);
+    }
+
+    getGloryModifiers() {
+        const gloryModifierEffects = [
+            EffectNames.CopyCharacter,
+            EffectNames.SetGlory,
+            EffectNames.ModifyGlory
+        ];
+
+        // glory undefined (Holding etc.)
+        if(this.printedGlory === undefined) {
+            return [];
+        }
+
+        let gloryEffects = this.getRawEffects().filter(effect => gloryModifierEffects.includes(effect.type));
+
+        let gloryModifiers = [];
+
+        // set effects
+        let setEffects = gloryEffects.filter(effect => effect.type === EffectNames.SetGlory);
+        if(setEffects.length > 0) {
+            let latestSetEffect = _.last(setEffects);
+            let setAmount = latestSetEffect.getValue(this);
+            return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
+        }
+
+        // copy effects/printed glory
+        let copyEffects = gloryEffects.filter(effect => effect.type === EffectNames.CopyCharacter);
+        if(copyEffects.length > 0) {
+            let latestCopyEffect = _.last(copyEffects);
+            let copiedCard = latestCopyEffect.getValue(this);
+            gloryModifiers.push(StatModifier.fromEffect(copiedCard.printedGlory, latestCopyEffect, false, `Printed glory from ${copiedCard.name} due to ${StatModifier.getEffectName(latestCopyEffect)}`));
+        } else {
+            gloryModifiers.push(StatModifier.fromCard(this.printedGlory, this, 'Printed glory', false));
+        }
+
+        // skill modifiers
+        let modifierEffects = gloryEffects.filter(effect => effect.type === EffectNames.ModifyGlory);
+        modifierEffects.forEach(modifierEffect => {
+            const value = modifierEffect.getValue(this);
+            gloryModifiers.push(StatModifier.fromEffect(value, modifierEffect));
+        });
+
+        return gloryModifiers;
     }
 
     getProvinceStrengthBonus() {
@@ -740,6 +818,11 @@ class DrawCard extends BaseCard {
         super.leavesPlay();
     }
 
+    updateEffects(from, to) {
+        super.updateEffects(from, to);
+        this.setPersonalHonor(this.personalHonor);
+    }
+
     resetForConflict() {
         this.covert = false;
         this.inConflict = false;
@@ -796,6 +879,13 @@ class DrawCard extends BaseCard {
         return this.owner;
     }
 
+    canDisguise(card, context, intoConflictOnly) {
+        return this.disguisedKeywordTraits.some(trait => card.hasTrait(trait)) &&
+            card.allowGameAction('discardFromPlay', context) &&
+            !card.isUnique() &&
+            (!intoConflictOnly || card.isParticipating());
+    }
+
     play() {
     //empty function so playcardaction doesn't crash the game
     }
@@ -822,6 +912,7 @@ class DrawCard extends BaseCard {
             showStats: this.showStats,
             militarySkillSummary: this.militarySkillSummary,
             politicalSkillSummary: this.politicalSkillSummary,
+            glorySummary: this.glorySummary,
             controller: this.controller.getShortSummary()
         });
     }

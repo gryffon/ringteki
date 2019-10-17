@@ -31,20 +31,21 @@ export class CardGameAction extends GameAction {
             const additionalCosts = card.getEffects(EffectNames.UnlessActionCost).filter(properties => properties.actionName === this.name);
             if(additionalCosts.length > 0) {
                 let allCostsPaid = true;
-                for(const properties of additionalCosts) {
-                    if(typeof properties.cost === 'function') {
-                        properties.cost = properties.cost(card);
-                    }
+                for(const properties of additionalCosts) {                    
                     context.game.queueSimpleStep(() => {
-                        if(properties.cost.hasLegalTarget(context)) {
+                        let cost = properties.cost;
+                        if(typeof cost === 'function') {
+                            cost = cost(card);
+                        }
+                        if(cost.hasLegalTarget(context)) {
                             context.game.promptWithHandlerMenu(card.controller, {
                                 activePromptTitle: properties.activePromptTitle,
                                 source: card,
                                 choices: ['Yes', 'No'],
                                 handlers: [
                                     () => {
-                                        context.game.addMessage('{0} chooses to {1} in order to {2}', card.controller, properties.cost.getEffectMessage(context), this.getEffectMessage(context, additionalProperties))
-                                        properties.cost.resolve(card, context);
+                                        context.game.addMessage('{0} chooses to {1} in order to {2}', card.controller, cost.getEffectMessage(context), this.getEffectMessage(context, additionalProperties))
+                                        cost.resolve(card, context);
                                     },
                                     () => {
                                         allCostsPaid = false;

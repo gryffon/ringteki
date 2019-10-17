@@ -229,6 +229,15 @@ class Game extends EventEmitter {
     }
 
     /**
+     * Returns all cards from anywhere in the game matching the passed predicate
+     * @param {Function} predicate - card => Boolean
+     * @returns {Array} Array of DrawCard objects
+     */
+    findAnyCardsInAnyList(predicate) {
+        return this.allCards.filter(predicate);
+    }
+
+    /**
      * Returns all cards (i.e. characters) which matching the passed predicated
      * function from either players 'in play' area.
      * @param {Function} predicate - card => Boolean
@@ -875,7 +884,7 @@ class Game extends EventEmitter {
      * @param {String} eventName
      * @param {Object} params - parameters for this event
      * @param {Function} handler - (Event + params) => undefined
-     * @returns {Event} - this allows the caller to track Event.resolved and
+     * returns {Event} - this allows the caller to track Event.resolved and
      * tell whether or not the handler resolved successfully
      */
     raiseEvent(eventName, params = {}, handler = () => true) {
@@ -1109,8 +1118,6 @@ class Game extends EventEmitter {
                 // conflicts with illegal participants
                 this.currentConflict.checkForIllegalParticipants();
             }
-            // any terminal conditions which have met their condition
-            this.effectEngine.checkTerminalConditions();
         }
         if(events.length > 0) {
             // check for any delayed effects which need to fire

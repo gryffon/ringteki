@@ -80,7 +80,11 @@ export class SelectCardAction extends CardGameAction {
             if(properties.message) {
                 context.game.addMessage(properties.message, ...properties.messageArgs(cards, player, properties));
             }
-            properties.gameAction.addEventsToArray(events, context, Object.assign({}, additionalProperties, properties.subActionProperties(cards)));
+            properties.gameAction.addEventsToArray(events, context, Object.assign(
+                { parentAction: this },
+                additionalProperties,
+                properties.subActionProperties(cards)
+            ));
             return true;
         };
         if(properties.mode === TargetModes.AutoSingle && legalTargets.length === 1) {

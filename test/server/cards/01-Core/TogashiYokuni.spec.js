@@ -249,15 +249,14 @@ describe('Togashi Yokuni', function() {
             });
 
             it('should trigger the terminal condition from Shoju\'s ability correctly', function() {
-                this.messageSpy = spyOn(this.game, 'addMessage');
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickCard(this.bayushiManipulator);
-                expect(this.messageSpy).toHaveBeenCalledWith('{1} is discarded due to {0}\'s lasting effect', this.togashiYokuni, this.bayushiManipulator);
+                expect(this.getChatLogs(5)).toContain('Bayushi Manipulator is discarded due to Togashi Yokuni\'s lasting effect');
                 expect(this.bayushiManipulator.location).toBe('dynasty discard pile');
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickCard(this.tattooedWanderer);
-                expect(this.messageSpy).toHaveBeenCalledWith('{1} is discarded due to {0}\'s lasting effect', this.togashiYokuni, this.tattooedWanderer);
+                expect(this.getChatLogs(5)).toContain('Tattooed Wanderer is discarded due to Togashi Yokuni\'s lasting effect');
                 expect(this.tattooedWanderer.location).toBe('conflict discard pile');
             });
         });

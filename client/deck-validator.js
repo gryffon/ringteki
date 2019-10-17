@@ -5,13 +5,13 @@ const moment = require('moment');
 const RestrictedList = require('./RestrictedList');
 
 const officialRoles = {
-    crab: ['keeper-of-water', 'seeker-of-void'],
-    crane: ['seeker-of-fire', 'seeker-of-void'],
-    dragon: ['seeker-of-void', 'keeper-of-water'],
-    lion: ['keeper-of-earth', 'seeker-of-air'],
-    phoenix: ['keeper-of-air', 'seeker-of-void'],
-    scorpion: ['seeker-of-air', 'keeper-of-air'],
-    unicorn: ['seeker-of-water', 'keeper-of-water']
+    crab: ['keeper-of-air', 'seeker-of-void'],
+    crane: ['keeper-of-air', 'seeker-of-void'],
+    dragon: ['seeker-of-air', 'keeper-of-water'],
+    lion: ['seeker-of-earth', 'seeker-of-air'],
+    phoenix: ['seeker-of-earth', 'seeker-of-void'],
+    scorpion: ['keeper-of-earth', 'keeper-of-air'],
+    unicorn: ['keeper-of-earth', 'keeper-of-water']
 };
 
 const openRoles = [
@@ -155,7 +155,7 @@ class DeckValidator {
         let cardCountByName = {};
 
         _.each(allCards, cardQuantity => {
-            cardCountByName[cardQuantity.card.name] = cardCountByName[cardQuantity.card.name] || { name: cardQuantity.card.name, faction: cardQuantity.card.clan, influence: cardQuantity.card.influence_cost, limit: cardQuantity.card.deck_limit, count: 0 };
+            cardCountByName[cardQuantity.card.name] = cardCountByName[cardQuantity.card.name] || { name: cardQuantity.card.name, faction: cardQuantity.card.clan, influence: cardQuantity.card.influence_cost, limit: cardQuantity.card.deck_limit, count: 0, allowed_clans: cardQuantity.card.allowed_clans };
             cardCountByName[cardQuantity.card.name].count += cardQuantity.count;
 
             if(!rules.mayInclude(cardQuantity.card) || rules.cannotInclude(cardQuantity.card) || (cardQuantity.card.role_restriction && !rules.roleRestrictions.includes(cardQuantity.card.role_restriction))) {
@@ -244,7 +244,7 @@ class DeckValidator {
             }
         };
         let factionRules = this.getFactionRules(deck.faction.value.toLowerCase());
-        let allianceRules = this.getAllianceRules(deck.alliance.value.toLowerCase());
+        let allianceRules = this.getAllianceRules(deck.alliance.value.toLowerCase(), deck.faction.value.toLowerCase());
         let roleRules = this.getRoleRules(deck.role.length > 0 ? deck.role[0].card : null);
         let strongholdRules = this.getStrongholdRules(deck.stronghold.length > 0 ? deck.stronghold[0].card : null);
         return this.combineValidationRules([standardRules, factionRules, allianceRules, roleRules, strongholdRules]);
@@ -256,9 +256,9 @@ class DeckValidator {
         };
     }
 
-    getAllianceRules(clan) {
+    getAllianceRules(clan, faction) {
         return {
-            mayInclude: card => card.side === 'conflict' && card.clan === clan
+            mayInclude: card => card.side === 'conflict' && card.clan === clan && card.allowed_clans.includes(faction)
         };
     }
 

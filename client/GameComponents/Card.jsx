@@ -234,7 +234,7 @@ class Card extends React.Component {
 
         let attachmentOffset = 13;
         let cardHeight = 84;
-        let cardLayer = 10;
+        let cardLayer = 45;
         switch(this.props.size) {
             case 'large':
                 attachmentOffset *= 1.4;
@@ -389,7 +389,14 @@ class Card extends React.Component {
                     <CardCounters counters={ this.getCountersForCard(this.props.card) } />
                 </div>
                 { this.showMenu() ? <CardMenu menu={ this.props.card.menu } onMenuItemClick={ this.onMenuItemClick } /> : null }
-                { !this.showMenu() && this.props.showStats ? <CardStats text={ this.props.card.name } militarySkillSummary={ this.props.card.militarySkillSummary } politicalSkillSummary={ this.props.card.politicalSkillSummary } /> : null }
+                { !this.showMenu() && this.props.showStats ?
+                    <CardStats
+                        text={ this.props.card.name }
+                        militarySkillSummary={ this.props.card.militarySkillSummary }
+                        politicalSkillSummary={ this.props.card.politicalSkillSummary }
+                        glorySummary={ this.props.card.glorySummary }
+                    /> : null
+                }
                 { this.getPopup() }
             </div>);
     }
@@ -510,6 +517,7 @@ Card.propTypes = {
         controller: PropTypes.string,
         covert: PropTypes.bool,
         facedown: PropTypes.bool,
+        glorySummary: PropTypes.object,
         id: PropTypes.string,
         inConflict: PropTypes.bool,
         inDanger: PropTypes.bool,

@@ -423,10 +423,24 @@ describe('conflict phase', function() {
                         hand: ['mantra-of-fire']
                     }
                 });
+                this.game.rings.fire.fate = 2;
                 this.childOfThePlains = this.player1.findCardByName('child-of-the-plains');
                 this.spyglass = this.player1.playAttachment('spyglass', this.childOfThePlains);
                 this.elementalFury = this.player2.findCardByName('elemental-fury');
                 this.noMoreActions('Initiate an action');
+            });
+
+            it('should give the declaring player any fate on the ring', function() {
+                let fate = this.player1.player.fate;
+                this.initiateConflict({
+                    ring: 'fire',
+                    type: 'military',
+                    province: 'elemental-fury',
+                    attackers: [this.childOfThePlains]
+                });
+                expect(this.player1.player.fate).toBe(fate + 2);
+                expect(this.game.rings.fire.fate).toBe(0);
+                expect(this.getChatLogs(1)).toContain('player1 takes 2 fate from Fire Ring');
             });
 
             it('should reveal the province', function() {
