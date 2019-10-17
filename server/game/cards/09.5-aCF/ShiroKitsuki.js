@@ -9,7 +9,7 @@ class ShiroKitsuki extends StrongholdCard {
             when: {
                 onConflictDeclared: () => true
             },
-            limit: AbilityDsl.limit.unlimitedPerConflict(),
+            limit: AbilityDsl.limit.perRound(Infinity),
             handler: context => this.game.promptWithMenu(context.player, this, {
                 source: context.source,
                 activePrompt: {
