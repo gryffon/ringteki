@@ -1,4 +1,4 @@
-describe('Matsu Gohei', function() {
+describe('Kitsu Motso', function() {
     integration(function() {
         beforeEach(function() {
             this.setupTest({
@@ -46,7 +46,7 @@ describe('Matsu Gohei', function() {
             this.player2.pass();
             this.player1.clickCard(this.kitsuMotso);
             expect(this.agashaSwordsmith.location).toBe('dynasty discard pile');
-            expect(this.player1).toHavePrompt('Choose a character to move in');
+            expect(this.player1).toHavePrompt('Choose a character');
             this.player1.clickCard(this.mirumotoRaitsugu);
             expect(this.mirumotoRaitsugu.isParticipating()).toBe(true);
         });
@@ -66,7 +66,7 @@ describe('Matsu Gohei', function() {
             this.player2.pass();
             this.player1.clickCard(this.kitsuMotso);
             expect(this.agashaSwordsmith.location).toBe('dynasty discard pile');
-            expect(this.player1).toHavePrompt('Choose a character to move in');
+            expect(this.player1).toHavePrompt('Choose a character');
             this.player1.clickCard(this.mirumotoRaitsugu);
             expect(this.mirumotoRaitsugu.isParticipating()).toBe(true);
         });
