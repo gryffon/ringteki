@@ -1,5 +1,5 @@
 const UiPrompt = require('./uiprompt.js');
-const { Locations, Players, EffectNames } = require('../Constants');
+const { EventNames, Locations, Players, EffectNames } = require('../Constants');
 
 class ActionWindow extends UiPrompt {
     constructor(game, title, windowName) {
@@ -12,8 +12,9 @@ class ActionWindow extends UiPrompt {
         } else {
             this.currentPlayer = game.getFirstPlayer();
         }
+        this.currentPlayerConsecutiveActions = 0;
+        this.opportunityCounter = 0;
         this.prevPlayerPassed = false;
-        this.priorityPassed = false;
     }
 
     activeCondition(player) {
@@ -35,7 +36,7 @@ class ActionWindow extends UiPrompt {
             let action = legalActions[0];
             let targetPrompts = action.targets.some(target => target.properties.player !== Players.Opponent);
             if(!this.currentPlayer.optionSettings.confirmOneClick || action.cost.some(cost => cost.promptsPlayer) || targetPrompts) {
-                this.game.resolveAbility(action.createContext(player));
+                this.resolveAbility(action.createContext(player));
                 return true;
             }
         }
@@ -43,9 +44,24 @@ class ActionWindow extends UiPrompt {
             activePromptTitle: (card.location === Locations.PlayArea ? 'Choose an ability:' : 'Play ' + card.name + ':'),
             source: card,
             choices: legalActions.map(action => action.title).concat('Cancel'),
-            handlers: legalActions.map(action => (() => this.game.resolveAbility(action.createContext(player)))).concat(() => true)
+            handlers: legalActions.map(action => (() => this.resolveAbility(action.createContext(player)))).concat(() => true)
         });
         return true;
+    }
+
+    resolveAbility(context) {
+        const resolver = this.game.resolveAbility(context);
+        this.game.queueSimpleStep(() => {
+            if(resolver.passPriority) {
+                this.postResolutionUpdate(resolver);
+            }
+        });
+    }
+
+    postResolutionUpdate(resolver) { // eslint-disable-line no-unused-vars
+        this.currentPlayerConsecutiveActions += 1;
+        this.prevPlayerPassed = false;
+        this.nextPlayer();
     }
 
     continue() {
@@ -56,16 +72,12 @@ class ActionWindow extends UiPrompt {
 
         if(!this.currentPlayer.promptedActionWindows[this.windowName]) {
             this.pass();
-            if(!this.currentPlayer.promptedActionWindows[this.windowName]) {
-                this.pass();
-            }
         }
 
         let completed = super.continue();
 
         if(!completed) {
             this.game.currentActionWindow = this;
-            this.priorityPassed = false;
         } else {
             this.game.currentActionWindow = null;
         }
@@ -100,7 +112,7 @@ class ActionWindow extends UiPrompt {
                 cardCondition: card => !card.facedown,
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} uses {1}\'s ability', player, card);
-                    this.markActionAsTaken();
+                    this.nextPlayer();
                     return true;
                 }
             });
@@ -132,15 +144,15 @@ class ActionWindow extends UiPrompt {
         }
 
         if(otherPlayer) {
-            this.currentPlayer = otherPlayer;
-        }
-    }
-
-    markActionAsTaken() {
-        if(!this.priorityPassed) {
-            this.prevPlayerPassed = false;
-            this.nextPlayer();
-            this.priorityPassed = true;
+            this.game.raiseEvent(
+                EventNames.OnPassActionPhasePriority,
+                { player: this.currentPlayer, consecutiveActions: this.currentPlayerConsecutiveActions, actionWindow: this },
+                () => {
+                    this.currentPlayer = otherPlayer;
+                    this.opportunityCounter += 1;
+                    this.currentPlayerConsecutiveActions = 0;
+                }
+            );
         }
     }
 }

@@ -173,10 +173,14 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
     resolveAbility(context) {
         let resolver = this.game.resolveAbility(context);
         this.game.queueSimpleStep(() => {
-            if(!resolver.cancelled) {
-                this.resolvedAbilities.push({ ability: context.ability, event: context.event });
+            if(resolver.passPriority) {
+                this.postResolutionUpdate(resolver);
             }
         });
+    }
+
+    postResolutionUpdate(resolver) {
+        this.resolvedAbilities.push({ ability: resolver.context.ability, event: resolver.context.event });
     }
 
     emitEvents() {
@@ -185,6 +189,7 @@ class ForcedTriggeredAbilityWindow extends BaseStep {
         _.each(this.events, event => {
             this.game.emit(event.name + ':' + this.abilityType, event, this);
         });
+        this.game.emit('aggregateEvent:' + this.abilityType, this.events, this);
     }
 }
 

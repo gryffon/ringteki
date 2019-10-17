@@ -60,7 +60,7 @@ class CardAbility extends ThenAbility {
         }
 
         if(card.getType() === CardTypes.Event) {
-            this.cost = this.cost.concat(Costs.payReduceableFateCost(PlayTypes.PlayFromHand), Costs.playLimited());
+            this.cost = this.cost.concat(Costs.payReduceableFateCost(PlayTypes.PlayFromHand));
         }
     }
 
@@ -87,7 +87,7 @@ class CardAbility extends ThenAbility {
         return defaultedLocation;
     }
 
-    meetsRequirements(context) {
+    meetsRequirements(context, ignoredRequirements = []) {
         if(this.card.isBlank() && this.printedAbility) {
             return 'blank';
         }
@@ -104,7 +104,11 @@ class CardAbility extends ThenAbility {
             return 'max';
         }
 
-        return super.meetsRequirements(context);
+        if(this.isCardPlayed() && this.card.isLimited() && context.player.limitedPlayed >= context.player.maxLimited) {
+            return 'limited';
+        }
+
+        return super.meetsRequirements(context, ignoredRequirements);
     }
 
     getCosts(context) {

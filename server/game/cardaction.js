@@ -1,5 +1,4 @@
 const CardAbility = require('./CardAbility.js');
-const Costs = require('./costs.js');
 const { AbilityTypes, CardTypes } = require('./Constants');
 
 /**
@@ -38,8 +37,6 @@ class CardAction extends CardAbility {
         this.anyPlayer = properties.anyPlayer || false;
         this.condition = properties.condition;
         this.doesNotTarget = properties.doesNotTarget;
-
-        this.cost.push(Costs.useInitiateAction());
     }
 
     meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
@@ -59,7 +56,7 @@ class CardAction extends CardAbility {
             return 'condition';
         }
 
-        return super.meetsRequirements(context);
+        return super.meetsRequirements(context, ignoredRequirements);
     }
 
     isAction() {
