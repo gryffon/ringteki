@@ -6,7 +6,7 @@ describe('Asako Takahiro', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['asako-takahiro', 'brash-samurai', 'doji-challenger'],
-                        hand: ['way-of-the-crane', 'way-of-the-crane', 'way-of-the-scorpion', 'way-of-the-scorpion']
+                        hand: ['way-of-the-crane', 'way-of-the-crane', 'way-of-the-scorpion', 'way-of-the-scorpion', 'soul-beyond-reproach']
                     },
                     player2: {
                         inPlay: ['doji-whisperer', 'asahina-artisan'],
@@ -53,6 +53,15 @@ describe('Asako Takahiro', function() {
                 this.player2.playAttachment('mark-of-shame', this.challenger);
                 this.player2.clickCard('mark-of-shame');
                 expect(this.takahiro.getMilitarySkill()).toBe(5);
+            });
+
+            it('should not give skill pump if takahiro is honored or dishonored', function() {
+                this.player2.clickCard('way-of-the-scorpion');
+                this.player2.clickCard(this.takahiro);
+                expect(this.takahiro.getMilitarySkill()).toBe(0);
+                this.player1.clickCard('soul-beyond-reproach');
+                this.player1.clickCard(this.takahiro);
+                expect(this.takahiro.getPoliticalSkill()).toBe(3);
             });
         });
     });
