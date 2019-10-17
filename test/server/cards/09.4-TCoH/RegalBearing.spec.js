@@ -98,6 +98,7 @@ describe('Regal Bearing', function() {
 
                 this.player1.clickCard(this.regalBearing);
 
+                expect(this.player1.player.showBid).toBe(1);
                 expect(this.player1.hand.length).toBe(5);
                 expect(this.fineKatana.location).toBe('hand');
                 expect(this.ornateFan.location).toBe('hand');

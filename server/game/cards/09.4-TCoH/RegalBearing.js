@@ -11,9 +11,10 @@ class RegalBearing extends DrawCard {
             effect: 'set their bid dial to 1 and draw {1} cards.',
             effectArgs: context => this.getHonorDialDifference(context),
             gameAction: AbilityDsl.actions.sequential([
-                AbilityDsl.actions.setHonorDial({
+                AbilityDsl.actions.setHonorDial(context => ({
+                    target: context.player,
                     value: 1
-                }),
+                })),
                 AbilityDsl.actions.draw(context => ({
                     target: context.player,
                     amount: this.getHonorDialDifference(context)
