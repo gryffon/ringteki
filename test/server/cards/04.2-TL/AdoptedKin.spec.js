@@ -127,7 +127,7 @@ describe('Adopted Kin', function() {
                 this.player2.pass();
             });
 
-            fit('should be immeditately discarded if a second copy is attached', function() {
+            it('should be immeditately discarded if a second copy is attached', function() {
                 expect(this.adept.attachments.toArray()).toContain(this.adoptedKin);
                 expect(this.adoptedKin.location).toBe('play area');
                 this.player1.clickCard(this.kin);
