@@ -239,6 +239,9 @@ class Conflict extends GameObject {
     }
 
     getNumberOfCardsPlayed(player, predicate) {
+        if(!player) {
+            return 0;
+        }
         if(predicate) {
             return this.getCardsPlayed(player, predicate).length;
         }
