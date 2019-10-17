@@ -24,9 +24,7 @@ const checkRestrictions = {
         context.player && context.player === effect.context.player.opponent && context.source.type === 'ring',
     opponentsTriggeredAbilities: (context, effect) =>
         context.player === effect.context.player.opponent && context.ability.isTriggeredAbility(),
-    reactions: context =>
-        context.ability.abilityType === AbilityTypes.Reaction ||
-        context.ability.abilityType === AbilityTypes.ForcedReaction,
+    reactions: context => context.ability.abilityType === AbilityTypes.Reaction,
     source: (context, effect) => context.source === effect.context.source
 };
 
