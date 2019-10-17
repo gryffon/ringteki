@@ -1,15 +1,13 @@
 const DrawCard = require('../../drawcard.js');
-const EventRegistrar = require('../../eventregistrar.js');
-const { CardTypes, EventNames } = require('../../Constants');
+const { CardTypes } = require('../../Constants');
 
 class VoidFist extends DrawCard {
     setupCardAbilities(ability) {
-        this.cardsPlayedThisConflict = {};
-        this.eventRegistrar = new EventRegistrar(this.game, this);
-        this.eventRegistrar.register([EventNames.OnConflictFinished, EventNames.OnCardPlayed]);
         this.action({
             title: 'Bow and send a character home',
-            condition: context => this.cardsPlayedThisConflict[context.player.uuid] >= 2,
+            condition: context =>
+                this.game.isDuringConflict() &&
+                this.game.currentConflict.getNumberOfCardsPlayed(context.player) >= 2,
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: (card, context) =>
@@ -20,20 +18,6 @@ class VoidFist extends DrawCard {
             },
             effect: 'bow {0} and send them home'
         });
-    }
-
-    onConflictFinished() {
-        this.cardsPlayedThisConflict = {};
-    }
-
-    onCardPlayed(event) {
-        if(this.game.isDuringConflict()) {
-            if(this.cardsPlayedThisConflict[event.player.uuid]) {
-                this.cardsPlayedThisConflict[event.player.uuid] += 1;
-            } else {
-                this.cardsPlayedThisConflict[event.player.uuid] = 1;
-            }
-        }
     }
 }
 

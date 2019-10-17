@@ -89,6 +89,7 @@ export enum EffectNames {
     AddElement = 'addElement',
     CannotDeclareRing = 'cannotDeclare',
     ConsiderRingAsClaimed = 'considerAsClaimed',
+    AdditionalCardPlayed = 'additionalCardPlayed',
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
     AdditionalCost = 'additionalCost',

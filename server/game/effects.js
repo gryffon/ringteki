@@ -87,6 +87,7 @@ const Effects = {
     cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match),
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match),
     // Player effects
+    additionalCardPlayed: (amount = 1) => EffectBuilder.player.dynamic(EffectNames.AdditionalCardPlayed, amount),
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible(EffectNames.AdditionalCharactersInConflict, amount),
     additionalConflict: (type) => EffectBuilder.player.detached(EffectNames.AdditionalConflict, {
         apply: player => player.addConflictOpportunity(type),
