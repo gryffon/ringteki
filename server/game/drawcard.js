@@ -733,12 +733,12 @@ class DrawCard extends BaseCard {
         for(const card of this.attachments.filter(card => card.anyEffect(EffectNames.AttachmentLimit))) {
             const limit = Math.max(...card.getEffects(EffectNames.AttachmentLimit));
             const matchingAttachments = this.attachments.filter(attachment => attachment.id === card.id);
-            illegalAttachments.concat(matchingAttachments.slice(0, -limit));
+            illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -limit));
         }
         for(const object of this.attachments.reduce((array, card) => array.concat(card.getEffects(EffectNames.AttachmentRestrictTraitAmount)), [])) {
             for(const trait of Object.keys(object)) {
                 const matchingAttachments = this.attachments.filter(attachment => attachment.hasTrait(trait));
-                illegalAttachments.concat(matchingAttachments.slice(0, -object[trait]));
+                illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -object[trait]));
             }
         }
         illegalAttachments = _.uniq(illegalAttachments);

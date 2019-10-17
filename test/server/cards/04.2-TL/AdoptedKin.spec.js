@@ -119,7 +119,7 @@ describe('Adopted Kin', function() {
                 });
                 this.adept = this.player1.findCardByName('niten-adept');
                 this.shugenja = this.player1.findCardByName('doomed-shugenja');
-                this.player1.playAttachment('adopted-kin', this.adept);
+                this.adoptedKin = this.player1.playAttachment('adopted-kin', this.adept);
                 this.kin = this.player1.findCardByName('adopted-kin', 'hand');
                 this.cloud = this.player1.findCardByName('cloud-the-mind');
                 this.challenger = this.player2.findCardByName('doji-challenger');
@@ -127,10 +127,17 @@ describe('Adopted Kin', function() {
                 this.player2.pass();
             });
 
-            it('should not be able to be attached twice to the same character', function() {
+            fit('should be immeditately discarded if a second copy is attached', function() {
+                expect(this.adept.attachments.toArray()).toContain(this.adoptedKin);
+                expect(this.adoptedKin.location).toBe('play area');
                 this.player1.clickCard(this.kin);
                 expect(this.player1).toBeAbleToSelect(this.shugenja);
-                expect(this.player1).not.toBeAbleToSelect(this.adept);
+                expect(this.player1).toBeAbleToSelect(this.adept);
+                this.player1.clickCard(this.adept);
+                expect(this.adept.attachments.toArray()).toContain(this.kin);
+                expect(this.kin.location).toBe('play area');
+                expect(this.adept.attachments.toArray()).not.toContain(this.adoptedKin);
+                expect(this.adoptedKin.location).toBe('conflict discard pile');
             });
 
             it('should also work when attached to opponent\'s character', function() {
