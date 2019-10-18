@@ -9,20 +9,23 @@ class ShiroKitsuki extends StrongholdCard {
             when: {
                 onConflictDeclared: () => true
             },
-            limit: AbilityDsl.limit.perRound(Infinity),
-            handler: context => this.game.promptWithMenu(context.player, this, {
-                source: context.source,
-                activePrompt: {
-                    menuTitle: 'Name a card',
-                    controls: [
-                        { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
-                    ]
-                }
-            })
+            limit: AbilityDsl.limit.unlimitedPerConflict(),
+            handler: context => {
+                this.originalContext = context;
+                this.game.promptWithMenu(context.player, this, {
+                    source: context.source,
+                    activePrompt: {
+                        menuTitle: 'Name a card',
+                        controls: [
+                            { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
+                        ]
+                    }
+                });
+            }
         });
     }
 
-    selectCardName(player, cardName, source) {
+    selectCardName(player, cardName) {
         this.game.addMessage('{0} names {1} - if {2} plays copies of this card {0} gets to claim a ring', player, cardName, player.opponent);
         this.game.actions.cardLastingEffect(() => ({
             duration: Durations.UntilEndOfConflict,
@@ -41,7 +44,7 @@ class ShiroKitsuki extends StrongholdCard {
                     gameAction: AbilityDsl.actions.takeRing({ takeFate: true })
                 }))
             })
-        })).resolve(player, source);
+        })).resolve(player, this.originalContext);
         return true;
     }
 }

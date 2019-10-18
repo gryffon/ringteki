@@ -47,10 +47,10 @@ describe('Shiro Kitsuki', function() {
                 this.player1.chooseCardInPrompt(this.fineKatana.name, 'card-name');
                 this.player2.clickPrompt('Done');
                 this.player2.playAttachment(this.fineKatana, this.adept);
-                expect(this.game.ring.earth.isUnclaimed).toBe(true);
+                expect(this.game.rings.earth.isUnclaimed()).toBe(true);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 this.player1.clickRing('earth');
-                expect(this.game.ring.earth.isUnclaimed).toBe(false);
+                expect(this.game.rings.earth.isUnclaimed()).toBe(false);
             });
         });
     });
