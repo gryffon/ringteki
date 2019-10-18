@@ -17,10 +17,11 @@ class RightHandOfTheEmperor extends DrawCard {
                 activePromptTitle: 'Choose characters',
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
-                numCards: 0,
+                numCards: 99, //numCards: 0 doesn't seem to work with optional cost and TargetModes.MaxStat
+                optional: true,
                 cardType: CardTypes.Character,
                 controller: Players.Self,
-                cardCondition: card => card.hasTrait('bushi'),
+                cardCondition: card => card.hasTrait('bushi') && card.bowed,
                 gameAction: AbilityDsl.actions.multiple([
                     AbilityDsl.actions.ready(),
                     AbilityDsl.actions.moveCard(context => ({
@@ -29,8 +30,11 @@ class RightHandOfTheEmperor extends DrawCard {
                     }))
                 ])
             },
-            effect: 'ready {0}. {1} is placed on the bottom of {2}\'s conflict deck',
-            effectArgs: context => [context.source, context.source.owner]
+            effect: 'ready {0}{1}.  {2} is placed on the bottom of {3}\'s conflict deck',
+            effectArgs: context => [
+                context.target.length > 0 ? '' : 'no one',
+                context.source,
+                context.source.owner]
         });
     }
 }
