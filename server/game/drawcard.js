@@ -68,9 +68,11 @@ class DrawCard extends BaseCard {
 
     getPrintedSkill(type) {
         if(type === 'military') {
-            return this.cardData.military === null ? NaN : isNaN(parseInt(this.cardData.military)) ? 0 : parseInt(this.cardData.military);
+            return this.cardData.military === null || this.cardData.military === undefined ?
+                NaN : isNaN(parseInt(this.cardData.military)) ? 0 : parseInt(this.cardData.military);
         } else if(type === 'political') {
-            return this.cardData.political === null ? NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
+            return this.cardData.political === null || this.cardData.political === undefined ?
+                NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
         }
     }
 
