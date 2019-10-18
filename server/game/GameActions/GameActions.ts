@@ -69,15 +69,18 @@ import { TakeRingAction, TakeRingProperties } from './TakeRingAction';
 import { TransferFateAction, TransferFateProperties } from './TransferFateAction';
 import { TransferHonorAction, TransferHonorProperties } from './TransferHonorAction';
 import { TurnCardFacedownAction, TurnCardFacedownProperties } from './TurnCardFacedownAction';
+import { GloryCountAction, GloryCountProperties } from './GloryCountAction';
+import { ClaimFavorAction, ClaimFavorProperties } from './ClaimFavorAction';
 
 const GameActions = {
-    // card 
+    // card
     addToken: (propertyFactory: AddTokenProperties | ((context: TriggeredAbilityContext) => AddTokenProperties) = {}) => new AddTokenAction(propertyFactory),
     attach: (propertyFactory: AttachActionProperties | ((context: TriggeredAbilityContext) => AttachActionProperties) = {}) => new AttachAction(propertyFactory), // attachment
     attachToRing: (propertyFactory: AttachToRingActionProperties | ((context: TriggeredAbilityContext) => AttachToRingActionProperties) = {}) => new AttachToRingAction(propertyFactory), // attachment on a ring
     bow: (propertyFactory: BowActionProperties | ((context: TriggeredAbilityContext) => BowActionProperties) = {}) => new BowAction(propertyFactory),
     break: (propertyFactory: BreakProperties | ((context: TriggeredAbilityContext) => BreakProperties) = {}) => new BreakAction(propertyFactory),
     cardLastingEffect: (propertyFactory: LastingEffectCardProperties | ((context: TriggeredAbilityContext) => LastingEffectCardProperties)) => new LastingEffectCardAction(propertyFactory),
+    claimImperialFavor: (propertyFactory: ClaimFavorProperties | ((context: TriggeredAbilityContext) => ClaimFavorProperties)) => new ClaimFavorAction(propertyFactory),
     createToken: (propertyFactory: CreateTokenProperties | ((context: TriggeredAbilityContext) => CreateTokenProperties) = {}) => new CreateTokenAction(propertyFactory),
     discardCard: (propertyFactory: DiscardCardProperties | ((context: TriggeredAbilityContext) => DiscardCardProperties) = {}) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory: DiscardFromPlayProperties | ((context: TriggeredAbilityContext) => DiscardFromPlayProperties) = {}) => new DiscardFromPlayAction(propertyFactory),
@@ -90,6 +93,7 @@ const GameActions = {
     moveToConflict: (propertyFactory: MoveToConflictProperties | ((context: TriggeredAbilityContext) => MoveToConflictProperties) = {}) => new MoveToConflictAction(propertyFactory),
     placeFate: (propertyFactory: PlaceFateProperties | ((context: TriggeredAbilityContext) => PlaceFateProperties) = {}) => new PlaceFateAction(propertyFactory), // amount = 1, origin
     playCard: (propertyFactory: PlayCardProperties | ((context: TriggeredAbilityContext) => PlayCardProperties) = {}) => new PlayCardAction(propertyFactory), // resetOnCancel = false, postHandler
+    performGloryCount: (propertyFactory: GloryCountProperties | ((context: TriggeredAbilityContext) => GloryCountProperties)) => new GloryCountAction(propertyFactory),
     putIntoConflict: (propertyFactory: PutIntoPlayProperties | ((context: TriggeredAbilityContext) => PutIntoPlayProperties) = {}) => new PutIntoPlayAction(propertyFactory), // fate = 0, status = ordinary
     putIntoPlay: (propertyFactory: PutIntoPlayProperties | ((context: TriggeredAbilityContext) => PutIntoPlayProperties) = {}) => new PutIntoPlayAction(propertyFactory, false), // fate = 0, status = ordinary
     ready: (propertyFactory: ReadyProperties | ((context: TriggeredAbilityContext) => ReadyProperties) = {}) => new ReadyAction(propertyFactory),
