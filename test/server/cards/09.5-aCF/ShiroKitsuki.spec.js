@@ -48,7 +48,7 @@ describe('Shiro Kitsuki', function() {
                 this.player2.clickPrompt('Done');
                 this.player2.playAttachment(this.fineKatana, this.adept);
                 expect(this.game.rings.earth.isUnclaimed()).toBe(true);
-                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toHavePrompt('Choose a ring to take');
                 this.player1.clickRing('earth');
                 expect(this.game.rings.earth.isUnclaimed()).toBe(false);
             });

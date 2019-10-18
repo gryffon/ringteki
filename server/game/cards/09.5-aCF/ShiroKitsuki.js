@@ -25,7 +25,7 @@ class ShiroKitsuki extends StrongholdCard {
         });
     }
 
-    selectCardName(player, cardName) {
+    selectCardName(player, cardName, source) {
         this.game.addMessage('{0} names {1} - if {2} plays copies of this card {0} gets to claim a ring', player, cardName, player.opponent);
         this.game.actions.cardLastingEffect(() => ({
             duration: Durations.UntilEndOfConflict,
@@ -44,7 +44,7 @@ class ShiroKitsuki extends StrongholdCard {
                     gameAction: AbilityDsl.actions.takeRing({ takeFate: true })
                 }))
             })
-        })).resolve(player, this.originalContext);
+        })).resolve(source, this.originalContext);
         return true;
     }
 }
