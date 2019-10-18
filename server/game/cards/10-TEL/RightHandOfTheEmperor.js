@@ -22,14 +22,12 @@ class RightHandOfTheEmperor extends DrawCard {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.hasTrait('bushi') && card.bowed,
-                gameAction: AbilityDsl.actions.multiple([
-                    AbilityDsl.actions.ready(),
-                    AbilityDsl.actions.moveCard(context => ({
-                        target: context.source,
-                        destination: Locations.ConflictDeck, bottom: true
-                    }))
-                ])
+                gameAction: AbilityDsl.actions.ready()
             },
+            gameAction: AbilityDsl.actions.moveCard(context => ({
+                target: context.source,
+                destination: Locations.ConflictDeck, bottom: true
+            })),
             effect: 'ready {0}{1}.  {2} is placed on the bottom of {3}\'s conflict deck',
             effectArgs: context => [
                 context.target.length > 0 ? '' : 'no one',
