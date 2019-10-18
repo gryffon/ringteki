@@ -33,7 +33,7 @@ class ShiroKitsuki extends StrongholdCard {
                 when: {
                     onCardPlayed: (event, context) => {
                         return event.player === context.player.opponent &&
-                            event === cardName;
+                            event.card.name === cardName;
                     }
                 },
                 gameAction: AbilityDsl.actions.selectRing(context => ({
