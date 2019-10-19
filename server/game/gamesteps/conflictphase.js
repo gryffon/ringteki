@@ -1,10 +1,11 @@
+const AbilityDsl = require('../abilitydsl.js');
+
 const Phase = require('./phase.js');
 const SimpleStep = require('./simplestep.js');
 const Conflict = require('../conflict.js');
 const ActionWindow = require('./actionwindow.js');
 const GameActions = require('../GameActions/GameActions');
-
-const { Phases, EventNames } = require('../Constants');
+const { Phases } = require('../Constants');
 
 /*
 III Conflict Phase
@@ -60,23 +61,11 @@ class ConflictPhase extends Phase {
     }
 
     claimImperialFavor() {
-        let gloryTotals = this.game.getPlayersInFirstPlayerOrder().map(player => {
-            return player.getGloryCount();
-        });
-        let winner = this.game.getFirstPlayer();
-        if(winner.opponent) {
-            if(gloryTotals[0] === gloryTotals[1]) {
-                this.game.addMessage('Both players are tied in glory at {0}.  The imperial favor remains in its current state', gloryTotals[0]);
-                this.game.raiseEvent(EventNames.OnFavorGloryTied);
-                return;
-            } else if(gloryTotals[0] < gloryTotals[1]) {
-                winner = winner.opponent;
-                this.game.addMessage('{0} succesfully claims the Emperor\'s favor with total glory of {1} vs {2}', winner, gloryTotals[1], gloryTotals[0]);
-            } else {
-                this.game.addMessage('{0} succesfully claims the Emperor\'s favor with total glory of {1} vs {2}', winner, gloryTotals[0], gloryTotals[1]);
-            }
-        }
-        winner.claimImperialFavor();
+        AbilityDsl.actions.performGloryCount({
+            gameAction: winner => winner && AbilityDsl.actions.claimImperialFavor({
+                target: winner
+            })
+        }).resolve(null, this.game.getFrameworkContext());
     }
 }
 

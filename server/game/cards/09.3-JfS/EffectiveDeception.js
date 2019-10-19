@@ -6,7 +6,9 @@ class EffectiveDeception extends ProvinceCard {
         this.wouldInterrupt({
             title: 'Cancel triggered ability',
             when: {
-                onInitiateAbilityEffects: (event, context) => context.source.isConflictProvince()
+                onInitiateAbilityEffects: (event, context) =>
+                    context.source.isConflictProvince() &&
+                    event.context.ability.isTriggeredAbility()
             },
             effect: 'cancel the effects of {1}\'s ability',
             effectArgs: context => context.event.card,

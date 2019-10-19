@@ -87,7 +87,7 @@ class CardAbility extends ThenAbility {
         return defaultedLocation;
     }
 
-    meetsRequirements(context) {
+    meetsRequirements(context, ignoredRequirements = []) {
         if(this.card.isBlank() && this.printedAbility) {
             return 'blank';
         }
@@ -108,7 +108,7 @@ class CardAbility extends ThenAbility {
             return 'limited';
         }
 
-        return super.meetsRequirements(context);
+        return super.meetsRequirements(context, ignoredRequirements);
     }
 
     getCosts(context) {

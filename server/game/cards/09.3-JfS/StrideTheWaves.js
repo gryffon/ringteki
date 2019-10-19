@@ -3,6 +3,10 @@ const AbilityDsl = require('../../abilitydsl');
 
 class StrideTheWaves extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.action({
             title: 'Move attached character in or out of the conflict',
             limit: AbilityDsl.limit.perRound(2),
@@ -24,14 +28,6 @@ class StrideTheWaves extends DrawCard {
                 context.source.parent.inConflict ? 'send' : 'move'
             ]
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 
