@@ -10,25 +10,23 @@ class EmbraceDeath extends DrawCard {
             when: {
                 afterConflict: (event, context) =>
                     event.conflict.loser === context.player &&
-                    event.conflict.defendingPlayer !== context.player &&
+                    context.player.isAttackingPlayer() &&
                     event.conflict.attackers.some(card => card.hasTrait('bushi'))
             },
             cost: AbilityDsl.costs.sacrifice({
                 cardType: CardTypes.Character,
-                cardCondition: (card, context) => card.hasTrait('bushi') && context.game.currentConflict.attackers.includes(card)
+                cardCondition: (card, context) => card.hasTrait('bushi') && card.isAttacking()
             }),
-            target: {
+            gameAction: AbilityDsl.actions.selectCard({
                 cardType: CardTypes.Character,
                 controller: Players.Opponent,
-                cardCondition: (card, context) => (card.fate > 0 ? card.allowGameAction('removeFate', context) : card.allowGameAction('discardFromPlay', context))
-            },
-            handler: context => {
-                if(context.target.fate === 0) {
-                    AbilityDsl.actions.discardFromPlay().resolve(context.target, context);
-                } else {
-                    AbilityDsl.actions.removeFate().resolve(context.target, context);
-                }
-            },
+                gameAction: AbilityDsl.actions.conditional({
+                    // @ts-ignore
+                    condition: (context, properties) => properties.target.fate > 0,
+                    trueGameAction: AbilityDsl.actions.removeFate(),
+                    falseGameAction: AbilityDsl.actions.discardFromPlay()
+                })
+            }),
             effect: '{1} {0}',
             effectArgs: context => context.target.fate > 0 ? 'remove 1 fate from' : 'discard'
         });
