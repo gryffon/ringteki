@@ -3,6 +3,11 @@ const { Players, PlayTypes } = require('../../Constants');
 
 class GraspOfEarth extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true,
+            trait: 'shugenja'
+        });
+
         this.action({
             title: 'Opponent\'s cards cannot join this conflict',
             condition: context => this.game.isDuringConflict() && context.player.opponent,
@@ -22,14 +27,6 @@ class GraspOfEarth extends DrawCard {
                 })
             ]
         });
-    }
-
-    canAttach(card, context) {
-        if(card.hasTrait('shugenja') === false || card.controller !== context.player) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 
