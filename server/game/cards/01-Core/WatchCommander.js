@@ -2,6 +2,11 @@ const DrawCard = require('../../drawcard.js');
 
 class WatchCommander extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            limit: 1,
+            myControl: true
+        });
+
         this.reaction({
             title: 'Force opponent to lose 1 honor',
             limit: ability.limit.unlimitedPerConflict(),
@@ -10,15 +15,6 @@ class WatchCommander extends DrawCard {
             },
             gameAction: ability.actions.loseHonor()
         });
-    }
-
-    canAttach(card, context) {
-        if(card.attachments && card.attachments.any(card => card.id === 'watch-commander' && card !== this)) {
-            return false;
-        } else if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

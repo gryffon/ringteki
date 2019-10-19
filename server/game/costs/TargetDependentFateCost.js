@@ -3,8 +3,8 @@ const Event = require('../Events/Event');
 const { EventNames } = require('../Constants');
 
 class TargetDependentFateCost extends ReduceableFateCost {
-    constructor(playingType, targetName) {
-        super(playingType);
+    constructor(playingType, targetName, ignoreType) {
+        super(playingType, ignoreType);
         this.dependsOn = targetName;
     }
 
@@ -16,12 +16,12 @@ class TargetDependentFateCost extends ReduceableFateCost {
             // we don't need to check now because this will be checked again once targeting is done
             return true;
         }
-        let reducedCost = context.player.getMinimumCost(this.playingType, context, context.targets[this.dependsOn]);
+        let reducedCost = context.player.getMinimumCost(this.playingType, context, context.targets[this.dependsOn], this.ignoreType);
         return context.player.fate >= reducedCost && (reducedCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
 
     getReducedCost(context) {
-        return context.player.getReducedCost(this.playingType, context.source, context.targets[this.dependsOn]);
+        return context.player.getReducedCost(this.playingType, context.source, context.targets[this.dependsOn], this.ignoreType);
     }
 
     payEvent(context) {
