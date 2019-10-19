@@ -48,6 +48,7 @@ export enum EffectNames {
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
     ChangeContributionFunction = 'changeContributionFunction',
+    ChangeType = 'changeType',
     CopyCharacter = 'copyCharacter',
     CustomEffect = 'customEffect',
     DelayedEffect = 'delayedEffect',

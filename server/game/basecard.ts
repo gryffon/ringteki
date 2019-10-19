@@ -48,7 +48,7 @@ class BaseCard extends EffectSource {
 
         this.id = cardData.id;
         this.printedName = cardData.name;
-        this.type = cardData.type;
+        this.printedType = cardData.type;
         this.traits = cardData.traits || [];
         this.printedFaction = cardData.clan;
 
