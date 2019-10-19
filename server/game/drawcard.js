@@ -690,8 +690,8 @@ class DrawCard extends BaseCard {
      * Checks whether the passed card meets the attachment restrictions (e.g.
      * Opponent cards only, specific factions, etc) for this card.
      */
-    canAttach(parent, context) { // eslint-disable-line no-unused-vars
-        if(!parent || parent.getType() !== CardTypes.Character || this.getType() !== CardTypes.Attachment) {
+    canAttach(parent, context, ignoreType = false) {
+        if(!parent || parent.getType() !== CardTypes.Character || !ignoreType && this.getType() !== CardTypes.Attachment) {
             return false;
         }
         if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller) {
