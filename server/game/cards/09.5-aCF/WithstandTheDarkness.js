@@ -5,7 +5,7 @@ const { Players, Locations, CardTypes } = require('../../Constants');
 class WithstandTheDarkness extends DrawCard {
     setupCardAbilities() {
         let targets = [];
-        
+
         this.reaction({
             when: {
                 onInitiateAbilityEffects: (event, context) => {
