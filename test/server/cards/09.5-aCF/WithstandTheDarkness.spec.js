@@ -138,5 +138,46 @@ describe('Withstand The Darkness', function() {
                 expect(this.player1).not.toBeAbleToSelect(this.eagerScoutP2);
             });
         });
+
+        describe('Withstand The Darkness\'s Reaction (Banzai)', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['eager-scout', 'hiruma-skirmisher', 'brash-samurai'],
+                        hand: ['withstand-the-darkness']
+                    },
+                    player2: {
+                        inPlay: ['eager-scout'],
+                        hand: ['banzai']
+                    }
+                });
+                this.eagerScout = this.player1.findCardByName('eager-scout');
+                this.hirumaSkirmisher = this.player1.findCardByName('hiruma-skirmisher');
+                this.brashSamurai = this.player1.findCardByName('brash-samurai');
+                this.withstandTheDarkness = this.player1.findCardByName('withstand-the-darkness');
+
+                this.eagerScoutP2 = this.player2.findCardByName('eager-scout');
+                this.banzai = this.player2.findCardByName('banzai');
+
+                this.eagerScout.fate = 0;
+                this.hirumaSkirmisher.fate = 0;
+                this.brashSamurai.fate = 0;
+                this.eagerScoutP2.fate = 0;
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.eagerScout, this.hirumaSkirmisher],
+                    defenders: [this.eagerScoutP2]
+                });
+            });
+
+            it('should react only when banzai is finished resolving', function() {
+                this.player2.clickCard(this.banzai);
+                this.player2.clickCard(this.eagerScout);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
+            });
+        });
     });
 });
