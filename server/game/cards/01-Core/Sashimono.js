@@ -2,18 +2,14 @@ const DrawCard = require('../../drawcard.js');
 
 class Sashimono extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            trait: 'bushi'
+        });
+
         this.whileAttached({
             condition: () => this.game.isDuringConflict('military'),
             effect: ability.effects.doesNotBow()
         });
-    }
-
-    canAttach(card, context) {
-        if(!card.hasTrait('bushi')) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 
