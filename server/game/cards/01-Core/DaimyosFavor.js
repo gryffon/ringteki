@@ -17,7 +17,7 @@ class DaimyosFavor extends DrawCard {
                 effect: ability.effects.reduceCost({
                     playingTypes: PlayTypes.PlayFromHand,
                     amount: 1,
-                    match: card => card.type === CardTypes.Attachment,
+                    cardType: CardTypes.Attachment,
                     targetCondition: target => target === context.source.parent,
                     limit: ability.limit.fixed(1)
                 })
