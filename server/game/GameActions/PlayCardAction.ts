@@ -3,7 +3,7 @@ import AbilityResolver = require('../gamesteps/abilityresolver');
 import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations }  from '../Constants';
+import { Locations, PlayTypes }  from '../Constants';
 
 class PlayCardResolver extends AbilityResolver {
     playGameAction: PlayCardAction;
@@ -66,7 +66,7 @@ class PlayCardResolver extends AbilityResolver {
 export interface PlayCardProperties extends CardActionProperties {
     resetOnCancel?: boolean;
     postHandler?: (context: AbilityContext) => void;
-    location?: Locations;
+    playType?: PlayTypes;
     destination?: Locations;
     destinationOptions?: object;
     payCosts?: boolean;
@@ -78,7 +78,6 @@ export class PlayCardAction extends CardGameAction {
     defaultProperties: PlayCardProperties = {
         resetOnCancel: false,
         postHandler: () => true,
-        location: Locations.Hand,
         destinationOptions: {},
         payCosts: true
     };
@@ -108,6 +107,9 @@ export class PlayCardAction extends CardGameAction {
             }
             let newContext = action.createContext(context.player);
             newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
+            if(properties.playType) {
+                newContext.playType = properties.playType;
+            }
             return !action.meetsRequirements(newContext, ignoredRequirements);
         });
     }
@@ -142,6 +144,9 @@ export class PlayCardAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties);
         let event = this.createEvent(card, context, additionalProperties);
         this.updateEvent(event, card, context, additionalProperties);
+        if(properties.playType) {
+            actionContext.playType = properties.playType;
+        }
         event.replaceHandler(() => context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties)));
         return event;    
     }

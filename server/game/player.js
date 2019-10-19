@@ -368,8 +368,9 @@ class Player extends GameObject {
      * @param card BaseCard
      * @param {String} playingType
      */
-    isCardInPlayableLocation(card, playingType) {
-        return _.any(this.playableLocations, location => location.playingType === playingType && location.contains(card));
+    isCardInPlayableLocation(card, playingType = null) {
+        return _.any(this.playableLocations, location =>
+            (!playingType || location.playingType === playingType) && location.contains(card));
     }
 
     /**

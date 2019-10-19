@@ -11,7 +11,7 @@ import AbilityContext = require('./AbilityContext');
 import Player = require('./player');
 import Game = require('./game');
 
-import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, PlayTypes } from './Constants';
+import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } from './Constants';
 import { ActionProps, TriggeredAbilityProps, PersistentEffectProps, AttachmentConditionProps } from './Interfaces'; 
 
 class BaseCard extends EffectSource {
@@ -249,7 +249,7 @@ class BaseCard extends EffectSource {
         _.each(this.reactions, reaction => {
             reaction.limit.reset();
             if(this.type === CardTypes.Event) {
-                if(to === Locations.ConflictDeck || this.controller.isCardInPlayableLocation(this, PlayTypes.PlayFromHand) || this.controller.opponent && this.controller.opponent.isCardInPlayableLocation(this, PlayTypes.PlayFromHand)) {
+                if(to === Locations.ConflictDeck || this.controller.isCardInPlayableLocation(this) || this.controller.opponent && this.controller.opponent.isCardInPlayableLocation(this)) {
                     reaction.registerEvents();
                 } else {
                     reaction.unregisterEvents();

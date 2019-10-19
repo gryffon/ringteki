@@ -172,7 +172,8 @@ export enum CardTypes {
 
 export enum PlayTypes {
     PlayFromHand = 'playFromHand',
-    PlayFromProvince = 'playFromProvince'
+    PlayFromProvince = 'playFromProvince',
+    Other = 'other'
 };
 
 export enum EventNames {

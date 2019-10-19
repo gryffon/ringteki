@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, PlayTypes } = require('../../Constants');
 
 class TogashiMitsu extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,6 +11,7 @@ class TogashiMitsu extends DrawCard {
                 controller: Players.Self,
                 cardCondition: card => card.hasTrait('monk') || card.hasTrait('kiho') || card.hasTrait('tattoo'),
                 gameAction: ability.actions.playCard({
+                    playType: PlayTypes.PlayFromHand,
                     destination: Locations.ConflictDeck,
                     destinationOptions: { bottom: true }
                 })
