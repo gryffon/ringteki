@@ -15,7 +15,7 @@ class EmbraceDeath extends DrawCard {
             },
             cost: AbilityDsl.costs.sacrifice({
                 cardType: CardTypes.Character,
-                cardCondition: (card, context) => card.hasTrait('bushi') && card.isAttacking()
+                cardCondition: card => card.hasTrait('bushi') && card.isAttacking()
             }),
             gameAction: AbilityDsl.actions.selectCard({
                 cardType: CardTypes.Character,
