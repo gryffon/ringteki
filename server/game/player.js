@@ -22,7 +22,7 @@ class Player extends GameObject {
         this.emailHash = this.user.emailHash;
         this.id = id;
         this.owner = owner;
-        this.type = 'player';
+        this.printedType = 'player';
         this.socket = null;
         this.disconnected = false;
         this.left = false;

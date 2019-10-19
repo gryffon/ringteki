@@ -5,7 +5,7 @@ const { EffectNames } = require('./Constants');
 class Ring extends EffectSource {
     constructor(game, element, type) {
         super(game, element.replace(/\b\w/g, l => l.toUpperCase()) + ' Ring');
-        this.type = 'ring';
+        this.printedType = 'ring';
         this.claimed = false;
         this.claimedBy = '';
         this.conflictType = type;
