@@ -398,5 +398,181 @@ describe('Right Hand of the Emperor', function() {
                 expect(this.player1.player.conflictDiscardPile.toArray()).toContain(this.rightHandOfTheEmperor);
             });
         });
+
+        describe('Right Hand of the Emperor <-> Special Interactions (From Hand)', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'draw',
+                    player1: {
+                        honor: 5,
+                        inPlay: ['guest-of-honor','master-of-gisei-toshi','utaku-tetsuko','akodo-toturi-2'],
+                    },
+                    player2: {
+                        honor: 11,
+                        fate: 30,
+                        inPlay: ['brash-samurai', 'doji-challenger'],
+                        hand: ['right-hand-of-the-emperor']
+                    }
+                });
+                this.brashSamurai = this.player2.findCardByName('brash-samurai');
+                this.dojiChallenger = this.player2.findCardByName('doji-challenger');
+                this.rightHandOfTheEmperor = this.player2.findCardByName('right-hand-of-the-emperor');
+                this.brashSamurai.bowed = true;
+
+                this.GoH = this.player1.findCardByName('guest-of-honor');
+                this.MoGT = this.player1.findCardByName('master-of-gisei-toshi');
+                this.tetsuko = this.player1.findCardByName('utaku-tetsuko');
+                this.toturi = this.player1.findCardByName('akodo-toturi-2');
+                this.player1.player.imperialFavor = 'political';
+
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+
+                this.noMoreActions();
+                this.player1.clickCard(this.MoGT);
+                expect(this.player1).toHavePrompt('Master of Gisei Toshi');
+                this.player1.clickRing('fire');
+
+                this.noMoreActions();
+            });
+
+            it('GoH - should not be playable from hand', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.GoH],
+                    defenders: [this.dojiChallenger]
+                });
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('Tetsuko - should increase cost from hand', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.tetsuko],
+                    defenders: [this.dojiChallenger]
+                });
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                this.player2.clickCard(this.brashSamurai);
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.player2.fate).toBe(26);
+            });
+
+            it('Toturi2 - should not be playable from hand', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.toturi],
+                    defenders: [this.dojiChallenger]
+                });
+                
+                this.player2.pass();
+                this.player1.clickCard(this.toturi);
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('MoGT - should not be playable from hand', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    ring: 'fire',
+                    attackers: [this.MoGT],
+                    defenders: [this.dojiChallenger]
+                });
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+        });
+
+        describe('Right Hand of the Emperor <-> Special Interactions (From Discard)', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'draw',
+                    player1: {
+                        honor: 5,
+                        inPlay: ['guest-of-honor','master-of-gisei-toshi','utaku-tetsuko','akodo-toturi-2'],
+                    },
+                    player2: {
+                        honor: 11,
+                        fate: 30,
+                        inPlay: ['brash-samurai', 'doji-challenger'],
+                        conflictDiscard: ['right-hand-of-the-emperor']
+                    }
+                });
+                this.brashSamurai = this.player2.findCardByName('brash-samurai');
+                this.dojiChallenger = this.player2.findCardByName('doji-challenger');
+                this.rightHandOfTheEmperor = this.player2.findCardByName('right-hand-of-the-emperor');
+                this.brashSamurai.bowed = true;
+
+                this.GoH = this.player1.findCardByName('guest-of-honor');
+                this.MoGT = this.player1.findCardByName('master-of-gisei-toshi');
+                this.tetsuko = this.player1.findCardByName('utaku-tetsuko');
+                this.toturi = this.player1.findCardByName('akodo-toturi-2');
+
+                this.player1.player.imperialFavor = 'political';
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+
+                this.noMoreActions();
+                this.player1.clickCard(this.MoGT);
+                expect(this.player1).toHavePrompt('Master of Gisei Toshi');
+                this.player1.clickRing('fire');
+
+                this.noMoreActions();
+            });
+
+            it('GoH - should not be playable from discard', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.GoH],
+                    defenders: [this.dojiChallenger]
+                });
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('Tetsuko - should not increase cost from discard', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.tetsuko],
+                    defenders: [this.dojiChallenger]
+                });
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                this.player2.clickCard(this.brashSamurai);
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.player2.fate).toBe(27);
+            });
+
+            it('Toturi2 - should be playable from discard', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.toturi],
+                    defenders: [this.dojiChallenger]
+                });
+                
+                this.player2.pass();
+                this.player1.clickCard(this.toturi);
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Choose characters');
+            });
+
+            it('MoGT - should not be playable from discard', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    ring: 'fire',
+                    attackers: [this.MoGT],
+                    defenders: [this.dojiChallenger]
+                });
+
+                this.player2.clickCard(this.rightHandOfTheEmperor);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+        });
     });
 });
