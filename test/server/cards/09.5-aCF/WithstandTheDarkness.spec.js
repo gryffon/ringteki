@@ -179,6 +179,7 @@ describe('Withstand The Darkness', function() {
                 expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
                 this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
                 this.player2.clickCard(this.eagerScoutP2);
+                this.player2.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
             });
