@@ -1,78 +1,87 @@
-describe('Fire Tensai Acolyte', function() {
+describe('Palace Guard', function() {
     integration(function() {
-        describe('Fire Tensai Acolyte\'s ability', function() {
+        describe('Palace Guard\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['fire-tensai-acolyte','isawa-masahiro'],
-                        dynastyDiscard: ['favorable-ground']
+                        inPlay: ['palace-guard','yogo-hiroue']
                     },
                     player2: {
                         inPlay: ['doji-challenger']
                     }
                 });
-                this.acolyte = this.player1.findCardByName('fire-tensai-acolyte');
-                this.masahiro = this.player1.findCardByName('isawa-masahiro');
-                this.favorableground = this.player1.placeCardInProvince('favorable-ground', 'province 1');
+                this.palaceGuard = this.player1.findCardByName('palace-guard');
+                this.hiroue = this.player1.findCardByName('yogo-hiroue');
 
-                this.duelist = this.player2.findCardByName('doji-challenger');
+                this.dojiChallenger = this.player2.findCardByName('doji-challenger');
             });
 
-            it('should not be able to attack during non-fire conflicts', function() {
+            it('should not be able to declare as an attacker if opponent is less honorable', function() {
+                this.player1.honor = 10;
+                this.player2.honor = 9;
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    ring: 'water',
-                    attackers: ['fire-tensai-acolyte','isawa-masahiro'],
+                    attackers: ['palace-guard','yogo-hiroue'],
                     defenders: []
                 });
-                expect(this.game.currentConflict.attackers).toContain(this.masahiro);
-                expect(this.game.currentConflict.attackers).not.toContain(this.acolyte);
+                expect(this.game.currentConflict.attackers).toContain(this.hiroue);
+                expect(this.game.currentConflict.attackers).not.toContain(this.palaceGuard);
             });
 
-            it('should be able to attack during fire conflicts', function() {
+            it('should be able to declare as an attacker if opponent is equally honorable', function() {
+                this.player1.honor = 10;
+                this.player2.honor = 10;
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    ring: 'fire',
-                    attackers: ['fire-tensai-acolyte','isawa-masahiro'],
+                    attackers: ['palace-guard','yogo-hiroue'],
                     defenders: []
                 });
-                expect(this.game.currentConflict.attackers).toContain(this.masahiro);
-                expect(this.game.currentConflict.attackers).toContain(this.acolyte);
+                expect(this.game.currentConflict.attackers).toContain(this.hiroue);
+                expect(this.game.currentConflict.attackers).toContain(this.palaceGuard);
+
             });
 
-            it('should be able to participate in non-fire conflicts if moved in', function() {
+            it('should be able to declare as an attacker if opponent is more honorable', function() {
+                this.player1.honor = 10;
+                this.player2.honor = 10;
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    ring: 'water',
-                    attackers: ['isawa-masahiro'],
+                    attackers: ['palace-guard','yogo-hiroue'],
                     defenders: []
                 });
+                expect(this.game.currentConflict.attackers).toContain(this.hiroue);
+                expect(this.game.currentConflict.attackers).toContain(this.palaceGuard);
+            });
+
+            it('should be able to participate as an attacker if opponent is less honorable if moved in', function() {
+                this.player1.honor = 10;
+                this.player2.honor = 9;
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: ['palace-guard','yogo-hiroue'],
+                    defenders: []
+                });
+                expect(this.game.currentConflict.attackers).toContain(this.hiroue);
+                expect(this.game.currentConflict.attackers).not.toContain(this.palaceGuard);
                 this.player2.pass();
-                this.player1.clickCard(this.favorableground);
-                this.player1.clickCard(this.acolyte);
-                expect(this.game.currentConflict.attackers).toContain(this.acolyte);
+                this.player1.clickCard(this.hiroue);
+                this.player1.clickCard(this.palaceGuard);
+                expect(this.game.currentConflict.attackers).toContain(this.palaceGuard);
             });
 
-            it('should let you declare an attack with only the acolyte with the fire ring', function () {
-                this.masahiro.bow();
+            it('should not let you declare an attack with only the palace guard', function () {
+                this.hiroue.bow();
+                this.player1.honor = 10;
+                this.player2.honor = 9;
                 this.player1.pass();
                 this.player2.pass();
-                this.player1.clickRing('fire');
-                this.player1.clickCard(this.acolyte);
-                expect(this.player1).toHavePrompt('Military Fire Conflict');
-            });
-
-            it('should not let you pick the fire ring declare acolyte as an attacking then change the ring and keep him in the conflict', function () {
-                this.player1.pass();
-                this.player2.pass();
-                this.player1.clickRing('fire');
-                this.player1.clickCard(this.acolyte);
-                this.player1.clickRing('void');
-                expect(this.game.currentConflict.attackers).not.toContain(this.acolyte);
+                expect(this.getChatLogs(1)).toContain('player1 passes their conflict opportunity as none of their characters can be declared as an attacker');
+                expect(this.player1).toHavePrompt('Action Window');
             });
         });
     });
