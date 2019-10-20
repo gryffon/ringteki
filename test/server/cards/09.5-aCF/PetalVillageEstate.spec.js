@@ -7,7 +7,7 @@ describe('Kuni Laboratory', function() {
                     player1: {
                         fate: 30,
                         inPlay: ['bayushi-shoju', 'attendant-to-the-emperor', 'miya-mystic'],
-                        inHand: ['bayushi-kachiko'],
+                        hand: ['bayushi-kachiko'],
                         dynastyDeck: ['petal-village-estate']
                     },
                     player2: {
@@ -29,8 +29,8 @@ describe('Kuni Laboratory', function() {
                 // initiate conflict
                 this.initiateConflict({
                     type: 'military',
-                    attackers: [this.bayushiShoju],
-                    defenders: []
+                    attackers: [this.bayushiShoju, this.miyaMystic],
+                    defenders: [this.hanteiSotorii]
                 });
             });
 
