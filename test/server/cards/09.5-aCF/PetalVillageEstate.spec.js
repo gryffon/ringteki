@@ -1,6 +1,6 @@
-describe('Kuni Laboratory', function() {
+describe('Petal Village Estate', function() {
     integration(function() {
-        describe('Kuni Laboratory\'s ability', function() {
+        describe('Petal Village Estate\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
