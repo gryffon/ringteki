@@ -3,7 +3,7 @@ const AbilityDsl = require('../../abilitydsl');
 const { AbilityTypes } = require('../../Constants');
 
 class Shukujo extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.grantedAbilityLimits = {};
         this.whileAttached({
             match: card => card.hasTrait('champion'),
