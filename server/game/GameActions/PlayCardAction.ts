@@ -4,7 +4,6 @@ import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Locations, PlayTypes }  from '../Constants';
-import { thisExpression } from 'babel-types';
 
 class PlayCardResolver extends AbilityResolver {
     playGameAction: PlayCardAction;
