@@ -11,7 +11,7 @@ describe('Kuni Laboratory', function() {
                         dynastyDeck: ['petal-village-estate']
                     },
                     player2: {
-                        inPlay: ['hantei-sotorii', 'hantei-daisetsu'],
+                        inPlay: ['hantei-sotorii', 'hantei-daisetsu']
                     }
                 });
 
