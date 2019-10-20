@@ -87,6 +87,7 @@ describe('Shukujo', function() {
                     });
                     this.player2.pass();
                     this.player1.clickCard(this.shukujo);
+                    expect(this.player1).toHavePrompt("Conflict Action Window");
                     expect(this.game.currentConflict.conflictType).toBe('military');
                 });
 
@@ -101,6 +102,7 @@ describe('Shukujo', function() {
                     expect(this.player1).toHavePromptButton('Switch the conflict type');
                     this.player1.clickPrompt('Switch the conflict type');
                     expect(this.game.currentConflict.conflictType).toBe('political');
+                    expect(this.player2).toHavePrompt("Conflict Action Window");
                 });
 
                 it('should switch the conflict type from political to military', function() {
@@ -111,6 +113,7 @@ describe('Shukujo', function() {
                     });
                     this.player2.pass();
                     this.player1.clickCard(this.dojiKuwananP1);
+                    expect(this.player2).toHavePrompt("Conflict Action Window");
                     expect(this.game.currentConflict.conflictType).toBe('military');
                 });
 
@@ -122,6 +125,7 @@ describe('Shukujo', function() {
                     });
                     this.player2.pass();
                     this.player1.clickCard(this.dojiKuwananP1);
+                    expect(this.player1).toHavePrompt("Conflict Action Window");
                     expect(this.game.currentConflict.conflictType).toBe('military');
                 });
             });
