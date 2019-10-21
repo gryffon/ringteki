@@ -5,7 +5,6 @@ class BorderFortress extends ProvinceCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Reveal a province',
-            condition: context => context.source.isConflictProvince(),
             target: {
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,

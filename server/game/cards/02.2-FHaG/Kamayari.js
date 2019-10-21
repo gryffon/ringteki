@@ -3,6 +3,10 @@ const { CardTypes } = require('../../Constants');
 
 class Kamayari extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            trait: 'bushi'
+        });
+
         this.reaction({
             title: 'Bow character who triggered ability',
             when: {
@@ -10,13 +14,6 @@ class Kamayari extends DrawCard {
             },
             gameAction: ability.actions.bow(context => ({ target: context.event.card }))
         });
-    }
-
-    canAttach(card, context) {
-        if(card.hasTrait('bushi')) {
-            return super.canAttach(card, context);
-        }
-        return false;
     }
 }
 

@@ -39,18 +39,20 @@ export class SequentialAction extends GameAction {
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties = {}): void {
         let properties = this.getProperties(context, additionalProperties);
         for(const gameAction of properties.gameActions) {
-            if(gameAction.hasLegalTarget(context, additionalProperties)) {
-                let eventsForThisAction = [];
-                context.game.queueSimpleStep(() => gameAction.addEventsToArray(eventsForThisAction, context));
-                if(gameAction !== properties.gameActions[properties.gameActions.length - 1]) {
-                    context.game.queueSimpleStep(() => context.game.openEventWindow(eventsForThisAction));
+            context.game.queueSimpleStep(() => {
+                if(gameAction.hasLegalTarget(context, additionalProperties)) {
+                    let eventsForThisAction = [];
+                    gameAction.addEventsToArray(eventsForThisAction, context)
+                    context.game.queueSimpleStep(() => {
+                        for(const event of eventsForThisAction) {
+                            events.push(event);
+                        }    
+                        if(gameAction !== properties.gameActions[properties.gameActions.length - 1]) {
+                            context.game.openEventWindow(eventsForThisAction);
+                        }
+                    });
                 }
-                context.game.queueSimpleStep(() => {
-                    for(const event of eventsForThisAction) {
-                        events.push(event);
-                    }    
-                });
-            }
+            });
         }
     }
 
