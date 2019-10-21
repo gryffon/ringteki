@@ -6,7 +6,7 @@ class BrothersGiftDojo extends ProvinceCard {
         this.action({
             title: 'Move a character home',
             limit: ability.limit.perRound(2),
-            condition: () => this.game.isDuringConflict(),
+            conflictProvinceCondition: () => true,
             cost: ability.costs.payHonor(1),
             target: {
                 cardType: CardTypes.Character,

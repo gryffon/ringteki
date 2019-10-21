@@ -37,11 +37,17 @@ class CardAction extends CardAbility {
         this.anyPlayer = properties.anyPlayer || false;
         this.condition = properties.condition;
         this.doesNotTarget = properties.doesNotTarget;
+        this.conflictProvinceCondition = properties.conflictProvinceCondition || (province => province === this.card);
+        this.canTriggerOutsideConflict = !!properties.canTriggerOutsideConflict;
     }
 
     meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
         if(!ignoredRequirements.includes('location') && !this.isInValidLocation(context)) {
             return 'location';
+        }
+
+        if(!ignoredRequirements.includes('province') && !this.checkProvinceCondition()) {
+            return 'province';
         }
 
         if(!ignoredRequirements.includes('phase') && this.phase !== 'any' && this.phase !== this.game.currentPhase) {
@@ -57,6 +63,11 @@ class CardAction extends CardAbility {
         }
 
         return super.meetsRequirements(context, ignoredRequirements);
+    }
+
+    checkProvinceCondition() {
+        return this.card.type !== CardTypes.Province || this.canTriggerOutsideConflict ||
+            this.game.currentConflict && this.conflictProvinceCondition(this.game.currentConflict.conflictProvince);
     }
 
     isAction() {
