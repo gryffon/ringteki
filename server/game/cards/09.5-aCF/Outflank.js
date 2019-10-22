@@ -1,6 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const EventRegistrar = require('../../eventregistrar.js');
-const { EventNames, Durations, CardTypes, Players } = require('../../Constants');
+const { Durations, CardTypes, Players } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class Outflank extends DrawCard {

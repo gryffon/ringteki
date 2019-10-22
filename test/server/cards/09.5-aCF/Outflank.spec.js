@@ -150,7 +150,7 @@ describe('Outflank', function() {
                 this.tengu.bowed = false;
                 this.dojiKuwanan.bowed = false;
                 this.dojiChallenger.bowed = false;
-                
+
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
