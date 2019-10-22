@@ -2,6 +2,10 @@ const DrawCard = require('../../drawcard.js');
 
 class HawkTattoo extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.whileAttached({
             effect: ability.effects.addTrait('tattooed')
         });
@@ -18,13 +22,6 @@ class HawkTattoo extends DrawCard {
                 }))
             ]
         });
-    }
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 

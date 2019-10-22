@@ -3,6 +3,11 @@ const { Players, CardTypes } = require('../../Constants');
 
 class ShinjoSaddle extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true,
+            trait: 'cavalry'
+        });
+
         this.action({
             title: 'Move to another character',
             target: {
@@ -11,13 +16,6 @@ class ShinjoSaddle extends DrawCard {
                 gameAction: ability.actions.attach(context => ({ attachment: context.source }))
             }
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player || !card.hasTrait('cavalry')) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 
