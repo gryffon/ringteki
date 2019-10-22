@@ -14,9 +14,7 @@ class KitsukiKagi extends DrawCard {
                     activePromptTitle: 'Choose up to 3 cards',
                     location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile],
                     player: Players.Any,
-                    gameAction: AbilityDsl.actions.removeFromGame({
-                        location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile]
-                    })
+                    gameAction: AbilityDsl.actions.moveCard({ destination: Locations.RemovedFromGame })
                 },
                 second: {
                     activePromptTitle: 'Choose a cards',
@@ -28,13 +26,11 @@ class KitsukiKagi extends DrawCard {
                         card.controller === context.targets.first.controller &&
                         card.location === context.targets.first.location &&
                         card !== context.targets.first,
-                    gameAction: AbilityDsl.actions.removeFromGame({
-                        location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile]
-                    })
+                    gameAction: AbilityDsl.actions.moveCard({ destination: Locations.RemovedFromGame })
                 },
                 third: {
                     activePromptTitle: 'Choose a card',
-                    dependsOn: 'second',
+                    dependsOn: 'first',
                     optional: true,
                     location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile],
                     player: Players.Any,
@@ -43,9 +39,7 @@ class KitsukiKagi extends DrawCard {
                         card.location === context.targets.first.location &&
                         card !== context.targets.first &&
                         card !== context.targets.second,
-                    gameAction: AbilityDsl.actions.removeFromGame({
-                        location: [Locations.DynastyDiscardPile, Locations.ConflictDiscardPile]
-                    })
+                    gameAction: AbilityDsl.actions.moveCard({ destination: Locations.RemovedFromGame })
                 }
             }
         });
