@@ -21,9 +21,15 @@ describe('Quarrelsome Youth', function() {
                 this.yoshi = this.player1.findCardByName('kakita-yoshi');
                 this.toturi = this.player1.findCardByName('akodo-toturi');
                 this.mount = this.player1.findCardByName('favored-mount');
+                this.crane = this.player1.findCardByName('way-of-the-crane');
                 this.kuwanan = this.player2.findCardByName('doji-kuwanan');
 
                 this.player1.playAttachment(this.mount, this.toturi);
+
+                this.player1.reduceDeckToNumber('conflict deck', 0);
+                this.player1.moveCard('way-of-the-crane', 'conflict deck');
+                this.player1.moveCard('way-of-the-lion', 'conflict deck');
+                this.player1.moveCard('way-of-the-dragon', 'conflict deck');
 
                 this.noMoreActions();
                 this.initiateConflict({
@@ -48,6 +54,18 @@ describe('Quarrelsome Youth', function() {
 
             it('should not make your opponent discard a card at random if you have more cards when youth loses conflict as an attacker', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.yoshi);
+                this.noMoreActions();
+                expect(this.player1).not.toBeAbleToSelect(this.youth);
+                let player2hand = this.player2.player.hand.size();
+                expect(this.player2.player.hand.size()).toBe(player2hand);
+            });
+
+            it('should not make your opponent discard a card at random if you have equal cards when youth loses conflict as an attacker', function() {
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.yoshi);
+                this.player2.pass();
+                this.player1.clickCard(this.crane);
                 this.player1.clickCard(this.yoshi);
                 this.noMoreActions();
                 expect(this.player1).not.toBeAbleToSelect(this.youth);
