@@ -5,7 +5,7 @@ import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Locations, CardTypes, EventNames } from '../Constants';
 
 export interface RemoveFromGameProperties extends CardActionProperties {
-    location?: Locations | Locations[]
+    location?: Locations
 }
 
 export class RemoveFromGameAction extends CardGameAction {
@@ -18,16 +18,8 @@ export class RemoveFromGameAction extends CardGameAction {
     canAffect(card: BaseCard, context: AbilityContext, additionalProperties): boolean {
         let properties = this.getProperties(context, additionalProperties) as RemoveFromGameProperties;
         if(properties.location) {
-            if (properties.location instanceof Array) {
-                return properties.location.includes(card.location) //bypasses super.canAffect - smells bad
-                // if(!properties.location.includes(card.location)) { //doesn't work - super.canAffect doesn't seem to work
-                //     return false;
-                // }
-            }
-            else {
-                if(properties.location !== card.location) {
-                    return false;
-                }
+            if(properties.location !== card.location) {
+                return false;
             }
         }
         else {
