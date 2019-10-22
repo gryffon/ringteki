@@ -6,44 +6,57 @@ describe('Outflank', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['moto-youth'],
-                        hand: ['outflank', 'chasing-the-sun']
+                        hand: ['outflank', 'chasing-the-sun'],
+                        conflictDiscard: ['outflank']
                     },
                     player2: {
+                        provinces: ['shameful-display', 'shameful-display', 'toshi-ranbo'],
                         inPlay: ['doji-challenger', 'doji-kuwanan', 'tengu-sensei'],
                         hand: ['finger-of-jade']
                     }
                 });
 
-                this.outflank = this.player1.findCardByName('outflank');
+                this.outflank = this.player1.findCardByName('outflank', 'hand');
+                this.outflank2 = this.player1.findCardByName('outflank', 'conflict discard pile');
                 this.motoYouth = this.player1.findCardByName('moto-youth');
                 this.dojiChallenger = this.player2.findCardByName('doji-challenger');
                 this.dojiKuwanan = this.player2.findCardByName('doji-kuwanan');
                 this.tengu = this.player2.findCardByName('tengu-sensei');
                 this.foj = this.player2.findCardByName('finger-of-jade');
                 this.chasingTheSun = this.player1.findCardByName('chasing-the-sun');
-                this.shameful1 = this.player2.provinces['province 1'].provinceCard;
-                this.shameful2 = this.player2.provinces['province 2'].provinceCard;
-                this.shameful3 = this.player2.provinces['province 3'].provinceCard;
+
+                this.shameful1 = this.player2.findCardByName('shameful-display', 'province 1');
+                this.shameful2 = this.player2.findCardByName('shameful-display', 'province 2');
+                this.toshiRanbo = this.player2.findCardByName('toshi-ranbo', 'province 3');
             });
 
             it('should trigger when a province is revealed', function() {
                 this.noMoreActions();
-                this.player1.declareConflict('military', this.shameful1, [this.motoYouth], 'air');
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.shameful1
+                });
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.outflank);
             });
 
             it('should not trigger when a province is already revealed', function() {
-                this.shameful1.facedown = false;
+                expect(this.toshiRanbo.facedown).toBe(false);
                 this.noMoreActions();
-                this.player1.declareConflict('military', this.shameful1, [this.motoYouth], 'air');
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.toshiRanbo
+                });
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
-                expect(this.player1).not.toBeAbleToSelect(this.outflank);
+                expect(this.player2).toHavePrompt('Choose Defenders');
             });
 
             it('should not trigger when a province is revealed mid-conflict', function() {
                 this.noMoreActions();
-                this.player1.declareConflict('military', this.shameful1, [this.motoYouth], 'air');
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.shameful1
+                });
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.outflank);
                 this.player1.clickPrompt('Pass');
@@ -56,7 +69,10 @@ describe('Outflank', function() {
 
             it('should allow you to select opponent\'s non-unique characters', function() {
                 this.noMoreActions();
-                this.player1.declareConflict('military', this.shameful1, [this.motoYouth], 'air');
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.shameful1
+                });
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.outflank);
                 this.player1.clickCard(this.outflank);
@@ -68,7 +84,10 @@ describe('Outflank', function() {
 
             it('should not allow the selected character to declare as a defender', function() {
                 this.noMoreActions();
-                this.player1.declareConflict('military', this.shameful1, [this.motoYouth], 'air');
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.shameful1
+                });
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.outflank);
                 this.player1.clickCard(this.outflank);
@@ -81,19 +100,46 @@ describe('Outflank', function() {
                 expect(this.game.currentConflict.defenders).not.toContain(this.tengu);
             });
 
+            it('should not allow you to select the same character twice', function() {
+                this.player1.moveCard(this.outflank2, 'hand');
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.shameful1
+                });
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.outflank);
+                expect(this.player1).toBeAbleToSelect(this.outflank2);
+                this.player1.clickCard(this.outflank);
+                expect(this.player1).not.toBeAbleToSelect(this.motoYouth);
+                expect(this.player1).toBeAbleToSelect(this.dojiChallenger);
+                expect(this.player1).toBeAbleToSelect(this.tengu);
+                expect(this.player1).not.toBeAbleToSelect(this.dojiKuwanan);
+                this.player1.clickCard(this.tengu);
+                this.player1.clickCard(this.outflank2);
+                expect(this.player1).not.toBeAbleToSelect(this.motoYouth);
+                expect(this.player1).toBeAbleToSelect(this.dojiChallenger);
+                expect(this.player1).not.toBeAbleToSelect(this.tengu);
+                expect(this.player1).not.toBeAbleToSelect(this.dojiKuwanan);
+            });
+
             it('should expire at the end of the conflict', function() {
                 this.noMoreActions();
-                this.player1.declareConflict('military', this.shameful1, [this.motoYouth], 'air');
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.shameful1
+                });
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.outflank);
                 this.player1.clickCard(this.outflank);
                 expect(this.player1).toBeAbleToSelect(this.tengu);
                 this.player1.clickCard(this.tengu);
-                this.player2.assignDefenders([]);
+                this.player2.assignDefenders([this.dojiKuwanan, this.dojiChallenger, this.tengu]);
+                expect(this.game.currentConflict.defenders).toContain(this.dojiKuwanan);
+                expect(this.game.currentConflict.defenders).toContain(this.dojiChallenger);
+                expect(this.game.currentConflict.defenders).not.toContain(this.tengu);
                 this.player2.pass();
                 this.player1.pass();
-                this.player1.clickPrompt('No');
-                this.player1.clickPrompt('Don\'t Resolve');
                 expect(this.player1).toHavePrompt('Action Window');
                 this.tengu.bowed = true;
                 this.dojiKuwanan.bowed = true;
@@ -113,6 +159,30 @@ describe('Outflank', function() {
                     attackers: [this.motoYouth],
                     defenders: [this.dojiChallenger, this.dojiKuwanan, this.tengu]
                 });
+                expect(this.game.currentConflict.defenders).toContain(this.dojiKuwanan);
+                expect(this.game.currentConflict.defenders).toContain(this.dojiChallenger);
+                expect(this.game.currentConflict.defenders).toContain(this.tengu);
+            });
+
+            it('should be able to be cancelled via finger of jade', function() {
+                this.player1.pass();
+                this.player2.playAttachment(this.foj, this.tengu);
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.motoYouth],
+                    province: this.shameful1
+                });
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.outflank);
+                this.player1.clickCard(this.outflank);
+                expect(this.player1).not.toBeAbleToSelect(this.motoYouth);
+                expect(this.player1).toBeAbleToSelect(this.dojiChallenger);
+                expect(this.player1).toBeAbleToSelect(this.tengu);
+                expect(this.player1).not.toBeAbleToSelect(this.dojiKuwanan);
+                this.player1.clickCard(this.tengu);
+                expect(this.player2).toBeAbleToSelect(this.foj);
+                this.player2.clickCard(this.foj);
+                this.player2.assignDefenders([this.dojiKuwanan, this.dojiChallenger, this.tengu]);
                 expect(this.game.currentConflict.defenders).toContain(this.dojiKuwanan);
                 expect(this.game.currentConflict.defenders).toContain(this.dojiChallenger);
                 expect(this.game.currentConflict.defenders).toContain(this.tengu);

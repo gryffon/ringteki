@@ -14,13 +14,12 @@ class Outflank extends DrawCard {
                 controller: Players.Opponent,
                 cardType: CardTypes.Character,
                 cardCondition: card => !card.isUnique(),
-                gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
+                gameAction: AbilityDsl.actions.cardLastingEffect({
                     duration: Durations.UntilEndOfConflict,
                     effect: AbilityDsl.effects.cardCannot('declareAsDefender')
-                }))
+                })
             },
-            effect: 'prevent {1} from defending this conflict',
-            effectArgs: context => context.event.context.target,
+            effect: 'prevent {0} from defending this conflict'
         });
     }
 }
