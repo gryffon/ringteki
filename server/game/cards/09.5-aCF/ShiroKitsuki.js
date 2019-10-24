@@ -2,6 +2,29 @@ const StrongholdCard = require('../../strongholdcard.js');
 const { Durations } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
+const shiroKitsukiCost = function() {
+    return {
+        action: { name: 'shiroKitsukiCost', getCostMessage: () => ['naming {0}', []] },
+        canPay: function() {
+            return true;
+        },
+        resolve: function(context, result = { resolved: false }) {
+            context.game.promptWithMenu(context.player, this, {
+                source: context.source,
+                activePrompt: {
+                    menuTitle: 'Name a card',
+                    controls: [
+                        { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
+                    ]
+                }
+            });
+        },
+        pay: function() {
+        }
+    };
+
+};
+
 class ShiroKitsuki extends StrongholdCard {
     setupCardAbilities() {
         this.reaction({
@@ -9,43 +32,32 @@ class ShiroKitsuki extends StrongholdCard {
             when: {
                 onConflictDeclared: () => true
             },
+            cost: [shiroKitsukiCost()],
             limit: AbilityDsl.limit.unlimitedPerConflict(),
-            handler: context => {
-                this.originalContext = context;
-                this.game.promptWithMenu(context.player, this, {
-                    source: context.source,
-                    activePrompt: {
-                        menuTitle: 'Name a card',
-                        controls: [
-                            { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
-                        ]
-                    }
-                });
-            }
+            gameAction: AbilityDsl.actions.playerLastingEffect(() => ({
+                duration: Durations.UntilEndOfConflict,
+                effect: AbilityDsl.effects.delayedEffect({
+                    when: {
+                        onCardPlayed: (event, context) => {
+                            return event.player === context.player.opponent &&
+                                event.card.name === context.cost[0];
+                        }
+                    },
+                    gameAction: AbilityDsl.actions.selectRing(context => ({
+                        activePromptTitle: 'Choose a ring to take',
+                        ringCondition: ring => ring.isUnclaimed(),
+                        message: '{0} takes {1}',
+                        messageArgs: ring => [context.player, ring],
+                        gameAction: AbilityDsl.actions.takeRing({ takeFate: true })
+                    }))
+                })
+            }))
         });
     }
 
     selectCardName(player, cardName, source) {
         this.game.addMessage('{0} names {1} - if {2} plays copies of this card {0} gets to claim a ring', player, cardName, player.opponent);
-        this.game.actions.cardLastingEffect(() => ({
-            duration: Durations.UntilEndOfConflict,
-            effect: AbilityDsl.effects.delayedEffect({
-                when: {
-                    onCardPlayed: (event, context) => {
-                        return event.player === context.player.opponent &&
-                            event.card.name === cardName;
-                    }
-                },
-                gameAction: AbilityDsl.actions.selectRing(context => ({
-                    activePromptTitle: 'Choose a ring to take',
-                    ringCondition: ring => ring.isUnclaimed(),
-                    message: '{0} takes {1}',
-                    messageArgs: ring => [context.player, ring],
-                    gameAction: AbilityDsl.actions.takeRing({ takeFate: true })
-                }))
-            })
-        })).resolve(source, this.originalContext);
-        return true;
+        return cardName;
     }
 }
 
