@@ -111,11 +111,15 @@ class CardAbility extends ThenAbility {
         return super.meetsRequirements(context, ignoredRequirements);
     }
 
-    getCosts(context) {
-        const costs = super.getCosts(context);
-        if(!context.subResolution && context.player.anyEffect(EffectNames.AdditionalCost)) {
-            let additionalCosts = context.player.getEffects(EffectNames.AdditionalCost).map(effect => effect(context));
-            return costs.concat(...additionalCosts);
+    getCosts(context, playCosts = true) {
+        let costs = super.getCosts(context, playCosts);
+        if(context.player.anyEffect(EffectNames.AdditionalCost)) {
+            const additionalCosts = context.player.getEffects(EffectNames.AdditionalCost).map(effect => effect(context));
+            costs = costs.concat(...additionalCosts);
+        }
+        if(!context.subResolution && playCosts && context.player.anyEffect(EffectNames.AdditionalPlayCost)) {
+            const additionalPlayCosts = context.player.getEffects(EffectNames.AdditionalPlayCost).map(effect => effect(context));
+            return costs.concat(...additionalPlayCosts);
         }
         return costs;
     }

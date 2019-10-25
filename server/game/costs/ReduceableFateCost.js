@@ -5,6 +5,7 @@ class ReduceableFateCost {
     constructor(playingType, ignoreType) {
         this.playingType = playingType;
         this.ignoreType = ignoreType;
+        this.isPlayCost = true;
     }
 
     canPay(context) {

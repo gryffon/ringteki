@@ -120,16 +120,19 @@ class BaseAbility {
         return this.getCosts(context).every(cost => cost.canPay(contextCopy));
     }
 
-    getCosts(context) { // eslint-disable-line no-unused-vars
+    getCosts(context, playCosts = true) {
+        if(!playCosts) {
+            return this.cost.filter(cost => !cost.isPlayCost);
+        }
         return this.cost;
     }
 
-    resolveCosts(events, context, results) {
-        for(let cost of this.getCosts(context)) {
+    resolveCosts(context, results) {
+        for(let cost of this.getCosts(context, results.playCosts)) {
             context.game.queueSimpleStep(() => {
                 if(!results.cancelled) {
                     if(cost.addEventsToArray) {
-                        cost.addEventsToArray(events, context, results);
+                        cost.addEventsToArray(results.events, context, results);
                     } else {
                         if(cost.resolve) {
                             cost.resolve(context, results);
@@ -139,10 +142,10 @@ class BaseAbility {
                                 let newEvents = cost.payEvent ? cost.payEvent(context) : context.game.getEvent('payCost', {}, () => cost.pay(context));
                                 if(Array.isArray(newEvents)) {
                                     for(let event of newEvents) {
-                                        events.push(event);
+                                        results.events.push(event);
                                     }
                                 } else {
-                                    events.push(newEvents);
+                                    results.events.push(newEvents);
                                 }
                             }
                         });

@@ -99,6 +99,7 @@ export enum EffectNames {
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
     AdditionalCost = 'additionalCost',
+    AdditionalPlayCost = 'additionalPlayCost',
     AlternateFatePool = 'alternateFatePool',
     CannotDeclareConflictsOfType = 'cannotDeclareConflictsOfType',
     CanPlayFromOwn = 'canPlayFromOwn',
