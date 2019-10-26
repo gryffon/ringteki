@@ -1,5 +1,4 @@
 import { CardTypes, Players } from '../../Constants.js';
-
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
 
@@ -17,17 +16,19 @@ class EmbraceDeath extends DrawCard {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.hasTrait('bushi') && card.isAttacking()
             }),
-            gameAction: AbilityDsl.actions.selectCard({
+            target: {
                 cardType: CardTypes.Character,
                 controller: Players.Opponent,
-                gameAction: AbilityDsl.actions.conditional({
-                    // @ts-ignore
-                    condition: (context, properties) => properties.target[0].fate > 0,
-                    trueGameAction: AbilityDsl.actions.removeFate({
-
-                    }),
-                    falseGameAction: AbilityDsl.actions.discardFromPlay()
-                })
+            },
+            gameAction: AbilityDsl.actions.conditional({
+                // @ts-ignore
+                condition: context => context.target.fate > 0,
+                trueGameAction: AbilityDsl.actions.removeFate(context => ({
+                    target: context.target
+                })),
+                falseGameAction: AbilityDsl.actions.discardFromPlay(context => ({
+                    target: context.target
+                }))
             })
         });
     }
