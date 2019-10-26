@@ -4,6 +4,9 @@ const DrawCard = require('../../drawcard.js');
 
 class TotalWarfare extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            limit: 1
+        })
         this.forcedReaction({
             title: 'Loser sacrifices a character',
             when: {
