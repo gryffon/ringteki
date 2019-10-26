@@ -34,22 +34,28 @@ class VoiceOfTheAncestors extends DrawCard {
                         effect: AbilityDsl.effects.reduceNextPlayedCardCost(1)
                     }),
                     AbilityDsl.actions.cardLastingEffect({
-                        canChangeZone: true,
+                        canChangeZoneOnce: true,
                         duration: Durations.Custom,
                         effect: [
                             AbilityDsl.effects.blank(true),
+                            AbilityDsl.effects.changeType('attachment'),
                             AbilityDsl.effects.addTrait('spirit'),
                             AbilityDsl.effects.attachmentRestrictTraitAmount({ spirit: 1 }),
                             AbilityDsl.effects.gainAbility(AbilityTypes.Persistent, {
                                 match: (card, context) => card === context.source.parent,
                                 effect: [
-                                    AbilityDsl.effects.modifyMilitarySkill((card, context) => context.source.printedMilitarySkill),
-                                    AbilityDsl.effects.modifyPoliticalSkill((card, context) => context.source.printedPoliticalSkill)
+                                    AbilityDsl.effects.modifyMilitarySkill((card, context) => context.source.printedMilitarySkill || 0),
+                                    AbilityDsl.effects.modifyPoliticalSkill((card, context) => context.source.printedPoliticalSkill || 0)
                                 ]
                             })
                         ]
                     }),
-                    AbilityDsl.actions.playCard()
+                    AbilityDsl.actions.playCard(context => ({
+                        playCardTarget: attachContext => {
+                            attachContext.target = context.target;
+                            attachContext.targets.target = context.targets.target;
+                        }
+                    }))
                 ])
             })
         });

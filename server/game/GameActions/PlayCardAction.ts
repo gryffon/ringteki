@@ -3,7 +3,7 @@ import AbilityResolver = require('../gamesteps/abilityresolver');
 import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations }  from '../Constants';
+import { Locations, Stages }  from '../Constants';
 
 class PlayCardResolver extends AbilityResolver {
     playGameAction: PlayCardAction;
@@ -16,6 +16,21 @@ class PlayCardResolver extends AbilityResolver {
         this.gameActionContext = gameActionContext;
         this.gameActionProperties = gameActionProperties;
         this.cancelPressed = false;
+    }
+
+    resolveEarlyTargets() {
+        if(this.gameActionProperties.playCardTarget) {
+            this.context.stage = Stages.PreTarget;
+            this.targetResults = {
+                canIgnoreAllCosts: false,
+                cancelled: false,
+                payCostsFirst: false,
+                delayTargeting: null
+            };
+            this.gameActionProperties.playCardTarget(this.context, this.gameActionProperties);
+        } else {
+            super.resolveEarlyTargets();
+        }
     }
 
     checkForCancel() {
@@ -66,6 +81,7 @@ class PlayCardResolver extends AbilityResolver {
 export interface PlayCardProperties extends CardActionProperties {
     resetOnCancel?: boolean;
     postHandler?: (context: AbilityContext) => void;
+    playCardTarget?: (context: AbilityContext, properties: PlayCardProperties) => void;
     location?: Locations;
     destination?: Locations;
     destinationOptions?: object;
