@@ -15,12 +15,11 @@ class FeastOrFamine extends ProvinceCard {
                 gameAction: AbilityDsl.actions.selectCard(context => ({
                     cardType: CardTypes.Character,
                     controller: Players.Self,
-                    cardCondition: card => card.fate === 0,
                     message: '{0} moves {1} fate from {2} to {3}',
                     messageArgs: card => [context.player, context.target.fate, context.target, card],
                     gameAction: AbilityDsl.actions.placeFate({
                         origin: context.target,
-                        amount: context.target.fate
+                        amount: 1
                     })
                 }))
             },

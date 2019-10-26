@@ -4,6 +4,10 @@ const { ConflictTypes, Locations } = require('../../Constants');
 
 class CallousAshigaru extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            unique: true
+        });
+
         this.reaction({
             title: 'Discard cards from provinces',
             when: {
@@ -16,13 +20,6 @@ class CallousAshigaru extends DrawCard {
                     []
             }))
         });
-    }
-
-    canAttach(card, context) {
-        if(!card.isUnique()) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

@@ -3,6 +3,11 @@ const { Locations, CardTypes } = require('../../Constants');
 
 class ForceOfTheRiver extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true,
+            trait: 'shugenja'
+        });
+
         this.action({
             title: 'Create spirits from facedown dynasty cards',
             condition: () => this.game.isDuringConflict(),
@@ -20,13 +25,6 @@ class ForceOfTheRiver extends DrawCard {
                 ).filter(card => card.facedown)
             }))
         });
-    }
-
-    canAttach(card, context) {
-        if(!card.hasTrait('shugenja') || card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

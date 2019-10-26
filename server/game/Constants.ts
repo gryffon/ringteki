@@ -29,7 +29,14 @@ export enum EffectNames {
     AddFaction = 'addFaction',
     AddKeyword = 'addKeyword',
     AddTrait = 'addTrait',
+    AttachmentFactionRestriction = 'attachmentFactionRestriction',
+    AttachmentLimit = 'attachmentLimit',
+    AttachmentMyControlOnly = 'attachmentMyControlOnly',
+    AttachmentRestrictTraitAmount = 'attachmentRestrictTraitAmount',
+    AttachmentTraitRestriction = 'attachmentTraitRestriction',
+    AttachmentUniqueRestriction = 'attachmentUniqueRestriction',
     Blank = 'blank',
+    CalculatePrintedMilitarySkill = 'calculatePrintedMilitarySkill',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
     CanOnlyBeDeclaredAsAttackerWithElement = 'canOnlyBeDeclaredAsAttackerWithElement',
     CannotApplyLastingEffects = 'cannotApplyLastingEffects',
@@ -41,6 +48,7 @@ export enum EffectNames {
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
     ChangeContributionFunction = 'changeContributionFunction',
+    ChangeType = 'changeType',
     CopyCharacter = 'copyCharacter',
     CustomEffect = 'customEffect',
     DelayedEffect = 'delayedEffect',
@@ -239,6 +247,8 @@ export enum EventNames {
     OnTakeRing = 'onTakeRing',
     OnSpendFate = 'onSpendFate',
     OnPassActionPhasePriority = 'onPassActionPhasePriority',
+    OnGloryCount = 'onGloryCount',
+    OnClaimFavor = 'onClaimFavor',
     Unnamed = 'unnamedEvent'
 };
 

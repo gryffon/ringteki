@@ -5,8 +5,9 @@ import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Locations, CardTypes, EventNames }  from '../Constants';
 
 export interface AttachActionProperties extends CardActionProperties {
-    attachment?: DrawCard,
-    takeControl?: boolean
+    attachment?: DrawCard;
+    ignoreType?: boolean;
+    takeControl?: boolean;
 }
 
 export class AttachAction extends CardGameAction {
@@ -14,6 +15,7 @@ export class AttachAction extends CardGameAction {
     eventName = EventNames.OnCardAttached;
     targetType = [CardTypes.Character, CardTypes.Province];
     defaultProperties: AttachActionProperties = {
+        ignoreType: false,
         takeControl: false
     };
 
@@ -33,7 +35,7 @@ export class AttachAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties) as AttachActionProperties;
         if(!context || !context.player || !card || card.location !== Locations.PlayArea && card.type !== CardTypes.Province) {
             return false;
-        } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context)) {
+        } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context, properties.ignoreType)) {
             return false;
         } else if(properties.takeControl && properties.attachment.controller === context.player) {
             return false;
