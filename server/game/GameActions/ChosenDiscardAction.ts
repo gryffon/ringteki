@@ -63,6 +63,7 @@ export class ChosenDiscardAction extends PlayerAction {
         super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
         event.cards = [];
+        event.discardedAtRandom = false;
     }
 
     eventHandler(event): void {
