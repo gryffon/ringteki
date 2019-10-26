@@ -18,7 +18,7 @@ class EmbraceDeath extends DrawCard {
             }),
             target: {
                 cardType: CardTypes.Character,
-                controller: Players.Opponent,
+                controller: Players.Opponent
             },
             gameAction: AbilityDsl.actions.conditional({
                 // @ts-ignore
