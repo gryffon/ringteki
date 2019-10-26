@@ -76,7 +76,7 @@ describe('Withstand The Darkness', function() {
                     },
                     player2: {
                         inPlay: ['eager-scout'],
-                        hand: ['unfulfilled-duty']
+                        hand: ['unfulfilled-duty', 'way-of-the-scorpion']
                     }
                 });
                 this.eagerScout = this.player1.findCardByName('eager-scout');
@@ -86,6 +86,7 @@ describe('Withstand The Darkness', function() {
 
                 this.eagerScoutP2 = this.player2.findCardByName('eager-scout');
                 this.unfulfilledDuty = this.player2.findCardByName('unfulfilled-duty');
+                this.wayOfTheScorpion = this.player2.findCardByName('way-of-the-scorpion');
 
                 this.eagerScout.fate = 0;
                 this.hirumaSkirmisher.fate = 0;
@@ -137,6 +138,34 @@ describe('Withstand The Darkness', function() {
                 expect(this.player1).not.toBeAbleToSelect(this.brashSamurai);
                 expect(this.player1).not.toBeAbleToSelect(this.eagerScoutP2);
             });
+
+            it('should not have memory when another event is played', function() {
+                this.player2.clickCard(this.eagerScout);
+                this.player2.clickCard(this.hirumaSkirmisher);
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+
+                this.eagerScout.bowed = false;
+                this.hirumaSkirmisher.bowed = false;
+                this.brashSamurai.bowed = false;
+                this.eagerScoutP2.bowed = false;
+
+                this.player1.clickPrompt('Pass');
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.brashSamurai, this.eagerScout],
+                    defenders: [this.eagerScoutP2]
+                });
+
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.wayOfTheScorpion);
+                this.player2.clickCard(this.brashSamurai);
+                expect(this.brashSamurai.isDishonored).toBe(true);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
+            });
         });
 
         describe('Withstand The Darkness\'s Reaction (Banzai)', function() {
@@ -178,10 +207,13 @@ describe('Withstand The Darkness', function() {
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
                 expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
                 this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
-                this.player2.clickCard(this.eagerScoutP2);
+                this.player2.clickCard(this.hirumaSkirmisher);
                 this.player2.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.eagerScout);
+                expect(this.player1).toBeAbleToSelect(this.hirumaSkirmisher);
             });
         });
     });
