@@ -8,6 +8,9 @@ describe('Tactical Ingenuity', function() {
                     hand: ['tactical-ingenuity'],
                     conflictDeck: ['way-of-the-lion', 'fine-katana', 'strength-in-numbers', 'censure'],
                     conflictDeckSize: 4
+                },
+                player2: {
+                    inPlay: ['gifted-tactician']
                 }
             });
 
@@ -15,6 +18,8 @@ describe('Tactical Ingenuity', function() {
             this.matsuBerseker = this.player1.findCardByName('matsu-berserker');
             this.tacticalIngenuity = this.player1.findCardByName('tactical-ingenuity');
             this.wayOfTheLion = this.player1.findCardByName('way-of-the-lion', 'conflict deck');
+        
+            this.giftedTactician = this.player2.findCardByName('gifted-tactician');
         });
 
         it('should only be allowed to trigger in a conflict', function() {
@@ -23,6 +28,13 @@ describe('Tactical Ingenuity', function() {
 
             this.player1.clickCard(this.zentaro);
             expect(this.player1).toHavePrompt('Action Window');
+        });
+
+        it('should only be allowed to be attached to a commander', function() {
+            this.player1.clickCard(this.tacticalIngenuity);
+            expect(this.player1).toBeAbleToSelect(this.zentaro);
+            expect(this.player1).toBeAbleToSelect(this.giftedTactician);
+            expect(this.player1).not.toBeAbleToSelect(this.matsuBerseker);
         });
 
         it('should allow you to look at the top 4 and draw an event', function() {

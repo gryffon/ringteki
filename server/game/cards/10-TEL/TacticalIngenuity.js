@@ -5,6 +5,9 @@ const AbilityDsl = require('../../abilitydsl');
 
 class TacticalIngenuity extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            trait: 'commander'
+        });
         this.whileAttached({
             effect: AbilityDsl.effects.gainAbility(AbilityTypes.Action, {
                 title: 'Reveal and draw an event',
