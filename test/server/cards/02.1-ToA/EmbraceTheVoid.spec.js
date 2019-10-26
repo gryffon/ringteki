@@ -77,8 +77,8 @@ describe('Embrace the Void', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.embraceTheVoid);
                 this.player1.clickCard(this.embraceTheVoid);
-                expect(this.player1.fate).toBe(3);
-                expect(this.prodigyOfTheWaves.fate).toBe(0);
+                expect(this.player1.fate).toBe(2);
+                expect(this.prodigyOfTheWaves.fate).toBe(1);
                 expect(this.adeptOfTheWaves.fate).toBe(0);
             });
         });
