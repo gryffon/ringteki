@@ -59,7 +59,9 @@ export class ChosenDiscardAction extends PlayerAction {
     }
 
     addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
+        let { amount } = this.getProperties(context, additionalProperties) as ChosenDiscardProperties;
         super.addPropertiesToEvent(event, player, context, additionalProperties);
+        event.amount = amount;
         event.cards = [];
     }
 
