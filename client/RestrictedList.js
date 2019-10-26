@@ -2,7 +2,6 @@ const restrictedList = {
     version: '9',
     cards: [
         'guest-of-honor',
-        'niten-master',
         'young-rumormonger',
         'rebuild',
         'steward-of-law',
@@ -13,12 +12,16 @@ const restrictedList = {
         'charge',
         'embrace-the-void',
         'pathfinder-s-blade',
-        'feast-or-famine',
         'policy-debate',
         'a-fate-worse-than-death',
         'isawa-tadaka',
         'secluded-shrine',
-        'void-fist'
+        'void-fist',
+        'consumed-by-five-fires',
+        'cunning-magistrate',
+        'daidoji-uji',
+        'miya-satoshi',
+        'gateway-to-meido'
     ]
 };
 

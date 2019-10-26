@@ -13,6 +13,7 @@ class ActionWindow extends UiPrompt {
             this.currentPlayer = game.getFirstPlayer();
         }
         this.currentPlayerConsecutiveActions = 0;
+        this.opportunityCounter = 0;
         this.prevPlayerPassed = false;
     }
 
@@ -145,9 +146,10 @@ class ActionWindow extends UiPrompt {
         if(otherPlayer) {
             this.game.raiseEvent(
                 EventNames.OnPassActionPhasePriority,
-                { player: this.currentPlayer, consecutiveActions: this.currentPlayerConsecutiveActions },
+                { player: this.currentPlayer, consecutiveActions: this.currentPlayerConsecutiveActions, actionWindow: this },
                 () => {
                     this.currentPlayer = otherPlayer;
+                    this.opportunityCounter += 1;
                     this.currentPlayerConsecutiveActions = 0;
                 }
             );
