@@ -10,31 +10,29 @@ class EmissaryOfLies extends DrawCard {
                 cardType: CardTypes.Character,
                 cardCondition: (card, context) => card.isParticipating() && card.controller === context.player.opponent
             },
-            handler: context => {
-                this.originalContext = context;
-                this.game.promptWithMenu(context.player.opponent, this, {
-                    source: context.source,
-                    activePrompt: {
-                        menuTitle: 'Name a card',
-                        controls: [
-                            { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
-                        ]
-                    }
-                });
-            }
+            handler: context => this.game.promptWithMenu(context.player.opponent, this, {
+                context: context,
+                activePrompt: {
+                    menuTitle: 'Name a card',
+                    controls: [
+                        { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
+                    ]
+                }
+            })
         });
     }
 
-    selectCardName(player, cardName, source) {
+    selectCardName(player, cardName, context) {
         this.game.addMessage('{0} names {1} - {2} must choose if they want to reveal their hand', player, cardName, player.opponent);
         let opponent = player.opponent;
-        this.game.promptWithHandlerMenu(source.controller, {
+        this.game.promptWithHandlerMenu(context.player, {
+            context: context,
             choices: ['Yes', 'No'],
             handlers: [() => {
                 let handCardNames = opponent.hand.map(card => card.name);
-                this.game.actions.lookAt().resolve(opponent.hand.sortBy(card => card.name), this.originalContext);
+                this.game.actions.lookAt().resolve(opponent.hand.sortBy(card => card.name), context);
                 if(!handCardNames.includes(cardName)) {
-                    this.game.actions.sendHome().resolve(this.originalContext.target, this.originalContext);
+                    this.game.actions.sendHome().resolve(context.target, context);
                     return true;
                 }
                 return true;
