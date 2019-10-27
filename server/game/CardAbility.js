@@ -2,7 +2,7 @@ const AbilityLimit = require('./abilitylimit.js');
 const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, EffectNames, PlayTypes, Players, TargetModes } = require('./Constants');
+const { Locations, CardTypes, EffectNames, Players, TargetModes } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
@@ -60,7 +60,7 @@ class CardAbility extends ThenAbility {
         }
 
         if(card.getType() === CardTypes.Event) {
-            this.cost = this.cost.concat(Costs.payReduceableFateCost(PlayTypes.PlayFromHand));
+            this.cost = this.cost.concat(Costs.payReduceableFateCost());
         }
     }
 
@@ -92,7 +92,7 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, PlayTypes.PlayFromHand)) {
+        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, context.playType)) {
             return 'cannotTrigger';
         }
 
@@ -126,7 +126,7 @@ class CardAbility extends ThenAbility {
     }
 
     isInValidLocation(context) {
-        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand) : this.location.includes(this.card.location);
+        return this.card.type === CardTypes.Event ? context.player.isCardInPlayableLocation(context.source, context.playType) : this.location.includes(this.card.location);
     }
 
     displayMessage(context, messageVerb = context.source.type === CardTypes.Event ? 'plays' : 'uses') {

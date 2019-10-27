@@ -2,8 +2,7 @@ const Event = require('../Events/Event');
 const { EventNames } = require('../Constants');
 
 class ReduceableFateCost {
-    constructor(playingType, ignoreType) {
-        this.playingType = playingType;
+    constructor(ignoreType) {
         this.ignoreType = ignoreType;
     }
 
@@ -11,13 +10,13 @@ class ReduceableFateCost {
         if(context.source.printedCost === null) {
             return false;
         }
-        let minCost = context.player.getMinimumCost(this.playingType, context, null, this.ignoreType);
+        let minCost = context.player.getMinimumCost(context.playType, context, null, this.ignoreType);
         return context.player.fate >= minCost &&
             (minCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
 
     resolve(context, result) {
-        let alternatePools = context.player.getAlternateFatePools(this.playingType, context.source);
+        let alternatePools = context.player.getAlternateFatePools(context.playType, context.source);
         let alternatePoolTotal = alternatePools.reduce((total, pool) => total + pool.fate, 0);
         let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
         if(this.getReducedCost(context) > maxPlayerFate + alternatePoolTotal) {
@@ -46,7 +45,7 @@ class ReduceableFateCost {
     }
 
     getReducedCost(context) {
-        return context.player.getReducedCost(this.playingType, context.source, null, this.ignoreType);
+        return context.player.getReducedCost(context.playType, context.source, null, this.ignoreType);
     }
 
     promptForAlternateFate(context, result, properties) {
@@ -74,7 +73,7 @@ class ReduceableFateCost {
     payEvent(context) {
         const amount = context.costs.fate = this.getReducedCost(context);
         return new Event(EventNames.OnSpendFate, { amount, context }, event => {
-            event.context.player.markUsedReducers(this.playingType, event.context.source);
+            event.context.player.markUsedReducers(context.playType, event.context.source);
             event.context.player.fate -= this.getFinalFatecost(context, amount);
         });
     }
@@ -84,7 +83,7 @@ class ReduceableFateCost {
             return reducedCost;
         }
         let totalAlternateFate = 0;
-        for(let alternatePool of context.player.getAlternateFatePools(this.playingType, context.source)) {
+        for(let alternatePool of context.player.getAlternateFatePools(context.playType, context.source)) {
             alternatePool.modifyFate(-context.costs.alternateFate.get(alternatePool));
             totalAlternateFate += context.costs.alternateFate.get(alternatePool);
         }

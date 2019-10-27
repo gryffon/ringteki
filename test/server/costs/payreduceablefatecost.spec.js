@@ -10,9 +10,10 @@ describe('Costs.payReduceableFateCost', function() {
             costs: {},
             game: this.gameSpy,
             player: this.playerSpy,
-            source: this.cardSpy
+            source: this.cardSpy,
+            playType: 'playing-type'
         };
-        this.cost = Costs.payReduceableFateCost('playing-type');
+        this.cost = Costs.payReduceableFateCost();
     });
 
     describe('canPay()', function() {
