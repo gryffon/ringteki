@@ -4,7 +4,7 @@ const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
 const InitiateCardAbilityEvent = require('../Events/InitiateCardAbilityEvent');
 const InitiateAbilityEventWindow = require('../Events/InitiateAbilityEventWindow');
-const { Locations, Stages, CardTypes, EventNames, PlayTypes } = require('../Constants');
+const { Locations, Stages, CardTypes, EventNames } = require('../Constants');
 
 class AbilityResolver extends BaseStepWithPipeline {
     constructor(game, context) {
@@ -55,7 +55,7 @@ class AbilityResolver extends BaseStepWithPipeline {
                     card: this.context.source,
                     context: this.context,
                     originalLocation: this.context.source.location,
-                    playType: PlayTypes.PlayFromHand,
+                    playType: this.context.playType,
                     resolver: this
                 }));
             }

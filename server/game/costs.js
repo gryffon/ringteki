@@ -134,11 +134,11 @@ const Costs = {
      * reducer effects the play has activated. Upon playing the card, all
      * matching reducer effects will expire, if applicable.
      */
-    payReduceableFateCost: (playingType, ignoreType = false) => new ReduceableFateCost(playingType, ignoreType),
+    payReduceableFateCost: (ignoreType = false) => new ReduceableFateCost(ignoreType),
     /**
      * Cost that is dependent on context.targets[targetName]
      */
-    payTargetDependentFateCost: (targetName, playingType, ignoreType = false) => new TargetDependentFateCost(playingType, targetName, ignoreType),
+    payTargetDependentFateCost: (targetName, ignoreType = false) => new TargetDependentFateCost(targetName, ignoreType),
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of fate.
      */

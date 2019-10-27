@@ -4,7 +4,7 @@ import Game = require('./game');
 import Player = require('./player');
 import Ring = require('./ring');
 import StatusToken = require('./StatusToken');
-import { Stages, Locations } from './Constants.js';
+import { Stages, Locations, PlayTypes } from './Constants.js';
 import { GameAction } from './GameActions/GameAction.js';
 
 interface AbilityContextProperties {
@@ -43,6 +43,7 @@ class AbilityContext {
     subResolution = false;
     choosingPlayerOverride: Player = null;
     gameActionsResolutionChain: GameAction[] = [];
+    playType: PlayTypes;
 
     constructor(properties: AbilityContextProperties) {
         this.game = properties.game;
@@ -56,6 +57,8 @@ class AbilityContext {
         this.tokens = properties.tokens || {};
         this.stage = properties.stage || Stages.Effect;
         this.targetAbility = properties.targetAbility;
+        const location = this.player && this.player.playableLocations.find(location => location.contains(this.source));
+        this.playType = location && location.playingType;
     }
 
     copy(newProps: object): AbilityContext {
@@ -67,6 +70,7 @@ class AbilityContext {
         copy.subResolution = this.subResolution;
         copy.choosingPlayerOverride = this.choosingPlayerOverride;
         copy.gameActionsResolutionChain = this.gameActionsResolutionChain;
+        copy.playType = this.playType;
         return copy;
     }
 

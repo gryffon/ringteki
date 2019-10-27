@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Players, PlayTypes } = require('../../Constants');
+const { Players } = require('../../Constants');
 
 class BayushisWhisperers extends DrawCard {
     setupCardAbilities(ability) {
@@ -28,7 +28,7 @@ class BayushisWhisperers extends DrawCard {
         context.source.untilEndOfPhase(ability => ({
             targetController: Players.Opponent,
             effect: ability.effects.playerCannot({
-                cannot: PlayTypes.PlayFromHand,
+                cannot: 'play',
                 restricts: 'copiesOfX',
                 source: context.source,
                 params: cardName
