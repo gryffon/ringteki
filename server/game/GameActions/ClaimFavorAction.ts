@@ -18,9 +18,7 @@ export class ClaimFavorAction extends PlayerAction {
     }
 
     canAffect(player: Player, context: AbilityContext, additionalProperties = {}): boolean {
-        let properties = this.getProperties(context, additionalProperties) as ClaimFavorProperties;
-
-        return !!player && !player.imperialFavor && super.canAffect(player, context);
+        return !!player && super.canAffect(player, context);
     }
 
     getProperties(context: AbilityContext, additionalProperties = {}): ClaimFavorProperties {
