@@ -2,7 +2,7 @@ const _ = require('underscore');
 
 const CardAbility = require('./CardAbility.js');
 const TriggeredAbilityContext = require('./TriggeredAbilityContext.js');
-const { Stages, CardTypes, PlayTypes } = require('./Constants.js');
+const { Stages, CardTypes } = require('./Constants.js');
 
 /**
  * Represents a reaction/interrupt ability provided by card text.
@@ -44,7 +44,7 @@ class TriggeredAbility extends CardAbility {
     }
 
     meetsRequirements(context) {
-        if(!this.anyPlayer && context.player !== this.card.controller && (this.card.type !== CardTypes.Event || !context.player.isCardInPlayableLocation(this.card, PlayTypes.PlayFromHand))) {
+        if(!this.anyPlayer && context.player !== this.card.controller && (this.card.type !== CardTypes.Event || !context.player.isCardInPlayableLocation(this.card, context.playType))) {
             return 'player';
         }
 

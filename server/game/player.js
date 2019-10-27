@@ -22,7 +22,7 @@ class Player extends GameObject {
         this.emailHash = this.user.emailHash;
         this.id = id;
         this.owner = owner;
-        this.type = 'player';
+        this.printedType = 'player';
         this.socket = null;
         this.disconnected = false;
         this.left = false;
@@ -368,8 +368,9 @@ class Player extends GameObject {
      * @param card BaseCard
      * @param {String} playingType
      */
-    isCardInPlayableLocation(card, playingType) {
-        return _.any(this.playableLocations, location => location.playingType === playingType && location.contains(card));
+    isCardInPlayableLocation(card, playingType = null) {
+        return _.any(this.playableLocations, location =>
+            (!playingType || location.playingType === playingType) && location.contains(card));
     }
 
     /**
@@ -584,9 +585,9 @@ class Player extends GameObject {
         return _.uniq(alternateFatePools);
     }
 
-    getMinimumCost(playingType, context, target) {
+    getMinimumCost(playingType, context, target, ignoreType = false) {
         const card = context.source;
-        let reducedCost = this.getReducedCost(playingType, card, target);
+        let reducedCost = this.getReducedCost(playingType, card, target, ignoreType);
         let alternateFatePools = this.getAlternateFatePools(playingType, card);
         let alternateFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0);
         let triggeredCostReducers = 0;
@@ -602,9 +603,9 @@ class Player extends GameObject {
      * @param card DrawCard
      * @param target BaseCard
      */
-    getReducedCost(playingType, card, target) {
+    getReducedCost(playingType, card, target, ignoreType = false) {
         var baseCost = card.getCost();
-        var matchingReducers = _.filter(this.costReducers, reducer => reducer.canReduce(playingType, card, target));
+        var matchingReducers = _.filter(this.costReducers, reducer => reducer.canReduce(playingType, card, target, ignoreType));
         var reducedCost = _.reduce(matchingReducers, (cost, reducer) => cost - reducer.getAmount(card, this), baseCost);
         return Math.max(reducedCost, 0);
     }

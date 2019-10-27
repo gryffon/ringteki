@@ -7,7 +7,7 @@ describe('TriggeredAbility', function () {
         //this.cardSpy.location = 'play area';
         //this.cardSpy.canTriggerAbilities.and.returnValue(true);
         //this.cardSpy.abilities = { reactions: [] };
-        this.player = { name: 'player1' };
+        this.player = { name: 'player1', playableLocations: [] };
         this.cardSpy.controller = this.player;
         this.gameSpy.getPlayers.and.returnValue([this.player]);
         //this.limitSpy = jasmine.createSpyObj('limit', ['increment', 'isAtMax', 'registerEvents', 'unregisterEvents']);

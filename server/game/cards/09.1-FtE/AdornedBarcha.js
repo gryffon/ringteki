@@ -4,6 +4,11 @@ const AbilityDsl = require('../../abilitydsl');
 
 class AdornedBarcha extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            myControl: true,
+            unique: true
+        });
+
         this.action({
             title: 'Move character into the conflict',
             condition: context => !context.source.parent.isParticipating() && this.game.isDuringConflict('military'),
@@ -14,14 +19,6 @@ class AdornedBarcha extends DrawCard {
             },
             gameAction: AbilityDsl.actions.moveToConflict(context => ({ target: context.source.parent }))
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player ||
-            !card.isUnique()) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

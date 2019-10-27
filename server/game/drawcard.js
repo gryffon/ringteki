@@ -68,9 +68,11 @@ class DrawCard extends BaseCard {
 
     getPrintedSkill(type) {
         if(type === 'military') {
-            return this.cardData.military === null ? NaN : isNaN(parseInt(this.cardData.military)) ? 0 : parseInt(this.cardData.military);
+            return this.cardData.military === null || this.cardData.military === undefined ?
+                NaN : isNaN(parseInt(this.cardData.military)) ? 0 : parseInt(this.cardData.military);
         } else if(type === 'political') {
-            return this.cardData.political === null ? NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
+            return this.cardData.political === null || this.cardData.political === undefined ?
+                NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
         }
     }
 
@@ -690,12 +692,25 @@ class DrawCard extends BaseCard {
      * Checks whether the passed card meets the attachment restrictions (e.g.
      * Opponent cards only, specific factions, etc) for this card.
      */
-    canAttach(parent, context) { // eslint-disable-line no-unused-vars
-        return parent && parent.getType() === CardTypes.Character && this.getType() === CardTypes.Attachment;
+    canAttach(parent, context, ignoreType = false) {
+        if(!parent || parent.getType() !== CardTypes.Character || !ignoreType && this.getType() !== CardTypes.Attachment) {
+            return false;
+        }
+        if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller) {
+            return false;
+        } else if(this.anyEffect(EffectNames.AttachmentUniqueRestriction) && !parent.isUnique()) {
+            return false;
+        } else if(this.getEffects(EffectNames.AttachmentFactionRestriction).some(factions => !factions.some(faction => parent.isFaction(faction)))) {
+            return false;
+        } else if(this.getEffects(EffectNames.AttachmentTraitRestriction).some(traits => !traits.some(trait => parent.hasTrait(trait)))) {
+            return false;
+        }
+        return true;
     }
 
     canPlay(context, type) {
-        return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context);
+        return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context) &&
+            this.checkRestrictions('play', context) && context.player.checkRestrictions('play', context);
     }
 
     mustAttachToRing() {
@@ -717,6 +732,17 @@ class DrawCard extends BaseCard {
         ));
         for(const effectCard of this.getEffects(EffectNames.CannotHaveOtherRestrictedAttachments)) {
             illegalAttachments = illegalAttachments.concat(this.attachments.filter(card => card.isRestricted() && card !== effectCard));
+        }
+        for(const card of this.attachments.filter(card => card.anyEffect(EffectNames.AttachmentLimit))) {
+            const limit = Math.max(...card.getEffects(EffectNames.AttachmentLimit));
+            const matchingAttachments = this.attachments.filter(attachment => attachment.id === card.id);
+            illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -limit));
+        }
+        for(const object of this.attachments.reduce((array, card) => array.concat(card.getEffects(EffectNames.AttachmentRestrictTraitAmount)), [])) {
+            for(const trait of Object.keys(object)) {
+                const matchingAttachments = this.attachments.filter(attachment => attachment.hasTrait(trait));
+                illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -object[trait]));
+            }
         }
         illegalAttachments = _.uniq(illegalAttachments);
         if(this.attachments.filter(card => card.isRestricted()).length > 2) {

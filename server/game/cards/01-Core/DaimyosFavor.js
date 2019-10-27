@@ -1,8 +1,12 @@
 const DrawCard = require('../../drawcard.js');
-const { Durations, CardTypes, PlayTypes } = require('../../Constants');
+const { Durations, CardTypes } = require('../../Constants');
 
 class DaimyosFavor extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.action({
             title: 'Bow to reduce attachment cost',
             cost: ability.costs.bowSelf(),
@@ -11,21 +15,13 @@ class DaimyosFavor extends DrawCard {
             gameAction: ability.actions.playerLastingEffect(context => ({
                 duration: Durations.UntilEndOfPhase,
                 effect: ability.effects.reduceCost({
-                    playingTypes: PlayTypes.PlayFromHand,
                     amount: 1,
-                    match: card => card.type === CardTypes.Attachment,
+                    cardType: CardTypes.Attachment,
                     targetCondition: target => target === context.source.parent,
                     limit: ability.limit.fixed(1)
                 })
             }))
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

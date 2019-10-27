@@ -2,17 +2,14 @@ const DrawCard = require('../../drawcard.js');
 
 class WayOfTheDragon extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            limit: 1,
+            myControl: true
+        });
+
         this.whileAttached({
             effect: ability.effects.increaseLimitOnAbilities()
         });
-    }
-    canAttach(card, context) {
-        if(card.attachments && card.attachments.any(card => card.id === 'way-of-the-dragon' && card !== this)) {
-            return false;
-        } else if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 
