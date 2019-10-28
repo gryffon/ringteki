@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard');
-const {CardTypes, Durations, Phases, PlayTypes} = require('../../Constants');
+const {CardTypes, Durations, Phases} = require('../../Constants');
 
 class ThoseWhoServe extends DrawCard {
     setupCardAbilities(ability) {
@@ -10,9 +10,6 @@ class ThoseWhoServe extends DrawCard {
             gameAction: ability.actions.playerLastingEffect({
                 duration: Durations.UntilEndOfPhase,
                 effect: ability.effects.reduceCost({
-                    // RRG does not allow characters to be played from hand in dynasty, but does not use the term "cannot" for this,
-                    // so future card effects could nullify this restriction. In this case conflict characters would work with Those Who Serve.
-                    playingTypes: [PlayTypes.PlayFromHand, PlayTypes.PlayFromProvince],
                     match: card => card.type === CardTypes.Character,
                     amount: 1
                 })
