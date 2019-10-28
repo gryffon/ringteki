@@ -6,7 +6,7 @@ class Gossip extends DrawCard {
         this.action({
             title: 'Name a card that your opponent cannot play for the phase',
             handler: context => this.game.promptWithMenu(context.player, this, {
-                source: context.source,
+                context: context,
                 activePrompt: {
                     menuTitle: 'Name a card',
                     controls: [
@@ -17,14 +17,14 @@ class Gossip extends DrawCard {
         });
     }
 
-    selectCardName(player, cardName, source) {
+    selectCardName(player, cardName, context) {
         this.game.addMessage('{0} names {1} - {2} cannot play copies of this card this phase', player, cardName, player.opponent);
-        source.untilEndOfPhase(ability => ({
+        context.source.untilEndOfPhase(ability => ({
             targetController: Players.Opponent,
             effect: ability.effects.playerCannot({
                 cannot: PlayTypes.PlayFromHand,
                 restricts: 'copiesOfX',
-                source: source,
+                source: context.source,
                 params: cardName
             })
         }));

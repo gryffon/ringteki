@@ -6,7 +6,6 @@ class KuroiMori extends ProvinceCard {
     setupCardAbilities() {
         this.action({
             title: 'Switch the conflict type or ring',
-            condition: context => context.source.isConflictProvince(),
             target: {
                 mode: TargetModes.Select,
                 choices: {

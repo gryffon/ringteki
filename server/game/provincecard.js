@@ -50,6 +50,10 @@ class ProvinceCard extends BaseCard {
         return this.cardData.element;
     }
 
+    isElement(element) {
+        return this.element === 'all' || this.element === element;
+    }
+
     flipFaceup() {
         this.facedown = false;
     }

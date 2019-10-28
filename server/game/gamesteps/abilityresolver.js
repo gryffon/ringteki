@@ -4,7 +4,7 @@ const BaseStepWithPipeline = require('./basestepwithpipeline.js');
 const SimpleStep = require('./simplestep.js');
 const InitiateCardAbilityEvent = require('../Events/InitiateCardAbilityEvent');
 const InitiateAbilityEventWindow = require('../Events/InitiateAbilityEventWindow');
-const { Locations, Stages, CardTypes, EventNames, PlayTypes } = require('../Constants');
+const { Locations, Stages, CardTypes, EventNames } = require('../Constants');
 
 class AbilityResolver extends BaseStepWithPipeline {
     constructor(game, context) {
@@ -55,7 +55,7 @@ class AbilityResolver extends BaseStepWithPipeline {
                     card: this.context.source,
                     context: this.context,
                     originalLocation: this.context.source.location,
-                    playType: PlayTypes.PlayFromHand,
+                    playType: this.context.playType,
                     resolver: this
                 }));
             }
@@ -160,8 +160,13 @@ class AbilityResolver extends BaseStepWithPipeline {
             return;
         }
 
-        if(this.context.ability.isCardPlayed() && this.context.source.isLimited) {
-            this.context.player.limitedPlayed += 1;
+        if(this.context.ability.isCardPlayed()) {
+            if(this.context.source.isLimited()) {
+                this.context.player.limitedPlayed += 1;
+            }
+            if(this.game.currentConflict) {
+                this.game.currentConflict.addCardPlayed(this.context.player, this.context.source);
+            }
         }
 
         // Increment limits (limits aren't used up on cards in hand)
@@ -179,7 +184,7 @@ class AbilityResolver extends BaseStepWithPipeline {
             if(this.context.ability.isCardPlayed()) {
                 this.game.actions.moveCard({ destination: Locations.BeingPlayed }).resolve(this.context.source, this.context);
             }
-            this.game.openEventWindow(new InitiateCardAbilityEvent({ card: this.context.source, context: this.context }, () => this.initiateAbility = true));
+            this.game.openThenEventWindow(new InitiateCardAbilityEvent({ card: this.context.source, context: this.context }, () => this.initiateAbility = true));
         } else {
             this.initiateAbility = true;
         }

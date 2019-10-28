@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl.js');
-const { Durations, CardTypes, PlayTypes } = require('../../Constants');
+const { Durations, CardTypes } = require('../../Constants');
 
 class YasukiProcurer extends DrawCard {
     setupCardAbilities() {
@@ -12,7 +12,6 @@ class YasukiProcurer extends DrawCard {
                 duration: Durations.UntilEndOfPhase,
                 effect: AbilityDsl.effects.reduceCost({
                     match: card => card.type === CardTypes.Attachment || card.type === CardTypes.Character,
-                    playingTypes: [PlayTypes.PlayFromHand, PlayTypes.PlayFromProvince],
                     limit: AbilityDsl.limit.fixed(1)
                 })
             })
