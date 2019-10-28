@@ -405,7 +405,7 @@ describe('Right Hand of the Emperor', function() {
                     phase: 'draw',
                     player1: {
                         honor: 5,
-                        inPlay: ['guest-of-honor','master-of-gisei-toshi','utaku-tetsuko','akodo-toturi-2'],
+                        inPlay: ['guest-of-honor','master-of-gisei-toshi','utaku-tetsuko','akodo-toturi-2']
                     },
                     player2: {
                         honor: 11,
@@ -467,7 +467,7 @@ describe('Right Hand of the Emperor', function() {
                     attackers: [this.toturi],
                     defenders: [this.dojiChallenger]
                 });
-                
+
                 this.player2.pass();
                 this.player1.clickCard(this.toturi);
                 this.player2.clickCard(this.rightHandOfTheEmperor);
@@ -493,7 +493,7 @@ describe('Right Hand of the Emperor', function() {
                     phase: 'draw',
                     player1: {
                         honor: 5,
-                        inPlay: ['guest-of-honor','master-of-gisei-toshi','utaku-tetsuko','akodo-toturi-2'],
+                        inPlay: ['guest-of-honor','master-of-gisei-toshi','utaku-tetsuko','akodo-toturi-2']
                     },
                     player2: {
                         honor: 11,
@@ -555,7 +555,7 @@ describe('Right Hand of the Emperor', function() {
                     attackers: [this.toturi],
                     defenders: [this.dojiChallenger]
                 });
-                
+
                 this.player2.pass();
                 this.player1.clickCard(this.toturi);
                 this.player2.clickCard(this.rightHandOfTheEmperor);
