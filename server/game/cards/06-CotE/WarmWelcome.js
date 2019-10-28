@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players, CardTypes} = require('../../Constants');
+const { Locations, Players, CardTypes, PlayTypes} = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class WarmWelcome extends DrawCard {
@@ -11,7 +11,10 @@ class WarmWelcome extends DrawCard {
                 location: Locations.ConflictDiscardPile,
                 controller: Players.Self,
                 gameAction: AbilityDsl.actions.sequential([
-                    AbilityDsl.actions.playCard(context => ({ target: context.target })),
+                    AbilityDsl.actions.playCard(context => ({
+                        target: context.target,
+                        playType: PlayTypes.PlayFromHand
+                    })),
                     AbilityDsl.actions.moveCard(context => ({
                         target: context.target.type === CardTypes.Event ? context.target : [],
                         destination: Locations.ConflictDeck, bottom: true

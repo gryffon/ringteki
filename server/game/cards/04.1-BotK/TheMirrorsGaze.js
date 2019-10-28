@@ -3,6 +3,11 @@ const { CardTypes } = require('../../Constants');
 
 class TheMirrorsGaze extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true,
+            trait: 'shugenja'
+        });
+
         this.reaction({
             title: 'Mirror an opponent\'s event',
             when: {
@@ -15,14 +20,6 @@ class TheMirrorsGaze extends DrawCard {
                 event: context.event.context.event
             }))
         });
-    }
-
-    canAttach(card, context) {
-        if(card.hasTrait('shugenja') === false || card.controller !== context.player) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 

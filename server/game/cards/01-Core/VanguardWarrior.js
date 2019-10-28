@@ -1,14 +1,15 @@
+const AbilityDsl = require('../../abilitydsl.js');
 const DrawCard = require('../../drawcard.js');
 const { CardTypes } = require('../../Constants');
 
 class VanguardWarrior extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Sacrifice to put fate on one character',
-            cost: ability.costs.sacrificeSelf(),
+            cost: AbilityDsl.costs.sacrificeSelf(),
             target: {
                 cardType: CardTypes.Character,
-                gameAction: ability.actions.placeFate()
+                gameAction: AbilityDsl.actions.placeFate()
             }
         });
     }

@@ -5,6 +5,7 @@ class MagistrateStation extends ProvinceCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Ready an honored character',
+            canTriggerOutsideConflict: true,
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isHonored,

@@ -1,3 +1,4 @@
+const AbilityDsl = require('../../abilitydsl.js');
 const DrawCard = require('../../drawcard.js');
 
 class FawningDiplomat extends DrawCard {
@@ -8,7 +9,9 @@ class FawningDiplomat extends DrawCard {
                 onCardLeavesPlay: (event, context) => event.card === context.source
             },
             effect: 'claim the Emperor\'s favor as she leaves play',
-            handler: context => context.player.claimImperialFavor()
+            gameAction: AbilityDsl.actions.claimImperialFavor(context => ({
+                target: context.player
+            }))
         });
     }
 }
