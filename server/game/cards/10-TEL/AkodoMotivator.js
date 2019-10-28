@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const DrawCard = require('../../drawcard');
 const AbilityDsl = require('../../abilitydsl');
 
@@ -16,7 +15,7 @@ class AkodoMotivator extends DrawCard {
                 }
             },
             gameAction: AbilityDsl.actions.discardAtRandom(context => ({
-                amount: _.isArray(context.event.cards) ? context.event.cards.length : context.event.amount
+                amount: context.event.amount
             }))
         });
     }
