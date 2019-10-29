@@ -1,4 +1,4 @@
-import { Locations, Players, CardTypes, TargetModes } from '../../Constants.js';
+import { Locations, Players, CardTypes, TargetModes, PlayTypes } from '../../Constants.js';
 
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
@@ -8,7 +8,7 @@ class RightHandOfTheEmperor extends DrawCard {
         this.persistentEffect({
             condition: context => context.player.opponent && context.player.honor > context.player.opponent.honor,
             location: Locations.ConflictDiscardPile,
-            effect: AbilityDsl.effects.canPlayFromOwn(Locations.ConflictDiscardPile, [this])
+            effect: AbilityDsl.effects.canPlayFromOwn(Locations.ConflictDiscardPile, [this], PlayTypes.Other)
         });
         this.action({
             title: 'Ready characters',
@@ -17,11 +17,11 @@ class RightHandOfTheEmperor extends DrawCard {
                 activePromptTitle: 'Choose characters',
                 cardStat: card => card.getCost(),
                 maxStat: () => 6,
-                numCards: 99, //numCards: 0 doesn't seem to work with optional cost and TargetModes.MaxStat
+                numCards: 0,
                 optional: true,
                 cardType: CardTypes.Character,
                 controller: Players.Self,
-                cardCondition: card => card.hasTrait('bushi') && card.bowed,
+                cardCondition: card => card.hasTrait('bushi'),
                 gameAction: AbilityDsl.actions.ready()
             },
             gameAction: AbilityDsl.actions.moveCard(context => ({
