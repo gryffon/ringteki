@@ -52,18 +52,17 @@ describe('Peasant\'s Advice', function() {
             it('should both display a chat message and offer the option to shuffle a faceup card in a facedown province', function() {
                 this.player1.clickCard('peasant-s-advice');
                 this.player1.clickCard(this.shamefulDisplay);
-                this.spy = spyOn(this.player2.player, 'moveCard').and.callThrough();
                 this.seppunGuardsman = this.player1.clickCard('seppun-guardsman');
-                expect(this.getChatLogs(5)).toContain('Peasant\'s Advice sees Shameful Display');
                 expect(this.player1).toHavePrompt('Choose a faceup card to return to its owner\'s deck');
                 expect(this.player1).toHavePromptButton('Done');
                 expect(this.player1).toBeAbleToSelect(this.shibaTsukune);
                 this.player1.clickCard(this.shibaTsukune);
                 expect(this.player2).toHavePrompt('Action Window');
                 expect(this.getChatLogs(5)).toContain('Peasant\'s Advice sees Shameful Display');
-                expect(this.getChatLogs(2)).toContain('player1 chooses to shuffle Shiba Tsukune into its owner\'s deck');
-                expect(this.getChatLogs(1)).toContain('player2 is shuffling their dynasty deck');
-                expect(this.spy).toHaveBeenCalledWith(this.shibaTsukune, 'dynasty deck', { bottom: false });
+                expect(this.getChatLogs(5)).toContain('player1 chooses to shuffle Shiba Tsukune into its owner\'s deck');
+                expect(this.getChatLogs(5)).toContain('player2 is shuffling their dynasty deck');
+                expect(this.shibaTsukune.location === 'dynasty deck' ||
+                    this.shibaTsukune.location === 'province 1' && this.shibaTsukune.facedown).toBe(true);
                 expect(this.player2.player.getDynastyCardInProvince('province 1')).not.toBeUndefined();
             });
 

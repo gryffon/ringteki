@@ -4,6 +4,10 @@ const { AbilityTypes, DuelTypes } = require('../../Constants');
 
 class JusticarsApproach extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            trait: 'courtier'
+        });
+
         this.whileAttached({
             effect: AbilityDsl.effects.gainAbility(AbilityTypes.Action, {
                 title: 'Initiate a duel to dishonor/bow/discard',
@@ -19,13 +23,6 @@ class JusticarsApproach extends DrawCard {
                 }
             })
         });
-    }
-
-    canAttach(card, context) {
-        if(!card.hasTrait('courtier')) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

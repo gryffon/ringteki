@@ -183,7 +183,6 @@ describe('Loyal Challenger', function() {
                 this.player2.clickCard(this.agashaSwordsmith);
                 expect(this.player2).toHavePrompt('Agasha Swordsmith');
             });
-
         });
     });
 });

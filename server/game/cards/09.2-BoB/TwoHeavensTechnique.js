@@ -3,17 +3,14 @@ const AbilityDsl = require('../../abilitydsl');
 
 class TwoHeavensTechnique extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            trait: 'bushi'
+        });
+
         this.whileAttached({
             condition: context => context.source.parent && context.source.parent.attachments.filter(card => card.hasTrait('weapon')).length === 2,
             effect: AbilityDsl.effects.addKeyword('covert')
         });
-    }
-
-    canAttach(card, context) {
-        if(!card.hasTrait('bushi')) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

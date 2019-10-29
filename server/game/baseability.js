@@ -90,11 +90,11 @@ class BaseAbility {
      * @param {*} context
      * @returns {String}
      */
-    meetsRequirements(context) {
+    meetsRequirements(context, ignoredRequirements = []) {
         // check legal targets exist
         // check costs can be paid
         // check for potential to change game state
-        if(!this.canPayCosts(context)) {
+        if(!this.canPayCosts(context) && !ignoredRequirements.includes('cost')) {
             return 'cost';
         }
         if(this.targets.length === 0) {

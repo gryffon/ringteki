@@ -9,7 +9,7 @@ describe('Feast or Famine', function() {
                     },
                     player2: {
                         provinces: ['feast-or-famine'],
-                        inPlay: ['togashi-initiate'],
+                        inPlay: ['togashi-initiate', 'togashi-mendicant'],
                         dynastyDeck: ['doomed-shugenja', 'niten-adept'],
                         hand: ['charge', 'assassination', 'fine-katana']
                     }
@@ -17,6 +17,7 @@ describe('Feast or Famine', function() {
                 this.feastOrFamine = this.player2.findCardByName('feast-or-famine');
                 this.doomedShugenja = this.player2.placeCardInProvince('doomed-shugenja', 'province 1');
                 this.nitenAdept = this.player2.placeCardInProvince('niten-adept', 'province 2');
+                this.togashiMendicant = this.player2.findCardByName('togashi-mendicant');
                 this.togashiInitiate = this.player2.findCardByName('togashi-initiate');
                 this.togashiInitiate.modifyFate(1);
                 this.shinjoOutrider = this.player1.findCardByName('shinjo-outrider');
@@ -29,9 +30,15 @@ describe('Feast or Famine', function() {
                 });
             });
 
-            it('should not allow the ability to be used if there is no character who can receive the fate', function() {
+            //RRG Feast or Famine Errata 2019-10-07: Now only steals 1 fate and can be placed on any target.
+            it('should allow the ability to be used regardless of fate or no fate on the character', function() {
                 this.noMoreActions();
-                expect(this.player1).toHavePrompt('Break Feast or Famine');
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                this.player2.clickCard(this.feastOrFamine);
+                this.player2.clickCard(this.shinjoOutrider);
+
+                expect(this.player2).toBeAbleToSelect(this.togashiInitiate);
+                expect(this.player2).toBeAbleToSelect(this.togashiMendicant);
             });
 
             it('should not allow the ability to be used if there is no legal target', function() {
@@ -67,8 +74,8 @@ describe('Feast or Famine', function() {
                 this.player2.clickCard(this.shinjoOutrider);
                 expect(this.player2).toBeAbleToSelect(this.nitenAdept);
                 this.player2.clickCard(this.nitenAdept);
-                expect(this.shinjoOutrider.fate).toBe(0);
-                expect(this.nitenAdept.fate).toBe(2);
+                expect(this.shinjoOutrider.fate).toBe(1);
+                expect(this.nitenAdept.fate).toBe(1);
                 expect(this.feastOrFamine.isBroken).toBe(true);
             });
 
@@ -88,8 +95,8 @@ describe('Feast or Famine', function() {
                 expect(this.player2).toBeAbleToSelect(this.nitenAdept);
                 expect(this.player2).not.toBeAbleToSelect(this.doomedShugenja);
                 this.player2.clickCard(this.nitenAdept);
-                expect(this.shinjoOutrider.fate).toBe(0);
-                expect(this.nitenAdept.fate).toBe(2);
+                expect(this.shinjoOutrider.fate).toBe(1);
+                expect(this.nitenAdept.fate).toBe(1);
                 expect(this.feastOrFamine.isBroken).toBe(true);
             });
 
@@ -104,8 +111,8 @@ describe('Feast or Famine', function() {
                 expect(this.player2).toBeAbleToSelect(this.togashiInitiate);
                 expect(this.player2).not.toBeAbleToSelect(this.doomedShugenja);
                 this.player2.clickCard(this.togashiInitiate);
-                expect(this.shinjoOutrider.fate).toBe(0);
-                expect(this.togashiInitiate.fate).toBe(2);
+                expect(this.shinjoOutrider.fate).toBe(1);
+                expect(this.togashiInitiate.fate).toBe(1);
                 expect(this.feastOrFamine.isBroken).toBe(true);
             });
 
@@ -122,8 +129,8 @@ describe('Feast or Famine', function() {
                 this.player2.clickCard(this.shinjoOutrider);
                 expect(this.player2).toBeAbleToSelect(this.doomedShugenja);
                 this.player2.clickCard(this.doomedShugenja);
-                expect(this.shinjoOutrider.fate).toBe(0);
-                expect(this.doomedShugenja.fate).toBe(2);
+                expect(this.shinjoOutrider.fate).toBe(1);
+                expect(this.doomedShugenja.fate).toBe(1);
                 expect(this.feastOrFamine.isBroken).toBe(true);
             });
         });

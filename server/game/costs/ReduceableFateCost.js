@@ -2,15 +2,16 @@ const Event = require('../Events/Event');
 const { EventNames } = require('../Constants');
 
 class ReduceableFateCost {
-    constructor(playingType) {
+    constructor(playingType, ignoreType) {
         this.playingType = playingType;
+        this.ignoreType = ignoreType;
     }
 
     canPay(context) {
         if(context.source.printedCost === null) {
             return false;
         }
-        let minCost = context.player.getMinimumCost(this.playingType, context);
+        let minCost = context.player.getMinimumCost(this.playingType, context, null, this.ignoreType);
         return context.player.fate >= minCost &&
             (minCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
@@ -45,7 +46,7 @@ class ReduceableFateCost {
     }
 
     getReducedCost(context) {
-        return context.player.getReducedCost(this.playingType, context.source);
+        return context.player.getReducedCost(this.playingType, context.source, null, this.ignoreType);
     }
 
     promptForAlternateFate(context, result, properties) {

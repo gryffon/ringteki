@@ -15,7 +15,7 @@ class EsteemedTeaHouse extends DrawCard {
             },
             gameAction: AbilityDsl.actions.playerLastingEffect(context => ({
                 duration: Durations.UntilEndOfPhase,
-                targetController: Players.Opponent,
+                targetController: context.target.owner === context.player ? Players.Self : Players.Opponent,
                 effect: AbilityDsl.effects.playerCannot({
                     cannot: PlayTypes.PlayFromHand,
                     restricts: 'copiesOfX',

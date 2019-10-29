@@ -3,6 +3,10 @@ const { Players, CardTypes } = require('../../Constants');
 
 class HonedNodachi extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            trait: 'bushi'
+        });
+
         this.reaction({
             title: 'Remove a fate from attached character and force opponent to discard a participating character',
             when: {
@@ -20,14 +24,6 @@ class HonedNodachi extends DrawCard {
                 gameAction: ability.actions.discardFromPlay()
             }
         });
-    }
-
-    canAttach(card, context) {
-        if(!card.hasTrait('bushi')) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 

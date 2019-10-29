@@ -5,7 +5,7 @@ describe('ProvinceCard', function () {
         this.testCard = { code: '111', label: 'test 1(some pack)', name: 'test 1' };
         this.gameSpy = jasmine.createSpyObj('game', ['emitEvent', 'on']);
         this.card = new ProvinceCard({ game: this.gameSpy }, this.testCard);
-        this.card.type = 'province';
+        this.card.printedType = 'province';
         spyOn(this.card, 'removeLastingEffects');
     });
 

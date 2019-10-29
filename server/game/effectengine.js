@@ -74,7 +74,13 @@ class EffectEngine {
     }
 
     removeLastingEffects(card) {
-        this.unapplyAndRemove(effect => effect.match === card && effect.duration !== Durations.Persistent);
+        this.unapplyAndRemove(effect =>
+            effect.match === card && effect.duration !== Durations.Persistent && !effect.canChangeZoneOnce);
+        for(const effect of this.effects) {
+            if(effect.match === card && effect.canChangeZoneOnce) {
+                effect.canChangeZoneOnce = false;
+            }
+        }
     }
 
     checkEffects(prevStateChanged = false, loops = 0) {
