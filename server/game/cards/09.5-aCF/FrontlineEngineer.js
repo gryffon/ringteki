@@ -1,11 +1,11 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Players, CardTypes } = require('../../Constants');
+const { Locations, CardTypes } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class FrontlineEngineer extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
-            effect: ability.effects.modifyGlory(card => this.getHoldingsInPlay(card))
+            effect: AbilityDsl.effects.modifyGlory(() => this.getHoldingsInPlay())
         });
 
         this.action({
@@ -18,7 +18,7 @@ class FrontlineEngineer extends DrawCard {
                 cardCondition: card => card.getType() === CardTypes.Holding,
                 cards: context.player.dynastyDeck.first(5),
                 cardHandler: cardFromDeck => {
-                    let card = context.player.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location)
+                    let card = context.player.getDynastyCardInProvince(this.game.currentConflict.conflictProvince.location);
                     this.game.addMessage('{0} discards {1}, replacing it with {2}', context.player, card, cardFromDeck);
                     context.player.moveCard(cardFromDeck, this.game.currentConflict.conflictProvince.location);
                     cardFromDeck.facedown = false;
@@ -29,7 +29,7 @@ class FrontlineEngineer extends DrawCard {
         });
     }
 
-    getHoldingsInPlay(source) {
+    getHoldingsInPlay() {
         return this.game.allCards.reduce((sum, card) => {
             if(!card.facedown && (card.isInProvince() && card.type === CardTypes.Holding)) {
                 return sum + 1;

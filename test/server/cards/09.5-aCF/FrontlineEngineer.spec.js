@@ -62,7 +62,7 @@ describe('Frontline Engineer', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['frontline-engineer'],
+                        inPlay: ['frontline-engineer']
                     },
                     player2: {
                         inPlay: ['frontline-engineer'],
