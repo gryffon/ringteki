@@ -7,12 +7,12 @@ class TotalWarfare extends DrawCard {
         this.forcedReaction({
             title: 'Loser sacrifices a character',
             when: {
-                afterConflict: (event, context) => event.conflict.loser && context.source.isConflictProvince()
+                afterConflict: (event, context) => event.conflict.loser && context.source.parent.isConflictProvince()
             },
             target: {
                 cardType: CardTypes.Character,
                 player: context => context.source.controller === this.game.currentConflict.loser ? Players.Self : Players.Opponent,
-                cardCondition: card => card.isParticipating(),
+                cardCondition: card => card.isParticipating() && card.controller === this.game.currentConflict.loser,
                 gameAction: AbilityDsl.actions.sacrifice()
             }
         });
