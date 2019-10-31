@@ -17,7 +17,7 @@ class AshigaruLevy extends DrawCard {
                     && card.id === 'ashigaru-levy',
                 gameAction: AbilityDsl.actions.putIntoPlay()
             },
-            effect: 'to put {0} into play.',
+            effect: 'to put {0} into play.'
         });
     }
 }
