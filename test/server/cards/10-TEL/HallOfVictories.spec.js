@@ -29,9 +29,10 @@ describe('Hall of Victories', function() {
             });
 
             this.noMoreActions();
-            expect(this.player1.honor).toBe(11);
+            expect(this.getChatLogs(5)).toContain('player1 uses Hall of Victories to make player1 gain 1 honor');
             this.player1.clickPrompt('No');
             this.player1.clickPrompt('Don\'t Resolve');
+            expect(this.player1.honor).toBe(11);
 
             this.noMoreActions();
             this.initiateConflict({
@@ -41,9 +42,10 @@ describe('Hall of Victories', function() {
             });
 
             this.noMoreActions();
+            expect(this.getChatLogs(5)).toContain('player1 uses Hall of Victories to make player2 gain 1 honor');
             this.player2.clickPrompt('Don\'t Resolve');
             expect(this.player1).toHavePrompt('Action Window');
-            expect(this.player2.honor).toBe(11);
+            expect(this.player2.honor).toBe(10);
         });
     });
 });
