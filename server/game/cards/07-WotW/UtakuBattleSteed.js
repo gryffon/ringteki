@@ -2,6 +2,10 @@ const DrawCard = require('../../drawcard.js');
 
 class UtakuBattleSteed extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            faction: 'unicorn'
+        });
+
         this.whileAttached({
             effect: ability.effects.addTrait('cavalry')
         });
@@ -17,10 +21,6 @@ class UtakuBattleSteed extends DrawCard {
                 target: context.source.parent
             }))
         });
-    }
-
-    canAttach(card, context) {
-        return card.isFaction('unicorn') && super.canAttach(card, context);
     }
 }
 

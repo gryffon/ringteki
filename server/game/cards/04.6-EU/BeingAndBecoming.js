@@ -3,6 +3,10 @@ const { TargetModes } = require('../../Constants');
 
 class BeingAndBecoming extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.action({
             title: 'Move each fate from an unclaimed ring to attached character',
             cost: ability.costs.bowParent(),
@@ -19,14 +23,6 @@ class BeingAndBecoming extends DrawCard {
             effect: 'move {1} fate from {2} to {3}',
             effectArgs: context => [context.ring.fate, context.ring, context.source.parent]
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 

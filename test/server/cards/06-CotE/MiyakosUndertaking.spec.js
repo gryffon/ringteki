@@ -13,7 +13,7 @@ describe('Miyako\'s Undertaking', function() {
                     player2: {
                         hand: ['assassination'],
                         inPlay: ['doomed-shugenja', 'kitsuki-investigator'],
-                        dynastyDiscard: ['kitsu-spiritcaller', 'implacable-magistrate', 'akodo-gunso', 'niten-master', 'ikoma-ujiaki']
+                        dynastyDiscard: ['kitsu-spiritcaller', 'implacable-magistrate', 'akodo-gunso', 'niten-master', 'ikoma-ujiaki', 'matsu-berserker']
                     }
                 });
 
@@ -27,6 +27,7 @@ describe('Miyako\'s Undertaking', function() {
                 this.akodoGunso = this.player2.findCardByName('akodo-gunso');
                 this.nitenMaster = this.player2.findCardByName('niten-master');
                 this.ikomaUjiaki = this.player2.findCardByName('ikoma-ujiaki');
+                this.matsuBerserker = this.player2.findCardByName('matsu-berserker');
                 this.doomedShugenja = this.player2.findCardByName('doomed-shugenja');
 
                 this.shosuroSadako.dishonor();
@@ -213,6 +214,13 @@ describe('Miyako\'s Undertaking', function() {
                 this.player2.pass();
                 this.player1.playAttachment('fine-katana', this.youngRumormonger);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should copy dash skills', function() {
+                this.player1.clickCard('miyako-s-undertaking');
+                this.player1.clickCard(this.matsuBerserker);
+                this.player1.clickCard(this.bayushiLiar);
+                expect(this.bayushiLiar.hasDash('political')).toBe(true);
             });
         });
     });

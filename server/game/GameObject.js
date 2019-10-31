@@ -8,10 +8,14 @@ class GameObject {
         this.game = game;
         this.name = name;
         this.id = name;
-        this.type = '';
+        this.printedType = '';
         this.facedown = false;
         this.uuid = uuid.v1();
         this.effects = [];
+    }
+
+    get type() {
+        return this.getType();
     }
 
     addEffect(effect) {
@@ -69,7 +73,10 @@ class GameObject {
     }
 
     getType() {
-        return this.type;
+        if(this.anyEffect(EffectNames.ChangeType)) {
+            return this.mostRecentEffect(EffectNames.ChangeType);
+        }
+        return this.printedType;
     }
 
     getPrintedFaction() {

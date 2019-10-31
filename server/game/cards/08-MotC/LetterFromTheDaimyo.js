@@ -3,6 +3,10 @@ const AbilityDsl = require('../../abilitydsl');
 
 class LetterFromTheDaimyo extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.reaction({
             title: 'Make opponent discard 2 cards',
             cost: AbilityDsl.costs.sacrificeSelf(),
@@ -13,14 +17,6 @@ class LetterFromTheDaimyo extends DrawCard {
             },
             gameAction: AbilityDsl.actions.chosenDiscard({ amount: 2 })
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 
