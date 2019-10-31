@@ -207,6 +207,7 @@ class Card extends React.Component {
                 cardHeight *= 2;
                 break;
         }
+
         let attachmentCount = this.props.source === 'play area' ? _.size(this.props.card.attachments) : 0;
         let attachments = this.props.card.attachments;
         let totalTiers = 0;
@@ -227,8 +228,8 @@ class Card extends React.Component {
     }
 
     getAttachments() {
-
-        if(this.props.source !== 'play area') {
+        const provinces = ['province 1', 'province 2', 'province 3', 'province 4']
+        if(this.props.source !== 'play area' && !provinces.includes(this.props.source)) {
             return null;
         }
 
@@ -495,7 +496,7 @@ class Card extends React.Component {
     render() {
         if(this.props.wrapped) {
             return (
-                <div className={ 'card-wrapper ' + this.getWrapper() } style={ Object.assign({}, this.props.style ? this.props.style : {},this.getWrapperStyle()) }>
+                <div className={ 'card-wrapper ' + this.getWrapper() } style={ Object.assign({}, this.props.style ? this.props.style : {}, this.getWrapperStyle()) }>
                     { this.getCard() }
                     { this.getAttachments() }
                 </div>);

@@ -117,7 +117,9 @@ class ProvinceCard extends BaseCard {
         return _.extend(baseSummary, {
             isProvince: this.isProvince,
             isBroken: this.isBroken,
-            attachments: this.attachments
+            attachments: this.attachments.map(attachment => {
+                return attachment.getSummary(activePlayer, hideWhenFaceup);
+            }),
         });
     }
 
@@ -127,8 +129,7 @@ class ProvinceCard extends BaseCard {
         }
 
         return (
-            this.isBlank() ||
-            this.allowedAttachmentTraits.length === 0
+            !this.isBroken
         );
     }
 }
