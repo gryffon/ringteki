@@ -160,8 +160,13 @@ class AbilityResolver extends BaseStepWithPipeline {
             return;
         }
 
-        if(this.context.ability.isCardPlayed() && this.context.source.isLimited()) {
-            this.context.player.limitedPlayed += 1;
+        if(this.context.ability.isCardPlayed()) {
+            if(this.context.source.isLimited()) {
+                this.context.player.limitedPlayed += 1;
+            }
+            if(this.game.currentConflict) {
+                this.game.currentConflict.addCardPlayed(this.context.player, this.context.source);
+            }
         }
 
         // Increment limits (limits aren't used up on cards in hand)
