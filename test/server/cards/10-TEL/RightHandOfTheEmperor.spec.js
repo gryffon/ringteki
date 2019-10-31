@@ -430,7 +430,6 @@ describe('Right Hand of the Emperor', function() {
 
                 this.noMoreActions();
                 this.player1.clickCard(this.MoGT);
-                expect(this.player1).toHavePrompt('Master of Gisei Toshi');
                 this.player1.clickRing('fire');
 
                 this.noMoreActions();
@@ -518,7 +517,6 @@ describe('Right Hand of the Emperor', function() {
 
                 this.noMoreActions();
                 this.player1.clickCard(this.MoGT);
-                expect(this.player1).toHavePrompt('Master of Gisei Toshi');
                 this.player1.clickRing('fire');
 
                 this.noMoreActions();
