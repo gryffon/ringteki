@@ -8,9 +8,9 @@ const shiroKitsukiCost = function() {
         canPay: function() {
             return true;
         },
-        resolve: function(context, result = { resolved: false }) {
+        resolve: function(context) {
             context.game.promptWithMenu(context.player, this, {
-                source: context.source,
+                context: context,
                 activePrompt: {
                     menuTitle: 'Name a card',
                     controls: [
@@ -55,9 +55,10 @@ class ShiroKitsuki extends StrongholdCard {
         });
     }
 
-    selectCardName(player, cardName, source) {
+    selectCardName(player, cardName, context) {
         this.game.addMessage('{0} names {1} - if {2} plays copies of this card {0} gets to claim a ring', player, cardName, player.opponent);
-        return cardName;
+        context.costs.shiroKitsukiCost = cardName;
+        return true;
     }
 }
 
