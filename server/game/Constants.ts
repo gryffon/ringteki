@@ -149,8 +149,7 @@ export enum TargetModes {
     MaxStat = 'maxStat',
     Single = 'single',
     Unlimited = 'unlimited',
-    UpTo = 'upTo',
-    Province = 'province'
+    UpTo = 'upTo'
 };
 
 export enum Phases {

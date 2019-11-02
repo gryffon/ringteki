@@ -51,8 +51,20 @@ class ProvinceCard extends BaseCard {
         return this.cardData.element;
     }
 
+    removeAttachment(attachment) {
+        var index = this.attachments.indexOf(attachment);
+        if (index > -1) {
+            this.attachments.splice(index, 1);
+        }
+    }
+
     flipFaceup() {
         this.facedown = false;
+        this.attachments.forEach(attachment => {
+            attachment.parent = null;
+            this.removeAttachment(attachment);
+            attachment.moveTo(Locations.ConflictDiscardPile);
+        })
     }
 
     isConflictProvince() {
