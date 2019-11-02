@@ -35,12 +35,9 @@ class IsawaTsuke extends DrawCard {
 
         return targetedCharacterController
             .cardsInPlay
-            .toArray()
-            .filter(card => card.printedCost === targetedCharacter.printedCost)
+            .filter(card => card.printedCost === targetedCharacter.printedCost);
     }
 }
-
-
 
 IsawaTsuke.id = 'isawa-tsuke';
 
