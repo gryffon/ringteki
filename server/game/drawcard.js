@@ -714,10 +714,6 @@ class DrawCard extends BaseCard {
         return false;
     }
 
-    mustAttachToProvince() {
-        return false;
-    }
-
     /**
      * Checks whether an attachment can be played on a given card.  Intended to be
      * used by cards inheriting this class
