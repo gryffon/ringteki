@@ -81,6 +81,7 @@ const Effects = {
     setBaseProvinceStrength: (value) => EffectBuilder.card.static(EffectNames.SetBaseProvinceStrength, value),
     setDash: (type) => EffectBuilder.card.static(EffectNames.SetDash, type),
     setGlory: (value) => EffectBuilder.card.static(EffectNames.SetGlory, value),
+    setBaseGlory: (value) => EffectBuilder.card.static(EffectNames.SetBaseGlory, value),
     setMilitarySkill: (value) => EffectBuilder.card.static(EffectNames.SetMilitarySkill, value),
     setPoliticalSkill: (value) => EffectBuilder.card.static(EffectNames.SetPoliticalSkill, value),
     setProvinceStrength: (value) => EffectBuilder.card.static(EffectNames.SetProvinceStrength, value),

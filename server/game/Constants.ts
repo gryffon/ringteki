@@ -114,7 +114,8 @@ export enum EffectNames {
     ChangeConflictSkillFunction = 'skillFunction',
     ModifyConflictElementsToResolve = 'modifyConflictElementsToResolve',
     RestrictNumberOfDefenders = 'restrictNumberOfDefenders',
-    ResolveConflictEarly = 'resolveConflictEarly'
+    ResolveConflictEarly = 'resolveConflictEarly',
+    SetBaseGlory = "setBaseGlory"
 };
 
 export enum Durations {
