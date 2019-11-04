@@ -4,7 +4,7 @@ describe('Honor in Battle', function() {
             this.setupTest({
                 phase: 'conflict',
                 player1: {
-                    inPlay: ['matsu-seventh-legion'],
+                    inPlay: ['matsu-seventh-legion', 'akodo-kage'],
                     hand: ['honor-in-battle']
                 },
                 player2: {
@@ -13,12 +13,28 @@ describe('Honor in Battle', function() {
             });
 
             this.matsuSeventhLegion = this.player1.findCardByName('matsu-seventh-legion');
+            this.akodoKage = this.player1.findCardByName('akodo-kage');
             this.honorInBattle = this.player1.findCardByName('honor-in-battle');
 
             this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
         });
 
-        it('should not be able the trigger if you don\'t have a military ring claimed', function() {
+        it('should not be able the trigger if you don\'t have a ring claimed', function() {
+            this.player1.clickCard(this.honorInBattle);
+            expect(this.player1).toHavePrompt('Action Window');
+        });
+
+        it('should not be able the trigger if you have a political ring claimed', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                type: 'political',
+                attackers: [this.akodoKage],
+                defenders: [this.mirumotoRaitsugu]
+            });
+
+            this.noMoreActions();
+            this.player1.clickPrompt('Don\'t Resolve');
+
             this.player1.clickCard(this.honorInBattle);
             expect(this.player1).toHavePrompt('Action Window');
         });
@@ -53,8 +69,8 @@ describe('Honor in Battle', function() {
             this.player1.clickPrompt('Don\'t Resolve');
 
             this.player1.clickCard(this.honorInBattle);
-            this.player1.clickCard(this.matsuSeventhLegion);
-            expect(this.matsuSeventhLegion.isHonored).toBe(true);
+            this.player1.clickCard(this.mirumotoRaitsugu);
+            expect(this.mirumotoRaitsugu.isHonored).toBe(true);
         });
     });
 });
