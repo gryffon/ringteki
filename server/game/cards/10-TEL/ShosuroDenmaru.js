@@ -1,4 +1,4 @@
-import { CardTypes, Players } from '../../Constants.js';
+import { Players } from '../../Constants.js';
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl.js');
 
@@ -8,7 +8,7 @@ class ShosuroDenmaru extends DrawCard {
             targetController: Players.Opponent,
             match: card => card.isHonored,
             effect: AbilityDsl.effects.setBaseGlory(0)
-        })
+        });
     }
 }
 
