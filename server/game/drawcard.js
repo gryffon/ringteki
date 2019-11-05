@@ -519,17 +519,14 @@ class DrawCard extends BaseCard {
             return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
         }
 
-        // base effects
+        // base effects/copy effects/printed glory
         let baseEffects = gloryEffects.filter(effect => effect.type === EffectNames.SetBaseGlory);
+        let copyEffects = gloryEffects.filter(effect => effect.type === EffectNames.CopyCharacter);
         if(baseEffects.length > 0) {
             let latestBaseEffect = _.last(baseEffects);
             let baseAmount = latestBaseEffect.getValue(this);
             gloryModifiers.push(StatModifier.fromEffect(baseAmount, latestBaseEffect, true, `Base set by ${StatModifier.getEffectName(latestBaseEffect)}`));
-        }
-
-        // copy effects/printed glory
-        let copyEffects = gloryEffects.filter(effect => effect.type === EffectNames.CopyCharacter);
-        if(copyEffects.length > 0) {
+        } else if(copyEffects.length > 0) {
             let latestCopyEffect = _.last(copyEffects);
             let copiedCard = latestCopyEffect.getValue(this);
             gloryModifiers.push(StatModifier.fromEffect(copiedCard.printedGlory, latestCopyEffect, false, `Printed glory from ${copiedCard.name} due to ${StatModifier.getEffectName(latestCopyEffect)}`));
