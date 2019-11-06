@@ -1,12 +1,12 @@
 const ProvinceCard = require('../../provincecard.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, Elements } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl');
 
 class AlongTheRiverOfGold extends ProvinceCard {
     setupCardAbilities() {
         this.action({
             title: 'switch a character\'s base skills',
-            condition: () => this.game.currentConflict && this.game.currentConflict.conflictProvince.getElement() === 'water',
+            conflictProvinceCondition: province => province.isElement(Elements.Water),
             target: {
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isParticipating() && !card.hasDash(),

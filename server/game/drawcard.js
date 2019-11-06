@@ -68,9 +68,11 @@ class DrawCard extends BaseCard {
 
     getPrintedSkill(type) {
         if(type === 'military') {
-            return this.cardData.military === null ? NaN : isNaN(parseInt(this.cardData.military)) ? 0 : parseInt(this.cardData.military);
+            return this.cardData.military === null || this.cardData.military === undefined ?
+                NaN : isNaN(parseInt(this.cardData.military)) ? 0 : parseInt(this.cardData.military);
         } else if(type === 'political') {
-            return this.cardData.political === null ? NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
+            return this.cardData.political === null || this.cardData.political === undefined ?
+                NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
         }
     }
 
@@ -248,7 +250,8 @@ class DrawCard extends BaseCard {
             EffectNames.SetBaseMilitarySkill,
             EffectNames.SetBasePoliticalSkill,
             EffectNames.SetBaseDash,
-            EffectNames.SwitchBaseSkills
+            EffectNames.SwitchBaseSkills,
+            EffectNames.SetBaseGlory
         ];
 
         let baseEffects = this.getRawEffects().filter(effect => baseModifierEffects.includes(effect.type));
@@ -497,7 +500,8 @@ class DrawCard extends BaseCard {
         const gloryModifierEffects = [
             EffectNames.CopyCharacter,
             EffectNames.SetGlory,
-            EffectNames.ModifyGlory
+            EffectNames.ModifyGlory,
+            EffectNames.SetBaseGlory
         ];
 
         // glory undefined (Holding etc.)
@@ -517,9 +521,14 @@ class DrawCard extends BaseCard {
             return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
         }
 
-        // copy effects/printed glory
+        // base effects/copy effects/printed glory
+        let baseEffects = gloryEffects.filter(effect => effect.type === EffectNames.SetBaseGlory);
         let copyEffects = gloryEffects.filter(effect => effect.type === EffectNames.CopyCharacter);
-        if(copyEffects.length > 0) {
+        if(baseEffects.length > 0) {
+            let latestBaseEffect = _.last(baseEffects);
+            let baseAmount = latestBaseEffect.getValue(this);
+            gloryModifiers.push(StatModifier.fromEffect(baseAmount, latestBaseEffect, true, `Base set by ${StatModifier.getEffectName(latestBaseEffect)}`));
+        } else if(copyEffects.length > 0) {
             let latestCopyEffect = _.last(copyEffects);
             let copiedCard = latestCopyEffect.getValue(this);
             gloryModifiers.push(StatModifier.fromEffect(copiedCard.printedGlory, latestCopyEffect, false, `Printed glory from ${copiedCard.name} due to ${StatModifier.getEffectName(latestCopyEffect)}`));
@@ -707,7 +716,8 @@ class DrawCard extends BaseCard {
     }
 
     canPlay(context, type) {
-        return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context);
+        return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context) &&
+            this.checkRestrictions('play', context) && context.player.checkRestrictions('play', context);
     }
 
     mustAttachToRing() {
@@ -856,6 +866,10 @@ class DrawCard extends BaseCard {
     }
 
     canDeclareAsAttacker(conflictType, ring, province) { // eslint-disable-line no-unused-vars
+        const attackers = this.game.isDuringConflict() ? this.game.currentConflict.attackers : [];
+        if(attackers.concat(this).reduce((total, card) => total + card.sumEffects(EffectNames.FateCostToAttack), 0) > this.controller.fate) {
+            return false;
+        }
         if(this.anyEffect(EffectNames.CanOnlyBeDeclaredAsAttackerWithElement)) {
             const elementsAdded = this.attachments.reduce(
                 (array, attachment) => array.concat(attachment.getEffects(EffectNames.AddElementAsAttacker)),

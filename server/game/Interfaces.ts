@@ -4,6 +4,7 @@ import { GameAction } from './GameActions/GameAction';
 import Ring = require('./ring');
 import BaseCard = require('./basecard');
 import DrawCard = require('./drawcard');
+import ProvinceCard = require('./provincecard');
 import CardAbility = require('./CardAbility');
 import { DuelProperties } from './GameActions/DuelAction';
 import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } from './Constants';
@@ -111,6 +112,8 @@ export interface ActionProps extends AbilityProps {
     condition?: (context?: AbilityContext) => boolean;
     phase?: string;
     anyPlayer?: boolean;
+    conflictProvinceCondition?: (province: ProvinceCard) => boolean;
+    canTriggerOutsideConflict?: boolean;
 };
 
 interface TriggeredAbilityCardTarget {
