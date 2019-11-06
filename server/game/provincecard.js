@@ -60,11 +60,6 @@ class ProvinceCard extends BaseCard {
 
     flipFaceup() {
         this.facedown = false;
-        this.attachments.forEach(attachment => {
-            attachment.parent = null;
-            this.removeAttachment(attachment);
-            attachment.moveTo(Locations.ConflictDiscardPile);
-        })
     }
 
     isConflictProvince() {

@@ -48,19 +48,24 @@ describe('Total Warfare', function() {
             expect(this.getChatLogs(3)).toContain('player1 uses Total Warfare to sacrifice Akodo Zentarō');
         });
 
-        it('should be discard if played on a facedown province and that province is flipped', function() {
-            this.player1.playAttachment(this.totalWarfare, this.ancestralLands);
-
-            expect(this.totalWarfare.parent).toBe(this.ancestralLands);
+        it('should prompt the loser to sacrifice a character, regardless of controller', function() {
             this.noMoreActions();
 
             this.initiateConflict({
                 attackers: [this.zentaro, this.matsuBerseker],
-                defenders: [this.akodoToturi, this.samuraiOfIntegrity],
+                defenders: [this.samuraiOfIntegrity],
                 province: this.ancestralLands
             });
 
-            expect(this.totalWarfare.location).toBe('conflict discard pile');
+            this.player2.pass();
+            this.player1.playAttachment(this.totalWarfare, this.ancestralLands);
+
+            this.player2.pass();
+            this.player1.pass();
+
+            expect(this.player2).toHavePrompt('Choose a character');
+            this.player1.clickCard(this.samuraiOfIntegrity);
+            expect(this.getChatLogs(3)).toContain('player1 uses Total Warfare to sacrifice Samurai of Integrity');
         });
     });
 });
