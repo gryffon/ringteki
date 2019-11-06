@@ -250,7 +250,8 @@ class DrawCard extends BaseCard {
             EffectNames.SetBaseMilitarySkill,
             EffectNames.SetBasePoliticalSkill,
             EffectNames.SetBaseDash,
-            EffectNames.SwitchBaseSkills
+            EffectNames.SwitchBaseSkills,
+            EffectNames.SetBaseGlory
         ];
 
         let baseEffects = this.getRawEffects().filter(effect => baseModifierEffects.includes(effect.type));
@@ -499,7 +500,8 @@ class DrawCard extends BaseCard {
         const gloryModifierEffects = [
             EffectNames.CopyCharacter,
             EffectNames.SetGlory,
-            EffectNames.ModifyGlory
+            EffectNames.ModifyGlory,
+            EffectNames.SetBaseGlory
         ];
 
         // glory undefined (Holding etc.)
@@ -519,9 +521,14 @@ class DrawCard extends BaseCard {
             return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
         }
 
-        // copy effects/printed glory
+        // base effects/copy effects/printed glory
+        let baseEffects = gloryEffects.filter(effect => effect.type === EffectNames.SetBaseGlory);
         let copyEffects = gloryEffects.filter(effect => effect.type === EffectNames.CopyCharacter);
-        if(copyEffects.length > 0) {
+        if(baseEffects.length > 0) {
+            let latestBaseEffect = _.last(baseEffects);
+            let baseAmount = latestBaseEffect.getValue(this);
+            gloryModifiers.push(StatModifier.fromEffect(baseAmount, latestBaseEffect, true, `Base set by ${StatModifier.getEffectName(latestBaseEffect)}`));
+        } else if(copyEffects.length > 0) {
             let latestCopyEffect = _.last(copyEffects);
             let copiedCard = latestCopyEffect.getValue(this);
             gloryModifiers.push(StatModifier.fromEffect(copiedCard.printedGlory, latestCopyEffect, false, `Printed glory from ${copiedCard.name} due to ${StatModifier.getEffectName(latestCopyEffect)}`));
