@@ -6,7 +6,6 @@ class IntoTheForbiddenCity extends ProvinceCard {
     setupCardAbilities() {
         this.action({
             title: 'Discard an attachment',
-            condition: context => context.source.isConflictProvince(),
             target: {
                 cardType: CardTypes.Attachment,
                 cardCondition: card => card.parent && card.parent.isAttacking(),

@@ -7,7 +7,7 @@ class StatusToken extends EffectSource {
         this.honored = !!isHonored;
         this.dishonored = !isHonored;
         this.card = card;
-        this.type = 'token';
+        this.printedType = 'token';
         this.persistentEffects = [];
 
         this.applyHonorEffects();

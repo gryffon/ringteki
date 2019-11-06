@@ -3,6 +3,10 @@ const { TargetModes, CardTypes } = require('../../Constants');
 
 class WickedTetsubo extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            trait: 'berserker'
+        });
+
         this.action({
             title: 'Set Military or Political skill to 0',
             condition: context => context.source.parent.isAttacking(),
@@ -31,14 +35,6 @@ class WickedTetsubo extends DrawCard {
             effect: 'set {1}\'s {2} skill to 0',
             effectArgs: context => [context.targets.character, context.selects.effect.choice.toLowerCase()]
         });
-    }
-
-    canAttach(card, context) {
-        if(!card.hasTrait('berserker')) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 

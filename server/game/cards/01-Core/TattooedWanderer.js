@@ -1,29 +1,21 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const PlayAttachmentAction = require('../../playattachmentaction.js');
-const { CardTypes } = require('../../Constants');
+const { CardTypes, Durations } = require('../../Constants');
 
 class PlayTattooedWandererAsAttachment extends PlayAttachmentAction {
     constructor(card) {
-        super(card);
+        super(card, true);
         this.title = 'Play Tattooed Wanderer as an attachment';
     }
 
-    canResolveTargets(context) {
-        context.source.type = CardTypes.Attachment;
-        let result = super.canResolveTargets(context);
-        context.source.type = CardTypes.Character;
-        return result;
-    }
-
-    resolveTargets(context) {
-        context.source.type = CardTypes.Attachment;
-        const targetResults = super.resolveTargets(context);
-        context.game.queueSimpleStep(() => {
-            if(targetResults.cancelled) {
-                context.source.type = CardTypes.Character;
-            }
-        });
-        return targetResults;
+    executeHandler(context) {
+        AbilityDsl.actions.cardLastingEffect({
+            duration: Durations.Custom,
+            canChangeZoneOnce: true,
+            effect: AbilityDsl.effects.changeType(CardTypes.Attachment)
+        }).resolve(this.card, context);
+        super.executeHandler(context);
     }
 }
 
@@ -33,11 +25,6 @@ class TattooedWanderer extends DrawCard {
         this.whileAttached({
             effect: ability.effects.addKeyword('covert')
         });
-    }
-
-    leavesPlay() {
-        this.type = CardTypes.Character;
-        super.leavesPlay();
     }
 }
 

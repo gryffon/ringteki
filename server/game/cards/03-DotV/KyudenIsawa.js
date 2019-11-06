@@ -1,6 +1,6 @@
 const StrongholdCard = require('../../strongholdcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Locations, Players, CardTypes } = require('../../Constants');
+const { Locations, Players, CardTypes, PlayTypes } = require('../../Constants');
 
 class KyudenIsawa extends StrongholdCard {
     setupCardAbilities() {
@@ -17,6 +17,7 @@ class KyudenIsawa extends StrongholdCard {
                 cardCondition: card => card.hasTrait('spell'),
                 gameAction: AbilityDsl.actions.playCard({
                     resetOnCancel: true,
+                    playType: PlayTypes.PlayFromHand,
                     postHandler: spellContext => {
                         let card = spellContext.source;
                         context.game.addMessage('{0} is removed from the game by {1}\'s ability', card, context.source);

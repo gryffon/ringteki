@@ -4,6 +4,11 @@ const AbilityDsl = require('../../abilitydsl');
 
 class BladeOf10000Battles extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            myControl: true,
+            unique: true
+        });
+
         this.reaction({
             when: {
                 afterConflict: (event, context) => context.source.parent.isParticipating() &&
@@ -19,14 +24,6 @@ class BladeOf10000Battles extends DrawCard {
                 gameAction: AbilityDsl.actions.moveCard({ destination: Locations.Hand })
             }
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player ||
-            !card.isUnique()) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 
