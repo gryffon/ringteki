@@ -5,7 +5,7 @@ const { Phases, PlayTypes, EventNames, TargetModes } = require('./Constants');
 
 class PlayAttachmentToRingAction extends BaseAction {
     constructor(card) {
-        super(card, [Costs.payTargetDependentFateCost('target', PlayTypes.PlayFromHand)], {
+        super(card, [Costs.payTargetDependentFateCost('target')], {
             gameAction: GameActions.attachToRing(context => ({ attachment: context.source })),
             ringCondition: (ring, context) => context.source.canPlayOn(ring),
             mode: TargetModes.Ring

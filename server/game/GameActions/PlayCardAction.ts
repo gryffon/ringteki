@@ -3,7 +3,7 @@ import AbilityResolver = require('../gamesteps/abilityresolver');
 import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
-import { Locations, Stages }  from '../Constants';
+import { Locations, PlayTypes, Stages }  from '../Constants';
 
 class PlayCardResolver extends AbilityResolver {
     playGameAction: PlayCardAction;
@@ -81,6 +81,7 @@ class PlayCardResolver extends AbilityResolver {
 export interface PlayCardProperties extends CardActionProperties {
     resetOnCancel?: boolean;
     postHandler?: (context: AbilityContext) => void;
+    playType?: PlayTypes;
     playCardTarget?: (context: AbilityContext, properties: PlayCardProperties) => void;
     location?: Locations;
     destination?: Locations;
@@ -94,7 +95,6 @@ export class PlayCardAction extends CardGameAction {
     defaultProperties: PlayCardProperties = {
         resetOnCancel: false,
         postHandler: () => true,
-        location: Locations.Hand,
         destinationOptions: {},
         payCosts: true
     };
@@ -111,11 +111,11 @@ export class PlayCardAction extends CardGameAction {
             return false;
         }
         const properties = this.getProperties(context, additionalProperties);
-        const actions = card.getPlayActions();
-        return this.getLegalActions(actions, context, properties).length > 0;
+        return this.getLegalActions(card, context, properties).length > 0;
     }
 
-    getLegalActions(actions: any[], context: AbilityContext, properties: PlayCardProperties) {
+    getLegalActions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        const actions = card.getPlayActions();
         // filter actions to exclude actions which involve this game action, or which are not legal
         return actions.filter(action => {
             const ignoredRequirements = ['location', 'player'];
@@ -124,10 +124,15 @@ export class PlayCardAction extends CardGameAction {
             }
             let newContext = action.createContext(context.player);
             newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
+            this.setPlayType(newContext, properties.playType, card.location);
             return !action.meetsRequirements(newContext, ignoredRequirements);
         });
     }
 
+    setPlayType(context: AbilityContext, playType: PlayTypes, location: Locations): void {
+        context.playType = playType || context.playType || location.includes('province') && PlayTypes.PlayFromProvince ||
+            location === 'hand' && PlayTypes.PlayFromHand || PlayTypes.Other;
+    }
 
     cancelAction(context: AbilityContext, properties: PlayCardProperties): number {
         if(properties.parentAction) {
@@ -142,7 +147,7 @@ export class PlayCardAction extends CardGameAction {
             return;
         }
         let card = properties.target[0];
-        let actions = this.getLegalActions(card.getPlayActions(), context, properties);
+        let actions = this.getLegalActions(card, context, properties);
         if(actions.length === 1) {
             events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), additionalProperties));
             return;
@@ -158,6 +163,7 @@ export class PlayCardAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties);
         let event = this.createEvent(card, context, additionalProperties);
         this.updateEvent(event, card, context, additionalProperties);
+        this.setPlayType(actionContext, properties.playType, card.location);
         event.replaceHandler(() => context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties)));
         return event;    
     }

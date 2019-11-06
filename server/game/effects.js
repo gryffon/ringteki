@@ -94,6 +94,7 @@ const Effects = {
     cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match),
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match),
     // Player effects
+    additionalCardPlayed: (amount = 1) => EffectBuilder.player.dynamic(EffectNames.AdditionalCardPlayed, amount),
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible(EffectNames.AdditionalCharactersInConflict, amount),
     additionalConflict: (type) => EffectBuilder.player.detached(EffectNames.AdditionalConflict, {
         apply: player => player.addConflictOpportunity(type),
@@ -102,18 +103,18 @@ const Effects = {
     additionalCost: (func) => EffectBuilder.player.static(EffectNames.AdditionalCost, func),
     alternateFatePool: (match) => EffectBuilder.player.static(EffectNames.AlternateFatePool, match),
     cannotDeclareConflictsOfType: type => EffectBuilder.player.static(EffectNames.CannotDeclareConflictsOfType, type),
-    canPlayFromOwn: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
+    canPlayFromOwn: (location, cards, playType = PlayTypes.PlayFromHand) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
         apply: (player) => {
             for(const card of cards.filter(card => card.type === CardTypes.Event && card.location === location)) {
                 for(const reaction of card.reactions) {
                     reaction.registerEvents();
                 }
             }
-            return player.addPlayableLocation(PlayTypes.PlayFromHand, player, location, cards);
+            return player.addPlayableLocation(playType, player, location, cards);
         },
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),
-    canPlayFromOpponents: (location, cards) => EffectBuilder.player.detached(EffectNames.CanPlayFromOpponents, {
+    canPlayFromOpponents: (location, cards, playType = PlayTypes.PlayFromHand) => EffectBuilder.player.detached(EffectNames.CanPlayFromOpponents, {
         apply: (player) => {
             if(!player.opponent) {
                 return;
@@ -123,7 +124,7 @@ const Effects = {
                     reaction.registerEvents();
                 }
             }
-            return player.addPlayableLocation(PlayTypes.PlayFromHand, player.opponent, location, cards);
+            return player.addPlayableLocation(playType, player.opponent, location, cards);
         },
         unapply: (player, context, location) => player.removePlayableLocation(location)
     }),

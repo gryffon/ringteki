@@ -96,6 +96,7 @@ export enum EffectNames {
     AddElement = 'addElement',
     CannotDeclareRing = 'cannotDeclare',
     ConsiderRingAsClaimed = 'considerAsClaimed',
+    AdditionalCardPlayed = 'additionalCardPlayed',
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
     AdditionalCost = 'additionalCost',
@@ -172,7 +173,8 @@ export enum CardTypes {
 
 export enum PlayTypes {
     PlayFromHand = 'playFromHand',
-    PlayFromProvince = 'playFromProvince'
+    PlayFromProvince = 'playFromProvince',
+    Other = 'other'
 };
 
 export enum EventNames {
