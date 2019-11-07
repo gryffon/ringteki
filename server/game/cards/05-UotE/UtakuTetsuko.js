@@ -8,7 +8,7 @@ class UtakuTetsuko extends DrawCard {
             targetController: Players.Opponent,
             effect: ability.effects.increaseCost({
                 amount: 1,
-                playingType: PlayTypes.PlayFromHand
+                playingTypes: PlayTypes.PlayFromHand
             })
         });
     }

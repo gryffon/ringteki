@@ -2,7 +2,7 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases, PlayTypes, EventNames, Locations } = require('./Constants');
+const { Phases, EventNames, Locations } = require('./Constants');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card, ignoreType = false) {
@@ -18,10 +18,10 @@ class PlayAttachmentAction extends BaseAction {
         if(!ignoredRequirements.includes('phase') && context.game.currentPhase === Phases.Dynasty) {
             return 'phase';
         }
-        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand)) {
+        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, context.playType)) {
             return 'location';
         }
-        if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, PlayTypes.PlayFromHand)) {
+        if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, context.playType)) {
             return 'cannotTrigger';
         }
         if(context.source.anotherUniqueInPlay(context.player)) {
@@ -40,7 +40,7 @@ class PlayAttachmentAction extends BaseAction {
             card: context.source,
             context: context,
             originalLocation: context.source.location,
-            playType: PlayTypes.PlayFromHand
+            playType: context.playType
         });
         let takeControl = context.source.controller !== context.player;
         context.game.openEventWindow([context.game.actions.attach({ attachment: context.source, takeControl: takeControl }).getEvent(context.target, context), cardPlayedEvent]);

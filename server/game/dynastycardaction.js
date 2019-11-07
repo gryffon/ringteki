@@ -7,7 +7,7 @@ class DynastyCardAction extends BaseAction {
     constructor(card) {
         super(card, [
             Costs.chooseFate(PlayTypes.PlayFromProvince),
-            Costs.payReduceableFateCost(PlayTypes.PlayFromProvince)
+            Costs.payReduceableFateCost()
         ]);
         this.title = 'Play this character';
     }
