@@ -9,7 +9,7 @@ const shiroKitsukiCost = function() {
             return true;
         },
         resolve: function(context) {
-            context.game.promptWithMenu(context.player, this, {
+            context.game.promptWithMenu(context.player, context.source, {
                 context: context,
                 activePrompt: {
                     menuTitle: 'Name a card',
@@ -40,7 +40,7 @@ class ShiroKitsuki extends StrongholdCard {
                     when: {
                         onCardPlayed: (event, context) => {
                             return event.player === context.player.opponent &&
-                                event.card.name === context.cost[0];
+                                event.card.name === this.nameOfCard;
                         }
                     },
                     gameAction: AbilityDsl.actions.selectRing(context => ({
@@ -55,9 +55,9 @@ class ShiroKitsuki extends StrongholdCard {
         });
     }
 
-    selectCardName(player, cardName, context) {
+    selectCardName(player, cardName) {
         this.game.addMessage('{0} names {1} - if {2} plays copies of this card {0} gets to claim a ring', player, cardName, player.opponent);
-        context.costs.shiroKitsukiCost = cardName;
+        this.nameOfCard = cardName;
         return true;
     }
 }
