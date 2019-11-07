@@ -19,7 +19,7 @@ describe('Total Warfare', function() {
 
             this.samuraiOfIntegrity = this.player2.findCardByName('samurai-of-integrity');
             this.akodoToturi = this.player2.findCardByName('akodo-toturi');
-            this.ancestralLands = this.player2.findCardByName('ancestral-lands', 'province 1');
+            this.ancestralLands = this.player2.findCardByName('ancestral-lands');
         });
 
         it('should be able to played on a province', function() {
@@ -45,6 +45,7 @@ describe('Total Warfare', function() {
 
             expect(this.player1).toHavePrompt('Choose a character');
             this.player1.clickCard(this.zentaro);
+            expect(this.zentaro.location).toBe('dynasty discard pile');
             expect(this.getChatLogs(3)).toContain('player1 uses Total Warfare to sacrifice Akodo Zentarō');
         });
 
@@ -64,7 +65,8 @@ describe('Total Warfare', function() {
             this.player1.pass();
 
             expect(this.player2).toHavePrompt('Choose a character');
-            this.player1.clickCard(this.samuraiOfIntegrity);
+            this.player2.clickCard(this.samuraiOfIntegrity);
+            expect(this.samuraiOfIntegrity.location).toBe('dynasty discard pile');
             expect(this.getChatLogs(3)).toContain('player1 uses Total Warfare to sacrifice Samurai of Integrity');
         });
     });
