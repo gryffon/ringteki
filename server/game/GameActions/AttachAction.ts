@@ -32,9 +32,8 @@ export class AttachAction extends CardGameAction {
     }
 
     canAffect(card: BaseCard, context: AbilityContext, additionalProperties = {}): boolean {
-        const provinces = [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince];
         let properties = this.getProperties(context, additionalProperties) as AttachActionProperties;
-        if(!context || !context.player || !card || card.location !== Locations.PlayArea && provinces.includes(card.location)) {
+        if(!context || !context.player || !card || card.location !== Locations.PlayArea && card.type !== CardTypes.Province) {
             return false;
         } else if(!properties.attachment || properties.attachment.anotherUniqueInPlay(context.player) || !properties.attachment.canAttach(card, context, properties.ignoreType)) {
             return false;
