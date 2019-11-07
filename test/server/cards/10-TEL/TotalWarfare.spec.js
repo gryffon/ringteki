@@ -5,7 +5,8 @@ describe('Total Warfare', function() {
                 phase: 'conflict',
                 player1: {
                     inPlay: ['akodo-zentaro', 'matsu-berserker'],
-                    hand: ['total-warfare']
+                    hand: ['total-warfare'],
+                    conflictDiscard: ['total-warfare']
                 },
                 player2: {
                     inPlay: ['samurai-of-integrity', 'akodo-toturi'],
@@ -16,6 +17,8 @@ describe('Total Warfare', function() {
             this.zentaro = this.player1.findCardByName('akodo-zentaro');
             this.matsuBerseker = this.player1.findCardByName('matsu-berserker');
             this.totalWarfare = this.player1.findCardByName('total-warfare');
+            this.totalWarfare2 = this.player1.findCardByName('total-warfare', 'conflict discard pile');
+            this.player1.player.moveCard(this.totalWarfare2, 'hand');
 
             this.samuraiOfIntegrity = this.player2.findCardByName('samurai-of-integrity');
             this.akodoToturi = this.player2.findCardByName('akodo-toturi');
@@ -68,6 +71,19 @@ describe('Total Warfare', function() {
             this.player2.clickCard(this.samuraiOfIntegrity);
             expect(this.samuraiOfIntegrity.location).toBe('dynasty discard pile');
             expect(this.getChatLogs(3)).toContain('player1 uses Total Warfare to sacrifice Samurai of Integrity');
+        });
+
+        it('shouldn\'t be able to have two battlefields at the same time', function() {
+            this.player1.playAttachment(this.totalWarfare, this.ancestralLands);
+
+            expect(this.totalWarfare.parent).toBe(this.ancestralLands);
+            this.player2.pass();
+            expect(this.totalWarfare2.location).toBe('hand');
+            this.player1.playAttachment(this.totalWarfare2, this.ancestralLands);
+
+            expect(this.totalWarfare.parent).toBe(null);
+            expect(this.totalWarfare.location).toBe('conflict discard pile');
+            expect(this.totalWarfare2.parent).toBe(this.ancestralLands);
         });
     });
 });

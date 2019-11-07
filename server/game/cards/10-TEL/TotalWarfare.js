@@ -4,13 +4,13 @@ const DrawCard = require('../../drawcard.js');
 
 class TotalWarfare extends DrawCard {
     setupCardAbilities() {
-        this.attachmentConditions({
-            limit: 1
-        })
+        this.whileAttached({
+            effect: AbilityDsl.effects.attachmentRestrictTraitAmount({ battlefield: 1 })
+        });
         this.forcedReaction({
             title: 'Loser sacrifices a character',
             when: {
-                afterConflict: (event, context) => event.conflict.loser && context.source.parent.isConflictProvince();
+                afterConflict: (event, context) => event.conflict.loser && context.source.parent.isConflictProvince()
             },
             target: {
                 cardType: CardTypes.Character,
