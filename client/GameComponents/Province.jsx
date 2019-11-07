@@ -124,7 +124,7 @@ class Province extends React.Component {
 
         return (
             <div className={ className } onDragLeave={ this.onDragLeave } onDragOver={ this.onDragOver } onDrop={ event => this.onDragDrop(event, this.props.source) }
-                onClick={ this.onCollectionClick } style={ !!provinceCard ? Object.assign({}, this.getWrapperStyle(provinceCard)) : {} }>
+                onClick={ this.onCollectionClick } style={ provinceCard ? Object.assign({}, this.getWrapperStyle(provinceCard)) : {} }>
                 <div className='panel-header'>
                     { headerText }
                 </div>
