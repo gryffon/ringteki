@@ -123,7 +123,7 @@ class ProvinceCard extends BaseCard {
             isBroken: this.isBroken,
             attachments: this.attachments.map(attachment => {
                 return attachment.getSummary(activePlayer, hideWhenFaceup);
-            }),
+            })
         });
     }
 
