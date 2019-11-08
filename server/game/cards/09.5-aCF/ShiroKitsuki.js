@@ -28,7 +28,7 @@ const shiroKitsukiCost = function() {
 class ShiroKitsuki extends StrongholdCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'Name a card that your opponent cannot play for the phase',
+            title: 'Name a card',
             when: {
                 onConflictDeclared: () => true
             },
@@ -44,11 +44,11 @@ class ShiroKitsuki extends StrongholdCard {
                         }
                     },
                     gameAction: AbilityDsl.actions.selectRing(context => ({
-                        activePromptTitle: 'Choose a ring to take',
+                        activePromptTitle: 'Choose a ring to claim',
                         ringCondition: ring => ring.isUnclaimed(),
-                        message: '{0} takes {1}',
+                        message: '{0} claim {1}',
                         messageArgs: ring => [context.player, ring],
-                        gameAction: AbilityDsl.actions.takeRing({ takeFate: true })
+                        gameAction: AbilityDsl.actions.claimRing({ takeFate: true, type: 'political'})
                     }))
                 })
             }))
