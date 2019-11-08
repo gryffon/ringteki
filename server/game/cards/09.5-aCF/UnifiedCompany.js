@@ -13,7 +13,7 @@ class UnifiedCompany extends DrawCard {
                         context.player.hand.size() < context.player.opponent.hand.size();
                 }
             },
-            target: {
+            gameAction: AbilityDsl.actions.selectCard(() => ({
                 cardType: CardTypes.Character,
                 location: Locations.DynastyDiscardPile,
                 controller: Players.Self,
@@ -23,7 +23,7 @@ class UnifiedCompany extends DrawCard {
                         !card.isUnique();
                 },
                 gameAction: AbilityDsl.actions.putIntoPlay()
-            }
+            }))
         });
     }
 }
