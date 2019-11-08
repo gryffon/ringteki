@@ -9,9 +9,9 @@ export interface ClaimRingProperties extends RingActionProperties {
 }
 
 export class ClaimRingAction extends RingAction {
-    name = 'takeFate';
+    name = 'claimRing';
     eventName = EventNames.OnClaimRing;
-    effect = 'take {0}';
+    effect = 'claim {0}';
     defaultProperties: ClaimRingProperties = { takeFate: true, type: ConflictTypes.Military };
     constructor(properties: ((context: AbilityContext) => ClaimRingProperties) | ClaimRingProperties) {
         super(properties);
@@ -22,11 +22,12 @@ export class ClaimRingAction extends RingAction {
     }
 
     eventHandler(event, additionalProperties): void {
-        let { takeFate } = this.getProperties(event.context, additionalProperties) as ClaimRingProperties;
+        let { takeFate, type } = this.getProperties(event.context, additionalProperties) as ClaimRingProperties;
         let ring = event.ring;
         let context = event.context;
         ring.claimRing(context.player);
         ring.contested = false;
+        ring.conflictType = type;
         if(takeFate && context.player.checkRestrictions('takeFateFromRings', context)) {
             context.game.addMessage('{0} takes {1} fate from {2}', context.player, ring.fate, ring);
             context.player.modifyFate(ring.fate);

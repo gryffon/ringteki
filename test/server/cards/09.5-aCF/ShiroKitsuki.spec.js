@@ -7,6 +7,8 @@ describe('Shiro Kitsuki', function() {
                     player1: {
                         hand: ['fine-katana'],
                         inPlay: ['solemn-scholar'],
+                        dynastyDiscard: ['keeper-initiate'],
+                        role: 'keeper-of-water',
                         stronghold: 'shiro-kitsuki'
                     },
                     player2: {
@@ -21,6 +23,7 @@ describe('Shiro Kitsuki', function() {
                 this.fineKatana = this.player2.findCardByName('fine-katana');
                 this.kamiUnleashed = this.player2.findCardByName('kami-unleashed');
                 this.entrenched = this.player2.findCardByName('entrenched-position');
+                this.keeper = this.player1.findCardByName('keeper-initiate');
 
                 this.shiroKitsuki = this.player1.findCardByName('shiro-kitsuki');
                 this.scholar = this.player1.findCardByName('solemn-scholar');
@@ -51,6 +54,16 @@ describe('Shiro Kitsuki', function() {
                 expect(this.player1).toHavePrompt('Choose a ring to claim');
                 this.player1.clickRing('earth');
                 expect(this.game.rings.earth.isUnclaimed()).toBe(false);
+            });
+
+            it('should claim the ring for the player', function() {
+                this.player1.clickCard(this.shiroKitsuki);
+                this.player1.chooseCardInPrompt(this.fineKatana.name, 'card-name');
+                this.player2.clickPrompt('Done');
+                this.player2.playAttachment(this.fineKatana, this.adept);
+                this.player1.clickRing('water');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.keeper);
             });
         });
     });
