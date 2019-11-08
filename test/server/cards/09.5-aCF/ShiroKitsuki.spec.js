@@ -65,6 +65,17 @@ describe('Shiro Kitsuki', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.keeper);
             });
+
+            it('should change the ring to political', function() {
+                this.player1.clickCard(this.shiroKitsuki);
+                this.player1.chooseCardInPrompt(this.fineKatana.name, 'card-name');
+                this.player2.clickPrompt('Done');
+                this.player2.playAttachment(this.fineKatana, this.adept);
+                this.game.rings.earth.conflictType = 'military';
+                expect(this.game.rings.earth.conflictType).toBe('military');
+                this.player1.clickRing('earth');
+                expect(this.game.rings.earth.conflictType).toBe('political');
+            });
         });
     });
 });
