@@ -10,7 +10,7 @@ describe('Unified Company', function() {
                         dynastyDiscard: ['solemn-scholar', 'akodo-gunso', 'agasha-taiko', 'borderlands-defender']
                     },
                     player2: {
-                        hand: ['ornate-fan', 'banzai'],
+                        hand: ['banzai', 'fine-katana'],
                         dynastyDiscard: ['brash-samurai']
                     }
                 });
@@ -57,13 +57,25 @@ describe('Unified Company', function() {
                 expect(this.gunso.isParticipating()).toBe(false);
             });
 
-            it('should not trigger if you have equal or less cards in hand', function() {
+            it('should not trigger if you have equal cards in hand', function() {
                 this.player2.clickCard('banzai');
                 this.player2.clickCard(this.unifiedCompany);
                 this.player2.clickPrompt('Done');
                 this.noMoreActions();
                 expect(this.player1.player.hand.size()).toBe(1);
                 expect(this.player2.player.hand.size()).toBe(1);
+                expect(this.player1).toHavePrompt('Do you wish to discard Adept of the Waves?');
+            });
+
+            it('should not trigger if you have less cards in hand', function() {
+                this.player2.clickCard('banzai');
+                this.player2.clickCard(this.unifiedCompany);
+                this.player2.clickPrompt('Done');
+                this.player1.pass();
+                this.player2.playAttachment('fine-katana', this.unifiedCompany);
+                this.noMoreActions();
+                expect(this.player1.player.hand.size()).toBe(1);
+                expect(this.player2.player.hand.size()).toBe(0);
                 expect(this.player1).toHavePrompt('Do you wish to discard Adept of the Waves?');
             });
         });
