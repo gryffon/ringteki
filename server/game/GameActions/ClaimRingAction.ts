@@ -33,7 +33,6 @@ export class ClaimRingAction extends RingAction {
             context.player.modifyFate(ring.fate);
             ring.removeFate();
         }
-
     }
 }
 
