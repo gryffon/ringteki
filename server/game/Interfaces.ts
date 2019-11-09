@@ -163,12 +163,18 @@ export interface PersistentEffectProps {
     effect: Function | Function[];
 };
 
+export type traitLimit = {
+    trait: string
+    limit: number
+};
+
 export interface AttachmentConditionProps {
     limit?: number;
     myControl?: boolean;
     unique?: boolean;
     faction?: string | string[];
     trait?: string | string[];
+    limitTrait?: traitLimit | traitLimit[]
 };
 
 interface HonoredToken {

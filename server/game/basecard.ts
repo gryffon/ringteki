@@ -12,7 +12,7 @@ import Player = require('./player');
 import Game = require('./game');
 
 import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } from './Constants';
-import { ActionProps, TriggeredAbilityProps, PersistentEffectProps, AttachmentConditionProps } from './Interfaces'; 
+import { ActionProps, TriggeredAbilityProps, PersistentEffectProps, AttachmentConditionProps } from './Interfaces';
 
 class BaseCard extends EffectSource {
     owner: Player;
@@ -25,7 +25,7 @@ class BaseCard extends EffectSource {
     inConflict: boolean = false;
     type: CardTypes;
     facedown: boolean;
-    
+
     tokens: object = {};
     menu: _.Underscore<any> = _([]);
     showPopup: boolean = false;
@@ -183,11 +183,17 @@ class BaseCard extends EffectSource {
             const traits = Array.isArray(properties.trait) ? properties.trait : [properties.trait];
             effects.push(Effects.attachmentTraitRestriction(traits));
         }
+        if(properties.limitTrait) {
+            const traitLimits = Array.isArray(properties.limitTrait) ? properties.limitTrait : [properties.limitTrait];
+            traitLimits.forEach(traitLimit => {
+                effects.push(Effects.attachmentRestrictTraitAmount({ [traitLimit.trait]: traitLimit.limit}))
+            });
+        }
         if(effects.length > 0) {
             this.persistentEffect({
                 location: Locations.Any,
                 effect: effects
-            });    
+            });
         }
     }
 
@@ -215,7 +221,7 @@ class BaseCard extends EffectSource {
     }
 
     isInProvince(): boolean {
-        return [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, 
+        return [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree,
             Locations.ProvinceFour, Locations.StrongholdProvince].includes(this.location);
     }
 
