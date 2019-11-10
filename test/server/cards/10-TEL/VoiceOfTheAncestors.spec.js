@@ -10,7 +10,7 @@ describe('Voice of the Ancestors', function() {
                         dynastyDiscard: ['ashigaru-levy', 'ashigaru-levy', 'kitsu-spiritcaller', 'matsu-berserker']
                     }
                 });
-                
+
                 this.voiceOfTheAncestors = this.player1.filterCardsByName('voice-of-the-ancestors')[0];
                 this.voiceOfTheAncestors2 = this.player1.filterCardsByName('voice-of-the-ancestors')[1];
                 this.ashigaruLevy = this.player1.findCardByName('ashigaru-levy', 'dynasty discard pile');
@@ -54,9 +54,9 @@ describe('Voice of the Ancestors', function() {
                 expect(this.player1).toBeAbleToSelect(this.matsuBerserker);
                 this.player1.clickCard(this.matsuBerserker);
                 expect(this.player2).toHavePrompt('Action Window');
-                
+
                 this.player2.pass();
-                
+
                 this.player1.clickCard(this.voiceOfTheAncestors2);
                 expect(this.player1).toHavePrompt('Voice of the Ancestors');
                 expect(this.player1).toBeAbleToSelect(this.akodoToturi);
