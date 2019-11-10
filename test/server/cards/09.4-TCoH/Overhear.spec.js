@@ -50,11 +50,11 @@ describe('Overhear', function() {
                 this.player1.clickCard(this.overhear);
                 expect(this.player2.hand.length).toBe(handSize - 1);
                 expect(this.player2.conflictDeck.length).toBe(deckSize + 1);
-                expect([ 
-                    'player1 sees Fine Katana', 
+                expect([
+                    'player1 sees Fine Katana',
                     'player1 sees Ornate Fan',
                     'player1 sees Banzai!'
-                ]).toContain(this.getChatLogs(1)[0])
+                ]).toContain(this.getChatLogs(1)[0]);
                 expect(
                     `player1 sees ${ this.player2.conflictDeck[0].name }`
                 ).toEqual(this.getChatLogs(1)[0]);

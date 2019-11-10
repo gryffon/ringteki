@@ -12,12 +12,12 @@ class Overhear extends DrawCard {
             gameAction:AbilityDsl.actions.sequential([AbilityDsl.actions.moveCard(context => ({
                 target: context.player.opponent && context.player.opponent.hand.shuffle().slice(0, 1),
                 destination: Locations.ConflictDeck
-            })), 
-                AbilityDsl.actions.lookAt(context => ({
-                    target: context.player.opponent.conflictDeck.first(1),
-                    message: '{0} sees {1}', 
-                    messageArgs : cards => ([context.player, cards[0]])
-                }))
+            })),
+            AbilityDsl.actions.lookAt(context => ({
+                target: context.player.opponent.conflictDeck.first(1),
+                message: '{0} sees {1}',
+                messageArgs : cards => ([context.player, cards[0]])
+            }))
             ]),
             condition: context => context.game.isDuringConflict('political'),
             then: context => {
