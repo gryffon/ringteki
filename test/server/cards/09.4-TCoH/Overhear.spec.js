@@ -37,7 +37,7 @@ describe('Overhear', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
-            it('should put a random card from your opponent\'s hand on top of their deck', function() {
+            it('should put a random card from your opponent\'s hand on top of their deck, and correctly log it', function() {
                 let handSize = this.player2.hand.length;
                 let deckSize = this.player2.conflictDeck.length;
                 this.noMoreActions();
@@ -50,11 +50,14 @@ describe('Overhear', function() {
                 this.player1.clickCard(this.overhear);
                 expect(this.player2.hand.length).toBe(handSize - 1);
                 expect(this.player2.conflictDeck.length).toBe(deckSize + 1);
-                expect([
-                    'player1 plays Overhear to move Fine Katana to player2\'s conflict deck',
-                    'player1 plays Overhear to move Ornate Fan to player2\'s conflict deck',
-                    'player1 plays Overhear to move Banzai! to player2\'s conflict deck'
-                ]).toContain(this.getChatLogs(1)[0]);
+                expect([ 
+                    'player1 sees Fine Katana', 
+                    'player1 sees Ornate Fan',
+                    'player1 sees Banzai!'
+                ]).toContain(this.getChatLogs(1)[0])
+                expect(
+                    `player1 sees ${ this.player2.conflictDeck[0].name }`
+                ).toEqual(this.getChatLogs(1)[0]);
             });
 
             it('should not prompt to resolve a second time if you do not have a participating courtier', function() {
@@ -97,7 +100,7 @@ describe('Overhear', function() {
                 this.player1.clickPrompt('Give 1 honor to resolve this ability again');
                 expect(this.player1.player.honor).toBe(honorP1 - 1);
                 expect(this.player2.player.honor).toBe(honorP2 + 1);
-                expect(this.getChatLogs(2)).toContain('player1 chooses to give an honor to player2 to resolve Overhear again');
+                expect(this.getChatLogs(3)).toContain('player1 chooses to give an honor to player2 to resolve Overhear again');
             });
 
             it('should end if you choose not to resolve again', function() {
