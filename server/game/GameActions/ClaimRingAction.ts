@@ -25,7 +25,6 @@ export class ClaimRingAction extends RingAction {
         let { takeFate, type } = this.getProperties(event.context, additionalProperties) as ClaimRingProperties;
         let ring = event.ring;
         let context = event.context;
-        ring.claimRing(context.player);
         ring.contested = false;
         ring.conflictType = type;
         if(takeFate && context.player.checkRestrictions('takeFateFromRings', context)) {
@@ -33,6 +32,7 @@ export class ClaimRingAction extends RingAction {
             context.player.modifyFate(ring.fate);
             ring.removeFate();
         }
+        context.game.raiseEvent(EventNames.OnClaimRing, { player: context.player, conflict: context.conflict, ring:ring }, () => ring.claimRing(context.player));
     }
 }
 

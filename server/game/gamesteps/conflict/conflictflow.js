@@ -360,7 +360,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
         if(this.conflict.winner) {
-            this.game.raiseEvent(EventNames.OnClaimRing, { player: this.conflict.winner, conflict: this.conflict }, () => ring.claimRing(this.conflict.winner));
+            this.game.raiseEvent(EventNames.OnClaimRing, { player: this.conflict.winner, conflict: this.conflict, ring:this.conflict.ring }, () => ring.claimRing(this.conflict.winner));
         }
         //Do this lazily for now
         this.game.queueSimpleStep(() => {
