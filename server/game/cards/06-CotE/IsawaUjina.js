@@ -7,7 +7,7 @@ class IsawaUjina extends DrawCard {
         this.forcedReaction({
             title: 'Remove a character from the game',
             when: {
-                onClaimRing: (event) => event.conflict && event.conflict.ring.hasElement('void')
+                onClaimRing: (event) => (event.conflict && event.conflict.ring.hasElement('void')) || event.ring.hasElement('void')
             },
             target: {
                 cardType: CardTypes.Character,
