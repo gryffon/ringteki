@@ -5,8 +5,7 @@ describe('Total Warfare', function() {
                 phase: 'conflict',
                 player1: {
                     inPlay: ['akodo-zentaro', 'matsu-berserker'],
-                    hand: ['total-warfare'],
-                    conflictDiscard: ['total-warfare']
+                    hand: ['total-warfare','total-warfare']
                 },
                 player2: {
                     inPlay: ['samurai-of-integrity', 'akodo-toturi'],
@@ -16,9 +15,8 @@ describe('Total Warfare', function() {
 
             this.zentaro = this.player1.findCardByName('akodo-zentaro');
             this.matsuBerseker = this.player1.findCardByName('matsu-berserker');
-            this.totalWarfare = this.player1.findCardByName('total-warfare');
-            this.totalWarfare2 = this.player1.findCardByName('total-warfare', 'conflict discard pile');
-            this.player1.player.moveCard(this.totalWarfare2, 'hand');
+            this.totalWarfare = this.player1.filterCardsByName('total-warfare')[0];
+            this.totalWarfare2 = this.player1.filterCardsByName('total-warfare')[1];
 
             this.samuraiOfIntegrity = this.player2.findCardByName('samurai-of-integrity');
             this.akodoToturi = this.player2.findCardByName('akodo-toturi');
@@ -84,6 +82,7 @@ describe('Total Warfare', function() {
             expect(this.totalWarfare.parent).toBe(null);
             expect(this.totalWarfare.location).toBe('conflict discard pile');
             expect(this.totalWarfare2.parent).toBe(this.ancestralLands);
+            expect(this.totalWarfare2.location).toBe('play area');
         });
     });
 });

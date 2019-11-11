@@ -761,7 +761,7 @@ class DrawCard extends BaseCard {
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
                     if(illegalAttachments.length > 0) {
-                        this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
+                        this.game.addMessage('{0} {1} discarded from {3} as {2} {1} no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', illegalAttachments.length > 1 ? 'they' : 'it', this);
                     }
                     if(!illegalAttachments.includes(card)) {
                         illegalAttachments.push(card);
@@ -773,8 +773,8 @@ class DrawCard extends BaseCard {
             });
             return true;
         } else if(illegalAttachments.length > 0) {
-            this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
-            this.game.applyGameAction(null, { discardFromPlay: illegalAttachments});
+            this.game.addMessage('{0} {1} discarded from {3} as {2} {1} no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', illegalAttachments.length > 1 ? 'they' : 'it', this);
+            this.game.applyGameAction(context, { discardFromPlay: illegalAttachments });
             return true;
         }
         return false;

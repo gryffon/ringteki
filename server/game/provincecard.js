@@ -1,15 +1,14 @@
 const _ = require('underscore');
 
-const BaseCard = require('./basecard');
+const DrawCard = require('./drawcard');
 const { Locations, EffectNames } = require('./Constants');
 
-class ProvinceCard extends BaseCard {
+class ProvinceCard extends DrawCard {
     constructor(owner, cardData) {
         super(owner, cardData);
 
         this.isProvince = true;
         this.isBroken = false;
-        this.attachments = [];
         this.menu = _([{ command: 'break', text: 'Break/unbreak this province' }, { command: 'hide', text: 'Flip face down' }]);
     }
 
