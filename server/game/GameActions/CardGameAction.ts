@@ -123,7 +123,6 @@ export class CardGameAction extends GameAction {
         if(!event.card.owner.isLegalLocationForCard(event.card, event.destination)) {
             event.card.game.addMessage('{0} is not a legal location for {1} and it is discarded', event.destination, event.card);
             event.destination = event.card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile;
-            event.card.removeLastingEffects();
         }
         event.card.owner.moveCard(event.card, event.destination, event.options || {});
     }

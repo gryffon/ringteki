@@ -228,7 +228,7 @@ class Card extends React.Component {
     }
 
     getAttachments() {
-        const provinces = ['province 1', 'province 2', 'province 3', 'province 4'];
+        const provinces = ['province 1', 'province 2', 'province 3', 'province 4', 'stronghold province'];
         if(this.props.source !== 'play area' && !provinces.includes(this.props.source)) {
             return null;
         }

@@ -1,8 +1,7 @@
-
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases, EventNames, Locations } = require('./Constants');
+const { Phases, EventNames, Locations, CardTypes } = require('./Constants');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card, ignoreType = false) {
@@ -31,7 +30,11 @@ class PlayAttachmentAction extends BaseAction {
     }
 
     displayMessage(context) {
-        context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target);
+        if(context.target.type === CardTypes.Province && context.target.facedown) {
+            context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target.location);
+        } else {
+            context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target);
+        }
     }
 
     executeHandler(context) {

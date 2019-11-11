@@ -84,5 +84,27 @@ describe('Total Warfare', function() {
             expect(this.totalWarfare2.parent).toBe(this.ancestralLands);
             expect(this.totalWarfare2.location).toBe('play area');
         });
+
+        it('should tell you the name of a faceup province', function() {
+            this.noMoreActions();
+
+            this.initiateConflict({
+                attackers: [this.zentaro, this.matsuBerseker],
+                defenders: [this.samuraiOfIntegrity],
+                province: this.ancestralLands
+            });
+
+            this.player2.pass();
+            this.player1.playAttachment(this.totalWarfare, this.ancestralLands);
+            expect(this.totalWarfare.parent).toBe(this.ancestralLands);
+            expect(this.getChatLogs(5)).toContain('player1 plays Total Warfare, attaching it to Ancestral Lands');
+        });
+
+        it('shouldn\'t tell you the facedown province', function() {
+            this.player1.playAttachment(this.totalWarfare, this.ancestralLands);
+
+            expect(this.totalWarfare.parent).toBe(this.ancestralLands);
+            expect(this.getChatLogs(2)).toContain('player1 plays Total Warfare, attaching it to ' + this.ancestralLands.location);
+        });
     });
 });
