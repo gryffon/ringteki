@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
             "type": "node",
             "request": "attach",
@@ -75,6 +76,16 @@
             "program": "${workspaceRoot}/node_modules/jasmine/bin/jasmine.js",
             "env": { "JASMINE_CONFIG_PATH": "./jasmine.json" },
             "cwd": "${workspaceRoot}"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Jasmine Individual Test",
+            "program": "${workspaceRoot}/node_modules/jasmine/bin/jasmine.js",
+            "args": [
+                "./test/server/cards/08-MotC/TheSpearRushesForth.spec.js"
+            ],
+            "env":  { "JASMINE_CONFIG_PATH": "./jasmine.json" }
         }
     ]
 }

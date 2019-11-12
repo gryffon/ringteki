@@ -78,6 +78,8 @@ describe('The Spear Rushes Forth', function() {
                 expect(this.player1).toBeAbleToSelect(this.kakitaYoshi);
                 this.player1.clickCard(this.kakitaYoshi);
                 this.player1.clickCard(this.kakitaKaezin);
+
+                expect(this.getChatLogs(5)).toContain('player1 plays The Spear Rushes Forth, discarding Kakita Kaezin\'s status token to bow Kakita Yoshi')
                 expect(this.kakitaYoshi.bowed).toBe(true);
                 expect(this.kakitaKaezin.isHonored).toBe(false);
             });

@@ -21,12 +21,8 @@ export class DiscardStatusAction extends TokenAction {
 
     getCostMessage(context: AbilityContext, additionalProperties = {}): [string, any[]] {
         let properties = (this.getProperties(context,additionalProperties) as SelectCardProperties)
-        let cost = context.ability.cost as MetaActionCost[];
-        let actionProps = cost[0].action.properties as SelectCardProperties;
-        console.log('--------------------------');
-        console.log('target: ', context.target);
-        let target = (actionProps.subActionProperties as DiscardStatusProperties).target as StatusToken;
-        return ['discarding {1}\'s {0}', [target, target.card as DrawCard]];
+        let target = (Array.isArray(properties.target) ? properties.target[0] : properties.target);
+        return ['discarding {1}\'s status token', [target, target.personalHonor]];
     }
 
     eventHandler(event): void {
