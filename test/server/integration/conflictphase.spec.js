@@ -239,6 +239,24 @@ describe('conflict phase', function() {
                     expect(this.vengefulBerserker.bowed).toBe(false);
                 });
 
+                it('should remove illegal attackers when dash skill is undefined instead of null', function() {
+                    this.vengefulBerserker.political = undefined;
+                    this.player1.putIntoPlay(this.vengefulBerserker);
+                    this.player1.clickRing('air');
+
+                    expect(this.game.currentConflict.conflictType).toBe('military');
+                    this.player1.clickCard(this.vengefulBerserker);
+                    expect(this.game.currentConflict.attackers).toContain(this.vengefulBerserker);
+                    expect(this.vengefulBerserker.inConflict).toBe(true);
+                    expect(this.vengefulBerserker.bowed).toBe(false);
+
+                    this.player1.clickRing('air');
+                    expect(this.game.currentConflict.conflictType).toBe('political');
+                    expect(this.game.currentConflict.attackers).not.toContain(this.vengefulBerserker);
+                    expect(this.vengefulBerserker.inConflict).toBe(false);
+                    expect(this.vengefulBerserker.bowed).toBe(false);
+                });
+
                 it('should flip the ring to match attackers when the ring is changed', function() {
                     this.player1.putIntoPlay(this.vengefulBerserker);
                     this.player1.clickRing('earth');
