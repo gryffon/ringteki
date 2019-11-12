@@ -24,9 +24,9 @@ describe('the MenuPrompt', function() {
         spyOn(this.contextObj, 'doIt');
         spyOn(this.contextObj, 'forbiddenMethod');
 
-        this.source = { name: 'source' };
+        this.context = { name: 'context' };
         this.properties = {
-            source: this.source,
+            context: this.context,
             activePrompt: {
                 buttons: [{ command: 'menuButton', text: 'Do it!', method: 'doIt' }]
             }
@@ -64,7 +64,7 @@ describe('the MenuPrompt', function() {
             describe('when the method has a corresponding button', function() {
                 it('should call the specified method on the context object', function() {
                     this.prompt.onMenuCommand(this.player, this.arg, this.prompt.uuid, 'doIt');
-                    expect(this.contextObj.doIt).toHaveBeenCalledWith(this.player, this.arg, this.source);
+                    expect(this.contextObj.doIt).toHaveBeenCalledWith(this.player, this.arg, this.context);
                 });
 
                 describe('when the method returns false', function() {

@@ -1,7 +1,7 @@
 const BaseAction = require('./BaseAction.js');
 const ReduceableFateCost = require('./costs/ReduceableFateCost');
 
-const { CardTypes, EventNames, Phases, Players, PlayTypes, EffectNames } = require ('./Constants');
+const { CardTypes, EventNames, Phases, Players, EffectNames } = require ('./Constants');
 
 const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
     return {
@@ -28,8 +28,8 @@ const ChooseDisguisedCharacterCost = function(intoConflictOnly) {
 };
 
 class DisguisedReduceableFateCost extends ReduceableFateCost {
-    constructor(playingType, intoConflictOnly) {
-        super(playingType);
+    constructor(intoConflictOnly) {
+        super();
         this.intoConflictOnly = intoConflictOnly;
     }
 
@@ -37,7 +37,7 @@ class DisguisedReduceableFateCost extends ReduceableFateCost {
         const maxCharacterCost = Math.max(...context.player.cardsInPlay.map(card =>
             context.source.canDisguise(card, context) ? card.getCost() : 0
         ));
-        const minCost = Math.max(context.player.getMinimumCost(this.playingType, context) - maxCharacterCost, 0);
+        const minCost = Math.max(context.player.getMinimumCost(context.playType, context) - maxCharacterCost, 0);
         return context.player.fate >= minCost &&
             (minCost === 0 || context.player.checkRestrictions('spendFate', context));
     }
@@ -48,12 +48,11 @@ class DisguisedReduceableFateCost extends ReduceableFateCost {
 }
 
 class PlayDisguisedCharacterAction extends BaseAction {
-    constructor(card, playType = card.isDynasty ? PlayTypes.PlayFromProvince : PlayTypes.PlayFromHand, intoConflictOnly = false) {
+    constructor(card, intoConflictOnly = false) {
         super(card, [
             ChooseDisguisedCharacterCost(intoConflictOnly),
-            new DisguisedReduceableFateCost(playType, intoConflictOnly)
+            new DisguisedReduceableFateCost(intoConflictOnly)
         ]);
-        this.playType = playType;
         this.intoConflictOnly = intoConflictOnly;
         this.title = 'Play this character with Disguise';
     }
@@ -61,9 +60,9 @@ class PlayDisguisedCharacterAction extends BaseAction {
     meetsRequirements(context = this.createContext(), ignoredRequirements = []) {
         if(!ignoredRequirements.includes('phase') && context.game.currentPhase !== Phases.Conflict) {
             return 'phase';
-        } else if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, this.playType)) {
+        } else if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, context.playType)) {
             return 'location';
-        } else if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, this.playType)) {
+        } else if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, context.playType)) {
             return 'cannotTrigger';
         } else if(context.source.anotherUniqueInPlay(context.player)) {
             return 'unique';
@@ -78,7 +77,7 @@ class PlayDisguisedCharacterAction extends BaseAction {
             card: context.source,
             context: context,
             originalLocation: context.source.location,
-            playType: this.playType
+            playType: context.playType
         })];
         const replacedCharacter = context.costs.chooseDisguisedCharacter;
         if(!replacedCharacter) {

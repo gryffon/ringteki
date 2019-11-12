@@ -3,6 +3,10 @@ const { CardTypes } = require('../../Constants');
 
 class JadeTetsubo extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.action({
             title: 'Return all fate from a character',
             cost: ability.costs.bowSelf(),
@@ -17,14 +21,6 @@ class JadeTetsubo extends DrawCard {
             },
             effect: 'return all fate from {0} to its owner'
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-
-        return super.canAttach(card, context);
     }
 }
 

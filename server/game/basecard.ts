@@ -2,6 +2,7 @@ import _ = require('underscore');
 
 const AbilityDsl = require('./abilitydsl.js');
 const CustomPlayAction = require('./customplayaction.js');
+const Effects = require('./effects');
 const EffectSource = require('./EffectSource.js');
 import CardAbility = require('./CardAbility');
 import CardAction = require('./cardaction.js');
@@ -10,8 +11,8 @@ import AbilityContext = require('./AbilityContext');
 import Player = require('./player');
 import Game = require('./game');
 
-import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, PlayTypes } from './Constants';
-import { ActionProps, TriggeredAbilityProps, PersistentEffectProps } from './Interfaces'; 
+import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } from './Constants';
+import { ActionProps, TriggeredAbilityProps, PersistentEffectProps, AttachmentConditionProps } from './Interfaces'; 
 
 class BaseCard extends EffectSource {
     owner: Player;
@@ -47,7 +48,7 @@ class BaseCard extends EffectSource {
 
         this.id = cardData.id;
         this.printedName = cardData.name;
-        this.type = cardData.type;
+        this.printedType = cardData.type;
         this.traits = cardData.traits || [];
         this.printedFaction = cardData.clan;
 
@@ -149,7 +150,7 @@ class BaseCard extends EffectSource {
      * is both in play and not blank.
      */
     persistentEffect(properties: PersistentEffectProps): void {
-        const allowedLocations = [Locations.Any, Locations.PlayArea, Locations.Provinces];
+        const allowedLocations = [Locations.Any, Locations.ConflictDiscardPile, Locations.PlayArea, Locations.Provinces];
         const defaultLocationForType = {
             province: Locations.Provinces,
             holding: Locations.Provinces,
@@ -163,6 +164,33 @@ class BaseCard extends EffectSource {
         this.abilities.persistentEffects.push(_.extend({ duration: Durations.Persistent, location: location }, properties));
     }
 
+    attachmentConditions(properties: AttachmentConditionProps): void {
+        const effects = [];
+        if(properties.limit) {
+            effects.push(Effects.attachmentLimit(properties.limit));
+        }
+        if(properties.myControl) {
+            effects.push(Effects.attachmentMyControlOnly());
+        }
+        if(properties.unique) {
+            effects.push(Effects.attachmentUniqueRestriction());
+        }
+        if(properties.faction) {
+            const factions = Array.isArray(properties.faction) ? properties.faction : [properties.faction];
+            effects.push(Effects.attachmentFactionRestriction(factions));
+        }
+        if(properties.trait) {
+            const traits = Array.isArray(properties.trait) ? properties.trait : [properties.trait];
+            effects.push(Effects.attachmentTraitRestriction(traits));
+        }
+        if(effects.length > 0) {
+            this.persistentEffect({
+                location: Locations.Any,
+                effect: effects
+            });    
+        }
+    }
+
     composure(properties): void {
         this.persistentEffect(Object.assign({ condition: context => context.player.hasComposure() }, properties));
     }
@@ -174,7 +202,7 @@ class BaseCard extends EffectSource {
 
     getTraits(): string[] {
         let copyEffect = this.mostRecentEffect(EffectNames.CopyCharacter);
-        let traits = copyEffect ? copyEffect.traits : this.traits;
+        let traits = copyEffect ? copyEffect.traits : this.getEffects(EffectNames.Blank).some(blankTraits => blankTraits) ? [] : this.traits;
         return _.uniq(traits.concat(this.getEffects(EffectNames.AddTrait)));
     }
 
@@ -221,7 +249,7 @@ class BaseCard extends EffectSource {
         _.each(this.reactions, reaction => {
             reaction.limit.reset();
             if(this.type === CardTypes.Event) {
-                if(to === Locations.ConflictDeck || this.controller.isCardInPlayableLocation(this, PlayTypes.PlayFromHand) || this.controller.opponent && this.controller.opponent.isCardInPlayableLocation(this, PlayTypes.PlayFromHand)) {
+                if(to === Locations.ConflictDeck || this.controller.isCardInPlayableLocation(this) || this.controller.opponent && this.controller.opponent.isCardInPlayableLocation(this)) {
                     reaction.registerEvents();
                 } else {
                     reaction.unregisterEvents();
@@ -237,6 +265,7 @@ class BaseCard extends EffectSource {
 
     updateEffects(from: Locations, to: Locations) {
         const activeLocations = {
+            'conflict discard pile': [Locations.ConflictDiscardPile],
             'play area': [Locations.PlayArea],
             'province': [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince]
         };

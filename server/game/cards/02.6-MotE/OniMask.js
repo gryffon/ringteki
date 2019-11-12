@@ -3,6 +3,10 @@ const { CardTypes } = require('../../Constants');
 
 class OniMask extends DrawCard {
     setupCardAbilities(ability) {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.action({
             title: 'Blank participating character',
             cost: ability.costs.removeFateFromParent(),
@@ -14,13 +18,6 @@ class OniMask extends DrawCard {
             },
             effect: 'blank {0} until the end of the conflict'
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

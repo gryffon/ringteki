@@ -6,7 +6,6 @@ class UntamedSteppe extends ProvinceCard {
     setupCardAbilities() {
         this.action({
             title: 'Turn another unbroken province facedown',
-            condition: context => context.source.isConflictProvince(),
             target: {
                 cardType: CardTypes.Province,
                 controller: Players.Any,
