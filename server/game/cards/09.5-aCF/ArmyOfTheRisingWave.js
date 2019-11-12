@@ -8,9 +8,8 @@ class ArmyOfTheRisingWave extends DrawCard {
             when: {
                 onCharacterEntersPlay: (event, context) => event.card === context.source
             },
-            gameAction: AbilityDsl.actions.placeFateOnRing(() => ({
-                target: Object.values(this.game.rings).filter(ring => ring.isUnclaimed())
-            }))
+            gameAction: AbilityDsl.actions.placeFateOnRing(context => 
+                ({ target: Object.values(context.game.rings).filter(ring => ring.isUnclaimed()) }))
         });
     }
 }
