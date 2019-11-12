@@ -11,7 +11,7 @@ class ChildOfThePlains extends DrawCard {
             },
             effect: 'get the first action in this conflict',
             gameAction: AbilityDsl.actions.playerLastingEffect({
-                effect: AbilityDsl.effects.gainActionPhasePriority()
+                effect: AbilityDsl.effects.gainActionPhasePriority(1)
             })
         });
     }

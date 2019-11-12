@@ -131,9 +131,9 @@ const Effects = {
     changePlayerGloryModifier: (value) => EffectBuilder.player.static(EffectNames.ChangePlayerGloryModifier, value),
     changePlayerSkillModifier: (value) => EffectBuilder.player.flexible(EffectNames.ChangePlayerSkillModifier, value),
     customDetachedPlayer: (properties) => EffectBuilder.player.detached(EffectNames.CustomEffect, properties),
-    gainActionPhasePriority: () => EffectBuilder.player.detached(EffectNames.GainActionPhasePriority, {
-        apply: player => player.actionPhasePriority = true,
-        unapply: player => player.actionPhasePriority = false
+    gainActionPhasePriority: (turns) => EffectBuilder.player.detached(EffectNames.GainActionPhasePriority, {
+        apply: player => player.actionPhasePriority = turns,
+        unapply: player => player.actionPhasePriority = 0
     }),
     increaseCost: (properties) => Effects.reduceCost(_.extend(properties, { amount: -properties.amount })),
     modifyCardsDrawnInDrawPhase: (amount) => EffectBuilder.player.flexible(EffectNames.ModifyCardsDrawnInDrawPhase, amount),

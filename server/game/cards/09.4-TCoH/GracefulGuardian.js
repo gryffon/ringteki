@@ -21,7 +21,7 @@ class GracefulGuardian extends DrawCard {
                     until: {
                         onPassActionPhasePriority: event =>
                             event.player === context.player && event.actionWindow === currentActionWindow &&
-                            currentActionWindow.opportunityCounter > opportunityCounter + 1
+                            (currentActionWindow.opportunityCounter > opportunityCounter + 1) && event.consecutiveActions === 0
                     }
                 };
             })

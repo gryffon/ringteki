@@ -18,7 +18,7 @@ class HawkTattoo extends DrawCard {
             gameAction: [
                 ability.actions.moveToConflict(context => ({ target: context.source.parent })),
                 ability.actions.playerLastingEffect(context => ({
-                    effect: context.source.parent.hasTrait('monk') ? ability.effects.gainActionPhasePriority() : []
+                    effect: context.source.parent.hasTrait('monk') ? ability.effects.gainActionPhasePriority(1) : []
                 }))
             ]
         });

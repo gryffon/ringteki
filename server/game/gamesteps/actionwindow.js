@@ -67,7 +67,7 @@ class ActionWindow extends UiPrompt {
     continue() {
         if(this.currentPlayer.opponent && this.currentPlayer.opponent.actionPhasePriority) {
             this.currentPlayer = this.currentPlayer.opponent;
-            this.currentPlayer.actionPhasePriority = false;
+            this.currentPlayer.actionPhasePriority = 0;
         }
 
         if(!this.currentPlayer.promptedActionWindows[this.windowName]) {
@@ -131,26 +131,29 @@ class ActionWindow extends UiPrompt {
         if(this.prevPlayerPassed || !this.currentPlayer.opponent) {
             this.complete();
         }
-
+        this.currentPlayerConsecutiveActions++;
+        this.currentPlayer.actionPhasePriority = 0;
         this.prevPlayerPassed = true;
         this.nextPlayer();
     }
 
     nextPlayer() {
+        let currentPlayer = this.currentPlayer;
         let otherPlayer = this.game.getOtherPlayer(this.currentPlayer);
 
-        if(this.currentPlayer.anyEffect(EffectNames.ResolveConflictEarly)) {
+        if(this.currentPlayer.anyEffect(EffectNames.ResolveConflictEarly) && !!this.currentPlayer.actionPhasePriority) {
             this.complete();
         }
-
+        const consecutiveActions = this.currentPlayerConsecutiveActions;
+        const priority = this.currentPlayer.actionPhasePriority;
         if(otherPlayer) {
             this.game.raiseEvent(
                 EventNames.OnPassActionPhasePriority,
                 { player: this.currentPlayer, consecutiveActions: this.currentPlayerConsecutiveActions, actionWindow: this },
                 () => {
-                    this.currentPlayer = otherPlayer;
+                    this.currentPlayer = (consecutiveActions > priority ? otherPlayer : currentPlayer);
                     this.opportunityCounter += 1;
-                    this.currentPlayerConsecutiveActions = 0;
+                    this.currentPlayerConsecutiveActions = (consecutiveActions > priority ? 0 : consecutiveActions);
                 }
             );
         }
