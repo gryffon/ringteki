@@ -23,7 +23,7 @@ class FrontlineEngineer extends DrawCard {
                     context.player.moveCard(cardFromDeck, this.game.currentConflict.conflictProvince.location);
                     cardFromDeck.facedown = false;
                     card.forEach(element => {
-                        context.player.moveCard(element, Locations.DynastyDiscardPile);                        
+                        context.player.moveCard(element, Locations.DynastyDiscardPile);
                     });
                     context.player.shuffleDynastyDeck();
                 }
@@ -32,13 +32,14 @@ class FrontlineEngineer extends DrawCard {
     }
 
     formatDiscardNames(cards) {
-        let s = "";
+        let s = '';
         let first = true;
         cards.forEach(element => {
-            if (first)
+            if(first) {
                 s = s + element.name;
-            else
-                s = s + ", " + element.name;
+            } else {
+                s = s + ', ' + element.name;
+            }
             first = false;
         });
         return s;
