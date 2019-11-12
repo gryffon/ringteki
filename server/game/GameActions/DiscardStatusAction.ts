@@ -1,10 +1,8 @@
 import { TokenAction, TokenActionProperties} from './TokenAction';
 import StatusToken = require('../StatusToken');
-import DrawCard = require('../DrawCard');
 import AbilityContext = require('../AbilityContext');
 import { EventNames } from '../Constants';
 import { SelectCardProperties } from './SelectCardAction';
-import MetaActionCost = require('../costs/MetaActionCost');
 
 export interface DiscardStatusProperties extends TokenActionProperties {
 }
