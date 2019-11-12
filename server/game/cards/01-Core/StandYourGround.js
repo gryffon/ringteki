@@ -8,8 +8,8 @@ class StandYourGround extends DrawCard {
             when: {
                 onCardLeavesPlay: (event, context) => event.card.controller === context.player && event.card.isHonored
             },
-            effect: 'prevent {1} from leaving play',
-            effectArgs: context => context.event.card,
+            effect: 'to discard {1}\'s {2} and prevent them from leaving play',
+            effectArgs: context => [context.event.card, context.event.card.personalHonor],
             cannotBeMirrored: true,
             gameAction: AbilityDsl.actions.cancel(context => ({
                 replacementGameAction: AbilityDsl.actions.discardStatusToken({ target: context.event.card.personalHonor })
