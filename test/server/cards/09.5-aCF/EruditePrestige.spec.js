@@ -47,6 +47,7 @@ describe('Erudite Prestige', function() {
                 this.player1.clickCard(this.prestige);
                 expect(this.whisperer.getPoliticalSkill()).toBe(pol + 1);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.getChatLogs(3)).toContain('player1 uses Erudite Prestige to give +1political to Doji Whisperer');
             });
 
             it('should not trigger off opponent cards', function() {
