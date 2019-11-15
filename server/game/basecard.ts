@@ -186,7 +186,8 @@ class BaseCard extends EffectSource {
         if(properties.limitTrait) {
             const traitLimits = Array.isArray(properties.limitTrait) ? properties.limitTrait : [properties.limitTrait];
             traitLimits.forEach(traitLimit => {
-                effects.push(Effects.attachmentRestrictTraitAmount({ [traitLimit.trait]: traitLimit.limit}))
+                const trait = Object.keys(traitLimit)[0];
+                effects.push(Effects.attachmentRestrictTraitAmount({ [trait]: traitLimit[trait]}))
             });
         }
         if(effects.length > 0) {

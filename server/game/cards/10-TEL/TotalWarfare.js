@@ -5,7 +5,7 @@ const DrawCard = require('../../drawcard.js');
 class TotalWarfare extends DrawCard {
     setupCardAbilities() {
         this.attachmentConditions({
-            limitTrait: { limit: 1, trait: 'battlefield' }
+            limitTrait: { 'battlefield': 1 }
         });
         this.forcedReaction({
             title: 'Loser sacrifices a character',

@@ -164,8 +164,7 @@ export interface PersistentEffectProps {
 };
 
 export type traitLimit = {
-    trait: string
-    limit: number
+    [trait: string]: number
 };
 
 export interface AttachmentConditionProps {
