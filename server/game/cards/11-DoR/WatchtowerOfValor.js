@@ -13,7 +13,8 @@ class WatchtowerOfValor extends DrawCard {
                             && context.player.isDefendingPlayer() && event.conflict.winner === context.player;
                 }
             },
-            gameAction: AbilityDsl.actions.draw()
+            gameAction: AbilityDsl.actions.draw(),
+            limit: AbilityDsl.limit.unlimitedPerConflict()
         });
     }
 }
