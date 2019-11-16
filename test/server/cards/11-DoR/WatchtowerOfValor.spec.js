@@ -120,6 +120,24 @@ describe('Watchtower of Valor', function() {
                 this.player2.clickCard(this.watchtower);
                 expect(this.player2.hand.length).toBe(hand);
             });
+
+            it('should not draw a card if you lose on defense', function () {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.kuwanan],
+                    defenders: [this.kisada],
+                    province: this.p2
+                });
+
+                this.player2.pass();
+                this.player1.pass();
+
+                let hand = this.player2.hand.length;
+                expect(this.player2).not.toBeAbleToSelect(this.watchtower);
+                this.player2.clickCard(this.watchtower);
+                expect(this.player2.hand.length).toBe(hand);
+            });
         });
     });
 });
