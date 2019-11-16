@@ -7,15 +7,13 @@ class NorthernCurtainWall extends DrawCard {
         this.persistentEffect({
             targetLocation: Locations.Provinces,
             match: (card, context) => {
-                if(card.isProvince) {
-                    let cardsInProvice = context.player.getDynastyCardsInProvince(card.location);
-                    let hasWall = cardsInProvice.some(element => element.type === CardTypes.Holding && element.hasTrait('kaiu-wall') && !element.facedown);
-
-                    return hasWall && context.player.areLocationsAdjacent(context.source.location, card.location);
+                if(card.type === CardTypes.Holding) {
+                    let isWall = card.hasTrait('kaiu-wall') && !card.facedown;
+                    return isWall && context.player.areLocationsAdjacent(context.source.location, card.location);
                 }
                 return false;
             },
-            effect: AbilityDsl.effects.modifyProvinceStrength(2)
+            effect: AbilityDsl.effects.modifyProvinceStrengthBonus(2)
         });
     }
 }
