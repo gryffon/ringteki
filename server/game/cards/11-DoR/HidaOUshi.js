@@ -12,7 +12,7 @@ class HidaOUshi extends DrawCard {
                 effect: AbilityDsl.effects.additionalConflict('military')
             }),
             max: AbilityDsl.limit.perPhase(1)
-        }); 
+        });
     }
 }
 
