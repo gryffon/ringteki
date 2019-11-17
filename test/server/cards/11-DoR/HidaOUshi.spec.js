@@ -9,7 +9,7 @@ describe('Hida O-Ushi', function() {
                     },
                     player2: {
                         inPlay: ['hida-kisada', 'hida-o-ushi'],
-                        hand: ['captive-audience']
+                        hand: ['captive-audience', 'way-of-the-dragon']
                     }
                 });
 
@@ -17,6 +17,10 @@ describe('Hida O-Ushi', function() {
                 this.kisada = this.player2.findCardByName('hida-kisada');
                 this.oushi = this.player2.findCardByName('hida-o-ushi');
                 this.captive = this.player2.findCardByName('captive-audience');
+                this.dragon = this.player2.findCardByName('way-of-the-dragon');
+
+                this.player1.pass();
+                this.player2.playAttachment(this.dragon, this.oushi);
             });
 
             it('should trigger if you win on defense', function () {
