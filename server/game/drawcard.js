@@ -30,8 +30,6 @@ class DrawCard extends BaseCard {
 
         this.parseKeywords(cardData.text ? cardData.text.replace(/<[^>]*>/g, '').toLowerCase() : '');
 
-
-
         this.menu = _([
             { command: 'bow', text: 'Bow/Ready' },
             { command: 'honor', text: 'Honor' },
