@@ -1,9 +1,10 @@
+const BaseCard = require('./basecard');
+
 const _ = require('underscore');
 
-const DrawCard = require('./drawcard');
 const { Locations, EffectNames } = require('./Constants');
 
-class ProvinceCard extends DrawCard {
+class ProvinceCard extends BaseCard {
     constructor(owner, cardData) {
         super(owner, cardData);
 
