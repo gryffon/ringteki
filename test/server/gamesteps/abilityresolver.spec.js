@@ -2,7 +2,7 @@ const AbilityResolver = require('../../../build/server/game/gamesteps/abilityres
 
 describe('AbilityResolver', function() {
     beforeEach(function() {
-        this.game = jasmine.createSpyObj('game', ['getPlayers', 'markActionAsTaken', 'popAbilityContext', 'pushAbilityContext', 'getEvent', 'raiseEvent', 'reportError', 'openEventWindow', 'queueStep']);
+        this.game = jasmine.createSpyObj('game', ['getPlayers', 'markActionAsTaken', 'popAbilityContext', 'pushAbilityContext', 'getEvent', 'raiseEvent', 'reportError', 'openThenEventWindow', 'queueStep']);
         this.game.raiseEvent.and.callFake((name, params, handler) => {
             if(handler) {
                 handler(params);
@@ -67,7 +67,7 @@ describe('AbilityResolver', function() {
             });
 
             it('should raise the InitiateAbility event', function() {
-                expect(this.game.openEventWindow).toHaveBeenCalledWith(jasmine.any(Object));
+                expect(this.game.openThenEventWindow).toHaveBeenCalledWith(jasmine.any(Object));
             });
         });
 

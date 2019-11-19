@@ -1,5 +1,4 @@
 const _ = require('underscore');
-const { PlayTypes } = require('./Constants');
 
 class CostReducer {
     constructor(game, source, properties) {
@@ -7,21 +6,25 @@ class CostReducer {
         this.source = source;
         this.uses = 0;
         this.limit = properties.limit;
+        this.cardType = properties.cardType;
         this.match = properties.match || (() => true);
         this.targetCondition = properties.targetCondition;
         this.amount = properties.amount || 1;
-        this.playingTypes = properties.playingTypes ? (_.isArray(properties.playingTypes) ? properties.playingTypes : [properties.playingTypes]) : [PlayTypes.PlayFromHand];
+        this.playingTypes = properties.playingTypes && (_.isArray(properties.playingTypes) ? properties.playingTypes : [properties.playingTypes]);
         if(this.limit) {
             this.limit.registerEvents(game);
         }
     }
 
-    canReduce(playingType, card, target = null) {
+    canReduce(playingType, card, target = null, ignoreType = false) {
         if(this.limit && this.limit.isAtMax(this.source.controller)) {
             return false;
+        } else if(!ignoreType && this.cardType && card.getType() !== this.cardType) {
+            return false;
+        } else if(this.playingTypes && !this.playingTypes.includes(playingType)) {
+            return false;
         }
-
-        return this.playingTypes.includes(playingType) && !!this.match(card, this.source) && this.checkTargetCondition(target);
+        return this.match(card, this.source) && this.checkTargetCondition(target);
     }
 
     checkTargetCondition(target) {

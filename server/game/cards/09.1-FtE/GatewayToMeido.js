@@ -9,6 +9,12 @@ class GatewayToMeidoPlayAction extends PlayCharacterAction {
         super(card, true);
     }
 
+    createContext(player = this.card.controller) {
+        const context = super.createContext(player);
+        context.playType = PlayTypes.PlayFromHand;
+        return context;
+    }
+
     meetsRequirements(context, ignoredRequirements = []) {
         let newIgnoredRequirements = ignoredRequirements.includes('location') ? ignoredRequirements : ignoredRequirements.concat('location');
         return super.meetsRequirements(context, newIgnoredRequirements);
@@ -16,7 +22,13 @@ class GatewayToMeidoPlayAction extends PlayCharacterAction {
 }
 class GatewayToMeidoPlayDisguisedAction extends PlayDisguisedCharacterAction {
     constructor(card) {
-        super(card, PlayTypes.PlayFromHand, true);
+        super(card, true);
+    }
+
+    createContext(player = this.card.controller) {
+        const context = super.createContext(player);
+        context.playType = PlayTypes.PlayFromHand;
+        return context;
     }
 
     meetsRequirements(context, ignoredRequirements = []) {

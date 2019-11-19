@@ -6,7 +6,8 @@ describe('Sharpen the Mind', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['brash-samurai'],
-                        hand: ['sharpen-the-mind', 'fine-katana', 'ornate-fan']
+                        hand: ['sharpen-the-mind', 'fine-katana', 'ornate-fan'],
+                        conflictDiscard: ['guidance-of-the-ancestors']
                     },
                     player2: {
                     }
@@ -15,6 +16,7 @@ describe('Sharpen the Mind', function() {
                 this.sharpenTheMind = this.player1.findCardByName('sharpen-the-mind');
                 this.fineKatana = this.player1.findCardByName('fine-katana');
                 this.ornateFan = this.player1.findCardByName('ornate-fan');
+                this.guidanceOfTheAncestors = this.player1.findCardByName('guidance-of-the-ancestors');
 
                 this.player1.playAttachment(this.sharpenTheMind, this.brashSamurai);
             });
@@ -38,6 +40,22 @@ describe('Sharpen the Mind', function() {
                 expect(this.player1).toBeAbleToSelect(this.fineKatana);
                 expect(this.player1).toBeAbleToSelect(this.ornateFan);
             });
+
+            it('should only prompt to discard from hand', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.brashSamurai],
+                    defenders: []
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.sharpenTheMind);
+                expect(this.player1).toHavePrompt('Select card to discard');
+                expect(this.player1).toBeAbleToSelect(this.fineKatana);
+                expect(this.player1).toBeAbleToSelect(this.ornateFan);
+                expect(this.player1).not.toBeAbleToSelect(this.brashSamurai);
+                expect(this.player1).not.toBeAbleToSelect(this.guidanceOfTheAncestors);
+            });
+
 
             it('should discard the chosen card', function() {
                 this.noMoreActions();

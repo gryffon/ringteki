@@ -4,16 +4,13 @@ const AbilityDsl = require('../../abilitydsl');
 
 class BornInWar extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            trait: 'cavalry'
+        });
+
         this.whileAttached({
             effect: AbilityDsl.effects.modifyMilitarySkill((card, context) => _.size(_.filter(context.game.rings, ring => ring.isUnclaimed())))
         });
-    }
-
-    canAttach(card, context) {
-        if(card.hasTrait('cavalry')) {
-            return super.canAttach(card, context);
-        }
-        return false;
     }
 }
 

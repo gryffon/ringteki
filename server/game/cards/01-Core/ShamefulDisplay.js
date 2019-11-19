@@ -5,7 +5,6 @@ class ShamefulDisplay extends ProvinceCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Dishonor/Honor two characters',
-            condition: context => context.source.isConflictProvince(),
             target: {
                 mode: TargetModes.Exactly,
                 numCards: 2,
