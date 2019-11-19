@@ -11,18 +11,15 @@ class SubterraneanGuile extends DrawCard {
     }
 
     isHoldingOnUnbrokenProvince(context) {
-        let found = false;
-        [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince].forEach(location => {
+        return [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince].some(location => {
             if(!context.player.getProvinceCardInProvince(location).isBroken) {
                 let cards = context.player.getDynastyCardsInProvince(location);
                 if(cards.some(card => !card.facedown && card.type === CardTypes.Holding)) {
-                    found = true;
-                    return;
+                    return true;
                 }
             }
+            return false;
         });
-
-        return found;
     }
 }
 
