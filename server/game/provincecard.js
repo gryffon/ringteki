@@ -1,6 +1,7 @@
+const BaseCard = require('./basecard');
+
 const _ = require('underscore');
 
-const BaseCard = require('./basecard');
 const { Locations, EffectNames } = require('./Constants');
 
 class ProvinceCard extends BaseCard {
@@ -119,10 +120,22 @@ class ProvinceCard extends BaseCard {
 
         return _.extend(baseSummary, {
             isProvince: this.isProvince,
-            isBroken: this.isBroken
+            isBroken: this.isBroken,
+            attachments: this.attachments.map(attachment => {
+                return attachment.getSummary(activePlayer, hideWhenFaceup);
+            })
         });
     }
 
+    allowAttachment(attachment) {
+        if(_.any(this.allowedAttachmentTraits, trait => attachment.hasTrait(trait))) {
+            return true;
+        }
+
+        return (
+            !this.isBroken
+        );
+    }
 }
 
 module.exports = ProvinceCard;
