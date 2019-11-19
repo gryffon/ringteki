@@ -11,8 +11,24 @@ import AbilityContext = require('./AbilityContext');
 import Player = require('./player');
 import Game = require('./game');
 
-import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes } from './Constants';
-import { ActionProps, TriggeredAbilityProps, PersistentEffectProps, AttachmentConditionProps } from './Interfaces'; 
+import { Locations, EffectNames, Durations, CardTypes, EventNames, AbilityTypes, Players } from './Constants';
+import { ActionProps, TriggeredAbilityProps, PersistentEffectProps, AttachmentConditionProps } from './Interfaces';
+import PlayDisguisedCharacterAction = require('./PlayDisguisedCharacterAction');
+import DynastyCardAction = require('./dynastycardaction');
+import PlayCharacterAction = require('./playcharacteraction');
+import PlayAttachmentAction = require('./playattachmentaction');
+import PlayAttachmentOnRingAction = require('./playattachmentonringaction.js');
+
+
+const ValidKeywords = [
+    'ancestral',
+    'restricted',
+    'limited',
+    'sincerity',
+    'courtesy',
+    'pride',
+    'covert'
+];
 
 class BaseCard extends EffectSource {
     owner: Player;
@@ -25,7 +41,7 @@ class BaseCard extends EffectSource {
     inConflict: boolean = false;
     type: CardTypes;
     facedown: boolean;
-    
+
     tokens: object = {};
     menu: _.Underscore<any> = _([]);
     showPopup: boolean = false;
@@ -51,8 +67,10 @@ class BaseCard extends EffectSource {
         this.printedType = cardData.type;
         this.traits = cardData.traits || [];
         this.printedFaction = cardData.clan;
+        this.attachments = _([]);
 
         this.setupCardAbilities(AbilityDsl);
+        this.applyAttachmentBonus();
     }
 
     get name(): string {
@@ -183,11 +201,18 @@ class BaseCard extends EffectSource {
             const traits = Array.isArray(properties.trait) ? properties.trait : [properties.trait];
             effects.push(Effects.attachmentTraitRestriction(traits));
         }
+        if(properties.limitTrait) {
+            const traitLimits = Array.isArray(properties.limitTrait) ? properties.limitTrait : [properties.limitTrait];
+            traitLimits.forEach(traitLimit => {
+                const trait = Object.keys(traitLimit)[0];
+                effects.push(Effects.attachmentRestrictTraitAmount({ [trait]: traitLimit[trait]}))
+            });
+        }
         if(effects.length > 0) {
             this.persistentEffect({
                 location: Locations.Any,
                 effect: effects
-            });    
+            });
         }
     }
 
@@ -215,7 +240,7 @@ class BaseCard extends EffectSource {
     }
 
     isInProvince(): boolean {
-        return [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, 
+        return [Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree,
             Locations.ProvinceFour, Locations.StrongholdProvince].includes(this.location);
     }
 
@@ -427,6 +452,199 @@ class BaseCard extends EffectSource {
 
     createSnapshot() {
         return {};
+    }
+
+    parseKeywords(text) {
+        var lines = text.split('\n');
+        var potentialKeywords = [];
+        _.each(lines, line => {
+            line = line.slice(0, -1);
+            _.each(line.split('. '), k => potentialKeywords.push(k));
+        });
+
+        this.printedKeywords = [];
+        this.allowedAttachmentTraits = [];
+        this.disguisedKeywordTraits = [];
+
+        _.each(potentialKeywords, keyword => {
+            if(_.contains(ValidKeywords, keyword)) {
+                this.printedKeywords.push(keyword);
+            } else if(keyword.startsWith('disguised ')) {
+                this.disguisedKeywordTraits.push(keyword.replace('disguised ', ''));
+            } else if(keyword.startsWith('no attachments except')) {
+                var traits = keyword.replace('no attachments except ', '');
+                this.allowedAttachmentTraits = traits.split(' or ');
+            } else if(keyword.startsWith('no attachments')) {
+                this.allowedAttachmentTraits = ['none'];
+            }
+        });
+
+        this.printedKeywords.forEach(keyword => {
+            this.persistentEffect({
+                effect: AbilityDsl.effects.addKeyword(keyword)
+            });
+        });
+    }
+
+    applyAttachmentBonus() {
+        let militaryBonus = parseInt(this.cardData.military_bonus);
+        if(militaryBonus) {
+            this.persistentEffect({
+                match: (card) => card === this.parent,
+                targetController: Players.Any,
+                effect: AbilityDsl.effects.modifyMilitarySkill(militaryBonus)
+            });
+        }
+        let politicalBonus = parseInt(this.cardData.political_bonus);
+        if(politicalBonus) {
+            this.persistentEffect({
+                match: (card) => card === this.parent,
+                targetController: Players.Any,
+                effect: AbilityDsl.effects.modifyPoliticalSkill(politicalBonus)
+            });
+        }
+    }
+
+    checkForIllegalAttachments() {
+        let context = this.game.getFrameworkContext(this.controller);
+        let illegalAttachments = this.attachments.filter(attachment => (
+            !this.allowAttachment(attachment) || !attachment.canAttach(this, { game: this.game, player: this.controller })
+        ));
+        for(const effectCard of this.getEffects(EffectNames.CannotHaveOtherRestrictedAttachments)) {
+            illegalAttachments = illegalAttachments.concat(this.attachments.filter(card => card.isRestricted() && card !== effectCard));
+        }
+        for(const card of this.attachments.filter(card => card.anyEffect(EffectNames.AttachmentLimit))) {
+            const limit = Math.max(...card.getEffects(EffectNames.AttachmentLimit));
+            const matchingAttachments = this.attachments.filter(attachment => attachment.id === card.id);
+            illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -limit));
+        }
+        for(const object of this.attachments.reduce((array, card) => array.concat(card.getEffects(EffectNames.AttachmentRestrictTraitAmount)), [])) {
+            for(const trait of Object.keys(object)) {
+                const matchingAttachments = this.attachments.filter(attachment => attachment.hasTrait(trait));
+                illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -object[trait]));
+            }
+        }
+        illegalAttachments = _.uniq(illegalAttachments);
+        if(this.attachments.filter(card => card.isRestricted()).length > 2) {
+            this.game.promptForSelect(this.controller, {
+                activePromptTitle: 'Choose an attachment to discard',
+                waitingPromptTitle: 'Waiting for opponent to choose an attachment to discard',
+                controller: Players.Self,
+                cardCondition: card => card.parent === this && card.isRestricted(),
+                onSelect: (player, card) => {
+                    this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
+                    if(illegalAttachments.length > 0) {
+                        this.game.addMessage('{0} {1} discarded from {3} as {2} {1} no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', illegalAttachments.length > 1 ? 'they' : 'it', this);
+                    }
+                    if(!illegalAttachments.includes(card)) {
+                        illegalAttachments.push(card);
+                    }
+                    this.game.applyGameAction(context, { discardFromPlay: illegalAttachments });
+                    return true;
+                },
+                source: 'Too many Restricted attachments'
+            });
+            return true;
+        } else if(illegalAttachments.length > 0) {
+            this.game.addMessage('{0} {1} discarded from {3} as {2} {1} no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', illegalAttachments.length > 1 ? 'they' : 'it', this);
+            this.game.applyGameAction(context, { discardFromPlay: illegalAttachments });
+            return true;
+        }
+        return false;
+    }
+
+    mustAttachToRing() {
+        return false;
+    }
+
+    /**
+     * Checks whether an attachment can be played on a given card.  Intended to be
+     * used by cards inheriting this class
+     */
+    canPlayOn(card) { // eslint-disable-line no-unused-vars
+        return true;
+    }
+
+    /**
+     * Checks 'no attachment' restrictions for this card when attempting to
+     * attach the passed attachment card.
+     */
+    allowAttachment(attachment) {
+        if(_.any(this.allowedAttachmentTraits, trait => attachment.hasTrait(trait))) {
+            return true;
+        }
+
+        return (
+            this.isBlank() ||
+            this.allowedAttachmentTraits.length === 0
+        );
+    }
+
+    /**
+     * Applies an effect with the specified properties while the current card is
+     * attached to another card. By default the effect will target the parent
+     * card, but you can provide a match function to narrow down whether the
+     * effect is applied (for cases where the effect only applies to specific
+     * characters).
+     */
+    whileAttached(properties) {
+        this.persistentEffect({
+            condition: properties.condition || (() => true),
+            match: (card, context) => card === this.parent && (!properties.match || properties.match(card, context)),
+            targetController: Players.Any,
+            effect: properties.effect
+        });
+    }
+
+    /**
+     * Checks whether the passed card meets the attachment restrictions (e.g.
+     * Opponent cards only, specific factions, etc) for this card.
+     */
+    canAttach(parent, context, ignoreType = false) {
+        if(!parent || parent.getType() !== CardTypes.Character || !ignoreType && this.getType() !== CardTypes.Attachment) {
+            return false;
+        }
+        if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller) {
+            return false;
+        } else if(this.anyEffect(EffectNames.AttachmentUniqueRestriction) && !parent.isUnique()) {
+            return false;
+        } else if(this.getEffects(EffectNames.AttachmentFactionRestriction).some(factions => !factions.some(faction => parent.isFaction(faction)))) {
+            return false;
+        } else if(this.getEffects(EffectNames.AttachmentTraitRestriction).some(traits => !traits.some(trait => parent.hasTrait(trait)))) {
+            return false;
+        }
+        return true;
+    }
+
+    getPlayActions() {
+        if(this.type === CardTypes.Event) {
+            return this.getActions();
+        }
+        let actions = this.abilities.playActions.slice();
+        if(this.type === CardTypes.Character) {
+            if(this.disguisedKeywordTraits.length > 0) {
+                actions.push(new PlayDisguisedCharacterAction(this));
+            }
+            if(this.isDynasty) {
+                actions.push(new DynastyCardAction(this));
+            } else {
+                actions.push(new PlayCharacterAction(this));
+            }
+        } else if(this.type === CardTypes.Attachment && this.mustAttachToRing()) {
+            actions.push(new PlayAttachmentOnRingAction(this));
+        } else if(this.type === CardTypes.Attachment) {
+            actions.push(new PlayAttachmentAction(this));
+        }
+        return actions;
+    }
+
+    /**
+     * This removes an attachment from this card's attachment Array.  It doesn't open any windows for
+     * game effects to respond to.
+     * @param {DrawCard} attachment
+     */
+    removeAttachment(attachment) {
+        this.attachments = _(this.attachments.reject(card => card.uuid === attachment.uuid));
     }
 
     getShortSummaryForControls(activePlayer) {

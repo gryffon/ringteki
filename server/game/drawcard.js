@@ -1,12 +1,6 @@
 const _ = require('underscore');
 
-const AbilityDsl = require('./abilitydsl.js');
 const BaseCard = require('./basecard');
-const DynastyCardAction = require('./dynastycardaction.js');
-const PlayAttachmentAction = require('./playattachmentaction.js');
-const PlayAttachmentOnRingAction = require('./playattachmentonringaction.js');
-const PlayCharacterAction = require('./playcharacteraction.js');
-const PlayDisguisedCharacterAction = require('./PlayDisguisedCharacterAction');
 const DuplicateUniqueAction = require('./duplicateuniqueaction.js');
 const CourtesyAbility = require('./KeywordAbilities/CourtesyAbility');
 const PrideAbility = require('./KeywordAbilities/PrideAbility');
@@ -14,24 +8,13 @@ const SincerityAbility = require('./KeywordAbilities/SincerityAbility');
 const StatusToken = require('./StatusToken');
 const StatModifier = require('./StatModifier');
 
-const { Locations, EffectNames, Players, CardTypes, PlayTypes } = require('./Constants');
-
-const ValidKeywords = [
-    'ancestral',
-    'restricted',
-    'limited',
-    'sincerity',
-    'courtesy',
-    'pride',
-    'covert'
-];
+const { Locations, EffectNames, CardTypes, PlayTypes } = require('./Constants');
 
 class DrawCard extends BaseCard {
     constructor(owner, cardData) {
         super(owner, cardData);
 
         this.defaultController = owner;
-        this.attachments = _([]);
         this.parent = null;
 
         this.printedMilitarySkill = this.getPrintedSkill('military');
@@ -46,8 +29,6 @@ class DrawCard extends BaseCard {
         this.personalHonor = null;
 
         this.parseKeywords(cardData.text ? cardData.text.replace(/<[^>]*>/g, '').toLowerCase() : '');
-
-        this.applyAttachmentBonus();
 
         this.menu = _([
             { command: 'bow', text: 'Bow/Ready' },
@@ -73,57 +54,6 @@ class DrawCard extends BaseCard {
         } else if(type === 'political') {
             return this.cardData.political === null || this.cardData.political === undefined ?
                 NaN : isNaN(parseInt(this.cardData.political)) ? 0 : parseInt(this.cardData.political);
-        }
-    }
-
-    parseKeywords(text) {
-        var lines = text.split('\n');
-        var potentialKeywords = [];
-        _.each(lines, line => {
-            line = line.slice(0, -1);
-            _.each(line.split('. '), k => potentialKeywords.push(k));
-        });
-
-        this.printedKeywords = [];
-        this.allowedAttachmentTraits = [];
-        this.disguisedKeywordTraits = [];
-
-        _.each(potentialKeywords, keyword => {
-            if(_.contains(ValidKeywords, keyword)) {
-                this.printedKeywords.push(keyword);
-            } else if(keyword.startsWith('disguised ')) {
-                this.disguisedKeywordTraits.push(keyword.replace('disguised ', ''));
-            } else if(keyword.startsWith('no attachments except')) {
-                var traits = keyword.replace('no attachments except ', '');
-                this.allowedAttachmentTraits = traits.split(' or ');
-            } else if(keyword.startsWith('no attachments')) {
-                this.allowedAttachmentTraits = ['none'];
-            }
-        });
-
-        this.printedKeywords.forEach(keyword => {
-            this.persistentEffect({
-                effect: AbilityDsl.effects.addKeyword(keyword)
-            });
-        });
-    }
-
-    applyAttachmentBonus() {
-        let militaryBonus = parseInt(this.cardData.military_bonus);
-        if(militaryBonus) {
-            this.persistentEffect({
-                match: (card) => card === this.parent,
-                targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyMilitarySkill(militaryBonus)
-            });
-        }
-        let politicalBonus = parseInt(this.cardData.political_bonus);
-        if(politicalBonus) {
-            this.persistentEffect({
-                match: (card) => card === this.parent,
-                targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyPoliticalSkill(politicalBonus)
-            });
         }
     }
 
@@ -250,7 +180,8 @@ class DrawCard extends BaseCard {
             EffectNames.SetBaseMilitarySkill,
             EffectNames.SetBasePoliticalSkill,
             EffectNames.SetBaseDash,
-            EffectNames.SwitchBaseSkills
+            EffectNames.SwitchBaseSkills,
+            EffectNames.SetBaseGlory
         ];
 
         let baseEffects = this.getRawEffects().filter(effect => baseModifierEffects.includes(effect.type));
@@ -499,7 +430,8 @@ class DrawCard extends BaseCard {
         const gloryModifierEffects = [
             EffectNames.CopyCharacter,
             EffectNames.SetGlory,
-            EffectNames.ModifyGlory
+            EffectNames.ModifyGlory,
+            EffectNames.SetBaseGlory
         ];
 
         // glory undefined (Holding etc.)
@@ -519,9 +451,14 @@ class DrawCard extends BaseCard {
             return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
         }
 
-        // copy effects/printed glory
+        // base effects/copy effects/printed glory
+        let baseEffects = gloryEffects.filter(effect => effect.type === EffectNames.SetBaseGlory);
         let copyEffects = gloryEffects.filter(effect => effect.type === EffectNames.CopyCharacter);
-        if(copyEffects.length > 0) {
+        if(baseEffects.length > 0) {
+            let latestBaseEffect = _.last(baseEffects);
+            let baseAmount = latestBaseEffect.getValue(this);
+            gloryModifiers.push(StatModifier.fromEffect(baseAmount, latestBaseEffect, true, `Base set by ${StatModifier.getEffectName(latestBaseEffect)}`));
+        } else if(copyEffects.length > 0) {
             let latestCopyEffect = _.last(copyEffects);
             let copiedCard = latestCopyEffect.getValue(this);
             gloryModifiers.push(StatModifier.fromEffect(copiedCard.printedGlory, latestCopyEffect, false, `Printed glory from ${copiedCard.name} due to ${StatModifier.getEffectName(latestCopyEffect)}`));
@@ -657,119 +594,9 @@ class DrawCard extends BaseCard {
         this.bowed = false;
     }
 
-    /**
-     * Checks 'no attachment' restrictions for this card when attempting to
-     * attach the passed attachment card.
-     */
-    allowAttachment(attachment) {
-        if(_.any(this.allowedAttachmentTraits, trait => attachment.hasTrait(trait))) {
-            return true;
-        }
-
-        return (
-            this.isBlank() ||
-            this.allowedAttachmentTraits.length === 0
-        );
-    }
-
-    /**
-     * Applies an effect with the specified properties while the current card is
-     * attached to another card. By default the effect will target the parent
-     * card, but you can provide a match function to narrow down whether the
-     * effect is applied (for cases where the effect only applies to specific
-     * characters).
-     */
-    whileAttached(properties) {
-        this.persistentEffect({
-            condition: properties.condition || (() => true),
-            match: (card, context) => card === this.parent && (!properties.match || properties.match(card, context)),
-            targetController: Players.Any,
-            effect: properties.effect
-        });
-    }
-
-    /**
-     * Checks whether the passed card meets the attachment restrictions (e.g.
-     * Opponent cards only, specific factions, etc) for this card.
-     */
-    canAttach(parent, context, ignoreType = false) {
-        if(!parent || parent.getType() !== CardTypes.Character || !ignoreType && this.getType() !== CardTypes.Attachment) {
-            return false;
-        }
-        if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller) {
-            return false;
-        } else if(this.anyEffect(EffectNames.AttachmentUniqueRestriction) && !parent.isUnique()) {
-            return false;
-        } else if(this.getEffects(EffectNames.AttachmentFactionRestriction).some(factions => !factions.some(faction => parent.isFaction(faction)))) {
-            return false;
-        } else if(this.getEffects(EffectNames.AttachmentTraitRestriction).some(traits => !traits.some(trait => parent.hasTrait(trait)))) {
-            return false;
-        }
-        return true;
-    }
-
     canPlay(context, type) {
         return this.checkRestrictions(type, context) && context.player.checkRestrictions(type, context) &&
             this.checkRestrictions('play', context) && context.player.checkRestrictions('play', context);
-    }
-
-    mustAttachToRing() {
-        return false;
-    }
-
-    /**
-     * Checks whether an attachment can be played on a given card.  Intended to be
-     * used by cards inheriting this class
-     */
-    canPlayOn(card) { // eslint-disable-line no-unused-vars
-        return true;
-    }
-
-    checkForIllegalAttachments() {
-        let context = this.game.getFrameworkContext(this.controller);
-        let illegalAttachments = this.attachments.filter(attachment => (
-            !this.allowAttachment(attachment) || !attachment.canAttach(this, { game: this.game, player: this.controller })
-        ));
-        for(const effectCard of this.getEffects(EffectNames.CannotHaveOtherRestrictedAttachments)) {
-            illegalAttachments = illegalAttachments.concat(this.attachments.filter(card => card.isRestricted() && card !== effectCard));
-        }
-        for(const card of this.attachments.filter(card => card.anyEffect(EffectNames.AttachmentLimit))) {
-            const limit = Math.max(...card.getEffects(EffectNames.AttachmentLimit));
-            const matchingAttachments = this.attachments.filter(attachment => attachment.id === card.id);
-            illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -limit));
-        }
-        for(const object of this.attachments.reduce((array, card) => array.concat(card.getEffects(EffectNames.AttachmentRestrictTraitAmount)), [])) {
-            for(const trait of Object.keys(object)) {
-                const matchingAttachments = this.attachments.filter(attachment => attachment.hasTrait(trait));
-                illegalAttachments = illegalAttachments.concat(matchingAttachments.slice(0, -object[trait]));
-            }
-        }
-        illegalAttachments = _.uniq(illegalAttachments);
-        if(this.attachments.filter(card => card.isRestricted()).length > 2) {
-            this.game.promptForSelect(this.controller, {
-                activePromptTitle: 'Choose an attachment to discard',
-                waitingPromptTitle: 'Waiting for opponent to choose an attachment to discard',
-                cardCondition: card => card.parent === this && card.isRestricted(),
-                onSelect: (player, card) => {
-                    this.game.addMessage('{0} discards {1} from {2} due to too many Restricted attachments', player, card, card.parent);
-                    if(illegalAttachments.length > 0) {
-                        this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
-                    }
-                    if(!illegalAttachments.includes(card)) {
-                        illegalAttachments.push(card);
-                    }
-                    this.game.applyGameAction(context, { discardFromPlay: illegalAttachments });
-                    return true;
-                },
-                source: 'Too many Restricted attachments'
-            });
-            return true;
-        } else if(illegalAttachments.length > 0) {
-            this.game.addMessage('{0} {1} discarded from {2} as it is no longer legally attached', illegalAttachments, illegalAttachments.length > 1 ? 'are' : 'is', this);
-            this.game.applyGameAction(null, { discardFromPlay: illegalAttachments});
-            return true;
-        }
-        return false;
     }
 
     getActions(location = this.location) {
@@ -778,37 +605,6 @@ class DrawCard extends BaseCard {
         }
         const actions = this.type === CardTypes.Character ? [new DuplicateUniqueAction(this)] : [];
         return actions.concat(this.getPlayActions(), super.getActions());
-    }
-
-    getPlayActions() {
-        if(this.type === CardTypes.Event) {
-            return super.getActions();
-        }
-        let actions = this.abilities.playActions.slice();
-        if(this.type === CardTypes.Character) {
-            if(this.disguisedKeywordTraits.length > 0) {
-                actions.push(new PlayDisguisedCharacterAction(this));
-            }
-            if(this.isDynasty) {
-                actions.push(new DynastyCardAction(this));
-            } else {
-                actions.push(new PlayCharacterAction(this));
-            }
-        } else if(this.type === CardTypes.Attachment && !this.mustAttachToRing()) {
-            actions.push(new PlayAttachmentAction(this));
-        } else if(this.type === CardTypes.Attachment && this.mustAttachToRing()) {
-            actions.push(new PlayAttachmentOnRingAction(this));
-        }
-        return actions;
-    }
-
-    /**
-     * This removes an attachment from this card's attachment Array.  It doesn't open any windows for
-     * game effects to respond to.
-     * @param {DrawCard} attachment
-     */
-    removeAttachment(attachment) {
-        this.attachments = _(this.attachments.reject(card => card.uuid === attachment.uuid));
     }
 
     /**
@@ -858,6 +654,10 @@ class DrawCard extends BaseCard {
     }
 
     canDeclareAsAttacker(conflictType, ring, province) { // eslint-disable-line no-unused-vars
+        const attackers = this.game.isDuringConflict() ? this.game.currentConflict.attackers : [];
+        if(attackers.concat(this).reduce((total, card) => total + card.sumEffects(EffectNames.FateCostToAttack), 0) > this.controller.fate) {
+            return false;
+        }
         if(this.anyEffect(EffectNames.CanOnlyBeDeclaredAsAttackerWithElement)) {
             const elementsAdded = this.attachments.reduce(
                 (array, attachment) => array.concat(attachment.getEffects(EffectNames.AddElementAsAttacker)),
