@@ -6,19 +6,22 @@ describe('Withstand The Darkness', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['crisis-breaker', 'doji-challenger'],
-                        hand: ['withstand-the-darkness']
+                        hand: ['withstand-the-darkness', 'withstand-the-darkness']
                     },
                     player2: {
                         inPlay: ['eager-scout'],
-                        hand: ['way-of-the-scorpion']
+                        hand: ['way-of-the-scorpion', 'way-of-the-scorpion']
                     }
                 });
                 this.crisisBreaker = this.player1.findCardByName('crisis-breaker');
                 this.dojiChallenger = this.player1.findCardByName('doji-challenger');
-                this.withstandTheDarkness = this.player1.findCardByName('withstand-the-darkness');
+                this.withstandTheDarkness = this.player1.filterCardsByName('withstand-the-darkness')[0];
+                this.withstandTheDarkness2 = this.player1.filterCardsByName('withstand-the-darkness')[1];
                 this.eagerScout = this.player2.findCardByName('eager-scout');
-                this.wayOfTheScorpion = this.player2.findCardByName('way-of-the-scorpion');
+                this.wayOfTheScorpion = this.player2.filterCardsByName('way-of-the-scorpion')[0];
+                this.wayOfTheScorpion2 = this.player2.filterCardsByName('way-of-the-scorpion')[1];
 
+                this.crisisBreaker.honor();
                 this.crisisBreaker.fate = 0;
 
                 this.noMoreActions();
@@ -62,6 +65,23 @@ describe('Withstand The Darkness', function() {
                 this.player1.clickCard(this.withstandTheDarkness);
                 this.player1.clickCard(this.crisisBreaker);
                 expect(this.crisisBreaker.fate).toBe(1);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should not be playable twice', function() {
+                this.player2.clickCard(this.wayOfTheScorpion);
+                this.player2.clickCard(this.crisisBreaker);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness2);
+                this.player1.clickCard(this.withstandTheDarkness);
+                this.player1.clickCard(this.crisisBreaker);
+                expect(this.crisisBreaker.fate).toBe(1);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness2);
+                this.player1.pass();
+                this.player2.clickCard(this.wayOfTheScorpion2);
+                this.player2.clickCard(this.crisisBreaker);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
         });
