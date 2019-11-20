@@ -17,6 +17,10 @@ class EffectValue {
         return this.value;
     }
 
+    recalculate() {
+        return false;
+    }
+
     setContext(context) {
         this.context = context;
     }
