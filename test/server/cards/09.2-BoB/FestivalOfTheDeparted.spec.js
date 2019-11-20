@@ -5,7 +5,7 @@ describe('Festival of the Departed', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['brash-samurai', 'doji-whisperer', 'iuchi-wayfinder'],
+                        inPlay: ['brash-samurai', 'doji-whisperer', 'iuchi-wayfinder', 'wandering-ronin'],
                         hand: ['challenge-on-the-fields', 'a-perfect-cut', 'speak-to-the-heart']
                     },
                     player2: {
@@ -18,6 +18,8 @@ describe('Festival of the Departed', function() {
                 this.brashSamurai = this.player1.findCardByName('brash-samurai');
                 this.dojiWhisperer = this.player1.findCardByName('doji-whisperer');
                 this.iuchiWayfinder = this.player1.findCardByName('iuchi-wayfinder');
+                this.wanderingRonin = this.player1.findCardByName('wandering-ronin');
+                this.wanderingRonin.fate = 2;
                 this.challengeOnTheFields = this.player1.findCardByName('challenge-on-the-fields');
                 this.aPerfectCut = this.player1.findCardByName('a-perfect-cut');
                 this.speakToTheHeart = this.player1.findCardByName('speak-to-the-heart');
@@ -129,6 +131,18 @@ describe('Festival of the Departed', function() {
                 expect(this.game.currentConflict.conflictProvince).toBe(this.festivalOfTheDeparted);
                 expect(this.brashSamurai.getMilitarySkill()).toBe(2);
                 expect(this.matsuBerserker.getMilitarySkill()).toBe(3);
+            });
+
+            it('should not suppress modifiers from character abilities', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.wanderingRonin],
+                    defenders: [this.tattooedWanderer, this.matsuBerserker],
+                    province: this.festivalOfTheDeparted
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.wanderingRonin);
+                expect(this.wanderingRonin.militarySkill).toBe(4);
             });
         });
     });
