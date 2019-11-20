@@ -17,6 +17,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.events = [];
         this.provincesToRefill = [];
         this.targetResults = {};
+        this.costResults = this.getCostResults();
         this.initialise();
     }
 
@@ -101,17 +102,18 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.costResults = this.getPayResults();
+        this.costResults.canCancel = this.canCancel;
         this.context.stage = Stages.Cost;
         this.context.ability.resolveCosts(this.context, this.costResults);
     }
 
-    getPayResults() {
+    getCostResults() {
         return {
             cancelled: false,
             canCancel: this.canCancel,
             events: [],
-            playCosts: true
+            playCosts: true,
+            triggerCosts: true
         };
     }
 

@@ -120,7 +120,7 @@ class BaseAbility {
         return this.getCosts(context).every(cost => cost.canPay(contextCopy));
     }
 
-    getCosts(context, playCosts = true) {
+    getCosts(context, playCosts = true, triggerCosts = true) { // eslint-disable-line no-unused-vars
         if(!playCosts) {
             return this.cost.filter(cost => !cost.isPlayCost);
         }
@@ -128,7 +128,7 @@ class BaseAbility {
     }
 
     resolveCosts(context, results) {
-        for(let cost of this.getCosts(context, results.playCosts)) {
+        for(let cost of this.getCosts(context, results.playCosts, results.triggerCosts)) {
             context.game.queueSimpleStep(() => {
                 if(!results.cancelled) {
                     if(cost.addEventsToArray) {

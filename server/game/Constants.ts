@@ -98,7 +98,7 @@ export enum EffectNames {
     ConsiderRingAsClaimed = 'considerAsClaimed',
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
-    AdditionalCost = 'additionalCost',
+    AdditionalTriggerCost = 'additionalTriggerCost',
     AdditionalPlayCost = 'additionalPlayCost',
     AlternateFatePool = 'alternateFatePool',
     CannotDeclareConflictsOfType = 'cannotDeclareConflictsOfType',

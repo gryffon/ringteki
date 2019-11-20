@@ -37,6 +37,12 @@ class NoCostsAbilityResolver extends AbilityResolver {
         this.game.openEventWindow(events);
     }
 
+    getCostResults() {
+        let results = super.getCostResults();
+        results.playCosts = false;
+        return results;
+    }
+
     initiateAbilityEffects() {
         if(this.cancelled) {
             for(const event of this.events) {
