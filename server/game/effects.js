@@ -3,6 +3,7 @@ const _ = require('underscore');
 const AbilityLimit = require('./abilitylimit.js');
 const CopyCharacter = require('./Effects/CopyCharacter');
 const Restriction = require('./Effects/restriction.js');
+const SuppressEffect = require('./Effects/SuppressEffect');
 const GainAbility = require('./Effects/GainAbility');
 const EffectBuilder = require('./Effects/EffectBuilder');
 const { EffectNames, PlayTypes, CardTypes } = require('./Constants');
@@ -87,7 +88,7 @@ const Effects = {
     setPoliticalSkill: (value) => EffectBuilder.card.static(EffectNames.SetPoliticalSkill, value),
     setProvinceStrength: (value) => EffectBuilder.card.static(EffectNames.SetProvinceStrength, value),
     switchBaseSkills: () => EffectBuilder.card.static(EffectNames.SwitchBaseSkills),
-    suppressEffects: (condition) => EffectBuilder.card.static(EffectNames.SuppressEffects, condition),
+    suppressEffects: (condition) => EffectBuilder.card.static(EffectNames.SuppressEffects, new SuppressEffect(condition)),
     takeControl: (player) => EffectBuilder.card.static(EffectNames.TakeControl, player),
     unlessActionCost: (properties) => EffectBuilder.card.static(EffectNames.UnlessActionCost, properties),
     // Ring effects
