@@ -1,11 +1,12 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
+const { Locations } = require('../../Constants');
 
 class SharpenTheMind extends DrawCard {
     setupCardAbilities() {
         this.action({
             title: 'Give +3/+3 to attached character',
-            cost: AbilityDsl.costs.discardCard(),
+            cost: AbilityDsl.costs.discardCard({ location: Locations.Hand }),
             condition: context => context.game.isDuringConflict(),
             gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
                 target: context.source.parent,

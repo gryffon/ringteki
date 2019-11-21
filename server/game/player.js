@@ -368,8 +368,9 @@ class Player extends GameObject {
      * @param card BaseCard
      * @param {String} playingType
      */
-    isCardInPlayableLocation(card, playingType) {
-        return _.any(this.playableLocations, location => location.playingType === playingType && location.contains(card));
+    isCardInPlayableLocation(card, playingType = null) {
+        return _.any(this.playableLocations, location =>
+            (!playingType || location.playingType === playingType) && location.contains(card));
     }
 
     /**
@@ -855,6 +856,10 @@ class Player extends GameObject {
         };
 
         let type = card.type;
+        if(location === Locations.DynastyDiscardPile || location === Locations.ConflictDiscardPile) {
+            type = card.printedType || card.type; //fallback to type if printedType doesn't exist (mock cards, token cards)
+        }
+
         if(type === 'character') {
             type = card.isDynasty ? 'dynastyCharacter' : 'conflictCharacter';
         }

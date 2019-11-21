@@ -1,11 +1,12 @@
 const BaseAction = require('./BaseAction');
 const Costs = require('./costs.js');
 const GameActions = require('./GameActions/GameActions');
-const { Phases, PlayTypes, EventNames } = require('./Constants');
+const { Phases, EventNames, Locations, CardTypes } = require('./Constants');
 
 class PlayAttachmentAction extends BaseAction {
     constructor(card, ignoreType = false) {
-        super(card, [Costs.payTargetDependentFateCost('target', PlayTypes.PlayFromHand, ignoreType)], {
+        super(card, [Costs.payTargetDependentFateCost('target', ignoreType)], {
+            location: [Locations.PlayArea, Locations.Provinces],
             gameAction: GameActions.attach(context => ({ attachment: context.source, ignoreType: ignoreType })),
             cardCondition: (card, context) => context.source.canPlayOn(card)
         });
@@ -16,10 +17,10 @@ class PlayAttachmentAction extends BaseAction {
         if(!ignoredRequirements.includes('phase') && context.game.currentPhase === Phases.Dynasty) {
             return 'phase';
         }
-        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, PlayTypes.PlayFromHand)) {
+        if(!ignoredRequirements.includes('location') && !context.player.isCardInPlayableLocation(context.source, context.playType)) {
             return 'location';
         }
-        if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, PlayTypes.PlayFromHand)) {
+        if(!ignoredRequirements.includes('cannotTrigger') && !context.source.canPlay(context, context.playType)) {
             return 'cannotTrigger';
         }
         if(context.source.anotherUniqueInPlay(context.player)) {
@@ -29,7 +30,11 @@ class PlayAttachmentAction extends BaseAction {
     }
 
     displayMessage(context) {
-        context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target);
+        if(context.target.type === CardTypes.Province && context.target.facedown) {
+            context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target.location);
+        } else {
+            context.game.addMessage('{0} plays {1}, attaching it to {2}', context.player, context.source, context.target);
+        }
     }
 
     executeHandler(context) {
@@ -38,7 +43,7 @@ class PlayAttachmentAction extends BaseAction {
             card: context.source,
             context: context,
             originalLocation: context.source.location,
-            playType: PlayTypes.PlayFromHand
+            playType: context.playType
         });
         let takeControl = context.source.controller !== context.player;
         context.game.openEventWindow([context.game.actions.attach({ attachment: context.source, takeControl: takeControl }).getEvent(context.target, context), cardPlayedEvent]);

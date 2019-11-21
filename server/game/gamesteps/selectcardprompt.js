@@ -78,7 +78,7 @@ class SelectCardPrompt extends UiPrompt {
         this.selector = properties.selector || CardSelector.for(this.properties);
         this.selectedCards = [];
         if(properties.mustSelect) {
-            if(this.selector.hasEnoughSelected(properties.mustSelect) && properties.mustSelect.length >= this.selector.numCards) {
+            if(this.selector.hasEnoughSelected(properties.mustSelect) && this.selector.numCards > 0 && properties.mustSelect.length >= this.selector.numCards) {
                 this.onlyMustSelectMayBeChosen = true;
             } else {
                 this.selectedCards = [...properties.mustSelect];
