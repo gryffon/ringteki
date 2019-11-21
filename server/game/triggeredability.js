@@ -43,18 +43,20 @@ class TriggeredAbility extends CardAbility {
         this.collectiveTrigger = !!properties.collectiveTrigger;
     }
 
-    meetsRequirements(context) {
-        if(!this.anyPlayer && context.player !== this.card.controller && (this.card.type !== CardTypes.Event || !context.player.isCardInPlayableLocation(this.card, PlayTypes.PlayFromHand))) {
-            return 'player';
+    meetsRequirements(context, ignoredRequirements = []) {
+        if(!ignoredRequirements.includes('player') && !this.anyPlayer && context.player !== this.card.controller) {
+            if(this.card.type !== CardTypes.Event || !context.player.isCardInPlayableLocation(this.card, PlayTypes.PlayFromHand)) {
+                return 'player';
+            }
         }
 
-        return super.meetsRequirements(context);
+        return super.meetsRequirements(context, ignoredRequirements);
     }
 
     eventHandler(event, window) {
         for(const player of this.game.getPlayers()) {
             let context = this.createContext(player, event);
-            //console.log(event.name, this.card.name, this.isTriggeredByEvent(event, context), this.meetsRequirements(context));
+            console.log(event.name, this.card.name, this.isTriggeredByEvent(event, context), this.meetsRequirements(context));
             if(this.card.reactions.includes(this) && this.isTriggeredByEvent(event, context) && this.meetsRequirements(context) === '') {
                 window.addChoice(context);
             }

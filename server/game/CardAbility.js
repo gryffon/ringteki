@@ -96,11 +96,11 @@ class CardAbility extends ThenAbility {
             return 'cannotTrigger';
         }
 
-        if(this.limit.isAtMax(context.player)) {
+        if(!ignoredRequirements.includes('limit') && this.limit.isAtMax(context.player)) {
             return 'limit';
         }
 
-        if(this.max && context.player.isAbilityAtMax(this.maxIdentifier)) {
+        if(!ignoredRequirements.includes('max') && this.max && context.player.isAbilityAtMax(this.maxIdentifier)) {
             return 'max';
         }
 
