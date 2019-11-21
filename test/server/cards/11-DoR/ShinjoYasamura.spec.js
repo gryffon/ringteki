@@ -12,6 +12,7 @@ describe('Shinjo Yasamura', function() {
                         hand: ['finger-of-jade']
                     }
                 });
+                this.borderRider = this.player1.findCardByName('border-rider');
                 this.shinjoYasamura = this.player1.clickCard('shinjo-yasamura');
                 this.shamefulDisplay = this.player2.findCardByName('shameful-display', 'province 1');
                 this.agashaSwordsmith = this.player2.findCardByName('agasha-swordsmith');
@@ -38,11 +39,12 @@ describe('Shinjo Yasamura', function() {
                 this.player1.clickPrompt('Gain 2 honor');
                 expect(this.player1).toHavePrompt('Action Window');
                 this.noMoreActions();
-                this.player1.passConflict();
-
+                this.player2.passConflict();
                 this.noMoreActions();
+
                 this.initiateConflict({
                     type: 'political',
+                    ring: 'fire',
                     attackers: [this.borderRider],
                     defenders: [this.agashaSwordsmith]
                 });
@@ -51,6 +53,7 @@ describe('Shinjo Yasamura', function() {
             });
 
             it('should not trigger when cancelled by Finger of Jade', function() {
+                this.player1.pass();
                 this.fingerOfJade = this.player2.playAttachment('finger-of-jade', this.agashaSwordsmith);
                 this.noMoreActions();
                 this.player1.clickRing('air');
@@ -67,19 +70,22 @@ describe('Shinjo Yasamura', function() {
                 expect(this.player1).not.toBeAbleToSelect(this.shinjoYasamura);
 
                 expect(this.player2).toHavePrompt('Choose Defenders');
-                expect(this.player2).toBeAbleToSelect(this.agashaSwordsmith);
+                this.player2.clickCard(this.agashaSwordsmith);
+                expect(this.game.currentConflict.defenders).toContain(this.agashaSwordsmith);
                 this.player2.clickPrompt('Done');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Air Ring');
                 this.player1.clickPrompt('Gain 2 honor');
                 expect(this.player1).toHavePrompt('Action Window');
+                this.agashaSwordsmith.bowed = false;
                 this.noMoreActions();
-                this.player1.passConflict();
+                this.player2.passConflict();
 
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
+                    ring: 'fire',
                     attackers: [this.borderRider],
                     defenders: [this.agashaSwordsmith]
                 });
