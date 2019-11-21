@@ -132,10 +132,7 @@ describe('Seventh Tower', function() {
                 this.player2.pass();
                 this.player1.pass();
 
-                let hand = this.player2.hand.length;
-                expect(this.player2).not.toBeAbleToSelect(this.watchtower);
-                this.player2.clickCard(this.watchtower);
-                expect(this.player2.hand.length).toBe(hand);
+                expect(this.player2).not.toBeAbleToSelect(this.tower);
             });
         });
     });
