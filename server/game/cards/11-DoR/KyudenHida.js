@@ -17,14 +17,27 @@ class KyudenHida extends StrongholdCard {
                     cardCondition: card => card.type === CardTypes.Character,
                     choices: ['Take nothing'],
                     handlers: [() => {
-                        this.game.addMessage('{0} takes nothing', context.player);
+                        context.player.dynastyDeck.first(3).forEach(card => {
+                            context.player.moveCard(card, Locations.DynastyDiscardPile);
+                        });
+                        this.game.addMessage('{0} chooses not to play a character', context.player);
                         return true;
                     }],
-                    gameAction: AbilityDsl.actions.playCard({ resetOnCancel: true })
+                    gameAction: AbilityDsl.actions.playCard({
+                        resetOnCancel: false,
+                        postHandler: hidaContext => {
+                            let card = hidaContext.source;
+                            if(card.location !== Locations.PlayArea) {
+                                context.player.moveCard(card, Locations.DynastyDiscardPile);
+                                this.game.addMessage('{0} chooses not to play a character', context.player);
+                            }
+                        }
+                    })
                 })),
-                AbilityDsl.actions.shuffleDeck(context => ({
-                    deck: Locations.DynastyDeck,
-                    target: context.player
+                AbilityDsl.actions.moveCard((context) => ({
+                    target: context.player.dynastyDeck.first(2),
+                    faceup: true,
+                    destination: Locations.DynastyDiscardPile
                 }))
             ])
         });

@@ -34,6 +34,41 @@ describe('Kyuden Hida', function() {
 
                 expect(this.kisada.location).toBe('play area');
                 expect(this.kisada.fate).toBe(2);
+                expect(this.storehouse.location).toBe('dynasty discard pile');
+                expect(this.favorableGround.location).toBe('dynasty discard pile');
+                expect(this.getChatLogs(1)).toContain('player1 plays Hida Kisada with 2 additional fate');
+            });
+
+            it('should discard all 3 cards if none are taken', function() {
+                this.player1.clickCard(this.kyudenHida);
+                expect(this.player1).toHaveDisabledPromptButton('Imperial Storehouse');
+                expect(this.player1).toHaveDisabledPromptButton('Favorable Ground');
+                expect(this.player1).toHavePromptButton('Hida Kisada');
+
+                this.player1.clickPrompt('Take nothing');
+                expect(this.kisada.location).toBe('dynasty discard pile');
+                expect(this.storehouse.location).toBe('dynasty discard pile');
+                expect(this.favorableGround.location).toBe('dynasty discard pile');
+                expect(this.getChatLogs(1)).toContain('player1 chooses not to play a character');
+            });
+
+            it('should discard all 3 cards if prompt is cancelled', function() {
+                this.player1.clickCard(this.kyudenHida);
+                expect(this.player1).toHaveDisabledPromptButton('Imperial Storehouse');
+                expect(this.player1).toHaveDisabledPromptButton('Favorable Ground');
+                expect(this.player1).toHavePromptButton('Hida Kisada');
+
+                this.player1.clickPrompt('Hida Kisada');
+                expect(this.player1).toHavePromptButton('0');
+                expect(this.player1).toHavePromptButton('1');
+                expect(this.player1).toHavePromptButton('2');
+                expect(this.player1).toHavePromptButton('Cancel');
+                this.player1.clickPrompt('Cancel');
+
+                expect(this.kisada.location).toBe('dynasty discard pile');
+                expect(this.storehouse.location).toBe('dynasty discard pile');
+                expect(this.favorableGround.location).toBe('dynasty discard pile');
+                expect(this.getChatLogs(1)).toContain('player1 chooses not to play a character');
             });
         });
 
