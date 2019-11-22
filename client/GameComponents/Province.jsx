@@ -47,6 +47,41 @@ class Province extends React.Component {
         }
     }
 
+    getWrapperStyle(provinceCard) {
+        let wrapperStyle = {};
+        let attachmentOffset = 13;
+        let cardHeight = 84;
+        switch(this.props.size) {
+            case 'large':
+                attachmentOffset *= 1.4;
+                cardHeight *= 1.4;
+                break;
+            case 'small':
+                attachmentOffset *= 0.8;
+                cardHeight *= 0.8;
+                break;
+            case 'x-large':
+                attachmentOffset *= 2;
+                cardHeight *= 2;
+                break;
+        }
+
+        let attachmentCount = _.size(provinceCard.attachments);
+        let attachments = provinceCard.attachments;
+        let totalTiers = 0;
+        _.forEach(attachments, attachment => {
+            if(attachment.bowed) {
+                totalTiers += 1;
+            }
+        });
+
+        if(attachmentCount > 0) {
+            wrapperStyle = { marginLeft:(4 + attachmentCount * attachmentOffset) + 'px', minHeight: (cardHeight + totalTiers * attachmentOffset) + 'px' };
+        }
+
+        return wrapperStyle;
+    }
+
     render() {
         var className = 'panel province ' + this.props.size;
         var cardCount = this.props.cardCount || (this.props.cards ? this.props.cards.length : '0');
@@ -89,7 +124,7 @@ class Province extends React.Component {
 
         return (
             <div className={ className } onDragLeave={ this.onDragLeave } onDragOver={ this.onDragOver } onDrop={ event => this.onDragDrop(event, this.props.source) }
-                onClick={ this.onCollectionClick }>
+                onClick={ this.onCollectionClick } style={ provinceCard ? Object.assign({}, this.getWrapperStyle(provinceCard)) : {} }>
                 <div className='panel-header'>
                     { headerText }
                 </div>
