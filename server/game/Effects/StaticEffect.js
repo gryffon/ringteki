@@ -86,7 +86,7 @@ class StaticEffect {
     }
 
     recalculate() {
-        return false;
+        return this.value.recalculate();
     }
 
     setContext(context) {

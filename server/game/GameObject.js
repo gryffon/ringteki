@@ -27,20 +27,14 @@ class GameObject {
     }
 
     getEffects(type) {
-        let suppressedEffects = this.getSuppressedEffects();
-        let filteredEffects = this.effects.filter(effect => effect.type === type && !suppressedEffects.includes(effect));
+        let filteredEffects = this.getRawEffects().filter(effect => effect.type === type);
         return filteredEffects.map(effect => effect.getValue(this));
     }
 
     getRawEffects() {
-        let suppressedEffects = this.getSuppressedEffects();
+        const suppressEffects = this.effects.filter(effect => effect.type === EffectNames.SuppressEffects);
+        const suppressedEffects = suppressEffects.reduce((array, effect) => array.concat(effect.getValue(this)), []);
         return this.effects.filter(effect => !suppressedEffects.includes(effect));
-    }
-
-    getSuppressedEffects() {
-        let suppressingEffects = this.effects.filter(effect => effect.type === EffectNames.SuppressEffects);
-        let suppressedEffects = this.effects.filter(effect => suppressingEffects.some(suppressingEffect => suppressingEffect.value.value(effect)));
-        return suppressedEffects;
     }
 
     sumEffects(type) {
