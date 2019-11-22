@@ -17,7 +17,7 @@ class GameActionCost {
         return this.action.hasLegalTarget(context);
     }
 
-    addEventsToArray(events: any[], context: AbilityContext, result): void { // eslint-disable-line no-unused-vars
+    addEventsToArray(events: any[], context: AbilityContext, result = null): void { // eslint-disable-line no-unused-vars
         context.costs[this.action.name] = this.action.getProperties(context).target;
         this.action.addEventsToArray(events, context);
     }

@@ -31,7 +31,7 @@ export class CardGameAction extends GameAction {
             const additionalCosts = card.getEffects(EffectNames.UnlessActionCost).filter(properties => properties.actionName === this.name);
             if(additionalCosts.length > 0) {
                 let allCostsPaid = true;
-                for(const properties of additionalCosts) {                    
+                for(const properties of additionalCosts) {
                     context.game.queueSimpleStep(() => {
                         let cost = properties.cost;
                         if(typeof cost === 'function') {
@@ -52,11 +52,11 @@ export class CardGameAction extends GameAction {
                                         context.game.addMessage('{0} chooses not to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
                                     }
                                 ]
-                            });    
+                            });
                         } else {
                             allCostsPaid = false;
                             context.game.addMessage('{0} cannot pay the additional cost required to {1}', card.controller, this.getEffectMessage(context, additionalProperties));
-                        }    
+                        }
                     });
                 }
                 context.game.queueSimpleStep(() => {
@@ -114,7 +114,7 @@ export class CardGameAction extends GameAction {
                 fateEvent.isContingent = true;
                 contingentEvents.push(fateEvent);
             }
-            return contingentEvents;    
+            return contingentEvents;
         }
     }
 
