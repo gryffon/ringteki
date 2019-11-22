@@ -54,6 +54,7 @@ export enum EffectNames {
     DelayedEffect = 'delayedEffect',
     DoesNotBow = 'doesNotBow',
     DoesNotReady = 'doesNotReady',
+    FateCostToAttack = 'fateCostToAttack',
     GainAbility = 'gainAbility',
     GainExtraFateWhenPlayed = 'gainExtraFateWhenPlayed',
     GainPlayAction = 'gainPlayAction',
@@ -117,7 +118,8 @@ export enum EffectNames {
     ChangeConflictSkillFunction = 'skillFunction',
     ModifyConflictElementsToResolve = 'modifyConflictElementsToResolve',
     RestrictNumberOfDefenders = 'restrictNumberOfDefenders',
-    ResolveConflictEarly = 'resolveConflictEarly'
+    ResolveConflictEarly = 'resolveConflictEarly',
+    SetBaseGlory = "setBaseGlory"
 };
 
 export enum Durations {
