@@ -3,7 +3,6 @@ const MaxStatCardSelector = require('./CardSelectors/MaxStatCardSelector');
 const SingleCardSelector = require('./CardSelectors/SingleCardSelector');
 const UnlimitedCardSelector = require('./CardSelectors/UnlimitedCardSelector');
 const UpToXCardSelector = require('./CardSelectors/UpToXCardSelector');
-
 const { TargetModes, CardTypes } = require('./Constants');
 
 const defaultProperties = {
