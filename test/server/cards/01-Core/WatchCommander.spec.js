@@ -6,7 +6,7 @@ describe('Watch Commander', function () {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['wandering-ronin'],
-                        hand: ['watch-commander']
+                        hand: ['watch-commander', 'watch-commander']
                     },
                     player2: {
                         inPlay: ['adept-of-the-waves'],
@@ -14,7 +14,8 @@ describe('Watch Commander', function () {
                     }
                 });
                 this.wanderingRonin = this.player1.findCardByName('wandering-ronin');
-                this.watchCommander = this.player1.findCardByName('watch-commander');
+                this.watchCommander = this.player1.filterCardsByName('watch-commander')[0];
+                this.watchCommander2 = this.player1.filterCardsByName('watch-commander')[1];
 
                 this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
                 this.letGo = this.player2.findCardByName('let-go');
@@ -30,6 +31,17 @@ describe('Watch Commander', function () {
                 expect(this.player1).not.toBeAbleToSelect(this.adeptOfTheWaves);
                 this.player1.clickCard(this.wanderingRonin);
                 expect(this.wanderingRonin.attachments.toArray()).toContain(this.watchCommander);
+            });
+
+            it('should deatch if a second Watch Commander is attached to a character you control', function () {
+                this.player1.clickCard(this.watchCommander);
+                this.player1.clickCard(this.wanderingRonin);
+                this.player2.pass();
+                this.player1.clickCard(this.watchCommander2);
+                this.player1.clickCard(this.wanderingRonin);
+                expect(this.wanderingRonin.attachments.toArray()).toContain(this.watchCommander2);
+                expect(this.player1.conflictDiscard).toContain(this.watchCommander);
+
             });
 
             it('should trigger when your opponent plays a card when attached character is participating', function () {
