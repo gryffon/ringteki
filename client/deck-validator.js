@@ -4,21 +4,24 @@ const moment = require('moment');
 
 const RestrictedList = require('./RestrictedList');
 
-const officialRoles = {
-    crab: ['keeper-of-air', 'seeker-of-void'],
-    crane: ['keeper-of-air', 'seeker-of-void'],
-    dragon: ['seeker-of-air', 'keeper-of-water'],
-    lion: ['seeker-of-earth', 'seeker-of-air'],
-    phoenix: ['seeker-of-earth', 'seeker-of-void'],
-    scorpion: ['keeper-of-earth', 'keeper-of-air'],
-    unicorn: ['keeper-of-earth', 'keeper-of-water']
-};
-
 const openRoles = [
+    'keeper-of-air',
+    'keeper-of-earth',
+    'keeper-of-fire',
+    'keeper-of-water',
+    'keeper-of-void',
+    'seeker-of-air',
+    'seeker-of-earth',
+    'seeker-of-fire',
+    'seeker-of-water',
+    'seeker-of-void',
     'support-of-the-crane',
     'support-of-the-phoenix',
     'support-of-the-scorpion',
-    'support-of-the-unicorn'
+    'support-of-the-unicorn',
+    'support-of-the-lion',
+    'support-of-the-crab',
+    'support-of-the-dragon'
 ];
 
 function getDeckCount(deck) {
@@ -100,7 +103,10 @@ const roleRules = {
     'support-of-the-crane': rulesForSupportRole('crane'),
     'support-of-the-phoenix': rulesForSupportRole('phoenix'),
     'support-of-the-scorpion': rulesForSupportRole('scorpion'),
-    'support-of-the-unicorn': rulesForSupportRole('unicorn')
+    'support-of-the-unicorn': rulesForSupportRole('unicorn'),
+    'support-of-the-lion': rulesForSupportRole('lion'),
+    'support-of-the-crab': rulesForSupportRole('crab'),
+    'support-of-the-dragon': rulesForSupportRole('dragon')
 };
 
 class DeckValidator {
@@ -217,7 +223,7 @@ class DeckValidator {
         return {
             basicRules: errors.length === 0,
             noUnreleasedCards: unreleasedCards.length === 0,
-            officialRole: !role || officialRoles[deck.faction.value].includes(role.id) || openRoles.includes(role.id),
+            officialRole: !role || openRoles.includes(role.id),
             faqRestrictedList: restrictedResult.valid,
             faqVersion: restrictedResult.version,
             provinceCount: provinceCount,
