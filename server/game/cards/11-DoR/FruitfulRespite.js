@@ -5,7 +5,7 @@ const AbilityDsl = require('../../abilitydsl.js');
 class FruitfulRespite extends DrawCard {
     setupCardAbilities() {
         this.reaction({
-            title: 'Make opponent lose honor',
+            title: 'Gain fate',
             when: {
                 onConflictPass: (event, context) => event.conflict.attackingPlayer === context.player.opponent && context.player.opponent.cardsInPlay.some(card => card.type === CardTypes.Character && !card.bowed)
             },
