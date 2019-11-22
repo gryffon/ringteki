@@ -6,7 +6,7 @@ describe('Kyuden Hida', function() {
                     phase: 'dynasty',
                     player1: {
                         stronghold: 'kyuden-hida',
-                        dynastyDiscard: ['imperial-storehouse', 'favorable-ground', 'hida-kisada'],
+                        dynastyDiscard: ['imperial-storehouse', 'favorable-ground', 'hida-kisada', 'borderlands-defender', 'hida-guardian'],
                         dynastyDeckSize: 4
                     }
                 });
@@ -14,7 +14,11 @@ describe('Kyuden Hida', function() {
                 this.storehouse = this.player1.findCardByName('imperial-storehouse');
                 this.favorableGround = this.player1.findCardByName('favorable-ground');
                 this.kisada = this.player1.findCardByName('hida-kisada');
+                this.borderlands = this.player1.findCardByName('borderlands-defender');
+                this.hidaGuardian = this.player1.findCardByName('hida-guardian');
                 this.kyudenHida = this.player1.findCardByName('kyuden-hida');
+                this.player1.moveCard(this.borderlands, 'dynasty deck');
+                this.player1.moveCard(this.hidaGuardian, 'dynasty deck');
                 this.player1.moveCard(this.storehouse, 'dynasty deck');
                 this.player1.moveCard(this.favorableGround, 'dynasty deck');
                 this.player1.moveCard(this.kisada, 'dynasty deck');
@@ -36,7 +40,10 @@ describe('Kyuden Hida', function() {
                 expect(this.kisada.fate).toBe(2);
                 expect(this.storehouse.location).toBe('dynasty discard pile');
                 expect(this.favorableGround.location).toBe('dynasty discard pile');
-                expect(this.getChatLogs(1)).toContain('player1 plays Hida Kisada with 2 additional fate');
+                expect(this.borderlands.location).toBe('dynasty deck');
+                expect(this.hidaGuardian.location).toBe('dynasty deck');
+                expect(this.getChatLogs(2)).toContain('player1 plays Hida Kisada with 2 additional fate');
+                expect(this.getChatLogs(2)).toContain('player1 discards Favorable Ground, Imperial Storehouse');
             });
 
             it('should discard all 3 cards if none are taken', function() {
@@ -49,7 +56,10 @@ describe('Kyuden Hida', function() {
                 expect(this.kisada.location).toBe('dynasty discard pile');
                 expect(this.storehouse.location).toBe('dynasty discard pile');
                 expect(this.favorableGround.location).toBe('dynasty discard pile');
-                expect(this.getChatLogs(1)).toContain('player1 chooses not to play a character');
+                expect(this.borderlands.location).toBe('dynasty deck');
+                expect(this.hidaGuardian.location).toBe('dynasty deck');
+                expect(this.getChatLogs(2)).toContain('player1 chooses not to play a character');
+                expect(this.getChatLogs(2)).toContain('player1 discards Hida Kisada, Favorable Ground, Imperial Storehouse');
             });
 
             it('should discard all 3 cards if prompt is cancelled', function() {
@@ -68,7 +78,10 @@ describe('Kyuden Hida', function() {
                 expect(this.kisada.location).toBe('dynasty discard pile');
                 expect(this.storehouse.location).toBe('dynasty discard pile');
                 expect(this.favorableGround.location).toBe('dynasty discard pile');
-                expect(this.getChatLogs(1)).toContain('player1 chooses not to play a character');
+                expect(this.borderlands.location).toBe('dynasty deck');
+                expect(this.hidaGuardian.location).toBe('dynasty deck');
+                expect(this.getChatLogs(2)).toContain('player1 chooses not to play a character');
+                expect(this.getChatLogs(2)).toContain('player1 discards Hida Kisada, Favorable Ground, Imperial Storehouse');
             });
         });
 
