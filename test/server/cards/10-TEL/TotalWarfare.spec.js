@@ -9,6 +9,7 @@ describe('Total Warfare', function() {
                 },
                 player2: {
                     inPlay: ['samurai-of-integrity', 'akodo-toturi'],
+                    hand: ['let-go', 'calling-in-favors'],
                     provinces: ['ancestral-lands']
                 }
             });
@@ -21,6 +22,8 @@ describe('Total Warfare', function() {
             this.samuraiOfIntegrity = this.player2.findCardByName('samurai-of-integrity');
             this.akodoToturi = this.player2.findCardByName('akodo-toturi');
             this.ancestralLands = this.player2.findCardByName('ancestral-lands');
+            this.letGo = this.player2.findCardByName('let-go');
+            this.cif = this.player2.findCardByName('calling-in-favors');
         });
 
         it('should be able to played on a province', function() {
@@ -105,6 +108,26 @@ describe('Total Warfare', function() {
 
             expect(this.totalWarfare.parent).toBe(this.ancestralLands);
             expect(this.getChatLogs(2)).toContain('player1 plays Total Warfare, attaching it to ' + this.ancestralLands.location);
+        });
+
+        it('should be able to be discarded by let go', function() {
+            this.player1.playAttachment(this.totalWarfare, this.ancestralLands);
+            expect(this.totalWarfare.parent).toBe(this.ancestralLands);
+            this.player2.clickCard(this.letGo);
+            expect(this.player2).toBeAbleToSelect(this.totalWarfare);
+            this.player2.clickCard(this.totalWarfare);
+            expect(this.totalWarfare.location).toBe('conflict discard pile');
+        });
+
+        it('should be able to be discarded by calling in favors', function() {
+            this.player1.playAttachment(this.totalWarfare, this.ancestralLands);
+            expect(this.totalWarfare.parent).toBe(this.ancestralLands);
+            this.player2.clickCard(this.cif);
+            expect(this.player2).toBeAbleToSelect(this.totalWarfare);
+            this.player2.clickCard(this.totalWarfare);
+            expect(this.player2).toBeAbleToSelect(this.akodoToturi);
+            this.player2.clickCard(this.akodoToturi);
+            expect(this.totalWarfare.location).toBe('conflict discard pile');
         });
     });
 });
