@@ -15,11 +15,22 @@ class KaiuShihobu extends DrawCard {
                 reveal: true,
                 selectedCardsHandler: (context, event, cards) => {
                     if (cards.length > 0) {
-                        event.player.createAdditionalPile('shihobu');
+                        if (!('shihobu' in event.player.additionalPiles))
+                            event.player.createAdditionalPile('shihobu');
                         this.game.addMessage('{0} selects {1}', event.player, cards.map(e => e.name).join(', '))
-                        this.holdingsToPlay = this.holdingsToPlay.concat(cards);
+                        event.player.additionalPiles['shihobu'].cards = event.player.additionalPiles['shihobu'].cards.concat(cards);
+                        // this.holdingsToPlay = this.holdingsToPlay.concat(cards);
                         cards.forEach(card => {
                             event.player.moveCard(card, Locations.RemovedFromGame);
+                            card.lastingEffect(ability => ({
+                                until: {
+                                    onCardMoved: event => event.card === card && event.originalLocation === Locations.RemovedFromGame
+                                },
+                                match: card,
+                                effect: [
+                                    ability.effects.hideWhenFaceUp(),
+                                ]
+                            }));
                         });
                     }
                     else
@@ -37,7 +48,7 @@ class KaiuShihobu extends DrawCard {
                     cardType: CardTypes.Holding,
                     controller: Players.Self,
                     location: Locations.RemovedFromGame,
-                    cardCondition: card => this.holdingsToPlay.includes(card)
+                    cardCondition: (card, context) => context.player.additionalPiles['shihobu'].cards.includes(card)//this.holdingsToPlay.includes(card)
                 },
                 second: {
                     activePromptTitle: 'Choose an unbroken province',
