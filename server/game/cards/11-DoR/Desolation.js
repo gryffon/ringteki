@@ -7,6 +7,7 @@ class Desolation extends DrawCard {
         this.action({
             title: 'Blank opponent\'s provinces',
             cost: AbilityDsl.costs.payHonor(2),
+            condition: context => context.player.opponent,
             gameAction: AbilityDsl.actions.cardLastingEffect((context) => ({
                 target: this.game.provinceCards.filter(a => a.controller === context.player.opponent),
                 duration: Durations.UntilEndOfPhase,
