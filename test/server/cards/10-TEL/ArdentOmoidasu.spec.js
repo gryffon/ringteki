@@ -126,6 +126,6 @@ describe('Ardent Omoidasu', function() {
 
             expect(this.mirumotoRaitsugu.isDishonored).toBe(true);
             expect(this.player1).toHavePrompt('Conflict Action Window');
-        })
+        });
     });
 });

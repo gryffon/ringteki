@@ -24,8 +24,9 @@ class ArdentOmoidasu extends DrawCard {
 }
 
 function targetIsControlledByPlayer(target, context) {
-    if(Array.isArray(target))
+    if(Array.isArray(target)) {
         return target.some(target => target.controller === context.player);
+    }
 
     return target.controller === context.player;
 }
