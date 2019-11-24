@@ -480,8 +480,8 @@ class DrawCard extends BaseCard {
     getProvinceStrengthBonus() {
         let modifiers = this.getProvinceStrengthBonusModifiers();
         let bonus = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
-        if(this.cardData.strength_bonus && !this.facedown) {
-            return parseInt(this.cardData.strength_bonus) + bonus;
+        if(this.printedStrengthBonus && !this.facedown) {
+            return bonus;
         }
         return 0;
     }
@@ -510,6 +510,7 @@ class DrawCard extends BaseCard {
         }
 
         // skill modifiers
+        strengthModifiers.push(StatModifier.fromCard(this.printedStrengthBonus, this, 'Printed province strength bonus', false));
         let modifierEffects = strengthEffects.filter(effect => effect.type === EffectNames.ModifyProvinceStrengthBonus);
         modifierEffects.forEach(modifierEffect => {
             const value = modifierEffect.getValue(this);
