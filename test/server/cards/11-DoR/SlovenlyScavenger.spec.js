@@ -69,8 +69,8 @@ describe('Slovenly Scavenger', function() {
                 expect(this.player1.dynastyDeck.length).toBe(size + 2);
                 expect(this.getChatLogs(3)).toContain('player1 uses Slovenly Scavenger, sacrificing Slovenly Scavenger to shuffle player1\'s dynasty discard pile into their deck');
                 expect(this.getChatLogs(2)).toContain('player1 is shuffling their dynasty deck');
-            });     
-            
+            });
+
             it('should shuffle my conflict discard pile into my conflict deck', function() {
                 this.initiateConflict({
                     type: 'military',
@@ -93,7 +93,7 @@ describe('Slovenly Scavenger', function() {
                 expect(this.getChatLogs(3)).toContain('player1 uses Slovenly Scavenger, sacrificing Slovenly Scavenger to shuffle player1\'s conflict discard pile into their deck');
                 expect(this.getChatLogs(2)).toContain('player1 is shuffling their conflict deck');
             });
-            
+
             it('should shuffle opponent dynasty discard pile into their dynasty deck', function() {
                 this.initiateConflict({
                     type: 'military',
@@ -113,7 +113,7 @@ describe('Slovenly Scavenger', function() {
 
                 expect(this.getChatLogs(3)).toContain('player1 uses Slovenly Scavenger, sacrificing Slovenly Scavenger to shuffle player2\'s dynasty discard pile into their deck');
                 expect(this.getChatLogs(2)).toContain('player2 is shuffling their dynasty deck');
-            }); 
+            });
 
             it('should shuffle opponent conflict discard pile into their conflict deck', function() {
                 this.initiateConflict({
@@ -158,8 +158,8 @@ describe('Slovenly Scavenger', function() {
                 expect(this.newName.location).toBe('conflict deck');
                 expect(this.player2.player.conflictDiscardPile.size()).toBe(0);
                 expect(this.player2.conflictDeck.length).toBe(size + 4);
-            });       
-            
+            });
+
             it('should not prompt you to shuffle an empty discard pile', function() {
                 this.initiateConflict({
                     type: 'military',
