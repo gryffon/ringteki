@@ -32,6 +32,13 @@ describe('Kansen Haunt', function() {
                 this.player1p1 = this.player1.findCardByName('shameful-display', 'province 1');
             });
 
+            it('should give negative strength to the province', function () {
+                expect(this.p1.getStrength()).toBe(3);
+                expect(this.p2.getStrength()).toBe(1);
+                expect(this.p3.getStrength()).toBe(1);
+                expect(this.p4.getStrength()).toBe(3);
+            });
+
             it('should trigger if you claim a ring on defense', function () {
                 this.noMoreActions();
                 this.initiateConflict({
