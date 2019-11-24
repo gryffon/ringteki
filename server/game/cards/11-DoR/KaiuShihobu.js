@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Phases, Locations, CardTypes, PlayTypes, EventNames, Players } = require('../../Constants');
+const { Locations, CardTypes, Players } = require('../../Constants');
 
 class KaiuShihobu extends DrawCard {
     PILENAME = 'shihobu'
@@ -9,15 +9,16 @@ class KaiuShihobu extends DrawCard {
         this.reaction({
             title: 'Look at your dynasty deck',
             when: { onCharacterEntersPlay: (event, context) => event.card === context.source },
-            gameAction: AbilityDsl.actions.dynastyDeckSearch({ 
-                cardCondition: card => card.type == CardTypes.Holding,
+            gameAction: AbilityDsl.actions.dynastyDeckSearch({
+                cardCondition: card => card.type === CardTypes.Holding,
                 selectAmount: -1,
                 reveal: true,
                 selectedCardsHandler: (context, event, cards) => {
-                    if (cards.length > 0) {
-                        if (!(this.PILENAME in event.player.additionalPiles))
+                    if(cards.length > 0) {
+                        if(!(this.PILENAME in event.player.additionalPiles)) {
                             event.player.createAdditionalPile(this.PILENAME);
-                        this.game.addMessage('{0} selects {1}', event.player, cards.map(e => e.name).join(', '))
+                        }
+                        this.game.addMessage('{0} selects {1}', event.player, cards.map(e => e.name).sort().join(', '));
                         event.player.additionalPiles[this.PILENAME].cards = event.player.additionalPiles[this.PILENAME].cards.concat(cards);
                         cards.forEach(card => {
                             event.player.moveCard(card, Locations.RemovedFromGame);
@@ -27,16 +28,16 @@ class KaiuShihobu extends DrawCard {
                                 },
                                 match: card,
                                 effect: [
-                                    AbilityDsl.effects.hideWhenFaceUp(),
+                                    AbilityDsl.effects.hideWhenFaceUp()
                                 ]
                             }));
                         });
-                    }
-                    else
+                    } else {
                         this.game.addMessage('{0} selects no holdings', event.player);
+                    }
                     event.player.shuffleDynastyDeck();
                 }
-            })         
+            })
         });
 
         this.action({
@@ -57,16 +58,13 @@ class KaiuShihobu extends DrawCard {
                     location: Locations.Provinces,
                     controller: Players.Self,
                     cardCondition: card => card.location !== Locations.StrongholdProvince && !card.isBroken
-                },
+                }
             },
             handler: context => {
                 let holding = context.targets.first;
                 let province = context.targets.second;
 
                 let cards = context.player.getDynastyCardsInProvince(province.location);
-                //Leaving this here since it sounds like she's going to be errata-ed to face up
-                // this.game.addMessage('{0} discards {1}, replacing it with {2}', context.player, cards.map(e => e.name).join(', '), holding);
-                // this.game.addMessage('{0} uses {1} to discard {2}, replacing it with a facedown holding', context.player, context.source, cards.map(e => e.name).join(', '));
                 context.player.moveCard(holding, province.location);
                 holding.facedown = true;
                 cards.forEach(card => {
@@ -74,7 +72,7 @@ class KaiuShihobu extends DrawCard {
                 });
             },
             effect: 'discard {1}, replacing it with a facedown holding',
-            effectArgs: context => context.player.getDynastyCardsInProvince(context.targets.second.location).map(e => e.name).join(', ')
+            effectArgs: context => context.player.getDynastyCardsInProvince(context.targets.second.location).map(e => e.name).sort().join(', ')
         });
     }
 }
