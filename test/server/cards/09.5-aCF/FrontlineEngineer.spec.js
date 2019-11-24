@@ -183,6 +183,58 @@ describe('Frontline Engineer', function() {
                 expect(this.getChatLogs(3)).toContain('player2 is shuffling their dynasty deck');
             });
         });
+
+        describe('Multiple Cards in Province', function() {
+            beforeEach(function () {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['frontline-engineer']
+                    },
+                    player2: {
+                        inPlay: ['frontline-engineer'],
+                        dynastyDiscard: ['wandering-ronin', 'doji-challenger', 'kitsu-spiritcaller', 'akodo-toturi', 'iron-mine', 'imperial-storehouse', 'favorable-ground'],
+                        dynastyDeckSize: 4
+                    }
+                });
+
+                this.frontlineEngineerAttacker = this.player1.findCardByName('frontline-engineer');
+                this.frontlineEngineerDefender = this.player2.findCardByName('frontline-engineer');
+                this.player2.moveCard('wandering-ronin', 'dynasty deck');
+                this.player2.moveCard('doji-challenger', 'dynasty deck');
+                this.player2.moveCard('kitsu-spiritcaller', 'dynasty deck');
+                this.player2.moveCard('akodo-toturi', 'dynasty deck');
+                this.player2.moveCard('iron-mine', 'dynasty deck');
+
+                this.storehouse = this.player2.moveCard('imperial-storehouse', 'province 1');
+                this.favorable = this.player2.moveCard('favorable-ground', 'province 1');
+
+                this.holding = this.player2.findCardByName('iron-mine');
+            });
+
+            it('should put the chosen holding face up in the defending province and discard all cards there', function () {
+                expect(this.storehouse.location).toBe('province 1');
+                expect(this.favorable.location).toBe('province 1');
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.frontlineEngineerAttacker],
+                    defenders: [this.frontlineEngineerDefender]
+                });
+
+                this.player2.clickCard(this.frontlineEngineerDefender);
+                expect(this.player2).toHavePrompt('Choose a holding');
+                this.player2.clickPrompt('Iron Mine');
+                expect(this.holding.location).toBe('province 1');
+                expect(this.holding.facedown).toBe(false);
+                expect(this.storehouse.location).toBe('dynasty discard pile');
+                expect(this.favorable.location).toBe('dynasty discard pile');
+                expect(this.getChatLogs(5)).toContain('player2 uses Frontline Engineer to look at the top five cards of their dynasty deck');
+                expect(this.getChatLogs(4)).toContain('player2 discards Adept of the Waves, Imperial Storehouse, Favorable Ground, replacing it with Iron Mine');
+                expect(this.getChatLogs(3)).toContain('player2 is shuffling their dynasty deck');
+            });
+        });
     });
 });
 

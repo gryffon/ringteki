@@ -18,31 +18,17 @@ class FrontlineEngineer extends DrawCard {
                 cardCondition: card => card.getType() === CardTypes.Holding,
                 cards: context.player.dynastyDeck.first(5),
                 cardHandler: cardFromDeck => {
-                    let card = context.player.getDynastyCardsInProvince(this.game.currentConflict.conflictProvince.location);
-                    this.game.addMessage('{0} discards {1}, replacing it with {2}', context.player, this.formatDiscardNames(card), cardFromDeck);
+                    let cards = context.player.getDynastyCardsInProvince(this.game.currentConflict.conflictProvince.location);
+                    this.game.addMessage('{0} discards {1}, replacing it with {2}', context.player, cards.map(e => e.name).join(', '), cardFromDeck);
                     context.player.moveCard(cardFromDeck, this.game.currentConflict.conflictProvince.location);
                     cardFromDeck.facedown = false;
-                    card.forEach(element => {
+                    cards.forEach(element => {
                         context.player.moveCard(element, Locations.DynastyDiscardPile);
                     });
                     context.player.shuffleDynastyDeck();
                 }
             })
         });
-    }
-
-    formatDiscardNames(cards) {
-        let s = '';
-        let first = true;
-        cards.forEach(element => {
-            if(first) {
-                s = s + element.name;
-            } else {
-                s = s + ', ' + element.name;
-            }
-            first = false;
-        });
-        return s;
     }
 
     getHoldingsInPlay() {
