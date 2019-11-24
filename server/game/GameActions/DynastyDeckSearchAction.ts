@@ -103,7 +103,10 @@ export class DynastyDeckSearchAction extends PlayerAction {
     handleDone(properties, context, event, selectedCards) {
         if (properties.selectedCardsHandler == null) {
             if (selectedCards.length > 0) {
-                context.game.addMessage('{0} selects {1}', event.player, selectedCards.map(e => e.name).join(', '))
+                if (properties.reveal)
+                    context.game.addMessage('{0} selects {1} and moves {2} in {3}', event.player, selectedCards.map(e => e.name).join(', '), selectedCards.length > 1 ? 'them' : 'it', properties.destination);
+                else
+                    context.game.addMessage('{0} makes a selection and moves {2} in {3}', event.player, selectedCards.map(e => e.name).join(', '), selectedCards.length > 1 ? 'them' : 'it', properties.destination);
                 selectedCards.forEach(card  => {
                     event.player.moveCard(card, properties.destination);
                 });            
