@@ -232,8 +232,8 @@ describe('Withstand The Darkness', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
                 this.player1.clickCard(this.withstandTheDarkness);
-                expect(this.player1).toBeAbleToSelect(this.eagerScout);
                 expect(this.player1).toBeAbleToSelect(this.hirumaSkirmisher);
+                expect(this.player1).toBeAbleToSelect(this.eagerScout);
             });
         });
     });
