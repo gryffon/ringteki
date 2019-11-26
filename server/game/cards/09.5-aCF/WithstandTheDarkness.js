@@ -6,15 +6,6 @@ const { Players, Locations, CardTypes, EventNames, AbilityTypes } = require('../
 class WithstandTheDarkness extends DrawCard {
     setupCardAbilities() {
         let currentTargets = [];
-        // this.targets = {};
-        this.abilityRegistrar = new EventRegistrar(this.game, this);
-        this.abilityRegistrar.register([{
-            [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.WouldInterrupt]: 'onInitiateAbilityEffects'
-        }]);
-        this.abilityRegistrar.register([{
-            [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.OtherEffects]: 'onInitiateAbilityEffects'
-        }]);
-        // this.abilityRegistrar.register([EventNames.OnCardPlayed, EventNames.OnCardLeavesPlay]);
 
         this.reaction({
             when: {
@@ -33,38 +24,15 @@ class WithstandTheDarkness extends DrawCard {
                 }},
             title: 'Place a fate on a character',
             target: {
-                activePromptTitle: 'Choose a character to receive a fate.',
+                activePromptTitle: 'Choose a character to receive a fate',
                 cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.isFaction('crab') && currentTargets.includes(card),
+                gameAction: AbilityDsl.actions.placeFate()
             },
-            gameAction: AbilityDsl.actions.placeFate(),
             max: AbilityDsl.limit.perPhase(1),
         });
     }
-
-    onInitiateAbilityEffects(event) {
-        console.log(event.card.name + ' initiated');
-        // let id = event.card.uuid;
-        // if (!(id in this.targets))
-        //     this.targets[id] = [];
-        
-        // this.targets[id] = this.targets[id].concat(event.cardTargets);
-        // console.log(this.targets[id].map(e => e.name).join(', '));
-    }
-
-    // onCardPlayed(event) {
-    //     let id = event.card.uuid;
-    //     console.log('Card ' + id + ' played');
-    // }
-
-    // onCardLeavesPlay(event) {
-    //     let id = event.card.uuid;
-    //     console.log('Card ' + id + ' leaving play');
-    //     if (id in this.targets) {
-    //         delete(this.targets[id]);
-    //     }
-    // }
 }
 
 WithstandTheDarkness.id = 'withstand-the-darkness';

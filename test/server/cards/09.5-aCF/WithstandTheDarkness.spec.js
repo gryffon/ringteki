@@ -225,7 +225,6 @@ describe('Withstand The Darkness', function() {
                 this.player2.clickCard(this.banzai);
                 this.player2.clickCard(this.eagerScout);
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
-                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
                 this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
                 this.player2.clickCard(this.hirumaSkirmisher);
                 this.player2.clickPrompt('Done');
