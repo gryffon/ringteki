@@ -29,6 +29,12 @@ export enum EffectNames {
     AddFaction = 'addFaction',
     AddKeyword = 'addKeyword',
     AddTrait = 'addTrait',
+    AttachmentFactionRestriction = 'attachmentFactionRestriction',
+    AttachmentLimit = 'attachmentLimit',
+    AttachmentMyControlOnly = 'attachmentMyControlOnly',
+    AttachmentRestrictTraitAmount = 'attachmentRestrictTraitAmount',
+    AttachmentTraitRestriction = 'attachmentTraitRestriction',
+    AttachmentUniqueRestriction = 'attachmentUniqueRestriction',
     Blank = 'blank',
     CalculatePrintedMilitarySkill = 'calculatePrintedMilitarySkill',
     CanBeSeenWhenFacedown = 'canBeSeenWhenFacedown',
@@ -42,11 +48,13 @@ export enum EffectNames {
     CannotParticipateAsAttacker = 'cannotParticipateAsAttacker',
     CannotParticipateAsDefender = 'cannotParticipateAsDefender',
     ChangeContributionFunction = 'changeContributionFunction',
+    ChangeType = 'changeType',
     CopyCharacter = 'copyCharacter',
     CustomEffect = 'customEffect',
     DelayedEffect = 'delayedEffect',
     DoesNotBow = 'doesNotBow',
     DoesNotReady = 'doesNotReady',
+    FateCostToAttack = 'fateCostToAttack',
     GainAbility = 'gainAbility',
     GainExtraFateWhenPlayed = 'gainExtraFateWhenPlayed',
     GainPlayAction = 'gainPlayAction',
@@ -89,6 +97,7 @@ export enum EffectNames {
     AddElement = 'addElement',
     CannotDeclareRing = 'cannotDeclare',
     ConsiderRingAsClaimed = 'considerAsClaimed',
+    AdditionalCardPlayed = 'additionalCardPlayed',
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
     AdditionalCost = 'additionalCost',
@@ -107,7 +116,8 @@ export enum EffectNames {
     ChangeConflictSkillFunction = 'skillFunction',
     ModifyConflictElementsToResolve = 'modifyConflictElementsToResolve',
     RestrictNumberOfDefenders = 'restrictNumberOfDefenders',
-    ResolveConflictEarly = 'resolveConflictEarly'
+    ResolveConflictEarly = 'resolveConflictEarly',
+    SetBaseGlory = "setBaseGlory"
 };
 
 export enum Durations {
@@ -165,7 +175,8 @@ export enum CardTypes {
 
 export enum PlayTypes {
     PlayFromHand = 'playFromHand',
-    PlayFromProvince = 'playFromProvince'
+    PlayFromProvince = 'playFromProvince',
+    Other = 'other'
 };
 
 export enum EventNames {

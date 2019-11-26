@@ -10,9 +10,10 @@ describe('Costs.payReduceableFateCost', function() {
             costs: {},
             game: this.gameSpy,
             player: this.playerSpy,
-            source: this.cardSpy
+            source: this.cardSpy,
+            playType: 'playing-type'
         };
-        this.cost = Costs.payReduceableFateCost('playing-type');
+        this.cost = Costs.payReduceableFateCost();
     });
 
     describe('canPay()', function() {
@@ -27,7 +28,7 @@ describe('Costs.payReduceableFateCost', function() {
 
         it('should check the cost properly', function() {
             this.cost.canPay(this.context);
-            expect(this.playerSpy.getMinimumCost).toHaveBeenCalledWith('playing-type', this.context);
+            expect(this.playerSpy.getMinimumCost).toHaveBeenCalledWith('playing-type', this.context, null, false);
         });
 
         describe('when there is not enough fate', function() {

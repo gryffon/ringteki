@@ -20,6 +20,8 @@ class Conflict extends GameObject {
         this.conflictTypeSwitched = false;
         this.conflictUnopposed = false;
         this.winnerGoesStraightToNextConflict = false;
+        this.attackerCardsPlayed = [];
+        this.defenderCardsPlayed = [];
         this.attackers = [];
         this.attackerSkill = 0;
         this.defenders = [];
@@ -219,6 +221,31 @@ class Conflict extends GameObject {
             return !!this.getNumberOfParticipantsFor(player, predicate);
         }
         return this.getNumberOfParticipantsFor(player) > this.getNumberOfParticipantsFor(player.opponent);
+    }
+
+    addCardPlayed(player, card) {
+        if(player === this.attackingPlayer) {
+            this.attackerCardsPlayed.push(card.createSnapshot());
+        } else {
+            this.defenderCardsPlayed.push(card.createSnapshot());
+        }
+    }
+
+    getCardsPlayed(player, predicate = () => true) {
+        if(player === this.attackingPlayer) {
+            return this.attackerCardsPlayed.filter(predicate);
+        }
+        return this.defenderCardsPlayed.filter(predicate);
+    }
+
+    getNumberOfCardsPlayed(player, predicate) {
+        if(!player) {
+            return 0;
+        }
+        if(predicate) {
+            return this.getCardsPlayed(player, predicate).length;
+        }
+        return player.sumEffects(EffectNames.AdditionalCardPlayed) + this.getCardsPlayed(player).length;
     }
 
     calculateSkill(prevStateChanged = false) {

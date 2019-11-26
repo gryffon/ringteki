@@ -4,6 +4,12 @@ const PlayCharacterAction = require('../../playcharacteraction');
 const { Locations, PlayTypes } = require('../../Constants');
 
 class DaidojiUjiPlayAction extends PlayCharacterAction {
+    createContext(player = this.card.controller) {
+        const context = super.createContext(player);
+        context.playType = PlayTypes.PlayFromHand;
+        return context;
+    }
+
     meetsRequirements(context, ignoredRequirements = []) {
         let newIgnoredRequirements = ignoredRequirements.includes('location') ? ignoredRequirements : ignoredRequirements.concat('location');
         return super.meetsRequirements(context, newIgnoredRequirements);

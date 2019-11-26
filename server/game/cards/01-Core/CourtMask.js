@@ -3,6 +3,10 @@ const AbilityDsl = require('../../abilitydsl');
 
 class CourtMask extends DrawCard {
     setupCardAbilities() {
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.action({
             title: 'Return court mask to hand',
             effect: 'return {0} to hand, dishonoring {1}',
@@ -12,13 +16,6 @@ class CourtMask extends DrawCard {
                 AbilityDsl.actions.dishonor(context => ({ target: context.source.parent }))
             ]
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

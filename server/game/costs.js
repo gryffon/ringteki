@@ -134,11 +134,11 @@ const Costs = {
      * reducer effects the play has activated. Upon playing the card, all
      * matching reducer effects will expire, if applicable.
      */
-    payReduceableFateCost: playingType => new ReduceableFateCost(playingType),
+    payReduceableFateCost: (ignoreType = false) => new ReduceableFateCost(ignoreType),
     /**
      * Cost that is dependent on context.targets[targetName]
      */
-    payTargetDependentFateCost: (targetName, playingType) => new TargetDependentFateCost(playingType, targetName),
+    payTargetDependentFateCost: (targetName, ignoreType = false) => new TargetDependentFateCost(targetName, ignoreType),
     /**
      * Cost in which the player must pay a fixed, non-reduceable amount of fate.
      */
@@ -188,7 +188,7 @@ const Costs = {
             promptsPlayer: true
         };
     },
-    returnRings: function () {
+    returnRings: function (amount = -1) {
         return {
             canPay: function (context) {
                 return Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name);
@@ -210,7 +210,7 @@ const Costs = {
                         ringCondition: ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring),
                         onSelect: (player, ring) => {
                             chosenRings.push(ring);
-                            if(Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring))) {
+                            if(Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring) && (amount < 0 || chosenRings.length < amount))) {
                                 promptPlayer();
                             } else {
                                 context.costs.returnRing = chosenRings;
