@@ -86,6 +86,102 @@ describe('Withstand The Darkness', function() {
             });
         });
 
+        describe('Withstand The Darkness\'s Reaction (Edge Cases)', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['crisis-breaker', 'hida-guardian'],
+                        hand: ['withstand-the-darkness', 'voice-of-honor']
+                    },
+                    player2: {
+                        inPlay: ['eager-scout'],
+                        hand: ['way-of-the-scorpion', 'civil-discourse'],
+                        conflictDiscard: ['defend-your-honor']
+                    }
+                });
+                this.crisisBreaker = this.player1.findCardByName('crisis-breaker');
+                this.hidaGuardian = this.player1.findCardByName('hida-guardian');
+                this.withstandTheDarkness = this.player1.findCardByName('withstand-the-darkness');
+                this.eagerScout = this.player2.findCardByName('eager-scout');
+                this.wayOfTheScorpion = this.player2.findCardByName('way-of-the-scorpion');
+                this.voice = this.player1.findCardByName('voice-of-honor');
+                this.dyh = this.player2.findCardByName('defend-your-honor');
+                this.civilDiscourse = this.player2.findCardByName('civil-discourse');
+
+                this.crisisBreaker.honor();
+                this.crisisBreaker.fate = 0;
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.crisisBreaker, this.hidaGuardian],
+                    defenders: [this.eagerScout]
+                });
+            });
+
+            it('should react even if the event is cancelled', function() {
+                this.player2.clickCard(this.wayOfTheScorpion);
+                this.player2.clickCard(this.crisisBreaker);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.voice);
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.voice);
+                expect(this.voice.location).toBe('conflict discard pile');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.crisisBreaker);
+            });
+            
+            it('should react properly on duels where you choose the target', function() {
+                this.player2.clickCard(this.civilDiscourse);
+                this.player2.clickCard(this.eagerScout);
+                this.player1.clickCard(this.crisisBreaker);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.voice);
+                this.player1.pass();
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.crisisBreaker);
+            });
+
+            it('should react properly on nested events', function() {
+                this.player2.moveCard(this.dyh, 'hand');
+                this.player2.clickCard(this.wayOfTheScorpion);
+                this.player2.clickCard(this.crisisBreaker);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.voice);
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.voice);
+
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.dyh);
+                this.player2.clickCard(this.dyh);
+                this.player2.clickCard(this.eagerScout);
+                this.player1.clickCard(this.hidaGuardian);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.hidaGuardian);
+                expect(this.player1).not.toBeAbleToSelect(this.crisisBreaker);
+                this.player1.clickPrompt('Cancel');
+                this.player1.clickPrompt('Pass');
+
+                expect(this.voice.location).toBe('conflict discard pile');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.crisisBreaker);
+                expect(this.player1).not.toBeAbleToSelect(this.hidaGuardian);
+            });
+        });
+
         describe('Withstand The Darkness\'s Reaction (Multiple Targets)', function() {
             beforeEach(function() {
                 this.setupTest({
