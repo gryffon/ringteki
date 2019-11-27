@@ -16,8 +16,20 @@ class Event {
         this.checkFullyResolved = (event) => !event.cancelled;
         this.createContingentEvents = () => [];
         this.preResolutionEffect = () => true;
-
         _.extend(this, params);
+
+        if(this.context && this.context.ability && !this.context.ability.doesNotTarget) {
+            this.cardTargets = _.flatten(_.values(this.context.targets));
+            this.ringTargets = _.flatten(_.values(this.context.rings));
+            this.selectTargets = _.flatten(_.values(this.context.selects));
+            this.tokenTargets = _.flatten(_.values(this.context.tokens));
+        } else {
+            this.cardTargets = [];
+            this.ringTargets = [];
+            this.selectTargets = [];
+            this.tokenTargets = [];
+        }
+        this.allTargets = this.cardTargets.concat(this.ringTargets, this.selectTargets, this.tokenTargets);
     }
 
     cancel() {

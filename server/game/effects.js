@@ -44,6 +44,7 @@ const Effects = {
     delayedEffect: (properties) => EffectBuilder.card.static(EffectNames.DelayedEffect, properties),
     doesNotBow: () => EffectBuilder.card.static(EffectNames.DoesNotBow),
     doesNotReady: () => EffectBuilder.card.static(EffectNames.DoesNotReady),
+    fateCostToAttack: (amount = 1) => EffectBuilder.card.flexible(EffectNames.FateCostToAttack, amount),
     gainAbility: (abilityType, properties) => EffectBuilder.card.static(EffectNames.GainAbility, new GainAbility(abilityType, properties)),
     gainExtraFateWhenPlayed: (amount = 1) => EffectBuilder.card.flexible(EffectNames.GainExtraFateWhenPlayed, amount),
     gainPlayAction: (playActionClass) => EffectBuilder.card.detached(EffectNames.GainPlayAction, {
@@ -81,6 +82,7 @@ const Effects = {
     setBaseProvinceStrength: (value) => EffectBuilder.card.static(EffectNames.SetBaseProvinceStrength, value),
     setDash: (type) => EffectBuilder.card.static(EffectNames.SetDash, type),
     setGlory: (value) => EffectBuilder.card.static(EffectNames.SetGlory, value),
+    setBaseGlory: (value) => EffectBuilder.card.static(EffectNames.SetBaseGlory, value),
     setMilitarySkill: (value) => EffectBuilder.card.static(EffectNames.SetMilitarySkill, value),
     setPoliticalSkill: (value) => EffectBuilder.card.static(EffectNames.SetPoliticalSkill, value),
     setProvinceStrength: (value) => EffectBuilder.card.static(EffectNames.SetProvinceStrength, value),
@@ -94,6 +96,7 @@ const Effects = {
     cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match),
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match),
     // Player effects
+    additionalCardPlayed: (amount = 1) => EffectBuilder.player.dynamic(EffectNames.AdditionalCardPlayed, amount),
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible(EffectNames.AdditionalCharactersInConflict, amount),
     additionalConflict: (type) => EffectBuilder.player.detached(EffectNames.AdditionalConflict, {
         apply: player => player.addConflictOpportunity(type),
