@@ -103,6 +103,7 @@ describe('Shukujo', function() {
                     this.player1.clickPrompt('Switch the conflict type');
                     expect(this.game.currentConflict.conflictType).toBe('political');
                     expect(this.player2).toHavePrompt('Conflict Action Window');
+                    expect(this.getChatLogs(3)).toContain('player1 uses Doji Kuwanan\'s gained ability from Shukujo to switch the conflict type');
                 });
 
                 it('should switch the conflict type from political to military', function() {
