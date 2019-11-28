@@ -1,12 +1,14 @@
 import { PlayerAction, PlayerActionProperties } from './PlayerAction';
-import { Locations, EventNames } from '../Constants';
+import { Locations, EventNames, TargetModes } from '../Constants';
 import AbilityContext = require('../AbilityContext');
 import DrawCard = require('../drawcard');
 import Player = require('../player');
 
 export interface DynastyDeckSearchProperties extends PlayerActionProperties {
+    targetMode?: TargetModes;
+    activePromptTitle?: string;
     searchAmount?: number;
-    selectAmount?: number; 
+    numCards?: number;
     reveal?: boolean;
     destination?: Locations;
     selectedCardsHandler?: (context, event, cards) => void;
@@ -19,8 +21,9 @@ export class DynastyDeckSearchAction extends PlayerAction {
 
     defaultProperties: DynastyDeckSearchProperties = {
         searchAmount: -1,
-        selectAmount: 1,
-        destination: Locations.RemovedFromGame,
+        numCards: 1,
+        targetMode: TargetModes.Single,
+        destination: Locations.PlayArea,
         selectedCardsHandler: null
     };
 
@@ -75,22 +78,34 @@ export class DynastyDeckSearchAction extends PlayerAction {
         let context = event.context;
         let player = event.player;
         let properties = this.getProperties(context, additionalProperties) as DynastyDeckSearchProperties;
+        let canCancel = properties.targetMode !== TargetModes.Exactly;
 
         context.game.promptWithHandlerMenu(player, {
             activePromptTitle: 'Select a card' + (properties.reveal ? ' to reveal' : ''),
             context: context,
             cards: cards,
             cardCondition: properties.cardCondition,
-            choices: selectedCards.length > 0 ? ['Done'] : ['Take nothing'],
+            choices: canCancel ? (selectedCards.length > 0 ? ['Done'] : ['Take nothing']) : ([]),
             handlers: [() => {
                 this.handleDone(properties, context, event, selectedCards);
             }],
             cardHandler: card => {
-                selectedCards = selectedCards.concat(card);
+                let selectAmount = 1;
+
+                if (properties.targetMode === TargetModes.UpTo)
+                    selectAmount = properties.numCards;
+                if (properties.targetMode === TargetModes.Single)
+                    selectAmount = 1;
+                if (properties.targetMode === TargetModes.Exactly)
+                    selectAmount = properties.numCards;
+                if (properties.targetMode === TargetModes.Unlimited)
+                    selectAmount = -1;
+
+                    selectedCards = selectedCards.concat(card);
                 let index = cards.indexOf(card, 0);
                 if (index > -1)
                     cards.splice(index, 1);
-                if ((properties.selectAmount < 0 || selectedCards.length < properties.selectAmount) && cards.length > 0) {
+                if ((selectAmount < 0 || selectedCards.length < selectAmount) && cards.length > 0) {
                     this.selectCard(event, additionalProperties, cards, selectedCards);
                 }
                 else {

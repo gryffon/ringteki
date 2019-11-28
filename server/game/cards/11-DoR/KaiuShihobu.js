@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Locations, CardTypes, Players } = require('../../Constants');
+const { Locations, CardTypes, Players, TargetModes } = require('../../Constants');
 
 class KaiuShihobu extends DrawCard {
     PILENAME = 'shihobu'
@@ -11,7 +11,7 @@ class KaiuShihobu extends DrawCard {
             when: { onCharacterEntersPlay: (event, context) => event.card === context.source },
             gameAction: AbilityDsl.actions.dynastyDeckSearch({
                 cardCondition: card => card.type === CardTypes.Holding,
-                selectAmount: -1,
+                targetMode: TargetModes.Unlimited,
                 reveal: true,
                 selectedCardsHandler: (context, event, cards) => {
                     if(cards.length > 0) {
