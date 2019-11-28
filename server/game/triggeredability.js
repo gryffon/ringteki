@@ -43,12 +43,14 @@ class TriggeredAbility extends CardAbility {
         this.collectiveTrigger = !!properties.collectiveTrigger;
     }
 
-    meetsRequirements(context) {
-        if(!this.anyPlayer && context.player !== this.card.controller && (this.card.type !== CardTypes.Event || !context.player.isCardInPlayableLocation(this.card, context.playType))) {
-            return 'player';
+    meetsRequirements(context, ignoredRequirements = []) {
+        if(!ignoredRequirements.includes('player') && !this.anyPlayer && context.player !== this.card.controller) {
+            if(this.card.type !== CardTypes.Event || !context.player.isCardInPlayableLocation(this.card, context.playType)) {
+                return 'player';
+            }
         }
 
-        return super.meetsRequirements(context);
+        return super.meetsRequirements(context, ignoredRequirements);
     }
 
     eventHandler(event, window) {

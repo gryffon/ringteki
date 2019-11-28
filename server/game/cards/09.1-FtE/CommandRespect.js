@@ -13,7 +13,7 @@ class CommandRespect extends DrawCard {
             effectArgs: context => context.player.opponent,
             gameAction: AbilityDsl.actions.playerLastingEffect(() => ({
                 targetController: Players.Opponent,
-                effect: AbilityDsl.effects.additionalCost(context =>
+                effect: AbilityDsl.effects.additionalPlayCost(context =>
                     context.source.type === CardTypes.Event ? [AbilityDsl.costs.giveHonorToOpponent(1)] : []
                 )
             }))

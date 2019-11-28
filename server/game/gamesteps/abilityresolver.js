@@ -17,6 +17,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         this.events = [];
         this.provincesToRefill = [];
         this.targetResults = {};
+        this.costResults = this.getCostResults();
         this.initialise();
     }
 
@@ -101,25 +102,31 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.canPayResults = {
-            cancelled: false,
-            canCancel: this.canCancel
-        };
-        this.costEvents = [];
+        this.costResults.canCancel = this.canCancel;
         this.context.stage = Stages.Cost;
-        this.context.ability.resolveCosts(this.costEvents, this.context, this.canPayResults);
+        this.context.ability.resolveCosts(this.context, this.costResults);
+    }
+
+    getCostResults() {
+        return {
+            cancelled: false,
+            canCancel: this.canCancel,
+            events: [],
+            playCosts: true,
+            triggerCosts: true
+        };
     }
 
     payCosts() {
         if(this.cancelled) {
             return;
-        } else if(this.canPayResults.cancelled) {
+        } else if(this.costResults.cancelled) {
             this.cancelled = true;
             return;
         }
         this.passPriority = true;
-        if(this.costEvents.length > 0) {
-            this.game.openEventWindow(this.costEvents);
+        if(this.costResults.events.length > 0) {
+            this.game.openEventWindow(this.costResults.events);
         }
     }
 
@@ -127,7 +134,7 @@ class AbilityResolver extends BaseStepWithPipeline {
         if(this.cancelled) {
             return;
         }
-        this.cancelled = _.any(this.costEvents, event => event.getResolutionEvent().cancelled);
+        this.cancelled = _.any(this.costResults.events, event => event.getResolutionEvent().cancelled);
         if(this.cancelled) {
             this.game.addMessage('{0} attempted to use {1}, but did not successfully pay the required costs', this.context.player, this.context.source);
         }

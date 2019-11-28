@@ -140,13 +140,14 @@ describe('BaseAbility', function () {
 
             this.context = { game: this.gameSpy, context: 1 };
             this.context.copy = () => this.context;
+            this.costResults = { events: [] };
         });
 
         describe('when the cost has a resolve method', function() {
             beforeEach(function() {
                 this.ability.cost = [this.resolveCost];
 
-                this.results = this.ability.resolveCosts([], this.context, {});
+                this.results = this.ability.resolveCosts(this.context, this.costResults);
             });
 
             it('should not call canPay on the cost', function() {
@@ -154,7 +155,7 @@ describe('BaseAbility', function () {
             });
 
             it('should call resolve on the cost', function() {
-                expect(this.resolveCost.resolve).toHaveBeenCalledWith(this.context, {});
+                expect(this.resolveCost.resolve).toHaveBeenCalledWith(this.context, this.costResults);
             });
         });
     });
