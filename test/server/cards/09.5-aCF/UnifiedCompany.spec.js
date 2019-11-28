@@ -34,12 +34,14 @@ describe('Unified Company', function() {
             it('should trigger once the character wins a conflict and the controller has less cards in hand', function() {
                 this.noMoreActions();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.unifiedCompany);
                 this.player1.clickCard(this.unifiedCompany);
                 expect(this.player1).toHavePrompt('Unified Company');
             });
 
             it('should only be able to target non-unique cost 2 or less bushi in your dynasty discard pile', function() {
                 this.noMoreActions();
+                expect(this.player1).toBeAbleToSelect(this.unifiedCompany);
                 this.player1.clickCard(this.unifiedCompany);
                 expect(this.player1).toBeAbleToSelect(this.gunso);
                 expect(this.player1).not.toBeAbleToSelect(this.taiko);
@@ -51,6 +53,7 @@ describe('Unified Company', function() {
             it('should put the character into play', function() {
                 expect(this.gunso.location).toBe('dynasty discard pile');
                 this.noMoreActions();
+                expect(this.player1).toBeAbleToSelect(this.unifiedCompany);
                 this.player1.clickCard(this.unifiedCompany);
                 this.player1.clickCard(this.gunso);
                 expect(this.gunso.location).toBe('play area');
@@ -61,22 +64,22 @@ describe('Unified Company', function() {
                 this.player2.clickCard('banzai');
                 this.player2.clickCard(this.unifiedCompany);
                 this.player2.clickPrompt('Done');
-                this.noMoreActions();
                 expect(this.player1.player.hand.size()).toBe(1);
                 expect(this.player2.player.hand.size()).toBe(1);
-                expect(this.player1).toHavePrompt('Do you wish to discard Adept of the Waves?');
+                this.noMoreActions();
+                expect(this.player1).not.toBeAbleToSelect(this.unifiedCompany);
             });
 
-            it('should not trigger if you have less cards in hand', function() {
+            it('should not trigger if you have more cards in hand', function() {
                 this.player2.clickCard('banzai');
                 this.player2.clickCard(this.unifiedCompany);
                 this.player2.clickPrompt('Done');
                 this.player1.pass();
                 this.player2.playAttachment('fine-katana', this.unifiedCompany);
-                this.noMoreActions();
                 expect(this.player1.player.hand.size()).toBe(1);
                 expect(this.player2.player.hand.size()).toBe(0);
-                expect(this.player1).toHavePrompt('Do you wish to discard Adept of the Waves?');
+                this.noMoreActions();
+                expect(this.player1).not.toBeAbleToSelect(this.unifiedCompany);
             });
         });
     });
