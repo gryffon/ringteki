@@ -10,7 +10,7 @@ describe('Third Whisker Warrens', function() {
                     },
                     player2: {
                         inPlay: ['akodo-gunso'],
-                        dynastyDiscard: ['kitsu-warrior', 'akodo-zentaro', 'doomed-shugenja', 'agasha-taiko', 'third-whisker-warrens', 'seventh-tower'],
+                        dynastyDiscard: ['kitsu-warrior', 'akodo-zentaro', 'doomed-shugenja', 'agasha-taiko', 'third-whisker-warrens', 'seventh-tower', 'imperial-storehouse'],
                         fate: 30
                     }
                 });
@@ -23,6 +23,7 @@ describe('Third Whisker Warrens', function() {
                 this.agashaTaiko = this.player2.findCardByName('agasha-taiko', 'dynasty discard pile');
                 this.warrens = this.player2.findCardByName('third-whisker-warrens');
                 this.tower = this.player2.findCardByName('seventh-tower');
+                this.storehouse = this.player2.findCardByName('imperial-storehouse');
                 this.player2.moveCard(this.warrens, 'province 1');
                 this.player2.moveCard(this.tower, 'province 2');
                 this.warrens.facedown = false;
@@ -100,6 +101,21 @@ describe('Third Whisker Warrens', function() {
                 this.player2.clickCard(this.kitsuWarrior);
                 expect(this.player2).not.toHavePrompt('Choose additional fate');
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should not let you use holdings', function() {
+                this.player2.moveCard(this.storehouse, 'dynasty deck');
+                expect(this.player2.player.dynastyDeck.first()).toBe(this.storehouse);
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.agashaSwordsmith],
+                    defenders: [],
+                    province: this.pWarrens
+                });
+                let hand = this.player2.hand.length;
+                this.player2.clickCard(this.storehouse);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                expect(this.player2.hand.length).toBe(hand);
             });
 
             it('should allow you to use the disguised keyword when you play from discard', function() {
