@@ -2,6 +2,10 @@ const DrawCard = require('../../drawcard.js');
 
 class Pragmatism extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+        this.attachmentConditions({
+            myControl: true
+        });
+
         this.whileAttached({
             condition: () => this.controller.isLessHonorableThanOpponent(),
             effect: [
@@ -11,13 +15,6 @@ class Pragmatism extends DrawCard {
                 ability.effects.cardCannot('dishonor')
             ]
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-        return super.canAttach(card, context);
     }
 }
 

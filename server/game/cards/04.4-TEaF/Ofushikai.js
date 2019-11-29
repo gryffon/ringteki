@@ -3,6 +3,12 @@ const { Durations, CardTypes, AbilityTypes } = require('../../Constants');
 
 class Ofushukai extends DrawCard {
     setupCardAbilities(ability) { // eslint-disable-line no-unused-vars
+        this.attachmentConditions({
+            myControl: true,
+            unique: true,
+            faction: 'phoenix'
+        });
+
         this.grantedAbilityLimits = {};
         this.whileAttached({
             match: card => card.hasTrait('champion'),
@@ -23,13 +29,6 @@ class Ofushukai extends DrawCard {
                 }
             })
         });
-    }
-
-    canAttach(card, context) {
-        if(card.controller !== context.player) {
-            return false;
-        }
-        return card.isUnique() && card.isFaction('phoenix') ? super.canAttach(card, context) : false;
     }
 }
 

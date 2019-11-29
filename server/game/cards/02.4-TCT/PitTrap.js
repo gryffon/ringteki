@@ -8,7 +8,7 @@ class PitTrap extends DrawCard {
     }
 
     canPlayOn(card) {
-        return card.isAttacking() && super.canPlayOn();
+        return card.isAttacking() && super.canPlayOn(card);
     }
 }
 

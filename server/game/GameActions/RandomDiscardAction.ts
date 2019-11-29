@@ -30,6 +30,7 @@ export class RandomDiscardAction extends PlayerAction {
         let { amount } = this.getProperties(context, additionalProperties) as RandomDiscardProperties;        
         super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
+        event.discardedAtRandom = true;
     }
 
     eventHandler(event): void {

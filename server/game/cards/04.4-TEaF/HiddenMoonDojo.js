@@ -2,9 +2,15 @@ const DrawCard = require('../../drawcard.js');
 const PlayCharacterAction = require('../../playcharacteraction.js');
 const _ = require('underscore');
 const AbilityDsl = require('../../abilitydsl');
-const { Locations, Players } = require('../../Constants');
+const { Locations, Players, PlayTypes } = require('../../Constants');
 
 class HiddenMoonDojoPlayAction extends PlayCharacterAction {
+    createContext(player = this.card.controller) {
+        const context = super.createContext(player);
+        context.playType = PlayTypes.PlayFromHand;
+        return context;
+    }
+
     meetsRequirements(context, ignoredRequirements = []) {
         return super.meetsRequirements(context, _.uniq(ignoredRequirements.concat('location')));
     }

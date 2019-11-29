@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { PlayTypes } = require('../../Constants');
 
 class Infiltrator extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,7 +12,7 @@ class Infiltrator extends DrawCard {
                 return {
                     activePromptTitle: topCard && 'Choose an action for ' + topCard.name,
                     choices: {
-                        'Play this card': ability.actions.playCard({ target: topCard }),
+                        'Play this card': ability.actions.playCard({ target: topCard, playType: PlayTypes.PlayFromHand }),
                         'Discard this card': ability.actions.discardCard({ target: topCard })
                     },
                     messages: { 'Discard this card': '{0} chooses to discard {1}' }
