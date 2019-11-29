@@ -9,7 +9,7 @@ describe('Kyuden Kakita', function() {
                         inPlay: ['sincere-challenger', 'solemn-scholar']
                     },
                     player2: {
-                        inPlay: ['honest-challenger']
+                        inPlay: ['honest-challenger', 'mirumoto-hitomi']
                     }
                 });
 
@@ -19,12 +19,12 @@ describe('Kyuden Kakita', function() {
                     'honest-challenger');
                 this.solemnScholar = this.player1.findCardByName(
                     'solemn-scholar');
-
+                this.mirumotoHitomi = this.player2.findCardByName('mirumoto-hitomi');
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.sincereChallenger, this.solemnScholar],
-                    defenders: [this.honestChallenger]
+                    defenders: [this.honestChallenger, this.mirumotoHitomi]
                 });
             });
 
@@ -101,6 +101,28 @@ describe('Kyuden Kakita', function() {
                 this.player1.clickCard(this.solemnScholar);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 expect(this.solemnScholar.isHonored).toBe(true);
+            });
+
+            it('should trigger from duels where multiple characters are targeted', function () {
+                this.player2.clickCard(this.mirumotoHitomi);
+                this.player2.clickCard(this.sincereChallenger);
+                this.player2.clickCard(this.solemnScholar);
+                this.player2.clickPrompt('Done');
+                this.player1.clickPrompt('4');
+                this.player2.clickPrompt('4');
+                expect(this.player1).toHavePrompt('Mirumoto Hitomi');
+                this.player1.clickPrompt('Dishonor this character');
+                expect(this.player1).toHavePrompt('Mirumoto Hitomi');
+                this.player1.clickPrompt('Dishonor this character');
+                expect(this.solemnScholar.isDishonored).toBe(true);
+                expect(this.sincereChallenger.isDishonored).toBe(true);
+                expect(this.player1).toBeAbleToSelect('kyuden-kakita');
+                this.player1.clickCard('kyuden-kakita');
+                expect(this.player1).toBeAbleToSelect(this.solemnScholar);
+                expect(this.player1).toBeAbleToSelect(this.sincereChallenger);
+                this.player1.clickCard(this.solemnScholar);
+                expect(this.solemnScholar.isDishonored).toBe(false);
+                expect(this.sincereChallenger.isDishonored).toBe(true);
             });
         });
     });
