@@ -28,7 +28,7 @@ class ThirdWhiskerWarrens extends DrawCard {
             },
             targetLocation: Locations.DynastyDeck,
             match: (card, context) => {
-                return card.getType() === CardTypes.Character && card === context.player.dynastyDeck.first()
+                return card === context.player.dynastyDeck.first()
             },
             effect: [
                 AbilityDsl.effects.hideWhenFaceUp(),
@@ -37,7 +37,7 @@ class ThirdWhiskerWarrens extends DrawCard {
         });
 
         this.action({
-            title: 'Make top card of conflict deck playable',
+            title: 'Reveal top card of dynasty deck playable',
             effect: 'reveal the top card of their conflict deck',
             gameAction: AbilityDsl.actions.playerLastingEffect(context => {
                 return {
