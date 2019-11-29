@@ -1,6 +1,7 @@
 const _ = require('underscore');
 const AbilityContext = require('../../AbilityContext');
 const BaseStepWithPipeline = require('../basestepwithpipeline.js');
+const Costs = require('../../costs');
 const CovertAbility = require('../../KeywordAbilities/CovertAbility');
 const GameActions = require('../../GameActions/GameActions');
 const SimpleStep = require('../simplestep.js');
@@ -9,7 +10,7 @@ const InitiateConflictPrompt = require('./initiateconflictprompt.js');
 const SelectDefendersPrompt = require('./selectdefendersprompt.js');
 const InitiateCardAbilityEvent = require('../../Events/InitiateCardAbilityEvent');
 
-const { Players, CardTypes, EventNames } = require('../../Constants');
+const { Players, CardTypes, EventNames, EffectNames } = require('../../Constants');
 
 /**
 Conflict Resolution
@@ -34,6 +35,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.resetCards()),
             new SimpleStep(this.game, () => this.promptForNewConflict()),
             new SimpleStep(this.game, () => this.initiateConflict()),
+            new SimpleStep(this.game, () => this.payAttackerCosts()),
             new SimpleStep(this.game, () => this.promptForCovert()),
             new SimpleStep(this.game, () => this.resolveCovert()),
             new SimpleStep(this.game, () => this.raiseDeclarationEvents()),
@@ -93,6 +95,16 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         _.each(this.conflict.attackers, card => card.inConflict = true);
         this.game.recordConflict(this.conflict);
+    }
+
+    payAttackerCosts() {
+        const totalFateCost = this.conflict.attackers.reduce((total, card) => total + card.sumEffects(EffectNames.FateCostToAttack), 0);
+        if(totalFateCost > 0) {
+            this.game.addMessage('{0} pays {1} fate to declare his attackers', this.conflict.attackingPlayer, totalFateCost);
+            const costEvents = [];
+            Costs.payFate(totalFateCost).addEventsToArray(costEvents, this.game.getFrameworkContext(this.conflict.attackingPlayer));
+            this.game.openEventWindow(costEvents);
+        }
     }
 
     promptForCovert() {
