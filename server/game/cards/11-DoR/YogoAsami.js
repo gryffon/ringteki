@@ -5,7 +5,7 @@ const AbilityDsl = require('../../abilitydsl');
 class YogoAsami extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
-            match:  card => card.name === 'Bayushi Kachiko' && card.location === Locations.PlayArea,
+            match:  card => card.name === 'Bayushi Kachiko',
             targetController: Players.Any,
             effect: AbilityDsl.effects.cardCannot({
                 cannot: 'target',
