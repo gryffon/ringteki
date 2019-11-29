@@ -14,7 +14,7 @@ class PrepareForWar extends DrawCard {
                     AbilityDsl.actions.selectCard(context => ({
                         mode: TargetModes.Unlimited,
                         cardType: CardTypes.Attachment,
-                        controller: Players.Self,
+                        controller: Players.Any,
                         cardCondition: card => card.parent === context.target,
                         activePromptTitle: 'Choose any amount of attachments',
                         optional: true,
