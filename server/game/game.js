@@ -1113,6 +1113,9 @@ class Game extends EventEmitter {
                     // any attachments which are illegally attached
                     card.checkForIllegalAttachments();
                 });
+                _.each(player.getProvinces(), card => {
+                    card && card.checkForIllegalAttachments();
+                });
             }
             if(this.currentConflict) {
                 // conflicts with illegal participants
