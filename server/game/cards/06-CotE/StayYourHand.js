@@ -8,7 +8,8 @@ class StayYourHand extends DrawCard {
             when: {
                 onDuelInitiated: (event, context) =>
                     event.context.player === context.player.opponent &&
-                    _.some(event.context.targets, (card) => card.controller === context.player)
+                    (_.some(event.context.targets, (card) => card.controller === context.player) ||
+                    (event.context.targets.target && _.some(event.context.targets.target, (card) => card.controller === context.player)))
             },
             cannotBeMirrored: true,
             effect: 'cancel the duel originating from {1}',

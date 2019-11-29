@@ -74,5 +74,18 @@ describe('Shrewd Yasuki', function() {
                 expect(this.player1).toHavePrompt('Shrewd Yasuki');
             });
         });
+
+        describe('when Shrewd Yasuki\'s controller has less than two cards in their conflict deck', function() {
+            it('should not try to put a nonexistant card onto the deck', function() {
+                this.player1.reduceDeckToNumber('conflict deck', 2);
+                this.player2.clickPrompt('Pass');
+                this.player1.clickCard(this.imperialStorehouse);
+                this.player2.clickPrompt('Pass');
+                this.player1.clickCard('shrewd-yasuki');
+                expect(this.player1).toHavePrompt('Shrewd Yasuki');
+                this.player1.clickPrompt('Supernatural Storm');
+                expect(this.player1.conflictDeck.length).toBe(0);
+            });
+        });
     });
 });

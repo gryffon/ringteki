@@ -10,7 +10,14 @@ import InitiateCardAbilityEvent = require('../Events/InitiateCardAbilityEvent');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { EventNames } from '../Constants';
 
-class NoCostsAbilityResolver extends AbilityResolver {
+class ResolveAbilityActionResolver extends AbilityResolver {
+    ignoreCosts: boolean;
+
+    constructor(game, context, ignoreCosts) {
+        super(game, context);
+        this.ignoreCosts = ignoreCosts;
+    }
+
     initialise() {
         this.pipeline.initialise([
             new SimpleStep(this.game, () => this.createSnapshot()),
@@ -19,21 +26,24 @@ class NoCostsAbilityResolver extends AbilityResolver {
         ]);
     }
 
+    getCostResults() {
+        const results = super.getCostResults();
+        results.canCancel = false;
+        results.playCosts = false;
+        results.triggerCosts = false;
+        return results;
+    }
+
     openInitiateAbilityEventWindow() {
-        let events = [
-            this.game.getEvent(EventNames.OnCardAbilityInitiated, { card: this.context.source, ability: this.context.ability, context: this.context }, () => {
-                this.game.queueSimpleStep(() => this.resolveTargets());
-                this.game.queueSimpleStep(() => this.initiateAbilityEffects());
-                this.game.queueSimpleStep(() => this.executeHandler());    
-            })
-        ];
+        const params = { card: this.context.source, ability: this.context.ability, context: this.context };
+        const events = [this.game.getEvent(EventNames.OnCardAbilityInitiated, params, () => this.queueInitiateAbilitySteps())];
         if(this.context.ability.isTriggeredAbility() && !this.context.subResolution) {
             events.push(this.game.getEvent(EventNames.OnCardAbilityTriggered, {
                 player: this.context.player,
                 card: this.context.source,
                 context: this.context
             }));
-        }
+        }        
         this.game.openEventWindow(events);
     }
 
@@ -49,19 +59,33 @@ class NoCostsAbilityResolver extends AbilityResolver {
         this.context.ability.displayMessage(this.context, 'resolves');
         this.game.openEventWindow(new InitiateCardAbilityEvent({ card: this.context.source, context: this.context }, () => this.initiateAbility = true));
     }
+
+    resolveCosts() {
+        if(!this.ignoreCosts) {
+            super.resolveCosts();
+        }
+    }
+
+    payCosts() {
+        if(!this.ignoreCosts) {
+            super.payCosts();
+        }
+    }
 }
 
 export interface ResolveAbilityProperties extends CardActionProperties {
-    ability: CardAbility,
-    subResolution?: boolean,
-    player?: Player,
-    event?: Event
+    ability: CardAbility;
+    subResolution?: boolean;
+    ignoredRequirements?: string[];
+    player?: Player;
+    event?: Event;
 }
 
 export class ResolveAbilityAction extends CardGameAction {
     name = 'resolveAbility';
     defaultProperties: ResolveAbilityProperties = { 
         ability: null,
+        ignoredRequirements: [],
         subResolution: false
     };
     constructor(properties: ((context: TriggeredAbilityContext) => ResolveAbilityProperties) | ResolveAbilityProperties) {
@@ -82,10 +106,8 @@ export class ResolveAbilityAction extends CardGameAction {
             return false;
         }
         let newContext = ability.createContext(player, newContextEvent);
-        if(ability.targets.length === 0) {
-            return ability.gameAction.length === 0 || ability.gameAction.some(action => action.hasLegalTarget(newContext));
-        }
-        return ability.canResolveTargets(newContext);
+        let ignoredRequirements = properties.ignoredRequirements.concat('player', 'location');
+        return !ability.meetsRequirements(newContext, ignoredRequirements);
     }
 
     eventHandler(event, additionalProperties): void {
@@ -94,7 +116,7 @@ export class ResolveAbilityAction extends CardGameAction {
         let newContextEvent = properties.event;
         let newContext = (properties.ability as TriggeredAbility).createContext(player, newContextEvent);
         newContext.subResolution = !!properties.subResolution;
-        event.context.game.queueStep(new NoCostsAbilityResolver(event.context.game, newContext));
+        event.context.game.queueStep(new ResolveAbilityActionResolver(event.context.game, newContext, properties.ignoredRequirements.includes('cost')));
     }
 
     hasTargetsChosenByInitiatingPlayer(context) {

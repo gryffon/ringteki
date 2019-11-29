@@ -4,6 +4,7 @@ const { EventNames } = require('../Constants');
 class ReduceableFateCost {
     constructor(ignoreType) {
         this.ignoreType = ignoreType;
+        this.isPlayCost = true;
     }
 
     canPay(context) {

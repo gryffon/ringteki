@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, CardTypes, EventNames } = require('../../Constants');
+const { Locations, CardTypes, EventNames, Players } = require('../../Constants');
 
 class ChasingTheSun extends DrawCard {
     setupCardAbilities() {
@@ -12,6 +12,7 @@ class ChasingTheSun extends DrawCard {
                 context: context,
                 cardType: CardTypes.Province,
                 location: Locations.Provinces,
+                controller: Players.Opponent,
                 cardCondition: card => !card.isConflictProvince() && card.canBeAttacked(),
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} moves the conflict to {1}', player, card);

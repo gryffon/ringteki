@@ -110,5 +110,22 @@ describe('Ardent Omoidasu', function() {
 
             expect(this.player1).toHavePrompt('Action Window');
         });
+
+        it('should not be allowed to trigger if the opponent dishonors their own character', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                type: 'political',
+                attackers: [this.ardentOmoidasu],
+                defenders: [this.mirumotoRaitsugu],
+                province: this.shamefulDisplay,
+                ring: 'fire'
+            });
+
+            this.player2.clickCard(this.wayOfTheScorpion);
+            this.player2.clickCard(this.mirumotoRaitsugu);
+
+            expect(this.mirumotoRaitsugu.isDishonored).toBe(true);
+            expect(this.player1).toHavePrompt('Conflict Action Window');
+        });
     });
 });
