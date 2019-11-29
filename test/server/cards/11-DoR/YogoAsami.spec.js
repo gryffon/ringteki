@@ -184,7 +184,7 @@ describe('Yogo Asami', function() {
                         hand: ['a-fate-worse-than-death', 'kirei-ko']
                     },
                     player2: {
-                        inPlay: ['yogo-asami', 'bayushi-kachiko', 'mirumoto-raitsugu'],
+                        inPlay: ['yogo-asami', 'bayushi-kachiko', 'mirumoto-raitsugu', 'isawa-ujina'],
                         hand: ['a-fate-worse-than-death', 'kirei-ko']
                     }
                 });
@@ -200,12 +200,15 @@ describe('Yogo Asami', function() {
                 this.p2kireiko = this.player2.findCardByName('kirei-ko');
                 this.p2Kachiko = this.player2.findCardByName('bayushi-kachiko');
                 this.p2raitsugu = this.player2.findCardByName('mirumoto-raitsugu');
+                this.ujina = this.player2.findCardByName('isawa-ujina');
+
                 this.noMoreActions();
 
                 this.initiateConflict({
                     type: 'political',
                     attackers: [this.p1Kachiko, this.p1raitsugu],
-                    defenders: [this.p2Kachiko, this.p2raitsugu]
+                    defenders: [this.p2Kachiko, this.p2raitsugu],
+                    ring: 'void'
                 });
             });
 
@@ -262,6 +265,15 @@ describe('Yogo Asami', function() {
                 expect(this.player1).toBeAbleToSelect(this.p1kireiko);
                 this.player1.clickCard(this.p1kireiko);
                 expect(this.p2Kachiko.bowed).toBe(true);
+            });
+
+            it('should allow targeting by forced reactinos (Ujina)', function() {
+                this.noMoreActions();
+                expect(this.player2).toHavePrompt('Isawa Ujina');
+                expect(this.player2).toBeAbleToSelect(this.p1raitsugu);
+                expect(this.player2).toBeAbleToSelect(this.p2raitsugu);
+                expect(this.player2).toBeAbleToSelect(this.p1Kachiko);
+                expect(this.player2).toBeAbleToSelect(this.p2Kachiko);
             });
         });
     });

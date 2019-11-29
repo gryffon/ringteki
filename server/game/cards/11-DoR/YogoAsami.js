@@ -9,7 +9,7 @@ class YogoAsami extends DrawCard {
             targetController: Players.Any,
             effect: AbilityDsl.effects.cardCannot({
                 cannot: 'target',
-                restricts: 'opponentsTriggeredAbilities'
+                restricts: 'abilitiesTriggeredByOpponents'
             })
         });
         this.action({
