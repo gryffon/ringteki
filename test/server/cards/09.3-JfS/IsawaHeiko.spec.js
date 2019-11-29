@@ -74,18 +74,29 @@ describe('Isawa Heiko', function () {
                 expect(this.makoto.getPoliticalSkill()).toBe(4);
             });
 
-            it('should not target characters at home', function() {
+            it('should target characters at home', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
                 this.player1.clickCard(this.solemn);
                 this.player1.clickCard(this.heiko);
-                expect(this.player1).not.toBeAbleToSelect(this.solemn);
+                expect(this.player1).toBeAbleToSelect(this.solemn);
             });
 
             it('should not trigger when the opponent plays a water card', function() {
                 this.player2.clickCard(this.clarity);
                 this.player2.clickCard(this.makoto);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('should be able to trigger outside of a conflict', function() {
+                this.noMoreActions();
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard(this.against);
+                this.player1.clickCard(this.heiko);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                this.player1.clickCard(this.heiko);
+                this.player1.clickCard(this.heiko);
+                expect(this.heiko.getMilitarySkill()).toBe(5);
             });
         });
     });

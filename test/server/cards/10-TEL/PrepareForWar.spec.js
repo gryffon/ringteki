@@ -8,7 +8,8 @@ describe('Prepare for War', function() {
                     hand: ['ornate-fan', 'fine-katana', 'cloud-the-mind', 'prepare-for-war']
                 },
                 player2: {
-                    inPlay: ['mirumoto-raitsugu']
+                    inPlay: ['mirumoto-raitsugu'],
+                    hand: ['pacifism']
                 }
             });
 
@@ -20,6 +21,7 @@ describe('Prepare for War', function() {
             this.prepareForWar = this.player1.findCardByName('prepare-for-war');
 
             this.mirumotoRaitsugu = this.player2.findCardByName('mirumoto-raitsugu');
+            this.pacifism = this.player2.findCardByName('pacifism');
         });
 
         it('should not allow you to target a non-commander that is neutral and has no attachments', function() {
@@ -42,9 +44,17 @@ describe('Prepare for War', function() {
             expect(this.player1).toBeAbleToSelect(this.matsuBerserker);
         });
 
+        it('should not allow you to target a enemy character', function() {
+            this.player1.playAttachment(this.fineKatana, this.mirumotoRaitsugu);
+            this.player2.pass();
+
+            this.player1.clickCard(this.prepareForWar);
+            expect(this.player1).not.toBeAbleToSelect(this.mirumotoRaitsugu);
+        });
+
         it('should prompt to discard any number of attached attachments from the character', function() {
             this.player1.playAttachment(this.fineKatana, this.matsuBerserker);
-            this.player2.pass();
+            this.player2.playAttachment(this.pacifism, this.matsuBerserker);
 
             this.player1.playAttachment(this.ornateFan, this.matsuBerserker);
             this.player2.pass();
@@ -54,10 +64,15 @@ describe('Prepare for War', function() {
             this.player1.clickCard(this.matsuBerserker);
 
             expect(this.player1).toHavePrompt('Choose any amount of attachments');
+            expect(this.player1).toBeAbleToSelect(this.fineKatana);
+            expect(this.player1).toBeAbleToSelect(this.pacifism);
+            expect(this.player1).toBeAbleToSelect(this.ornateFan);
             this.player1.clickCard(this.ornateFan);
+            this.player1.clickCard(this.pacifism);
             this.player1.clickPrompt('Done');
 
             expect(this.ornateFan.location).toBe('conflict discard pile');
+            expect(this.pacifism.location).toBe('conflict discard pile');
             expect(this.fineKatana.location).toBe('play area');
         });
 
