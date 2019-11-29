@@ -112,6 +112,7 @@ export enum EffectNames {
     ModifyCardsDrawnInDrawPhase = 'modifyCardsDrawnInDrawPhase',
     SetMaxConflicts = 'maxConflicts',
     ShowTopConflictCard = 'showTopConflictCard',
+    ShowTopDynastyCard = 'showTopDynastyCard',
     ContributeToConflict = 'contribute',
     ChangeConflictSkillFunction = 'skillFunction',
     ModifyConflictElementsToResolve = 'modifyConflictElementsToResolve',
