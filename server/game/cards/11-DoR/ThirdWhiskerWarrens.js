@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Decks, Phases, Durations, CardTypes, PlayTypes, Players } = require('../../Constants');
+const { Locations, CardTypes, PlayTypes, Players } = require('../../Constants');
 const PlayDisguisedCharacterAction = require('../../PlayDisguisedCharacterAction.js');
 const AbilityDsl = require('../../abilitydsl.js');
 const PlayCharacterAction = require('../../playcharacteraction');
@@ -42,7 +42,7 @@ class ThirdWhiskerWarrens extends DrawCard {
             },
             targetLocation: Locations.DynastyDeck,
             match: (card, context) => {
-                return context && card === context.player.dynastyDeck.first()
+                return context && card === context.player.dynastyDeck.first();
             },
             effect: [
                 AbilityDsl.effects.hideWhenFaceUp(),
@@ -61,7 +61,7 @@ class ThirdWhiskerWarrens extends DrawCard {
             },
             targetController: Players.Self,
             effect: AbilityDsl.effects.showTopDynastyCard()
-        });        
+        });
     }
 }
 

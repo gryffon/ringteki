@@ -88,7 +88,7 @@ describe('Third Whisker Warrens', function() {
                 this.player2.clickPrompt('home');
                 expect(this.agashaTaiko.location).toBe('play area');
                 expect(this.game.currentConflict.defenders).not.toContain(this.agashaTaiko);
-            });            
+            });
 
             it('should not be active when conflict is not at a province with a kaiu wall', function() {
                 this.noMoreActions();
