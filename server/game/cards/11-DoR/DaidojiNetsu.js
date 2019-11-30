@@ -8,7 +8,10 @@ class DaidojiNetsu extends DrawCard {
             condition: context => this.game.currentPhase === Phases.Conflict,
             targetController: Players.Any,
             match: (card, context) => card.getType() === CardTypes.Character && card !== context.source,
-            effect: AbilityDsl.effects.cardCannot('discardFromPlay')
+            effect: [
+                AbilityDsl.effects.cardCannot('discardFromPlay'),
+                AbilityDsl.effects.cardCannot('sacrifice')
+            ]
         });
     }
 }
