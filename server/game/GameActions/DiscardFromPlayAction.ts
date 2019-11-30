@@ -12,7 +12,6 @@ export class DiscardFromPlayAction extends CardGameAction {
     eventName = EventNames.OnCardLeavesPlay;
     cost = 'sacrificing {0}';
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Holding];
-    fromKeyword = false;
 
     constructor(propertyFactory, isSacrifice = false) {
         super(propertyFactory);
