@@ -25,7 +25,9 @@ const checkRestrictions = {
     opponentsTriggeredAbilities: (context, effect) =>
         context.player === effect.context.player.opponent && context.ability.isTriggeredAbility(),
     reactions: context => context.ability.abilityType === AbilityTypes.Reaction,
-    source: (context, effect) => context.source === effect.context.source
+    source: (context, effect) => context.source === effect.context.source,
+    keywordAbilities: context => context.ability.isKeywordAbility(),
+    nonKeywordAbilities: context => !context.ability.isKeywordAbility()
 };
 
 class Restriction extends EffectValue {

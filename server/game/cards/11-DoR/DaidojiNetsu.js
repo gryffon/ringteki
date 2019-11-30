@@ -3,13 +3,16 @@ const { Players, CardTypes, Phases } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class DaidojiNetsu extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
-            condition: context => this.game.currentPhase === Phases.Conflict,
+            condition: () => this.game.currentPhase === Phases.Conflict,
             targetController: Players.Any,
             match: (card, context) => card.getType() === CardTypes.Character && card !== context.source,
             effect: [
-                AbilityDsl.effects.cardCannot('discardFromPlay'),
+                //AbilityDsl.effects.cardCannot('discardFromPlay'),
+                AbilityDsl.effects.cardCannot({
+                    cannot: 'discardFromPlay',
+                    restricts: 'nonKeywordAbilities'}),
                 AbilityDsl.effects.cardCannot('sacrifice')
             ]
         });
