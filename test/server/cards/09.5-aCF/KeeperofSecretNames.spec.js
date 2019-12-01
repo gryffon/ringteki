@@ -5,7 +5,7 @@ describe('Keeper of Secret Names', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['keeper-of-secret-names', 'doji-challenger', 'brash-samurai', 'graceful-guardian'],
+                        inPlay: ['keeper-of-secret-names', 'doji-challenger', 'brash-samurai', 'graceful-guardian', 'cautious-scout'],
                         hand: ['fine-katana'],
                         provinces: ['meditations-on-the-tao', 'vassal-fields', 'kuroi-mori', 'rally-to-the-cause']
                     },
@@ -19,6 +19,7 @@ describe('Keeper of Secret Names', function() {
                 this.brash = this.player1.findCardByName('brash-samurai');
                 this.guardian = this.player1.findCardByName('graceful-guardian');
                 this.katana = this.player1.findCardByName('fine-katana');
+                this.scout = this.player1.findCardByName('cautious-scout');
 
                 this.p2Keeper = this.player2.findCardByName('keeper-of-secret-names');
 
@@ -322,6 +323,38 @@ describe('Keeper of Secret Names', function() {
                 expect(this.player1).toHavePrompt('Action Window');
                 this.player1.clickCard(this.p1Keeper);
                 expect(this.player1).toHavePrompt('Action Window');
+            });
+
+            it('should not allow selecting a blanked province', function() {
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.scout],
+                    defenders: [this.p2Keeper],
+                    province: this.alongTheRiverOfGold
+                });
+
+                this.player2.clickCard(this.p2Keeper);
+                expect(this.player2).not.toBeAbleToSelect(this.meditationsOnTheTao);
+                expect(this.player2).toBeAbleToSelect(this.vassalFields);
+                expect(this.player2).toBeAbleToSelect(this.kuroiMori);
+                expect(this.player2).not.toBeAbleToSelect(this.rallyToTheCause);
+                expect(this.player2).not.toBeAbleToSelect(this.riotInTheStreets);
+                expect(this.player2).not.toBeAbleToSelect(this.alongTheRiverOfGold);
+                expect(this.player2).not.toBeAbleToSelect(this.frostbittenCrossing);
+                expect(this.player2).toBeAbleToSelect(this.brothersGiftDojo);
+
+                this.player2.clickPrompt('Cancel');
+                this.player2.pass();
+
+                this.player1.clickCard(this.p1Keeper);
+                expect(this.player1).not.toBeAbleToSelect(this.meditationsOnTheTao);
+                expect(this.player1).toBeAbleToSelect(this.vassalFields);
+                expect(this.player1).toBeAbleToSelect(this.kuroiMori);
+                expect(this.player1).not.toBeAbleToSelect(this.rallyToTheCause);
+                expect(this.player1).not.toBeAbleToSelect(this.riotInTheStreets);
+                expect(this.player1).not.toBeAbleToSelect(this.alongTheRiverOfGold);
+                expect(this.player1).not.toBeAbleToSelect(this.frostbittenCrossing);
+                expect(this.player1).toBeAbleToSelect(this.brothersGiftDojo);
             });
         });
     });
