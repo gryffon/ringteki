@@ -7,7 +7,7 @@ class FrostbittenCrossing extends ProvinceCard {
             title: 'Discard all attachments from a character',
             target: {
                 cardType: CardTypes.Character,
-                cardCondition: card => card.isParticipating()
+                cardCondition: card => card.isParticipating() && card.attachments.size() > 0
             },
             effect: 'remove all attachments from {0}',
             gameAction: ability.actions.discardFromPlay(context => ({ target: context.target.attachments.toArray() }))
