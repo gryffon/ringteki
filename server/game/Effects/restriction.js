@@ -3,6 +3,8 @@ const EffectValue = require('./EffectValue');
 const { AbilityTypes, CardTypes } = require('../Constants');
 
 const checkRestrictions = {
+    abilitiesTriggeredByOpponents: (context, effect) =>
+        context.player === effect.context.player.opponent && context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt,
     attachmentsWithSameClan: (context, effect, card) =>
         context.source.type === CardTypes.Attachment &&
         context.source.getPrintedFaction() !== 'neutral' && card.isFaction(context.source.getPrintedFaction()),

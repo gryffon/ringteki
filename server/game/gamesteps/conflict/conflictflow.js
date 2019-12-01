@@ -310,10 +310,13 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         const eventFactory = () => {
             let event = this.game.getEvent(EventNames.AfterConflict, { conflict: this.conflict }, () => {
+                let effects = this.conflict.getEffects(EffectNames.ForceConflictUnopposed);
+                let forcedUnopposed = effects.length !== 0;
+
                 this.showConflictResult();
                 this.game.recordConflictWinner(this.conflict);
 
-                if(this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) {
+                if((this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) || forcedUnopposed) {
                     this.conflict.conflictUnopposed = true;
                 }
             });

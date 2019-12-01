@@ -183,12 +183,14 @@ class InitiateConflictPrompt extends UiPrompt {
 
     selectCard(card) {
         if(card.isProvince) {
+            let oldProvince = this.conflict.conflictProvince;
             if(this.conflict.conflictProvince) {
                 this.conflict.conflictProvince.inConflict = false;
                 this.conflict.conflictProvince = null;
             } else {
                 this.conflict.conflictProvince = card;
                 this.conflict.conflictProvince.inConflict = true;
+                if (card.name === 'Kuni Wastelands' || (oldProvince && oldProvince.name === 'Kuni Wastelands'))
             }
         } else if(card.type === CardTypes.Character) {
             if(card.controller === this.choosingPlayer) {

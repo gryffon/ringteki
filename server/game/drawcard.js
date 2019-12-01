@@ -21,6 +21,7 @@ class DrawCard extends BaseCard {
         this.printedPoliticalSkill = this.getPrintedSkill('political');
         this.printedCost = this.cardData.cost;
         this.printedGlory = parseInt(cardData.glory);
+        this.printedStrengthBonus = parseInt(cardData.strength_bonus);
         this.fate = 0;
         this.bowed = false;
         this.covert = false;
@@ -477,10 +478,46 @@ class DrawCard extends BaseCard {
     }
 
     getProvinceStrengthBonus() {
-        if(this.cardData.strength_bonus && !this.facedown) {
-            return parseInt(this.cardData.strength_bonus);
+        let modifiers = this.getProvinceStrengthBonusModifiers();
+        let bonus = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
+        if(this.printedStrengthBonus && !this.facedown) {
+            return bonus;
         }
         return 0;
+    }
+
+    getProvinceStrengthBonusModifiers() {
+        const strengthModifierEffects = [
+            EffectNames.SetProvinceStrengthBonus,
+            EffectNames.ModifyProvinceStrengthBonus
+        ];
+
+        // strength bonus undefined (not a holding)
+        if(this.printedStrengthBonus === undefined) {
+            return [];
+        }
+
+        let strengthEffects = this.getRawEffects().filter(effect => strengthModifierEffects.includes(effect.type));
+
+        let strengthModifiers = [];
+
+        // set effects
+        let setEffects = strengthEffects.filter(effect => effect.type === EffectNames.SetProvinceStrengthBonus);
+        if(setEffects.length > 0) {
+            let latestSetEffect = _.last(setEffects);
+            let setAmount = latestSetEffect.getValue(this);
+            return [StatModifier.fromEffect(setAmount, latestSetEffect, true, `Set by ${StatModifier.getEffectName(latestSetEffect)}`)];
+        }
+
+        // skill modifiers
+        strengthModifiers.push(StatModifier.fromCard(this.printedStrengthBonus, this, 'Printed province strength bonus', false));
+        let modifierEffects = strengthEffects.filter(effect => effect.type === EffectNames.ModifyProvinceStrengthBonus);
+        modifierEffects.forEach(modifierEffect => {
+            const value = modifierEffect.getValue(this);
+            strengthModifiers.push(StatModifier.fromEffect(value, modifierEffect));
+        });
+
+        return strengthModifiers;
     }
 
     get militarySkill() {
