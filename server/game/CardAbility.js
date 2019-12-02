@@ -96,6 +96,10 @@ class CardAbility extends ThenAbility {
             return 'cannotTrigger';
         }
 
+        if(!this.card.canInitiateKeywords(context)) {
+            return 'cannotInitiate';
+        }
+
         if(!ignoredRequirements.includes('limit') && this.limit.isAtMax(context.player)) {
             return 'limit';
         }

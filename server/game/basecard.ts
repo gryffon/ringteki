@@ -339,6 +339,10 @@ class BaseCard extends EffectSource {
         return !this.facedown && (this.checkRestrictions('triggerAbilities', context) || !context.ability.isTriggeredAbility());
     }
 
+    canInitiateKeywords(context: AbilityContext): boolean {
+        return !this.facedown && (this.checkRestrictions('initiateKeywords', context) || !context.ability.isKeywordAbility());
+    }
+
     getModifiedLimitMax(player: Player, ability: CardAbility, max: number): number {
         const effects = this.getRawEffects().filter(effect => effect.type === EffectNames.IncreaseLimitOnAbilities);
         return effects.reduce((total, effect) => {
