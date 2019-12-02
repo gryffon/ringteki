@@ -33,7 +33,10 @@ class ThePerfectGift extends DrawCard {
                     message: '{0} chooses {1} to give to {2}',
                     messageArgs: (card, player) => [player, card, context.player.opponent],
                     gameAction: AbilityDsl.actions.moveCard({ destination: Locations.Hand })
-                }))
+                })),
+                AbilityDsl.actions.shuffleDeck({
+                    deck: Locations.ConflictDeck
+                })
             ])
         });
     }
