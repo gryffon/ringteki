@@ -6,13 +6,13 @@ const { Players, Locations, CardTypes, EventNames, AbilityTypes } = require('../
 const EventRegistrar = require('../../eventregistrar.js');
 
 class WithstandTheDarkness extends DrawCard {
-    firstBanzaiTarget = null;
+    extraBanzaiTarget = null;
 
     setupCardAbilities() {
         let currentTargets = [];
         this.abilityRegistrar = new EventRegistrar(this.game, this);
         this.abilityRegistrar.register([{
-            [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.OtherEffects]: 'onInitiateAbility'
+            [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.WouldInterrupt]: 'onInitiateAbility'
         }]);
 
         this.reaction({
@@ -45,9 +45,10 @@ class WithstandTheDarkness extends DrawCard {
             }
 
             if(event.card.id === 'banzai') {
-                if(this.firstBanzaiTarget) {
-                    targets = targets.concat(this.firstBanzaiTarget);
+                if(this.extraBanzaiTarget) {
+                    targets = targets.concat(this.extraBanzaiTarget);
                 }
+                this.extraBanzaiTarget = null;
             }
 
             targets = targets.filter(card => (
@@ -56,8 +57,6 @@ class WithstandTheDarkness extends DrawCard {
                 card.controller === context.player &&
                 card.location === Locations.PlayArea));
         }
-
-        this.firstBanzaiTarget = null;
         return targets;
     }
 
@@ -69,7 +68,7 @@ class WithstandTheDarkness extends DrawCard {
                 if(!Array.isArray(targets)) {
                     targets = [targets];
                 }
-                this.firstBanzaiTarget = targets[0];
+                this.extraBanzaiTarget = targets[0];
             }
         }
     }

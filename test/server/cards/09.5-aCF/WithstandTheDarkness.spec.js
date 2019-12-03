@@ -406,5 +406,112 @@ describe('Withstand The Darkness', function() {
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
         });
+
+        describe('Withstand The Darkness\'s Reaction (Banzai Edge Cases)', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['crisis-breaker', 'hida-guardian', 'hiruma-skirmisher'],
+                        hand: ['withstand-the-darkness', 'voice-of-honor']
+                    },
+                    player2: {
+                        inPlay: ['eager-scout'],
+                        hand: ['banzai'],
+                        conflictDiscard: ['defend-your-honor']
+                    }
+                });
+                this.crisisBreaker = this.player1.findCardByName('crisis-breaker');
+                this.hidaGuardian = this.player1.findCardByName('hida-guardian');
+                this.hirumaSkirmisher = this.player1.findCardByName('hiruma-skirmisher');
+                this.withstandTheDarkness = this.player1.findCardByName('withstand-the-darkness');
+                this.eagerScout = this.player2.findCardByName('eager-scout');
+                this.banzai = this.player2.findCardByName('banzai');
+                this.voice = this.player1.findCardByName('voice-of-honor');
+                this.dyh = this.player2.findCardByName('defend-your-honor');
+
+                this.crisisBreaker.honor();
+                this.crisisBreaker.fate = 0;
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.crisisBreaker, this.hidaGuardian, this.hirumaSkirmisher],
+                    defenders: [this.eagerScout]
+                });
+            });
+
+            it('should react even if banzai is cancelled', function() {
+                this.player2.clickCard(this.banzai);
+                this.player2.clickCard(this.crisisBreaker);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.voice);
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.voice);
+                expect(this.voice.location).toBe('conflict discard pile');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.crisisBreaker);
+            });
+
+            it('should react properly if banzai kicker is cancelled', function() {
+                this.player2.clickCard(this.banzai);
+                this.player2.clickCard(this.crisisBreaker);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                this.player1.pass();
+                this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player2.clickCard(this.hidaGuardian);
+
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.voice);
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.voice);
+                expect(this.voice.location).toBe('conflict discard pile');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.crisisBreaker);
+                expect(this.player1).toBeAbleToSelect(this.hidaGuardian);
+            });
+
+            it('should react properly when banzai is nested', function() {
+                this.player2.moveCard(this.dyh, 'hand');
+                this.player2.clickCard(this.banzai);
+                this.player2.clickCard(this.crisisBreaker);
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                this.player1.pass();
+                this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player2.clickCard(this.hidaGuardian);
+
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.voice);
+                expect(this.player1).not.toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.voice);
+
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.dyh);
+                this.player2.clickCard(this.dyh);
+                this.player2.clickCard(this.eagerScout);
+                this.player1.clickCard(this.hirumaSkirmisher);
+                this.player1.clickPrompt('1');
+                this.player2.clickPrompt('1');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.hirumaSkirmisher);
+                expect(this.player1).not.toBeAbleToSelect(this.crisisBreaker);
+                expect(this.player1).not.toBeAbleToSelect(this.hidaGuardian);
+                this.player1.clickPrompt('Cancel');
+                this.player1.clickPrompt('Pass');
+
+                expect(this.voice.location).toBe('conflict discard pile');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.crisisBreaker);
+                expect(this.player1).toBeAbleToSelect(this.hidaGuardian);
+                expect(this.player1).not.toBeAbleToSelect(this.hirumaSkirmisher);
+            });
+        });
     });
 });
