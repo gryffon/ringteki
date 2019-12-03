@@ -1,11 +1,19 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Players, Locations, CardTypes } = require('../../Constants');
+const { Players, Locations, CardTypes, EventNames, AbilityTypes } = require('../../Constants');
+
+const EventRegistrar = require('../../eventregistrar.js');
 
 class WithstandTheDarkness extends DrawCard {
+    firstBanzaiTarget = null;
+
     setupCardAbilities() {
         let currentTargets = [];
+        this.abilityRegistrar = new EventRegistrar(this.game, this);
+        this.abilityRegistrar.register([{
+            [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.OtherEffects]: 'onInitiateAbility'
+        }]);
 
         this.reaction({
             when: {
@@ -28,11 +36,18 @@ class WithstandTheDarkness extends DrawCard {
     }
 
     getLegalWithstandTargets(event, context) {
+        let targets = [];
         if(event.context) {
-            let targets = _.flatten(_.values(event.context.targets));
+            targets = _.flatten(_.values(event.context.targets));
             targets = targets.concat(_.flatten(_.values(event.context.selects)));
             if(!Array.isArray(targets)) {
                 targets = [targets];
+            }
+
+            if(event.card.id === 'banzai') {
+                if(this.firstBanzaiTarget) {
+                    targets = targets.concat(this.firstBanzaiTarget);
+                }
             }
 
             targets = targets.filter(card => (
@@ -40,9 +55,23 @@ class WithstandTheDarkness extends DrawCard {
                 card.isFaction('crab') &&
                 card.controller === context.player &&
                 card.location === Locations.PlayArea));
-            return targets;
         }
-        return [];
+
+        this.firstBanzaiTarget = null;
+        return targets;
+    }
+
+    onInitiateAbility(event) {
+        if(event.card.id === 'banzai') {
+            if(event.context) {
+                let targets = _.flatten(_.values(event.context.targets));
+                targets = targets.concat(_.flatten(_.values(event.context.selects)));
+                if(!Array.isArray(targets)) {
+                    targets = [targets];
+                }
+                this.firstBanzaiTarget = targets[0];
+            }
+        }
     }
 }
 

@@ -302,7 +302,7 @@ describe('Withstand The Darkness', function() {
                     },
                     player2: {
                         inPlay: ['eager-scout'],
-                        hand: ['banzai']
+                        hand: ['banzai', 'banzai']
                     }
                 });
                 this.eagerScout = this.player1.findCardByName('eager-scout');
@@ -311,7 +311,8 @@ describe('Withstand The Darkness', function() {
                 this.withstandTheDarkness = this.player1.findCardByName('withstand-the-darkness');
 
                 this.eagerScoutP2 = this.player2.findCardByName('eager-scout');
-                this.banzai = this.player2.findCardByName('banzai');
+                this.banzai = this.player2.filterCardsByName('banzai')[0];
+                this.banzai2 = this.player2.filterCardsByName('banzai')[1];
 
                 this.eagerScout.fate = 0;
                 this.hirumaSkirmisher.fate = 0;
@@ -337,6 +338,72 @@ describe('Withstand The Darkness', function() {
                 this.player1.clickCard(this.withstandTheDarkness);
                 expect(this.player1).toBeAbleToSelect(this.hirumaSkirmisher);
                 expect(this.player1).toBeAbleToSelect(this.eagerScout);
+            });
+
+            it('should react if banzai is split between opponent and your character', function() {
+                this.player2.clickCard(this.banzai);
+                this.player2.clickCard(this.eagerScoutP2);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player2.clickCard(this.hirumaSkirmisher);
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.hirumaSkirmisher);
+            });
+
+            it('should react if banzai is split between opponent and your character (reversed targets)', function() {
+                this.player2.clickCard(this.banzai);
+                this.player2.clickCard(this.hirumaSkirmisher);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player2.clickCard(this.eagerScoutP2);
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.hirumaSkirmisher);
+            });
+
+            it('should not have banzai memory', function() {
+                this.player2.clickCard(this.banzai);
+                this.player2.clickCard(this.eagerScout);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player2.clickCard(this.hirumaSkirmisher);
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Triggered Abilities');
+                expect(this.player1).toBeAbleToSelect(this.withstandTheDarkness);
+                this.player1.clickCard(this.withstandTheDarkness);
+                expect(this.player1).toBeAbleToSelect(this.hirumaSkirmisher);
+                expect(this.player1).toBeAbleToSelect(this.eagerScout);
+                this.player1.clickPrompt('Cancel');
+                this.player1.pass();
+
+                this.noMoreActions();
+                this.player1.clickPrompt('No');
+                this.player1.clickPrompt('Don\'t Resolve');
+
+                this.eagerScout.bowed = false;
+                this.hirumaSkirmisher.bowed = false;
+                this.eagerScoutP2.bowed = false;
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.eagerScoutP2],
+                    defenders: [this.eagerScout, this.hirumaSkirmisher],
+                    ring: 'fire'
+                });
+
+                this.player1.pass();
+                this.player2.clickCard(this.banzai2);
+                this.player2.clickCard(this.eagerScoutP2);
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                this.player2.clickPrompt('Lose 1 honor to resolve this ability again');
+                this.player2.clickCard(this.eagerScoutP2);
+                this.player2.clickPrompt('Done');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
             });
         });
     });
