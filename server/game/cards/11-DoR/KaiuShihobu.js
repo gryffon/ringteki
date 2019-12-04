@@ -3,8 +3,6 @@ const AbilityDsl = require('../../abilitydsl');
 const { Locations, CardTypes, Players, TargetModes } = require('../../Constants');
 
 class KaiuShihobu extends DrawCard {
-    PILENAME = 'shihobu'
-
     setupCardAbilities() {
         this.reaction({
             title: 'Look at your dynasty deck',
@@ -15,16 +13,12 @@ class KaiuShihobu extends DrawCard {
                 reveal: true,
                 selectedCardsHandler: (context, event, cards) => {
                     if(cards.length > 0) {
-                        if(!(this.PILENAME in event.player.additionalPiles)) {
-                            event.player.createAdditionalPile(this.PILENAME);
-                        }
                         this.game.addMessage('{0} selects {1}', event.player, cards.map(e => e.name).sort().join(', '));
-                        event.player.additionalPiles[this.PILENAME].cards = event.player.additionalPiles[this.PILENAME].cards.concat(cards);
                         cards.forEach(card => {
-                            event.player.moveCard(card, Locations.RemovedFromGame);
+                            event.player.stronghold.addChildCard(card, Locations.UnderneathStronghold);
                             card.lastingEffect(() => ({
                                 until: {
-                                    onCardMoved: event => event.card === card && event.originalLocation === Locations.RemovedFromGame
+                                    onCardMoved: event => event.card === card && event.originalLocation === Locations.UnderneathStronghold
                                 },
                                 match: card,
                                 effect: [
@@ -47,8 +41,8 @@ class KaiuShihobu extends DrawCard {
                     activePromptTitle: 'Choose a holding',
                     cardType: CardTypes.Holding,
                     controller: Players.Self,
-                    location: Locations.RemovedFromGame,
-                    cardCondition: (card, context) => context.player.additionalPiles[this.PILENAME].cards.includes(card)
+                    location: Locations.UnderneathStronghold,
+                    cardCondition: (card, context) => context.player.stronghold.childCards.includes(card)
                 },
                 second: {
                     activePromptTitle: 'Choose an unbroken province',
@@ -65,7 +59,7 @@ class KaiuShihobu extends DrawCard {
                 let province = context.targets.second;
 
                 let cards = context.player.getDynastyCardsInProvince(province.location);
-                context.player.moveCard(holding, province.location);
+                context.player.stronghold.removeChildCard(holding, province.location);
                 holding.facedown = true;
                 cards.forEach(card => {
                     context.player.moveCard(card, Locations.DynastyDiscardPile);
