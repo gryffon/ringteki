@@ -1117,7 +1117,7 @@ class Game extends EventEmitter {
                     card && card.checkForIllegalAttachments();
                 });
 
-                if (!player.checkRestrictions('haveImperialFavor') && player.imperialFavor !== '') {
+                if(!player.checkRestrictions('haveImperialFavor') && player.imperialFavor !== '') {
                     this.addMessage('The imperial favor is discarded as {0} cannot have it', player.name);
                     player.loseImperialFavor();
                 }
