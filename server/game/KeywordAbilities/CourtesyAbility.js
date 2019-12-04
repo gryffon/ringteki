@@ -19,6 +19,10 @@ class CourtesyAbility extends TriggeredAbility {
     isTriggeredAbility() {
         return false;
     }
+
+    isKeywordAbility() {
+        return true;
+    }
 }
 
 module.exports = CourtesyAbility;
