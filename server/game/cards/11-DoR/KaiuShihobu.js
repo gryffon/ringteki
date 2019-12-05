@@ -1,16 +1,17 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Locations, CardTypes, Players, TargetModes } = require('../../Constants');
+const { Locations, CardTypes, Players, TargetModes, Decks } = require('../../Constants');
 
 class KaiuShihobu extends DrawCard {
     setupCardAbilities() {
         this.reaction({
             title: 'Look at your dynasty deck',
             when: { onCharacterEntersPlay: (event, context) => event.card === context.source },
-            gameAction: AbilityDsl.actions.dynastyDeckSearch({
+            gameAction: AbilityDsl.actions.deckSearch({
                 cardCondition: card => card.type === CardTypes.Holding,
                 targetMode: TargetModes.Unlimited,
                 reveal: true,
+                deck: Decks.DynastyDeck,
                 selectedCardsHandler: (context, event, cards) => {
                     if(cards.length > 0) {
                         this.game.addMessage('{0} selects {1}', event.player, cards.map(e => e.name).sort().join(', '));
@@ -29,7 +30,6 @@ class KaiuShihobu extends DrawCard {
                     } else {
                         this.game.addMessage('{0} selects no holdings', event.player);
                     }
-                    event.player.shuffleDynastyDeck();
                 }
             })
         });

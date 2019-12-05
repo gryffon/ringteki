@@ -12,7 +12,6 @@ import { ChosenDiscardAction, ChosenDiscardProperties } from './ChosenDiscardAct
 import { ConditionalAction, ConditionalActionProperties } from './ConditionalAction';
 import { CreateTokenAction, CreateTokenProperties } from './CreateTokenAction';
 import { DeckSearchAction,  DeckSearchProperties} from './DeckSearchAction';
-import { DynastyDeckSearchAction,  DynastyDeckSearchProperties} from './DynastyDeckSearchAction';
 import { DiscardFavorAction, DiscardFavorProperties } from './DiscardFavorAction';
 import { DiscardFromPlayAction, DiscardFromPlayProperties } from './DiscardFromPlayAction';
 import { DiscardCardAction, DiscardCardProperties } from './DiscardCardAction';
@@ -111,7 +110,6 @@ const GameActions = {
     // player actions
     chosenDiscard: (propertyFactory: ChosenDiscardProperties | ((context: TriggeredAbilityContext) => ChosenDiscardProperties) = {}) => new ChosenDiscardAction(propertyFactory), // amount = 1
     deckSearch: (propertyFactory: DeckSearchProperties | ((context: TriggeredAbilityContext) => DeckSearchProperties)) => new DeckSearchAction(propertyFactory), // amount = -1, reveal = true, cardCondition = (card, context) => true
-    dynastyDeckSearch: (propertyFactory: DynastyDeckSearchProperties | ((context: TriggeredAbilityContext) => DynastyDeckSearchProperties)) => new DynastyDeckSearchAction(propertyFactory), // amount = -1, reveal = true, cardCondition = (card, context) => true
     discardAtRandom: (propertyFactory: RandomDiscardProperties | ((context: TriggeredAbilityContext) => RandomDiscardProperties) = {}) => new RandomDiscardAction(propertyFactory), // amount = 1
     draw: (propertyFactory: DrawProperties | ((context: TriggeredAbilityContext) => DrawProperties) = {}) => new DrawAction(propertyFactory), // amount = 1
     gainFate: (propertyFactory: GainFateProperties | ((context: TriggeredAbilityContext) => GainFateProperties) = {}) => new GainFateAction(propertyFactory), // amount = 1
