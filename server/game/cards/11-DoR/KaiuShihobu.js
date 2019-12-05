@@ -12,6 +12,7 @@ class KaiuShihobu extends DrawCard {
                 targetMode: TargetModes.Unlimited,
                 reveal: true,
                 deck: Decks.DynastyDeck,
+                destination: Locations.UnderneathStronghold,
                 selectedCardsHandler: (context, event, cards) => {
                     if(cards.length > 0) {
                         this.game.addMessage('{0} selects {1}', event.player, cards.map(e => e.name).sort().join(', '));

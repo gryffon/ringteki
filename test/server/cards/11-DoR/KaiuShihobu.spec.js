@@ -41,6 +41,7 @@ describe('Kaiu Shihobu', function() {
                 this.player1.clickPrompt('0');
                 expect(this.player1).toBeAbleToSelect(this.kaiuShihobu);
                 this.player1.clickCard(this.kaiuShihobu);
+                expect(this.player1).toHavePrompt('Select all cards to reveal');
 
                 expect(this.player1).toHavePromptButton('Imperial Storehouse');
                 expect(this.player1).toHavePromptButton('Favorable Ground');

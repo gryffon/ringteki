@@ -85,11 +85,27 @@ export class DeckSearchAction extends PlayerAction {
         let player = event.player;
         let properties = this.getProperties(context, additionalProperties) as DeckSearchProperties;
         let canCancel = properties.targetMode !== TargetModes.Exactly;
+        let selectAmount = 1;
+
+        if (properties.targetMode === TargetModes.UpTo)
+            selectAmount = properties.numCards;
+        if (properties.targetMode === TargetModes.Single)
+            selectAmount = 1;
+        if (properties.targetMode === TargetModes.Exactly)
+            selectAmount = properties.numCards;
+        if (properties.targetMode === TargetModes.Unlimited)
+            selectAmount = -1;
+        
         let title = 'Select a card' + (properties.reveal ? ' to reveal' : '');
         if (properties.destination === Locations.Hand) {
             title = 'Select a card to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand';
         }
-
+        if (selectAmount < 0 || selectAmount > 1) {
+            title = 'Select all cards' + (properties.reveal ? ' to reveal' : '');
+            if (properties.destination === Locations.Hand) {
+                title = 'Select all cards to ' + (properties.reveal ? 'reveal and ' : '') + 'put in your hand';
+            }
+        }
 
         context.game.promptWithHandlerMenu(player, {
             activePromptTitle: title,
@@ -101,18 +117,7 @@ export class DeckSearchAction extends PlayerAction {
                 this.handleDone(properties, context, event, selectedCards);
             }],
             cardHandler: card => {
-                let selectAmount = 1;
-
-                if (properties.targetMode === TargetModes.UpTo)
-                    selectAmount = properties.numCards;
-                if (properties.targetMode === TargetModes.Single)
-                    selectAmount = 1;
-                if (properties.targetMode === TargetModes.Exactly)
-                    selectAmount = properties.numCards;
-                if (properties.targetMode === TargetModes.Unlimited)
-                    selectAmount = -1;
-
-                    selectedCards = selectedCards.concat(card);
+                selectedCards = selectedCards.concat(card);
                 let index = cards.indexOf(card, 0);
                 if (index > -1)
                     cards.splice(index, 1);
