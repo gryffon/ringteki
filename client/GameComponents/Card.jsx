@@ -8,7 +8,7 @@ import 'jquery-nearest';
 import CardMenu from './CardMenu.jsx';
 import CardStats from './CardStats.jsx';
 import CardCounters from './CardCounters.jsx';
-import SquishableCardPanel from './SquishableCardPanel.jsx'
+import SquishableCardPanel from './SquishableCardPanel.jsx';
 
 class Card extends React.Component {
     constructor() {
