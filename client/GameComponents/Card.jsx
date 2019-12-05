@@ -8,6 +8,7 @@ import 'jquery-nearest';
 import CardMenu from './CardMenu.jsx';
 import CardStats from './CardStats.jsx';
 import CardCounters from './CardCounters.jsx';
+import SquishableCardPanel from './SquishableCardPanel.jsx'
 
 class Card extends React.Component {
     constructor() {
@@ -269,6 +270,29 @@ class Card extends React.Component {
         return attachments;
     }
 
+    renderUnderneathCards() {
+        // TODO: Right now it is assumed that all cards in the childCards array
+        // are being placed underneath the current card. In the future there may
+        // be other types of cards in this array and it should be filtered.
+        let underneathCards = this.props.card.childCards;
+        if(!underneathCards || underneathCards.length === 0) {
+            return;
+        }
+
+        let maxCards = 1 + (underneathCards.length - 1) / 6;
+
+        return (
+            <SquishableCardPanel
+                cardSize={ this.props.size }
+                cards={ underneathCards }
+                className='underneath'
+                maxCards={ maxCards }
+                onCardClick={ this.props.onClick }
+                onMouseOut={ this.props.onMouseOut }
+                onMouseOver={ this.props.onMouseOver }
+                source='underneath stronghold' />);
+    }
+
     getCardOrder() {
         if(!this.props.card.order) {
             return null;
@@ -499,6 +523,7 @@ class Card extends React.Component {
                 <div className={ 'card-wrapper ' + this.getWrapper() } style={ Object.assign({}, this.props.style ? this.props.style : {}, this.getWrapperStyle()) }>
                     { this.getCard() }
                     { this.getAttachments() }
+                    { this.renderUnderneathCards() }
                 </div>);
         }
 
@@ -566,7 +591,7 @@ Card.propTypes = {
     popupLocation: PropTypes.string,
     showStats: PropTypes.bool,
     size: PropTypes.string,
-    source: PropTypes.oneOf(['hand', 'dynasty discard pile', 'conflict discard pile', 'play area', 'dynasty deck', 'conflict deck', 'province deck', 'province 1', 'province 2', 'province 3', 'province 4', 'attachment', 'stronghold province', 'additional', 'role card']).isRequired,
+    source: PropTypes.oneOf(['hand', 'dynasty discard pile', 'conflict discard pile', 'play area', 'dynasty deck', 'conflict deck', 'province deck', 'province 1', 'province 2', 'province 3', 'province 4', 'attachment', 'stronghold province', 'additional', 'role card', 'underneath stronghold']).isRequired,
     style: PropTypes.object,
     title: PropTypes.string,
     wrapped: PropTypes.bool

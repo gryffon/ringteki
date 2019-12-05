@@ -45,6 +45,9 @@ class StrongholdCard extends BaseCard {
 
         return _.extend(baseSummary, {
             isStronghold: this.isStronghold,
+            childCards: this.childCards.map(card => {
+                return card.getSummary(activePlayer, hideWhenFaceup);
+            }),
             bowed: this.bowed
         });
     }
