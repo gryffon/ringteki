@@ -1,7 +1,6 @@
 const Event = require('../Events/Event');
 const { EventNames } = require('../Constants');
 const GameActions = require('../GameActions/GameActions');
-const Ring = require('../ring.js');
 
 class ReduceableFateCost {
     constructor(ignoreType) {
@@ -31,7 +30,6 @@ class ReduceableFateCost {
             };
             context.costs.alternateFate = new Map();
             let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
-
             for(const alternatePool of alternatePools) {
                 context.game.queueSimpleStep(() => {
                     properties.remainingPoolTotal -= alternatePool.fate;
@@ -62,11 +60,7 @@ class ReduceableFateCost {
             return;
         }
 
-        let poolArray = [properties.pool];
-        if(!(properties.pool instanceof Ring)) {
-            context.player.setSelectableCards(poolArray);
-        }
-
+        context.player.setSelectableCards([properties.pool]);
         context.game.promptWithHandlerMenu(context.player, {
             activePromptTitle: 'Choose amount of fate to spend from the ' + properties.pool.name,
             choices: choices,
