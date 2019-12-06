@@ -1,5 +1,6 @@
 const Event = require('../Events/Event');
 const { EventNames } = require('../Constants');
+const GameActions = require('../GameActions/GameActions');
 
 class ReduceableFateCost {
     constructor(ignoreType) {
@@ -54,6 +55,10 @@ class ReduceableFateCost {
         if(result.canCancel) {
             choices.push('Cancel');
         }
+        if (properties.maxFate === 0) {
+            context.costs.alternateFate.set(properties.pool, 0);
+            return;
+        }
         context.game.promptWithHandlerMenu(context.player, {
             activePromptTitle: 'Choose amount of fate to spend from the ' + properties.pool.name,
             choices: choices,
@@ -85,7 +90,8 @@ class ReduceableFateCost {
         }
         let totalAlternateFate = 0;
         for(let alternatePool of context.player.getAlternateFatePools(context.playType, context.source)) {
-            alternatePool.modifyFate(-context.costs.alternateFate.get(alternatePool));
+            GameActions.removeFate({ amount: context.costs.alternateFate.get(alternatePool)}).resolve(alternatePool, context);
+            //alternatePool.modifyFate(-context.costs.alternateFate.get(alternatePool));
             totalAlternateFate += context.costs.alternateFate.get(alternatePool);
         }
         return Math.max(reducedCost - totalAlternateFate, 0);
