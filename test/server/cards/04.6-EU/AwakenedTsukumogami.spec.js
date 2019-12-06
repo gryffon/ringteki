@@ -87,5 +87,48 @@ describe('Awakened Tsukumogami', function() {
                 expect(this.game.rings.air.fate).toBe(1);
             });
         });
+
+        describe('Awakened Tsukumogami\'s ability (Stone of Sorrows)', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['agasha-swordsmith'],
+                        hand: ['the-stone-of-sorrows']
+                    },
+                    player2: {
+                        fate: 1,
+                        inPlay: ['awakened-tsukumogami', 'asako-azunami', 'awakened-tsukumogami'],
+                        hand: ['against-the-waves', 'consumed-by-five-fires', 'the-mirror-s-gaze', 'daimyo-s-favor']
+                    }
+                });
+                this.agashaSwordsmith = this.player1.findCardByName('agasha-swordsmith');
+                this.agashaSwordsmith.fate = 4;
+                this.game.rings.air.fate = 2;
+                this.game.rings.water.fate = 2;
+                this.game.rings.fire.fate = 5;
+                this.player1.playAttachment('the-stone-of-sorrows', this.agashaSwordsmith);
+            });
+
+            it('should not allow the player to choose whether to take fate from the ring or their fate pool', function() {
+                let waterFate = this.game.rings.water.fate;
+                let playerFate = this.player2.fate;
+
+                this.player2.clickCard('against-the-waves');
+                expect(this.player2).toHavePrompt('Against the Waves');
+                this.player2.clickCard(this.agashaSwordsmith);
+                expect(this.player2).not.toHavePrompt('Choose amount of fate to spend from the Water ring');
+                expect(this.player2.fate).toBe(playerFate - 1);
+                expect(this.game.rings.water.fate).toBe(waterFate);
+                expect(this.agashaSwordsmith.bowed).toBe(true);
+                expect(this.player1).toHavePrompt('Action Window');
+            });
+
+            it('should not let playing a card you can\'t afford if you can\'t take fate from the rings', function() {
+                this.player2.fate = 3;
+                this.player2.clickCard('consumed-by-five-fires');
+                expect(this.player2).toHavePrompt('Action Window');
+            });
+        });
     });
 });

@@ -4,9 +4,10 @@ const AbilityDsl = require('../../abilitydsl');
 class StudentOfEsoterica extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
-           effect: AbilityDsl.effects.alternateFatePool(card => { 
-                if (card.hasTrait('spell'))
+            effect: AbilityDsl.effects.alternateFatePool(card => {
+                if(card.hasTrait('spell')) {
                     return this;
+                }
                 return false;
             })
         });

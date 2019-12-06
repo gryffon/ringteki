@@ -18,12 +18,12 @@ class ReduceableFateCost {
     }
 
     resolve(context, result) {
-        let alternatePools = context.player.getAlternateFatePools(context.playType, context.source);
+        let alternatePools = context.player.getAlternateFatePools(context.playType, context.source, context);
         let alternatePoolTotal = alternatePools.reduce((total, pool) => total + pool.fate, 0);
         let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
         if(this.getReducedCost(context) > maxPlayerFate + alternatePoolTotal) {
             result.cancelled = true;
-        } else if(!result.cancelled && alternatePools.length > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
+        } else if(!result.cancelled && alternatePools.length > 0) {
             let properties = {
                 reducedCost: this.getReducedCost(context),
                 remainingPoolTotal: alternatePoolTotal
@@ -55,7 +55,7 @@ class ReduceableFateCost {
         if(result.canCancel) {
             choices.push('Cancel');
         }
-        if (properties.maxFate === 0) {
+        if(properties.maxFate === 0) {
             context.costs.alternateFate.set(properties.pool, 0);
             return;
         }
@@ -89,9 +89,8 @@ class ReduceableFateCost {
             return reducedCost;
         }
         let totalAlternateFate = 0;
-        for(let alternatePool of context.player.getAlternateFatePools(context.playType, context.source)) {
+        for(let alternatePool of context.player.getAlternateFatePools(context.playType, context.source, context)) {
             GameActions.removeFate({ amount: context.costs.alternateFate.get(alternatePool)}).resolve(alternatePool, context);
-            //alternatePool.modifyFate(-context.costs.alternateFate.get(alternatePool));
             totalAlternateFate += context.costs.alternateFate.get(alternatePool);
         }
         return Math.max(reducedCost - totalAlternateFate, 0);
