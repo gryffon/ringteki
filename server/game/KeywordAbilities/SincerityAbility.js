@@ -19,6 +19,10 @@ class SincerityAbility extends TriggeredAbility {
     isTriggeredAbility() {
         return false;
     }
+
+    isKeywordAbility() {
+        return true;
+    }
 }
 
 module.exports = SincerityAbility;
