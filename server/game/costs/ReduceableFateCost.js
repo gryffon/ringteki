@@ -1,5 +1,6 @@
 const Event = require('../Events/Event');
 const { EventNames } = require('../Constants');
+const GameActions = require('../GameActions/GameActions');
 
 class ReduceableFateCost {
     constructor(ignoreType) {
@@ -17,12 +18,12 @@ class ReduceableFateCost {
     }
 
     resolve(context, result) {
-        let alternatePools = context.player.getAlternateFatePools(context.playType, context.source);
+        let alternatePools = context.player.getAlternateFatePools(context.playType, context.source, context);
         let alternatePoolTotal = alternatePools.reduce((total, pool) => total + pool.fate, 0);
         let maxPlayerFate = context.player.checkRestrictions('spendFate', context) ? context.player.fate : 0;
         if(this.getReducedCost(context) > maxPlayerFate + alternatePoolTotal) {
             result.cancelled = true;
-        } else if(!result.cancelled && alternatePools.length > 0 && context.player.checkRestrictions('takeFateFromRings', context)) {
+        } else if(!result.cancelled && alternatePools.length > 0) {
             let properties = {
                 reducedCost: this.getReducedCost(context),
                 remainingPoolTotal: alternatePoolTotal
@@ -54,10 +55,18 @@ class ReduceableFateCost {
         if(result.canCancel) {
             choices.push('Cancel');
         }
+        if(properties.maxFate === 0) {
+            context.costs.alternateFate.set(properties.pool, 0);
+            return;
+        }
+
+        context.player.setSelectableCards([properties.pool]);
         context.game.promptWithHandlerMenu(context.player, {
             activePromptTitle: 'Choose amount of fate to spend from the ' + properties.pool.name,
             choices: choices,
             choiceHandler: choice => {
+                context.player.clearSelectableCards();
+
                 if(choice === 'Cancel') {
                     result.cancelled = true;
                     return;
@@ -84,8 +93,8 @@ class ReduceableFateCost {
             return reducedCost;
         }
         let totalAlternateFate = 0;
-        for(let alternatePool of context.player.getAlternateFatePools(context.playType, context.source)) {
-            alternatePool.modifyFate(-context.costs.alternateFate.get(alternatePool));
+        for(let alternatePool of context.player.getAlternateFatePools(context.playType, context.source, context)) {
+            GameActions.removeFate({ amount: context.costs.alternateFate.get(alternatePool)}).resolve(alternatePool, context);
             totalAlternateFate += context.costs.alternateFate.get(alternatePool);
         }
         return Math.max(reducedCost - totalAlternateFate, 0);

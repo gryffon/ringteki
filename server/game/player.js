@@ -11,6 +11,7 @@ const PlayableLocation = require('./playablelocation.js');
 const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
+const Ring = require('./ring.js');
 
 const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes, ConflictTypes } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
@@ -579,16 +580,29 @@ class Player extends GameObject {
         this.playableLocations = _.reject(this.playableLocations, l => l === location);
     }
 
-    getAlternateFatePools(playingType, card) {
+    getAlternateFatePools(playingType, card, context) {
         let effects = this.getEffects(EffectNames.AlternateFatePool);
         let alternateFatePools = effects.filter(match => match(card) && match(card).fate > 0).map(match => match(card));
+        let rings = alternateFatePools.filter(a => a instanceof Ring);
+        let cards = alternateFatePools.filter(a => !(a instanceof Ring));
+        if(!this.checkRestrictions('takeFateFromRings', context)) {
+            rings.forEach(ring => {
+                alternateFatePools.splice(ring, 1);
+            });
+        }
+        cards.forEach(card => {
+            if(!card.allowGameAction('removeFate')) {
+                alternateFatePools.splice(card, 1);
+            }
+        });
+
         return _.uniq(alternateFatePools);
     }
 
     getMinimumCost(playingType, context, target, ignoreType = false) {
         const card = context.source;
         let reducedCost = this.getReducedCost(playingType, card, target, ignoreType);
-        let alternateFatePools = this.getAlternateFatePools(playingType, card);
+        let alternateFatePools = this.getAlternateFatePools(playingType, card, context);
         let alternateFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0);
         let triggeredCostReducers = 0;
         let fakeWindow = { addChoice: () => triggeredCostReducers++ };
