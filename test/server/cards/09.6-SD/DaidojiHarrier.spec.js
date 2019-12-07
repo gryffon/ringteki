@@ -56,6 +56,19 @@ describe('Daidoji Harrier', function() {
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
             });
 
+            it('should not prompt if your opponent has less than 2 cards', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    attackers: [this.harrier],
+                    defenders: []
+                });
+                this.player2.playAttachment(this.fan, this.whisperer);
+                this.player1.pass();
+                this.player2.playAttachment(this.katana, this.whisperer);
+                this.noMoreActions();
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+            });
+
             it('should prompt your opponent to choose two cards in their hand', function() {
                 this.noMoreActions();
                 this.initiateConflict({
