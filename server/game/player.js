@@ -1159,6 +1159,10 @@ class Player extends GameObject {
         return this.anyEffect(EffectNames.ShowTopConflictCard);
     }
 
+    eventsCannotBeCancelled() {
+        return this.anyEffect(EffectNames.EventsCannotBeCancelled);
+    }
+
     /**
      * Resolves any number of ring effects.  If there are more than one, then it will prompt the first player to choose what order those effects should be applied in
      * @param {Array} elements - Array of String, alternatively can be passed a String for convenience
