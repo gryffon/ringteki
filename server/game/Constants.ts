@@ -191,6 +191,7 @@ export enum EventNames {
     OnConflictInitiated = 'onConflictInitiated',
     OnDuelInitiated = 'onDuelInitiated',
     OnConflictDeclared = 'onConflictDeclared',
+    OnConflictDeclaredBeforeReveal = 'onConflictDeclaredBeforeReveal',
     OnCovertResolved = 'onCovertResolved',
     OnCardRevealed = 'onCardRevealed',
     OnCardTurnedFacedown = 'onCardTurnedFacedown',

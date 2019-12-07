@@ -38,6 +38,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.payAttackerCosts()),
             new SimpleStep(this.game, () => this.promptForCovert()),
             new SimpleStep(this.game, () => this.resolveCovert()),
+            new SimpleStep(this.game, () => this.raisePreRevealEvents()),
             new SimpleStep(this.game, () => this.raiseDeclarationEvents()),
             new SimpleStep(this.game, () => this.announceAttackerSkill()),
             new SimpleStep(this.game, () => this.promptForDefenders()),
@@ -168,6 +169,23 @@ class ConflictFlow extends BaseStepWithPipeline {
             () => context.target.covert = true
         ));
         events = events.concat(this.covert.map(context => this.game.getEvent(EventNames.OnCovertResolved, { card: context.source, context: context })));
+        this.game.openEventWindow(events);
+    }
+
+    raisePreRevealEvents() {
+        if(this.conflict.conflictPassed) {
+            return;
+        }
+
+        let ring = this.conflict.ring;
+        let events = [this.game.getEvent(EventNames.OnConflictDeclaredBeforeReveal, {
+            conflict: this.conflict,
+            type: this.conflict.conflictType,
+            ring: ring,
+            attackers: this.conflict.attackers.slice(),
+            ringFate: ring.fate
+        })];
+
         this.game.openEventWindow(events);
     }
 
