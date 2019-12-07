@@ -68,6 +68,7 @@ class BaseCard extends EffectSource {
         this.traits = cardData.traits || [];
         this.printedFaction = cardData.clan;
         this.attachments = _([]);
+        this.childCards = [];
 
         this.setupCardAbilities(AbilityDsl);
         this.applyAttachmentBonus();
@@ -649,6 +650,20 @@ class BaseCard extends EffectSource {
      */
     removeAttachment(attachment) {
         this.attachments = _(this.attachments.reject(card => card.uuid === attachment.uuid));
+    }
+
+    addChildCard(card, location) {
+        this.childCards.push(card);
+        this.controller.moveCard(card, location);
+    }
+
+    removeChildCard(card, location) {
+        if(!card) {
+            return;
+        }
+
+        this.childCards = this.childCards.filter(a => a !== card);
+        this.controller.moveCard(card, location);
     }
 
     getShortSummaryForControls(activePlayer) {

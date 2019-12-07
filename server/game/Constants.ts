@@ -14,6 +14,7 @@ export enum Locations {
     StrongholdProvince = 'stronghold province',
     ProvinceDeck = 'province deck',
     RemovedFromGame = 'removed from game',
+    UnderneathStronghold = 'underneath stronghold',
     BeingPlayed = 'being played',
     Role = 'role'
 };

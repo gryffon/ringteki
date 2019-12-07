@@ -4,7 +4,7 @@
   display: inline-block;
   &.at-home {
     order:2;
-    &.conflict{ 
+    &.conflict{
       &.activeCombatant {
         margin-top:20px;
         order:1;
@@ -412,7 +412,7 @@
     .counters {
       margin-top: -3px;
     }
-  }  
+  }
 }
 
 
@@ -546,3 +546,22 @@
 }
 
 .generate-province-attachment(5, 1);
+
+.underneath {
+  margin-left: 0;
+  margin-top: -(@card-height + @card-height / 2);
+  position: relative;
+  z-index: @layer-cards - 1;
+
+  &.small {
+    margin-top: -(@card-sm-height + @card-sm-height / 2);
+  }
+
+  &.large {
+    margin-top: -(@card-lg-height + @card-lg-height / 2);
+  }
+
+  &.x-large {
+    margin-top: -(@card-xl-height + @card-xl-height / 2);
+  }
+}
