@@ -45,7 +45,7 @@ describe('Know the Terrain', function() {
                 expect(this.rally.facedown).toBe(true);
             });
 
-            it('should not interrupt the province being revealed if it is facedown', function() {
+            it('should not interrupt the province being revealed if it is faceup', function() {
                 this.rally.facedown = false;
                 this.initiateConflict({
                     type: 'military',
@@ -54,6 +54,19 @@ describe('Know the Terrain', function() {
                 });
                 expect(this.player2).toHavePrompt('Choose Defenders');
                 expect(this.rally.facedown).toBe(false);
+            });
+
+            it('should not interrupt the province being revealed if it is the stronghold province', function() {
+                this.rally.isBroken = true;
+                this.cache.isBroken = true;
+                this.garden.isBroken = true;
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.rider],
+                    province: this.shameful
+                });
+                expect(this.player2).toHavePrompt('Choose Defenders');
+                expect(this.shameful.facedown).toBe(false);
             });
 
             it('should not interrupt a province being revealed after conflict declaration', function() {
@@ -126,7 +139,7 @@ describe('Know the Terrain', function() {
                 expect(this.player2).toBeAbleToSelect(this.cache);
                 expect(this.player2).toBeAbleToSelect(this.garden);
                 expect(this.player2).not.toBeAbleToSelect(this.shameful);
-                
+
                 this.player2.clickCard(this.garden);
                 expect(this.rally.facedown).toBe(true);
                 expect(this.garden.facedown).toBe(false);
@@ -151,7 +164,7 @@ describe('Know the Terrain', function() {
                 expect(this.player2).toBeAbleToSelect(this.cache);
                 expect(this.player2).toBeAbleToSelect(this.garden);
                 expect(this.player2).not.toBeAbleToSelect(this.shameful);
-                
+
                 this.player2.clickCard(this.cache);
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 this.player2.clickCard(this.cache);
