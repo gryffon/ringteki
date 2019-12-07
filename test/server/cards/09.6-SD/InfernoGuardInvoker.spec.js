@@ -31,7 +31,7 @@ describe('Inferno Guard Invoker', function() {
                 this.player2.pass();
 
                 this.player1.clickCard(this.infernoGuardInvoker);
-                expect(this.player1).toHavePrompt('Conflict Action Window')
+                expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
             it('should be able to honor a participating character you control during a military conflict', function() {
