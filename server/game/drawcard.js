@@ -123,6 +123,7 @@ class DrawCard extends BaseCard {
         let clone = new DrawCard(this.owner, this.cardData);
 
         clone.attachments = _(this.attachments.map(attachment => attachment.createSnapshot()));
+        clone.childCards = this.childCards.map(card => card.createSnapshot());
         clone.effects = _.clone(this.effects);
         clone.controller = this.controller;
         clone.bowed = this.bowed;
@@ -759,6 +760,9 @@ class DrawCard extends BaseCard {
             attached: !!this.parent,
             attachments: this.attachments.map(attachment => {
                 return attachment.getSummary(activePlayer, hideWhenFaceup);
+            }),
+            childCards: this.childCards.map(card => {
+                return card.getSummary(activePlayer, hideWhenFaceup);
             }),
             inConflict: this.inConflict,
             isConflict: this.isConflict,
