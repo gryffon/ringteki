@@ -7,7 +7,10 @@ class EffectEngine {
     constructor(game) {
         this.game = game;
         this.events = new EventRegistrar(game, this);
-        this.events.register([EventNames.OnConflictFinished, EventNames.OnPhaseEnded, EventNames.OnRoundEnded, EventNames.OnDuelFinished]);
+        this.events.register([
+            EventNames.OnConflictFinished, EventNames.OnPhaseEnded, EventNames.OnRoundEnded,
+            EventNames.OnDuelFinished, EventNames.OnPassActionPhasePriority
+        ]);
         this.effects = [];
         this.customDurationEvents = [];
         this.newEffect = false;
@@ -113,6 +116,17 @@ class EffectEngine {
 
     onRoundEnded() {
         this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilEndOfRound);
+    }
+
+    onPassActionPhasePriority() {
+        this.newEffect = this.unapplyAndRemove(effect => effect.duration === Durations.UntilPassPriority);
+        for(const effect of this.effects) {
+            if(effect.duration === Durations.UntilOpponentPassPriority) {
+                effect.duration = Durations.UntilPassPriority;
+            } else if(effect.duration === Durations.UntilNextPassPriority) {
+                effect.duration = Durations.UntilOpponentPassPriority;
+            }
+        }
     }
 
     registerCustomDurationEvents(effect) {

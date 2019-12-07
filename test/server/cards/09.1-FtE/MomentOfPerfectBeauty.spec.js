@@ -75,8 +75,8 @@ describe('MomentOfPerfectBeauty', function() {
                 expect(this.player1).toHavePrompt('Break Shameful Display');
             });
 
-            // Unsure if hawk tattoo interaction is correct. Awaiting official ruling one way or the other
-            it('should end conflict even if other player triggers hawk tattoo', function() {
+            // Latest ruling states that conflict ends only after all actions from Hawk Tattoo, etc. are taken
+            it('should Not end conflict until other player loses action priority', function() {
                 this.initiateConflict({
                     attackers: ['doji-challenger'],
                     defenders: ['adept-of-the-waves'],
@@ -87,6 +87,8 @@ describe('MomentOfPerfectBeauty', function() {
                 this.player1.clickCard(this.momentofbeauty);
                 this.player2.playAttachment('hawk-tattoo', 'tattooed-wanderer');
                 this.player2.clickCard(this.hawktattoo);
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.pass();
                 expect(this.player2).toHavePrompt('Waiting for opponent to use Air Ring');
                 expect(this.player1).toHavePrompt('Choose an effect to resolve');
             });
