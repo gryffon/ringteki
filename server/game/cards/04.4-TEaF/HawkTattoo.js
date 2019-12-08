@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Durations } = require('../../Constants');
 
 class HawkTattoo extends DrawCard {
     setupCardAbilities(ability) {
@@ -18,7 +19,8 @@ class HawkTattoo extends DrawCard {
             gameAction: [
                 ability.actions.moveToConflict(context => ({ target: context.source.parent })),
                 ability.actions.playerLastingEffect(context => ({
-                    effect: context.source.parent.hasTrait('monk') ? ability.effects.gainActionPhasePriority() : []
+                    duration: Durations.UntilPassPriority,
+                    effect: context.source.parent.hasTrait('monk') ? ability.effects.additionalAction() : []
                 }))
             ]
         });

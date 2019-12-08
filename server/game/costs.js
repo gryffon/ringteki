@@ -193,7 +193,7 @@ const Costs = {
             promptsPlayer: true
         };
     },
-    returnRings: function () {
+    returnRings: function (amount = -1) {
         return {
             canPay: function (context) {
                 return Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name);
@@ -215,7 +215,7 @@ const Costs = {
                         ringCondition: ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring),
                         onSelect: (player, ring) => {
                             chosenRings.push(ring);
-                            if(Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring))) {
+                            if(Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring) && (amount < 0 || chosenRings.length < amount))) {
                                 promptPlayer();
                             } else {
                                 context.costs.returnRing = chosenRings;

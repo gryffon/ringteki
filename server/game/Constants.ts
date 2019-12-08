@@ -100,6 +100,7 @@ export enum EffectNames {
     AddElement = 'addElement',
     CannotDeclareRing = 'cannotDeclare',
     ConsiderRingAsClaimed = 'considerAsClaimed',
+    AdditionalAction = 'additionalAction',
     AdditionalCardPlayed = 'additionalCardPlayed',
     AdditionalCharactersInConflict = 'additionalCharactersInConflict',
     AdditionalConflict = 'additionalConflict',
@@ -131,6 +132,9 @@ export enum Durations {
     UntilEndOfConflict = 'untilEndOfConflict',
     UntilEndOfPhase = 'untilEndOfPhase',
     UntilEndOfRound = 'untilEndOfRound',
+    UntilPassPriority = 'untilPassPriority',
+    UntilOpponentPassPriority = 'untilOpponentPassPriority',
+    UntilNextPassPriority = 'untilNextPassPriority',
     Persistent = 'persistent',
     Custom = 'lastingEffect'
 };
