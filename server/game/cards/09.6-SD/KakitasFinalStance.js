@@ -38,14 +38,14 @@ class KakitasFinalStance extends DrawCard {
     afterDuel(event) {
         if(event.duel.challenger) {
             let duelist = event.duel.challenger;
-            if (!Array.isArray(duelist)) {
+            if(!Array.isArray(duelist)) {
                 duelist = [duelist];
             }
             this.duelParticipantsThisConflict = this.duelParticipantsThisConflict.concat(duelist);
         }
         if(event.duel.target) {
             let duelist = event.duel.target;
-            if (!Array.isArray(duelist)) {
+            if(!Array.isArray(duelist)) {
                 duelist = [duelist];
             }
             this.duelParticipantsThisConflict = this.duelParticipantsThisConflict.concat(duelist);
