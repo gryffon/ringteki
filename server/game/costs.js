@@ -44,6 +44,11 @@ const Costs = {
      */
     returnToHand: properties => getSelectCost(GameActions.returnToHand(), properties, 'Select card to return to hand'),
     /**
+     * Cost that will return a selected card to the appropriate deck which matches the passed
+     * condition.
+     */
+    returnToDeck: properties => getSelectCost(GameActions.returnToDeck(properties), properties, 'Select card to return to your deck'),
+    /**
      * Cost that will return to hand the card that initiated the ability.
      */
     returnSelfToHand: () => new GameActionCost(GameActions.returnToHand()),

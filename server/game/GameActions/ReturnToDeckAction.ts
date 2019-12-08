@@ -6,6 +6,7 @@ import { Locations, CardTypes, EventNames }  from '../Constants';
 export interface ReturnToDeckProperties extends CardActionProperties {
     bottom?: boolean;
     shuffle?: boolean;
+    location?: Locations | Locations[];
 }
 
 export class ReturnToDeckAction extends CardGameAction {
@@ -14,7 +15,8 @@ export class ReturnToDeckAction extends CardGameAction {
     targetType = [CardTypes.Character, CardTypes.Attachment, CardTypes.Event, CardTypes.Holding];
     defaultProperties: ReturnToDeckProperties = {
         bottom: false,
-        shuffle: false
+        shuffle: false,
+        location: Locations.PlayArea
      };
     constructor(properties: ((context: AbilityContext) => ReturnToDeckProperties) | ReturnToDeckProperties) {
         super(properties);
@@ -22,7 +24,7 @@ export class ReturnToDeckAction extends CardGameAction {
 
     getCostMessage(context: AbilityContext): [string, any[]] {
         let properties = this.getProperties(context) as ReturnToDeckProperties;
-        return [properties.shuffle ? 'shuffling {0} into their deck' : 'returning {0} to their deck', [properties.target]];
+        return [properties.shuffle ? 'shuffling {0} into their deck' : 'returning {0} to the ' + (properties.bottom ? 'bottom' : 'top') + ' of their deck', [properties.target]];
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
@@ -34,7 +36,17 @@ export class ReturnToDeckAction extends CardGameAction {
     }
 
     canAffect(card: DrawCard, context: AbilityContext, additionalProperties = {}): boolean {
-        return card.location === Locations.PlayArea && super.canAffect(card, context, additionalProperties);
+        let properties = this.getProperties(context) as ReturnToDeckProperties;
+        let location = properties.location;
+        if(!Array.isArray(location)) {
+            location = [location];
+        }
+        let index = location.indexOf(Locations.Provinces);
+        if(index > -1) {
+            location.splice(index, 1, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour, Locations.StrongholdProvince);
+        }
+
+        return (location.includes(Locations.Any) || location.includes(card.location)) && super.canAffect(card, context, additionalProperties);
     }
 
     updateEvent(event, card: DrawCard, context: AbilityContext, additionalProperties): void {

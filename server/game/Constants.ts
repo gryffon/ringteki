@@ -14,6 +14,7 @@ export enum Locations {
     StrongholdProvince = 'stronghold province',
     ProvinceDeck = 'province deck',
     RemovedFromGame = 'removed from game',
+    UnderneathStronghold = 'underneath stronghold',
     BeingPlayed = 'being played',
     Role = 'role'
 };
@@ -73,6 +74,7 @@ export enum EffectNames {
     ModifyMilitarySkillMultiplier = 'modifyMilitarySkillMultiplier',
     ModifyPoliticalSkill = 'modifyPoliticalSkill',
     ModifyPoliticalSkillMultiplier = 'modifyPoliticalSkillMultiplier',
+    ModifyProvinceStrengthBonus = 'modifyProvinceStrengthBonus',
     ModifyProvinceStrength = 'modifyProvinceStrength',
     ModifyProvinceStrengthMultiplier = 'modifyProvinceStrengthMultiplier',
     MustBeChosen = 'mustBeChosen',
@@ -88,6 +90,7 @@ export enum EffectNames {
     SetGlory = 'setGlory',
     SetMilitarySkill = 'setMilitarySkill',
     SetPoliticalSkill = 'setPoliticalSkill',
+    SetProvinceStrengthBonus = 'setProvinceStrengthBonus',
     SetProvinceStrength = 'setProvinceStrength',
     SwitchBaseSkills = 'switchBaseSkills',
     SuppressEffects = 'suppressEffects',
@@ -114,12 +117,14 @@ export enum EffectNames {
     ModifyCardsDrawnInDrawPhase = 'modifyCardsDrawnInDrawPhase',
     SetMaxConflicts = 'maxConflicts',
     ShowTopConflictCard = 'showTopConflictCard',
+    ShowTopDynastyCard = 'showTopDynastyCard',
     ContributeToConflict = 'contribute',
     ChangeConflictSkillFunction = 'skillFunction',
     ModifyConflictElementsToResolve = 'modifyConflictElementsToResolve',
     RestrictNumberOfDefenders = 'restrictNumberOfDefenders',
     ResolveConflictEarly = 'resolveConflictEarly',
-    SetBaseGlory = "setBaseGlory"
+    SetBaseGlory = "setBaseGlory",
+    ForceConflictUnopposed = 'forceConflictUnopposed'
 };
 
 export enum Durations {

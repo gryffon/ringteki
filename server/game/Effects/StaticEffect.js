@@ -10,7 +10,8 @@ const binaryCardEffects = [
     EffectNames.AbilityRestrictions,
     EffectNames.DoesNotBow,
     EffectNames.DoesNotReady,
-    EffectNames.ShowTopConflictCard
+    EffectNames.ShowTopConflictCard,
+    EffectNames.ShowTopDynastyCard
 ];
 
 const MilitaryModifiers = [
