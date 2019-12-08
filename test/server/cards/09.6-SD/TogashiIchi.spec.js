@@ -1,6 +1,6 @@
-describe('Hitsu-Do Disciple', function() {
+describe('Togashi Ichi', function() {
     integration(function() {
-        describe('Hitsu-Do Disciple\'s ability', function() {
+        describe('Togashi Ichi\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
