@@ -1177,45 +1177,6 @@ class Player extends GameObject {
         return this.anyEffect(EffectNames.EventsCannotBeCancelled);
     }
 
-    switchProvinces(province1, province2) {
-        let location1 = province1.location;
-        let location2 = province2.location;
-
-        let cardsInLocation1 = this.getProvinceArray(location1);
-        let cardsInLocation2 = this.getProvinceArray(location2);
-
-        //Switch the provinces
-        province1.location = location2;
-        province2.location = location1;
-
-        let index1 = cardsInLocation1.indexOf(province1);
-        let index2 = cardsInLocation2.indexOf(province2);
-        cardsInLocation1.splice(index1, 1);
-        cardsInLocation2.splice(index2, 1);
-        cardsInLocation1.push(province2);
-        cardsInLocation2.push(province1);
-    }
-
-    getProvinceArray(location) {
-        if(location === Locations.ProvinceOne) {
-            return this.provinceOne;
-        }
-        if(location === Locations.ProvinceTwo) {
-            return this.provinceTwo;
-        }
-        if(location === Locations.ProvinceThree) {
-            return this.provinceThree;
-        }
-        if(location === Locations.ProvinceFour) {
-            return this.provinceFour;
-        }
-        if(location === Locations.StrongholdProvince) {
-            return this.strongholdProvince;
-        }
-
-        return [];
-    }
-
     /**
      * Resolves any number of ring effects.  If there are more than one, then it will prompt the first player to choose what order those effects should be applied in
      * @param {Array} elements - Array of String, alternatively can be passed a String for convenience
