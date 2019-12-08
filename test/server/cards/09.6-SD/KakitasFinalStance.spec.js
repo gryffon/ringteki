@@ -1,32 +1,31 @@
-describe('Clarity of Purpose', function() {
+describe('Kakitas Final Stance', function() {
     integration(function() {
-        describe('Clarity of Purpose\'s ability', function() {
+        describe('Kakitas Final Stance\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['adept-of-the-waves','asako-diplomat'],
-                        hand: ['clarity-of-purpose']
+                        inPlay: ['doji-kuwanan', 'doji-whisperer'],
+                        hand: ['game-of-sadane', 'kakita-s-final-stance', 'mirumoto-s-fury']
                     },
                     player2: {
-                        inPlay: ['bayushi-manipulator'],
-                        hand: ['for-shame', 'against-the-waves']
+                        inPlay: ['bayushi-collector'],
+                        hand: ['game-of-sadane', 'for-shame']
                     }
                 });
-                this.adeptOfTheWaves = this.player1.findCardByName('adept-of-the-waves');
-                this.asakoDiplomat = this.player1.findCardByName('asako-diplomat');
-
-                this.clarityOfPurpose = this.player1.findCardByName('clarity-of-purpose');
-
-                this.bayushiManipulator = this.player2.findCardByName('bayushi-manipulator');
-
-                this.forShame = this.player2.findCardByName('for-shame');
-                this.againstTheWaves = this.player2.findCardByName('against-the-waves');
+                this.kuwanan = this.player1.findCardByName('doji-kuwanan');
+                this.whisperer = this.player1.findCardByName('doji-whisperer');
+                this.sadane1 = this.player1.findCardByName('game-of-sadane');
+                this.stance = this.player1.findCardByName('kakita-s-final-stance');
+                this.bayushiCollector = this.player2.findCardByName('bayushi-collector');
+                this.fury = this.player1.findCardByName('mirumoto-s-fury');
+                this.shame = this.player2.findCardByName('for-shame');
+                this.sadane2 = this.player2.findCardByName('game-of-sadane');
             });
 
             it('should not be triggerable outside of a conflict', function() {
                 expect(this.player1).toHavePrompt('Action Window');
-                this.player1.clickCard(this.clarityOfPurpose);
+                this.player1.clickCard(this.stance);
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
@@ -34,65 +33,149 @@ describe('Clarity of Purpose', function() {
                 beforeEach(function() {
                     this.noMoreActions();
                     this.initiateConflict({
-                        attackers: [this.adeptOfTheWaves],
-                        defenders: [this.bayushiManipulator],
+                        attackers: [this.kuwanan],
+                        defenders: [this.bayushiCollector],
                         type: 'political'
                     });
                 });
 
-                it('should allow you to choose a character you control', function() {
+                it('should not be triggerable in a political conflict', function() {
                     this.player2.pass();
-                    this.player1.clickCard(this.clarityOfPurpose);
-                    expect(this.player1).toBeAbleToSelect(this.adeptOfTheWaves);
-                    expect(this.player1).toBeAbleToSelect(this.asakoDiplomat);
-                    expect(this.player1).not.toBeAbleToSelect(this.bayushiManipulator);
-                });
-
-                describe('if resolved', function() {
-                    beforeEach(function() {
-                        this.player2.pass();
-                        this.player1.clickCard(this.clarityOfPurpose);
-                        this.player1.clickCard(this.adeptOfTheWaves);
-                    });
-
-                    it('should prevent opponents\' card effects from bowing', function() {
-                        this.adeptOfTheWaves.dishonor();
-                        expect(this.player2).toHavePrompt('Conflict Action Window');
-                        this.player2.clickCard(this.forShame);
-                        expect(this.player2).toHavePrompt('Conflict Action Window');
-                        expect(this.adeptOfTheWaves.bowed).toBe(false);
-                    });
-
-                    it('should prevent bowing as a result of conflict resolution', function() {
-                        this.noMoreActions();
-                        this.player1.clickPrompt('Don\'t Resolve');
-                        expect(this.adeptOfTheWaves.bowed).toBe(false);
-                    });
-
-                    it('should allow bowing after the conflict ends', function() {
-                        this.noMoreActions();
-                        this.player1.clickPrompt('Don\'t Resolve');
-                        this.player1.pass();
-                        expect(this.adeptOfTheWaves.bowed).toBe(false);
-                        this.player2.clickCard(this.againstTheWaves);
-                        this.player2.clickCard(this.adeptOfTheWaves);
-                        expect(this.adeptOfTheWaves.bowed).toBe(true);
-                    });
+                    expect(this.player1).toHavePrompt('Conflict Action Window');
+                    this.player1.clickCard(this.stance);
+                    expect(this.player1).toHavePrompt('Conflict Action Window');
                 });
             });
 
-            it('should still allow bowing as a result of a military conflict resolution', function() {
-                this.noMoreActions();
-                this.initiateConflict({
-                    attackers: [this.adeptOfTheWaves],
-                    defenders: [this.bayushiManipulator],
-                    type: 'military'
+            describe('during a military conflict', function() {
+                beforeEach(function() {
+                    this.noMoreActions();
+                    this.initiateConflict({
+                        attackers: [this.kuwanan],
+                        defenders: [this.bayushiCollector],
+                        type: 'military'
+                    });
                 });
-                this.noMoreActions();
-                this.player1.clickPrompt('Don\'t Resolve');
-                expect(this.adeptOfTheWaves.bowed).toBe(true);
-            });
 
+                it('should allow you to choose a participating character', function() {
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    expect(this.player1).toBeAbleToSelect(this.kuwanan);
+                    expect(this.player1).toBeAbleToSelect(this.bayushiCollector);
+                    expect(this.player1).not.toBeAbleToSelect(this.whisperer);
+                });
+
+                it('should prevent opponents\' card effects from bowing', function() {
+                    this.kuwanan.dishonor();
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    this.player1.clickCard(this.kuwanan);
+                    expect(this.player2).toHavePrompt('Conflict Action Window');
+                    this.player2.clickCard(this.shame);
+                    expect(this.player2).toHavePrompt('Conflict Action Window');
+                    expect(this.kuwanan.bowed).toBe(false);
+                });
+
+                it('should allow own card effects to bow', function() {
+                    this.kuwanan.dishonor();
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    this.player1.clickCard(this.kuwanan);
+                    this.player2.pass();
+                    this.player1.clickCard(this.fury);
+                    this.player1.clickCard(this.kuwanan);
+                    expect(this.kuwanan.bowed).toBe(true);
+                });
+
+                it('should prevent bowing as a result of conflict resolution (duel before playing stance)', function() {
+                    this.player2.pass();
+                    this.player1.clickCard(this.sadane1);
+                    this.player1.clickCard(this.kuwanan);
+                    this.player1.clickCard(this.bayushiCollector);
+
+                    this.player1.clickPrompt('1');
+                    this.player2.clickPrompt('1');
+
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    this.player1.clickCard(this.kuwanan);
+
+                    this.player2.pass();
+                    this.player1.pass();
+
+                    this.player1.clickPrompt('No');
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.kuwanan.bowed).toBe(false);
+                    expect(this.bayushiCollector.bowed).toBe(true);
+                });
+
+                it('should prevent bowing as a result of conflict resolution (duel after playing stance)', function() {
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    this.player1.clickCard(this.kuwanan);
+
+                    this.player2.pass();
+                    this.player1.clickCard(this.sadane1);
+                    this.player1.clickCard(this.kuwanan);
+                    this.player1.clickCard(this.bayushiCollector);
+
+                    this.player1.clickPrompt('1');
+                    this.player2.clickPrompt('1');
+
+                    this.player2.pass();
+                    this.player1.pass();
+
+                    this.player1.clickPrompt('No');
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.kuwanan.bowed).toBe(false);
+                    expect(this.bayushiCollector.bowed).toBe(true);
+                });
+
+                it('should prevent bowing as a result of conflict resolution (losing duel)', function() {
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    this.player1.clickCard(this.kuwanan);
+
+                    this.player2.pass();
+                    this.player1.clickCard(this.sadane1);
+                    this.player1.clickCard(this.kuwanan);
+                    this.player1.clickCard(this.bayushiCollector);
+
+                    this.player1.clickPrompt('1');
+                    this.player2.clickPrompt('5');
+
+                    this.player2.pass();
+                    this.player1.pass();
+
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.kuwanan.bowed).toBe(false);
+                    expect(this.bayushiCollector.bowed).toBe(true);
+                });
+
+                it('should prevent bowing as a result of conflict resolution (opponent duel)', function() {
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    this.player1.clickCard(this.kuwanan);
+
+                    this.player2.clickCard(this.sadane2);
+                    this.player2.clickCard(this.bayushiCollector);
+                    this.player2.clickCard(this.kuwanan);
+
+                    this.player1.clickPrompt('1');
+                    this.player2.clickPrompt('1');
+
+                    expect(this.kuwanan.isHonored).toBe(true);
+                    expect(this.bayushiCollector.isDishonored).toBe(true);
+
+                    this.player1.pass();
+                    this.player2.pass();
+
+                    this.player1.clickPrompt('No');
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.kuwanan.bowed).toBe(false);
+                    expect(this.bayushiCollector.bowed).toBe(true);
+                });
+            });
         });
     });
 });
