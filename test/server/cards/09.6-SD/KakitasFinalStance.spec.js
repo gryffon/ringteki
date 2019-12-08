@@ -90,6 +90,20 @@ describe('Kakitas Final Stance', function() {
                     expect(this.kuwanan.bowed).toBe(true);
                 });
 
+                it('should not prevent bowing as a result of conflict resolution (no duel)', function() {
+                    this.player2.pass();
+                    this.player1.clickCard(this.stance);
+                    this.player1.clickCard(this.kuwanan);
+
+                    this.player2.pass();
+                    this.player1.pass();
+
+                    this.player1.clickPrompt('No');
+                    this.player1.clickPrompt('Don\'t Resolve');
+                    expect(this.kuwanan.bowed).toBe(true);
+                    expect(this.bayushiCollector.bowed).toBe(true);
+                });
+
                 it('should prevent bowing as a result of conflict resolution (duel before playing stance)', function() {
                     this.player2.pass();
                     this.player1.clickCard(this.sadane1);
