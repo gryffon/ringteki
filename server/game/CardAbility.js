@@ -96,11 +96,15 @@ class CardAbility extends ThenAbility {
             return 'cannotTrigger';
         }
 
-        if(this.limit.isAtMax(context.player)) {
+        if(!this.card.canInitiateKeywords(context)) {
+            return 'cannotInitiate';
+        }
+
+        if(!ignoredRequirements.includes('limit') && this.limit.isAtMax(context.player)) {
             return 'limit';
         }
 
-        if(this.max && context.player.isAbilityAtMax(this.maxIdentifier)) {
+        if(!ignoredRequirements.includes('max') && this.max && context.player.isAbilityAtMax(this.maxIdentifier)) {
             return 'max';
         }
 
@@ -111,11 +115,15 @@ class CardAbility extends ThenAbility {
         return super.meetsRequirements(context, ignoredRequirements);
     }
 
-    getCosts(context) {
-        const costs = super.getCosts(context);
-        if(!context.subResolution && context.player.anyEffect(EffectNames.AdditionalCost)) {
-            let additionalCosts = context.player.getEffects(EffectNames.AdditionalCost).map(effect => effect(context));
-            return costs.concat(...additionalCosts);
+    getCosts(context, playCosts = true, triggerCosts = true) {
+        let costs = super.getCosts(context, playCosts);
+        if(!context.subResolution && triggerCosts && context.player.anyEffect(EffectNames.AdditionalTriggerCost)) {
+            const additionalTriggerCosts = context.player.getEffects(EffectNames.AdditionalTriggerCost).map(effect => effect(context));
+            costs = costs.concat(...additionalTriggerCosts);
+        }
+        if(!context.subResolution && playCosts && context.player.anyEffect(EffectNames.AdditionalPlayCost)) {
+            const additionalPlayCosts = context.player.getEffects(EffectNames.AdditionalPlayCost).map(effect => effect(context));
+            return costs.concat(...additionalPlayCosts);
         }
         return costs;
     }

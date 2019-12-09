@@ -28,6 +28,10 @@ class PrideAbility extends TriggeredAbility {
     isTriggeredAbility() {
         return false;
     }
+
+    isKeywordAbility() {
+        return true;
+    }
 }
 
 module.exports = PrideAbility;

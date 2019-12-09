@@ -74,6 +74,7 @@ const Effects = {
     modifyPoliticalSkillMultiplier: (value) => EffectBuilder.card.flexible(EffectNames.ModifyPoliticalSkillMultiplier, value),
     modifyProvinceStrength: (value) => EffectBuilder.card.flexible(EffectNames.ModifyProvinceStrength, value),
     modifyProvinceStrengthMultiplier: (value) => EffectBuilder.card.flexible(EffectNames.ModifyProvinceStrengthMultiplier, value),
+    modifyProvinceStrengthBonus: (value) => EffectBuilder.card.flexible(EffectNames.ModifyProvinceStrengthBonus, value),
     mustBeChosen: (properties) => EffectBuilder.card.static(EffectNames.MustBeChosen, new Restriction(Object.assign({ type: 'target' }, properties))),
     mustBeDeclaredAsAttacker: (type = 'both') => EffectBuilder.card.static(EffectNames.MustBeDeclaredAsAttacker, type),
     mustBeDeclaredAsDefender: (type = 'both') => EffectBuilder.card.static(EffectNames.MustBeDeclaredAsDefender, type),
@@ -87,6 +88,7 @@ const Effects = {
     setMilitarySkill: (value) => EffectBuilder.card.static(EffectNames.SetMilitarySkill, value),
     setPoliticalSkill: (value) => EffectBuilder.card.static(EffectNames.SetPoliticalSkill, value),
     setProvinceStrength: (value) => EffectBuilder.card.static(EffectNames.SetProvinceStrength, value),
+    setProvinceStrengthBonus: (value) => EffectBuilder.card.flexible(EffectNames.SetProvinceStrengthBonus, value),
     switchBaseSkills: () => EffectBuilder.card.static(EffectNames.SwitchBaseSkills),
     suppressEffects: (condition) => EffectBuilder.card.static(EffectNames.SuppressEffects, new SuppressEffect(condition)),
     takeControl: (player) => EffectBuilder.card.static(EffectNames.TakeControl, player),
@@ -97,13 +99,15 @@ const Effects = {
     cannotDeclareRing: (match) => EffectBuilder.ring.static(EffectNames.CannotDeclareRing, match),
     considerRingAsClaimed: (match) => EffectBuilder.ring.static(EffectNames.ConsiderRingAsClaimed, match),
     // Player effects
+    additionalAction: (amount = 1) => EffectBuilder.player.static(EffectNames.AdditionalAction, amount),
     additionalCardPlayed: (amount = 1) => EffectBuilder.player.dynamic(EffectNames.AdditionalCardPlayed, amount),
     additionalCharactersInConflict: (amount) => EffectBuilder.player.flexible(EffectNames.AdditionalCharactersInConflict, amount),
     additionalConflict: (type) => EffectBuilder.player.detached(EffectNames.AdditionalConflict, {
         apply: player => player.addConflictOpportunity(type),
         unapply: () => true
     }),
-    additionalCost: (func) => EffectBuilder.player.static(EffectNames.AdditionalCost, func),
+    additionalTriggerCost: (func) => EffectBuilder.player.static(EffectNames.AdditionalTriggerCost, func),
+    additionalPlayCost: (func) => EffectBuilder.player.static(EffectNames.AdditionalPlayCost, func),
     alternateFatePool: (match) => EffectBuilder.player.static(EffectNames.AlternateFatePool, match),
     cannotDeclareConflictsOfType: type => EffectBuilder.player.static(EffectNames.CannotDeclareConflictsOfType, type),
     canPlayFromOwn: (location, cards, playType = PlayTypes.PlayFromHand) => EffectBuilder.player.detached(EffectNames.CanPlayFromOwn, {
@@ -154,12 +158,14 @@ const Effects = {
     setMaxConflicts: (amount) => EffectBuilder.player.static(EffectNames.SetMaxConflicts, amount),
     setConflictTotalSkill: (value) => EffectBuilder.player.static(EffectNames.SetConflictTotalSkill, value),
     showTopConflictCard: () => EffectBuilder.player.static(EffectNames.ShowTopConflictCard),
+    showTopDynastyCard: () => EffectBuilder.player.static(EffectNames.ShowTopDynastyCard),
     // Conflict effects
     cannotContribute: (func) => EffectBuilder.conflict.dynamic(EffectNames.CannotContribute, func),
     changeConflictSkillFunction: (func) => EffectBuilder.conflict.static(EffectNames.ChangeConflictSkillFunction, func), // TODO: Add this to lasting effect checks
     modifyConflictElementsToResolve: (value) => EffectBuilder.conflict.static(EffectNames.ModifyConflictElementsToResolve, value), // TODO: Add this to lasting effect checks
     restrictNumberOfDefenders: (value) => EffectBuilder.conflict.static(EffectNames.RestrictNumberOfDefenders, value), // TODO: Add this to lasting effect checks
-    resolveConflictEarly: () => EffectBuilder.player.static(EffectNames.ResolveConflictEarly)
+    resolveConflictEarly: () => EffectBuilder.player.static(EffectNames.ResolveConflictEarly),
+    forceConflictUnopposed: () => EffectBuilder.conflict.static(EffectNames.ForceConflictUnopposed)
 };
 
 module.exports = Effects;
