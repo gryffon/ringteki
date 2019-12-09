@@ -1,4 +1,4 @@
-const { EventNames }  = require('../../Constants.js');
+const { EventNames } = require('../../Constants.js');
 const EventRegistrar = require('../../eventregistrar.js');
 const DrawCard = require('../../drawcard.js');
 const { CardTypes, Durations, Players } = require('../../Constants');
