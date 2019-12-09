@@ -14,21 +14,16 @@ class Castigated extends DrawCard {
         });
     }
 
-    canPlay(context, playType) {
-        return (context.game.isDuringConflict('political') && this.hasImperialCharacter(context.source));
-    }
-
     canPlayOn(card) {
         return card.isParticipating() && super.canPlayOn(card);
     }
 
-    hasImperialCharacter(source) {
-        return this.game.allCards.any(card => {
-            (card.controller === source.controller && 
-            card.hasTrait('imperial') && 
-            !card.facedown && card.location === Locations.PlayArea && 
-            card.type === CardTypes.Character)
-        });
+    canPlay(context, playType) {
+        if(!context.game.isDuringConflict('political') || !context.player.cardsInPlay.any(card => card.getType() === CardTypes.Character && card.hasTrait('imperial'))) {
+            return false;
+        }
+
+        return super.canPlay(context, playType);
     }
 }
 
