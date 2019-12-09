@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, CardTypes } = require('../../Constants');
+const { CardTypes } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class Castigated extends DrawCard {
@@ -7,8 +7,8 @@ class Castigated extends DrawCard {
         this.whileAttached({
             effect: AbilityDsl.effects.delayedEffect({
                 condition: context => !context.source.parent.hasDash('political') && context.source.parent.getPoliticalSkill() < 1,
-                message: '{0} is discarded due to {1}\'s lasting effect',
-                messageArgs: context => [context.target, context.source],
+                message: '{0} is discarded by {1}',
+                messageArgs: context => [context.source.parent, context.source],
                 gameAction: AbilityDsl.actions.discardFromPlay()
             })
         });
