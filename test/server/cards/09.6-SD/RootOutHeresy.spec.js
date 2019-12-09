@@ -1,6 +1,6 @@
-describe('Moto Outrider', function() {
+describe('Root Out Heresy', function() {
     integration(function() {
-        describe('Moto Outrider\'s ability', function() {
+        describe('Root Out Heresy\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
