@@ -53,8 +53,6 @@ class CardSelector {
             properties.mode = TargetModes.Single;
         } else if(properties.numCards === 0) {
             properties.mode = TargetModes.Unlimited;
-        } else if(properties.numCardsFunc) {
-            properties.mode = TargetModes.UpToVariable;
         } else {
             properties.mode = TargetModes.UpTo;
         }
