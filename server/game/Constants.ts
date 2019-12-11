@@ -162,7 +162,8 @@ export enum TargetModes {
     MaxStat = 'maxStat',
     Single = 'single',
     Unlimited = 'unlimited',
-    UpTo = 'upTo'
+    UpTo = 'upTo',
+    UpToVariable = 'upToVariable'
 };
 
 export enum Phases {

@@ -310,6 +310,7 @@ const Costs = {
             promptsPlayer: true
         };
     },
+    
     variableCardDiscardCost: function (amountFunc) {
         return {
             canPay: function (context) {
@@ -324,7 +325,7 @@ const Costs = {
                     context: context,
                     mode: TargetModes.UpTo,
                     numCards: amount,
-                    ordered: true,
+                    ordered: false,
                     location: Locations.Hand,
                     controller: Players.Self,
                     onSelect: (player, cards) => {
@@ -351,6 +352,44 @@ const Costs = {
             //         context.player.moveCard(card, Locations.ConflictDiscardPile);
             //     })
             // },
+            promptsPlayer: true
+        };
+    },
+
+    multipleCardDiscardCost: function (amountFunc) {
+        return {
+            canPay: function (context) {
+                return context.game.actions.chosenDiscard().canAffect(context.player, context);
+            },
+            resolve: function (context, result) {
+                let amount = amountFunc(context)
+                context.game.promptForSelect(context.player, {
+                    activePromptTitle: 'Choose ' + amount + " card" + (amount === 1 ? '' : ('s')) + ' to discard',
+                    context: context,
+                    mode: TargetModes.Exactly,
+                    numCards: amount,
+                    ordered: false,
+                    location: Locations.Hand,
+                    controller: Players.Self,
+                    onSelect: (player, cards) => {
+                        if (cards.length === 0) {
+                            context.costs.multipleCardDiscardCost = [];
+                            result.cancelled = true;
+                        } else {
+                            context.costs.multipleCardDiscardCost = cards;
+                        }
+                        return true;
+                    },
+                    onCancel: () => {
+                        result.cancelled = true;
+                        return true;
+                    }
+                });
+            },
+            payEvent: function (context) {
+                let action = context.game.actions.discardCard({ target: context.costs.multipleCardDiscardCost });
+                return action.getEvent(context.costs.multipleCardDiscardCost, context);
+            },
             promptsPlayer: true
         };
     }

@@ -149,7 +149,7 @@ class SelectCardPrompt extends UiPrompt {
             selectCard: this.properties.selectCard,
             selectRing: true,
             selectOrder: this.properties.ordered,
-            menuTitle: this.properties.activePromptTitle || this.selector.defaultActivePromptTitle(),
+            menuTitle: this.properties.activePromptTitle || this.selector.defaultActivePromptTitle(this.context),
             buttons: buttons,
             promptTitle: this.properties.source ? this.properties.source.name : undefined,
             controls: this.properties.controls
@@ -173,7 +173,7 @@ class SelectCardPrompt extends UiPrompt {
             return false;
         }
 
-        if(this.selector.automaticFireOnSelect() && this.selector.hasReachedLimit(this.selectedCards)) {
+        if(this.selector.automaticFireOnSelect() && this.selector.hasReachedLimit(this.selectedCards, this.context)) {
             this.fireOnSelect();
         }
     }
@@ -192,7 +192,7 @@ class SelectCardPrompt extends UiPrompt {
     }
 
     selectCard(card) {
-        if(this.selector.hasReachedLimit(this.selectedCards) && !this.selectedCards.includes(card)) {
+        if(this.selector.hasReachedLimit(this.selectedCards, this.context) && !this.selectedCards.includes(card)) {
             return false;
         } else if(this.cannotUnselectMustSelect && this.properties.mustSelect.includes(card)) {
             return false;

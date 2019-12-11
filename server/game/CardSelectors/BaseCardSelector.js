@@ -109,7 +109,7 @@ class BaseCardSelector {
         return this.findPossibleCards(context).some(card => this.canTarget(card, context, choosingPlayer));
     }
 
-    defaultActivePromptTitle() {
+    defaultActivePromptTitle(context) {
         return 'Choose cards';
     }
 
@@ -121,11 +121,11 @@ class BaseCardSelector {
         return false;
     }
 
-    hasReachedLimit(selectedCards) { // eslint-disable-line no-unused-vars
+    hasReachedLimit(selectedCards, context) { // eslint-disable-line no-unused-vars
         return false;
     }
 
-    hasExceededLimit(selectedCards) { // eslint-disable-line no-unused-vars
+    hasExceededLimit(selectedCards, context) { // eslint-disable-line no-unused-vars
         return false;
     }
 

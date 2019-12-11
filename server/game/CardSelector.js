@@ -3,11 +3,13 @@ const MaxStatCardSelector = require('./CardSelectors/MaxStatCardSelector');
 const SingleCardSelector = require('./CardSelectors/SingleCardSelector');
 const UnlimitedCardSelector = require('./CardSelectors/UnlimitedCardSelector');
 const UpToXCardSelector = require('./CardSelectors/UpToXCardSelector');
+const UpToVariableXCardSelector = require('./CardSelectors/UpToVariableXCardSelector');
 const { TargetModes, CardTypes } = require('./Constants');
 
 const defaultProperties = {
     numCards: 1,
     cardCondition: () => true,
+    numCardsFunc: () => 1,
     cardType: [CardTypes.Attachment, CardTypes.Character, CardTypes.Event, CardTypes.Holding, CardTypes.Stronghold, CardTypes.Role, CardTypes.Province],
     multiSelect: false
 };
@@ -20,7 +22,8 @@ const ModeToSelector = {
     single: p => new SingleCardSelector(p),
     token: p => new SingleCardSelector(p),
     unlimited: p => new UnlimitedCardSelector(p),
-    upTo: p => new UpToXCardSelector(p.numCards, p)
+    upTo: p => new UpToXCardSelector(p.numCards, p),
+    upToVariable: p => new UpToVariableXCardSelector(p.numCardsFunc, p)
 };
 
 class CardSelector {
@@ -48,6 +51,8 @@ class CardSelector {
             properties.mode = TargetModes.Single;
         } else if(properties.numCards === 0) {
             properties.mode = TargetModes.Unlimited;
+        } else if(properties.numCardsFunc) {
+            properties.mode = TargetModes.UpToVariable;        
         } else {
             properties.mode = TargetModes.UpTo;
         }
