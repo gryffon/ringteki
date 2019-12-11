@@ -1,4 +1,5 @@
 const ExactlyXCardSelector = require('./CardSelectors/ExactlyXCardSelector');
+const ExactlyVariableXCardSelector = require('./CardSelectors/ExactlyVariableXCardSelector');
 const MaxStatCardSelector = require('./CardSelectors/MaxStatCardSelector');
 const SingleCardSelector = require('./CardSelectors/SingleCardSelector');
 const UnlimitedCardSelector = require('./CardSelectors/UnlimitedCardSelector');
@@ -18,6 +19,7 @@ const ModeToSelector = {
     ability: p => new SingleCardSelector(p),
     autoSingle: p => new SingleCardSelector(p),
     exactly: p => new ExactlyXCardSelector(p.numCards, p),
+    exactlyVariable: p => new ExactlyVariableXCardSelector(p.numCardsFunc, p),
     maxStat: p => new MaxStatCardSelector(p),
     single: p => new SingleCardSelector(p),
     token: p => new SingleCardSelector(p),

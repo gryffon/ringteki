@@ -54,8 +54,8 @@ interface TargetCardExactlyUpTo extends BaseTargetCard {
     numCards: number;
 };
 
-interface TargetCardExactlyUpToVariableCost extends BaseTargetCard {
-    mode: TargetModes.UpToVariable,
+interface TargetCardExactlyUpToVariable extends BaseTargetCard {
+    mode: TargetModes.ExactlyVariable | TargetModes.UpToVariable,
     numCardsFunc: (context : AbilityContext) => number;
 };
 
@@ -70,7 +70,7 @@ interface TargetCardSingleUnlimited extends BaseTargetCard {
     mode?: TargetModes.Single | TargetModes.Unlimited;
 };
 
-type TargetCard = TargetCardExactlyUpTo | TargetCardExactlyUpToVariableCost | TargetCardMaxStat | TargetCardSingleUnlimited | TargetAbility | TargetToken;
+type TargetCard = TargetCardExactlyUpTo | TargetCardExactlyUpToVariable | TargetCardMaxStat | TargetCardSingleUnlimited | TargetAbility | TargetToken;
 
 interface SubTarget {
     dependsOn?: string;

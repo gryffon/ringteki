@@ -7,26 +7,16 @@ class DishonorableAssault extends ProvinceCard {
         this.action({
             title: 'Discard cards to dishonor attackers',
             effect: 'discard {1} and dishonor {2}',
-            effectArgs: context => [context.costs.multipleCardDiscardCost.map(a => a.name).sort().join(', '), context.target],
-            cost: AbilityDsl.costs.multipleCardDiscardCost(context => {
-                if (context && context.target) {
-                    return context.target.length;
-                }
-                return 1;
-            }),
+            effectArgs: context => [context.costs.variableCardDiscardCost.map(a => a.name).sort().join(', '), context.target],
+            cost: AbilityDsl.costs.variableCardDiscardCost(context => this.getNumberOfLegalTargets(context)),
             target: {
-                mode: TargetModes.UpToVariable,
+                mode: TargetModes.ExactlyVariable,
                 numCardsFunc: (context) => {
-                    let hand  = 0;
-                    let paid = 0;
-                    if (context && context.player && context.player.hand) {
-                        hand = context.player.hand.size();
-                    }
-                    if (context && context.costs && context.costs.multipleCardDiscardCost) {
-                        paid = context.costs.multipleCardDiscardCost.length;
+                    if (context && context.costs && context.costs.variableCardDiscardCost) {
+                        return context.costs.variableCardDiscardCost.length;
                     }
 
-                    return hand + paid;
+                    return this.getNumberOfLegalTargets(context);
                 },
                 cardType: CardTypes.Character,
                 cardCondition: card => card.isAttacking(),
@@ -34,6 +24,21 @@ class DishonorableAssault extends ProvinceCard {
             },
             cannotTargetFirst: true
         });
+    }
+
+    getNumberOfLegalTargets(context) {
+        if (this.game.isDuringConflict()) {
+            let cards = this.game.currentConflict.getParticipants(card => card.isAttacking());
+            let count = 0;
+            cards.forEach(card => {
+                if (card.allowGameAction('dishonor', context)) {
+                    count++;
+                }
+            });
+
+            return count;
+        }
+        return 0;
     }
 }
 

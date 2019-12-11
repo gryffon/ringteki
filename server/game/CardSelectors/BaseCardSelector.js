@@ -101,7 +101,7 @@ class BaseCardSelector {
         return this.findPossibleCards(context).filter(card => this.canTarget(card, context, choosingPlayer));
     }
 
-    hasEnoughSelected(selectedCards) {
+    hasEnoughSelected(selectedCards, context) {
         return this.optional || selectedCards.length > 0;
     }
 
@@ -113,7 +113,7 @@ class BaseCardSelector {
         return 'Choose cards';
     }
 
-    automaticFireOnSelect() {
+    automaticFireOnSelect(context) {
         return false;
     }
 

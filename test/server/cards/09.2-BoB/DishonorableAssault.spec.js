@@ -28,7 +28,7 @@ describe('Dishonorable Assault', function() {
                 this.assassination = this.player2.findCardByName('assassination');
             });
 
-            it('Should force you to discard cards equal to the amount of targets selected', function() {
+            it('Should force you to choose target equal to the amount of cards discarded', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
@@ -38,35 +38,15 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
+                expect(this.player2).toHavePrompt('Choose up to 2 cards to discard');
+                expect(this.player2).toBeAbleToSelect(this.fan);
+                expect(this.player2).toBeAbleToSelect(this.katana);
+                expect(this.player2).toBeAbleToSelect(this.assassination);
 
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
+                this.player2.clickCard(this.fan);
+                this.player2.clickCard(this.katana);
                 this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 2 cards to discard');
-            });
-
-            it('Should not let you choose invalid targets', function() {
-                this.noMoreActions();
-                this.initiateConflict({
-                    type: 'military',
-                    attackers: [this.youth, this.whisperer, this.ambusher],
-                    defenders: [],
-                    province: this.assault
-                });
-
-                this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-                expect(this.player2).not.toBeAbleToSelect(this.ambusher);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 2 cards to discard');
+                expect(this.player2).toHavePrompt('Choose 2 characters');
             });
 
             it('Should not let you choose invalid targets (Harrier)', function() {
@@ -81,15 +61,7 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).not.toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-                expect(this.player2).not.toBeAbleToSelect(this.ambusher);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 1 card to discard');
+                expect(this.player2).toHavePrompt('Choose up to 1 card to discard');
             });
 
             it('Should not let you trigger if there are no valid targets', function() {
@@ -115,31 +87,61 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 2 cards to discard');
+                expect(this.player2).toHavePrompt('Choose up to 2 cards to discard');
                 expect(this.player2).toBeAbleToSelect(this.katana);
                 expect(this.player2).toBeAbleToSelect(this.fan);
                 expect(this.player2).toBeAbleToSelect(this.assassination);
-
                 this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.fan);
                 this.player2.clickPrompt('Done');
 
                 expect(this.katana.location).toBe('conflict discard pile');
                 expect(this.fan.location).toBe('conflict discard pile');
+
+                expect(this.player2).toHavePrompt('Choose 2 characters');
+                expect(this.player2).toBeAbleToSelect(this.whisperer);
+                expect(this.player2).toBeAbleToSelect(this.youth);
+                this.player2.clickCard(this.whisperer);
+                this.player2.clickCard(this.youth);
+                this.player2.clickPrompt('Done');
+
                 expect(this.whisperer.isDishonored).toBe(true);
                 expect(this.youth.isDishonored).toBe(true);
 
                 expect(this.getChatLogs(3)).toContain('player2 uses Dishonorable Assault to discard Fine Katana, Ornate Fan and dishonor Doji Whisperer and Moto Youth');
             });
 
-            it('Should not let you discard more cards than you chose characters', function() {
+            it('Should not let you choose more characters than you chose cards', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.youth, this.whisperer, this.ambusher, this.harrier],
+                    defenders: [],
+                    province: this.assault
+                });
+
+                this.player2.clickCard(this.assault);
+                expect(this.player2).toHavePrompt('Choose up to 3 cards to discard');
+                this.player2.clickCard(this.katana);
+                this.player2.clickCard(this.fan);
+                this.player2.clickPrompt('Done');
+
+                expect(this.player2).toHavePrompt('Choose 2 characters');
+                this.player2.clickCard(this.whisperer);
+                this.player2.clickCard(this.youth);
+                this.player2.clickCard(this.harrier);
+                this.player2.clickPrompt('Done');
+
+                expect(this.katana.location).toBe('conflict discard pile');
+                expect(this.fan.location).toBe('conflict discard pile');
+                expect(this.whisperer.isDishonored).toBe(true);
+                expect(this.youth.isDishonored).toBe(true);
+                expect(this.harrier.isDishonored).toBe(false);
+
+                expect(this.getChatLogs(3)).toContain('player2 uses Dishonorable Assault to discard Fine Katana, Ornate Fan and dishonor Doji Whisperer and Moto Youth');
+            });
+            
+            it('Should not let you choose more cards than you have targets', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
@@ -149,21 +151,15 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-
+                expect(this.player2).toHavePrompt('Choose up to 2 cards to discard');
+                this.player2.clickCard(this.fan);
+                this.player2.clickCard(this.katana);
+                this.player2.clickCard(this.assassination);
+                this.player2.clickPrompt('Done');
+                
+                expect(this.player2).toHavePrompt('Choose 2 characters');
                 this.player2.clickCard(this.whisperer);
                 this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 2 cards to discard');
-                expect(this.player2).toBeAbleToSelect(this.katana);
-                expect(this.player2).toBeAbleToSelect(this.fan);
-                expect(this.player2).toBeAbleToSelect(this.assassination);
-
-                this.player2.clickCard(this.katana);
-                this.player2.clickCard(this.fan);
-                this.player2.clickCard(this.assassination);
                 this.player2.clickPrompt('Done');
 
                 expect(this.katana.location).toBe('conflict discard pile');
@@ -174,45 +170,28 @@ describe('Dishonorable Assault', function() {
 
                 expect(this.getChatLogs(3)).toContain('player2 uses Dishonorable Assault to discard Fine Katana, Ornate Fan and dishonor Doji Whisperer and Moto Youth');
             });
-            
-            it('Should not let you choose more targets than you have cards', function() {
+
+            it('Should not let you choose less characters than you discarded cards', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    attackers: [this.youth, this.whisperer, this.ambusher, this.harrier, this.callow],
+                    attackers: [this.youth, this.whisperer, this.ambusher],
                     defenders: [],
                     province: this.assault
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-                expect(this.player2).not.toBeAbleToSelect(this.ambusher);
-                expect(this.player2).toBeAbleToSelect(this.harrier);
-                expect(this.player2).toBeAbleToSelect(this.callow);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickCard(this.harrier);
-                this.player2.clickCard(this.callow);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 3 cards to discard');
-
-                this.player2.clickCard(this.katana);
+                expect(this.player2).toHavePrompt('Choose up to 2 cards to discard');
                 this.player2.clickCard(this.fan);
+                this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.assassination);
                 this.player2.clickPrompt('Done');
-
-                expect(this.katana.location).toBe('conflict discard pile');
-                expect(this.fan.location).toBe('conflict discard pile');
-                expect(this.assassination.location).toBe('conflict discard pile');
-                expect(this.whisperer.isDishonored).toBe(true);
-                expect(this.youth.isDishonored).toBe(true);
-                expect(this.harrier.isDishonored).toBe(true);
-                expect(this.callow.isDishonored).toBe(false);
-
-                expect(this.getChatLogs(3)).toContain('player2 uses Dishonorable Assault to discard Assassination, Fine Katana, Ornate Fan and dishonor Doji Whisperer, Moto Youth and Young Harrier');
+                
+                expect(this.player2).toHavePrompt('Choose 2 characters');
+                this.player2.clickCard(this.whisperer);
+                expect(this.player2).not.toHavePromptButton('Done');
+                this.player2.clickCard(this.youth);
+                expect(this.player2).toHavePromptButton('Done');
             });
         });
 
@@ -258,17 +237,10 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 2 cards to discard');
+                expect(this.player2).toHavePrompt('Choose up to 3 cards to discard');
                 expect(this.player2).toBeAbleToSelect(this.katana);
                 expect(this.player2).toBeAbleToSelect(this.fan);
-
+                expect(this.player2).toBeAbleToSelect(this.assassination);
                 this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.fan);
                 this.player2.clickPrompt('Done');
@@ -281,6 +253,13 @@ describe('Dishonorable Assault', function() {
                 this.player1.clickCard(this.hyobu);
                 this.player1.clickCard(this.challenger);
                 expect(this.challenger.isDishonored).toBe(true);
+
+                expect(this.player2).toHavePrompt('Choose 2 characters');
+                expect(this.player2).toBeAbleToSelect(this.whisperer);
+                expect(this.player2).toBeAbleToSelect(this.youth);
+                this.player2.clickCard(this.whisperer);
+                this.player2.clickCard(this.youth);
+                this.player2.clickPrompt('Done');
 
                 expect(this.whisperer.isDishonored).toBe(true);
                 expect(this.youth.isDishonored).toBe(true);
@@ -299,14 +278,10 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 2 cards to discard');
+                expect(this.player2).toHavePrompt('Choose up to 3 cards to discard');
+                expect(this.player2).toBeAbleToSelect(this.katana);
+                expect(this.player2).toBeAbleToSelect(this.fan);
+                expect(this.player2).toBeAbleToSelect(this.assassination);
                 this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.fan);
                 this.player2.clickPrompt('Done');
@@ -317,6 +292,13 @@ describe('Dishonorable Assault', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hyobu);
                 this.player1.pass();
+
+                expect(this.player2).toHavePrompt('Choose 2 characters');
+                expect(this.player2).toBeAbleToSelect(this.whisperer);
+                expect(this.player2).toBeAbleToSelect(this.youth);
+                this.player2.clickCard(this.whisperer);
+                this.player2.clickCard(this.youth);
+                this.player2.clickPrompt('Done');
 
                 expect(this.whisperer.isDishonored).toBe(true);
                 expect(this.youth.isDishonored).toBe(true);
@@ -343,16 +325,7 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-                expect(this.player2).toBeAbleToSelect(this.ambusher);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickCard(this.ambusher);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 3 cards to discard');
+                expect(this.player2).toHavePrompt('Choose up to 3 cards to discard');
                 this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.fan);
                 this.player2.clickCard(this.assassination);
@@ -360,11 +333,16 @@ describe('Dishonorable Assault', function() {
 
                 expect(this.katana.location).toBe('conflict discard pile');
                 expect(this.fan.location).toBe('conflict discard pile');
-                expect(this.assassination.location).toBe('conflict discard pile');
 
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hyobu);
                 this.player1.pass();
+
+                expect(this.player2).toHavePrompt('Choose 3 characters');
+                this.player2.clickCard(this.whisperer);
+                this.player2.clickCard(this.youth);
+                this.player2.clickCard(this.ambusher);
+                this.player2.clickPrompt('Done');
 
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.jade);
@@ -389,16 +367,7 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-                expect(this.player2).toBeAbleToSelect(this.ambusher);
-
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickCard(this.ambusher);
-                this.player2.clickPrompt('Done');
-
-                expect(this.player2).toHavePrompt('Choose 3 cards to discard');
+                expect(this.player2).toHavePrompt('Choose up to 3 cards to discard');
                 this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.fan);
                 this.player2.clickCard(this.assassination);
@@ -406,11 +375,17 @@ describe('Dishonorable Assault', function() {
 
                 expect(this.katana.location).toBe('conflict discard pile');
                 expect(this.fan.location).toBe('conflict discard pile');
-                expect(this.assassination.location).toBe('conflict discard pile');
 
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hyobu);
                 this.player1.pass();
+
+                expect(this.player2).toHavePrompt('Choose 3 characters');
+                this.player2.clickCard(this.whisperer);
+                this.player2.clickCard(this.youth);
+                this.player2.clickCard(this.ambusher);
+                this.player2.clickPrompt('Done');
+
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.blade);
                 this.player1.clickCard(this.blade);
@@ -461,16 +436,11 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hantei);
             });
 
-            it('Should allow Hantei to re-select targets (after cards are discarded, and force choosing the correct # of characters)', function() {
+            it('Should allow Hantei to select targets after cards are discarded, and force choosing the correct # of characters', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
@@ -480,12 +450,6 @@ describe('Dishonorable Assault', function() {
                 });
 
                 this.player2.clickCard(this.assault);
-                expect(this.player2).toBeAbleToSelect(this.whisperer);
-                expect(this.player2).toBeAbleToSelect(this.youth);
-                this.player2.clickCard(this.whisperer);
-                this.player2.clickCard(this.youth);
-                this.player2.clickPrompt('Done');
-                expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.hantei);
                 this.player1.clickCard(this.hantei);
 
@@ -505,6 +469,8 @@ describe('Dishonorable Assault', function() {
                 this.player1.clickCard(this.harrier);
                 this.player1.clickPrompt('Done');
 
+                expect(this.fan.location).toBe('conflict discard pile');
+                expect(this.katana.location).toBe('conflict discard pile');
                 expect(this.whisperer.isDishonored).toBe(false);
                 expect(this.youth.isDishonored).toBe(false);
                 expect(this.callow.isDishonored).toBe(true);
@@ -512,56 +478,63 @@ describe('Dishonorable Assault', function() {
            });
         });
 
-        // describe('Dishonorable Assault\'s ability (Keeper of Secret Names)', function() {
-        //     beforeEach(function() {
-        //         this.setupTest({
-        //             phase: 'conflict',
-        //             player1: {
-        //                 inPlay: ['moto-youth', 'doji-whisperer', 'shinjo-ambusher', 'keeper-of-secret-names'],
-        //                 hand: ['duty', 'policy-debate']
-        //             },
-        //             player2: {
-        //                 provinces: ['dishonorable-assault'],
-        //                 hand: ['fine-katana','ornate-fan', 'assassination']
-        //             }
-        //         });
+        describe('Dishonorable Assault\'s ability (Keeper of Secret Names)', function() {
+            beforeEach(function() {
+                this.setupTest({
+                    phase: 'conflict',
+                    player1: {
+                        inPlay: ['moto-youth', 'doji-whisperer', 'shinjo-ambusher', 'keeper-of-secret-names'],
+                        hand: ['duty', 'policy-debate']
+                    },
+                    player2: {
+                        provinces: ['dishonorable-assault'],
+                        hand: ['fine-katana','ornate-fan', 'assassination']
+                    }
+                });
 
-        //         this.ambusher = this.player1.findCardByName('shinjo-ambusher');
-        //         this.youth = this.player1.findCardByName('moto-youth');
-        //         this.whisperer = this.player1.findCardByName('doji-whisperer');
-        //         this.keeper = this.player1.findCardByName('keeper-of-secret-names');
-        //         this.duty = this.player1.findCardByName('duty');
-        //         this.policyDebate = this.player1.findCardByName('policy-debate');
+                this.ambusher = this.player1.findCardByName('shinjo-ambusher');
+                this.youth = this.player1.findCardByName('moto-youth');
+                this.whisperer = this.player1.findCardByName('doji-whisperer');
+                this.keeper = this.player1.findCardByName('keeper-of-secret-names');
+                this.duty = this.player1.findCardByName('duty');
+                this.policyDebate = this.player1.findCardByName('policy-debate');
 
-        //         this.assault = this.player2.findCardByName('dishonorable-assault');
-        //         this.katana = this.player2.findCardByName('fine-katana');
-        //         this.fan = this.player2.findCardByName('ornate-fan');
-        //         this.assassination = this.player2.findCardByName('assassination');
-        //     });
+                this.assault = this.player2.findCardByName('dishonorable-assault');
+                this.katana = this.player2.findCardByName('fine-katana');
+                this.fan = this.player2.findCardByName('ornate-fan');
+                this.assassination = this.player2.findCardByName('assassination');
+            });
 
-        //     it('Should allow keeper of secret names to use the province', function() {
-        //         this.noMoreActions();
-        //         this.initiateConflict({
-        //             type: 'military',
-        //             attackers: [this.youth, this.whisperer, this.ambusher],
-        //             defenders: [],
-        //             province: this.assault
-        //         });
+            it('Should allow keeper of secret names to use the province', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.youth, this.whisperer, this.ambusher],
+                    defenders: [],
+                    province: this.assault
+                });
 
-        //         this.player2.pass();
-        //         this.player1.clickCard(this.keeper);
-        //         this.player1.clickCard(this.assault);
+                this.player2.pass();
+                this.player1.clickCard(this.keeper);
+                this.player1.clickCard(this.assault);
+                expect(this.player1).toHavePrompt('Choose up to 2 cards to discard');
+                this.player1.clickCard(this.duty);
+                this.player1.clickCard(this.policyDebate);
+                this.player1.clickPrompt('Done');
 
-        //         expect(this.player1).toBeAbleToSelect(this.whisperer);
-        //         expect(this.player1).toBeAbleToSelect(this.youth);
-        //         expect(this.player1).toBeAbleToSelect(this.ambusher);
+                expect(this.player1).toBeAbleToSelect(this.whisperer);
+                expect(this.player1).toBeAbleToSelect(this.youth);
+                expect(this.player1).toBeAbleToSelect(this.ambusher);
 
-        //         this.player1.clickCard(this.whisperer);
-        //         this.player1.clickCard(this.youth);
-        //         this.player1.clickPrompt('Done');
+                this.player1.clickCard(this.whisperer);
+                this.player1.clickCard(this.youth);
+                this.player1.clickPrompt('Done');
 
-        //         expect(this.player1).toHavePrompt('Choose 2 cards to discard');
-        //     });
-        // });
+                expect(this.whisperer.isDishonored).toBe(true);
+                expect(this.youth.isDishonored).toBe(true);
+                expect(this.duty.location).toBe('conflict discard pile');
+                expect(this.policyDebate.location).toBe('conflict discard pile');
+            });
+        });
     });
 });

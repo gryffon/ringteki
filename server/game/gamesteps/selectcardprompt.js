@@ -137,7 +137,7 @@ class SelectCardPrompt extends UiPrompt {
 
     activePrompt() {
         let buttons = this.properties.buttons;
-        if(!this.selector.automaticFireOnSelect() && this.selector.hasEnoughSelected(this.selectedCards) || this.selector.optional) {
+        if(!this.selector.automaticFireOnSelect(this.context) && this.selector.hasEnoughSelected(this.selectedCards, this.context) || this.selector.optional) {
             if(buttons.every(button => button.arg !== 'done')) {
                 buttons = [{ text: 'Done', arg: 'done' }].concat(buttons);
             }
@@ -173,7 +173,7 @@ class SelectCardPrompt extends UiPrompt {
             return false;
         }
 
-        if(this.selector.automaticFireOnSelect() && this.selector.hasReachedLimit(this.selectedCards, this.context)) {
+        if(this.selector.automaticFireOnSelect(this.context) && this.selector.hasReachedLimit(this.selectedCards, this.context)) {
             this.fireOnSelect();
         }
     }
@@ -227,7 +227,7 @@ class SelectCardPrompt extends UiPrompt {
             this.properties.onCancel(player);
             this.complete();
             return true;
-        } else if(arg === 'done' && this.selector.hasEnoughSelected(this.selectedCards)) {
+        } else if(arg === 'done' && this.selector.hasEnoughSelected(this.selectedCards, this.context)) {
             return this.fireOnSelect();
         } else if(this.properties.onMenuCommand(player, arg)) {
             this.complete();

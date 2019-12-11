@@ -159,6 +159,7 @@ export enum TargetModes {
     Token = 'token',
     AutoSingle = 'autoSingle',
     Exactly = 'exactly',
+    ExactlyVariable = 'exactlyVariable',
     MaxStat = 'maxStat',
     Single = 'single',
     Unlimited = 'unlimited',

@@ -314,7 +314,7 @@ const Costs = {
     variableCardDiscardCost: function (amountFunc) {
         return {
             canPay: function (context) {
-                return context.game.actions.chosenDiscard().canAffect(context.player, context);
+                return amountFunc(context) > 0 && context.game.actions.chosenDiscard().canAffect(context.player, context);
             },
             resolve: function (context, result) {
                 let amount = amountFunc(context)
