@@ -342,11 +342,15 @@ const Costs = {
                     }
                 });
             },
-            pay: function (context) {
-                context.costs.variableCardDiscardCost.forEach(card => {
-                    context.player.moveCard(card, Locations.ConflictDiscardPile);
-                })
+            payEvent: function (context) {
+                let action = context.game.actions.discardCard({ target: context.costs.variableCardDiscardCost });
+                return action.getEvent(context.costs.variableCardDiscardCost, context);
             },
+            // pay: function (context) {
+            //     context.costs.variableCardDiscardCost.forEach(card => {
+            //         context.player.moveCard(card, Locations.ConflictDiscardPile);
+            //     })
+            // },
             promptsPlayer: true
         };
     }

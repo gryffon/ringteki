@@ -6,7 +6,8 @@ class DishonorableAssault extends ProvinceCard {
     setupCardAbilities() {
         this.action({
             title: 'Discard cards to dishonor attackers',
-            effect: 'discards cards to dishonor attacking characters',
+            effect: 'discard {1}',
+            effectArgs: context => context.costs.variableCardDiscardCost.map(a => a.name).join(', '),
             cost: AbilityDsl.costs.variableCardDiscardCost(context => this.getNumberOfLegalTargets(context)),
             handler: context => {
                 this.game.promptForSelect(context.player, {
@@ -14,9 +15,9 @@ class DishonorableAssault extends ProvinceCard {
                     mode: TargetModes.Exactly,
                     numCards: context.costs.variableCardDiscardCost.length,
                     context: context,
-                    cardCondition: card => card.isAttacking(),
+                    cardCondition: card => card.type === CardTypes.Character && card.isAttacking(),
                     onSelect: (player, cards) => {
-                        this.game.addMessage('{0} dishonors {1}', player, cards);
+                        this.game.addMessage('{0} uses {1} to dishonor {2}', player, context.source, cards);
                         this.game.applyGameAction(context, { dishonor: cards });
                         return true;
                     }
