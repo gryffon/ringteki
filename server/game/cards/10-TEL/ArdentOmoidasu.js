@@ -10,8 +10,8 @@ class ArdentOmoidasu extends DrawCard {
                     const dishonoredByOpponentsEffect = (context.player.opponent === event.context.player);
                     const dishonoredByRingEffect = (event.context.source.type === 'ring');
                     const dishonoredByCardEffect = event.context.ability.isCardAbility();
-                    const dishonoredCharacterBelongsToOmoidasuOwner = targetIsControlledByPlayer(event.context.target, context);
-                    return dishonoredCharacterBelongsToOmoidasuOwner &&
+                    const dishonoredCharacterBelongsToOmoidasuController = event.card.controller === context.player;
+                    return dishonoredCharacterBelongsToOmoidasuController &&
                         dishonoredByOpponentsEffect &&
                         (dishonoredByRingEffect || dishonoredByCardEffect);
                 }
@@ -21,14 +21,6 @@ class ArdentOmoidasu extends DrawCard {
             })
         });
     }
-}
-
-function targetIsControlledByPlayer(target, context) {
-    if(Array.isArray(target)) {
-        return target.some(target => target.controller === context.player);
-    }
-
-    return target.controller === context.player;
 }
 
 ArdentOmoidasu.id = 'ardent-omoidasu';
