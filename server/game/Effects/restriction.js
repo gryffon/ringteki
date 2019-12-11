@@ -30,8 +30,7 @@ const checkRestrictions = {
     source: (context, effect) => context.source === effect.context.source,
     keywordAbilities: context => context.ability.isKeywordAbility(),
     nonKeywordAbilities: context => !context.ability.isKeywordAbility(),
-    nonForcedCharacterAbilities: context => context.source.type === CardTypes.Character && context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt,
-    characterKeywordAbilities: context => context.source.type === CardTypes.Character && context.ability.isKeywordAbility()
+    nonForcedAbilities: context => context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt
 };
 
 class Restriction extends EffectValue {

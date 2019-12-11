@@ -115,8 +115,15 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         let targets = this.conflict.defendingPlayer.cardsInPlay.filter(card => card.covert);
         let sources = this.conflict.attackers.filter(card => card.isCovert());
+        let contexts = sources.map(card => new AbilityContext({
+            game: this.game,
+            player: this.conflict.attackingPlayer,
+            source: card,
+            ability: new CovertAbility()
+        }));
+        contexts = contexts.filter(context => context.source.canInitiateKeywords(context));
 
-        if(sources.length === 0) {
+        if(contexts.length === 0) {
             return;
         }
 
@@ -128,14 +135,11 @@ class ConflictFlow extends BaseStepWithPipeline {
         // - a legal combination of covert targets and covert attackers
         // - no remaining covert
 
-        if(targets.length === sources.length) {
+        if(targets.length === contexts.length) {
             for(let i = 0; i < targets.length; i++) {
-                let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: sources[i], ability: new CovertAbility() });
+                let context = contexts[i];
                 context['target'] = context.targets.target = targets[i];
-
-                if(context.player.checkRestrictions('initiateKeywords', context)) {
-                    this.covert.push(context);
-                }
+                this.covert.push(context);
             }
             if(this.covert.every(context => context.targets.target.canBeBypassedByCovert(context))) {
                 return;
@@ -143,11 +147,10 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.covert = [];
         }
 
-        for(const source of sources) {
-            let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility() });
+        for(const context of contexts) {
             if(context.player.checkRestrictions('initiateKeywords', context)) {
                 this.game.promptForSelect(this.conflict.attackingPlayer, {
-                    activePromptTitle: 'Choose covert target for ' + source.name,
+                    activePromptTitle: 'Choose covert target for ' + context.source.name,
                     buttons: [{ text: 'No Target', arg: 'cancel' }],
                     cardType: CardTypes.Character,
                     controller: Players.Opponent,

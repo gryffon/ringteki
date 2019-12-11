@@ -337,11 +337,11 @@ class BaseCard extends EffectSource {
     }
 
     canTriggerAbilities(context: AbilityContext): boolean {
-        return !this.facedown && (this.checkRestrictions('triggerAbilities', context) || !context.ability.isTriggeredAbility());
+        return !this.facedown && this.checkRestrictions('triggerAbilities', context);
     }
 
     canInitiateKeywords(context: AbilityContext): boolean {
-        return !this.facedown && (this.checkRestrictions('initiateKeywords', context) || !context.ability.isKeywordAbility());
+        return !this.facedown && this.checkRestrictions('initiateKeywords', context);
     }
 
     getModifiedLimitMax(player: Player, ability: CardAbility, max: number): number {
