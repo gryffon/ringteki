@@ -5,7 +5,7 @@ describe('Dishonorable Assault', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['moto-youth', 'doji-whisperer', 'shinjo-ambusher', 'callow-delegate', 'young-harrier', 'steward-of-law'],
+                        inPlay: ['moto-youth', 'doji-whisperer', 'shinjo-ambusher', 'callow-delegate', 'young-harrier', 'steward-of-law']
                     },
                     player2: {
                         provinces: ['dishonorable-assault'],
@@ -140,7 +140,7 @@ describe('Dishonorable Assault', function() {
 
                 expect(this.getChatLogs(3)).toContain('player2 uses Dishonorable Assault to discard Fine Katana, Ornate Fan and dishonor Doji Whisperer and Moto Youth');
             });
-            
+
             it('Should not let you choose more cards than you have targets', function() {
                 this.noMoreActions();
                 this.initiateConflict({
@@ -156,7 +156,7 @@ describe('Dishonorable Assault', function() {
                 this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.assassination);
                 this.player2.clickPrompt('Done');
-                
+
                 expect(this.player2).toHavePrompt('Choose 2 characters');
                 this.player2.clickCard(this.whisperer);
                 this.player2.clickCard(this.youth);
@@ -186,7 +186,7 @@ describe('Dishonorable Assault', function() {
                 this.player2.clickCard(this.katana);
                 this.player2.clickCard(this.assassination);
                 this.player2.clickPrompt('Done');
-                
+
                 expect(this.player2).toHavePrompt('Choose 2 characters');
                 this.player2.clickCard(this.whisperer);
                 expect(this.player2).not.toHavePromptButton('Done');
@@ -403,7 +403,7 @@ describe('Dishonorable Assault', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['moto-youth', 'doji-whisperer', 'shinjo-ambusher', 'callow-delegate', 'young-harrier', 'hantei-xxxviii'],
+                        inPlay: ['moto-youth', 'doji-whisperer', 'shinjo-ambusher', 'callow-delegate', 'young-harrier', 'hantei-xxxviii']
                     },
                     player2: {
                         provinces: ['dishonorable-assault'],
@@ -475,7 +475,7 @@ describe('Dishonorable Assault', function() {
                 expect(this.youth.isDishonored).toBe(false);
                 expect(this.callow.isDishonored).toBe(true);
                 expect(this.harrier.isDishonored).toBe(true);
-           });
+            });
         });
 
         describe('Dishonorable Assault\'s ability (Keeper of Secret Names)', function() {

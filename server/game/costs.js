@@ -310,18 +310,17 @@ const Costs = {
             promptsPlayer: true
         };
     },
-    
+
     variableCardDiscardCost: function (amountFunc) {
         return {
             canPay: function (context) {
                 return amountFunc(context) > 0 && context.game.actions.chosenDiscard().canAffect(context.player, context);
             },
             resolve: function (context, result) {
-                let amount = amountFunc(context)
+                let amount = amountFunc(context);
                 let max = Math.min(amount, context.player.hand.size());
-                let choices = Array.from(Array(max), (x, i) => String(i + 1));
                 context.game.promptForSelect(context.player, {
-                    activePromptTitle: 'Choose up to ' + max + " card" + (amount === 1 ? '' : ('s')) + ' to discard',
+                    activePromptTitle: 'Choose up to ' + max + ' card' + (amount === 1 ? '' : ('s')) + ' to discard',
                     context: context,
                     mode: TargetModes.UpTo,
                     numCards: amount,
@@ -329,7 +328,7 @@ const Costs = {
                     location: Locations.Hand,
                     controller: Players.Self,
                     onSelect: (player, cards) => {
-                        if (cards.length === 0) {
+                        if(cards.length === 0) {
                             context.costs.variableCardDiscardCost = [];
                             result.cancelled = true;
                         } else {
@@ -362,9 +361,9 @@ const Costs = {
                 return context.game.actions.chosenDiscard().canAffect(context.player, context);
             },
             resolve: function (context, result) {
-                let amount = amountFunc(context)
+                let amount = amountFunc(context);
                 context.game.promptForSelect(context.player, {
-                    activePromptTitle: 'Choose ' + amount + " card" + (amount === 1 ? '' : ('s')) + ' to discard',
+                    activePromptTitle: 'Choose ' + amount + ' card' + (amount === 1 ? '' : ('s')) + ' to discard',
                     context: context,
                     mode: TargetModes.Exactly,
                     numCards: amount,
@@ -372,7 +371,7 @@ const Costs = {
                     location: Locations.Hand,
                     controller: Players.Self,
                     onSelect: (player, cards) => {
-                        if (cards.length === 0) {
+                        if(cards.length === 0) {
                             context.costs.multipleCardDiscardCost = [];
                             result.cancelled = true;
                         } else {
