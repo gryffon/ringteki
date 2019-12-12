@@ -43,7 +43,7 @@ class ResolveAbilityActionResolver extends AbilityResolver {
                 card: this.context.source,
                 context: this.context
             }));
-        }        
+        }
         this.game.openEventWindow(events);
     }
 
@@ -83,7 +83,7 @@ export interface ResolveAbilityProperties extends CardActionProperties {
 
 export class ResolveAbilityAction extends CardGameAction {
     name = 'resolveAbility';
-    defaultProperties: ResolveAbilityProperties = { 
+    defaultProperties: ResolveAbilityProperties = {
         ability: null,
         ignoredRequirements: [],
         subResolution: false
@@ -106,7 +106,7 @@ export class ResolveAbilityAction extends CardGameAction {
             return false;
         }
         let newContext = ability.createContext(player, newContextEvent);
-        let ignoredRequirements = properties.ignoredRequirements.concat('player', 'location');
+        let ignoredRequirements = properties.ignoredRequirements.concat('player', 'location', 'limit');
         return !ability.meetsRequirements(newContext, ignoredRequirements);
     }
 
