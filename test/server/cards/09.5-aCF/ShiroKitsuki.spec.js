@@ -62,22 +62,8 @@ describe('Shiro Kitsuki', function() {
                 expect(this.game.rings.earth.isUnclaimed()).toBe(false);
             });
 
-            it('should work with court games', function() {
-                this.player1.clickCard(this.shiroKitsuki);
-                this.player1.chooseCardInPrompt(this.courtGames.name, 'card-name');
-                this.player2.clickCard(this.adept);
-                this.player2.clickPrompt('Done');
-                this.player2.clickCard(this.courtGames);
-                this.player2.clickPrompt('Honor a friendly character');
-                this.player2.clickCard(this.adept);
-                expect(this.adept.isHonored).toBe(true);
-                expect(this.game.rings.earth.isUnclaimed()).toBe(true);
-                expect(this.player1).toHavePrompt('Choose a ring to claim');
-                this.player1.clickRing('earth');
-                expect(this.game.rings.earth.isUnclaimed()).toBe(false);
-            });
 
-            it('should work with cards other than the first card played in a conflict', function() {
+            it('should work with cards other than the first card played in a conflict (ready for battle as a reaction)', function() {
                 this.player1.clickCard(this.shiroKitsuki);
                 this.player1.chooseCardInPrompt(this.readyForBattle.name, 'card-name');
                 this.player2.clickCard(this.adept);
