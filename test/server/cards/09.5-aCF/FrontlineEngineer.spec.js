@@ -234,6 +234,27 @@ describe('Frontline Engineer', function() {
                 expect(this.getChatLogs(4)).toContain('player2 discards Adept of the Waves, Imperial Storehouse, Favorable Ground, replacing it with Iron Mine');
                 expect(this.getChatLogs(3)).toContain('player2 is shuffling their dynasty deck');
             });
+
+            it('should be able to take nothing', function () {
+                expect(this.storehouse.location).toBe('province 1');
+                expect(this.favorable.location).toBe('province 1');
+
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.frontlineEngineerAttacker],
+                    defenders: [this.frontlineEngineerDefender]
+                });
+
+                this.player2.clickCard(this.frontlineEngineerDefender);
+                expect(this.player2).toHavePrompt('Choose a holding');
+                expect(this.player2).toHavePromptButton('Take nothing');
+                this.player2.clickPrompt('Take nothing');
+                expect(this.getChatLogs(5)).toContain('player2 uses Frontline Engineer to look at the top five cards of their dynasty deck');
+                expect(this.getChatLogs(4)).toContain('player2 takes nothing');
+                expect(this.getChatLogs(3)).toContain('player2 is shuffling their dynasty deck');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
         });
     });
 });
