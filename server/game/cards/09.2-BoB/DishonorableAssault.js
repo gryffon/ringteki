@@ -7,13 +7,13 @@ class DishonorableAssault extends ProvinceCard {
         this.action({
             title: 'Discard cards to dishonor attackers',
             effect: 'discard {1} and dishonor {2}',
-            effectArgs: context => [context.costs.variableCardDiscardCost.map(a => a.name).sort().join(', '), context.target],
-            cost: AbilityDsl.costs.variableCardDiscardCost(context => this.getNumberOfLegalTargets(context)),
+            effectArgs: context => [context.costs.discardedCards.map(a => a.name).sort().join(', '), context.target],
+            cost: AbilityDsl.costs.discardCardsUpToVariableX(context => this.getNumberOfLegalTargets(context)),
             target: {
                 mode: TargetModes.ExactlyVariable,
                 numCardsFunc: (context) => {
-                    if(context && context.costs && context.costs.variableCardDiscardCost) {
-                        return context.costs.variableCardDiscardCost.length;
+                    if(context && context.costs && context.costs.discardedCards) {
+                        return context.costs.discardedCards.length;
                     }
 
                     return this.getNumberOfLegalTargets(context);

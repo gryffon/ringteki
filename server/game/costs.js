@@ -311,7 +311,7 @@ const Costs = {
         };
     },
 
-    variableCardDiscardCost: function (amountFunc) {
+    discardCardsUpToVariableX: function (amountFunc) {
         return {
             canPay: function (context) {
                 return amountFunc(context) > 0 && context.game.actions.chosenDiscard().canAffect(context.player, context);
@@ -329,10 +329,10 @@ const Costs = {
                     controller: Players.Self,
                     onSelect: (player, cards) => {
                         if(cards.length === 0) {
-                            context.costs.variableCardDiscardCost = [];
+                            context.costs.discardedCards = [];
                             result.cancelled = true;
                         } else {
-                            context.costs.variableCardDiscardCost = cards;
+                            context.costs.discardedCards = cards;
                         }
                         return true;
                     },
@@ -343,17 +343,17 @@ const Costs = {
                 });
             },
             payEvent: function (context) {
-                let action = context.game.actions.discardCard({ target: context.costs.variableCardDiscardCost });
-                return action.getEvent(context.costs.variableCardDiscardCost, context);
+                let action = context.game.actions.discardCard({ target: context.costs.discardedCards });
+                return action.getEvent(context.costs.discardedCards, context);
             },
             promptsPlayer: true
         };
     },
 
-    multipleCardDiscardCost: function (amountFunc) {
+    discardCardsExactlyVariableX: function (amountFunc) {
         return {
             canPay: function (context) {
-                return context.game.actions.chosenDiscard().canAffect(context.player, context);
+                return amountFunc(context) > 0 && context.game.actions.chosenDiscard().canAffect(context.player, context);
             },
             resolve: function (context, result) {
                 let amount = amountFunc(context);
@@ -367,10 +367,10 @@ const Costs = {
                     controller: Players.Self,
                     onSelect: (player, cards) => {
                         if(cards.length === 0) {
-                            context.costs.multipleCardDiscardCost = [];
+                            context.costs.discardedCards = [];
                             result.cancelled = true;
                         } else {
-                            context.costs.multipleCardDiscardCost = cards;
+                            context.costs.discardedCards = cards;
                         }
                         return true;
                     },
@@ -381,8 +381,8 @@ const Costs = {
                 });
             },
             payEvent: function (context) {
-                let action = context.game.actions.discardCard({ target: context.costs.multipleCardDiscardCost });
-                return action.getEvent(context.costs.multipleCardDiscardCost, context);
+                let action = context.game.actions.discardCard({ target: context.costs.discardedCards });
+                return action.getEvent(context.costs.discardedCards, context);
             },
             promptsPlayer: true
         };
