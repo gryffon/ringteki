@@ -1,6 +1,6 @@
 const ProvinceCard = require('../../provincecard.js');
-const AbilityDsl = require('../../abilitydsl');
 import { CardTypes, TargetModes } from '../../Constants.js';
+const AbilityDsl = require('../../abilitydsl');
 
 class DishonorableAssault extends ProvinceCard {
     setupCardAbilities() {
