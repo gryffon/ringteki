@@ -5,15 +5,15 @@ describe('Shiro Kitsuki', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        hand: ['fine-katana'],
-                        inPlay: ['solemn-scholar'],
+                        hand: ['fine-katana', 'for-shame'],
+                        inPlay: ['solemn-scholar', 'asako-tsuki'],
                         dynastyDiscard: ['keeper-initiate'],
                         role: 'keeper-of-water',
                         stronghold: 'shiro-kitsuki'
                     },
                     player2: {
                         inPlay: ['adept-of-the-waves'],
-                        hand: ['against-the-waves', 'fine-katana', 'kami-unleashed'],
+                        hand: ['against-the-waves', 'fine-katana', 'kami-unleashed', 'court-games', 'ready-for-battle'],
                         provinces: ['entrenched-position']
                     }
                 });
@@ -21,18 +21,24 @@ describe('Shiro Kitsuki', function() {
                 this.adept = this.player2.findCardByName('adept-of-the-waves');
                 this.againstTheWaves = this.player2.findCardByName('against-the-waves');
                 this.fineKatana = this.player2.findCardByName('fine-katana');
+                this.courtGames = this.player2.findCardByName('court-games');
+                this.readyForBattle = this.player2.findCardByName('ready-for-battle');
                 this.kamiUnleashed = this.player2.findCardByName('kami-unleashed');
                 this.entrenched = this.player2.findCardByName('entrenched-position');
                 this.keeper = this.player1.findCardByName('keeper-initiate');
 
                 this.shiroKitsuki = this.player1.findCardByName('shiro-kitsuki');
                 this.scholar = this.player1.findCardByName('solemn-scholar');
+                this.forShame = this.player1.findCardByName('for-shame');
+                this.asakoTsuki = this.player1.findCardByName('asako-tsuki');
 
                 this.noMoreActions();
-                this.player1.clickCard(this.scholar);
-                this.player1.clickRing('fire');
-                this.player1.clickCard(this.entrenched);
-                this.player1.clickPrompt('Initiate Conflict');
+                this.initiateConflict({
+                    attackers: [this.scholar, this.asakoTsuki],
+                    province: this.entrenched,
+                    ring: 'fire',
+                    type: 'political'
+                });
             });
 
             it('should trigger at the start of each conflict', function() {
@@ -50,6 +56,40 @@ describe('Shiro Kitsuki', function() {
                 this.player1.chooseCardInPrompt(this.fineKatana.name, 'card-name');
                 this.player2.clickPrompt('Done');
                 this.player2.playAttachment(this.fineKatana, this.adept);
+                expect(this.game.rings.earth.isUnclaimed()).toBe(true);
+                expect(this.player1).toHavePrompt('Choose a ring to claim');
+                this.player1.clickRing('earth');
+                expect(this.game.rings.earth.isUnclaimed()).toBe(false);
+            });
+
+            it('should work with court games', function() {
+                this.player1.clickCard(this.shiroKitsuki);
+                this.player1.chooseCardInPrompt(this.courtGames.name, 'card-name');
+                this.player2.clickCard(this.adept);
+                this.player2.clickPrompt('Done');
+                this.player2.clickCard(this.courtGames);
+                this.player2.clickPrompt('Honor a friendly character');
+                this.player2.clickCard(this.adept);
+                expect(this.adept.isHonored).toBe(true);
+                expect(this.game.rings.earth.isUnclaimed()).toBe(true);
+                expect(this.player1).toHavePrompt('Choose a ring to claim');
+                this.player1.clickRing('earth');
+                expect(this.game.rings.earth.isUnclaimed()).toBe(false);
+            });
+
+            it('should work with cards other than the first card played in a conflict', function() {
+                this.player1.clickCard(this.shiroKitsuki);
+                this.player1.chooseCardInPrompt(this.readyForBattle.name, 'card-name');
+                this.player2.clickCard(this.adept);
+                this.player2.clickPrompt('Done');
+                this.player2.clickPrompt('Pass');
+
+                this.player1.clickCard(this.forShame);
+                this.player1.clickCard(this.adept);
+                this.player2.clickPrompt('bow this character');
+                this.player2.clickCard(this.readyForBattle);
+
+                expect(this.adept.bowed).toBe(false);
                 expect(this.game.rings.earth.isUnclaimed()).toBe(true);
                 expect(this.player1).toHavePrompt('Choose a ring to claim');
                 this.player1.clickRing('earth');

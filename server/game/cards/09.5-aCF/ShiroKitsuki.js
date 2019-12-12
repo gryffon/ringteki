@@ -43,6 +43,7 @@ class ShiroKitsuki extends StrongholdCard {
                                 event.card.name === this.nameOfCard;
                         }
                     },
+                    multipleTrigger: true,
                     gameAction: AbilityDsl.actions.selectRing(context => ({
                         activePromptTitle: 'Choose a ring to claim',
                         ringCondition: ring => ring.isUnclaimed(),
