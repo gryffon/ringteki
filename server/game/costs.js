@@ -329,10 +329,10 @@ const Costs = {
                     controller: Players.Self,
                     onSelect: (player, cards) => {
                         if(cards.length === 0) {
-                            context.costs.discardedCards = [];
+                            context.costs.discardCardsUpToVariableX = [];
                             result.cancelled = true;
                         } else {
-                            context.costs.discardedCards = cards;
+                            context.costs.discardCardsUpToVariableX = cards;
                         }
                         return true;
                     },
@@ -343,8 +343,8 @@ const Costs = {
                 });
             },
             payEvent: function (context) {
-                let action = context.game.actions.discardCard({ target: context.costs.discardedCards });
-                return action.getEvent(context.costs.discardedCards, context);
+                let action = context.game.actions.discardCard({ target: context.costs.discardCardsUpToVariableX });
+                return action.getEvent(context.costs.discardCardsUpToVariableX, context);
             },
             promptsPlayer: true
         };
@@ -367,10 +367,10 @@ const Costs = {
                     controller: Players.Self,
                     onSelect: (player, cards) => {
                         if(cards.length === 0) {
-                            context.costs.discardedCards = [];
+                            context.costs.discardCardsExactlyVariableX = [];
                             result.cancelled = true;
                         } else {
-                            context.costs.discardedCards = cards;
+                            context.costs.discardCardsExactlyVariableX = cards;
                         }
                         return true;
                     },
@@ -381,8 +381,8 @@ const Costs = {
                 });
             },
             payEvent: function (context) {
-                let action = context.game.actions.discardCard({ target: context.costs.discardedCards });
-                return action.getEvent(context.costs.discardedCards, context);
+                let action = context.game.actions.discardCard({ target: context.costs.discardCardsExactlyVariableX });
+                return action.getEvent(context.costs.discardCardsExactlyVariableX, context);
             },
             promptsPlayer: true
         };
