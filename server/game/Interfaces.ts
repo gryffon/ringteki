@@ -11,6 +11,7 @@ import { Players, TargetModes, CardTypes, Locations, EventNames, Durations } fro
 interface BaseTarget {
     activePromptTitle?: string;
     player?: ((context: AbilityContext) => Players) | Players;
+    targetingAction?: (context: AbilityContext) => object;
     gameAction?: GameAction | GameAction[];
 };
 

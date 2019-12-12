@@ -74,6 +74,7 @@ export class GameAction {
 
     allTargetsLegal(context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
+        console.log((properties.target as PlayerOrRingOrCardOrToken[]).map(target => [target.name, this.canAffect(target, context, additionalProperties)]));
         return (properties.target as PlayerOrRingOrCardOrToken[]).every(target => this.canAffect(target, context, additionalProperties));
     }
 

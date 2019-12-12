@@ -33,7 +33,7 @@ export class LastingEffectCardAction extends CardGameAction {
         let properties = this.getProperties(context, additionalProperties);
         properties.effect = properties.effect.map(factory => factory(context.game, context.source, properties));
         const lastingEffectRestrictions = card.getEffects(EffectNames.CannotApplyLastingEffects);
-        return super.canAffect(card, context) && properties.effect.some(props => 
+        return super.canAffect(card, context) && properties.effect.some(props =>
             props.effect.canBeApplied(card) && !lastingEffectRestrictions.some(condition => condition(props.effect))
         );
     }

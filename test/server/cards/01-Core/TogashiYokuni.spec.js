@@ -1,4 +1,4 @@
-describe('Togashi Yokuni', function() {
+fdescribe('Togashi Yokuni', function() {
     integration(function() {
         describe('Togashi Yokuni\'s ability', function() {
             beforeEach(function() {
@@ -21,10 +21,15 @@ describe('Togashi Yokuni', function() {
                 this.adeptOfTheWaves = this.player2.placeCardInProvince('adept-of-the-waves');
             });
 
-            it('should allow copying of an ability', function() {
+            fit('should allow copying of an ability', function() {
+                this.togashiYokuni = this.player1.findCardByName('togashi-yokuni');
+                console.log(this.togashiYokuni.abilities.actions[0].meetsRequirements())
                 this.togashiYokuni = this.player1.clickCard('togashi-yokuni');
                 expect(this.player1).toHavePrompt('Togashi Yokuni');
+                expect(this.player1).toBeAbleToSelect(this.borderRider);
                 this.player1.clickCard(this.borderRider);
+                expect(this.player1).toHavePrompt('Togashi Yokuni');
+                this.player1.clickPrompt('Ready this character');
                 this.togashiYokuni.bowed = true;
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);

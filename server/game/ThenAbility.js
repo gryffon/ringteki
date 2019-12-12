@@ -26,7 +26,7 @@ class ThenAbility extends BaseAbility {
     checkGameActionsForPotential(context) {
         if(super.checkGameActionsForPotential(context)) {
             return true;
-        } else if(this.gameAction.every(gameAction => gameAction.isOptional(context)) && this.properties.then) {
+        } else if(this.gameAction.isOptional(context) && this.properties.then) {
             const then = typeof(this.properties.then) === 'function' ? this.properties.then(context) : this.properties.then;
             const thenAbility = new ThenAbility(this.game, this.card, then);
             return thenAbility.meetsRequirements(thenAbility.createContext(context.player)) === '';
@@ -56,7 +56,7 @@ class ThenAbility extends BaseAbility {
         // if there are any targets, look for gameActions attached to them
         let actions = this.targets.reduce((array, target) => array.concat(target.getGameAction(context)), []);
         // look for a gameAction on the ability itself, on an attachment execute that action on its parent, otherwise on the card itself
-        return actions.concat(this.gameAction);
+        return this.gameAction ? actions.concat(this.gameAction) : actions;
     }
 
     executeHandler(context) {

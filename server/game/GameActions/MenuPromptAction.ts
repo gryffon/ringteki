@@ -12,6 +12,13 @@ export interface MenuPromptProperties extends GameActionProperties {
 }
 
 export class MenuPromptAction extends GameAction {
+    defaultProperties: MenuPromptProperties = {
+        activePromptTitle: 'Choose one:',
+        choices: [],
+        choiceHandler: () => ({}),
+        gameAction: null
+    };
+    
     constructor(properties: MenuPromptProperties | ((context: AbilityContext) => MenuPromptProperties)) {
         super(properties);
     }
@@ -31,6 +38,7 @@ export class MenuPromptAction extends GameAction {
 
     canAffect(target: any, context: AbilityContext, additionalProperties = {}): boolean {
         let properties = this.getProperties(context, additionalProperties);
+        console.log('canAffect', properties, additionalProperties);
         return (properties.choices as string[]).some(choice => {
             let childProperties = properties.choiceHandler(choice, false, properties);
             return properties.gameAction.canAffect(target, context, childProperties);

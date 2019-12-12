@@ -72,6 +72,7 @@ class BaseCardSelector {
         if(!card) {
             return false;
         }
+        console.log(card.name);
         if(this.checkTarget && !card.checkRestrictions('target', context)) {
             return false;
         }

@@ -4,17 +4,28 @@ const { Stages } = require('../Constants.js');
 
 class AbilityTargetAbility extends AbilityTargetCard {
     getTargetingGameAction(properties) {
-        return new MenuPromptAction({
+    // @ts-ignore
+    return new MenuPromptAction({
             activePromptTitle: 'Choose an ability',
-            choices: [],
-            choiceHandler: () => ({}),
             gameAction: super.getTargetingGameAction(properties)
+        });
+    }
+
+    getTargetingActionPropFactory(properties) {
+        return context => Object.assign(super.getTargetingActionPropFactory(properties)(context), {
+            targets: !!this.properties.targets,
+            subActionProperties: card => {
+                console.log('subAction');
+                const abilities = card.actions.concat(card.reactions).filter(ability => ability.isTriggeredAbility() && this.properties.abilityCondition(ability));
+                return { choices: abilities.map(ability => ability.title) };
+            }
         });
     }
 
     getCardCondition(properties, cardCondition) {
         return (card, context) => {
             let abilities = card.actions.concat(card.reactions).filter(ability => ability.isTriggeredAbility() && this.properties.abilityCondition(ability));
+            console.log(abilities.map(ability => ability.title));
             return abilities.some(ability => {
                 let contextCopy = context.copy();
                 contextCopy.targetAbility = ability;
@@ -34,21 +45,16 @@ class AbilityTargetAbility extends AbilityTargetCard {
             targets: !!this.properties.targets,
             subActionProperties: card => {
                 const abilities = card.actions.concat(card.reactions).filter(ability => ability.isTriggeredAbility() && this.properties.abilityCondition(ability));
-                if(abilities.length === 1) {
-                    context.targetAbility = abilities[0];
-                } else if(abilities.length > 1) {
-                    return {
-                        choices: abilities.map(ability => ability.title).concat('Back'),
-                        choiceHandler: choice => {
-                            if(choice === 'Back') {
-                                context.game.queueSimpleStep(() => this.resolve(context, targetResults));
-                            } else {
-                                context.targetAbility = abilities.find(ability => ability.title === choice);
-                            }
+                return {
+                    choices: abilities.map(ability => ability.title).concat('Back'),
+                    choiceHandler: choice => {
+                        if(choice === 'Back') {
+                            context.game.queueSimpleStep(() => this.resolve(context, targetResults));
+                        } else {
+                            context.targetAbility = abilities.find(ability => ability.title === choice);
                         }
-                    };
-                }
-                return {};
+                    }
+                };
             }
         });
     }

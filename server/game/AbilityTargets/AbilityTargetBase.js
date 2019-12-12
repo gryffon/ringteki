@@ -17,7 +17,7 @@ class AbilityTargetBase {
 
     getTargetingGameAction(properties) {
         return new HandlerAction(context => ({
-            hasTargetsChosenByInitiatingPlayer: properties.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context))
+            hasTargetsChosenByInitiatingPlayer: properties.gameAction.hasTargetsChosenByInitiatingPlayer(context)
         }));
     }
 

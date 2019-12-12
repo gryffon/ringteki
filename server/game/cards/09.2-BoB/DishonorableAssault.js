@@ -17,7 +17,7 @@ class DishonorableAssault extends ProvinceCard {
                     mode: TargetModes.Exactly,
                     targetType: CardTypes.Character,
                     cardCondition: card => card.isAttacking(),
-                    numCards: context.cost.discardCard.length,    
+                    numCards: context.costs.discardCard.length,    
                 }),
                 gameAction: AbilityDsl.actions.dishonor()
             }

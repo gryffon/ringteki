@@ -13,14 +13,12 @@ class AbilityTargetCard extends AbilityTargetBase {
     getTargetingActionPropFactory(properties) {
         const props = {
             targets: true,
-            cardType: properties.cardType,
-            mode: properties.mode,
-            controller: properties.controller,
-            optional: properties.optional,
-            numCards: properties.numCards,
-            location: properties.location,
-            cardStat: properties.cardStat,
-            maxStat: properties.maxStat
+            optional: !!properties.optional
+        };
+        for(const key of ['cardType', 'mode', 'controller', 'numCards', 'location','cardStat','maxStat']) {
+            if(properties[key]) {
+                props[key] = properties[key]
+            }
         }
         return context => {
             const baseProps = super.getTargetingActionPropFactory(properties)(context);

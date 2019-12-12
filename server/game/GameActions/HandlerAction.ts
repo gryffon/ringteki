@@ -2,7 +2,7 @@ import { GameAction, GameActionProperties } from './GameAction';
 import AbilityContext = require('../AbilityContext');
 
 export interface HandlerProperties extends GameActionProperties {
-    handler: (context: AbilityContext) => void;
+    handler?: (context: AbilityContext) => void;
     hasTargetsChosenByInitiatingPlayer?: boolean;
 }
 
@@ -11,8 +11,20 @@ export class HandlerAction extends GameAction {
         handler: () => true,
         hasTargetsChosenByInitiatingPlayer: false
     };
+
+    constructor(propertyFactory: HandlerProperties | ((context?: AbilityContext) => HandlerProperties)) {
+        super(propertyFactory);
+    }
+
+    canAffect(): boolean {
+        return true;
+    }
     
     hasLegalTarget(): boolean {
+        return true;
+    }
+
+    allTargetsLegal(): boolean {
         return true;
     }
 

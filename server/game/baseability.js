@@ -3,6 +3,7 @@ const AbilityTargetCard = require('./AbilityTargets/AbilityTargetCard.js');
 const AbilityTargetRing = require('./AbilityTargets/AbilityTargetRing.js');
 const AbilityTargetSelect = require('./AbilityTargets/AbilityTargetSelect.js');
 const AbilityTargetToken = require('./AbilityTargets/AbilityTargetToken.js');
+const { MultipleGameAction } = require('./GameActions/MultipleGameAction');
 const { Stages, TargetModes } = require('./Constants.js');
 
 /**
@@ -16,21 +17,11 @@ const { Stages, TargetModes } = require('./Constants.js');
  * ability is generated from.
  */
 class BaseAbility {
-    /**
-     * Creates an ability.
-     *
-     * @param {Object} properties - An object with ability related properties.
-     * @param {Object|Array} [properties.cost] - optional property that specifies
-     * the cost for the ability. Can either be a cost object or an array of cost
-     * objects.
-     * @param {Object} [properties.target] - optional property that specifies
-     * the target of the ability.
-     * @param [properties.gameAction] - GameAction[] optional array of game actions
-     */
     constructor(properties) {
-        this.gameAction = properties.gameAction || [];
-        if(!Array.isArray(this.gameAction)) {
-            this.gameAction = [this.gameAction];
+        this.gameAction = properties.gameAction;
+        if(Array.isArray(this.gameAction)) {
+            // @ts-ignore
+            this.gameAction = new MultipleGameAction(this.gameAction);
         }
         this.buildTargets(properties);
         this.cost = this.buildCost(properties.cost);
@@ -68,11 +59,9 @@ class BaseAbility {
 
     getAbilityTarget(name, properties) {
         if(properties.gameAction) {
-            if(!Array.isArray(properties.gameAction)) {
-                properties.gameAction = [properties.gameAction];
+            if(Array.isArray(properties.gameAction)) {
+                properties.gameAction = new MultipleGameAction(properties.gameAction);
             }
-        } else {
-            properties.gameAction = [];
         }
         if(properties.mode === TargetModes.Select) {
             return new AbilityTargetSelect(name, properties, this);
@@ -98,7 +87,7 @@ class BaseAbility {
             return 'cost';
         }
         if(this.targets.length === 0) {
-            if(this.gameAction.length > 0 && !this.checkGameActionsForPotential(context)) {
+            if(this.gameAction && !this.checkGameActionsForPotential(context)) {
                 return 'condition';
             }
             return '';
@@ -107,7 +96,7 @@ class BaseAbility {
     }
 
     checkGameActionsForPotential(context) {
-        return this.gameAction.some(gameAction => gameAction.hasLegalTarget(context));
+        return this.gameAction.hasLegalTarget(context);
     }
 
     /**
@@ -200,7 +189,7 @@ class BaseAbility {
 
     hasTargetsChosenByInitiatingPlayer(context) {
         return this.targets.some(target => target.hasTargetsChosenByInitiatingPlayer(context)) ||
-            this.gameAction.some(action => action.hasTargetsChosenByInitiatingPlayer(context)) ||
+            this.gameAction.hasTargetsChosenByInitiatingPlayer(context) ||
             this.cost.some(cost => cost.hasTargetsChosenByInitiatingPlayer && cost.hasTargetsChosenByInitiatingPlayer(context));
     }
 
