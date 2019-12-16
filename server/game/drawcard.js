@@ -501,8 +501,9 @@ class DrawCard extends BaseCard {
     }
 
     getMilitarySkillExcludingModifiers(exclusions, floor = true) {
-        if (!Array.isArray(exclusions))
+        if(!Array.isArray(exclusions)) {
             exclusions = [exclusions];
+        }
         let modifiers = this.getMilitaryModifiers(exclusions);
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         if(isNaN(skill)) {
@@ -525,8 +526,9 @@ class DrawCard extends BaseCard {
     }
 
     getPoliticalSkillExcludingModifiers(exclusions, floor = true) {
-        if (!Array.isArray(exclusions))
+        if(!Array.isArray(exclusions)) {
             exclusions = [exclusions];
+        }
         let modifiers = this.getPoliticalModifiers();
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         if(isNaN(skill)) {
