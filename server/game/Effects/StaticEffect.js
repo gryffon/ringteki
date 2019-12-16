@@ -17,14 +17,16 @@ const MilitaryModifiers = [
     EffectNames.ModifyBaseMilitarySkillMultiplier,
     EffectNames.ModifyMilitarySkill,
     EffectNames.ModifyMilitarySkillMultiplier,
-    EffectNames.ModifyBothSkills
+    EffectNames.ModifyBothSkills,
+    EffectNames.AttachmentMilitarySkillModifier
 ];
 
 const PoliticalModifiers = [
     EffectNames.ModifyBasePoliticalSkillMultiplier,
     EffectNames.ModifyPoliticalSkill,
     EffectNames.ModifyPoliticalSkillMultiplier,
-    EffectNames.ModifyBothSkills
+    EffectNames.ModifyBothSkills,
+    EffectNames.AttachmentPoliticalSkillModifier
 ];
 
 const hasDash = {
@@ -32,8 +34,10 @@ const hasDash = {
     modifyBasePoliticalSkillMultiplier: card => card.hasDash('political'),
     modifyBothSkills: card => card.hasDash('military') && card.hasDash('political'),
     modifyMilitarySkill: card => card.hasDash('military'),
+    attachmentMilitarySkillModifier: card => card.hasDash('military'),
     modifyMilitarySkillMultiplier: card => card.hasDash('military'),
     modifyPoliticalSkill: card => card.hasDash('political'),
+    attachmentPoliticalSkillModifier: card => card.hasDash('political'),
     modifyPoliticalSkillMultiplier: card => card.hasDash('political'),
     setBaseMilitarySkill: card => card.hasDash('military'),
     setBasePoliticalSkill: card => card.hasDash('political'),
