@@ -1,4 +1,4 @@
-describe('Matsu Koso', function() {
+describe('Bayushi Gensato', function() {
     integration(function() {
         beforeEach(function() {
             this.setupTest({
