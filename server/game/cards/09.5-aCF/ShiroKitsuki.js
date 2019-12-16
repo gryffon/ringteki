@@ -34,15 +34,16 @@ class ShiroKitsuki extends StrongholdCard {
             },
             cost: [shiroKitsukiCost()],
             limit: AbilityDsl.limit.unlimitedPerConflict(),
-            gameAction: AbilityDsl.actions.playerLastingEffect(() => ({
+            gameAction: AbilityDsl.actions.playerLastingEffect(playerLastingEffectContext => ({
                 duration: Durations.UntilEndOfConflict,
                 effect: AbilityDsl.effects.delayedEffect({
                     when: {
                         onCardPlayed: (event, context) => {
                             return event.player === context.player.opponent &&
-                                event.card.name === this.nameOfCard;
+                                event.card.name === playerLastingEffectContext.costs.shiroKitsukiCost;
                         }
                     },
+                    multipleTrigger: true,
                     gameAction: AbilityDsl.actions.selectRing(context => ({
                         activePromptTitle: 'Choose a ring to claim',
                         ringCondition: ring => ring.isUnclaimed(),
@@ -55,9 +56,9 @@ class ShiroKitsuki extends StrongholdCard {
         });
     }
 
-    selectCardName(player, cardName) {
-        this.game.addMessage('{0} names {1} - if {2} plays copies of this card {0} gets to claim a ring', player, cardName, player.opponent);
-        this.nameOfCard = cardName;
+    selectCardName(player, cardName, context) {
+        context.game.addMessage('{0} names {1} - if {2} plays copies of this card {0} gets to claim a ring', player, cardName, player.opponent);
+        context.costs.shiroKitsukiCost = cardName;
         return true;
     }
 }

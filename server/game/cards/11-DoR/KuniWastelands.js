@@ -1,20 +1,22 @@
 const ProvinceCard = require('../../provincecard.js');
 const AbilityDsl = require('../../abilitydsl.js');
-const { Players } = require('../../Constants');
+const { CardTypes, Locations, Players } = require('../../Constants');
 
 class KuniWastelands extends ProvinceCard {
     setupCardAbilities() {
         this.persistentEffect({
             condition: (context) => context.source.isConflictProvince(),
             targetController: Players.Opponent,
+            targetLocation: Locations.PlayArea,
+            match: card => card.type === CardTypes.Character,
             effect: [
-                AbilityDsl.effects.playerCannot({
+                AbilityDsl.effects.cardCannot({
                     cannot: 'triggerAbilities',
-                    restricts: 'nonForcedCharacterAbilities'
+                    restricts: 'nonForcedAbilities'
                 }),
-                AbilityDsl.effects.playerCannot({
+                AbilityDsl.effects.cardCannot({
                     cannot: 'initiateKeywords',
-                    restricts: 'characterKeywordAbilities'
+                    restricts: 'keywordAbilities'
                 })
             ]
         });
