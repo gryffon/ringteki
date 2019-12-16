@@ -92,6 +92,48 @@ describe('Ichiro', function() {
             expect(this.player1).toHavePrompt('Conflict Action Window');
         });
 
+        it('should prevent going from DH to Neutral', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.ichiro, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.clickCard(this.scorpion2);
+            this.player2.clickCard(this.challenger);
+            expect(this.challenger.isDishonored).toBe(true);
+            this.player1.clickCard(this.katana);
+            this.player1.clickCard(this.challenger);
+            this.player2.pass();
+
+            this.player1.clickCard(this.crane);
+            expect(this.player1).toHavePrompt('Conflict Action Window');
+        });
+
+        it('should prevent going from honored to Neutral', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.ichiro, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.pass();
+
+            this.player1.clickCard(this.crane);
+            this.player1.clickCard(this.challenger);
+            expect(this.challenger.isHonored).toBe(true);
+            this.player2.pass();
+            this.player1.clickCard(this.katana);
+            this.player1.clickCard(this.challenger);
+            this.player2.clickCard(this.scorpion2);
+
+            expect(this.player2).toBeAbleToSelect(this.ichiro);
+            expect(this.player2).not.toBeAbleToSelect(this.challenger);
+            expect(this.player2).toBeAbleToSelect(this.kuwanan);
+        });
+
         it('should not allow triggering Mark of Shame', function() {
             this.player1.clickCard(this.shame);
             this.player1.clickCard(this.kuwanan);

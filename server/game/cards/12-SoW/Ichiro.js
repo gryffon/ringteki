@@ -1,14 +1,15 @@
 const DrawCard = require('../../drawcard.js');
 const { Players, CardTypes } = require('../../Constants');
+const AbilityDsl = require('../../abilitydsl.js');
 
 class Ichiro extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.persistentEffect({
             targetController: Players.Any,
             match: card => card.getType() === CardTypes.Character && card.attachments.size() > 0,
             effect: [
-                ability.effects.cardCannot('honor'),
-                ability.effects.cardCannot('dishonor')
+                AbilityDsl.effects.cardCannot('honor'),
+                AbilityDsl.effects.cardCannot('dishonor')
             ]
         });
     }
