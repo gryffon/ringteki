@@ -8,9 +8,12 @@ class SeventhTower extends DrawCard {
             title: 'Resolve the ring effect',
             when: {
                 afterConflict: (event, context) => {
-                    let cards = context.player.getDynastyCardsInProvince(event.conflict.conflictProvince.location);
-                    return cards.some((card) => !card.facedown && card.type === CardTypes.Holding && card.hasTrait('kaiu-wall'))
-                            && context.player.isDefendingPlayer() && event.conflict.winner === context.player;
+                    if(event && event.conflict && event.conflict.conflictProvince && event.conflict.conflictProvince.location) {
+                        let cards = context.player.getDynastyCardsInProvince(event.conflict.conflictProvince.location);
+                        return cards.some((card) => !card.facedown && card.type === CardTypes.Holding && card.hasTrait('kaiu-wall'))
+                                && context.player.isDefendingPlayer() && event.conflict.winner === context.player;
+                    }
+                    return false;
                 }
             },
             gameAction: AbilityDsl.actions.resolveConflictRing()
