@@ -24,17 +24,24 @@ class AnOceanInADrop extends DrawCard {
     }
 
     getGameActions(player) {
-        let handSize = player.hand.value().length;
-        console.log(handSize);
-        
         return [
-            AbilityDsl.actions.moveCard(() => ({
-                shuffle: false,
-                bottom: true,
-                destination: Locations.ConflictDeck,
-                target: player.hand,
-            })),
-            AbilityDsl.actions.draw(() => ({ target: player, amount: handSize })),
+            AbilityDsl.actions.moveCard((context) => { 
+                let target = context.player;
+                if (player === this.owner.opponent) {
+                    target = context.player.opponent;
+                }
+                return ({ shuffle: false,
+                    bottom: true,
+                    destination: Locations.ConflictDeck,
+                    target: target.hand.shuffle() })
+            }),
+            AbilityDsl.actions.draw((context) => { 
+                let target = context.player;
+                if (player === this.owner.opponent) {
+                    target = context.player.opponent;
+                }
+                return ({ target: target, amount: 3 })
+            }),
         ];
     }
 }

@@ -33,6 +33,21 @@ describe('An Ocean In A Drop', function() {
             this.duty2 = this.player2.findCardByName('duty');
             this.assassination2 = this.player2.findCardByName('assassination');
 
+            this.player1.reduceDeckToNumber('conflict deck', 0);
+            expect(this.player1.conflictDeck.length).toBe(0);
+            this.player2.reduceDeckToNumber('conflict deck', 0);
+            expect(this.player2.conflictDeck.length).toBe(0);
+
+            this.player1.moveCard(this.assassination, 'conflict deck');
+            this.player1.moveCard(this.duty, 'conflict deck');
+            this.player1.moveCard(this.fan, 'conflict deck');
+            this.player1.moveCard(this.katana, 'conflict deck');
+
+            this.player2.moveCard(this.assassination2, 'conflict deck');
+            this.player2.moveCard(this.duty2, 'conflict deck');
+            this.player2.moveCard(this.fan2, 'conflict deck');
+            this.player2.moveCard(this.katana2, 'conflict deck');
+
             this.player1.playAttachment(this.ocean, this.doomed);
         });
 
@@ -85,6 +100,7 @@ describe('An Ocean In A Drop', function() {
             expect(this.duty.location).toBe('conflict deck');
             expect(this.assassination.location).toBe('conflict deck');
 
+            console.log('Click Ocean');
             this.player1.clickCard(this.ocean);
             expect(this.player1).toHavePromptButton('player1');
             expect(this.player1).toHavePromptButton('player2');
@@ -96,6 +112,7 @@ describe('An Ocean In A Drop', function() {
             expect(this.fan.location).toBe('hand');
             expect(this.duty.location).toBe('hand');
             expect(this.assassination.location).toBe('conflict deck');
+            expect(this.player1.hand.length).toBe(hand);
             expect(this.getChatLogs(5)).toContain('hahhh');
         });
     });
