@@ -17,7 +17,7 @@ class AnOceanInADrop extends DrawCard {
                 }
             },
             effect: 'place {1}\'s hand on the bottom of their deck and have {1} draw {2} cards',
-            effectArgs: (context) => context.select === this.owner.name ? 
+            effectArgs: (context) => context.select === this.owner.name ?
                 [this.owner.name, context.player.hand.value().length] :
                 [this.owner.opponent.name, context.player.opponent.hand.value().length]
         });
@@ -25,23 +25,23 @@ class AnOceanInADrop extends DrawCard {
 
     getGameActions(player) {
         return [
-            AbilityDsl.actions.moveCard((context) => { 
+            AbilityDsl.actions.moveCard((context) => {
                 let target = context.player;
-                if (player === this.owner.opponent) {
+                if(player === this.owner.opponent) {
                     target = context.player.opponent;
                 }
                 return ({ shuffle: false,
                     bottom: true,
                     destination: Locations.ConflictDeck,
-                    target: target.hand.shuffle() })
+                    target: target.hand.shuffle() });
             }),
-            AbilityDsl.actions.draw((context) => { 
+            AbilityDsl.actions.draw((context) => {
                 let target = context.player;
-                if (player === this.owner.opponent) {
+                if(player === this.owner.opponent) {
                     target = context.player.opponent;
                 }
-                return ({ target: target, amount: context.player.hand.value().length })
-            }),
+                return ({ target: target, amount: context.player.hand.value().length });
+            })
         ];
     }
 }

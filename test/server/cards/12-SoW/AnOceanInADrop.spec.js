@@ -10,7 +10,8 @@ describe('An Ocean In A Drop', function() {
                 },
                 player2: {
                     hand: ['way-of-the-scorpion', 'way-of-the-crane', 'way-of-the-dragon'],
-                    conflictDeck: ['fine-katana', 'ornate-fan', 'duty', 'assassination']
+                    conflictDeck: ['fine-katana', 'ornate-fan', 'duty', 'assassination'],
+                    dynastyDiscard: ['hantei-xxxviii']
                 }
             });
 
@@ -33,10 +34,10 @@ describe('An Ocean In A Drop', function() {
             this.duty2 = this.player2.findCardByName('duty');
             this.assassination2 = this.player2.findCardByName('assassination');
 
+            this.hantei = this.player2.findCardByName('hantei-xxxviii');
+
             this.player1.reduceDeckToNumber('conflict deck', 0);
-            expect(this.player1.conflictDeck.length).toBe(0);
             this.player2.reduceDeckToNumber('conflict deck', 0);
-            expect(this.player2.conflictDeck.length).toBe(0);
 
             this.player1.moveCard(this.assassination, 'conflict deck');
             this.player1.moveCard(this.duty, 'conflict deck');
@@ -84,6 +85,40 @@ describe('An Ocean In A Drop', function() {
             expect(this.player1).toHavePromptButton('player2');
         });
 
+        it('should not allow selecting a player with no hand', function() {
+            this.player2.reduceDeckToNumber('conflict deck', 0);
+            expect(this.player2.conflictDeck.length).toBe(0);
+
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.doomed],
+                defenders: [],
+                type: 'military'
+            });
+            this.player2.pass();
+            this.player1.clickCard(this.ocean);
+            expect(this.player1).toHavePromptButton('player1');
+            expect(this.player1).not.toHavePromptButton('player2');
+        });
+
+        it('should not allow using if neither player have any cards', function() {
+            this.player1.reduceDeckToNumber('conflict deck', 0);
+            expect(this.player1.conflictDeck.length).toBe(0);
+            this.player2.reduceDeckToNumber('conflict deck', 0);
+            expect(this.player2.conflictDeck.length).toBe(0);
+
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.doomed],
+                defenders: [],
+                type: 'military'
+            });
+            this.player2.pass();
+            expect(this.player1).toHavePrompt('Conflict Action Window');
+            this.player1.clickCard(this.ocean);
+            expect(this.player1).toHavePrompt('Conflict Action Window');
+        });
+
         it('should put the players hand on the bottom of their deck and draw an equal number of cards', function() {
             let hand = this.player1.hand.length;
 
@@ -100,7 +135,6 @@ describe('An Ocean In A Drop', function() {
             expect(this.duty.location).toBe('conflict deck');
             expect(this.assassination.location).toBe('conflict deck');
 
-            console.log('Click Ocean');
             this.player1.clickCard(this.ocean);
             expect(this.player1).toHavePromptButton('player1');
             expect(this.player1).toHavePromptButton('player2');
@@ -113,7 +147,56 @@ describe('An Ocean In A Drop', function() {
             expect(this.duty.location).toBe('hand');
             expect(this.assassination.location).toBe('conflict deck');
             expect(this.player1.hand.length).toBe(hand);
-            expect(this.getChatLogs(5)).toContain('hahhh');
+            expect(this.getChatLogs(5)).toContain('the right message');
+        });
+
+        it('should put the players hand on the bottom of their deck and draw an equal number of cards', function() {
+            let hand = this.player2.hand.length;
+
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.doomed],
+                defenders: [],
+                type: 'military'
+            });
+            this.player2.pass();
+
+            expect(this.katana.location).toBe('conflict deck');
+            expect(this.fan.location).toBe('conflict deck');
+            expect(this.duty.location).toBe('conflict deck');
+            expect(this.assassination.location).toBe('conflict deck');
+
+            this.player1.clickCard(this.ocean);
+            expect(this.player1).toHavePromptButton('player1');
+            expect(this.player1).toHavePromptButton('player2');
+            this.player1.clickPrompt('player2');
+            expect(this.scorpion2.location).toBe('conflict deck');
+            expect(this.crane2.location).toBe('conflict deck');
+            expect(this.dragon2.location).toBe('conflict deck');
+            expect(this.katana2.location).toBe('hand');
+            expect(this.fan2.location).toBe('hand');
+            expect(this.duty2.location).toBe('hand');
+            expect(this.assassination2.location).toBe('conflict deck');
+            expect(this.player2.hand.length).toBe(hand);
+            expect(this.getChatLogs(5)).toContain('the right message');
+        });
+
+        it('should allow using Hantei to pick the player', function() {
+            this.player2.moveCard(this.hantei, 'play area');
+            expect(this.hantei.location).toBe('play area');
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.doomed],
+                defenders: [],
+                type: 'military'
+            });
+            this.player2.pass();
+            this.player1.clickCard(this.ocean);
+            expect(this.player2).toHavePrompt('Triggered Abilities');
+            expect(this.player2).toBeAbleToSelect(this.hantei);
+            this.player2.clickCard(this.hantei);
+            expect(this.player2).toHavePromptButton('player1');
+            expect(this.player2).toHavePromptButton('player2');
         });
     });
 });
