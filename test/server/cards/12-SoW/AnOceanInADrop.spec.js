@@ -86,8 +86,10 @@ describe('An Ocean In A Drop', function() {
         });
 
         it('should not allow selecting a player with no hand', function() {
-            this.player2.reduceDeckToNumber('conflict deck', 0);
-            expect(this.player2.conflictDeck.length).toBe(0);
+            this.player2.moveCard(this.crane2, 'conflict discard pile');
+            this.player2.moveCard(this.scorpion2, 'conflict discard pile');
+            this.player2.moveCard(this.dragon2, 'conflict discard pile');
+            expect(this.player2.hand.length).toBe(0);
 
             this.noMoreActions();
             this.initiateConflict({
@@ -102,10 +104,15 @@ describe('An Ocean In A Drop', function() {
         });
 
         it('should not allow using if neither player have any cards', function() {
-            this.player1.reduceDeckToNumber('conflict deck', 0);
-            expect(this.player1.conflictDeck.length).toBe(0);
-            this.player2.reduceDeckToNumber('conflict deck', 0);
-            expect(this.player2.conflictDeck.length).toBe(0);
+            this.player1.moveCard(this.crane, 'conflict discard pile');
+            this.player1.moveCard(this.scorpion, 'conflict discard pile');
+            this.player1.moveCard(this.dragon, 'conflict discard pile');
+            expect(this.player1.hand.length).toBe(0);
+
+            this.player2.moveCard(this.crane2, 'conflict discard pile');
+            this.player2.moveCard(this.scorpion2, 'conflict discard pile');
+            this.player2.moveCard(this.dragon2, 'conflict discard pile');
+            expect(this.player2.hand.length).toBe(0);
 
             this.noMoreActions();
             this.initiateConflict({
