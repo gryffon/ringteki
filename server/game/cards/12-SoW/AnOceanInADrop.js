@@ -19,7 +19,7 @@ class AnOceanInADrop extends DrawCard {
             effect: 'place {1}\'s hand on the bottom of their deck and have {1} draw {2} cards',
             effectArgs: (context) => context.select === this.owner.name ? 
                 [this.owner.name, context.player.hand.value().length] :
-                [this.owner.opponent.name, context.player.opponent.hand.length]
+                [this.owner.opponent.name, context.player.opponent.hand.value().length]
         });
     }
 
@@ -40,7 +40,7 @@ class AnOceanInADrop extends DrawCard {
                 if (player === this.owner.opponent) {
                     target = context.player.opponent;
                 }
-                return ({ target: target, amount: 3 })
+                return ({ target: target, amount: context.player.hand.value().length })
             }),
         ];
     }
