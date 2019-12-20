@@ -126,7 +126,7 @@ describe('An Ocean In A Drop', function() {
             expect(this.player1).toHavePrompt('Conflict Action Window');
         });
 
-        it('should put the players hand on the bottom of their deck and draw an equal number of cards', function() {
+        it('should put the players hand on the bottom of their deck and draw an equal number of cards (self)', function() {
             let hand = this.player1.hand.length;
 
             this.noMoreActions();
@@ -154,10 +154,10 @@ describe('An Ocean In A Drop', function() {
             expect(this.duty.location).toBe('hand');
             expect(this.assassination.location).toBe('conflict deck');
             expect(this.player1.hand.length).toBe(hand);
-            expect(this.getChatLogs(5)).toContain('the right message');
+            expect(this.getChatLogs(3)).toContain('player1 uses An Ocean in a Drop, sacrificing An Ocean in a Drop to place player1\'s hand on the bottom of their deck and have them draw 3 cards');
         });
 
-        it('should put the players hand on the bottom of their deck and draw an equal number of cards', function() {
+        it('should put the players hand on the bottom of their deck and draw an equal number of cards (opponent)', function() {
             let hand = this.player2.hand.length;
 
             this.noMoreActions();
@@ -185,7 +185,7 @@ describe('An Ocean In A Drop', function() {
             expect(this.duty2.location).toBe('hand');
             expect(this.assassination2.location).toBe('conflict deck');
             expect(this.player2.hand.length).toBe(hand);
-            expect(this.getChatLogs(5)).toContain('the right message');
+            expect(this.getChatLogs(3)).toContain('player1 uses An Ocean in a Drop, sacrificing An Ocean in a Drop to place player2\'s hand on the bottom of their deck and have them draw 3 cards');
         });
 
         it('should allow using Hantei to pick the player', function() {
@@ -199,6 +199,7 @@ describe('An Ocean In A Drop', function() {
             });
             this.player2.pass();
             this.player1.clickCard(this.ocean);
+            this.player1.clickPrompt('player2');
             expect(this.player2).toHavePrompt('Triggered Abilities');
             expect(this.player2).toBeAbleToSelect(this.hantei);
             this.player2.clickCard(this.hantei);
