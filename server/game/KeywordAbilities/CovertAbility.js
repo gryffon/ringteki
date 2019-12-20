@@ -9,6 +9,10 @@ class CovertAbility extends BaseAbility {
     isCardAbility() {
         return true;
     }
+
+    isKeywordAbility() {
+        return true;
+    }
 }
 
 module.exports = CovertAbility;
