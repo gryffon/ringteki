@@ -42,6 +42,8 @@ class Conflict extends GameObject {
     }
 
     getSummary() {
+        let effects = this.getEffects(EffectNames.ForceConflictUnopposed);
+        let forcedUnopposed = effects.length !== 0;
         return {
             attackingPlayerId: this.attackingPlayer.id,
             defendingPlayerId: this.defendingPlayer.id,
@@ -51,7 +53,7 @@ class Conflict extends GameObject {
             elements: this.elements,
             attackerWins: this.attackers.length > 0 && this.attackerSkill >= this.defenderSkill,
             breaking: this.conflictProvince && (this.conflictProvince.getStrength() - (this.attackerSkill - this.defenderSkill) <= 0),
-            unopposed: !(this.defenders && this.defenders.length > 0),
+            unopposed: !(this.defenders && this.defenders.length > 0 && !forcedUnopposed),
             declarationComplete: this.declarationComplete,
             defendersChosen: this.defendersChosen
         };
