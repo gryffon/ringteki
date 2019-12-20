@@ -13,7 +13,7 @@ class AnOceanInADrop extends DrawCard {
                 targets: true,
                 choices:  {
                     [this.owner.name]: AbilityDsl.actions.multiple(this.getGameActions(this.owner)),
-                    [this.owner.opponent && this.owner.opponent.name || 'NA']: AbilityDsl.actions.multiple(this.getGameActions(this.owner.opponent))
+                    [this.owner.opponent && this.owner.opponent.name || 'NA']: AbilityDsl.actions.sequential(this.getGameActions(this.owner.opponent))
                 }
             },
             effect: 'place {1}\'s hand on the bottom of their deck and have them draw {2} cards',
@@ -31,7 +31,7 @@ class AnOceanInADrop extends DrawCard {
                 destination: Locations.ConflictDeck,
                 target: player.hand.shuffle()
             })),
-            AbilityDsl.actions.draw(() => ({ target: player, amount: player.hand.value().length }))
+            AbilityDsl.actions.draw((context) => ({ target: player, amount: context.events.length }))
         ];
     }
 }

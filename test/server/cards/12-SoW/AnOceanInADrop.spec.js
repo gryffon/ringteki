@@ -189,6 +189,8 @@ describe('An Ocean In A Drop', function() {
         });
 
         it('should allow using Hantei to pick the player', function() {
+            let hand = this.player1.hand.length;
+
             this.player2.moveCard(this.hantei, 'play area');
             expect(this.hantei.location).toBe('play area');
             this.noMoreActions();
@@ -205,6 +207,23 @@ describe('An Ocean In A Drop', function() {
             this.player2.clickCard(this.hantei);
             expect(this.player2).toHavePromptButton('player1');
             expect(this.player2).toHavePromptButton('player2');
+
+            expect(this.katana.location).toBe('conflict deck');
+            expect(this.fan.location).toBe('conflict deck');
+            expect(this.duty.location).toBe('conflict deck');
+            expect(this.assassination.location).toBe('conflict deck');
+
+            this.player2.clickPrompt('player1');
+
+            expect(this.scorpion.location).toBe('conflict deck');
+            expect(this.crane.location).toBe('conflict deck');
+            expect(this.dragon.location).toBe('conflict deck');
+            expect(this.katana.location).toBe('hand');
+            expect(this.fan.location).toBe('hand');
+            expect(this.duty.location).toBe('hand');
+            expect(this.assassination.location).toBe('conflict deck');
+            expect(this.player1.hand.length).toBe(hand);
+            expect(this.getChatLogs(3)).toContain('player1 uses An Ocean in a Drop, sacrificing An Ocean in a Drop to place player1\'s hand on the bottom of their deck and have them draw 3 cards');
         });
     });
 });
