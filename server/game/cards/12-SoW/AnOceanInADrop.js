@@ -12,7 +12,7 @@ class AnOceanInADrop extends DrawCard {
                 mode: TargetModes.Select,
                 targets: true,
                 choices:  {
-                    [this.owner.name]: AbilityDsl.actions.multiple(this.getGameActions(this.owner)),
+                    [this.owner.name]: AbilityDsl.actions.sequential(this.getGameActions(this.owner)),
                     [this.owner.opponent && this.owner.opponent.name || 'NA']: AbilityDsl.actions.sequential(this.getGameActions(this.owner.opponent))
                 }
             },
