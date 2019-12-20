@@ -10,7 +10,7 @@ describe('High House of Light', function() {
                 },
                 player2: {
                     inPlay: ['mirumoto-raitsugu', 'togashi-initiate'],
-                    hand: ['way-of-the-scorpion']
+                    hand: ['way-of-the-scorpion', 'the-stone-of-sorrows']
                 }
             });
 
@@ -93,6 +93,40 @@ describe('High House of Light', function() {
 
             expect(this.ancientMaster.fate).toBe(monkFate + 1);
             expect(this.game.rings.void.fate).toBe(ringFate - 1);
+            expect(this.player1.fate).toBe(playerFate);
+
+            expect(this.getChatLogs(4)).toContain('player1 uses High House of Light, bowing High House of Light to make Ancient Master unable to be targeted by opponent\'s events');
+            expect(this.getChatLogs(3)).toContain('player1 moves a fate from the Void Ring to Ancient Master');
+        });
+
+        it('Stone of Sorrows should prevent you from taking the fate', function() {
+            this.game.rings.void.fate = 1;
+            this.game.rings.water.fate = 1;
+
+            let i = 0;
+            for(i = 0; i < 5; i++) {
+                this.player2.pass();
+                this.player1.playAttachment(this.player1.filterCardsByName('a-new-name')[i], this.initiate);
+            }
+
+            this.player2.playAttachment('the-stone-of-sorrows', this.raitsugu);
+            this.player1.clickCard(this.house);
+            this.player1.clickCard(this.ancientMaster);
+
+            let monkFate = this.ancientMaster.fate;
+            let ringFate = this.game.rings.void.fate;
+            let playerFate = this.player1.fate;
+
+            expect(this.player1).toBeAbleToSelectRing('void');
+            expect(this.player1).toBeAbleToSelectRing('water');
+            expect(this.player1).not.toBeAbleToSelectRing('fire');
+            expect(this.player1).not.toBeAbleToSelectRing('air');
+            expect(this.player1).not.toBeAbleToSelectRing('earth');
+
+            this.player1.clickRing('void');
+
+            expect(this.ancientMaster.fate).toBe(monkFate);
+            expect(this.game.rings.void.fate).toBe(ringFate);
             expect(this.player1.fate).toBe(playerFate);
 
             expect(this.getChatLogs(4)).toContain('player1 uses High House of Light, bowing High House of Light to make Ancient Master unable to be targeted by opponent\'s events');

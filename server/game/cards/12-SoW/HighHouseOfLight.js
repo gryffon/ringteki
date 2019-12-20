@@ -23,13 +23,11 @@ class HighHouseOfLight extends StrongholdCard {
                 condition: context => this.game.currentConflict.getNumberOfCardsPlayed(context.player) >= 5,
                 gameAction: AbilityDsl.actions.selectRing({
                     activePromptTitle: 'Choose a ring to take a fate from',
-                    ringCondition: ring => ring.fate >= 1,
                     message: '{0} moves a fate from the {1} to {2}',
+                    ringCondition: ring => ring.fate >= 1,
                     messageArgs: ring => [context.player, ring, context.target],
-                    gameAction: AbilityDsl.actions.multiple([
-                        AbilityDsl.actions.takeFateFromRing({ removeOnly: true }),
-                        AbilityDsl.actions.placeFate({ target: context.target })
-                    ])
+                    subActionProperties: ring => ({origin: ring}),
+                    gameAction: AbilityDsl.actions.placeFate({ target: context.target })
                 })
             }),
             effect: 'make {0} unable to be targeted by opponent\'s events',
