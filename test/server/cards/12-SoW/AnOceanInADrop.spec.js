@@ -225,5 +225,29 @@ describe('An Ocean In A Drop', function() {
             expect(this.player1.hand.length).toBe(hand);
             expect(this.getChatLogs(3)).toContain('player1 uses An Ocean in a Drop, sacrificing An Ocean in a Drop to place player1\'s hand on the bottom of their deck and have them draw 3 cards');
         });
+
+        it('should not die if you deck yourself', function() {
+            let hand = this.player1.hand.length;
+
+            this.player1.reduceDeckToNumber('conflict deck', 0);
+
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.doomed],
+                defenders: [],
+                type: 'military'
+            });
+            this.player2.pass();
+
+            this.player1.clickCard(this.ocean);
+            expect(this.player1).toHavePromptButton('player1');
+            expect(this.player1).toHavePromptButton('player2');
+            this.player1.clickPrompt('player1');
+            expect(this.scorpion.location).toBe('hand');
+            expect(this.crane.location).toBe('hand');
+            expect(this.dragon.location).toBe('hand');
+            expect(this.player1.hand.length).toBe(hand);
+            expect(this.getChatLogs(3)).toContain('player1 uses An Ocean in a Drop, sacrificing An Ocean in a Drop to place player1\'s hand on the bottom of their deck and have them draw 3 cards');
+        });
     });
 });
