@@ -112,7 +112,7 @@ describe('Iron Foundations Stance', function() {
             this.player1.clickCard(this.stance);
             this.player1.clickCard(this.initiate);
             expect(this.player1.hand.length).toBe(hand);
-            expect(this.getChatLogs(3)).toContain('player1 draws a card');
+            expect(this.getChatLogs(3)).toContain('player1 plays Iron Foundations Stance to prevent opponents\' actions from bowing or moving home Togashi Initiate and draw 1 card');
         });
     });
 });

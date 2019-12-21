@@ -5,7 +5,7 @@ const AbilityDsl = require('../../abilitydsl.js');
 class IronFoundationsStance extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Lower military skill',
+            title: 'Prevent opponent\'s bow and send home effects',
             condition: () => this.game.isDuringConflict(),
             target: {
                 cardType: CardTypes.Character,
@@ -23,19 +23,16 @@ class IronFoundationsStance extends DrawCard {
                             cannot: 'bow',
                             restricts: 'opponentsCardEffects'
                         })
+                    }),
+                    AbilityDsl.actions.conditional({
+                        condition: context => this.game.currentConflict.getNumberOfCardsPlayed(context.player, card => card.hasTrait('kiho')) >= 2,
+                        trueGameAction: AbilityDsl.actions.draw(context => ({ target: context.player })),
+                        falseGameAction: AbilityDsl.actions.draw({ amount: 0 })
                     })
                 ]
             },
-            then: context => {
-                if(this.game.currentConflict.getNumberOfCardsPlayed(context.player, card => card.hasTrait('kiho')) < 2) {
-                    return;
-                }
-                return {
-                    gameAction: AbilityDsl.actions.draw(),
-                    message: '{0} draws a card'
-                };
-            },
-            effect: 'prevent opponents\' actions from bowing or moving home {0}'
+            effect: 'prevent opponents\' actions from bowing or moving home {0}{1}',
+            effectArgs: context => this.game.currentConflict.getNumberOfCardsPlayed(context.player, card => card.hasTrait('kiho')) >= 2 ? ' and draw 1 card' : ''
         });
     }
 }
