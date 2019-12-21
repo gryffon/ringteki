@@ -1,5 +1,5 @@
 const AbilityDsl = require('../../abilitydsl.js');
-
+const { CardTypes } = require('../../Constants');
 const StrongholdCard = require('../../strongholdcard.js');
 
 class KyudenIkoma extends StrongholdCard {
@@ -13,6 +13,7 @@ class KyudenIkoma extends StrongholdCard {
                     && event.conflict.attackers && event.conflict.attackers.length !== 0
             },
             target: {
+                cardType: CardTypes.Character,
                 cardCondition: card => !card.hasTrait('champion'),
                 activePromptTitle: 'Bow a non-champion',
                 gameAction: AbilityDsl.actions.bow()
