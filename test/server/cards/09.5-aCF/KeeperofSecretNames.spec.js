@@ -129,6 +129,29 @@ describe('Keeper of Secret Names', function() {
                 expect(this.player2.fate).toBe(p2fate - 2);
             });
 
+            it('Should be able to trigger after province has been triggered', function() {
+                this.player1.passConflict();
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.p2Keeper],
+                    defenders: [this.p1Keeper],
+                    province: this.vassalFields
+                });
+
+                let p2fate = this.player2.fate;
+
+                this.player1.clickCard(this.vassalFields);
+                expect(this.player2.fate).toBe(p2fate - 1);
+
+                this.player2.pass();
+
+                this.player1.clickCard(this.p1Keeper);
+                expect(this.player1).toBeAbleToSelect(this.vassalFields);
+                this.player1.clickCard(this.vassalFields);
+                expect(this.player2.fate).toBe(p2fate - 2);
+            });
+
             it('Riot in the Streets (province has a triggering condition)', function() {
                 this.initiateConflict({
                     type: 'military',

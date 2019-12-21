@@ -17,6 +17,12 @@ class FrontlineEngineer extends DrawCard {
                 context: context,
                 cardCondition: card => card.getType() === CardTypes.Holding,
                 cards: context.player.dynastyDeck.first(5),
+                choices: ['Take nothing'],
+                handlers: [() => {
+                    this.game.addMessage('{0} takes nothing', context.player);
+                    context.player.shuffleDynastyDeck();
+                    return true;
+                }],
                 cardHandler: cardFromDeck => {
                     let cards = context.player.getDynastyCardsInProvince(this.game.currentConflict.conflictProvince.location);
                     this.game.addMessage('{0} discards {1}, replacing it with {2}', context.player, cards.map(e => e.name).join(', '), cardFromDeck);
