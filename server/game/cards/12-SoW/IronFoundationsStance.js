@@ -30,7 +30,10 @@ class IronFoundationsStance extends DrawCard {
                 if(this.game.currentConflict.getNumberOfCardsPlayed(context.player, card => card.hasTrait('kiho')) < 2) {
                     return;
                 }
-                return { gameAction: AbilityDsl.actions.draw() };
+                return {
+                    gameAction: AbilityDsl.actions.draw(),
+                    message: '{0} draws a card'
+                };
             },
             effect: 'prevent opponents\' actions from bowing or moving home {0}'
         });
