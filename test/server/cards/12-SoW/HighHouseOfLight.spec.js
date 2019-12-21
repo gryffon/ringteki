@@ -23,6 +23,9 @@ describe('High House of Light', function() {
             this.initiate = this.player2.findCardByName('togashi-initiate');
             this.scorpion = this.player2.findCardByName('way-of-the-scorpion');
 
+            this.game.rings.void.fate = 1;
+            this.game.rings.water.fate = 1;
+
             this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.ancientMaster, this.challenger],
@@ -66,9 +69,6 @@ describe('High House of Light', function() {
         });
 
         it('if you played 5 cards should also allow you to pick a ring with a fate and move it to the monk', function() {
-            this.game.rings.void.fate = 1;
-            this.game.rings.water.fate = 1;
-
             let i = 0;
             for(i = 0; i < 5; i++) {
                 this.player2.pass();
@@ -100,9 +100,6 @@ describe('High House of Light', function() {
         });
 
         it('Stone of Sorrows should prevent you from taking the fate', function() {
-            this.game.rings.void.fate = 1;
-            this.game.rings.water.fate = 1;
-
             let i = 0;
             for(i = 0; i < 5; i++) {
                 this.player2.pass();

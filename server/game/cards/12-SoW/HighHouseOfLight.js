@@ -19,17 +19,22 @@ class HighHouseOfLight extends StrongholdCard {
                     })
                 }))
             },
-            then: context => ({
-                condition: context => this.game.currentConflict.getNumberOfCardsPlayed(context.player) >= 5,
-                gameAction: AbilityDsl.actions.selectRing({
-                    activePromptTitle: 'Choose a ring to take a fate from',
-                    message: '{0} moves a fate from the {1} to {2}',
-                    ringCondition: ring => ring.fate >= 1,
-                    messageArgs: ring => [context.player, ring, context.target],
-                    subActionProperties: ring => ({origin: ring}),
-                    gameAction: AbilityDsl.actions.placeFate({ target: context.target })
-                })
-            }),
+            then: context => {
+                if(this.game.currentConflict.getNumberOfCardsPlayed(context.player) < 5) {
+                    return;
+                }
+
+                return {
+                    gameAction: AbilityDsl.actions.selectRing({
+                        activePromptTitle: 'Choose a ring to take a fate from',
+                        message: '{0} moves a fate from the {1} to {2}',
+                        ringCondition: ring => ring.fate >= 1,
+                        messageArgs: ring => [context.player, ring, context.target],
+                        subActionProperties: ring => ({origin: ring}),
+                        gameAction: AbilityDsl.actions.placeFate({ target: context.target })
+                    })
+                };
+            },
             effect: 'make {0} unable to be targeted by opponent\'s events',
             effectArgs: context => [Math.min(context.target.attachments.size(), 2), 'military', 'political']
         });
