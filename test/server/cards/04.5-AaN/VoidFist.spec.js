@@ -12,10 +12,20 @@ describe('Void Fist', function() {
                     player2: {
                         inPlay: ['bayushi-liar'],
                         dynastyDiscard: ['hidden-moon-dojo', 'seeker-initiate'],
-                        hand: ['ornate-fan', 'infiltrator', 'banzai']
+                        hand: ['ornate-fan', 'infiltrator', 'banzai', 'court-games', 'forged-edict']
                     }
                 });
+
+                this.courtGames = this.player2.findCardByName('court-games');
+                this.forgedEdict = this.player2.findCardByName('forged-edict');
+
                 this.bayushiLiar = this.player2.findCardByName('bayushi-liar');
+                this.bayushiLiar.dishonor();
+
+                this.hurricanePunch = this.player1.findCardByName('hurricane-punch');
+                this.fineKatana = this.player1.findCardByName('fine-katana');
+                this.togashiMitsu = this.player1.findCardByName('togashi-mitsu');
+
                 this.player2.placeCardInProvince('hidden-moon-dojo', 'province 1');
                 this.seekerInitiate = this.player2.placeCardInProvince('seeker-initiate', 'province 2');
                 this.player1.pass();
@@ -54,6 +64,39 @@ describe('Void Fist', function() {
                 expect(this.player1).toHavePrompt('Centipede Tattoo');
                 this.player1.clickCard('togashi-mitsu');
                 this.player2.pass();
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard('void-fist');
+                expect(this.player1).toHavePrompt('Void Fist');
+                this.player1.clickCard(this.bayushiLiar);
+                expect(this.bayushiLiar.bowed).toBe(true);
+                expect(this.bayushiLiar.inConflict).toBe(false);
+            });
+
+            it('should trigger if the player has played 2 cards (1 card was canceled, but should count)', function() {
+                expect(this.bayushiLiar.inConflict).toBe(true);
+                this.player2.playAttachment('ornate-fan', 'bayushi-liar');
+
+                this.player1.clickCard(this.fineKatana);
+                this.player1.clickCard(this.togashiMitsu);
+                expect(this.togashiMitsu.militarySkill).toBe(6);
+
+                this.player2.clickCard(this.courtGames);
+                this.player2.clickPrompt('Honor a friendly character');
+                this.player2.clickCard(this.bayushiLiar);
+
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard('void-fist');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+                this.player1.clickCard(this.hurricanePunch);
+                this.player1.clickCard(this.togashiMitsu);
+
+                expect(this.player2).toHavePrompt('Triggered Abilities');
+                expect(this.player2).toBeAbleToSelect(this.forgedEdict);
+                this.player2.clickCard(this.forgedEdict);
+                this.player2.clickCard(this.bayushiLiar);
+
+                this.player2.pass();
+
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard('void-fist');
                 expect(this.player1).toHavePrompt('Void Fist');
