@@ -78,7 +78,7 @@ describe('Asako Togama', function() {
         it('should not work if there is no ring to return', function() {
             this.noMoreActions();
             this.initiateConflict({
-                attackers: [this.challenger],
+                attackers: [this.togama],
                 defenders: [],
                 type: 'military'
             });
