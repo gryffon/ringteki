@@ -1,5 +1,5 @@
-import { CardTypes, Players } from '../../Constants.js';
 const DrawCard = require('../../drawcard.js');
+import { CardTypes, Players } from '../../Constants.js';
 const AbilityDsl = require('../../abilitydsl.js');
 const EventRegistrar = require('../../eventregistrar');
 
