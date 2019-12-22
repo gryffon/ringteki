@@ -12,28 +12,26 @@ class HighHouseOfLight extends StrongholdCard {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.isParticipating() && card.hasTrait('monk'),
-                gameAction: AbilityDsl.actions.cardLastingEffect(() => ({
-                    effect: AbilityDsl.effects.cardCannot({
-                        cannot: 'target',
-                        restricts: 'opponentsEvents'
+                gameAction: AbilityDsl.actions.multiple([
+                    AbilityDsl.actions.cardLastingEffect(() => ({
+                        effect: AbilityDsl.effects.cardCannot({
+                            cannot: 'target',
+                            restricts: 'opponentsEvents'
+                        })
+                    })),
+                    AbilityDsl.actions.conditional({
+                        condition: context => this.game.currentConflict.getNumberOfCardsPlayed(context.player) >= 5 && context.player.checkRestrictions('takeFateFromRings', context),
+                        trueGameAction: AbilityDsl.actions.selectRing(context => ({
+                            activePromptTitle: 'Choose a ring to take a fate from',
+                            message: '{0} moves a fate from the {1} to {2}',
+                            ringCondition: ring => ring.fate >= 1,
+                            messageArgs: ring => [context.player, ring, context.target],
+                            subActionProperties: ring => ({origin: ring}),
+                            gameAction: AbilityDsl.actions.placeFate({ target: context.target })
+                        })),
+                        falseGameAction: AbilityDsl.actions.draw({ amount: 0 })
                     })
-                }))
-            },
-            then: context => {
-                if(this.game.currentConflict.getNumberOfCardsPlayed(context.player) < 5) {
-                    return;
-                }
-
-                return {
-                    gameAction: AbilityDsl.actions.selectRing({
-                        activePromptTitle: 'Choose a ring to take a fate from',
-                        message: '{0} moves a fate from the {1} to {2}',
-                        ringCondition: ring => ring.fate >= 1,
-                        messageArgs: ring => [context.player, ring, context.target],
-                        subActionProperties: ring => ({origin: ring}),
-                        gameAction: AbilityDsl.actions.placeFate({ target: context.target })
-                    })
-                };
+                ])
             },
             effect: 'make {0} unable to be targeted by opponent\'s events',
             effectArgs: context => [Math.min(context.target.attachments.size(), 2), 'military', 'political']
