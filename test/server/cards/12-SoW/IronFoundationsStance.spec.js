@@ -8,8 +8,8 @@ describe('Iron Foundations Stance', function() {
                     hand: ['iron-foundations-stance', 'hurricane-punch', 'fine-katana']
                 },
                 player2: {
-                    inPlay: ['doji-kuwanan'],
-                    hand: ['rout']
+                    inPlay: ['doji-kuwanan', 'togashi-kazue'],
+                    hand: ['rout', 'hurricane-punch']
                 }
             });
 
@@ -22,6 +22,8 @@ describe('Iron Foundations Stance', function() {
 
             this.kuwanan = this.player2.findCardByName('doji-kuwanan');
             this.rout = this.player2.findCardByName('rout');
+            this.kazue = this.player2.findCardByName('togashi-kazue');
+            this.hurricane2 = this.player2.findCardByName('hurricane-punch');
         });
 
         it('should allow selecting a participating monk', function() {
@@ -78,6 +80,22 @@ describe('Iron Foundations Stance', function() {
             expect(this.player1.hand.length).toBe(hand - 1);
         });
 
+        it('should not draw a card if only opponent has played a kiho', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.initiate, this.challenger],
+                defenders: [this.kuwanan, this.kazue],
+                type: 'military'
+            });
+
+            this.player2.clickCard(this.hurricane2);
+            this.player2.clickCard(this.kazue);
+            let hand = this.player1.hand.length;
+            this.player1.clickCard(this.stance);
+            this.player1.clickCard(this.initiate);
+            expect(this.player1.hand.length).toBe(hand - 1);
+        });
+
         it('should not draw a card if a non-kiho has been played', function() {
             this.noMoreActions();
             this.initiateConflict({
@@ -113,6 +131,38 @@ describe('Iron Foundations Stance', function() {
             this.player1.clickCard(this.initiate);
             expect(this.player1.hand.length).toBe(hand);
             expect(this.getChatLogs(3)).toContain('player1 plays Iron Foundations Stance to prevent opponents\' actions from bowing or moving home Togashi Initiate and draw 1 card');
+        });
+
+        it('kiho being played should not carry over to the next conflict', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.initiate],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.pass();
+            this.player1.clickCard(this.hurricane);
+            this.player1.clickCard(this.initiate);
+            this.noMoreActions();
+
+            this.initiate.bowed = false;
+            this.kuwanan.bowed = false;
+
+            this.noMoreActions();
+
+            this.initiateConflict({
+                attackers: [this.kuwanan],
+                defenders: [this.initiate],
+                type: 'military',
+                ring: 'fire'
+            });
+
+            let hand = this.player1.hand.length;
+            this.player1.clickCard(this.stance);
+            this.player1.clickCard(this.initiate);
+            expect(this.player1.hand.length).toBe(hand - 1);
+            expect(this.getChatLogs(3)).toContain('player1 plays Iron Foundations Stance to prevent opponents\' actions from bowing or moving home Togashi Initiate');
         });
     });
 });
