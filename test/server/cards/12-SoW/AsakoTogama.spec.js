@@ -13,7 +13,6 @@ describe('Asako Togama', function() {
 
             this.togama = this.player1.findCardByName('asako-togama');
             this.challenger = this.player1.findCardByName('doji-challenger');
-
             this.game.rings.earth.fate = 1;
             this.game.rings.void.fate = 2;
             this.game.rings.water.fate = 0;
