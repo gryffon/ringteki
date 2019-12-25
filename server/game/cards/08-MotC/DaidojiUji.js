@@ -24,14 +24,6 @@ class DaidojiUji extends DrawCard {
             match: card => card.isDynasty && !card.facedown,
             effect: AbilityDsl.effects.gainPlayAction(DaidojiUjiPlayAction)
         });
-
-        this.persistentEffect({
-            condition: context => context.source.isHonored,
-            effect: AbilityDsl.effects.reduceCost({
-                match: card => card.isDynasty && card.location.includes('province'),
-                playingTypes: PlayTypes.PlayFromHand
-            })
-        });
     }
 }
 
