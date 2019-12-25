@@ -17,6 +17,7 @@ class ChatCommands {
             '/move-to-conflict': this.moveToConflict,
             '/send-home': this.sendHome,
             '/claim-favor': this.claimFavor,
+            '/discard-favor': this.discardFavor,
             '/add-fate': this.addFate,
             '/rem-fate': this.remFate,
             '/add-fate-ring': this.addRingFate,
@@ -82,6 +83,11 @@ class ChatCommands {
         if(otherPlayer) {
             otherPlayer.loseImperialFavor();
         }
+    }
+
+    discardFavor(player) {
+        this.game.addMessage('{0} uses /discard-favor to discard the imperial favor', player);
+        player.loseImperialFavor();
     }
 
     honor(player) {
