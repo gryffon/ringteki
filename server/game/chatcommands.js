@@ -180,15 +180,15 @@ class ChatCommands {
 
     moveCardToDeckBottom(player) {
         this.game.promptForSelect(player, {
-            activePromptTitle: `Select a card to send to the bottom of one of their decks`,
-            waitingPromptTitle: `Waiting for opponent to send a card to the bottom of one of their decks`,
+            activePromptTitle: 'Select a card to send to the bottom of one of their decks',
+            waitingPromptTitle: 'Waiting for opponent to send a card to the bottom of one of their decks',
             location: Locations.Any,
             controller: Players.Self,
             onSelect: (p, card) => {
                 const cardInitialLocation = card.location;
                 const cardNewLocation = card.isConflict ? Locations.ConflictDeck : Locations.DynastyDeck;
                 GameActions.moveCard({ target: card, bottom: true, destination: cardNewLocation }).resolve(player, this.game.getFrameworkContext());
-                this.game.addMessage('{0} uses a command to move {1} from their {2} to the bottom of their {3}.', player, card, cardInitialLocation, );
+                this.game.addMessage('{0} uses a command to move {1} from their {2} to the bottom of their {3}.', player, card, cardInitialLocation);
                 return true;
             }
         });
