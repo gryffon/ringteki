@@ -1,21 +1,22 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Players, CardTypes } = require('../../Constants');
 
 class InvocationOfAsh extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Move to another character',
-            cost: ability.costs.payHonor(1),
+            cost: AbilityDsl.costs.payHonor(1),
             target: {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
-                gameAction: ability.actions.attach(context => ({ attachment: context.source }))
+                gameAction: AbilityDsl.actions.sequential([
+                    AbilityDsl.actions.attach(context => ({ attachment: context.source })),
+                    AbilityDsl.actions.removeFate()
+                ])
             },
-            then: context => ({
-                message: '{1} removes one fate from {3}',
-                messageArgs: context.target,
-                gameAction: ability.actions.removeFate({ target: context.target })
-            })
+            effect: 'move {1} to {0}, then remove a fate from {0}',
+            effectArgs: context => context.source
         });
     }
 }

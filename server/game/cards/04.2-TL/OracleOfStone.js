@@ -1,19 +1,21 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 
 class OracleOfStone extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Draw 2 cards, then discard 2 cards',
-            gameAction: ability.actions.draw(context => ({
-                target: context.game.getPlayers(),
-                amount: 2
-            })),
-            then: context => ({
-                gameAction: ability.actions.chosenDiscard({
-                    target: context.game.getPlayers(),
+            gameAction: AbilityDsl.actions.sequential([
+                AbilityDsl.actions.draw({
+                    target: this.game.getPlayers(),
+                    amount: 2
+                }),
+                AbilityDsl.actions.chosenDiscard({
+                    target: this.game.getPlayers(),
                     amount: 2
                 })
-            })
+            ]),
+            effect: 'make both players draw 2 cards, then discard 2 cards'
         });
     }
 }
