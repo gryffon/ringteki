@@ -22,7 +22,7 @@ class BayushiKachiko extends DrawCard {
                             return { target: (choice === 'Yes' ? context.target : []) };
                         },
                         gameAction: AbilityDsl.actions.dishonor()
-                    })
+                    }))
                 ])
             }
         });
