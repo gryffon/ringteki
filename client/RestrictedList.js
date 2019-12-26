@@ -7,7 +7,6 @@ const restrictedList = {
         'mirumoto-s-fury',
         'forged-edict',
         'spyglass',
-        'charge',
         'embrace-the-void',
         'pathfinder-s-blade',
         'policy-debate',
