@@ -7,16 +7,16 @@ describe('City of Lies', function() {
                     player1: {
                         fate: 5,
                         hand: ['against-the-waves', 'against-the-waves', 'mono-no-aware'],
-                        dynastyDeck: ['city-of-lies', 'city-of-lies']
+                        dynastyDeck: ['city-of-lies', 'city-of-lies'],
+                        inPlay: ['isawa-kaede']
                     },
                     player2: {
-                        inPlay: ['isawa-kaede']
                     }
                 });
                 this.cityOfLies = this.player1.placeCardInProvince('city-of-lies');
                 this.cityOfLies2 = this.game.allCards.find(card => card.id === 'city-of-lies' && card.controller === this.player1.player && card !== this.cityOfLies);
                 this.player1.placeCardInProvince(this.cityOfLies2, 'province 2');
-                this.isawaKaede = this.player2.findCardByName('isawa-kaede');
+                this.isawaKaede = this.player1.findCardByName('isawa-kaede');
                 this.isawaKaede.fate = 1;
             });
 

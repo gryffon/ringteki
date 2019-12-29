@@ -12,7 +12,7 @@ class SpoilsOfWar extends DrawCard {
                                                    context.player.isAttackingPlayer()
             },
             gameAction: AbilityDsl.actions.sequential([
-                AbilityDsl.actions.draw({ amount: 3 }),
+                AbilityDsl.actions.draw(context => ({ target: context.player, amount: 3 })),
                 AbilityDsl.actions.chosenDiscard(context => ({ target: context.player }))
             ]),
             effect: 'draw 3 cards, then discard 1'
