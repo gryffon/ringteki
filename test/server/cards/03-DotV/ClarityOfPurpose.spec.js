@@ -10,7 +10,7 @@ describe('Clarity of Purpose', function() {
                     },
                     player2: {
                         inPlay: ['bayushi-manipulator'],
-                        hand: ['for-shame', 'against-the-waves']
+                        hand: ['for-shame', 'kirei-ko']
                     }
                 });
                 this.adeptOfTheWaves = this.player1.findCardByName('adept-of-the-waves');
@@ -21,7 +21,7 @@ describe('Clarity of Purpose', function() {
                 this.bayushiManipulator = this.player2.findCardByName('bayushi-manipulator');
 
                 this.forShame = this.player2.findCardByName('for-shame');
-                this.againstTheWaves = this.player2.findCardByName('against-the-waves');
+                this.kireiKo = this.player2.findCardByName('kirei-ko');
             });
 
             it('should not be triggerable outside of a conflict', function() {
@@ -72,10 +72,10 @@ describe('Clarity of Purpose', function() {
                     it('should allow bowing after the conflict ends', function() {
                         this.noMoreActions();
                         this.player1.clickPrompt('Don\'t Resolve');
-                        this.player1.pass();
                         expect(this.adeptOfTheWaves.bowed).toBe(false);
-                        this.player2.clickCard(this.againstTheWaves);
-                        this.player2.clickCard(this.adeptOfTheWaves);
+                        this.player1.clickCard(this.adeptOfTheWaves);
+                        this.player1.clickCard(this.adeptOfTheWaves);
+                        this.player2.clickCard(this.kireiKo);
                         expect(this.adeptOfTheWaves.bowed).toBe(true);
                     });
                 });

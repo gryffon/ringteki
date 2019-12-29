@@ -11,10 +11,11 @@ describe('Master of Gisei Toshi', function() {
                     },
                     player2: {
                         honor: 11,
-                        inPlay: [],
+                        inPlay: ['adept-of-the-waves'],
                         hand: ['captive-audience', 'against-the-waves', 'tattooed-wanderer']
                     }
                 });
+                this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
                 this.masterOfGiseiToshi = this.player1.findCardByName('master-of-gisei-toshi', 'play area');
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
@@ -54,8 +55,8 @@ describe('Master of Gisei Toshi', function() {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 this.player2.clickCard('against-the-waves');
                 expect(this.player2).toHavePrompt('Against the Waves');
-                this.player2.clickCard(this.masterOfGiseiToshi);
-                expect(this.masterOfGiseiToshi.bowed).toBe(true);
+                this.player2.clickCard(this.adeptOfTheWaves);
+                expect(this.adeptOfTheWaves.bowed).toBe(true);
             });
 
             it('should not stop players from playing non-spell events during conflicts contesting other rings', function() {
@@ -129,8 +130,8 @@ describe('Master of Gisei Toshi', function() {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 this.player2.clickCard('against-the-waves');
                 expect(this.player2).toHavePrompt('Against the Waves');
-                this.player2.clickCard(this.masterOfGiseiToshi);
-                expect(this.masterOfGiseiToshi.bowed).toBe(true);
+                this.player2.clickCard(this.adeptOfTheWaves);
+                expect(this.adeptOfTheWaves.bowed).toBe(true);
             });
         });
     });

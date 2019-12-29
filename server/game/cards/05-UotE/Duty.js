@@ -16,7 +16,7 @@ class Duty extends DrawCard {
             effect: 'cancel their honor loss, then gain 1 honor',
             gameAction: AbilityDsl.actions.sequential([
                 AbilityDsl.actions.cancel(),
-                AbilityDsl.actions.gainHonor()
+                AbilityDsl.actions.gainHonor(context => ({ target: context.player }))
             ])
         });
     }

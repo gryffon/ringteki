@@ -1,6 +1,6 @@
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { TargetModes, CardTypes } = require('../../Constants');
+const { CardTypes } = require('../../Constants');
 
 class BayushiKachiko extends DrawCard {
     setupCardAbilities() {
@@ -17,11 +17,11 @@ class BayushiKachiko extends DrawCard {
                         choices: ['Yes', 'No'],
                         choiceHandler: (choice, displayMessage) => {
                             if(displayMessage && choice === 'Yes') {
-                                context.game.addMessage('{0} chooses to dishonor {1} due to {2}\'s ability', context.player, context.target, context.source);
+                                context.game.addMessage('{0} chooses to bow {1} due to {2}\'s ability', context.player, context.target, context.source);
                             }
                             return { target: (choice === 'Yes' ? context.target : []) };
                         },
-                        gameAction: AbilityDsl.actions.dishonor()
+                        gameAction: AbilityDsl.actions.bow()
                     }))
                 ])
             }

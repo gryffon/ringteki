@@ -17,6 +17,7 @@ class WarriorsOfTheWind extends DrawCard {
                     optional: true,
                     cardType: CardTypes.Character,
                     controller: Players.Self,
+                    targets: true,
                     cardCondition: card => card.hasTrait('cavalry'),
                     gameAction: AbilityDsl.actions.moveToConflict(),
                     message: '{0} chooses to move {1} to the conflict',
