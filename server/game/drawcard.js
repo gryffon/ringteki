@@ -276,14 +276,16 @@ class DrawCard extends BaseCard {
         };
     }
 
-    getMilitaryModifiers() {
+    getMilitaryModifiers(exclusions = []) {
         let baseSkillModifiers = this.getBaseSkillModifiers();
         if(isNaN(baseSkillModifiers.baseMilitarySkill)) {
             return baseSkillModifiers.baseMilitaryModifiers;
         }
 
+        let rawEffects = this.getRawEffects().filter(effect => !exclusions.includes(effect.type));
+
         // set effects
-        let setEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.SetMilitarySkill || effect.type === EffectNames.SetDash);
+        let setEffects = rawEffects.filter(effect => effect.type === EffectNames.SetMilitarySkill || effect.type === EffectNames.SetDash);
         if(setEffects.length > 0) {
             let latestSetEffect = _.last(setEffects);
             let setAmount = latestSetEffect.type === EffectNames.SetDash ? undefined : latestSetEffect.getValue(this);
@@ -293,7 +295,7 @@ class DrawCard extends BaseCard {
         let modifiers = baseSkillModifiers.baseMilitaryModifiers;
 
         // skill modifiers
-        let modifierEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyMilitarySkill || effect.type === EffectNames.ModifyBothSkills);
+        let modifierEffects = rawEffects.filter(effect => effect.type === EffectNames.AttachmentMilitarySkillModifier || effect.type === EffectNames.ModifyMilitarySkill || effect.type === EffectNames.ModifyBothSkills);
         modifierEffects.forEach(modifierEffect => {
             const value = modifierEffect.getValue(this);
             modifiers.push(StatModifier.fromEffect(value, modifierEffect));
@@ -303,7 +305,7 @@ class DrawCard extends BaseCard {
         this.adjustHonorStatusModifiers(modifiers);
 
         // multipliers
-        let multiplierEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyMilitarySkillMultiplier);
+        let multiplierEffects = rawEffects.filter(effect => effect.type === EffectNames.ModifyMilitarySkillMultiplier);
         multiplierEffects.forEach(multiplierEffect => {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
@@ -314,14 +316,16 @@ class DrawCard extends BaseCard {
         return modifiers;
     }
 
-    getPoliticalModifiers() {
+    getPoliticalModifiers(exclusions = []) {
         let baseSkillModifiers = this.getBaseSkillModifiers();
         if(isNaN(baseSkillModifiers.basePoliticalSkill)) {
             return baseSkillModifiers.basePoliticalModifiers;
         }
 
+        let rawEffects = this.getRawEffects().filter(effect => !exclusions.includes(effect.type));
+
         // set effects
-        let setEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.SetPoliticalSkill);
+        let setEffects = rawEffects.filter(effect => effect.type === EffectNames.SetPoliticalSkill);
         if(setEffects.length > 0) {
             let latestSetEffect = _.last(setEffects);
             let setAmount = latestSetEffect.getValue(this);
@@ -331,7 +335,7 @@ class DrawCard extends BaseCard {
         let modifiers = baseSkillModifiers.basePoliticalModifiers;
 
         // skill modifiers
-        let modifierEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyPoliticalSkill || effect.type === EffectNames.ModifyBothSkills);
+        let modifierEffects = rawEffects.filter(effect => effect.type === EffectNames.AttachmentPoliticalSkillModifier || effect.type === EffectNames.ModifyPoliticalSkill || effect.type === EffectNames.ModifyBothSkills);
         modifierEffects.forEach(modifierEffect => {
             const value = modifierEffect.getValue(this);
             modifiers.push(StatModifier.fromEffect(value, modifierEffect));
@@ -341,7 +345,7 @@ class DrawCard extends BaseCard {
         this.adjustHonorStatusModifiers(modifiers);
 
         // multipliers
-        let multiplierEffects = this.getRawEffects().filter(effect => effect.type === EffectNames.ModifyPoliticalSkillMultiplier);
+        let multiplierEffects = rawEffects.filter(effect => effect.type === EffectNames.ModifyPoliticalSkillMultiplier);
         multiplierEffects.forEach(multiplierEffect => {
             let multiplier = multiplierEffect.getValue(this);
             let currentTotal = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
@@ -534,11 +538,35 @@ class DrawCard extends BaseCard {
         return floor ? Math.max(0, skill) : skill;
     }
 
+    getMilitarySkillExcludingModifiers(exclusions, floor = true) {
+        if(!Array.isArray(exclusions)) {
+            exclusions = [exclusions];
+        }
+        let modifiers = this.getMilitaryModifiers(exclusions);
+        let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
+        if(isNaN(skill)) {
+            return 0;
+        }
+        return floor ? Math.max(0, skill) : skill;
+    }
+
     get politicalSkill() {
         return this.getPoliticalSkill();
     }
 
     getPoliticalSkill(floor = true) {
+        let modifiers = this.getPoliticalModifiers();
+        let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
+        if(isNaN(skill)) {
+            return 0;
+        }
+        return floor ? Math.max(0, skill) : skill;
+    }
+
+    getPoliticalSkillExcludingModifiers(exclusions, floor = true) {
+        if(!Array.isArray(exclusions)) {
+            exclusions = [exclusions];
+        }
         let modifiers = this.getPoliticalModifiers();
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
         if(isNaN(skill)) {
