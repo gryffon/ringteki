@@ -195,10 +195,6 @@
                 expect(this.player1).toHavePrompt('Action Window');
                 this.player1.clickCard(this.akodoZentaro);
                 expect(this.player1).toHavePrompt('Action Window');
-                this.player1.pass();
-                expect(this.player1).toHavePrompt('Action Window');
-                this.player1.clickCard(this.akodoZentaro);
-                expect(this.player1).toHavePrompt('Action Window');
             });
 
             it('should prompt to choose a non-unique character with the \'bushi\' trait', function() {
