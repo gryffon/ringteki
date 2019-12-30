@@ -3,6 +3,7 @@ const _ = require('underscore');
 const moment = require('moment');
 
 const RestrictedList = require('./RestrictedList');
+const BannedList = require('./BannedList');
 
 const openRoles = [
     'keeper-of-air',
@@ -112,6 +113,7 @@ const roleRules = {
 class DeckValidator {
     constructor(packs) {
         this.packs = packs;
+        this.bannedList = new BannedList();
         this.restrictedList = new RestrictedList();
     }
 
@@ -196,17 +198,6 @@ class DeckValidator {
             }
         });
 
-        let totalConflictChars = _.reduce(deck.conflictCards, (total, card) => {
-            if(card.card.type === 'character') {
-                return total + card.count;
-            }
-            return total;
-        }, 0);
-
-        if(totalConflictChars > rules.maxConflictCharacters) {
-            errors.push('Too many conflict characters');
-        }
-
         let totalInfluence = _.reduce(cardCountByName, (total, card) => {
             if(card.influence && card.faction !== deck.faction.value) {
                 return total + card.influence * card.count;
@@ -219,17 +210,18 @@ class DeckValidator {
         }
 
         let restrictedResult = this.restrictedList.validate(allCards.map(cardQuantity => cardQuantity.card));
+        let bannedResult = this.bannedList.validate(allCards.map(cardQuantity => cardQuantity.card));
 
         return {
             basicRules: errors.length === 0,
             noUnreleasedCards: unreleasedCards.length === 0,
             officialRole: !role || openRoles.includes(role.id),
-            faqRestrictedList: restrictedResult.valid,
+            faqRestrictedList: restrictedResult.valid && bannedResult.valid,
             faqVersion: restrictedResult.version,
             provinceCount: provinceCount,
             dynastyCount: dynastyCount,
             conflictCount: conflictCount,
-            extendedStatus: errors.concat(unreleasedCards).concat(restrictedResult.errors)
+            extendedStatus: errors.concat(unreleasedCards, restrictedResult.errors, bannedResult.errors)
         };
     }
 
@@ -240,7 +232,6 @@ class DeckValidator {
             minimumConflict: 40,
             maximumConflict: 45,
             requiredProvinces: 5,
-            maxConflictCharacters: 10,
             maxProvince: {
                 air: 1,
                 earth: 1,
