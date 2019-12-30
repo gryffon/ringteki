@@ -9,21 +9,23 @@ describe('Yogo Kikuyo', function() {
                         hand: ['yogo-kikuyo']
                     },
                     player2: {
+                        inPlay: ['solemn-scholar'],
                         hand: ['against-the-waves']
                     }
                 });
                 this.soshiIllusionist = this.player1.findCardByName('soshi-illusionist');
                 this.yogoKikuyo = this.player1.findCardByName('yogo-kikuyo');
 
+                this.scholar = this.player2.findCardByName('solemn-scholar');
                 this.againstTheWaves = this.player2.findCardByName('against-the-waves');
             });
 
             it('should not trigger outside of a conflict', function() {
                 this.player1.pass();
                 this.player2.clickCard(this.againstTheWaves);
-                this.player2.clickCard(this.soshiIllusionist);
+                this.player2.clickCard(this.scholar);
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
-                expect(this.soshiIllusionist.bowed).toBe(true);
+                expect(this.scholar.bowed).toBe(true);
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
@@ -34,7 +36,7 @@ describe('Yogo Kikuyo', function() {
                     defenders: []
                 });
                 this.player2.clickCard(this.againstTheWaves);
-                this.player2.clickCard(this.soshiIllusionist);
+                this.player2.clickCard(this.scholar);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.yogoKikuyo);
             });
@@ -46,7 +48,7 @@ describe('Yogo Kikuyo', function() {
                     defenders: []
                 });
                 this.player2.clickCard(this.againstTheWaves);
-                this.player2.clickCard(this.soshiIllusionist);
+                this.player2.clickCard(this.scholar);
                 this.player1.clickCard(this.yogoKikuyo);
                 expect(this.yogoKikuyo.location).toBe('play area');
                 expect(this.yogoKikuyo.inConflict).toBe(false);
@@ -59,9 +61,9 @@ describe('Yogo Kikuyo', function() {
                     defenders: []
                 });
                 this.player2.clickCard(this.againstTheWaves);
-                this.player2.clickCard(this.soshiIllusionist);
+                this.player2.clickCard(this.scholar);
                 this.player1.clickCard(this.yogoKikuyo);
-                expect(this.soshiIllusionist.bowed).toBe(false);
+                expect(this.scholar.bowed).toBe(false);
             });
         });
     });

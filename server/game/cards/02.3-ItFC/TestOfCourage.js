@@ -1,8 +1,9 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Players, CardTypes } = require('../../Constants');
 
 class TestOfCourage extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Move a character into conflict',
             condition: context => context.player.opponent && context.player.showBid < context.player.opponent.showBid,
@@ -10,13 +11,12 @@ class TestOfCourage extends DrawCard {
                 cardType: CardTypes.Character,
                 controller: Players.Self,
                 cardCondition: card => card.isFaction('lion'),
-                gameAction: ability.actions.moveToConflict()
+                gameAction: AbilityDsl.actions.sequential([
+                    AbilityDsl.actions.moveToConflict(),
+                    AbilityDsl.actions.honor()
+                ])
             },
-            then: context => ({
-                message: '{1} honors {3}',
-                messageArgs: context.target,
-                gameAction: ability.actions.honor({ target: context.target })
-            })
+            effect: 'move {0} to the conflict and honor it'
         });
     }
 }

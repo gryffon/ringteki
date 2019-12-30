@@ -7,7 +7,7 @@ describe('dynasty phase', function() {
                     'shameful-display', 'shameful-display', 'shameful-display', 'shameful-display', 'shameful-display',
                     'akodo-gunso', 'akodo-gunso', 'matsu-berserker', 'matsu-berserker',
                     'akodo-toturi', 'akodo-toturi', 'akodo-toturi', 'akodo-toturi',
-                    'against-the-waves', 'against-the-waves', 'against-the-waves', 'against-the-waves'
+                    'soul-beyond-reproach', 'soul-beyond-reproach', 'soul-beyond-reproach', 'soul-beyond-reproach'
                 ]);
                 const deck2 = this.buildDeck('dragon', [
                     'mountain-s-anvil-castle',
@@ -130,11 +130,11 @@ describe('dynasty phase', function() {
                 this.player1.clickPrompt('1');
                 this.player2.clickCard(this.doomedShugenja1);
                 this.player2.clickPrompt('0');
-                this.player1.clickCard('against-the-waves');
+                this.player1.clickCard('soul-beyond-reproach');
 
-                expect(this.doomedShugenja1.location).toBe('play area');
+                expect(this.akodoToturi.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Choose a character');
-                expect(this.player1).toBeAbleToSelect(this.doomedShugenja1);
+                expect(this.player1).toBeAbleToSelect(this.akodoToturi);
             });
 
             // This is disabled until building decks using the api rather than the db is possible
@@ -143,11 +143,11 @@ describe('dynasty phase', function() {
                 this.player1.clickPrompt('1');
                 this.player2.clickCard(this.doomedShugenja1);
                 this.player2.clickPrompt('0');
-                this.player1.clickCard('against-the-waves');
-                this.player1.clickCard(this.doomedShugenja1);
+                this.player1.clickCard('soul-beyond-reproach');
+                this.player1.clickCard(this.akodoToturi);
                 this.player2.clickCard(this.doomedShugenja2);
 
-                expect(this.doomedShugenja1.bowed).toBe(true);
+                expect(this.akodoToturi.isHonored).toBe(true);
                 expect(this.player2).toHavePrompt('Click pass when done');
             });
 

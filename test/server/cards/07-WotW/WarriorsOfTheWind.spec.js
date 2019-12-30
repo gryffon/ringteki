@@ -22,7 +22,7 @@ describe('Warriors of the Wind', function() {
                 this.matsuMitsuko = this.player2.findCardByName('matsu-mitsuko');
             });
 
-            it('should not trigger if you have no participating cavalry characters', function() {
+            it('should trigger even if you have no participating cavalry characters', function() {
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.miyaMystic],
@@ -31,7 +31,7 @@ describe('Warriors of the Wind', function() {
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard(this.warriorsOfTheWind);
-                expect(this.player1).toHavePrompt('Conflict Action Window');
+                expect(this.player1).toHavePrompt('Warriors of the Wind');
             });
 
             it('should send all participating cavalry characters you control home', function() {

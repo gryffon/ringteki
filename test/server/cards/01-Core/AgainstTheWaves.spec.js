@@ -18,10 +18,10 @@ describe('Against the Waves', function() {
                 this.togashiInitiate = this.player2.findCardByName('togashi-initiate');
             });
 
-            it('should work only on shugenja', function() {
+            it('should work only on shugenja you control', function() {
                 this.player1.clickCard(this.againstTheWaves);
                 expect(this.player1).toHavePrompt('Against the Waves');
-                expect(this.player1).toBeAbleToSelect(this.togashiYokuni);
+                expect(this.player1).not.toBeAbleToSelect(this.togashiYokuni);
                 expect(this.player1).toBeAbleToSelect(this.kudaka);
                 expect(this.player1).not.toBeAbleToSelect(this.togashiInitiate);
             });
@@ -34,10 +34,10 @@ describe('Against the Waves', function() {
             });
 
             it('should bow a ready character', function() {
-                this.togashiYokuni.bowed = false;
+                this.kudaka.bowed = false;
                 this.player1.clickCard(this.againstTheWaves);
-                this.player1.clickCard(this.togashiYokuni);
-                expect(this.togashiYokuni.bowed).toBe(true);
+                this.player1.clickCard(this.kudaka);
+                expect(this.kudaka.bowed).toBe(true);
             });
         });
     });
