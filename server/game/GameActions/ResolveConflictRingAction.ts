@@ -5,52 +5,43 @@ import Ring = require('../ring');
 import { RingAction, RingActionProperties} from './RingAction';
 import { EventNames } from '../Constants';
 
-export interface ResolveConflictRingProperties extends RingActionProperties {
-    resolveAsAttacker?: boolean;
-}
-
 export class ResolveConflictRingAction extends RingAction {
     name = 'resolveRing';
     eventName = EventNames.OnResolveConflictRing;
-    defaultProperties: ResolveConflictRingProperties = { resolveAsAttacker: true };
-    constructor(properties: ((context: AbilityContext) => ResolveConflictRingProperties) | ResolveConflictRingProperties) {
+    constructor(properties: ((context: AbilityContext) => RingActionProperties) | RingActionProperties) {
         super(properties);
     }
 
     getEffectMessage(context: AbilityContext): [string, any[]] {
-        let properties: ResolveConflictRingProperties = this.getProperties(context);
-        return ['resolve {0}' + (properties.resolveAsAttacker ? '' : ' for the attacking player'),[properties.target]];
+        let properties: RingActionProperties = this.getProperties(context);
+        return ['resolve {0}', [properties.target]];
     }
 
     addPropertiesToEvent(event, ring: Ring, context: AbilityContext, additionalProperties): void {
         super.addPropertiesToEvent(event, ring, context, additionalProperties);
-        let properties: ResolveConflictRingProperties = this.getProperties(context, additionalProperties);
         let conflict = context.game.currentConflict;
-        if(!conflict && !properties.resolveAsAttacker) {
-            event.name = EventNames.Unnamed;
-            return;
-        }
+
         event.conflict = conflict;
-        event.player = properties.resolveAsAttacker ? context.player : conflict.attackingPlayer;
+        event.player = context.player;
     }
 
     eventHandler(event, additionalProperties): void {
         if(event.name !== this.eventName) {
             return;
         }
-        let properties: ResolveConflictRingProperties = this.getProperties(event.context, additionalProperties);
+        let properties: RingActionProperties = this.getProperties(event.context, additionalProperties);
         let elements = event.ring.getElements();
         let player = event.player
-        if(elements.length === 1 || (!properties.resolveAsAttacker && event.conflict.elementsToResolve >= elements.length)) {
-            this.resolveRingEffects(player, elements, properties.resolveAsAttacker);
+        if(elements.length === 1) {
+            this.resolveRingEffects(player, elements);
         } else {
-            this.chooseElementsToResolve(player, elements, properties.resolveAsAttacker, event.conflict.elementsToResolve);
+            this.chooseElementsToResolve(player, elements, event.conflict.elementsToResolve);
         }
     }
 
-    chooseElementsToResolve(player: Player, elements: string[], optional: boolean, elementsToResolve: number, chosenElements: string[] = []): void {
+    chooseElementsToResolve(player: Player, elements: string[], elementsToResolve: number, chosenElements: string[] = []): void {
         if(elements.length === 0 || elementsToResolve === 0) {
-            this.resolveRingEffects(player, chosenElements, optional);
+            this.resolveRingEffects(player, chosenElements);
             return;
         }
         let activePromptTitle = 'Choose a ring effect to resolve (click the ring you want to resolve)';
@@ -58,15 +49,15 @@ export class ResolveConflictRingAction extends RingAction {
             activePromptTitle = chosenElements.reduce((string, element) => string + ' ' + element, activePromptTitle + '\nChosen elements:');
         }
         let buttons = [];
-        if(optional) {
-            if(chosenElements.length > 0 && optional) {
-                buttons.push({ text: 'Done', arg: 'done' });
-            }
-            if(elementsToResolve >= elements.length) {
-                buttons.push({ text: 'Resolve All Elements', arg: 'all' });
-            }
-            buttons.push({ text: 'Don\'t Resolve the Conflict Ring', arg: 'cancel' });
+
+        if(chosenElements.length > 0) {
+            buttons.push({ text: 'Done', arg: 'done' });
         }
+        if(elementsToResolve >= elements.length) {
+            buttons.push({ text: 'Resolve All Elements', arg: 'all' });
+        }
+        buttons.push({ text: 'Don\'t Resolve the Conflict Ring', arg: 'cancel' });
+
         player.game.promptForRingSelect(player, {
             activePromptTitle: activePromptTitle,
             buttons: buttons,
@@ -75,7 +66,7 @@ export class ResolveConflictRingAction extends RingAction {
             onSelect: (player, ring) => {
                 elementsToResolve--;
                 chosenElements.push(ring.element);
-                this.chooseElementsToResolve(player, elements.filter(e => e !== ring.element), optional, elementsToResolve, chosenElements);
+                this.chooseElementsToResolve(player, elements.filter(e => e !== ring.element), elementsToResolve, chosenElements);
                 return true;
             },
             onCancel: player => player.game.addMessage('{0} chooses not to resolve the conflict ring', player),
@@ -83,7 +74,7 @@ export class ResolveConflictRingAction extends RingAction {
                 if(arg === 'all') {
                     this.resolveRingEffects(player, elements.concat(chosenElements));
                 } else if(arg === 'done') {
-                    this.resolveRingEffects(player, chosenElements, optional);
+                    this.resolveRingEffects(player, chosenElements);
                 }
                 return true;
             }
