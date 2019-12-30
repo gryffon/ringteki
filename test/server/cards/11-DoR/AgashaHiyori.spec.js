@@ -3,7 +3,7 @@ describe('Agasha Hiyori', function() {
         describe('Agasha Hiyori\'s ability (phase checks)', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'regroup',
+                    phase: 'fate',
                     player1: {
                         inPlay: ['agasha-hiyori'],
                         hand: ['court-mask']
@@ -41,7 +41,7 @@ describe('Agasha Hiyori', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.agashaHiyori);
                 this.player1.clickPrompt('Pass');
-                expect(this.game.currentPhase).toBe('regroup');
+                expect(this.game.currentPhase).toBe('dynasty');
                 expect(this.courtMask.location).toBe('play area');
                 expect(this.agashaHiyori.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Triggered Abilities');

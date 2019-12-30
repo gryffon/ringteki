@@ -216,7 +216,7 @@ describe('(4) Fate Phase', function() {
             });
 
             it('should raise an onPhaseEnded event', function() {
-                expect(this.game.currentPhase).toBe('regroup');
+                expect(this.game.currentPhase).toBe('dynasty');
                 expect(this.raiseEventSpy).toHaveBeenCalledWith('onPhaseEnded', { phase: 'fate' });
             });
         });

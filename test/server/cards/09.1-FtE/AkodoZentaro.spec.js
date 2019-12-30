@@ -178,7 +178,6 @@
             it('should not work outside of the conflict phase', function() {
                 this.player1.togglePromptedActionWindow('draw', true);
                 this.player1.togglePromptedActionWindow('fate', true);
-                this.player1.togglePromptedActionWindow('regroup', true);
                 this.player1.clickCard(this.akodoZentaro);
                 expect(this.player1).toHavePrompt('Choose additional fate');
                 expect(this.player1).toHavePromptButton('Cancel');

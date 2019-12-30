@@ -39,8 +39,7 @@ class InnerProfile extends React.Component {
             { name: 'draw', label: 'Draw phase', style: 'col-sm-4' },
             { name: 'preConflict', label: 'Conflict phase', style: 'col-sm-4' },
             { name: 'conflict', label: 'During conflict', style: 'col-sm-4' },
-            { name: 'fate', label: 'Fate phase', style: 'col-sm-4' },
-            { name: 'regroup', label: 'Regroup phase', style: 'col-sm-4' }
+            { name: 'fate', label: 'Fate phase', style: 'col-sm-4' }
         ];
     }
 

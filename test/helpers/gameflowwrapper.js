@@ -146,7 +146,12 @@ class GameFlowWrapper {
                 player.clickPrompt('Done');
             }
         }
-        this.guardCurrentPhase('regroup');
+        var playersInPromptedOrder = _.sortBy(this.allPlayers, player => player.hasPrompt('Waiting for opponent to discard dynasty cards'));
+        _.each(playersInPromptedOrder, player => player.clickPrompt('Done'));
+        // End the round
+        var promptedToEnd = _.sortBy(this.allPlayers, player => player.hasPrompt('Waiting for opponent to end the round'));
+        _.each(promptedToEnd, player => player.clickPrompt('End Round'));
+        this.guardCurrentPhase('dynasty');
     }
 
     /**

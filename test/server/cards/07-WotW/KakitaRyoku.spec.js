@@ -3,7 +3,7 @@ describe('Kakita Ryoku', function() {
         describe('Kakita Ryoku\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'regroup',
+                    phase: 'fate',
                     player1: {
                         inPlay: ['kakita-ryoku']
                     },
@@ -44,7 +44,7 @@ describe('Kakita Ryoku', function() {
                 expect(this.player1).toBeAbleToSelect(this.kakitaRyoku);
                 this.player1.clickPrompt('Pass');
                 this.player2.clickPrompt('Done'); // regroup phase
-                expect(this.game.currentPhase).toBe('regroup');
+                expect(this.game.currentPhase).toBe('dynasty');
                 expect(this.kakitaRyoku.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kakitaRyoku);

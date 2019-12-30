@@ -48,7 +48,7 @@ describe('Jurojin\'s Curse', function() {
                 expect(this.game.currentPhase).toBe('fate');
                 expect(this.game.rings.air.fate).toBe(2);
                 this.noMoreActions();
-                expect(this.game.currentPhase).toBe('regroup');
+                expect(this.game.currentPhase).toBe('dynasty');
             });
 
             it('should allow two triggers from both players', function() {
