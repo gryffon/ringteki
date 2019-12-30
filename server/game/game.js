@@ -1116,6 +1116,11 @@ class Game extends EventEmitter {
                 _.each(player.getProvinces(), card => {
                     card && card.checkForIllegalAttachments();
                 });
+
+                if(!player.checkRestrictions('haveImperialFavor') && player.imperialFavor !== '') {
+                    this.addMessage('The imperial favor is discarded as {0} cannot have it', player.name);
+                    player.loseImperialFavor();
+                }
             }
             if(this.currentConflict) {
                 // conflicts with illegal participants

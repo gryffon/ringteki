@@ -124,6 +124,7 @@ export enum EffectNames {
     RestrictNumberOfDefenders = 'restrictNumberOfDefenders',
     ResolveConflictEarly = 'resolveConflictEarly',
     SetBaseGlory = "setBaseGlory",
+    EventsCannotBeCancelled = 'eventsCannotBeCancelled',
     ForceConflictUnopposed = 'forceConflictUnopposed'
 };
 
