@@ -20,7 +20,7 @@ class BannedList {
         let errors = [];
 
         if(cardsOnBannedList.length > 1) {
-            errors.push(`Contains a card on the FAQ v${BannedList.version} banned list: ${cardsOnBannedList.map(card => card.name).join(', ')}`);
+            errors.push(`Contains a card on the FAQ v${bannedList.version} banned list: ${cardsOnBannedList.map(card => card.name).join(', ')}`);
         }
 
         return {
