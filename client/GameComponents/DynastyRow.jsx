@@ -254,7 +254,8 @@ class DynastyRow extends React.Component {
                                 disableMenu={ this.props.spectating || !this.props.isMe || !this.props.manualMode }
                                 onDragDrop={ this.props.onDragDrop }
                                 menu={ dynastyDeckMenu }
-                                hiddenTopCard
+                                topCard={ this.props.dynastyDeckTopCard }
+                                hiddenTopCard={ !this.props.dynastyDeckTopCard }
                                 cardCount={ this.props.numDynastyCards }
                                 popupMenu={ dynastyDeckPopupMenu }
                                 size={ this.props.cardSize } />
@@ -297,7 +298,7 @@ class DynastyRow extends React.Component {
                             <CardPile
                                 className='removed-from-game-pile discard'
                                 title='Removed From Game'
-                                source='removed from game pile'
+                                source='removed from game'
                                 cards={ this.props.removedFromGame }
                                 onMouseOver={ this.props.onMouseOver }
                                 onMouseOut={ this.props.onMouseOut }
@@ -317,7 +318,7 @@ class DynastyRow extends React.Component {
                         <CardPile
                             className='removed-from-game-pile discard'
                             title='Removed From Game'
-                            source='removed from game pile'
+                            source='removed from game'
                             cards={ this.props.removedFromGame }
                             onMouseOver={ this.props.onMouseOver }
                             onMouseOut={ this.props.onMouseOut }
@@ -372,7 +373,8 @@ class DynastyRow extends React.Component {
                             disableMenu
                             onDragDrop={ this.props.onDragDrop }
                             menu={ dynastyDeckMenu }
-                            hiddenTopCard
+                            topCard={ this.props.dynastyDeckTopCard }
+                            hiddenTopCard={ !this.props.dynastyDeckTopCard }
                             cardCount={ this.props.numDynastyCards }
                             popupMenu={ dynastyDeckPopupMenu }
                             size={ this.props.cardSize } />
@@ -403,6 +405,7 @@ DynastyRow.propTypes = {
     conflictDeckTopCard: PropTypes.object,
     conflictDiscardPile: PropTypes.array,
     dynastyDeck: PropTypes.array,
+    dynastyDeckTopCard: PropTypes.object,
     dynastyDiscardPile: PropTypes.array,
     hand: PropTypes.array,
     honor: PropTypes.number,

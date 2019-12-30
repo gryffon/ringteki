@@ -28,7 +28,8 @@ class RegalBearing extends DrawCard {
             return 0;
         }
 
-        return Math.abs(context.player.showBid - context.player.opponent.showBid);
+        // Players honor bid will be one but this is calculated before dials are changed.
+        return Math.abs(1 - context.player.opponent.showBid);
     }
 }
 

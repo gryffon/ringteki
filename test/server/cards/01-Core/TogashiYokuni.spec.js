@@ -492,20 +492,18 @@ describe('Togashi Yokuni', function() {
             });
 
             it('should only allow Yokuni to use the ability when his controller has played 3 spells', function() {
-                this.player2.clickCard('against-the-waves');
-                this.player2.clickCard(this.togashiYokuni);
-                expect(this.togashiYokuni.bowed).toBe(true);
+                this.player2.pass();
                 this.player1.clickCard('against-the-waves');
                 this.player1.clickCard(this.togashiYokuni);
-                expect(this.togashiYokuni.bowed).toBe(false);
+                expect(this.togashiYokuni.bowed).toBe(true);
                 this.fieryMadness = this.player2.playAttachment('fiery-madness', this.togashiYokuni);
                 this.player1.playAttachment('cloud-the-mind', this.elementalGuard);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard('against-the-waves', 'hand');
-                this.player1.clickCard(this.elementalGuard);
-                expect(this.elementalGuard.bowed).toBe(true);
+                this.player1.clickCard(this.togashiYokuni);
+                expect(this.togashiYokuni.bowed).toBe(false);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 expect(this.player1).toHavePrompt('Togashi Yokuni');

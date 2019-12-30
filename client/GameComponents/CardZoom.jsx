@@ -11,7 +11,7 @@ class CardZoom extends React.Component {
 
         return (
             <div className={ zoomClass }>
-                { this.props.show ?
+                { this.props.show && this.props.cardName !== undefined ?
                     <div className='card-zoomed shadow no-highlight'>
                         <span className='card-name'>{ this.props.cardName }</span>
                         <img src={ this.props.imageUrl } />

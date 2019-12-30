@@ -38,9 +38,11 @@ class BaseCardSelector {
         }
         let attachments = context.player.cardsInPlay.reduce((array, card) => array.concat(card.attachments.toArray()), []);
         let allProvinceAttachments = context.player.getProvinces().reduce((array, card) => array.concat(card.attachments.toArray()), []);
+
         if(context.player.opponent) {
             allProvinceAttachments = allProvinceAttachments.concat(context.player.opponent.getProvinces().reduce((array, card) => array.concat(card.attachments.toArray()), []));
         }
+
         attachments = attachments.concat(allProvinceAttachments);
 
         if(context.source.game.rings) {

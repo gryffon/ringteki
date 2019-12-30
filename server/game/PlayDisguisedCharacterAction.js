@@ -117,6 +117,10 @@ class PlayDisguisedCharacterAction extends BaseAction {
     isCardPlayed() {
         return true;
     }
+
+    isKeywordAbility() {
+        return true;
+    }
 }
 
 module.exports = PlayDisguisedCharacterAction;

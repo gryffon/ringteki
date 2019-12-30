@@ -1,7 +1,7 @@
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
 const HonorBidPrompt = require('./gamesteps/honorbidprompt.js');
-const { Locations, CardTypes } = require('./Constants');
+const { Locations, CardTypes, Players } = require('./Constants');
 
 class ChatCommands {
     constructor(game) {
@@ -15,8 +15,10 @@ class ChatCommands {
             '/reveal': this.reveal,
             '/duel': this.duel,
             '/move-to-conflict': this.moveToConflict,
+            '/move-to-bottom-deck': this.moveCardToDeckBottom,
             '/send-home': this.sendHome,
             '/claim-favor': this.claimFavor,
+            '/discard-favor': this.discardFavor,
             '/add-fate': this.addFate,
             '/rem-fate': this.remFate,
             '/add-fate-ring': this.addRingFate,
@@ -82,6 +84,11 @@ class ChatCommands {
         if(otherPlayer) {
             otherPlayer.loseImperialFavor();
         }
+    }
+
+    discardFavor(player) {
+        this.game.addMessage('{0} uses /discard-favor to discard the imperial favor', player);
+        player.loseImperialFavor();
     }
 
     honor(player) {
@@ -169,6 +176,22 @@ class ChatCommands {
         this.game.addMessage('{0} uses the /discard command to discard {1} card{2} at random', player, num, num > 1 ? 's' : '');
 
         GameActions.discardAtRandom({ amount: num }).resolve(player, this.game.getFrameworkContext());
+    }
+
+    moveCardToDeckBottom(player) {
+        this.game.promptForSelect(player, {
+            activePromptTitle: 'Select a card to send to the bottom of one of their decks',
+            waitingPromptTitle: 'Waiting for opponent to send a card to the bottom of one of their decks',
+            location: Locations.Any,
+            controller: Players.Self,
+            onSelect: (p, card) => {
+                const cardInitialLocation = card.location;
+                const cardNewLocation = card.isConflict ? Locations.ConflictDeck : Locations.DynastyDeck;
+                GameActions.moveCard({ target: card, bottom: true, destination: cardNewLocation }).resolve(player, this.game.getFrameworkContext());
+                this.game.addMessage('{0} uses a command to move {1} from their {2} to the bottom of their {3}.', player, card, cardInitialLocation);
+                return true;
+            }
+        });
     }
 
     setToken(player, args) {

@@ -74,6 +74,7 @@ describe('Regal Bearing', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.regalBearing);
 
+                expect(this.getChatLogs(5)).toContain('player1 plays Regal Bearing to set their bid dial to 1 and draw 4 cards.');
                 expect(this.player1.hand.length).toBe(4);
                 expect(this.fineKatana.location).toBe('hand');
                 expect(this.ornateFan.location).toBe('hand');
@@ -98,6 +99,7 @@ describe('Regal Bearing', function() {
 
                 this.player1.clickCard(this.regalBearing);
 
+                expect(this.getChatLogs(5)).toContain('player1 plays Regal Bearing to set their bid dial to 1 and draw 4 cards.');
                 expect(this.player1.player.showBid).toBe(1);
                 expect(this.player1.hand.length).toBe(5);
                 expect(this.fineKatana.location).toBe('hand');
@@ -159,6 +161,8 @@ describe('Regal Bearing', function() {
                 this.player1.clickPrompt('1');
                 this.player2.clickPrompt('1');
 
+                expect(this.getChatLogs(10)).not.toContain('player1 plays Regal Bearing to set their bid dial to 1 and draw 4 cards.');
+                expect(this.getChatLogs(10)).not.toContain('player1 plays Regal Bearing to set their bid dial to 1 and draw 0 cards.');
                 expect(this.player1.hand.length).toBe(1);
                 expect(this.fineKatana.location).toBe('conflict deck');
                 expect(this.ornateFan.location).toBe('conflict deck');

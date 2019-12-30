@@ -5,8 +5,8 @@ describe('Finger of Jade', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['unassuming-yojimbo', 'young-rumormonger'],
-                        hand: ['against-the-waves']
+                        inPlay: ['unassuming-yojimbo', 'young-rumormonger', 'iuchi-wayfinder'],
+                        hand: ['gaijin-customs']
                     },
                     player2: {
                         stronghold: 'mountain-s-anvil-castle',
@@ -27,14 +27,15 @@ describe('Finger of Jade', function() {
             });
 
             it('should prompt the player to cancel when an event is used against its character', function() {
+                this.doomedShugenja.bowed = true;
                 this.fingerOfJade = this.player2.playAttachment('finger-of-jade', 'doomed-shugenja');
-                this.player1.clickCard('against-the-waves');
+                this.player1.clickCard('gaijin-customs');
                 this.player1.clickCard(this.doomedShugenja);
                 expect(this.player2).toHavePrompt('Triggered Abilities');
                 expect(this.player2).toBeAbleToSelect(this.fingerOfJade);
                 this.player2.clickCard(this.fingerOfJade);
                 expect(this.player2).toHavePrompt('Action Window');
-                expect(this.doomedShugenja.bowed).toBe(false);
+                expect(this.doomedShugenja.bowed).toBe(true);
                 expect(this.fingerOfJade.location).toBe('conflict discard pile');
             });
 

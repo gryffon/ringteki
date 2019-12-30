@@ -233,6 +233,10 @@ class BaseAbility {
     isTriggeredAbility() {
         return false;
     }
+
+    isKeywordAbility() {
+        return false;
+    }
 }
 
 module.exports = BaseAbility;
