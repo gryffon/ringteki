@@ -12,8 +12,8 @@ class AnOceanInADrop extends DrawCard {
                 mode: TargetModes.Select,
                 targets: true,
                 choices:  {
-                    [this.owner.name]: AbilityDsl.actions.multiple(this.getGameActions(this.owner)),
-                    [this.owner.opponent && this.owner.opponent.name || 'NA']: AbilityDsl.actions.multiple(this.getGameActions(this.owner.opponent))
+                    [this.owner.name]: AbilityDsl.actions.sequential(this.getGameActions(this.owner)),
+                    [this.owner.opponent && this.owner.opponent.name || 'NA']: AbilityDsl.actions.sequential(this.getGameActions(this.owner.opponent))
                 }
             },
             effect: 'place {1}\'s hand on the bottom of their deck and have them draw {2} cards',
