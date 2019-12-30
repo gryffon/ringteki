@@ -35,7 +35,7 @@ describe('Daidoji Uji', function() {
                 expect(this.player1.fate).toBe(9);
             });
 
-            it('should let you play characters as if they were in your hand, reducing their cost by 1', function() {
+            it('should let you play characters as if they were in your hand', function() {
                 this.nextPhase();
                 this.nextPhase();
                 let fate = this.player1.player.fate;
@@ -43,13 +43,13 @@ describe('Daidoji Uji', function() {
                 this.player1.clickCard(this.dojiWhisperer);
                 this.player1.clickPrompt('0');
                 expect(this.dojiWhisperer.location).toBe('play area');
-                expect(this.player1.fate).toBe(fate);
+                expect(this.player1.fate).toBe(fate - 1);
                 this.player2.pass();
                 this.player1.clickCard(this.kakitaKaezin);
                 this.player1.clickPrompt('1');
                 expect(this.kakitaKaezin.location).toBe('play area');
                 expect(this.kakitaKaezin.fate).toBe(1);
-                expect(this.player1.fate).toBe(fate - 3);
+                expect(this.player1.fate).toBe(fate - 5);
             });
 
             it('should not discount characters played directly from hand', function() {

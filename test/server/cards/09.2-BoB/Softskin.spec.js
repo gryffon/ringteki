@@ -5,32 +5,31 @@ describe('Softskin', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        hand: ['softskin', 'against-the-waves'],
-                        conflictDiscard: ['against-the-waves']
+                        hand: ['softskin']
                     },
                     player2: {
                         inPlay: ['adept-of-the-waves'],
-                        hand: ['against-the-waves'],
-                        conflictDiscard: ['against-the-waves', 'banzai']
+                        hand: ['against-the-waves', 'against-the-waves', 'against-the-waves', 'against-the-waves'],
+                        conflictDiscard: ['banzai']
                     }
                 });
 
                 this.softskin = this.player1.findCardByName('softskin');
-                this.againstTheWaves1 = this.player1.findCardByName('against-the-waves');
-                this.againstTheWaves3 = this.player1.findCardByName('against-the-waves', 'conflict discard pile');
+                this.againstTheWaves1 = this.player2.filterCardsByName('against-the-waves')[0];
+                this.againstTheWaves2 = this.player2.filterCardsByName('against-the-waves')[1];
+                this.againstTheWaves3 = this.player2.filterCardsByName('against-the-waves')[2];
+                this.againstTheWaves4 = this.player2.filterCardsByName('against-the-waves')[3];
 
                 this.adeptOfTheWaves = this.player2.findCardByName('adept-of-the-waves');
                 this.adeptOfTheWaves.fate = 2;
-                this.againstTheWaves2 = this.player2.findCardByName('against-the-waves');
-                this.againstTheWaves4 = this.player2.findCardByName('against-the-waves', 'conflict discard pile');
                 this.banzai = this.player2.findCardByName('banzai', 'conflict discard pile');
                 this.player2.moveCard(this.banzai, 'conflict deck');
 
                 this.player1.clickCard(this.softskin);
                 this.player1.clickCard(this.adeptOfTheWaves);
-                this.player2.pass();
-                this.player1.clickCard(this.againstTheWaves1);
-                this.player1.clickCard(this.adeptOfTheWaves);
+                this.player2.clickCard(this.againstTheWaves1);
+                this.player2.clickCard(this.adeptOfTheWaves);
+                this.player1.pass();
             });
 
             it('should \'trigger\' when a card attempts to ready due to a card effect', function() {
@@ -40,6 +39,7 @@ describe('Softskin', function() {
             });
 
             it('should \'trigger\' when a card attempts to ready from a framework step', function() {
+                this.player2.pass();
                 this.advancePhases('regroup');
                 expect(this.player2).toHavePrompt('Adept of the Waves');
             });
@@ -78,11 +78,11 @@ describe('Softskin', function() {
                 expect(this.adeptOfTheWaves.bowed).toBe(false);
                 expect(this.player2.conflictDeck.length).toBe(conflictDeckCount - 3);
                 expect(this.getChatLogs(1)).toContain('player2 chooses to discard Banzai!, Supernatural Storm and Supernatural Storm in order to ready Adept of the Waves');
-                this.player1.moveCard(this.againstTheWaves3, 'hand');
-                this.player1.clickCard(this.againstTheWaves3);
-                this.player1.clickCard(this.adeptOfTheWaves);
+                this.player1.pass();
+                this.player2.clickCard(this.againstTheWaves3);
+                this.player2.clickCard(this.adeptOfTheWaves);
                 expect(this.adeptOfTheWaves.bowed).toBe(true);
-                this.player2.moveCard(this.againstTheWaves4, 'hand');
+                this.player1.pass();
                 this.player2.clickCard(this.againstTheWaves4);
                 this.player2.clickCard(this.adeptOfTheWaves);
                 this.player2.clickPrompt('Yes');

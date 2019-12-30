@@ -5,7 +5,7 @@ describe('Jurojin\'s Curse', function() {
                 this.setupTest({
                     phase: 'fate',
                     player1: {
-                        hand: ['seeker-of-knowledge', 'jurojin-s-curse', 'jurojin-s-curse']
+                        hand: ['seeker-of-knowledge', 'jurojin-s-curse', 'jurojin-s-curse', 'against-the-waves']
                     },
                     player2: {
                         fate: 2,
@@ -20,8 +20,9 @@ describe('Jurojin\'s Curse', function() {
             });
 
             it('should not trigger if it\'s parent is bowed at the end of the fate phase', function() {
-                this.player2.clickCard('against-the-waves');
-                this.player2.clickCard(this.seekerOfKnowledge);
+                this.player2.pass();
+                this.player1.clickCard('against-the-waves');
+                this.player1.clickCard(this.seekerOfKnowledge);
                 expect(this.seekerOfKnowledge.bowed).toBe(true);
                 this.noMoreActions();
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');

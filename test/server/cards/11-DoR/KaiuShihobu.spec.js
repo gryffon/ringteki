@@ -115,7 +115,7 @@ describe('Kaiu Shihobu', function() {
                 this.player1.clickCard(this.storehouse);
                 this.player1.clickCard(this.shamefulDisplay);
                 expect(this.storehouse.location).toBe('province 1');
-                expect(this.storehouse.facedown).toBe(true);
+                expect(this.storehouse.facedown).toBe(false);
 
                 expect(this.getChatLogs(1)).toContain('player1 uses Kaiu Shihobu to discard ' + this.currentCard.name + ', replacing it with a facedown holding');
             });
@@ -151,7 +151,7 @@ describe('Kaiu Shihobu', function() {
                 this.player1.clickCard(this.storehouse);
                 this.player1.clickCard(this.shamefulDisplay);
                 expect(this.storehouse.location).toBe('province 1');
-                expect(this.storehouse.facedown).toBe(true);
+                expect(this.storehouse.facedown).toBe(false);
 
                 expect(this.getChatLogs(1)).toContain('player1 uses Kaiu Shihobu to discard ' + this.currentCards.map(e => e.name).sort().join(', ') + ', replacing it with a facedown holding');
             });
