@@ -1,5 +1,5 @@
 const DrawCard = require('../../drawcard.js');
-const { Locations, Durations, Players, AbilityTypes } = require('../../Constants');
+const { Locations, Durations, Players, AbilityTypes, CardTypes } = require('../../Constants');
 
 class IllustriousPlagiarist extends DrawCard {
     setupCardAbilities(ability) {
@@ -11,6 +11,7 @@ class IllustriousPlagiarist extends DrawCard {
                 location: Locations.ConflictDiscardPile,
                 controller: Players.Opponent,
                 cardCondition: (card, context) => card.location === Locations.ConflictDiscardPile &&
+                    card.type === CardTypes.Event &&
                     card.controller === context.player.opponent &&
                     card.abilities.actions.length > 0,
                 gameAction: ability.actions.cardLastingEffect(context => ({
