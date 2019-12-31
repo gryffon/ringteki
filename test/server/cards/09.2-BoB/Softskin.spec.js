@@ -40,7 +40,7 @@ describe('Softskin', function() {
 
             it('should \'trigger\' when a card attempts to ready from a framework step', function() {
                 this.player2.pass();
-                this.advancePhases('regroup');
+                this.advancePhases('fate');
                 expect(this.player2).toHavePrompt('Adept of the Waves');
             });
 

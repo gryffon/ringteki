@@ -3,7 +3,7 @@ describe('Kakita Ryoku', function() {
         describe('Kakita Ryoku\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'regroup',
+                    phase: 'fate',
                     player1: {
                         inPlay: ['kakita-ryoku']
                     },
@@ -19,32 +19,43 @@ describe('Kakita Ryoku', function() {
             });
 
             it('should trigger at the start of any phase', function() {
-                this.noMoreActions(); // regroup phase
+                this.noMoreActions(); // fate phase
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
                 this.player2.clickPrompt('End Round');
                 this.player1.clickPrompt('End Round');
+
                 this.noMoreActions(); // dynasty phase
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kakitaRyoku);
                 this.player1.clickPrompt('Pass');
+
                 this.noMoreActions();// draw phase
                 expect(this.game.currentPhase).toBe('draw');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kakitaRyoku);
                 this.player1.clickPrompt('Pass');
+
                 this.nextPhase(); // conflict phase
                 expect(this.game.currentPhase).toBe('conflict');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kakitaRyoku);
                 this.player1.clickPrompt('Pass');
+
                 this.nextPhase(); // fate phase
                 expect(this.game.currentPhase).toBe('fate');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kakitaRyoku);
                 this.player1.clickPrompt('Pass');
-                this.player2.clickPrompt('Done'); // regroup phase
-                expect(this.game.currentPhase).toBe('regroup');
+                this.player2.clickPrompt('Done');
+                this.noMoreActions();
+                this.player2.clickPrompt('Done');
+                this.player1.clickPrompt('Done');
+                this.player1.clickPrompt('End Round');
+                this.player2.clickPrompt('End Round');
+
+                //Dynasty phase
+                expect(this.game.currentPhase).toBe('dynasty');
                 expect(this.kakitaRyoku.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kakitaRyoku);

@@ -30,10 +30,15 @@ describe('Jurojin\'s Curse', function() {
 
             it('should resolve a second fate phase', function() {
                 this.noMoreActions();
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                expect(this.getChatLogs(3)).toContain('player1 uses Jurōjin\'s Curse to resolve a second fate phase after this');
+                expect(this.getChatLogs(2)).toContain('Jurōjin\'s Curse takes hold!');
                 this.player2.clickPrompt('Done');
                 expect(this.seekerOfKnowledge.fate).toBe(0);
                 expect(this.isawaKaede.location).toBe('dynasty discard pile');
-                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player2).toHavePrompt('Action Window');
                 expect(this.game.currentPhase).toBe('fate');
                 expect(this.game.rings.air.fate).toBe(2);
             });
@@ -42,27 +47,43 @@ describe('Jurojin\'s Curse', function() {
                 this.player2.pass();
                 this.curse2 = this.player1.playAttachment('jurojin-s-curse', this.seekerOfKnowledge);
                 this.noMoreActions();
+                this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
                 expect(this.seekerOfKnowledge.location).toBe('play area');
                 expect(this.isawaKaede.location).toBe('dynasty discard pile');
-                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player2).toHavePrompt('Action Window');
                 expect(this.game.currentPhase).toBe('fate');
                 expect(this.game.rings.air.fate).toBe(2);
                 this.noMoreActions();
-                expect(this.game.currentPhase).toBe('regroup');
+                this.player2.clickPrompt('Done');
+                this.player1.clickPrompt('Done');
+
+                this.player1.clickPrompt('End Round');
+                this.player2.clickPrompt('End Round');
+
+                expect(this.game.currentPhase).toBe('dynasty');
             });
 
             it('should allow two triggers from both players', function() {
                 this.curse2 = this.player2.playAttachment('jurojin-s-curse', this.isawaKaede);
                 this.noMoreActions();
+                this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
                 expect(this.seekerOfKnowledge.fate).toBe(0);
                 expect(this.isawaKaede.location).toBe('dynasty discard pile');
-                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.player2).toHavePrompt('Action Window');
                 expect(this.game.currentPhase).toBe('fate');
                 expect(this.game.rings.air.fate).toBe(2);
+
                 this.noMoreActions();
+                this.player2.clickPrompt('Done');
                 this.player1.clickPrompt('Done');
+                this.player1.clickPrompt('Done');
+
                 expect(this.seekerOfKnowledge.location).toBe('conflict discard pile');
                 expect(this.player1).toHavePrompt('Action Window');
                 expect(this.game.currentPhase).toBe('fate');

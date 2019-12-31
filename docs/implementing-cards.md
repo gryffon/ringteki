@@ -537,7 +537,7 @@ this.action({
 
 #### Limiting an action to a specific phase
 
-Some actions are limited to a specific phase by their card text. You can pass an optional `phase` property to the action to limit it to just that phase. Valid phases include `'dynasty'`, `'draw'`, `'conflict'`, `'fate'`, `'regroup'`. The default is `'any'` which allows the action to be triggered in any phase.
+Some actions are limited to a specific phase by their card text. You can pass an optional `phase` property to the action to limit it to just that phase. Valid phases include `'dynasty'`, `'draw'`, `'conflict'`, `'fate'`. The default is `'any'` which allows the action to be triggered in any phase.
 
 ```javascript
 this.action({
