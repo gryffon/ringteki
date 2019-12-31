@@ -35,6 +35,14 @@ const checkRestrictions = {
     nonForcedAbilities: context => context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt
 };
 
+const leavePlayTypes = [
+    'discardFromPlay',
+    'sacrifice',
+    'returnToHand',
+    'returnToDeck',
+    'removeFromGame'
+];
+
 class Restriction extends EffectValue {
     constructor(properties) {
         super();
@@ -53,6 +61,9 @@ class Restriction extends EffectValue {
     }
 
     isMatch(type, context, card) {
+        if(this.type === 'leavePlay') {
+            return leavePlayTypes.includes(type) && this.checkCondition(context, card);
+        }
         return (!this.type || this.type === type) && this.checkCondition(context, card);
     }
 
