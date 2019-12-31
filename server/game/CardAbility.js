@@ -2,7 +2,7 @@ const AbilityLimit = require('./abilitylimit.js');
 const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, EffectNames, Players, TargetModes } = require('./Constants');
+const { Locations, CardTypes, EffectNames, Players } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
