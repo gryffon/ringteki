@@ -283,6 +283,10 @@ describe('(4) Fate Phase', function() {
                 this.shameful1.isBroken = true;
                 this.shameful2.isBroken = true;
 
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+                this.adept3.facedown = false;
+                this.adept4.facedown = false;
                 this.adept5.facedown = true;
                 this.adept6.facedown = true;
 

@@ -32,8 +32,6 @@ describe('Jurojin\'s Curse', function() {
                 this.noMoreActions();
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
-                this.player2.clickPrompt('End Round');
-                this.player1.clickPrompt('End Round');
 
                 expect(this.getChatLogs(3)).toContain('player1 uses Jurōjin\'s Curse to resolve a second fate phase after this');
                 expect(this.getChatLogs(2)).toContain('Jurōjin\'s Curse takes hold!');
@@ -51,8 +49,6 @@ describe('Jurojin\'s Curse', function() {
                 this.noMoreActions();
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
-                this.player2.clickPrompt('End Round');
-                this.player1.clickPrompt('End Round');
                 this.player2.clickPrompt('Done');
 
                 expect(this.seekerOfKnowledge.location).toBe('play area');
@@ -63,6 +59,7 @@ describe('Jurojin\'s Curse', function() {
                 this.noMoreActions();
                 this.player2.clickPrompt('Done');
                 this.player1.clickPrompt('Done');
+
                 this.player1.clickPrompt('End Round');
                 this.player2.clickPrompt('End Round');
 
@@ -74,8 +71,6 @@ describe('Jurojin\'s Curse', function() {
                 this.noMoreActions();
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
-                this.player2.clickPrompt('End Round');
-                this.player1.clickPrompt('End Round');
                 this.player2.clickPrompt('Done');
 
                 expect(this.seekerOfKnowledge.fate).toBe(0);
@@ -87,8 +82,6 @@ describe('Jurojin\'s Curse', function() {
                 this.noMoreActions();
                 this.player2.clickPrompt('Done');
                 this.player1.clickPrompt('Done');
-                this.player1.clickPrompt('End Round');
-                this.player2.clickPrompt('End Round');
                 this.player1.clickPrompt('Done');
 
                 expect(this.seekerOfKnowledge.location).toBe('conflict discard pile');

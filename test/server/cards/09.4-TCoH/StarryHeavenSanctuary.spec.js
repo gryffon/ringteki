@@ -114,9 +114,14 @@ describe('Starry Heaven Sanctuary', function() {
                 this.player2.clickCard(this.shrineMaiden);
 
                 expect(this.player1).toHavePrompt('Discard Dynasty Cards');
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
                 expect(this.player1.fate).toBe(6);
                 expect(this.borderlandsDefender.fate).toBe(0);
                 expect(this.bayushiAramoro.fate).toBe(0);
+
+                expect(this.player2).toHavePrompt('Discard Dynasty Cards');
             });
         });
     });

@@ -13,6 +13,7 @@ const DynastyPhase = require('./gamesteps/dynastyphase.js');
 const DrawPhase = require('./gamesteps/drawphase.js');
 const ConflictPhase = require('./gamesteps/conflictphase.js');
 const FatePhase = require('./gamesteps/fatephase.js');
+const EndRoundPrompt = require('./gamesteps/regroup/endroundprompt.js');
 const SimpleStep = require('./gamesteps/simplestep.js');
 const MenuPrompt = require('./gamesteps/menuprompt.js');
 const HandlerMenuPrompt = require('./gamesteps/handlermenuprompt.js');
@@ -823,7 +824,13 @@ class Game extends EventEmitter {
         this.queueStep(new DrawPhase(this));
         this.queueStep(new ConflictPhase(this));
         this.queueStep(new FatePhase(this));
+        this.queueStep(new EndRoundPrompt(this)),
+        this.queueStep(new SimpleStep(this, () => this.roundEnded()));
         this.queueStep(new SimpleStep(this, () => this.beginRound()));
+    }
+
+    roundEnded() {
+        this.raiseEvent(EventNames.OnRoundEnded);
     }
 
     /*

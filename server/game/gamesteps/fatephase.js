@@ -2,7 +2,6 @@ const _ = require('underscore');
 const Phase = require('./phase.js');
 const ActionWindow = require('./actionwindow.js');
 const SimpleStep = require('./simplestep.js');
-const EndRoundPrompt = require('./regroup/endroundprompt.js');
 const { Players, Phases, CardTypes, EventNames, Locations } = require('../Constants');
 
 /*
@@ -31,9 +30,7 @@ class FatePhase extends Phase {
             new SimpleStep(game, () => this.readyCards()),
             new SimpleStep(game, () => this.discardFromProvinces()),
             new SimpleStep(game, () => this.returnRings()),
-            new SimpleStep(game, () => this.passFirstPlayer()),
-            new EndRoundPrompt(game),
-            new SimpleStep(game, () => this.roundEnded())]);
+            new SimpleStep(game, () => this.passFirstPlayer())]);
     }
 
     discardCharactersWithNoFate() {
@@ -162,10 +159,6 @@ class FatePhase extends Phase {
         if(otherPlayer) {
             this.game.raiseEvent(EventNames.OnPassFirstPlayer, { player: otherPlayer }, () => this.game.setFirstPlayer(otherPlayer));
         }
-    }
-
-    roundEnded() {
-        this.game.raiseEvent(EventNames.OnRoundEnded);
     }
 }
 
