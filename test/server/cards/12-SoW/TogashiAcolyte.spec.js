@@ -161,6 +161,31 @@ describe('Togashi Acolyte', function() {
                 this.player1.clickCard(this.whisperer);
                 expect(this.player1).toBeAbleToSelect(this.acolyte);
             });
+
+            it('can be played as a character', function() {
+                this.player1.clickCard(this.acolyte);
+                this.player1.clickPrompt('Play this character');
+                this.player1.clickPrompt('0');
+                expect(this.acolyte.location).toBe('play area');
+            });
+
+            it('should not give +1/+1 as a character', function() {
+                this.player1.clickCard(this.acolyte);
+                this.player1.clickPrompt('Play this character');
+                this.player1.clickPrompt('0');
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.whisperer, this.kuwanan, this.acolyte],
+                    defenders: []
+                });
+
+                this.player2.pass();
+                this.player1.clickCard(this.p1BHC);
+                this.player1.clickPrompt('player2');
+                expect(this.player1).not.toHavePrompt('Triggered Abilities');
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
         });
     });
 });

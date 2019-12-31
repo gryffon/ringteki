@@ -35,7 +35,7 @@ class TogashiAcolyte extends DrawCard {
             title: 'Give attached character +1/+1',
             limit: AbilityDsl.limit.unlimitedPerConflict(),
             when: {
-                onCardPlayed: (event, context) => event.player === context.player && context.source.parent.isParticipating()
+                onCardPlayed: (event, context) => event.player === context.player && context.source.type === CardTypes.Attachment && context.source.parent.isParticipating()
             },
             gameAction: AbilityDsl.actions.cardLastingEffect(context => ({
                 target: context.source.parent,
