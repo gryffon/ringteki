@@ -5,7 +5,7 @@ class IllustriousPlagiarist extends DrawCard {
     setupCardAbilities(ability) {
         this.action({
             title: 'Copy action abilty of opponent\'s top event',
-            condition: context => context.player.opponent,
+            condition: context => context.player.opponent && context.player.opponent.conflictDiscardPile.filter(card => card.type === CardTypes.Event).every(card => card.abilities.actions.length > 0),
             target: {
                 player: Players.Opponent, // As per December 2019 RRG Conflict Discard Pile order is determined by the controller of the pile
                 location: Locations.ConflictDiscardPile,
