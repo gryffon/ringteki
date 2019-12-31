@@ -7,16 +7,10 @@ const { Locations, CardTypes, EffectNames, Players, TargetModes } = require('./C
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
         if(properties.initiateDuel) {
-            properties.targets = {
-                challenger: {
-                    cardType: CardTypes.Character,
-                    mode: card.type === CardTypes.Character ? TargetModes.AutoSingle : TargetModes.Single,
-                    controller: Players.Self,
-                    cardCondition: (card, context) => card.isParticipating()
-                        && (context.source.type === CardTypes.Character ? card === context.source : true)
-                },
-                duelTarget: {
-                    dependsOn: 'challenger',
+            if(card.type === CardTypes.Character) {
+                let prevCondition = properties.condition;
+                properties.condition = context => context.source.isParticipating() && (!prevCondition || prevCondition(context));
+                properties.target = {
                     cardType: CardTypes.Character,
                     player: context => {
                         if(typeof properties.initiateDuel === 'function') {
@@ -28,12 +22,38 @@ class CardAbility extends ThenAbility {
                     cardCondition: card => card.isParticipating(),
                     gameAction: AbilityDsl.actions.duel(context => {
                         if(typeof properties.initiateDuel === 'function') {
-                            return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel(context));
+                            return Object.assign({ challenger: context.source }, properties.initiateDuel(context));
                         }
-                        return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel);
+                        return Object.assign({ challenger: context.source }, properties.initiateDuel);
                     })
-                }
-            };
+                };
+            } else {
+                properties.targets = {
+                    challenger: {
+                        cardType: CardTypes.Character,
+                        controller: Players.Self,
+                        cardCondition: card => card.isParticipating()
+                    },
+                    duelTarget: {
+                        dependsOn: 'challenger',
+                        cardType: CardTypes.Character,
+                        player: context => {
+                            if(typeof properties.initiateDuel === 'function') {
+                                return properties.initiateDuel(context).opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                            }
+                            return properties.initiateDuel.opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                        },
+                        controller: Players.Opponent,
+                        cardCondition: card => card.isParticipating(),
+                        gameAction: AbilityDsl.actions.duel(context => {
+                            if(typeof properties.initiateDuel === 'function') {
+                                return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel(context));
+                            }
+                            return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel);
+                        })
+                    }
+                };
+            }
         }
         super(game, card, properties);
 
