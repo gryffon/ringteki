@@ -147,7 +147,7 @@ describe('Regal Bearing', function() {
                 expect(this.honoredBlade.location).toBe('conflict deck');
                 expect(this.sharpenTheMind.location).toBe('conflict deck');
 
-                const playerHandSize = this.player1.hand.length - 1// Playing RB
+                const playerHandSize = this.player1.hand.length - 1;// Playing RB
                 this.player1.clickCard(this.regalBearing);
 
                 expect(this.getChatLogs(5)).toContain('player1 plays Regal Bearing to set their bid dial to 1 and draw 4 cards.');
