@@ -665,7 +665,7 @@ class BaseCard extends EffectSource {
         this.childCards = this.childCards.filter(a => a !== card);
         this.controller.moveCard(card, location);
     }
-
+    
     getShortSummaryForControls(activePlayer) {
         if(this.facedown && (activePlayer !== this.controller || this.hideWhenFacedown())) {
             return { facedown: true, isDynasty: this.isDynasty, isConflict: this.isConflict };

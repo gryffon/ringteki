@@ -185,6 +185,8 @@ class SelectCardPrompt extends UiPrompt {
             return true;
         }
 
+        this.context.TEST_SELECTED_CARDS = this.selectedCards;
+
         return (
             this.selector.canTarget(card, this.context, this.choosingPlayer) &&
             !this.selector.wouldExceedLimit(this.selectedCards, card)

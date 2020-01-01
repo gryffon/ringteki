@@ -79,7 +79,8 @@ class BaseCardSelector {
         if(!card) {
             return false;
         }
-        if(this.checkTarget && !card.checkRestrictions('target', context)) {
+
+        if(this.checkTarget && !card.canBeTargeted(context)) {
             return false;
         }
         if(this.controller === Players.Self && card.controller !== context.player) {

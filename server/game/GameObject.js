@@ -107,6 +107,37 @@ class GameObject {
         };
     }
 
+    canBeTargeted(context) {
+        if (!this.checkRestrictions('target', context)) {
+            console.log('False 1');
+            return false;
+        }
+
+        let availableFate = context.source.controller.fate - context.ability.getReducedCost(context);
+        console.log('Available fate: ' + availableFate);
+
+        if (this.sumEffects(EffectNames.FateCostToTarget) > availableFate) {
+            console.log('False 2');
+            return false;
+        }
+
+        if (context.TEST_SELECTED_CARDS) {
+            let targets = context.TEST_SELECTED_CARDS;
+            console.log(targets.map(a => a.name));
+            if (!Array.isArray(targets)) {
+                targets = [targets];
+            }
+            targets = targets.filter(a => !_.isEmpty(a));
+
+            if(targets.concat(this).reduce((total, target) => total + target.sumEffects(EffectNames.FateCostToTarget), 0) > availableFate) {
+                console.log('False 3');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     getShortSummaryForControls(activePlayer) {
         return this.getShortSummary(activePlayer);
     }
