@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl');
 class PerceptiveKitsuki extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Bow a character',
+            title: 'Look at your opponent\'s hand',
             condition: context => context.source.isParticipating(),
             cost: AbilityDsl.costs.returnRings(1),
             effect: 'look at {1}\'s hand',
