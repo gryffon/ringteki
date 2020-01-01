@@ -27,7 +27,7 @@ export class RandomDiscardAction extends PlayerAction {
     }
 
     addPropertiesToEvent(event, player: Player, context: AbilityContext, additionalProperties): void {
-        let { amount } = this.getProperties(context, additionalProperties) as RandomDiscardProperties;        
+        let { amount } = this.getProperties(context, additionalProperties) as RandomDiscardProperties;
         super.addPropertiesToEvent(event, player, context, additionalProperties);
         event.amount = amount;
         event.discardedAtRandom = true;
@@ -42,30 +42,9 @@ export class RandomDiscardAction extends PlayerAction {
         let cardsToDiscard = player.hand.shuffle().slice(0, amount);
         event.discardedCards = cardsToDiscard;
         player.game.addMessage('{0} discards {1} at random', player, cardsToDiscard);
-        if(amount === 1) {
-            let card = cardsToDiscard[0];
+
+        for(const card of cardsToDiscard) {
             player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
-            return;
         }
-        let handler = (player, cards = []) => {
-            cards = cards.concat(cardsToDiscard.filter(card => !cards.includes(card)));
-            for(const card of cards) {
-                player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
-            }
-            return true;
-        };
-        player.game.promptForSelect(player, {
-            activePromptTitle: 'Choose order for random discard',
-            mode: TargetModes.UpTo,
-            numCards: cardsToDiscard.length,
-            optional: true,
-            ordered: true,
-            location: Locations.Hand,
-            controller: Players.Self,
-            source: event.context.source,
-            cardCondition: card => cardsToDiscard.includes(card),
-            onSelect: handler,
-            onCancel: handler
-        });
     }
 }

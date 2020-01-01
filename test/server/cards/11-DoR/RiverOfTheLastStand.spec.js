@@ -45,10 +45,6 @@ describe('River of the Last Stand', function() {
                 let hand = this.player1.hand.length;
                 expect(hand).toBe(2);
                 this.player2.clickCard(this.river);
-                expect(this.player1).toHavePrompt('Choose order for random discard');
-                this.player1.clickCard(this.assassination);
-                this.player1.clickCard(this.duty);
-                this.player1.clickPrompt('Done');
                 expect(this.player1.hand.length).toBe(1);
                 expect(this.assassination.location).toBe('conflict discard pile');
                 expect(this.duty.location).toBe('conflict discard pile');
@@ -66,10 +62,6 @@ describe('River of the Last Stand', function() {
                 let hand = this.player1.hand.length;
                 expect(hand).toBe(2);
                 this.player2.clickCard(this.river);
-                expect(this.player1).toHavePrompt('Choose order for random discard');
-                this.player1.clickCard(this.assassination);
-                this.player1.clickCard(this.duty);
-                this.player1.clickPrompt('Done');
                 expect(this.player1.hand.length).toBe(1);
                 expect(this.assassination.location).toBe('conflict discard pile');
                 expect(this.duty.location).toBe('conflict discard pile');

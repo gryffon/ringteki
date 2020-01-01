@@ -44,7 +44,6 @@ export class ChosenDiscardAction extends PlayerAction {
                     context: context,
                     mode: TargetModes.Exactly,
                     numCards: amount,
-                    ordered: true,
                     location: Locations.Hand,
                     controller: player === context.player ? Players.Self : Players.Opponent,
                     onSelect: (player, cards) => {

@@ -32,12 +32,9 @@ describe('Young Rumormonger', function() {
                 expect(this.player1).toBeAbleToSelect(this.youngRumormonger);
                 this.player1.clickCard(this.youngRumormonger);
                 this.player1.clickCard(this.youngRumormonger);
-                expect(this.player2).toHavePrompt('Spies At Court');
                 expect(this.youngRumormonger.isDishonored).toBe(true);
                 expect(this.otomoCourtier.isDishonored).toBe(false);
-                expect(this.player2).toBeAbleToSelect('banzai');
-                expect(this.getChatLogs(3)).toContain('player1 uses Young Rumormonger to dishonor Young Rumormonger instead of Otomo Courtier');
-                this.player2.clickPrompt('Done');
+                expect(this.getChatLogs(5)).toContain('player1 uses Young Rumormonger to dishonor Young Rumormonger instead of Otomo Courtier');
                 expect(this.player2.hand.length).toBe(0);
             });
         });
