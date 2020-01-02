@@ -34,7 +34,6 @@ export class CardGameAction extends GameAction {
             if (context.player) {
                 const targetingCosts = context.player.getTargetingCost(context.source, card);
                 if (targetingCosts > 0) {
-                    console.log('Paying targeting costs');
                     context.game.addMessage('{0} pays {1} fate in order to target {2}', context.player, targetingCosts, card.name);
                     let properties = { amout: targetingCosts, target: context.player };
                     let cost = new LoseFateAction(properties);

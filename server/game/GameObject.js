@@ -122,13 +122,12 @@ class GameObject {
 
             let minCost = contextCopy.player.getTargetingCost(context.source, targets);
             let fateCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, null, true);
-            let availableFate = context.player.fate - fateCost;
+            let availableFate = Math.max(context.player.fate - fateCost, 0);
             
-            console.log('Checking ' + this.name + ' minCost is ' + minCost + ' and available fate is ' + availableFate);
-
             return availableFate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
         }
-        else if ((context.stage === Stages.Target || context.stage === Stages.Effect) && (!context.preTargets || context.preTargets.length === 0)) {
+        // else if ((context.stage === Stages.Target || context.stage === Stages.Effect) && (!context.preTargets || context.preTargets.length === 0)) {
+        else if (context.stage === Stages.Target || context.stage === Stages.Effect) {
             //We paid costs first, or targeting has to be done after costs have been paid
             let targets = this.getSelectedCards(context);
 
@@ -144,19 +143,19 @@ class GameObject {
     getSelectedCards(context) {
         let targets = [];
         if (context.player.getSelectedCards()) {
-            targets = context.player.getSelectedCards();
-            if (!Array.isArray(targets)) {
-                targets = [targets];
+            let selfTargets = context.player.getSelectedCards();
+            if (!Array.isArray(selfTargets)) {
+                selfTargets = [selfTargets];
             }
+            targets = targets.concat(selfTargets);
         }
-        //Handles the case where the opponent chooses multiple targets
-        if (targets.length === 0) {
-            if (context.player.opponent.getSelectedCards()) {
-                targets = context.player.opponent.getSelectedCards();
-                if (!Array.isArray(targets)) {
-                    targets = [targets];
-                }
+
+        if (context.player.opponent.getSelectedCards()) {
+            let opponentTargets = context.player.opponent.getSelectedCards();
+            if (!Array.isArray(opponentTargets)) {
+                opponentTargets = [opponentTargets];
             }
+            targets = targets.concat(opponentTargets);
         }
         return targets;
     }
