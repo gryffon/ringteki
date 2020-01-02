@@ -620,7 +620,16 @@ class Player extends GameObject {
                 target = [target];
             }
 
-            target.filter(a => !_.isEmpty(a)).forEach(t => {
+            let duels = target.filter(a => a.challenger || a.target);
+            target = target.filter(a => !a.challenger && !a.target);
+            let challengers = duels.map(a => a.challenger);
+            let duelTargets = duels.map(a => a.target).flat();
+
+            target = target.concat(challengers);
+            target = target.concat(duelTargets);
+            target = target.filter(a => !_.isEmpty(a));
+
+            target.forEach(t => {
                 t.getEffects(EffectNames.FateCostToTarget).forEach(effect => {
                     let typeMatch = true;
                     let controllerMatch = true;
@@ -1131,6 +1140,10 @@ class Player extends GameObject {
      */
     setSelectedCards(cards) {
         this.promptState.setSelectedCards(cards);
+    }
+
+    getSelectedCards() {
+        return this.promptState.getSelectedCards();
     }
 
     clearSelectedCards() {

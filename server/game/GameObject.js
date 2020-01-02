@@ -114,13 +114,7 @@ class GameObject {
         }
 
         if (context.stage === Stages.PreTarget) {
-            let targets = [];
-            if (context.preTargets) {
-                targets = context.preTargets;
-                if (!Array.isArray(targets)) {
-                    targets = [targets];
-                }
-            }
+            let targets = this.getSelectedCards(context);
 
             let contextCopy = context.copy();
             contextCopy.preTargets = targets.concat(this);
@@ -132,29 +126,41 @@ class GameObject {
             }
 
             //We have a triggered ability that's not getting played, so we need to ignore the play cost of whatever is triggering the ability
-            let minCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, contextCopy.preTargets, true);
+            let minCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, targets, true);
             minCost = minCost - contextCopy.source.getCost();
             return context.player.fate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
         }
-        else if (context.stage === Stages.Target && context.preTargets.length === 0) {
-            //We paid costs first
-            //We've already paid the play cost
-            let targets = [];
-            if (context.targets) {
-                targets = context.targets;
-                if (!Array.isArray(targets)) {
-                    targets = [targets];
-                }
-            }
+        else if ((context.stage === Stages.Target || context.stage === Stages.Effect) && (!context.preTargets || context.preTargets.length === 0)) {
+            //We paid costs first, or targeting has to be done after costs have been paid
+            let targets = this.getSelectedCards(context);
 
             let contextCopy = context.copy();
-            contextCopy.preTargets = targets.concat(this);
-            let minCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, contextCopy.preTargets, true);
-            minCost = minCost - contextCopy.source.getCost();
+            targets = targets.concat(this);
+            let minCost = contextCopy.player.getTargetingCost(context.source, targets);
             return context.player.fate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
         }
 
         return true;
+    }
+
+    getSelectedCards(context) {
+        let targets = [];
+        if (context.player.getSelectedCards()) {
+            targets = context.player.getSelectedCards();
+            if (!Array.isArray(targets)) {
+                targets = [targets];
+            }
+        }
+        //Handles the case where the opponent chooses multiple targets
+        if (targets.length === 0) {
+            if (context.player.opponent.getSelectedCards()) {
+                targets = context.player.opponent.getSelectedCards();
+                if (!Array.isArray(targets)) {
+                    targets = [targets];
+                }
+            }
+        }
+        return targets;
     }
 
     getShortSummaryForControls(activePlayer) {
