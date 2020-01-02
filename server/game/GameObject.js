@@ -115,6 +115,7 @@ class GameObject {
         let alternateFatePools = context.source.controller.getAlternateFatePools('playingType', context.source);
         let availableFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0) + context.source.controller.fate;
         availableFate = availableFate - context.ability.getReducedCost(context);
+        availableFate = context.source.controller.checkRestrictions('spendFate', context) ? availableFate : 0;
 
         let targets = [];
         if (context.TEST_SELECTED_CARDS) {
