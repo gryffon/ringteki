@@ -4,6 +4,7 @@ const AbilityContext = require('../AbilityContext.js');
 const CardSelector = require('../CardSelector.js');
 const EffectSource = require('../EffectSource.js');
 const UiPrompt = require('./uiprompt.js');
+const { Stages } = require('../Constants');
 
 /**
  * General purpose prompt that asks the user to select 1 or more cards.
@@ -185,7 +186,9 @@ class SelectCardPrompt extends UiPrompt {
             return true;
         }
 
-        this.context.TEST_SELECTED_CARDS = this.selectedCards;
+        if (this.context.stage === Stages.PreTarget) {
+            this.context.preTargets = this.selectedCards;
+        }
 
         return (
             this.selector.canTarget(card, this.context, this.choosingPlayer) &&

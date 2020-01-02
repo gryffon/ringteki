@@ -13,8 +13,8 @@ class ReduceableFateCost {
         }
 
         let target  = null;
-        if (context.TEST_SELECTED_CARDS) {
-            target = context.TEST_SELECTED_CARDS;
+        if (context.preTargets) {
+            target = context.preTargets;
         }
 
         let minCost = context.player.getMinimumCost(context.playType, context, target, this.ignoreType);

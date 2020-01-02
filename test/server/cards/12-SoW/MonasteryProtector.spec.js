@@ -256,5 +256,26 @@ describe('Monastery Protector', function() {
             this.player2.clickPrompt('1');
             expect(this.getChatLogs(3)).toContain('Duel Effect: bow Yogo Hiroue');
         });
+
+        it('should work if you choose to pay costs first', function() {
+            this.player2.fate = 3;
+            this.protector.bowed = true;
+            this.ancientMaster.bowed = true;
+
+            this.player1.pass();
+            this.player2.clickCard(this.duty);
+            this.player2.clickPrompt('Pay costs first');
+
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+
+            this.player2.clickCard(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).not.toBeAbleToSelect(this.ancientMaster);
+
+            this.player2.clickCard(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+        });
     });
 });

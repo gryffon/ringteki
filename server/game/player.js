@@ -620,7 +620,7 @@ class Player extends GameObject {
                 target = [target];
             }
 
-            target.forEach(t => {
+            target.filter(a => !_.isEmpty(a)).forEach(t => {
                 t.getEffects(EffectNames.FateCostToTarget).forEach(effect => {
                     let typeMatch = true;
                     let controllerMatch = true;
