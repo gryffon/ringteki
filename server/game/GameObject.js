@@ -112,21 +112,20 @@ class GameObject {
             return false;
         }
 
-        let availableFate = context.source.controller.fate - context.ability.getReducedCost(context);
+        let alternateFatePools = context.source.controller.getAlternateFatePools('playingType', context.source);
+        let availableFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0) + context.source.controller.fate;
+        availableFate = availableFate - context.ability.getReducedCost(context);
 
-        if (this.sumEffects(EffectNames.FateCostToTarget) > availableFate) {
-            return false;
-        }
-
+        let targets = [];
         if (context.TEST_SELECTED_CARDS) {
-            let targets = context.TEST_SELECTED_CARDS;
+            targets = context.TEST_SELECTED_CARDS;
             if (!Array.isArray(targets)) {
                 targets = [targets];
             }
+        }
  
-            if(targets.concat(this).reduce((total, target) => total + target.sumEffects(EffectNames.FateCostToTarget), 0) > availableFate) {
-                return false;
-            }
+        if(targets.concat(this).reduce((total, target) => total + target.sumEffects(EffectNames.FateCostToTarget), 0) > availableFate) {
+            return false;
         }
 
         return true;

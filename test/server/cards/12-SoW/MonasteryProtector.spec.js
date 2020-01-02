@@ -28,70 +28,70 @@ describe('Monastery Protector', function() {
             this.lies = this.player2.placeCardInProvince('city-of-lies', 'province 1');
         });
 
-        it('should not allow targeting if you cannot pay a fate', function() {
-            this.noMoreActions();
-            this.initiateConflict({
-                attackers: [this.protector, this.challenger, this.ancientMaster],
-                defenders: [this.kuwanan],
-                type: 'military'
-            });
+        // it('should not allow targeting if you cannot pay a fate', function() {
+        //     this.noMoreActions();
+        //     this.initiateConflict({
+        //         attackers: [this.protector, this.challenger, this.ancientMaster],
+        //         defenders: [this.kuwanan],
+        //         type: 'military'
+        //     });
 
-            this.player2.clickCard(this.scorpion);
-            expect(this.player2).not.toBeAbleToSelect(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.challenger);
-            expect(this.player2).not.toBeAbleToSelect(this.ancientMaster);
-        });
+        //     this.player2.clickCard(this.scorpion);
+        //     expect(this.player2).not.toBeAbleToSelect(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.challenger);
+        //     expect(this.player2).not.toBeAbleToSelect(this.ancientMaster);
+        // });
 
-        it('should not allow playing a card if it would have no legal targets', function() {
-            this.noMoreActions();
-            this.initiateConflict({
-                attackers: [this.protector, this.challenger, this.ancientMaster],
-                defenders: [this.kuwanan],
-                type: 'military'
-            });
+        // it('should not allow playing a card if it would have no legal targets', function() {
+        //     this.noMoreActions();
+        //     this.initiateConflict({
+        //         attackers: [this.protector, this.challenger, this.ancientMaster],
+        //         defenders: [this.kuwanan],
+        //         type: 'military'
+        //     });
 
-            expect(this.player2).toHavePrompt('Conflict Action Window');
-            this.player2.clickCard(this.hurricanePunch);
-            expect(this.player2).toHavePrompt('Conflict Action Window');
-        });
+        //     expect(this.player2).toHavePrompt('Conflict Action Window');
+        //     this.player2.clickCard(this.hurricanePunch);
+        //     expect(this.player2).toHavePrompt('Conflict Action Window');
+        // });
 
-        it('should only allow targeting tattooed characters equal to the amount of fate that you have', function() {
-            this.player2.fate = 3;
-            this.protector.bowed = true;
-            this.ancientMaster.bowed = true;
+        // it('should only allow targeting tattooed characters equal to the amount of fate that you have', function() {
+        //     this.player2.fate = 3;
+        //     this.protector.bowed = true;
+        //     this.ancientMaster.bowed = true;
 
-            this.player1.pass();
-            this.player2.clickCard(this.duty);
+        //     this.player1.pass();
+        //     this.player2.clickCard(this.duty);
 
-            expect(this.player2).toBeAbleToSelect(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+        //     expect(this.player2).toBeAbleToSelect(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.ancientMaster);
 
-            this.player2.clickCard(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.protector);
-            expect(this.player2).not.toBeAbleToSelect(this.ancientMaster);
+        //     this.player2.clickCard(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.protector);
+        //     expect(this.player2).not.toBeAbleToSelect(this.ancientMaster);
 
-            this.player2.clickCard(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
-        });
+        //     this.player2.clickCard(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+        // });
 
-        it('should account for reduced cost', function() {
-            this.player2.fate = 3;
-            this.protector.bowed = true;
-            this.ancientMaster.bowed = true;
+        // it('should account for reduced cost', function() {
+        //     this.player2.fate = 3;
+        //     this.protector.bowed = true;
+        //     this.ancientMaster.bowed = true;
 
-            this.player1.pass();
-            this.player2.clickCard(this.lies);
-            this.player1.pass();
-            this.player2.clickCard(this.duty);
+        //     this.player1.pass();
+        //     this.player2.clickCard(this.lies);
+        //     this.player1.pass();
+        //     this.player2.clickCard(this.duty);
 
-            expect(this.player2).toBeAbleToSelect(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+        //     expect(this.player2).toBeAbleToSelect(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.ancientMaster);
 
-            this.player2.clickCard(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.protector);
-            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
-        });
+        //     this.player2.clickCard(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.protector);
+        //     expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+        // });
 
         it('should allow for using alternate fate pools', function() {
             this.game.rings.air.fate = 1;
@@ -99,7 +99,8 @@ describe('Monastery Protector', function() {
             this.initiateConflict({
                 attackers: [this.protector, this.challenger, this.ancientMaster],
                 defenders: [this.kuwanan],
-                type: 'military'
+                type: 'military',
+                ring: 'water'
             });
 
             this.player2.clickCard(this.hurricanePunch);
