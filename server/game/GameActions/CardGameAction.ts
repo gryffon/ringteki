@@ -4,6 +4,7 @@ import BaseCard = require('../basecard');
 import Ring = require('../ring');
 import EffectSource = require('../EffectSource');
 import { CardTypes, EffectNames, Locations } from '../Constants.js';
+import { LoseFateAction } from './LoseFateAction';
 
 export interface CardActionProperties extends GameActionProperties {
     target?: BaseCard | BaseCard[];
@@ -29,6 +30,18 @@ export class CardGameAction extends GameAction {
         const { target } = this.getProperties(context, additionalProperties);
         for(const card of target as BaseCard[]) {
             const additionalCosts = card.getEffects(EffectNames.UnlessActionCost).filter(properties => properties.actionName === this.name);
+
+            if (context.player) {
+                const targetingCosts = context.player.getTargetingCost(context.source, card);
+                if (targetingCosts > 0) {
+                    console.log('Paying targeting costs');
+                    context.game.addMessage('{0} pays {1} fate in order to target {2}', context.player, targetingCosts, card.name);
+                    let properties = { amout: targetingCosts, target: context.player };
+                    let cost = new LoseFateAction(properties);
+                    cost.resolve(context.player, context);
+                }
+            }
+            
             if(additionalCosts.length > 0) {
                 let allCostsPaid = true;
                 for(const properties of additionalCosts) {

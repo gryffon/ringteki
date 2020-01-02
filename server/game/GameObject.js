@@ -117,18 +117,16 @@ class GameObject {
             let targets = this.getSelectedCards(context);
 
             let contextCopy = context.copy();
-            contextCopy.preTargets = targets.concat(this);
-            let costs = context.ability.getCosts(contextCopy);
-            let fateCost = costs.find(cost => cost.getReducedCost);
 
-            if (fateCost) {
-                return fateCost.canPay(contextCopy);
-            }
+            targets = targets.concat(this);
 
-            //We have a triggered ability that's not getting played, so we need to ignore the play cost of whatever is triggering the ability
-            let minCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, targets, true);
-            minCost = minCost - contextCopy.source.getCost();
-            return context.player.fate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
+            let minCost = contextCopy.player.getTargetingCost(context.source, targets);
+            let fateCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, null, true);
+            let availableFate = context.player.fate - fateCost;
+            
+            console.log('Checking ' + this.name + ' minCost is ' + minCost + ' and available fate is ' + availableFate);
+
+            return availableFate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
         }
         else if ((context.stage === Stages.Target || context.stage === Stages.Effect) && (!context.preTargets || context.preTargets.length === 0)) {
             //We paid costs first, or targeting has to be done after costs have been paid
