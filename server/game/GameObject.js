@@ -1,8 +1,7 @@
 const uuid = require('uuid');
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
-const ReduceableFateCost = require('./costs/ReduceableFateCost');
-const { EffectNames, Stages, CardTypes } = require('./Constants');
+const { EffectNames, Stages } = require('./Constants');
 
 class GameObject {
     constructor(game, name) {
@@ -121,7 +120,7 @@ class GameObject {
             targets = targets.concat(this);
 
             let minCost = contextCopy.player.getTargetingCost(context.source, targets);
-            let fateCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, null, true);
+            let fateCost = context.ability.getReducedCost();
             let availableFate = Math.max(context.player.fate - fateCost, 0);
             
             return availableFate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));

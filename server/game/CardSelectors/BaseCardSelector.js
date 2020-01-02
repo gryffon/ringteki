@@ -9,7 +9,6 @@ class BaseCardSelector {
         this.location = this.buildLocation(properties.location);
         this.controller = properties.controller || Players.Any;
         this.checkTarget = !!properties.targets;
-        this.selectedCards = [];
 
         if(!Array.isArray(properties.cardType)) {
             this.cardType = [properties.cardType];
