@@ -5,13 +5,14 @@ describe('Monastery Protector', function() {
                 phase: 'conflict',
                 player1: {
                     inPlay: ['monastery-protector', 'doji-challenger', 'ancient-master', 'court-musician'],
-                    hand: ['hawk-tattoo']
+                    hand: ['hawk-tattoo', 'way-of-the-scorpion']
                 },
                 player2: {
                     fate: 0,
                     inPlay: ['yogo-hiroue', 'awakened-tsukumogami'],
                     hand: ['way-of-the-scorpion', 'hurricane-punch', 'duelist-training', 'unfulfilled-duty', 'jade-tetsubo', 'court-games', 'civil-discourse', 'policy-debate'],
                     dynastyDiscard: ['city-of-lies'],
+                    conflictDiscard: ['kirei-ko'],
                     provinces: ['manicured-garden', 'blood-of-onnotangu']
                 }
             });
@@ -21,6 +22,7 @@ describe('Monastery Protector', function() {
             this.ancientMaster = this.player1.findCardByName('ancient-master');
             this.tattoo = this.player1.findCardByName('hawk-tattoo');
             this.musician = this.player1.findCardByName('court-musician');
+            this.scorpionP1 = this.player1.findCardByName('way-of-the-scorpion');
 
             this.hiroue = this.player2.findCardByName('yogo-hiroue');
             this.scorpion = this.player2.findCardByName('way-of-the-scorpion');
@@ -34,6 +36,23 @@ describe('Monastery Protector', function() {
             this.courtGames = this.player2.findCardByName('court-games');
             this.civil = this.player2.findCardByName('civil-discourse');
             this.debate = this.player2.findCardByName('policy-debate');
+            this.kireiKo = this.player2.findCardByName('kirei-ko');
+        });
+
+        it('should not impact own targeting', function() {
+            this.player1.fate = 0;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster],
+                defenders: [this.hiroue],
+                type: 'military'
+            });
+
+            this.player2.pass();
+            this.player1.clickCard(this.scorpionP1);
+            expect(this.player1).toBeAbleToSelect(this.protector);
+            expect(this.player1).toBeAbleToSelect(this.challenger);
+            expect(this.player1).toBeAbleToSelect(this.ancientMaster);
         });
 
         it('should not allow targeting if you cannot pay a fate', function() {
@@ -434,6 +453,31 @@ describe('Monastery Protector', function() {
             expect(this.player1).not.toBeAbleToSelect(this.protector);
             expect(this.player1).toBeAbleToSelect(this.challenger);
             expect(this.player1).not.toBeAbleToSelect(this.ancientMaster);
+        });
+
+        it('should not impact events that don\'t target', function() {
+            this.player2.fate = 1;
+            this.player2.moveCard(this.kireiKo, 'hand');
+
+            this.player1.playAttachment(this.tattoo, this.challenger);
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster],
+                defenders: [],
+                type: 'military'
+            });
+
+            // this.player2.clickCard(this.scorpion);
+            // expect(this.player2).toHavePrompt('Conflict Action Window');
+            this.player2.clickCard(this.lies);
+
+            this.player1.clickCard(this.challenger);
+            expect(this.player1).toBeAbleToSelect(this.hiroue);
+            this.player1.clickCard(this.hiroue);
+            expect(this.player2).toHavePrompt('Triggered Abilities');
+            this.player2.clickCard(this.kireiKo);
+            expect(this.challenger.bowed).toBe(true);
+            expect(this.player2.fate).toBe(1);
         });
     });
 });
