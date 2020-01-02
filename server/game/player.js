@@ -12,7 +12,7 @@ const PlayerPromptState = require('./playerpromptstate.js');
 const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 
-const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes, ConflictTypes } = require('./Constants');
+const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes, ConflictTypes, Players } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -606,17 +606,42 @@ class Player extends GameObject {
      */
     getReducedCost(playingType, card, target, ignoreType = false) {
         var baseCost = card.getCost();
+        var targetCost = this.getTargetingCost(card, target);
+        var matchingReducers = _.filter(this.costReducers, reducer => reducer.canReduce(playingType, card, target, ignoreType));
+        var reducedCost = _.reduce(matchingReducers, (cost, reducer) => cost - reducer.getAmount(card, this), baseCost);
+        reducedCost = reducedCost + targetCost;
+        return Math.max(reducedCost, 0);
+    }
+
+    getTargetingCost(card, target) {
         let targetCost  = 0;
         if (target) {
             if (!Array.isArray(target)) {
                 target = [target];
             }
-            targetCost = target.reduce((total, target) => total + target.sumEffects(EffectNames.FateCostToTarget), 0)
+
+            target.forEach(t => {
+                t.getEffects(EffectNames.FateCostToTarget).forEach(effect => {
+                    let typeMatch = true;
+                    let controllerMatch = true;
+                    if (effect.cardType && card.type !== effect.cardType) {
+                        typeMatch = false;
+                    }
+                    if (effect.targetPlayer && effect.targetPlayer === Players.Self && card.controller !== t.controller) {
+                        controllerMatch = false;
+                    }
+                    if (effect.targetPlayer && effect.targetPlayer === Players.Opponent && card.controller !== t.controller.opponent) {
+                        controllerMatch = false;
+                    }
+
+                    if (typeMatch && controllerMatch) {
+                        targetCost = targetCost + effect.amount;
+                    }
+                })
+            })
         }
-        var matchingReducers = _.filter(this.costReducers, reducer => reducer.canReduce(playingType, card, target, ignoreType));
-        var reducedCost = _.reduce(matchingReducers, (cost, reducer) => cost - reducer.getAmount(card, this), baseCost);
-        reducedCost = reducedCost + targetCost;
-        return Math.max(reducedCost, 0);
+
+        return targetCost;
     }
 
     /**

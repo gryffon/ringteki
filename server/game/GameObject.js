@@ -1,6 +1,7 @@
 const uuid = require('uuid');
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
+const ReduceableFateCost = require('./costs/ReduceableFateCost');
 const { EffectNames, Stages, CardTypes } = require('./Constants');
 
 class GameObject {
@@ -125,7 +126,15 @@ class GameObject {
             contextCopy.TEST_SELECTED_CARDS = targets.concat(this);
             let costs = context.ability.getCosts(contextCopy);
             let fateCost = costs.find(cost => cost.getReducedCost);
-            return fateCost ? fateCost.canPay(contextCopy) : true;
+
+            if (fateCost) {
+                return fateCost.canPay(contextCopy);
+            }
+
+            //We have a triggered ability that's not getting played
+            let minCost = contextCopy.player.getMinimumCost(contextCopy.playType, contextCopy, contextCopy.TEST_SELECTED_CARDS, true);
+            minCost = minCost - contextCopy.source.getCost();
+            return context.player.fate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
         }
 
         return true;
