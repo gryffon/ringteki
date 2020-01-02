@@ -114,27 +114,23 @@ class GameObject {
 
         if(context.stage === Stages.PreTarget) {
             let targets = this.getSelectedCards(context);
-
-            let contextCopy = context.copy();
-
             targets = targets.concat(this);
 
-            let minCost = contextCopy.player.getTargetingCost(context.source, targets);
+            let targetingCost = context.player.getTargetingCost(context.source, targets);
             let fateCost = 0;
             if(context.ability.getReducedCost) {
-                fateCost = context.ability.getReducedCost(contextCopy);
+                fateCost = context.ability.getReducedCost(context);
             }
             let availableFate = Math.max(context.player.fate - fateCost, 0);
 
-            return availableFate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
+            return availableFate >= targetingCost && (targetingCost === 0 || context.player.checkRestrictions('spendFate', context));
         } else if(context.stage === Stages.Target || context.stage === Stages.Effect) {
             //We paid costs first, or targeting has to be done after costs have been paid
             let targets = this.getSelectedCards(context);
-
-            let contextCopy = context.copy();
             targets = targets.concat(this);
-            let minCost = contextCopy.player.getTargetingCost(context.source, targets);
-            return context.player.fate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
+
+            let targetingCost = context.player.getTargetingCost(context.source, targets);
+            return context.player.fate >= targetingCost && (targetingCost === 0 || context.player.checkRestrictions('spendFate', context));
         }
 
         return true;
