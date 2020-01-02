@@ -108,11 +108,11 @@ class GameObject {
     }
 
     canBeTargeted(context) {
-        if (!this.checkRestrictions('target', context)) {
+        if(!this.checkRestrictions('target', context)) {
             return false;
         }
 
-        if (context.stage === Stages.PreTarget) {
+        if(context.stage === Stages.PreTarget) {
             let targets = this.getSelectedCards(context);
 
             let contextCopy = context.copy();
@@ -121,14 +121,13 @@ class GameObject {
 
             let minCost = contextCopy.player.getTargetingCost(context.source, targets);
             let fateCost = 0;
-            if (context.ability.getReducedCost) {
+            if(context.ability.getReducedCost) {
                 fateCost = context.ability.getReducedCost(contextCopy);
             }
             let availableFate = Math.max(context.player.fate - fateCost, 0);
-            
+
             return availableFate >= minCost && (minCost === 0 || context.player.checkRestrictions('spendFate', context));
-        }
-        else if (context.stage === Stages.Target || context.stage === Stages.Effect) {
+        } else if(context.stage === Stages.Target || context.stage === Stages.Effect) {
             //We paid costs first, or targeting has to be done after costs have been paid
             let targets = this.getSelectedCards(context);
 
@@ -143,17 +142,17 @@ class GameObject {
 
     getSelectedCards(context) {
         let targets = [];
-        if (context.player.getSelectedCards()) {
+        if(context.player.getSelectedCards()) {
             let selfTargets = context.player.getSelectedCards();
-            if (!Array.isArray(selfTargets)) {
+            if(!Array.isArray(selfTargets)) {
                 selfTargets = [selfTargets];
             }
             targets = targets.concat(selfTargets);
         }
 
-        if (context.player.opponent.getSelectedCards()) {
+        if(context.player.opponent.getSelectedCards()) {
             let opponentTargets = context.player.opponent.getSelectedCards();
-            if (!Array.isArray(opponentTargets)) {
+            if(!Array.isArray(opponentTargets)) {
                 opponentTargets = [opponentTargets];
             }
             targets = targets.concat(opponentTargets);

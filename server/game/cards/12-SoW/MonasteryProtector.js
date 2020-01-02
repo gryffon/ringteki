@@ -12,8 +12,6 @@ class MonasteryProtector extends DrawCard {
                 targetPlayer: Players.Opponent
             })
         });
-
-
     }
 }
 

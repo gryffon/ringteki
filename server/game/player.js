@@ -612,9 +612,9 @@ class Player extends GameObject {
     }
 
     getTargetingCost(card, target) {
-        let targetCost  = 0;
-        if (target) {
-            if (!Array.isArray(target)) {
+        let targetCost = 0;
+        if(target) {
+            if(!Array.isArray(target)) {
                 target = [target];
             }
 
@@ -623,21 +623,21 @@ class Player extends GameObject {
                 t.getEffects(EffectNames.FateCostToTarget).forEach(effect => {
                     let typeMatch = true;
                     let controllerMatch = true;
-                    if (effect.cardType && card.type !== effect.cardType) {
+                    if(effect.cardType && card.type !== effect.cardType) {
                         typeMatch = false;
                     }
-                    if (effect.targetPlayer && effect.targetPlayer === Players.Self && card.controller !== t.controller) {
+                    if(effect.targetPlayer && effect.targetPlayer === Players.Self && card.controller !== t.controller) {
                         controllerMatch = false;
                     }
-                    if (effect.targetPlayer && effect.targetPlayer === Players.Opponent && card.controller !== t.controller.opponent) {
+                    if(effect.targetPlayer && effect.targetPlayer === Players.Opponent && card.controller !== t.controller.opponent) {
                         controllerMatch = false;
                     }
 
-                    if (typeMatch && controllerMatch) {
+                    if(typeMatch && controllerMatch) {
                         targetCost = targetCost + effect.amount;
                     }
-                })
-            })
+                });
+            });
         }
 
         return targetCost;
