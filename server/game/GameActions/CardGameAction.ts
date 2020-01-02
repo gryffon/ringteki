@@ -31,7 +31,7 @@ export class CardGameAction extends GameAction {
         for(const card of target as BaseCard[]) {
             const additionalCosts = card.getEffects(EffectNames.UnlessActionCost).filter(properties => properties.actionName === this.name);
 
-            if (context.player) {
+            if (context.player && context.ability && context.ability.targets && context.ability.targets.length > 0) {
                 const targetingCosts = context.player.getTargetingCost(context.source, card);
                 if (targetingCosts > 0) {
                     context.game.addMessage('{0} pays {1} fate in order to target {2}', context.player, targetingCosts, card.name);

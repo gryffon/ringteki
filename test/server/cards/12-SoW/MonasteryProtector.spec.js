@@ -40,7 +40,7 @@ describe('Monastery Protector', function() {
         });
 
         it('should not impact own targeting', function() {
-            this.player1.fate = 0;
+            this.player1.fate = 1;
             this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.protector, this.challenger, this.ancientMaster],
@@ -53,6 +53,9 @@ describe('Monastery Protector', function() {
             expect(this.player1).toBeAbleToSelect(this.protector);
             expect(this.player1).toBeAbleToSelect(this.challenger);
             expect(this.player1).toBeAbleToSelect(this.ancientMaster);
+            this.player1.clickCard(this.protector);
+            expect(this.player1.fate).toBe(1);
+            expect(this.getChatLogs(3)).toContain('player1 plays Way of the Scorpion to dishonor Monastery Protector');
         });
 
         it('should not allow targeting if you cannot pay a fate', function() {
@@ -456,7 +459,7 @@ describe('Monastery Protector', function() {
         });
 
         it('should not impact events that don\'t target', function() {
-            this.player2.fate = 1;
+            this.player2.fate = 0;
             this.player2.moveCard(this.kireiKo, 'hand');
 
             this.player1.playAttachment(this.tattoo, this.challenger);
@@ -467,8 +470,9 @@ describe('Monastery Protector', function() {
                 type: 'military'
             });
 
-            // this.player2.clickCard(this.scorpion);
-            // expect(this.player2).toHavePrompt('Conflict Action Window');
+            this.player2.clickCard(this.scorpion); //no legal cards
+            expect(this.player2).toHavePrompt('Conflict Action Window');
+            this.player2.fate = 1;
             this.player2.clickCard(this.lies);
 
             this.player1.clickCard(this.challenger);
