@@ -6,7 +6,6 @@ class MonasteryProtector extends DrawCard {
     setupCardAbilities() {
         this.persistentEffect({
             match: (card, context) => card.getType() === CardTypes.Character && card.controller === context.source.controller && card.hasTrait('tattooed'),
-            targetController: Players.Opponent,
             effect: AbilityDsl.effects.fateCostToTarget()
         });
 
