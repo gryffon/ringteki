@@ -9,8 +9,8 @@ describe('Monastery Protector', function() {
                 },
                 player2: {
                     fate: 0,
-                    inPlay: ['doji-kuwanan', 'awakened-tsukumogami'],
-                    hand: ['way-of-the-scorpion', 'hurricane-punch', 'mark-of-shame', 'unfulfilled-duty'],
+                    inPlay: ['yogo-hiroue', 'awakened-tsukumogami'],
+                    hand: ['way-of-the-scorpion', 'hurricane-punch', 'duelist-training', 'unfulfilled-duty', 'jade-tetsubo'],
                     dynastyDiscard: ['city-of-lies'],
                     provinces: ['manicured-garden', 'blood-of-onnotangu']
                 }
@@ -21,11 +21,12 @@ describe('Monastery Protector', function() {
             this.ancientMaster = this.player1.findCardByName('ancient-master');
             this.tattoo = this.player1.findCardByName('hawk-tattoo');
 
-            this.kuwanan = this.player2.findCardByName('doji-kuwanan');
+            this.hiroue = this.player2.findCardByName('yogo-hiroue');
             this.scorpion = this.player2.findCardByName('way-of-the-scorpion');
             this.hurricanePunch = this.player2.findCardByName('hurricane-punch');
-            this.shame = this.player2.findCardByName('mark-of-shame');
             this.duty = this.player2.findCardByName('unfulfilled-duty');
+            this.tetsubo = this.player2.findCardByName('jade-tetsubo');
+            this.duelistTraining = this.player2.findCardByName('duelist-training');
             this.lies = this.player2.placeCardInProvince('city-of-lies', 'province 1');
             this.manicured = this.player2.findCardByName('manicured-garden');
             this.blood = this.player2.findCardByName('blood-of-onnotangu');
@@ -35,7 +36,7 @@ describe('Monastery Protector', function() {
             this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.protector, this.challenger, this.ancientMaster],
-                defenders: [this.kuwanan],
+                defenders: [this.hiroue],
                 type: 'military'
             });
 
@@ -49,7 +50,7 @@ describe('Monastery Protector', function() {
             this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.protector, this.challenger, this.ancientMaster],
-                defenders: [this.kuwanan],
+                defenders: [this.hiroue],
                 type: 'military'
             });
 
@@ -101,7 +102,7 @@ describe('Monastery Protector', function() {
             this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.protector, this.challenger, this.ancientMaster],
-                defenders: [this.kuwanan],
+                defenders: [this.hiroue],
                 type: 'military',
                 ring: 'water'
             });
@@ -116,7 +117,7 @@ describe('Monastery Protector', function() {
             this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.protector, this.challenger, this.ancientMaster],
-                defenders: [this.kuwanan],
+                defenders: [this.hiroue],
                 type: 'military',
                 ring: 'water',
                 province: this.blood
@@ -175,7 +176,7 @@ describe('Monastery Protector', function() {
             this.noMoreActions();
             this.initiateConflict({
                 attackers: [this.protector, this.challenger, this.ancientMaster],
-                defenders: [this.kuwanan],
+                defenders: [this.hiroue],
                 type: 'military'
             });
 
@@ -191,5 +192,69 @@ describe('Monastery Protector', function() {
             expect(this.protector.isDishonored).toBe(true);
         });
 
+        it('should not cost a fate to target with a character ability', function() {
+            this.player2.fate = 0;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.challenger],
+                defenders: [this.hiroue],
+                type: 'military'
+            });
+
+            this.player2.clickCard(this.hiroue);
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+            this.player2.clickCard(this.protector);
+
+            expect(this.getChatLogs(3)).toContain('player2 uses Yogo Hiroue to move Monastery Protector into the conflict');
+        });
+
+        it('should not cost a fate to target with an attachment ability', function() {
+            this.player2.fate = 2;
+            this.ancientMaster.fate = 3;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster],
+                defenders: [this.hiroue],
+                type: 'military'
+            });
+
+            this.player2.playAttachment(this.tetsubo, this.hiroue);
+            this.player1.pass();
+
+            expect(this.player2.fate).toBe(0);
+
+            this.player2.clickCard(this.tetsubo);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+            this.player2.clickCard(this.ancientMaster);
+            expect(this.ancientMaster.fate).toBe(0);
+
+            expect(this.getChatLogs(3)).toContain('player2 uses Jade Tetsubō, bowing Jade Tetsubō to return all fate from Ancient Master to its owner');
+        });
+
+        it('should not cost a fate to target with a gained ability', function() {
+            this.player2.fate = 1;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster],
+                defenders: [this.hiroue],
+                type: 'military'
+            });
+
+            this.player2.playAttachment(this.duelistTraining, this.hiroue);
+            this.player1.pass();
+
+            expect(this.player2.fate).toBe(0);
+
+            this.player2.clickCard(this.hiroue);
+            this.player2.clickPrompt('Initiate a duel to bow');
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.challenger);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+            this.player2.clickCard(this.ancientMaster);
+            this.player1.clickPrompt('1');
+            this.player2.clickPrompt('1');
+            expect(this.getChatLogs(3)).toContain('Duel Effect: bow Yogo Hiroue');
+        });
     });
 });

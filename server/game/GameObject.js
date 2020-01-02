@@ -1,7 +1,7 @@
 const uuid = require('uuid');
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
-const { EffectNames, Stages } = require('./Constants');
+const { EffectNames, Stages, CardTypes } = require('./Constants');
 
 class GameObject {
     constructor(game, name) {
@@ -123,7 +123,9 @@ class GameObject {
 
             let contextCopy = context.copy();
             contextCopy.TEST_SELECTED_CARDS = targets.concat(this);
-            return context.ability.canPayFateCost(contextCopy);
+            let costs = context.ability.getCosts(contextCopy);
+            let fateCost = costs.find(cost => cost.getReducedCost);
+            return fateCost ? fateCost.canPay(contextCopy) : true;
         }
 
         return true;
