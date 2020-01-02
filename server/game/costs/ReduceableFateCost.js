@@ -52,7 +52,15 @@ class ReduceableFateCost {
     }
 
     getReducedCost(context) {
-        return context.player.getReducedCost(context.playType, context.source, null, this.ignoreType);
+        let target = null;
+        if (context.target) {
+            target = context.target;
+        }
+        else if (context.targets) {
+            target = context.targets
+        }
+
+        return context.player.getReducedCost(context.playType, context.source, target, this.ignoreType);
     }
 
     promptForAlternateFate(context, result, properties) {

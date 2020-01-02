@@ -127,5 +127,69 @@ describe('Monastery Protector', function() {
             expect(this.player2).toBeAbleToSelect(this.challenger);
             expect(this.player2).not.toBeAbleToSelect(this.ancientMaster);
         });
+
+        it('should spend the extra fate (multi-target, single selection)', function() {
+            this.player2.fate = 3;
+            this.protector.bowed = true;
+            this.ancientMaster.bowed = true;
+
+            this.player1.pass();
+            this.player2.clickCard(this.duty);
+
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+
+            this.player2.clickCard(this.protector);
+            this.player2.clickPrompt('Done');
+
+            expect(this.getChatLogs(1)).toContain('player2 plays Unfulfilled Duty to ready Monastery Protector');
+
+            expect(this.player2.fate).toBe(0);
+            expect(this.protector.bowed).toBe(false);
+        });
+
+        it('should spend the extra fate (multi-target, multi selection)', function() {
+            this.player2.fate = 5;
+            this.protector.bowed = true;
+            this.ancientMaster.bowed = true;
+
+            this.player1.pass();
+            this.player2.clickCard(this.duty);
+
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+
+            this.player2.clickCard(this.protector);
+            this.player2.clickCard(this.ancientMaster);
+            this.player2.clickPrompt('Done');
+
+            expect(this.getChatLogs(1)).toContain('player2 plays Unfulfilled Duty to ready Monastery Protector and Ancient Master');
+
+            expect(this.player2.fate).toBe(1);
+            expect(this.protector.bowed).toBe(false);
+            expect(this.ancientMaster.bowed).toBe(false);
+        });
+
+        it('should spend the extra fate (single target)', function() {
+            this.player2.fate = 3;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.clickCard(this.scorpion);
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            expect(this.player2).toBeAbleToSelect(this.challenger);
+            expect(this.player2).toBeAbleToSelect(this.ancientMaster);
+            this.player2.clickCard(this.protector);
+
+            expect(this.getChatLogs(3)).toContain('player2 plays Way of the Scorpion to dishonor Monastery Protector');
+
+            expect(this.player2.fate).toBe(2);
+            expect(this.protector.isDishonored).toBe(true);
+        });
+
     });
 });

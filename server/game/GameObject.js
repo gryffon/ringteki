@@ -1,7 +1,7 @@
 const uuid = require('uuid');
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
-const { EffectNames } = require('./Constants');
+const { EffectNames, Stages } = require('./Constants');
 
 class GameObject {
     constructor(game, name) {
@@ -112,17 +112,21 @@ class GameObject {
             return false;
         }
 
-        let targets = [];
-        if (context.TEST_SELECTED_CARDS) {
-            targets = context.TEST_SELECTED_CARDS;
-            if (!Array.isArray(targets)) {
-                targets = [targets];
+        if (context.stage === Stages.PreTarget) {
+            let targets = [];
+            if (context.TEST_SELECTED_CARDS) {
+                targets = context.TEST_SELECTED_CARDS;
+                if (!Array.isArray(targets)) {
+                    targets = [targets];
+                }
             }
+
+            let contextCopy = context.copy();
+            contextCopy.TEST_SELECTED_CARDS = targets.concat(this);
+            return context.ability.canPayFateCost(contextCopy);
         }
 
-        let contextCopy = context.copy();
-        contextCopy.TEST_SELECTED_CARDS = targets.concat(this);
-        return context.ability.canPayFateCost(contextCopy);
+        return true;
     }
 
     getShortSummaryForControls(activePlayer) {
