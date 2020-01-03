@@ -120,7 +120,8 @@ class GameObject {
             if(context.ability.getReducedCost) {
                 fateCost = context.ability.getReducedCost(context);
             }
-            let availableFate = Math.max(context.player.fate - fateCost, 0);
+            let alternateFate = context.player.getAvailableAlternateFate(context.playType, context);
+            let availableFate = Math.max(context.player.fate - Math.max(fateCost - alternateFate, 0), 0);
 
             return availableFate >= targetingCost && (targetingCost === 0 || context.player.checkRestrictions('spendFate', context));
         } else if(context.stage === Stages.Target || context.stage === Stages.Effect) {

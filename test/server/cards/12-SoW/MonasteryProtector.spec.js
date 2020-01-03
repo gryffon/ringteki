@@ -4,7 +4,7 @@ describe('Monastery Protector', function() {
             this.setupTest({
                 phase: 'conflict',
                 player1: {
-                    inPlay: ['monastery-protector', 'doji-challenger', 'ancient-master', 'court-musician'],
+                    inPlay: ['monastery-protector', 'doji-challenger', 'ancient-master', 'court-musician', 'utaku-tetsuko'],
                     hand: ['hawk-tattoo', 'way-of-the-scorpion']
                 },
                 player2: {
@@ -22,6 +22,7 @@ describe('Monastery Protector', function() {
             this.ancientMaster = this.player1.findCardByName('ancient-master');
             this.tattoo = this.player1.findCardByName('hawk-tattoo');
             this.musician = this.player1.findCardByName('court-musician');
+            this.tetsuko = this.player1.findCardByName('utaku-tetsuko');
             this.scorpionP1 = this.player1.findCardByName('way-of-the-scorpion');
 
             this.hiroue = this.player2.findCardByName('yogo-hiroue');
@@ -482,6 +483,82 @@ describe('Monastery Protector', function() {
             this.player2.clickCard(this.kireiKo);
             expect(this.challenger.bowed).toBe(true);
             expect(this.player2.fate).toBe(1);
+        });
+
+        it('should allow for using alternate fate pools to pay for the event, and if not chosen then the event should not resolve (paying costs first)', function() {
+            this.game.rings.air.fate = 1;
+            this.player2.fate = 1;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster, this.tetsuko],
+                defenders: [this.hiroue],
+                type: 'military',
+                ring: 'water'
+            });
+
+            this.player2.clickCard(this.hurricanePunch);
+            this.player2.clickPrompt('Pay costs first');
+            expect(this.player2).toHavePrompt('Choose amount of fate to spend from the Air Ring');
+            expect(this.player2.currentButtons).toContain('0');
+            expect(this.player2.currentButtons).toContain('1');
+            expect(this.player2.currentButtons).toContain('Cancel');
+            this.player2.clickPrompt('0');
+            expect(this.getChatLogs(3)).toContain('player2 attempted to use Hurricane Punch, but there are insufficient legal targets');
+            expect(this.hurricanePunch.location).toBe('hand');
+            expect(this.player2.fate).toBe(0);
+            expect(this.player1).toHavePrompt('Conflict Action Window');
+        });
+
+        it('should allow for using alternate fate pools to pay for the event, and if not chosen then the event should not resolve (choosing targets first)', function() {
+            this.game.rings.air.fate = 1;
+            this.player2.fate = 1;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster, this.tetsuko],
+                defenders: [this.hiroue],
+                type: 'military',
+                ring: 'water'
+            });
+
+            this.player2.clickCard(this.hurricanePunch);
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            this.player2.clickCard(this.protector);
+            expect(this.player2).toHavePrompt('Choose amount of fate to spend from the Air Ring');
+            expect(this.player2.currentButtons).toContain('0');
+            expect(this.player2.currentButtons).toContain('1');
+            expect(this.player2.currentButtons).toContain('Cancel');
+            this.player2.clickPrompt('0');
+            expect(this.getChatLogs(3)).toContain('player2 attempted to use Hurricane Punch, but there are insufficient legal targets');
+            expect(this.hurricanePunch.location).toBe('hand');
+            expect(this.player2.fate).toBe(0);
+            expect(this.player1).toHavePrompt('Conflict Action Window');
+        });
+
+        it('should allow for using alternate fate pools to pay for the event', function() {
+            this.game.rings.air.fate = 1;
+            this.player2.fate = 1;
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.protector, this.challenger, this.ancientMaster, this.tetsuko],
+                defenders: [this.hiroue],
+                type: 'military',
+                ring: 'water'
+            });
+
+            this.player2.clickCard(this.hurricanePunch);
+            expect(this.player2).toBeAbleToSelect(this.protector);
+            this.player2.clickCard(this.protector);
+            expect(this.player2).toHavePrompt('Choose amount of fate to spend from the Air Ring');
+            expect(this.player2.currentButtons).toContain('0');
+            expect(this.player2.currentButtons).toContain('1');
+            expect(this.player2.currentButtons).toContain('Cancel');
+            this.player2.clickPrompt('1');
+            expect(this.getChatLogs(4)).toContain('player2 plays Hurricane Punch to grant 2 military skill to Monastery Protector and draw a card');
+            expect(this.getChatLogs(3)).toContain('player2 pays 1 fate in order to target Monastery Protector');
+            expect(this.hurricanePunch.location).toBe('conflict discard pile');
+            expect(this.player2.fate).toBe(0);
+            expect(this.game.rings.air.fate).toBe(0);
+            expect(this.player1).toHavePrompt('Conflict Action Window');
         });
     });
 });
