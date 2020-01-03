@@ -298,7 +298,7 @@ class DynastyRow extends React.Component {
                             <CardPile
                                 className='removed-from-game-pile discard'
                                 title='Removed From Game'
-                                source='removed from game pile'
+                                source='removed from game'
                                 cards={ this.props.removedFromGame }
                                 onMouseOver={ this.props.onMouseOver }
                                 onMouseOut={ this.props.onMouseOut }
@@ -318,7 +318,7 @@ class DynastyRow extends React.Component {
                         <CardPile
                             className='removed-from-game-pile discard'
                             title='Removed From Game'
-                            source='removed from game pile'
+                            source='removed from game'
                             cards={ this.props.removedFromGame }
                             onMouseOver={ this.props.onMouseOver }
                             onMouseOut={ this.props.onMouseOut }

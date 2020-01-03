@@ -3,7 +3,7 @@ describe('Iaijutsu Master', function() {
         describe('During the draw phase,', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'regroup',
+                    phase: 'fate',
                     player1: {
                         honor: 11,
                         inPlay: ['mirumoto-raitsugu']

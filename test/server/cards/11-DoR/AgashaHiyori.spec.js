@@ -3,7 +3,7 @@ describe('Agasha Hiyori', function() {
         describe('Agasha Hiyori\'s ability (phase checks)', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'regroup',
+                    phase: 'fate',
                     player1: {
                         inPlay: ['agasha-hiyori'],
                         hand: ['court-mask']
@@ -17,31 +17,42 @@ describe('Agasha Hiyori', function() {
             });
 
             it('should trigger at the start of any phase', function() {
-                this.noMoreActions(); // regroup phase
+                this.noMoreActions(); // fate phase
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
                 this.player2.clickPrompt('End Round');
                 this.player1.clickPrompt('End Round');
+
                 this.noMoreActions(); // dynasty phase
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.agashaHiyori);
                 this.player1.clickPrompt('Pass');
+
                 this.noMoreActions();// draw phase
                 expect(this.game.currentPhase).toBe('draw');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.agashaHiyori);
                 this.player1.clickPrompt('Pass');
+
                 this.nextPhase(); // conflict phase
                 expect(this.game.currentPhase).toBe('conflict');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.agashaHiyori);
                 this.player1.clickPrompt('Pass');
+
                 this.nextPhase(); // fate phase
                 expect(this.game.currentPhase).toBe('fate');
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.agashaHiyori);
                 this.player1.clickPrompt('Pass');
-                expect(this.game.currentPhase).toBe('regroup');
+                this.noMoreActions();
+                this.player2.clickPrompt('Done');
+                this.player1.clickPrompt('Done');
+                this.player1.clickPrompt('End Round');
+                this.player2.clickPrompt('End Round');
+
+                //Dynasty phase
+                expect(this.game.currentPhase).toBe('dynasty');
                 expect(this.courtMask.location).toBe('play area');
                 expect(this.agashaHiyori.location).toBe('play area');
                 expect(this.player1).toHavePrompt('Triggered Abilities');

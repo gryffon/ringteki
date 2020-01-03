@@ -9,7 +9,7 @@ class KansenHaunt extends DrawCard {
                 onClaimRing: (event, context) => context.player.honor < context.player.opponent.honor && context.player.isDefendingPlayer() && event.player === context.player
             },
             cost: AbilityDsl.costs.payHonor(2),
-            gameAction: AbilityDsl.actions.resolveConflictRing({ resolveAsAttacker: true })
+            gameAction: AbilityDsl.actions.resolveConflictRing()
         });
     }
 }

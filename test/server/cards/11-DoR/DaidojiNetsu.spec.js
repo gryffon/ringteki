@@ -238,7 +238,7 @@ describe('Daidoji Netsu', function() {
         describe('Daidoji Netsu\'s ability (non-conflict phase)', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'regroup',
+                    phase: 'fate',
                     player1: {
                         inPlay: ['daidoji-netsu', 'doji-hotaru-2', 'steadfast-witch-hunter'],
                         hand: ['way-of-the-crane', 'way-of-the-scorpion', 'noble-sacrifice', 'assassination', 'way-of-the-crab', 'seal-of-the-crab', 'charge'],

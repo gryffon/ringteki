@@ -3,7 +3,7 @@ describe('Wholeness of the World', function() {
         describe('Wholeness of the World\'s ability', function() {
             beforeEach(function() {
                 this.setupTest({
-                    phase: 'regroup',
+                    phase: 'fate',
                     player1: {
                         hand: ['wholeness-of-the-world', 'wholeness-of-the-world']
                     }

@@ -52,7 +52,7 @@ describe('Wayfarer\'s Camp', function () {
                 expect(this.player2).toHavePrompt('Play cards from provinces');
             });
 
-            it('should not prompt to flip a card if only 1 card is played', function() {
+            it('should prompt to flip a card if only 1 card is played', function() {
                 this.akodoGunso.facedown = true;
                 this.seppunGuardsman.facedown = true;
                 this.player1.clickCard(this.wayfarersCamp);
@@ -60,7 +60,7 @@ describe('Wayfarer\'s Camp', function () {
                 this.player1.clickPrompt('1');
                 expect(this.matsuBerserker.location).toBe('play area');
                 expect(this.matsuBerserker.fate).toBe(1);
-                expect(this.player2).toHavePrompt('Play cards from provinces');
+                expect(this.player1).toHavePrompt('Choose a card to turn faceup');
             });
 
             it('should allow Akodo Gunso to react in between plays', function() {

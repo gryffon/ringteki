@@ -4,7 +4,7 @@ const AbilityDsl = require('../../abilitydsl.js');
 class DaidojiKageyu extends DrawCard {
     setupCardAbilities() {
         this.action({
-            title: 'Bow and send a character home',
+            title: 'Draw cards',
             condition: context => this.game.isDuringConflict('political') &&
                 context.source.isParticipating() &&
                 this.game.currentConflict.getNumberOfCardsPlayed(context.player.opponent) > 0,

@@ -61,7 +61,7 @@ class KaiuShihobu extends DrawCard {
 
                 let cards = context.player.getDynastyCardsInProvince(province.location);
                 context.player.stronghold.removeChildCard(holding, province.location);
-                holding.facedown = true;
+                holding.facedown = false;
                 cards.forEach(card => {
                     context.player.moveCard(card, Locations.DynastyDiscardPile);
                 });

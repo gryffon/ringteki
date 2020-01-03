@@ -6,12 +6,12 @@ describe('Ivory Kingdoms Unicorn', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['ivory-kingdoms-unicorn', 'otomo-courtier', 'iuchi-farseer'],
-                        hand: ['iuchi-wayfinder'],
+                        hand: ['iuchi-wayfinder', 'against-the-waves'],
                         stronghold: ['hisu-mori-toride-unicorn']
                     },
                     player2: {
                         inPlay: ['doji-challenger'],
-                        hand: ['against-the-waves', 'talisman-of-the-sun'],
+                        hand: ['talisman-of-the-sun'],
                         provinces: ['shameful-display', 'shameful-display', 'endless-plains', 'shameful-display'],
                         role: 'keeper-of-water'
                     }
@@ -24,7 +24,7 @@ describe('Ivory Kingdoms Unicorn', function() {
                 this.hisuMoriToride = this.player1.findCardByName('hisu-mori-toride-unicorn');
 
                 this.dojiChallenger = this.player2.findCardByName('doji-challenger');
-                this.againstTheWaves = this.player2.findCardByName('against-the-waves');
+                this.againstTheWaves = this.player1.findCardByName('against-the-waves');
                 this.talismanOfTheSun = this.player2.findCardByName('talisman-of-the-sun');
 
                 this.shamefulDisplay1 = this.player2.provinces['province 1'].provinceCard;
@@ -82,8 +82,9 @@ describe('Ivory Kingdoms Unicorn', function() {
                     attackers: [this.ivoryKingdomsUnicorn],
                     defenders: []
                 });
-                this.player2.clickCard(this.againstTheWaves);
-                this.player2.clickCard(this.iuchiFarseer);
+                this.player2.pass();
+                this.player1.clickCard(this.againstTheWaves);
+                this.player1.clickCard(this.iuchiFarseer);
                 expect(this.iuchiFarseer.bowed).toBe(true);
                 this.noMoreActions();
                 this.player1.clickPrompt('No');

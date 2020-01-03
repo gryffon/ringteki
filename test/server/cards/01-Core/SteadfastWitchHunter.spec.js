@@ -4,10 +4,10 @@ describe('Steadfast Witch Hunter', function() {
             this.setupTest({
                 phase: 'conflict',
                 player1: {
-                    hand: ['against-the-waves']
                 },
                 player2: {
                     inPlay: ['steadfast-witch-hunter'],
+                    hand: ['against-the-waves'],
                     dynastyDeck: ['borderlands-defender']
                 }
             });
@@ -24,8 +24,10 @@ describe('Steadfast Witch Hunter', function() {
             });
 
             it('should display a message if the only legal target is sacrificed', function() {
-                this.player1.clickCard('against-the-waves');
-                this.player1.clickCard(this.steadfastWitchHunter);
+                this.player1.pass();
+                this.player2.clickCard('against-the-waves');
+                this.player2.clickCard(this.steadfastWitchHunter);
+                this.player1.pass();
                 this.player2.clickCard(this.steadfastWitchHunter);
                 expect(this.player2).toHavePrompt('Steadfast Witch Hunter');
                 this.player2.clickPrompt('Pay Costs First');
@@ -35,8 +37,10 @@ describe('Steadfast Witch Hunter', function() {
             });
 
             it('should still display a message if the target is chosen then sacrificed', function() {
-                this.player1.clickCard('against-the-waves');
-                this.player1.clickCard(this.steadfastWitchHunter);
+                this.player1.pass();
+                this.player2.clickCard('against-the-waves');
+                this.player2.clickCard(this.steadfastWitchHunter);
+                this.player1.pass();
                 this.player2.clickCard(this.steadfastWitchHunter);
                 expect(this.player2).toHavePrompt('Steadfast Witch Hunter');
                 this.player2.clickCard(this.steadfastWitchHunter);
@@ -48,8 +52,10 @@ describe('Steadfast Witch Hunter', function() {
             it('should prompt the player to select a new target if the first target is no longer in play', function() {
                 this.borderlandsDefender = this.player2.putIntoPlay('borderlands-defender');
                 this.borderlandsDefender.bowed = true;
-                this.player1.clickCard('against-the-waves');
-                this.player1.clickCard(this.steadfastWitchHunter);
+                this.player1.pass();
+                this.player2.clickCard('against-the-waves');
+                this.player2.clickCard(this.steadfastWitchHunter);
+                this.player1.pass();
                 this.player2.clickCard(this.steadfastWitchHunter);
                 expect(this.player2).toHavePrompt('Steadfast Witch Hunter');
                 this.player2.clickCard(this.steadfastWitchHunter);
