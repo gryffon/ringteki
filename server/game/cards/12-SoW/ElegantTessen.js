@@ -9,7 +9,7 @@ class ElegantTessen extends DrawCard {
             when: {
                 onCardAttached: (event, context) => (
                     event.card === context.source && context.source.parent.getCost() <= 2 &&
-                    event.card.originalLocation !== Locations.PlayArea
+                    event.originalLocation !== Locations.PlayArea
                 )
             },
             gameAction: AbilityDsl.actions.ready(context => ({ target: context.source.parent }))
