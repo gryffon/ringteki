@@ -1,4 +1,5 @@
 const DrawCard = require('../../drawcard.js');
+const { Locations } = require('../../Constants');
 const AbilityDsl = require('../../abilitydsl.js');
 
 class ElegantTessen extends DrawCard {
@@ -6,7 +7,10 @@ class ElegantTessen extends DrawCard {
         this.reaction({
             title: 'Ready attached character',
             when: {
-                onCardPlayed: (event, context) => event.card === context.source && context.source.parent.getCost() <= 2
+                onCardAttached: (event, context) => (
+                    event.card === context.source && context.source.parent.getCost() <= 2 &&
+                    event.card.originalLocation !== Locations.PlayArea
+                )
             },
             gameAction: AbilityDsl.actions.ready(context => ({ target: context.source.parent }))
         });
