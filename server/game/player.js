@@ -618,25 +618,25 @@ class Player extends GameObject {
         return Math.max(alternateFate, 0);
     }
 
-    getTargetingCost(card, target) {
+    getTargetingCost(abilitySource, targets) {
         let targetCost = 0;
-        if(target) {
-            if(!Array.isArray(target)) {
-                target = [target];
+        if(targets) {
+            if(!Array.isArray(targets)) {
+                targets = [targets];
             }
 
-            target = target.filter(a => !_.isEmpty(a));
-            target.forEach(t => {
+            targets = targets.filter(a => !_.isEmpty(a));
+            targets.forEach(t => {
                 t.getEffects(EffectNames.FateCostToTarget).forEach(effect => {
                     let typeMatch = true;
                     let controllerMatch = true;
-                    if(effect.cardType && card.type !== effect.cardType) {
+                    if(effect.cardType && abilitySource.type !== effect.cardType) {
                         typeMatch = false;
                     }
-                    if(effect.targetPlayer && effect.targetPlayer === Players.Self && card.controller !== t.controller) {
+                    if(effect.targetPlayer && effect.targetPlayer === Players.Self && abilitySource.controller !== t.controller) {
                         controllerMatch = false;
                     }
-                    if(effect.targetPlayer && effect.targetPlayer === Players.Opponent && card.controller !== t.controller.opponent) {
+                    if(effect.targetPlayer && effect.targetPlayer === Players.Opponent && abilitySource.controller !== t.controller.opponent) {
                         controllerMatch = false;
                     }
 
