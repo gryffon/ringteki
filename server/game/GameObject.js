@@ -107,17 +107,22 @@ class GameObject {
         };
     }
 
-    canBeTargeted(context) {
+    canBeTargeted(context, selectedCards = []) {
         if(!this.checkRestrictions('target', context)) {
             return false;
         }
-        let targets = this.getSelectedCards(context);
+        let targets = selectedCards;
+        if(!Array.isArray(targets)) {
+            targets = [targets];
+        }
+
         targets = targets.concat(this);
         let targetingCost = context.player.getTargetingCost(context.source, targets);
 
         if(context.stage === Stages.PreTarget) {
+            //We haven't paid the cost yet, so figure out what it will cost to play this so we can know how much fate we'll have available for targeting
             let fateCost = 0;
-            if(context.ability.getReducedCost) {
+            if(context.ability.getReducedCost) { //we only want to consider the ability cost, not the card cost
                 fateCost = context.ability.getReducedCost(context);
             }
             let alternateFate = context.player.getAvailableAlternateFate(context.playType, context);
@@ -130,26 +135,6 @@ class GameObject {
         }
 
         return true;
-    }
-
-    getSelectedCards(context) {
-        let targets = [];
-        if(context.player.getSelectedCards()) {
-            let selfTargets = context.player.getSelectedCards();
-            if(!Array.isArray(selfTargets)) {
-                selfTargets = [selfTargets];
-            }
-            targets = targets.concat(selfTargets);
-        }
-
-        if(context.player.opponent.getSelectedCards()) {
-            let opponentTargets = context.player.opponent.getSelectedCards();
-            if(!Array.isArray(opponentTargets)) {
-                opponentTargets = [opponentTargets];
-            }
-            targets = targets.concat(opponentTargets);
-        }
-        return targets;
     }
 
     getShortSummaryForControls(activePlayer) {

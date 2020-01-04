@@ -20,10 +20,6 @@ class PlayerPromptState {
         this.selectedCards = cards;
     }
 
-    getSelectedCards() {
-        return this.selectedCards;
-    }
-
     clearSelectedCards() {
         this.selectedCards = [];
     }
