@@ -15,15 +15,15 @@ class FeastOrFamine extends ProvinceCard {
                 gameAction: AbilityDsl.actions.selectCard(context => ({
                     cardType: CardTypes.Character,
                     controller: Players.Self,
-                    message: '{0} moves {1} fate from {2} to {3}',
-                    messageArgs: card => [context.player, context.target.fate, context.target, card],
+                    message: '{0} moves 1 fate from {1} to {2}',
+                    messageArgs: card => [context.player, context.target, card],
                     gameAction: AbilityDsl.actions.placeFate({
                         origin: context.target,
                         amount: 1
                     })
                 }))
             },
-            effect: 'move all fate from {0} to a character they control'
+            effect: 'move one fate from {0} to a character they control'
         });
     }
 }

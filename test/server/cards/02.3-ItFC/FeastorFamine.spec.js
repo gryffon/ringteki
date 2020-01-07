@@ -77,6 +77,8 @@ describe('Feast or Famine', function() {
                 expect(this.shinjoOutrider.fate).toBe(1);
                 expect(this.nitenAdept.fate).toBe(1);
                 expect(this.feastOrFamine.isBroken).toBe(true);
+                expect(this.getChatLogs(3)).toContain('player2 uses Feast or Famine to move one fate from Shinjo Outrider to a character they control');
+                expect(this.getChatLogs(2)).toContain('player2 moves 1 fate from Shinjo Outrider to Niten Adept');
             });
 
             it('should allow the ability to be used if there is a target inside the conflict', function() {
