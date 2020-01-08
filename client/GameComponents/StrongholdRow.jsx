@@ -14,7 +14,7 @@ class StrongholdRow extends React.Component {
                     player &&
                     <img
                         className={ `card-image imperial-favor ${ this.props.cardSize } ${player.imperialFavor ? '' : 'hidden'} ` }
-                        src={ '/img/' + (player.imperialFavor ? player.imperialFavor : 'political') + '-favor.png' }
+                        src={ '/img/' + (player.imperialFavor ? player.imperialFavor : 'political') + '-favor.jpg' }
                     />
                 }
             </div>
