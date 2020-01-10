@@ -135,7 +135,7 @@ class DrawCard extends BaseCard {
     }
 
     hasDash(type = '') {
-        if(type === 'glory') {
+        if(type === 'glory' || this.printedType !== CardTypes.Character) {
             return false;
         }
 
