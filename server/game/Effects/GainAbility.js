@@ -6,7 +6,6 @@ class GainAbility extends EffectValue {
     constructor(abilityType, ability) {
         super();
         this.abilityType = abilityType;
-        this.properties = ability;
         this.grantedAbilityLimits = {};
         if(ability.properties) {
             let newProps = { printedAbility: false, abilityIdentifier: ability.abilityIdentifier, origin: ability.card };
@@ -19,6 +18,8 @@ class GainAbility extends EffectValue {
                 newProps.max = AbilityLimit.repeatable(ability.properties.max.max, ability.properties.max.eventName);
             }
             this.properties = Object.assign({}, ability.properties, newProps);
+        } else {
+            this.properties = Object.assign({ printedAbility: false }, ability);
         }
         if(abilityType === AbilityTypes.Persistent && !this.properties.location) {
             this.properties.location = Locations.PlayArea;
