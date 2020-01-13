@@ -68,7 +68,7 @@ const Costs = {
     /**
      * Cost that requires discarding a card to be selected by the player.
      */
-    discardCard: properties => getSelectCost(GameActions.discardCard(), properties, 'Select card to discard'),
+    discardCard: properties => getSelectCost(GameActions.discardCard(), Object.assign({ location: Locations.Hand }, properties), 'Select card to discard'),
     /**
      * Cost that will discard a fate from the card
      */
