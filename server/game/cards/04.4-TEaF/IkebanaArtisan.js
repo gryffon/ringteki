@@ -10,10 +10,10 @@ class IkebanaArtisan extends DrawCard {
             },
             limit: AbilityDsl.limit.unlimitedPerConflict(),
             effect: 'lose 1 fate rather than 1 honor for not defending the conflict',
-            gameAction: AbilityDsl.actions.cancel(),
-            then: {
-                gameAction: AbilityDsl.actions.loseFate(context => ({ target: context.player }))
-            }
+            gameAction: AbilityDsl.actions.sequential([
+                AbilityDsl.actions.cancel(),
+                AbilityDsl.actions.loseFate(context => ({ target: context.player }))
+            ])
         });
     }
 }

@@ -10,8 +10,8 @@ describe('Persuasive Counselor', function() {
                         conflictDiscard: ['defend-your-honor']
                     },
                     player2: {
-                        inPlay: ['persuasive-counselor', 'bayushi-shoju'],
-                        hand: ['against-the-waves', 'way-of-the-scorpion', 'jade-tetsubo'],
+                        inPlay: ['persuasive-counselor', 'bayushi-shoju', 'kitsu-spiritcaller'],
+                        hand: ['against-the-waves', 'way-of-the-scorpion', 'jade-tetsubo', 'mirumoto-s-fury'],
                         provinces: ['meditations-on-the-tao']
                     }
                 });
@@ -26,7 +26,9 @@ describe('Persuasive Counselor', function() {
 
                 this.counselor = this.player2.findCardByName('persuasive-counselor');
                 this.shoju = this.player2.findCardByName('bayushi-shoju');
+                this.spiritcaller = this.player2.findCardByName('kitsu-spiritcaller');
                 this.atw = this.player2.findCardByName('against-the-waves');
+                this.fury = this.player2.findCardByName('mirumoto-s-fury');
                 this.wayOfTheScorpion = this.player2.findCardByName('way-of-the-scorpion');
                 this.tetsubo = this.player2.findCardByName('jade-tetsubo');
 
@@ -45,15 +47,14 @@ describe('Persuasive Counselor', function() {
             });
 
             it('events should cancel as normal', function() {
-                this.player2.clickCard(this.atw);
+                this.player2.clickCard(this.fury);
                 this.player2.clickCard(this.tadaka);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.voice);
                 expect(this.player1).toBeAbleToSelect(this.yojimbo);
-                expect(this.player1).toBeAbleToSelect(this.kikuyo);
                 expect(this.player1).not.toBeAbleToSelect(this.finger);
 
-                this.player1.clickCard(this.kikuyo);
+                this.player1.clickCard(this.yojimbo);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 expect(this.tadaka.bowed).toBe(false);
             });
@@ -62,7 +63,7 @@ describe('Persuasive Counselor', function() {
                 this.player2.clickCard(this.counselor);
                 expect(this.getChatLogs(3)).toContain('player2 uses Persuasive Counselor to prevent their events from being cancelled this conflict');
                 this.player1.pass();
-                this.player2.clickCard(this.atw);
+                this.player2.clickCard(this.fury);
                 this.player2.clickCard(this.tadaka);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 expect(this.tadaka.bowed).toBe(true);
@@ -83,7 +84,7 @@ describe('Persuasive Counselor', function() {
                 this.player2.clickCard(this.counselor);
                 expect(this.getChatLogs(3)).toContain('player2 uses Persuasive Counselor to prevent their events from being cancelled this conflict');
                 this.player1.pass();
-                this.player2.clickCard(this.atw);
+                this.player2.clickCard(this.fury);
                 this.player2.clickCard(this.tadaka);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.dyh);
@@ -102,7 +103,7 @@ describe('Persuasive Counselor', function() {
                 this.player2.clickCard(this.counselor);
                 expect(this.getChatLogs(3)).toContain('player2 uses Persuasive Counselor to prevent their events from being cancelled this conflict');
                 this.player1.pass();
-                this.player2.clickCard(this.atw);
+                this.player2.clickCard(this.fury);
                 this.player2.clickCard(this.tadaka);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.dyh);

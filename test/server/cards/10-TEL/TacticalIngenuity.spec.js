@@ -10,7 +10,8 @@ describe('Tactical Ingenuity', function() {
                     conflictDeckSize: 4
                 },
                 player2: {
-                    inPlay: ['gifted-tactician']
+                    inPlay: ['gifted-tactician', 'voice-of-the-ancestors'],
+                    hand: ['cloud-the-mind']
                 }
             });
 
@@ -55,6 +56,24 @@ describe('Tactical Ingenuity', function() {
 
             this.player1.clickPrompt('Way of the Lion');
             expect(this.wayOfTheLion.location).toBe('hand');
+        });
+
+        it('should not be blocked by Cloud the Mind',function() {
+            this.player1.playAttachment(this.tacticalIngenuity, this.zentaro);
+            this.player2.playAttachment('cloud-the-mind', this.zentaro);
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.zentaro],
+                defenders: []
+            });
+
+            this.player2.pass();
+            this.player1.clickCard(this.zentaro);
+            expect(this.player1).toHavePrompt('Select a card to reveal and put in your hand');
+            expect(this.player1).toHavePromptButton('Way of the Lion');
+            expect(this.player1).toHaveDisabledPromptButton('Fine Katana');
+            expect(this.player1).toHavePromptButton('Strength in Numbers');
+            expect(this.player1).toHavePromptButton('Censure');
         });
     });
 });

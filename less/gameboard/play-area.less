@@ -27,7 +27,7 @@
         grid-template-columns: 1fr repeat(3, (@card-xl-width + 10px));
         grid-template-rows: minmax(@card-xl-height+@attachment-offset-xl*2,auto) minmax(@card-xl-height + @attachment-offset-xl + 5px,auto) minmax(2*@attachment-offset,auto);
     }
-    
+
 
     &.our-side {
         grid-row-start:5;
@@ -151,6 +151,22 @@
     justify-content:center;
 }
 
+.squishable-card-panel {
+    display: flex;
+    justify-content: flex-start;
+    margin: 0px 5px;
+    min-height: 0;
+    padding: 0px;
+
+    .card-wrapper {
+      margin: 0 5px 0 0;
+    }
+  }
+
+.squishable-card-panel.squish .card-wrapper {
+    position: absolute;
+}
+
 .province-row {
     display:flex;
     flex-direction:row;
@@ -158,7 +174,7 @@
 }
 
 .left-decks {
-    display:flex; 
+    display:flex;
     flex-direction:row;
     justify-content:flex-end;
 }
@@ -184,7 +200,7 @@
 }
 
 .play-area {
-    position:absolute;    
+    position:absolute;
     min-height:100%;
     width:100%;
     grid-row-start:1;

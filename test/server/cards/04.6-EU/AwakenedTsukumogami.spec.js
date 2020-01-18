@@ -14,6 +14,7 @@ describe('Awakened Tsukumogami', function() {
                     }
                 });
                 this.agashaSwordsmith = this.player1.findCardByName('agasha-swordsmith');
+                this.azunami = this.player2.findCardByName('asako-azunami');
                 this.agashaSwordsmith.fate = 4;
                 this.game.rings.air.fate = 2;
                 this.game.rings.water.fate = 2;
@@ -24,7 +25,7 @@ describe('Awakened Tsukumogami', function() {
             it('should allow the player to choose whether to take fate from the ring or their fate pool', function() {
                 this.player2.clickCard('against-the-waves');
                 expect(this.player2).toHavePrompt('Against the Waves');
-                this.player2.clickCard(this.agashaSwordsmith);
+                this.player2.clickCard(this.azunami);
                 expect(this.player2).toHavePrompt('Choose amount of fate to spend from the Water ring');
                 expect(this.player2.currentButtons.length).toBe(3);
                 expect(this.player2.currentButtons).toContain('0');
@@ -34,21 +35,21 @@ describe('Awakened Tsukumogami', function() {
 
             it('should pay with ring fate when selected', function() {
                 this.player2.clickCard('against-the-waves');
-                this.player2.clickCard(this.agashaSwordsmith);
+                this.player2.clickCard(this.azunami);
                 this.player2.clickPrompt('1');
                 expect(this.player2.fate).toBe(1);
                 expect(this.game.rings.water.fate).toBe(1);
-                expect(this.agashaSwordsmith.bowed).toBe(true);
+                expect(this.azunami.bowed).toBe(true);
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
             it('should pay with own fate when selected', function() {
                 this.player2.clickCard('against-the-waves');
-                this.player2.clickCard(this.agashaSwordsmith);
+                this.player2.clickCard(this.azunami);
                 this.player2.clickPrompt('0');
                 expect(this.player2.fate).toBe(0);
                 expect(this.game.rings.water.fate).toBe(2);
-                expect(this.agashaSwordsmith.bowed).toBe(true);
+                expect(this.azunami.bowed).toBe(true);
                 expect(this.player1).toHavePrompt('Action Window');
             });
 
@@ -102,6 +103,7 @@ describe('Awakened Tsukumogami', function() {
                         hand: ['against-the-waves', 'consumed-by-five-fires', 'the-mirror-s-gaze', 'daimyo-s-favor']
                     }
                 });
+                this.azunami = this.player2.findCardByName('asako-azunami');
                 this.agashaSwordsmith = this.player1.findCardByName('agasha-swordsmith');
                 this.agashaSwordsmith.fate = 4;
                 this.game.rings.air.fate = 2;
@@ -116,11 +118,11 @@ describe('Awakened Tsukumogami', function() {
 
                 this.player2.clickCard('against-the-waves');
                 expect(this.player2).toHavePrompt('Against the Waves');
-                this.player2.clickCard(this.agashaSwordsmith);
+                this.player2.clickCard(this.azunami);
                 expect(this.player2).not.toHavePrompt('Choose amount of fate to spend from the Water ring');
                 expect(this.player2.fate).toBe(playerFate - 1);
                 expect(this.game.rings.water.fate).toBe(waterFate);
-                expect(this.agashaSwordsmith.bowed).toBe(true);
+                expect(this.azunami.bowed).toBe(true);
                 expect(this.player1).toHavePrompt('Action Window');
             });
 

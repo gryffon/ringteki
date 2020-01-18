@@ -2,21 +2,15 @@ const AbilityLimit = require('./abilitylimit.js');
 const AbilityDsl = require('./abilitydsl');
 const ThenAbility = require('./ThenAbility');
 const Costs = require('./costs.js');
-const { Locations, CardTypes, EffectNames, Players, TargetModes } = require('./Constants');
+const { Locations, CardTypes, EffectNames, Players } = require('./Constants');
 
 class CardAbility extends ThenAbility {
     constructor(game, card, properties) {
         if(properties.initiateDuel) {
-            properties.targets = {
-                challenger: {
-                    cardType: CardTypes.Character,
-                    mode: card.type === CardTypes.Character ? TargetModes.AutoSingle : TargetModes.Single,
-                    controller: Players.Self,
-                    cardCondition: (card, context) => card.isParticipating()
-                        && (context.source.type === CardTypes.Character ? card === context.source : true)
-                },
-                duelTarget: {
-                    dependsOn: 'challenger',
+            if(card.type === CardTypes.Character) {
+                let prevCondition = properties.condition;
+                properties.condition = context => context.source.isParticipating() && (!prevCondition || prevCondition(context));
+                properties.target = {
                     cardType: CardTypes.Character,
                     player: context => {
                         if(typeof properties.initiateDuel === 'function') {
@@ -28,12 +22,38 @@ class CardAbility extends ThenAbility {
                     cardCondition: card => card.isParticipating(),
                     gameAction: AbilityDsl.actions.duel(context => {
                         if(typeof properties.initiateDuel === 'function') {
-                            return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel(context));
+                            return Object.assign({ challenger: context.source }, properties.initiateDuel(context));
                         }
-                        return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel);
+                        return Object.assign({ challenger: context.source }, properties.initiateDuel);
                     })
-                }
-            };
+                };
+            } else {
+                properties.targets = {
+                    challenger: {
+                        cardType: CardTypes.Character,
+                        controller: Players.Self,
+                        cardCondition: card => card.isParticipating()
+                    },
+                    duelTarget: {
+                        dependsOn: 'challenger',
+                        cardType: CardTypes.Character,
+                        player: context => {
+                            if(typeof properties.initiateDuel === 'function') {
+                                return properties.initiateDuel(context).opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                            }
+                            return properties.initiateDuel.opponentChoosesDuelTarget ? Players.Opponent : Players.Self;
+                        },
+                        controller: Players.Opponent,
+                        cardCondition: card => card.isParticipating(),
+                        gameAction: AbilityDsl.actions.duel(context => {
+                            if(typeof properties.initiateDuel === 'function') {
+                                return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel(context));
+                            }
+                            return Object.assign({ challenger: context.targets.challenger }, properties.initiateDuel);
+                        })
+                    }
+                };
+            }
         }
         super(game, card, properties);
 
@@ -92,8 +112,12 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, context.playType)) {
+        if(this.isTriggeredAbility() && !this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, context.playType)) {
             return 'cannotTrigger';
+        }
+
+        if(this.isKeywordAbility() && !this.card.canInitiateKeywords(context)) {
+            return 'cannotInitiate';
         }
 
         if(!ignoredRequirements.includes('limit') && this.limit.isAtMax(context.player)) {

@@ -116,8 +116,15 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         let targets = this.conflict.defendingPlayer.cardsInPlay.filter(card => card.covert);
         let sources = this.conflict.attackers.filter(card => card.isCovert());
+        let contexts = sources.map(card => new AbilityContext({
+            game: this.game,
+            player: this.conflict.attackingPlayer,
+            source: card,
+            ability: new CovertAbility()
+        }));
+        contexts = contexts.filter(context => context.source.canInitiateKeywords(context));
 
-        if(sources.length === 0) {
+        if(contexts.length === 0) {
             return;
         }
 
@@ -129,9 +136,9 @@ class ConflictFlow extends BaseStepWithPipeline {
         // - a legal combination of covert targets and covert attackers
         // - no remaining covert
 
-        if(targets.length === sources.length) {
+        if(targets.length === contexts.length) {
             for(let i = 0; i < targets.length; i++) {
-                let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: sources[i], ability: new CovertAbility() });
+                let context = contexts[i];
                 context['target'] = context.targets.target = targets[i];
                 this.covert.push(context);
             }
@@ -141,21 +148,22 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.covert = [];
         }
 
-        for(const source of sources) {
-            let context = new AbilityContext({ game: this.game, player: this.conflict.attackingPlayer, source: source, ability: new CovertAbility() });
-            this.game.promptForSelect(this.conflict.attackingPlayer, {
-                activePromptTitle: 'Choose covert target for ' + source.name,
-                buttons: [{ text: 'No Target', arg: 'cancel' }],
-                cardType: CardTypes.Character,
-                controller: Players.Opponent,
-                source: 'Choose Covert',
-                cardCondition: card => card.canBeBypassedByCovert(context),
-                onSelect: (player, card) => {
-                    context['target'] = context.targets.target = card;
-                    this.covert.push(context);
-                    return true;
-                }
-            });
+        for(const context of contexts) {
+            if(context.player.checkRestrictions('initiateKeywords', context)) {
+                this.game.promptForSelect(this.conflict.attackingPlayer, {
+                    activePromptTitle: 'Choose covert target for ' + context.source.name,
+                    buttons: [{ text: 'No Target', arg: 'cancel' }],
+                    cardType: CardTypes.Character,
+                    controller: Players.Opponent,
+                    source: 'Choose Covert',
+                    cardCondition: card => card.canBeBypassedByCovert(context),
+                    onSelect: (player, card) => {
+                        context['target'] = context.targets.target = card;
+                        this.covert.push(context);
+                        return true;
+                    }
+                });
+            }
         }
     }
 
@@ -323,10 +331,13 @@ class ConflictFlow extends BaseStepWithPipeline {
 
         const eventFactory = () => {
             let event = this.game.getEvent(EventNames.AfterConflict, { conflict: this.conflict }, () => {
+                let effects = this.conflict.getEffects(EffectNames.ForceConflictUnopposed);
+                let forcedUnopposed = effects.length !== 0;
+
                 this.showConflictResult();
                 this.game.recordConflictWinner(this.conflict);
 
-                if(this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) {
+                if((this.conflict.isAttackerTheWinner() && this.conflict.defenders.length === 0) || forcedUnopposed) {
                     this.conflict.conflictUnopposed = true;
                 }
             });
@@ -390,7 +401,7 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
         if(this.conflict.winner) {
-            this.game.raiseEvent(EventNames.OnClaimRing, { player: this.conflict.winner, conflict: this.conflict }, () => ring.claimRing(this.conflict.winner));
+            this.game.raiseEvent(EventNames.OnClaimRing, { player: this.conflict.winner, conflict: this.conflict, ring:this.conflict.ring }, () => ring.claimRing(this.conflict.winner));
         }
         //Do this lazily for now
         this.game.queueSimpleStep(() => {

@@ -44,7 +44,6 @@ export class ChosenDiscardAction extends PlayerAction {
                     context: context,
                     mode: TargetModes.Exactly,
                     numCards: amount,
-                    ordered: true,
                     location: Locations.Hand,
                     controller: player === context.player ? Players.Self : Players.Opponent,
                     onSelect: (player, cards) => {
@@ -68,6 +67,7 @@ export class ChosenDiscardAction extends PlayerAction {
 
     eventHandler(event): void {
         event.context.game.addMessage('{0} discards {1}', event.player, event.cards);
+        event.discardedCards = event.cards;
         for(let card of event.cards) {
             event.player.moveCard(card, card.isDynasty ? Locations.DynastyDiscardPile : Locations.ConflictDiscardPile);
         }

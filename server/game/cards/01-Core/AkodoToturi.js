@@ -9,7 +9,7 @@ class AkodoToturi extends DrawCard {
                 onClaimRing: (event, context) => this.game.isDuringConflict('military') && context.source.isParticipating() &&
                                                  event.player === context.player
             },
-            gameAction: AbilityDsl.actions.resolveConflictRing({ resolveAsAttacker: false })
+            gameAction: AbilityDsl.actions.resolveConflictRing()
         });
     }
 }

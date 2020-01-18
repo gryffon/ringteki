@@ -28,6 +28,7 @@ describe('EarthBecomesSky', function() {
                 this.dojiWhisperer.bow();
                 this.noMoreActions();
                 this.flow.finishConflictPhase();
+                expect(this.game.currentPhase).toBe('fate');
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
 

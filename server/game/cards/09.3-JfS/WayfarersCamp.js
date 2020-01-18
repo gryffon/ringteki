@@ -21,16 +21,16 @@ class WayfarersCamp extends DrawCard {
                     location: Locations.Provinces,
                     controller: Players.Self,
                     gameAction: AbilityDsl.actions.playCard({ resetOnCancel: true })
-                })
-            ]),
-            then: {
-                gameAction: AbilityDsl.actions.selectCard({
+                }),
+                AbilityDsl.actions.selectCard({
                     activePromptTitle: 'Choose a card to turn faceup',
                     location: Locations.Provinces,
                     controller: Players.Self,
-                    gameAction: AbilityDsl.actions.flipDynasty()
+                    gameAction: AbilityDsl.actions.flipDynasty(),
+                    message: '{0} turns {1} faceup',
+                    messageArgs: (card, player) => [player, card]
                 })
-            }
+            ])
         });
     }
 }

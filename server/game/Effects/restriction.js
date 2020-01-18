@@ -3,6 +3,8 @@ const EffectValue = require('./EffectValue');
 const { AbilityTypes, CardTypes } = require('../Constants');
 
 const checkRestrictions = {
+    abilitiesTriggeredByOpponents: (context, effect) =>
+        context.player === effect.context.player.opponent && context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt,
     attachmentsWithSameClan: (context, effect, card) =>
         context.source.type === CardTypes.Attachment &&
         context.source.getPrintedFaction() !== 'neutral' && card.isFaction(context.source.getPrintedFaction()),
@@ -24,8 +26,13 @@ const checkRestrictions = {
         context.player && context.player === effect.context.player.opponent && context.source.type === 'ring',
     opponentsTriggeredAbilities: (context, effect) =>
         context.player === effect.context.player.opponent && context.ability.isTriggeredAbility(),
+    opponentsCardAbilities: (context, effect) =>
+        context.player === effect.context.player.opponent && context.ability.isCardAbility(),
     reactions: context => context.ability.abilityType === AbilityTypes.Reaction,
-    source: (context, effect) => context.source === effect.context.source
+    source: (context, effect) => context.source === effect.context.source,
+    keywordAbilities: context => context.ability.isKeywordAbility(),
+    nonKeywordAbilities: context => !context.ability.isKeywordAbility(),
+    nonForcedAbilities: context => context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt
 };
 
 class Restriction extends EffectValue {

@@ -5,24 +5,24 @@ describe('Caravan Guard', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['caravan-guard', 'caravan-guard', 'doomed-shugenja']
+                        inPlay: ['caravan-guard', 'caravan-guard', 'doomed-shugenja'],
+                        hand: ['against-the-waves']
                     },
                     player2: {
-                        hand: ['against-the-waves']
                     }
                 });
 
                 this.caravanGuard1 = this.player1.inPlay[0];
                 this.caravanGuard2 = this.player1.inPlay[1];
+                this.againstTheWaves = this.player1.findCardByName('against-the-waves');
                 this.doomedShugenja = this.player1.findCardByName('doomed-shugenja');
             });
 
             it('should skip conflict if the player cannot pay for any attackers', function () {
-                this.player1.fate = 0;
+                this.player1.fate = 1;
                 expect(this.player1).toHavePrompt('Action Window');
-                this.player1.pass();
-                this.player2.clickCard('against-the-waves');
-                this.player2.clickCard(this.doomedShugenja);
+                this.player1.clickCard(this.againstTheWaves);
+                this.player1.clickCard(this.doomedShugenja);
                 expect(this.doomedShugenja.bowed).toBe(true);
                 this.noMoreActions();
 

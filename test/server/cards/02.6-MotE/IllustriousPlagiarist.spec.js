@@ -28,7 +28,7 @@ describe('Illustrious Plagiarist', function() {
                 expect(this.bayushiShoju.isDishonored).toBe(true);
                 expect(this.bayushiShoju.bowed).toBe(true);
                 this.illustriousPlagiarist = this.player1.clickCard('illustrious-plagiarist');
-                this.player1.clickCard(this.aFateWorseThanDeath);
+                this.player2.clickCard(this.aFateWorseThanDeath);
                 this.player2.pass();
                 this.player1.clickCard(this.illustriousPlagiarist);
                 expect(this.player1).toHavePrompt('Illustrious Plagiarist');
@@ -72,7 +72,7 @@ describe('Illustrious Plagiarist', function() {
                 this.player1.playAttachment('cloud-the-mind', this.dojiWhisperer);
                 this.player2.pass();
                 this.illustriousPlagiarist = this.player1.clickCard('illustrious-plagiarist');
-                this.player1.clickCard(this.assassination);
+                this.player2.clickCard(this.assassination);
                 this.player2.clickCard('banzai');
                 this.player2.clickCard(this.dojiWhisperer);
                 this.player2.clickPrompt('Done');
