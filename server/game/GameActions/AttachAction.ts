@@ -63,6 +63,7 @@ export class AttachAction extends CardGameAction {
 
     eventHandler(event, additionalProperties = {}): void {
         let properties = this.getProperties(event.context, additionalProperties) as AttachActionProperties;
+        event.originalLocation = event.card.location;
         if(event.card.location === Locations.PlayArea) {
             event.card.parent.removeAttachment(event.card);
         } else {

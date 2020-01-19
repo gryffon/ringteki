@@ -68,6 +68,7 @@ class BaseCard extends EffectSource {
         this.traits = cardData.traits || [];
         this.printedFaction = cardData.clan;
         this.attachments = _([]);
+        this.childCards = [];
 
         this.setupCardAbilities(AbilityDsl);
         this.applyAttachmentBonus();
@@ -336,7 +337,11 @@ class BaseCard extends EffectSource {
     }
 
     canTriggerAbilities(context: AbilityContext): boolean {
-        return !this.facedown && (this.checkRestrictions('triggerAbilities', context) || !context.ability.isTriggeredAbility());
+        return !this.facedown && this.checkRestrictions('triggerAbilities', context);
+    }
+
+    canInitiateKeywords(context: AbilityContext): boolean {
+        return !this.facedown && this.checkRestrictions('initiateKeywords', context);
     }
 
     getModifiedLimitMax(player: Player, ability: CardAbility, max: number): number {
@@ -492,7 +497,7 @@ class BaseCard extends EffectSource {
             this.persistentEffect({
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyMilitarySkill(militaryBonus)
+                effect: AbilityDsl.effects.attachmentMilitarySkillModifier(militaryBonus)
             });
         }
         let politicalBonus = parseInt(this.cardData.political_bonus);
@@ -500,7 +505,7 @@ class BaseCard extends EffectSource {
             this.persistentEffect({
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyPoliticalSkill(politicalBonus)
+                effect: AbilityDsl.effects.attachmentPoliticalSkillModifier(politicalBonus)
             });
         }
     }
@@ -645,6 +650,20 @@ class BaseCard extends EffectSource {
      */
     removeAttachment(attachment) {
         this.attachments = _(this.attachments.reject(card => card.uuid === attachment.uuid));
+    }
+
+    addChildCard(card, location) {
+        this.childCards.push(card);
+        this.controller.moveCard(card, location);
+    }
+
+    removeChildCard(card, location) {
+        if(!card) {
+            return;
+        }
+
+        this.childCards = this.childCards.filter(a => a !== card);
+        this.controller.moveCard(card, location);
     }
 
     getShortSummaryForControls(activePlayer) {

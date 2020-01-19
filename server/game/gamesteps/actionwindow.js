@@ -61,7 +61,9 @@ class ActionWindow extends UiPrompt {
     postResolutionUpdate(resolver) { // eslint-disable-line no-unused-vars
         this.currentPlayerConsecutiveActions += 1;
         this.prevPlayerPassed = false;
-        this.nextPlayer();
+        if(this.currentPlayerConsecutiveActions > this.currentPlayer.sumEffects(EffectNames.AdditionalAction)) {
+            this.nextPlayer();
+        }
     }
 
     continue() {
@@ -112,6 +114,7 @@ class ActionWindow extends UiPrompt {
                 cardCondition: card => !card.facedown,
                 onSelect: (player, card) => {
                     this.game.addMessage('{0} uses {1}\'s ability', player, card);
+                    this.prevPlayerPassed = false;
                     this.nextPlayer();
                     return true;
                 }
@@ -132,8 +135,12 @@ class ActionWindow extends UiPrompt {
             this.complete();
         }
 
-        this.prevPlayerPassed = true;
-        this.nextPlayer();
+        this.currentPlayerConsecutiveActions += 1;
+
+        if(this.currentPlayerConsecutiveActions > this.currentPlayer.sumEffects(EffectNames.AdditionalAction)) {
+            this.prevPlayerPassed = true;
+            this.nextPlayer();
+        }
     }
 
     nextPlayer() {

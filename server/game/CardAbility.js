@@ -92,8 +92,12 @@ class CardAbility extends ThenAbility {
             return 'blank';
         }
 
-        if(!this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, context.playType)) {
+        if(this.isTriggeredAbility() && !this.card.canTriggerAbilities(context) || this.card.type === CardTypes.Event && !this.card.canPlay(context, context.playType)) {
             return 'cannotTrigger';
+        }
+
+        if(this.isKeywordAbility() && !this.card.canInitiateKeywords(context)) {
+            return 'cannotInitiate';
         }
 
         if(!ignoredRequirements.includes('limit') && this.limit.isAtMax(context.player)) {

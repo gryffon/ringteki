@@ -44,6 +44,11 @@ const Costs = {
      */
     returnToHand: properties => getSelectCost(GameActions.returnToHand(), properties, 'Select card to return to hand'),
     /**
+     * Cost that will return a selected card to the appropriate deck which matches the passed
+     * condition.
+     */
+    returnToDeck: properties => getSelectCost(GameActions.returnToDeck(properties), properties, 'Select card to return to your deck'),
+    /**
      * Cost that will return to hand the card that initiated the ability.
      */
     returnSelfToHand: () => new GameActionCost(GameActions.returnToHand()),
@@ -188,7 +193,7 @@ const Costs = {
             promptsPlayer: true
         };
     },
-    returnRings: function () {
+    returnRings: function (amount = -1) {
         return {
             canPay: function (context) {
                 return Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name);
@@ -210,7 +215,7 @@ const Costs = {
                         ringCondition: ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring),
                         onSelect: (player, ring) => {
                             chosenRings.push(ring);
-                            if(Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring))) {
+                            if(Object.values(context.game.rings).some(ring => ring.claimedBy === context.player.name && !chosenRings.includes(ring) && (amount < 0 || chosenRings.length < amount))) {
                                 promptPlayer();
                             } else {
                                 context.costs.returnRing = chosenRings;

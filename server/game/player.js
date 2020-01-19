@@ -42,6 +42,7 @@ class Player extends GameObject {
         this.conflictDiscardPile = _([]);
         this.removedFromGame = _([]);
         this.additionalPiles = {};
+        this.underneathStronghold = _([]);
 
         this.faction = {};
         this.stronghold = null;
@@ -737,6 +738,8 @@ class Player extends GameObject {
                     this.provinceFour.value(),
                     this.strongholdProvince.value()
                 ));
+            case Locations.UnderneathStronghold:
+                return this.underneathStronghold;
             default:
                 if(this.additionalPiles[source]) {
                     return this.additionalPiles[source].cards;
@@ -794,6 +797,9 @@ class Player extends GameObject {
             case Locations.ProvinceDeck:
                 this.provinceDeck = targetList;
                 break;
+            case Locations.UnderneathStronghold:
+                this.underneathStronghold = targetList;
+                break;
             default:
                 if(this.additionalPiles[source]) {
                     this.additionalPiles[source].cards = targetList;
@@ -843,7 +849,7 @@ class Player extends GameObject {
 
 
         const conflictCardLocations = [Locations.Hand, Locations.ConflictDeck, Locations.ConflictDiscardPile, Locations.RemovedFromGame];
-        const dynastyCardLocations = [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame];
+        const dynastyCardLocations = [...provinceLocations, Locations.DynastyDeck, Locations.DynastyDiscardPile, Locations.RemovedFromGame, Locations.UnderneathStronghold];
         const legalLocations = {
             stronghold: [Locations.StrongholdProvince],
             role: [Locations.Role],
@@ -1159,6 +1165,10 @@ class Player extends GameObject {
         return this.anyEffect(EffectNames.ShowTopConflictCard);
     }
 
+    isTopDynastyCardShown() {
+        return this.anyEffect(EffectNames.ShowTopDynastyCard);
+    }
+
     /**
      * Resolves any number of ring effects.  If there are more than one, then it will prompt the first player to choose what order those effects should be applied in
      * @param {Array} elements - Array of String, alternatively can be passed a String for convenience
@@ -1247,6 +1257,10 @@ class Player extends GameObject {
 
         if(this.isTopConflictCardShown()) {
             state.conflictDeckTopCard = this.conflictDeck.first().getSummary(activePlayer);
+        }
+
+        if(this.isTopDynastyCardShown()) {
+            state.dynastyDeckTopCard = this.dynastyDeck.first().getSummary(activePlayer);
         }
 
         if(this.clock) {

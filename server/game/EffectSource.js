@@ -46,6 +46,21 @@ class EffectSource extends GameObject {
         this.addEffectToEngine(Object.assign({ duration: Durations.UntilEndOfRound, location: Locations.Any }, properties));
     }
 
+    untilPassPriority(propertyFactory) {
+        var properties = propertyFactory(AbilityDsl);
+        this.addEffectToEngine(Object.assign({ duration: Durations.UntilPassPriority, location: Locations.Any }, properties));
+    }
+
+    untilOpponentPassPriority(propertyFactory) {
+        var properties = propertyFactory(AbilityDsl);
+        this.addEffectToEngine(Object.assign({ duration: Durations.UntilOpponentPassPriority, location: Locations.Any }, properties));
+    }
+
+    untilNextPassPriority(propertyFactory) {
+        var properties = propertyFactory(AbilityDsl);
+        this.addEffectToEngine(Object.assign({ duration: Durations.UntilNextPassPriority, location: Locations.Any }, properties));
+    }
+
     /**
      * Applies a lasting effect which lasts until an event contained in the
      * `until` property for the effect has occurred.

@@ -9,8 +9,10 @@ import { CancelAction, CancelActionProperties } from './CancelAction';
 import { CardMenuAction, CardMenuProperties } from './CardMenuAction';
 import { ChooseGameAction, ChooseActionProperties } from './ChooseGameAction';
 import { ChosenDiscardAction, ChosenDiscardProperties } from './ChosenDiscardAction';
+import { ClaimRingAction, ClaimRingProperties } from './ClaimRingAction';
 import { ConditionalAction, ConditionalActionProperties } from './ConditionalAction';
 import { CreateTokenAction, CreateTokenProperties } from './CreateTokenAction';
+import { DetachAction, DetachActionProperties } from './DetachAction';
 import { DeckSearchAction,  DeckSearchProperties} from './DeckSearchAction';
 import { DiscardFavorAction, DiscardFavorProperties } from './DiscardFavorAction';
 import { DiscardFromPlayAction, DiscardFromPlayProperties } from './DiscardFromPlayAction';
@@ -82,6 +84,7 @@ const GameActions = {
     cardLastingEffect: (propertyFactory: LastingEffectCardProperties | ((context: TriggeredAbilityContext) => LastingEffectCardProperties)) => new LastingEffectCardAction(propertyFactory),
     claimImperialFavor: (propertyFactory: ClaimFavorProperties | ((context: TriggeredAbilityContext) => ClaimFavorProperties)) => new ClaimFavorAction(propertyFactory),
     createToken: (propertyFactory: CreateTokenProperties | ((context: TriggeredAbilityContext) => CreateTokenProperties) = {}) => new CreateTokenAction(propertyFactory),
+    detach: (propertyFactory: DetachActionProperties | ((context: TriggeredAbilityContext) => DetachActionProperties) = {}) => new DetachAction(propertyFactory),
     discardCard: (propertyFactory: DiscardCardProperties | ((context: TriggeredAbilityContext) => DiscardCardProperties) = {}) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory: DiscardFromPlayProperties | ((context: TriggeredAbilityContext) => DiscardFromPlayProperties) = {}) => new DiscardFromPlayAction(propertyFactory),
     dishonor: (propertyFactory: DishonorProperties | ((context: TriggeredAbilityContext) => DishonorProperties) = {}) => new DishonorAction(propertyFactory),
@@ -136,6 +139,7 @@ const GameActions = {
     switchConflictType: (propertyFactory: SwitchConflictTypeProperties | ((context: TriggeredAbilityContext) => SwitchConflictTypeProperties) = {}) => new SwitchConflictTypeAction(propertyFactory),
     takeFateFromRing: (propertyFactory: TakeFateRingProperties | ((context: TriggeredAbilityContext) => TakeFateRingProperties) = {}) => new TakeFateRingAction(propertyFactory), // amount = 1
     takeRing: (propertyFactory: TakeRingProperties | ((context: TriggeredAbilityContext) => TakeRingProperties) = {}) => new TakeRingAction(propertyFactory),
+    claimRing: (propertyFactory: ClaimRingProperties | ((context: TriggeredAbilityContext) => ClaimRingProperties) = {}) => new ClaimRingAction(propertyFactory),
     // status token actions
     discardStatusToken: (propertyFactory: DiscardStatusProperties | ((context: TriggeredAbilityContext) => DiscardStatusProperties) = {}) => new DiscardStatusAction(propertyFactory),
     moveStatusToken: (propertyFactory: MoveTokenProperties | ((context: TriggeredAbilityContext) => MoveTokenProperties)) => new MoveTokenAction(propertyFactory),
