@@ -167,7 +167,7 @@ global.integration = function(definitions) {
                 }
 
                 if(options.phase !== 'setup') {
-                    if(['draw', 'fate', 'regroup'].includes(options.phase)) {
+                    if(['draw', 'fate'].includes(options.phase)) {
                         this.player1.player.promptedActionWindows[options.phase] = true;
                         this.player2.player.promptedActionWindows[options.phase] = true;
                     }

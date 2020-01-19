@@ -4,9 +4,14 @@ describe('(4) Fate Phase', function() {
             this.setupTest({
                 phase: 'conflict',
                 player1: {
-                    inPlay: ['doji-whisperer', 'doji-challenger', 'doji-hotaru', 'doji-representative']
+                    honor: 10,
+                    stronghold: 'city-of-the-open-hand',
+                    inPlay: ['doji-whisperer', 'doji-challenger', 'doji-hotaru', 'doji-representative'],
+                    hand: ['jade-masterpiece']
                 },
                 player2: {
+                    honor: 11,
+                    hand: ['daimyo-s-favor'],
                     inPlay: ['agasha-swordsmith', 'mirumoto-raitsugu', 'doomed-shugenja', 'kitsuki-investigator']
                 }
             });
@@ -209,14 +214,206 @@ describe('(4) Fate Phase', function() {
             });
         });
 
-        describe('(4.5) "Fate phase ends" step', () => {
+        describe('(4.5) "Ready" step', () => {
             beforeEach(function() {
+                this.player1.player.promptedActionWindows.fate = true;
+                this.player2.player.promptedActionWindows.fate = true;
+
+                //4.2
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                //4.4 action window
+                this.dojiWhisperer.bowed = true;
+                this.agashaSwordsmith.bowed = true;
+                this.jadeMasterpiece = this.player1.playAttachment('jade-masterpiece', this.dojiWhisperer);
+                this.daimyosFavor = this.player2.playAttachment('daimyo-s-favor', this.agashaSwordsmith);
+
+                this.player1.clickCard(this.jadeMasterpiece);
+                this.player1.clickRing('fire');
+                this.player1.clickRing('void');
+                this.player2.clickCard(this.daimyosFavor);
+                this.cityOfTheOpenHand = this.player1.clickCard('city-of-the-open-hand');
+                this.player1.clickPrompt('Gain 1 Honor');
+            });
+
+            it('should ready characters', function() {
+                expect(this.dojiWhisperer.bowed).toBe(true);
+                expect(this.agashaSwordsmith.bowed).toBe(true);
+                this.noMoreActions();
+                expect(this.dojiWhisperer.bowed).toBe(false);
+                expect(this.agashaSwordsmith.bowed).toBe(false);
+            });
+
+            it('should ready attachments', function() {
+                expect(this.jadeMasterpiece.bowed).toBe(true);
+                expect(this.daimyosFavor.bowed).toBe(true);
+                this.noMoreActions();
+                expect(this.jadeMasterpiece.bowed).toBe(false);
+                expect(this.daimyosFavor.bowed).toBe(false);
+            });
+
+            it('should ready strongholds', function() {
+                expect(this.cityOfTheOpenHand.bowed).toBe(true);
+                this.noMoreActions();
+                expect(this.cityOfTheOpenHand.bowed).toBe(false);
+            });
+        });
+
+        describe('(4.6) "Discard from Provinces" step', () => {
+            beforeEach(function() {
+                this.player1.player.promptedActionWindows.fate = true;
+                this.player2.player.promptedActionWindows.fate = true;
+
+                this.shameful1 = this.player1.findCardByName('shameful-display', 'province 2');
+                this.shameful2 = this.player2.findCardByName('shameful-display', 'province 2');
+                this.adept1 = this.player1.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept2 = this.player2.findCardByName('adept-of-the-waves', 'province 1');
+
+                this.adept3 = this.player1.findCardByName('adept-of-the-waves', 'province 2');
+                this.adept4 = this.player2.findCardByName('adept-of-the-waves', 'province 2');
+
+                this.adept5 = this.player1.findCardByName('adept-of-the-waves', 'province 3');
+                this.adept6 = this.player2.findCardByName('adept-of-the-waves', 'province 3');
+
+                //4.2
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                this.shameful1.isBroken = true;
+                this.shameful2.isBroken = true;
+
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+                this.adept3.facedown = false;
+                this.adept4.facedown = false;
+                this.adept5.facedown = true;
+                this.adept6.facedown = true;
+
+                //4.4 action window
+                this.player1.pass();
+                this.player2.pass();
+            });
+
+            it('should allow you to select faceup cards in unbroken provinces and discard them', function() {
+                expect(this.player1).toBeAbleToSelect(this.adept1);
+                expect(this.player1).not.toBeAbleToSelect(this.adept3);
+                expect(this.player1).not.toBeAbleToSelect(this.adept5);
+                this.player1.clickCard(this.adept1);
+                this.player1.clickPrompt('Done');
+                expect(this.adept1.location).toBe('dynasty discard pile');
+
+                expect(this.player2).toBeAbleToSelect(this.adept2);
+                expect(this.player2).not.toBeAbleToSelect(this.adept4);
+                expect(this.player2).not.toBeAbleToSelect(this.adept6);
+                this.player2.clickCard(this.adept2);
+                this.player2.clickPrompt('Done');
+                expect(this.adept2.location).toBe('dynasty discard pile');
+            });
+
+            it('should automatically discard faceup cards in broken provinces', function() {
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+                expect(this.adept3.location).toBe('dynasty discard pile');
+                expect(this.adept4.location).toBe('dynasty discard pile');
+            });
+        });
+
+        describe('(4.7) "Return Rings" step', () => {
+            beforeEach(function() {
+                this.player1.player.promptedActionWindows.fate = true;
+                this.player2.player.promptedActionWindows.fate = true;
+
+                this.adept1 = this.player1.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept2 = this.player2.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+
+                //4.2
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                //4.4 action window
+                this.player1.pass();
+                this.player2.pass();
+            });
+
+            it('should return claimed rings', function() {
+                expect(this.game.rings.air.claimedBy).toBe('player1');
+                expect(this.game.rings.earth.claimedBy).toBe('player2');
+                expect(this.game.rings.fire.claimedBy).toBe('');
+                expect(this.game.rings.void.claimedBy).toBe('');
+                expect(this.game.rings.water.claimedBy).toBe('');
+
+                //4.6
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                expect(this.game.rings.air.claimedBy).toBe('');
+                expect(this.game.rings.earth.claimedBy).toBe('');
+                expect(this.game.rings.fire.claimedBy).toBe('');
+                expect(this.game.rings.void.claimedBy).toBe('');
+                expect(this.game.rings.water.claimedBy).toBe('');
+            });
+        });
+
+        describe('(4.8) "Pass First Player Token" step', () => {
+            beforeEach(function() {
+                this.player1.player.promptedActionWindows.fate = true;
+                this.player2.player.promptedActionWindows.fate = true;
+
+                this.adept1 = this.player1.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept2 = this.player2.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+
+                //4.2
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                //4.4 action window
+                this.player1.pass();
+                this.player2.pass();
+
+                //4.6
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
             });
 
+            it('player2 should have the first option to end the round', function() {
+                expect(this.player1).toHavePrompt('Waiting for opponent to end the round');
+            });
+        });
+
+        describe('(4.9) "Fate phase ends" step', () => {
+            beforeEach(function() {
+                this.player1.player.promptedActionWindows.fate = true;
+                this.player2.player.promptedActionWindows.fate = true;
+
+                this.adept1 = this.player1.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept2 = this.player2.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+
+                //4.2
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                //4.4 action window
+                this.player1.pass();
+                this.player2.pass();
+
+                //4.6
+                this.player1.clickPrompt('Done');
+                this.player2.clickPrompt('Done');
+
+                //End of Round
+                this.player2.clickPrompt('End Round');
+                this.player1.clickPrompt('End Round');
+            });
+
             it('should raise an onPhaseEnded event', function() {
-                expect(this.game.currentPhase).toBe('regroup');
+                expect(this.game.currentPhase).toBe('dynasty');
                 expect(this.raiseEventSpy).toHaveBeenCalledWith('onPhaseEnded', { phase: 'fate' });
             });
         });

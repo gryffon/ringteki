@@ -34,7 +34,7 @@ describe('Isawa Heiko', function () {
             it('should trigger when you play a water card', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
-                this.player1.clickCard(this.solemn);
+                this.player1.clickCard(this.heiko);
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.heiko);
             });
@@ -42,7 +42,7 @@ describe('Isawa Heiko', function () {
             it('should be able to target your own characters in the conflict', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
-                this.player1.clickCard(this.solemn);
+                this.player1.clickCard(this.heiko);
                 this.player1.clickCard(this.heiko);
                 expect(this.player1).toBeAbleToSelect(this.heiko);
                 expect(this.player1).toBeAbleToSelect(this.kaede);
@@ -51,7 +51,7 @@ describe('Isawa Heiko', function () {
             it('should be able to select opponents characters that are partipating', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
-                this.player1.clickCard(this.solemn);
+                this.player1.clickCard(this.heiko);
                 this.player1.clickCard(this.heiko);
                 expect(this.player1).toBeAbleToSelect(this.makoto);
             });
@@ -59,7 +59,7 @@ describe('Isawa Heiko', function () {
             it('should not be able to select dash characters', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
-                this.player1.clickCard(this.solemn);
+                this.player1.clickCard(this.heiko);
                 this.player1.clickCard(this.heiko);
                 expect(this.player1).not.toBeAbleToSelect(this.goblin);
             });
@@ -67,7 +67,7 @@ describe('Isawa Heiko', function () {
             it('should swap the stats for the character', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
-                this.player1.clickCard(this.solemn);
+                this.player1.clickCard(this.heiko);
                 this.player1.clickCard(this.heiko);
                 this.player1.clickCard(this.makoto);
                 expect(this.makoto.getMilitarySkill()).toBe(1);
@@ -77,7 +77,7 @@ describe('Isawa Heiko', function () {
             it('should target characters at home', function() {
                 this.player2.pass();
                 this.player1.clickCard(this.against);
-                this.player1.clickCard(this.solemn);
+                this.player1.clickCard(this.heiko);
                 this.player1.clickCard(this.heiko);
                 expect(this.player1).toBeAbleToSelect(this.solemn);
             });

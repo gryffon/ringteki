@@ -39,7 +39,7 @@ describe('Political Sanction', function() {
                 this.player2.pass();
                 this.player1.playAttachment('political-sanction', this.tetsu);
                 this.player2.clickCard('against-the-waves');
-                this.player2.clickCard(this.ujina);
+                this.player2.clickCard(this.adept);
                 expect(this.player2).not.toBeAbleToSelect(this.tetsu);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });

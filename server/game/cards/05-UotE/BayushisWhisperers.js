@@ -1,25 +1,28 @@
 const DrawCard = require('../../drawcard.js');
+const AbilityDsl = require('../../abilitydsl');
 const { Players } = require('../../Constants');
 
 class BayushisWhisperers extends DrawCard {
-    setupCardAbilities(ability) {
+    setupCardAbilities() {
         this.action({
             title: 'Look at opponent\'s hand and name a card',
             condition: context => context.player.opponent && this.game.isDuringConflict(),
-            effect: 'look at {1}\'s hand',
+            effect: 'look at {1}\'s hand, then name a card',
             effectArgs: context => context.player.opponent,
-            gameAction: ability.actions.lookAt(context => ({ target: context.player.opponent.hand.sortBy(card => card.name), chatMessage: true })),
-            then: {
-                handler: context => this.game.promptWithMenu(context.player, this, {
-                    context: context,
-                    activePrompt: {
-                        menuTitle: 'Name a card',
-                        controls: [
-                            { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
-                        ]
-                    }
+            gameAction: AbilityDsl.actions.sequential([
+                AbilityDsl.actions.lookAt(context => ({ target: context.player.opponent.hand.sortBy(card => card.name), chatMessage: true })),
+                AbilityDsl.actions.handler({
+                    handler: context => this.game.promptWithMenu(context.player, this, {
+                        context: context,
+                        activePrompt: {
+                            menuTitle: 'Name a card',
+                            controls: [
+                                { type: 'card-name', command: 'menuButton', method: 'selectCardName', name: 'card-name' }
+                            ]
+                        }
+                    })
                 })
-            }
+            ])
         });
     }
 

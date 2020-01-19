@@ -8,11 +8,12 @@ describe('Akodo Toturi', function () {
                         inPlay: ['akodo-toturi']
                     },
                     player2: {
-                        inPlay: ['togashi-initiate']
+                        inPlay: ['togashi-initiate', 'isawa-kaede']
                     }
                 });
                 this.akodoToturi = this.player1.findCardByName('akodo-toturi');
                 this.togashiInitiate = this.player2.findCardByName('togashi-initiate');
+                this.isawaKaede = this.player2.findCardByName('isawa-kaede');
                 this.noMoreActions();
             });
 
@@ -50,25 +51,27 @@ describe('Akodo Toturi', function () {
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
             });
 
-            it('should force the opponent to resolve the ring effect when claimed as the defender', function () {
+            // Decemeber 2019 v12 RRG Update: Resolving the ring is now always as the attacker.
+            it('Toturi\'s controller should get to choose 1 element to resolve when winning on defense vs Isawa Kaede', function () {
                 this.togashiInitiate.fate = 1;
                 this.player1.passConflict();
                 this.noMoreActions();
                 this.initiateConflict({
                     type: 'military',
-                    attackers: [this.togashiInitiate],
+                    attackers: [this.isawaKaede],
                     defenders: [this.akodoToturi],
-                    ring: 'void'
+                    ring: 'fire'
                 });
                 this.player1.pass();
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.akodoToturi);
                 this.player1.clickCard(this.akodoToturi);
-                expect(this.player2).toHavePrompt('Void Ring');
-                expect(this.player2).toBeAbleToSelect(this.togashiInitiate);
-                expect(this.player2).not.toBeAbleToSelect(this.akodoToturi);
-                this.player2.clickCard(this.togashiInitiate);
+                expect(this.player1).toHavePrompt('Choose a ring effect to resolve (click the ring you want to resolve)');
+                this.player1.clickRing('void');
+                expect(this.player1).toBeAbleToSelect(this.togashiInitiate);
+                expect(this.player1).not.toBeAbleToSelect(this.akodoToturi);
+                this.player1.clickCard(this.togashiInitiate);
                 expect(this.togashiInitiate.fate).toBe(0);
             });
         });

@@ -58,12 +58,8 @@ describe('Akodo Motivator', function() {
             this.player1.clickCard(this.spiesAtCourt);
             expect(this.player1).toBeAbleToSelect(this.paragon);
             this.player1.clickCard(this.paragon);
-            expect(this.player2).toHavePrompt('Choose order for random discard');
-            this.player2.clickPrompt('Done');
             expect(this.player2).toBeAbleToSelect(this.motivator);
             this.player2.clickCard(this.motivator);
-            expect(this.player1).toHavePrompt('Choose order for random discard');
-            this.player1.clickPrompt('Done');
             expect(this.player1.hand.length).toBe(this.player1StartingHandSize - 3);
             expect(this.player2.hand.length).toBe(this.player2StartingHandSize - 2);
         });
@@ -82,23 +78,6 @@ describe('Akodo Motivator', function() {
             expect(this.player2).toBeAbleToSelect(this.motivator);
             this.player2.clickCard(this.motivator);
             expect(this.player1.hand.length).toBe(this.player1StartingHandSize);
-        });
-
-        it('should be able to trigger on an earth ring triggered on defense by Toturi/Hotaru', function() {
-            this.noMoreActions();
-            this.initiateConflict({
-                type: 'military',
-                ring: 'earth',
-                attackers: [this.hotaru],
-                defenders: [this.toturi]
-            });
-            this.noMoreActions();
-            expect(this.player2).toBeAbleToSelect(this.toturi);
-            this.player2.clickCard(this.toturi);
-            expect(this.player2).toBeAbleToSelect(this.motivator);
-            this.player2.clickCard(this.motivator);
-            expect(this.player1.hand.length).toBe(this.player1StartingHandSize);
-            expect(this.player2.hand.length).toBe(this.player2StartingHandSize - 1);
         });
 
         it('should make opponent discard random cards when made to discard chosen cards', function() {
@@ -120,8 +99,6 @@ describe('Akodo Motivator', function() {
             this.player2.clickPrompt('Done');
             expect(this.player2).toBeAbleToSelect(this.motivator);
             this.player2.clickCard(this.motivator);
-            expect(this.player1).toHavePrompt('Choose order for random discard');
-            this.player1.clickPrompt('Done');
             expect(this.player1.hand.length).toBe(this.player1StartingHandSize - 3);
             expect(this.player2.hand.length).toBe(this.player2StartingHandSize - 2);
         });
@@ -136,8 +113,6 @@ describe('Akodo Motivator', function() {
             this.player2.clickPrompt('Done');
             expect(this.player2).toBeAbleToSelect(this.motivator);
             this.player2.clickCard(this.motivator);
-            expect(this.player1).toHavePrompt('Choose order for random discard');
-            this.player1.clickPrompt('Done');
             expect(this.player1.hand.length).toBe(this.player1StartingHandSize - 3);
             expect(this.player2.hand.length).toBe(this.player2StartingHandSize);
         });

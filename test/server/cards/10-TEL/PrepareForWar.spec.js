@@ -109,7 +109,7 @@ describe('Prepare for War', function() {
             expect(this.player1).toHavePrompt('Do you wish to discard the status token?');
             this.player1.clickPrompt('Yes');
 
-            expect(this.akodoZentaro.isHonored).toBe(false);
+            expect(this.akodoZentaro.isHonored).toBe(true);
             expect(this.akodoZentaro.isDishonored).toBe(false);
         });
     });

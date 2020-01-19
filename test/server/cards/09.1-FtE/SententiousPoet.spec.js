@@ -5,13 +5,13 @@ describe('Sententious Poet', function() {
                 this.setupTest({
                     phase: 'conflict',
                     player1: {
-                        inPlay: ['sententious-poet', 'utaku-tetsuko']
+                        inPlay: ['sententious-poet', 'utaku-tetsuko', 'inquisitive-ishika']
                     },
                     player2: {
                         inPlay: ['wandering-ronin', 'daidoji-uji', 'master-alchemist'],
-                        hand: ['tattooed-wanderer', 'fine-katana', 'warm-welcome'],
+                        hand: ['tattooed-wanderer', 'fine-katana', 'warm-welcome', 'against-the-waves'],
                         conflictDiscard: ['finger-of-jade'],
-                        dynastyDiscard: ['doji-whisperer', 'mantis-tenkinja']
+                        dynastyDiscard: ['doji-whisperer', 'mantis-tenkinja', 'eager-scout']
                     }
                 });
                 this.sententiousPoet = this.player1.findCardByName('sententious-poet');
@@ -25,6 +25,8 @@ describe('Sententious Poet', function() {
                 this.fingerOfJade = this.player2.findCardByName('finger-of-jade');
                 this.dojiWhisperer = this.player2.findCardByName('doji-whisperer');
                 this.mantisTenkinja = this.player2.findCardByName('mantis-tenkinja');
+                this.scout = this.player2.findCardByName('eager-scout');
+                this.againstTheWaves = this.player2.findCardByName('against-the-waves');
             });
 
             it('should trigger when a character is played with a cost of 1 fate', function() {
@@ -65,33 +67,31 @@ describe('Sententious Poet', function() {
             });
 
             it('should not trigger when the cost is reduced to 0', function() {
-                this.daidojiUji.honor();
-                this.player1.placeCardInProvince(this.dojiWhisperer, 'province 1');
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.sententiousPoet],
-                    defenders: []
+                    defenders: [],
+                    ring: 'water'
                 });
-                this.player2.clickCard(this.dojiWhisperer);
-                this.player2.clickPrompt('0');
-                this.player2.clickPrompt('Conflict');
-                expect(this.dojiWhisperer.location).toBe('play area');
+                this.player2.clickCard(this.againstTheWaves);
+                this.player2.clickCard(this.masterAlchemist);
+                expect(this.masterAlchemist.bowed).toBe(true);
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
             it('should not trigger when additional fate is placed on a character (when the character fate cost was 0)', function() {
                 this.daidojiUji.honor();
-                this.player1.placeCardInProvince(this.dojiWhisperer, 'province 1');
+                this.player1.placeCardInProvince(this.scout, 'province 1');
                 this.noMoreActions();
                 this.initiateConflict({
                     attackers: [this.sententiousPoet],
                     defenders: []
                 });
-                this.player2.clickCard(this.dojiWhisperer);
+                this.player2.clickCard(this.scout);
                 this.player2.clickPrompt('2');
                 this.player2.clickPrompt('Conflict');
-                expect(this.dojiWhisperer.location).toBe('play area');
+                expect(this.scout.location).toBe('play area');
                 expect(this.player1).not.toHavePrompt('Triggered Abilities');
                 expect(this.player1).toHavePrompt('Conflict Action Window');
             });

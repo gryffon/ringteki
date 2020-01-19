@@ -82,12 +82,13 @@ describe('Soul Beyond Reproach', function() {
                     this.player1.clickCard(this.hotaru);
                 });
 
-                it('should not apply the post-THEN second honor action', function() {
+                it('should still apply the post-THEN second honor action', function() {
                     expect(this.player2).toHavePrompt('Triggered Abilities');
                     expect(this.player2).toBeAbleToSelect(this.rumormonger);
                     this.player2.clickCard(this.rumormonger);
                     this.player2.clickCard(this.yoshi);
-                    expect(this.hotaru.isDishonored).toBe(true);
+                    expect(this.hotaru.isDishonored).toBe(false);
+                    expect(this.hotaru.isHonored).toBe(false);
                     expect(this.yoshi.isHonored).toBe(true);
                 });
             });
