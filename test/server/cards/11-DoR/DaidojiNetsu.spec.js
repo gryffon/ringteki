@@ -6,8 +6,8 @@ describe('Daidoji Netsu', function() {
                     phase: 'conflict',
                     player1: {
                         inPlay: ['daidoji-netsu', 'doji-hotaru-2', 'steadfast-witch-hunter'],
-                        hand: ['way-of-the-crane', 'way-of-the-scorpion', 'noble-sacrifice', 'assassination', 'way-of-the-crab', 'seal-of-the-crab', 'charge'],
-                        dynastyDiscard: ['funeral-pyre', 'doji-kuwanan']
+                        hand: ['way-of-the-crane', 'way-of-the-scorpion', 'noble-sacrifice', 'assassination', 'way-of-the-crab', 'seal-of-the-crab', 'charge', 'forebearer-s-echoes', 'feral-ningyo', 'adept-of-shadows'],
+                        dynastyDiscard: ['funeral-pyre', 'doji-kuwanan', 'fushicho', 'isawa-ujina']
                     },
                     player2: {
                         inPlay: ['doomed-shugenja', 'steadfast-witch-hunter'],
@@ -28,6 +28,11 @@ describe('Daidoji Netsu', function() {
                 this.wayOfTheCrab = this.player1.findCardByName('way-of-the-crab');
                 this.sealOfTheCrab = this.player1.findCardByName('seal-of-the-crab');
                 this.charge = this.player1.findCardByName('charge');
+                this.echoes = this.player1.findCardByName('forebearer-s-echoes');
+                this.ningyo = this.player1.findCardByName('feral-ningyo');
+                this.shadows = this.player1.findCardByName('adept-of-shadows');
+                this.fushicho = this.player1.findCardByName('fushicho');
+                this.ujina = this.player1.findCardByName('isawa-ujina');
 
                 this.doomed = this.player2.findCardByName('doomed-shugenja');
                 this.tadaka = this.player2.findCardByName('isawa-tadaka-2');
@@ -120,6 +125,76 @@ describe('Daidoji Netsu', function() {
                 expect(this.player1).toBeAbleToSelect(this.netsu);
                 expect(this.player1).not.toBeAbleToSelect(this.hotaru);
             });
+
+            it('should not allow abilities to be used that return to hand', function() {
+                this.player2.pass();
+                this.player1.clickCard(this.shadows);
+                this.player1.clickPrompt('0');
+                this.player2.pass();
+                expect(this.player1).toHavePrompt('Action Window');
+                this.player1.clickCard(this.shadows);
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.shadows.location).toBe('play area');
+            });
+
+            it('should not put ningyo back into the deck', function() {
+                this.player1.fate = 0;
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.netsu],
+                    defenders: [this.doomed],
+                    ring: 'water'
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.ningyo);
+                this.netsu.bowed = true;
+                this.ningyo.bowed = true;
+                this.player2.pass();
+                this.player1.pass();
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.ningyo.location).toBe('play area');
+            });
+
+            it('should not put cards back into the deck after echoes', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.netsu],
+                    defenders: [this.doomed],
+                    ring: 'water'
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.echoes);
+                this.player1.clickCard(this.fushicho);
+                this.netsu.bowed = true;
+                this.fushicho.bowed = true;
+                this.player2.pass();
+                this.player1.pass();
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.fushicho.location).toBe('play area');
+            });
+
+            it('should not allow removing cards from the game', function() {
+                this.noMoreActions();
+                this.netsu.fate = 1;
+                this.initiateConflict({
+                    type: 'military',
+                    attackers: [this.netsu],
+                    defenders: [this.doomed],
+                    ring: 'void'
+                });
+                this.player2.pass();
+                this.player1.clickCard(this.echoes);
+                this.player1.clickCard(this.ujina);
+                this.netsu.bowed = true;
+                this.ujina.bowed = true;
+                this.player2.pass();
+                this.player1.pass();
+                expect(this.player1).toHavePrompt('Action Window');
+                expect(this.ujina.location).toBe('play area');
+            });
+
         });
 
         describe('Daidoji Netsu\'s ability (Double Netsu)', function() {
