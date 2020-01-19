@@ -5,13 +5,14 @@ import { EventNames } from '../Constants';
 
 export interface TakeFateRingProperties extends RingActionProperties {
     amount?: number,
-    removeOnly?: boolean
+    removeOnly?: boolean,
+    fromDeclaration?: boolean
 }
 
 export class TakeFateRingAction extends RingAction {
     name = 'takeFate';
     eventName = EventNames.OnMoveFate;
-    defaultProperties: TakeFateRingProperties = { amount: 1, removeOnly: false };
+    defaultProperties: TakeFateRingProperties = { amount: 1, removeOnly: false, fromDeclaration: false };
     constructor(properties: ((context: AbilityContext) => TakeFateRingProperties) | TakeFateRingProperties) {
         super(properties);
     }
@@ -33,6 +34,7 @@ export class TakeFateRingAction extends RingAction {
         event.origin = ring;
         event.context = context;
         event.recipient = properties.removeOnly ? null : context.player;
+        event.fromDeclaration = properties.fromDeclaration;
     }
 
     checkEventCondition(event): boolean {

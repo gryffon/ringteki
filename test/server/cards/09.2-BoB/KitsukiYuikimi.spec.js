@@ -57,7 +57,7 @@ describe('Kitsuki Yuikimi', function() {
                     ring: 'air'
                 });
                 this.player1.clickCard(this.kitsukuYuikimi);
-                expect(this.getChatLogs(2)).toContain('player1 uses Kitsuki Yuikimi to prevent Kitsuki Yuikimi from being chosen as the target of player2\'s triggered abilities until the end of the conflict');
+                expect(this.getChatLogs(3)).toContain('player1 uses Kitsuki Yuikimi to prevent Kitsuki Yuikimi from being chosen as the target of player2\'s triggered abilities until the end of the conflict');
                 expect(this.player1.player.fate).toBe(fate + 1);
                 expect(this.game.rings.air.fate).toBe(0);
                 this.player2.clickPrompt('Done');

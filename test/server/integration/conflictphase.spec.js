@@ -458,7 +458,7 @@ describe('conflict phase', function() {
                 });
                 expect(this.player1.player.fate).toBe(fate + 2);
                 expect(this.game.rings.fire.fate).toBe(0);
-                expect(this.getChatLogs(1)).toContain('player1 takes 2 fate from Fire Ring');
+                expect(this.getChatLogs(2)).toContain('player1 takes 2 fate from Fire Ring');
             });
 
             it('should reveal the province', function() {

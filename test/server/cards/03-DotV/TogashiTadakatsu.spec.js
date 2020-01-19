@@ -60,8 +60,9 @@ describe('Togashi Tadakatsu', function() {
                     expect(this.game.rings.fire.fate).toBe(0);
                     expect(this.player1.player.fate).toBe(1);
                     expect(this.player2).toHavePrompt('Triggered Abilities');
-                    expect(this.player2).toBeAbleToSelect('mantra-of-fire');
                     expect(this.player2).toBeAbleToSelect('enlightened-warrior');
+                    this.player2.clickCard('enlightened-warrior');
+                    expect(this.player2).toBeAbleToSelect('mantra-of-fire');
                 });
             });
         });

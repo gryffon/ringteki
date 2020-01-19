@@ -5,7 +5,7 @@ class EnlightenedWarrior extends DrawCard {
         this.reaction({
             title: 'Gain 1 fate',
             when: {
-                onConflictDeclared: (event, context) => event.ringFate > 0 && event.conflict.attackingPlayer === context.player.opponent
+                onConflictDeclaredRingSelected: (event, context) => event.ringFate > 0 && event.conflict.attackingPlayer === context.player.opponent
             },
             gameAction: ability.actions.placeFate()
         });

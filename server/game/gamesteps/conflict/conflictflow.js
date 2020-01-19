@@ -38,8 +38,9 @@ class ConflictFlow extends BaseStepWithPipeline {
             new SimpleStep(this.game, () => this.payAttackerCosts()),
             new SimpleStep(this.game, () => this.promptForCovert()),
             new SimpleStep(this.game, () => this.resolveCovert()),
-            new SimpleStep(this.game, () => this.raisePreRevealEvents()),
             new SimpleStep(this.game, () => this.raiseDeclarationEvents()),
+            new SimpleStep(this.game, () => this.raisePreRevealEvents()),
+            new SimpleStep(this.game, () => this.revealProvinceInitiateConflict()),
             new SimpleStep(this.game, () => this.announceAttackerSkill()),
             new SimpleStep(this.game, () => this.promptForDefenders()),
             new SimpleStep(this.game, () => this.announceDefenderSkill()),
@@ -202,10 +203,8 @@ class ConflictFlow extends BaseStepWithPipeline {
             return;
         }
 
-        this.game.addMessage('{0} is initiating a {1} conflict at {2}, contesting {3}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictProvince, this.conflict.ring);
-
         let ring = this.conflict.ring;
-        let events = [this.game.getEvent(EventNames.OnConflictDeclared, {
+        let events = [this.game.getEvent(EventNames.OnConflictDeclaredRingSelected, {
             conflict: this.conflict,
             type: this.conflict.conflictType,
             ring: ring,
@@ -217,10 +216,29 @@ class ConflictFlow extends BaseStepWithPipeline {
             this.game.actions.takeFateFromRing({
                 origin: ring,
                 recipient: this.conflict.attackingPlayer,
-                amount: ring.fate
+                amount: ring.fate,
+                fromDeclaration: true
             }).addEventsToArray(events, this.game.getFrameworkContext(this.conflict.attackingPlayer));
             this.game.addMessage('{0} takes {1} fate from {2}', this.conflict.attackingPlayer, ring.fate, ring);
         }
+        this.game.openEventWindow(events);
+    }
+
+    revealProvinceInitiateConflict() {
+        if(this.conflict.conflictPassed) {
+            return;
+        }
+
+        this.game.addMessage('{0} is initiating a {1} conflict at {2}, contesting {3}', this.conflict.attackingPlayer, this.conflict.conflictType, this.conflict.conflictProvince, this.conflict.ring);
+
+        let ring = this.conflict.ring;
+        let events = [this.game.getEvent(EventNames.OnConflictDeclared, {
+            conflict: this.conflict,
+            type: this.conflict.conflictType,
+            ring: ring,
+            attackers: this.conflict.attackers.slice(),
+            ringFate: ring.fate
+        })];
 
         if(!this.conflict.isSinglePlayer) {
             this.conflict.conflictProvince.inConflict = true;
