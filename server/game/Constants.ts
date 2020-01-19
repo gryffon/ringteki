@@ -225,6 +225,7 @@ export enum EventNames {
     OnRoundEnded = 'onRoundEnded',
     OnFateCollected = 'onFateCollected',
     OnCardAttached = 'onCardAttached',
+    OnCardDetached = 'onCardDetached',
     OnCardHonored = 'onCardHonored',
     OnCardDishonored = 'onCardDishonored',
     OnCardBowed = 'onCardBowed',

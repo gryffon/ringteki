@@ -12,6 +12,7 @@ import { ChosenDiscardAction, ChosenDiscardProperties } from './ChosenDiscardAct
 import { ClaimRingAction, ClaimRingProperties } from './ClaimRingAction';
 import { ConditionalAction, ConditionalActionProperties } from './ConditionalAction';
 import { CreateTokenAction, CreateTokenProperties } from './CreateTokenAction';
+import { DetachAction, DetachActionProperties } from './DetachAction';
 import { DeckSearchAction,  DeckSearchProperties} from './DeckSearchAction';
 import { DiscardFavorAction, DiscardFavorProperties } from './DiscardFavorAction';
 import { DiscardFromPlayAction, DiscardFromPlayProperties } from './DiscardFromPlayAction';
@@ -83,6 +84,7 @@ const GameActions = {
     cardLastingEffect: (propertyFactory: LastingEffectCardProperties | ((context: TriggeredAbilityContext) => LastingEffectCardProperties)) => new LastingEffectCardAction(propertyFactory),
     claimImperialFavor: (propertyFactory: ClaimFavorProperties | ((context: TriggeredAbilityContext) => ClaimFavorProperties)) => new ClaimFavorAction(propertyFactory),
     createToken: (propertyFactory: CreateTokenProperties | ((context: TriggeredAbilityContext) => CreateTokenProperties) = {}) => new CreateTokenAction(propertyFactory),
+    detach: (propertyFactory: DetachActionProperties | ((context: TriggeredAbilityContext) => DetachActionProperties) = {}) => new DetachAction(propertyFactory),
     discardCard: (propertyFactory: DiscardCardProperties | ((context: TriggeredAbilityContext) => DiscardCardProperties) = {}) => new DiscardCardAction(propertyFactory),
     discardFromPlay: (propertyFactory: DiscardFromPlayProperties | ((context: TriggeredAbilityContext) => DiscardFromPlayProperties) = {}) => new DiscardFromPlayAction(propertyFactory),
     dishonor: (propertyFactory: DishonorProperties | ((context: TriggeredAbilityContext) => DishonorProperties) = {}) => new DishonorAction(propertyFactory),
