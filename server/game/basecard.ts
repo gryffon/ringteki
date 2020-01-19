@@ -497,7 +497,7 @@ class BaseCard extends EffectSource {
             this.persistentEffect({
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyMilitarySkill(militaryBonus)
+                effect: AbilityDsl.effects.attachmentMilitarySkillModifier(militaryBonus)
             });
         }
         let politicalBonus = parseInt(this.cardData.political_bonus);
@@ -505,7 +505,7 @@ class BaseCard extends EffectSource {
             this.persistentEffect({
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyPoliticalSkill(politicalBonus)
+                effect: AbilityDsl.effects.attachmentPoliticalSkillModifier(politicalBonus)
             });
         }
     }

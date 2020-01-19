@@ -155,7 +155,7 @@ class ConflictFlow extends BaseStepWithPipeline {
                     cardType: CardTypes.Character,
                     controller: Players.Opponent,
                     source: 'Choose Covert',
-                    cardCondition: card => card.canBeBypassedByCovert(context),
+                    cardCondition: card => card.canBeBypassedByCovert(context) && card.checkRestrictions('target', context),
                     onSelect: (player, card) => {
                         context['target'] = context.targets.target = card;
                         this.covert.push(context);
