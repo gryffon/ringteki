@@ -152,7 +152,7 @@ describe('Asahina Maeko', function() {
                 this.player1.clickCard(this.whisperer);
                 this.player1.clickPrompt('0');
                 this.player1.clickPrompt('Conflict');
-                expect(this.player1.fate).toBe(p1fate - 1);
+                expect(this.player1.fate).toBe(p1fate - 2);
             });
         });
     });
