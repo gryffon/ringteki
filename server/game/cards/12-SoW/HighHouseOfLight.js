@@ -20,7 +20,7 @@ class HighHouseOfLight extends StrongholdCard {
                         })
                     })),
                     AbilityDsl.actions.conditional({
-                        condition: context => this.game.currentConflict.getNumberOfCardsPlayed(context.player) >= 5 && context.player.checkRestrictions('takeFateFromRings', context),
+                        condition: context => this.game.currentConflict.getNumberOfCardsPlayed(context.player) >= 5,
                         trueGameAction: AbilityDsl.actions.selectRing(context => ({
                             activePromptTitle: 'Choose a ring to take a fate from',
                             message: '{0} moves a fate from the {1} to {2}',
