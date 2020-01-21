@@ -9,8 +9,9 @@ describe('Chukan Nobue', function() {
                         hand: ['fine-katana', 'ornate-fan']
                     },
                     player2: {
-                        inPlay: ['paragon-of-grace'],
+                        inPlay: ['paragon-of-grace', 'kitsuki-investigator', 'isawa-tadaka-2'],
                         hand: ['policy-debate'],
+                        dynastyDiscard: ['solemn-scholar', 'keeper-initiate'],
                         provinces: ['upholding-authority']
                     }
                 });
@@ -19,6 +20,10 @@ describe('Chukan Nobue', function() {
                 this.fan = this.player1.findCardByName('ornate-fan');
                 this.katana = this.player1.findCardByName('fine-katana');
                 this.paragon = this.player2.findCardByName('paragon-of-grace');
+                this.investigator = this.player2.findCardByName('kitsuki-investigator');
+                this.tadaka = this.player2.findCardByName('isawa-tadaka-2');
+                this.scholar = this.player2.findCardByName('solemn-scholar');
+                this.keeper = this.player2.findCardByName('keeper-initiate');
             });
 
             it('paragon should not make the player choosen and discard a card', function() {
@@ -48,6 +53,63 @@ describe('Chukan Nobue', function() {
                 expect(this.player2).toHavePrompt('Conflict Action Window');
                 this.player2.clickCard(this.paragon);
                 expect(this.player2).toHavePrompt('Conflict Action Window');
+            });
+
+            it('investigator should see hand but not allow discarding', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.nobue],
+                    defenders: [this.investigator],
+                    provinces: ['upholding-authority']
+                });
+
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.investigator);
+                this.player2.clickRing('fire');
+                expect(this.game.rings.fire.fate).toBe(1);
+                expect(this.getChatLogs(3)).toContain('Kitsuki Investigator sees Fine Katana and Ornate Fan');
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('tadaka should see hand but not allow discarding', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.nobue],
+                    defenders: [this.investigator],
+                    provinces: ['upholding-authority']
+                });
+
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.tadaka);
+                this.player2.clickCard(this.scholar);
+                this.player2.clickCard(this.keeper);
+                this.player2.clickPrompt('Done');
+                expect(this.scholar.location).toBe('removed from game');
+                expect(this.keeper.location).toBe('removed from game');
+                expect(this.getChatLogs(4)).toContain('player2 uses Isawa Tadaka, removing Solemn Scholar and Keeper Initiate from the game to look at 2 random cards in player1\'s hand');
+                expect(this.getChatLogs(3).includes('Isawa Tadaka sees Fine Katana and Ornate Fan') || this.getChatLogs(3).includes('Isawa Tadaka sees Ornate Fan and Fine Katana')).toBe(true);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
+            });
+
+            it('tadaka should not see entire hand', function() {
+                this.noMoreActions();
+                this.initiateConflict({
+                    type: 'political',
+                    attackers: [this.nobue],
+                    defenders: [this.investigator],
+                    provinces: ['upholding-authority']
+                });
+
+                expect(this.player2).toHavePrompt('Conflict Action Window');
+                this.player2.clickCard(this.tadaka);
+                this.player2.clickCard(this.scholar);
+                this.player2.clickPrompt('Done');
+                expect(this.scholar.location).toBe('removed from game');
+                expect(this.getChatLogs(4)).toContain('player2 uses Isawa Tadaka, removing Solemn Scholar from the game to look at 1 random card in player1\'s hand');
+                expect(this.getChatLogs(3).includes('Isawa Tadaka sees Fine Katana') || this.getChatLogs(3).includes('Isawa Tadaka sees Ornate Fan')).toBe(true);
+                expect(this.player1).toHavePrompt('Conflict Action Window');
             });
 
             it('upholding should let the oppponent look at the hand but not select any cards', function() {
