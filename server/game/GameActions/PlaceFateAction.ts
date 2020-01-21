@@ -4,6 +4,7 @@ import Player = require('../player');
 import Ring = require('../ring');
 import { CardGameAction, CardActionProperties } from './CardGameAction';
 import { Locations, CardTypes, EventNames }  from '../Constants';
+import { type } from 'os';
 
 export interface PlaceFateProperties extends CardActionProperties {
     amount?: number,
@@ -29,7 +30,16 @@ export class PlaceFateAction extends CardGameAction {
         if(amount === 0 || card.location !== Locations.PlayArea) {
             return false;
         }
+
+        if(origin && this.isRing(origin) && !context.player.checkRestrictions('takeFateFromRings', context)){
+            return false;
+        }
+
         return super.canAffect(card, context) && this.checkOrigin(origin, context);
+    }
+
+    isRing(x: any): x is Ring {
+        return "element" in x;
     }
 
     checkOrigin(origin: Player | Ring | DrawCard, context: AbilityContext): boolean {
@@ -58,7 +68,7 @@ export class PlaceFateAction extends CardGameAction {
 
     isEventFullyResolved(event, card: DrawCard, context: AbilityContext, additionalProperties): boolean {
         let { amount, origin } = this.getProperties(context, additionalProperties) as PlaceFateProperties;
-        return !event.cancelled && event.name === this.eventName && 
+        return !event.cancelled && event.name === this.eventName &&
             event.fate === amount && event.origin === origin && event.recipient === card;
     }
 
