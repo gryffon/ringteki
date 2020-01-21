@@ -4,6 +4,7 @@ import BaseCard = require('../basecard');
 import Ring = require('../ring');
 import EffectSource = require('../EffectSource');
 import { CardTypes, EffectNames, Locations } from '../Constants.js';
+import { LoseFateAction } from './LoseFateAction';
 
 export interface CardActionProperties extends GameActionProperties {
     target?: BaseCard | BaseCard[];
@@ -28,9 +29,26 @@ export class CardGameAction extends GameAction {
     addEventsToArray(events: any[], context: AbilityContext, additionalProperties ={}): void {
         const { target } = this.getProperties(context, additionalProperties);
         for(const card of target as BaseCard[]) {
+            let allCostsPaid = true;
             const additionalCosts = card.getEffects(EffectNames.UnlessActionCost).filter(properties => properties.actionName === this.name);
+
+            if (context.player && context.ability && context.ability.targets && context.ability.targets.length > 0) {
+                const targetingCosts = context.player.getTargetingCost(context.source, card);
+                if (targetingCosts > 0) {
+                    let properties = { amount: targetingCosts, target: context.player };
+                    let cost = new LoseFateAction(properties);
+                    if (cost.canAffect(context.player, context)) {
+                        context.game.addMessage('{0} pays {1} fate in order to target {2}', context.player, targetingCosts, card.name);
+                        cost.resolve(context.player, context);
+                    }
+                    else { 
+                        context.game.addMessage('{0} cannot pay {1} fate in order to target {2}', context.player, targetingCosts, card.name);
+                        allCostsPaid = false;
+                    }
+                }
+            }
+            
             if(additionalCosts.length > 0) {
-                let allCostsPaid = true;
                 for(const properties of additionalCosts) {
                     context.game.queueSimpleStep(() => {
                         let cost = properties.cost;
@@ -65,7 +83,9 @@ export class CardGameAction extends GameAction {
                     }
                 })
             } else {
-                events.push(this.getEvent(card, context, additionalProperties));
+                if (allCostsPaid) {
+                    events.push(this.getEvent(card, context, additionalProperties));
+                }
             }
         }
     }

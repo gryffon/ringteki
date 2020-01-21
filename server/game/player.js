@@ -13,7 +13,7 @@ const RoleCard = require('./rolecard.js');
 const StrongholdCard = require('./strongholdcard.js');
 const Ring = require('./ring.js');
 
-const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes, ConflictTypes } = require('./Constants');
+const { Locations, Decks, EffectNames, CardTypes, PlayTypes, EventNames, AbilityTypes, ConflictTypes, Players } = require('./Constants');
 const provinceLocations = [Locations.StrongholdProvince, Locations.ProvinceOne, Locations.ProvinceTwo, Locations.ProvinceThree, Locations.ProvinceFour];
 
 class Player extends GameObject {
@@ -623,6 +623,45 @@ class Player extends GameObject {
         var matchingReducers = _.filter(this.costReducers, reducer => reducer.canReduce(playingType, card, target, ignoreType));
         var reducedCost = _.reduce(matchingReducers, (cost, reducer) => cost - reducer.getAmount(card, this), baseCost);
         return Math.max(reducedCost, 0);
+    }
+
+    getAvailableAlternateFate(playingType, context) {
+        const card = context.source;
+        let alternateFatePools = this.getAlternateFatePools(playingType, card);
+        let alternateFate = alternateFatePools.reduce((total, pool) => total + pool.fate, 0);
+        return Math.max(alternateFate, 0);
+    }
+
+    getTargetingCost(abilitySource, targets) {
+        let targetCost = 0;
+        if(targets) {
+            if(!Array.isArray(targets)) {
+                targets = [targets];
+            }
+
+            targets = targets.filter(a => !_.isEmpty(a));
+            targets.forEach(t => {
+                t.getEffects(EffectNames.FateCostToTarget).forEach(effect => {
+                    let typeMatch = true;
+                    let controllerMatch = true;
+                    if(effect.cardType && abilitySource.type !== effect.cardType) {
+                        typeMatch = false;
+                    }
+                    if(effect.targetPlayer && effect.targetPlayer === Players.Self && abilitySource.controller !== t.controller) {
+                        controllerMatch = false;
+                    }
+                    if(effect.targetPlayer && effect.targetPlayer === Players.Opponent && abilitySource.controller !== t.controller.opponent) {
+                        controllerMatch = false;
+                    }
+
+                    if(typeMatch && controllerMatch) {
+                        targetCost = targetCost + effect.amount;
+                    }
+                });
+            });
+        }
+
+        return targetCost;
     }
 
     /**

@@ -19,8 +19,10 @@ class ExactlyXCardSelector extends BaseCardSelector {
     }
 
     hasEnoughTargets(context, choosingPlayer) {
+        let matchedCards = [];
         let numMatchingCards = context.game.allCards.reduce((total, card) => {
-            if(this.canTarget(card, context, choosingPlayer)) {
+            if(this.canTarget(card, context, choosingPlayer, matchedCards)) {
+                matchedCards.push(card);
                 return total + 1;
             }
             return total;
