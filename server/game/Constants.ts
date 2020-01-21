@@ -162,10 +162,12 @@ export enum TargetModes {
     Token = 'token',
     AutoSingle = 'autoSingle',
     Exactly = 'exactly',
+    ExactlyVariable = 'exactlyVariable',
     MaxStat = 'maxStat',
     Single = 'single',
     Unlimited = 'unlimited',
-    UpTo = 'upTo'
+    UpTo = 'upTo',
+    UpToVariable = 'upToVariable'
 };
 
 export enum Phases {

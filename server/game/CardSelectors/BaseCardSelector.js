@@ -101,7 +101,7 @@ class BaseCardSelector {
         return this.findPossibleCards(context).filter(card => this.canTarget(card, context, choosingPlayer));
     }
 
-    hasEnoughSelected(selectedCards) {
+    hasEnoughSelected(selectedCards, context) { // eslint-disable-line no-unused-vars
         return this.optional || selectedCards.length > 0;
     }
 
@@ -109,11 +109,11 @@ class BaseCardSelector {
         return this.findPossibleCards(context).some(card => this.canTarget(card, context, choosingPlayer));
     }
 
-    defaultActivePromptTitle() {
+    defaultActivePromptTitle(context) { // eslint-disable-line no-unused-vars
         return 'Choose cards';
     }
 
-    automaticFireOnSelect() {
+    automaticFireOnSelect(context) { // eslint-disable-line no-unused-vars
         return false;
     }
 
@@ -121,11 +121,11 @@ class BaseCardSelector {
         return false;
     }
 
-    hasReachedLimit(selectedCards) { // eslint-disable-line no-unused-vars
+    hasReachedLimit(selectedCards, context) { // eslint-disable-line no-unused-vars
         return false;
     }
 
-    hasExceededLimit(selectedCards) { // eslint-disable-line no-unused-vars
+    hasExceededLimit(selectedCards, context) { // eslint-disable-line no-unused-vars
         return false;
     }
 
