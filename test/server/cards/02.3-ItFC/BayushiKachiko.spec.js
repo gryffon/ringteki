@@ -7,7 +7,7 @@ describe('Bayushi Kachiko', function() {
                     inPlay: ['bayushi-kachiko']
                 },
                 player2: {
-                    inPlay: ['shrewd-yasuki', 'borderlands-defender'],
+                    inPlay: ['shrewd-yasuki', 'borderlands-defender', 'kaito-temple-protector'],
                     hand: ['ready-for-battle', 'clarity-of-purpose']
                 }
             });
@@ -19,18 +19,23 @@ describe('Bayushi Kachiko', function() {
                 this.initiateConflict({
                     type: 'political',
                     attackers: ['bayushi-kachiko'],
-                    defenders: ['shrewd-yasuki', 'borderlands-defender']
+                    defenders: ['shrewd-yasuki', 'borderlands-defender', 'kaito-temple-protector']
                 });
                 this.player2.clickPrompt('Pass');
                 this.player1.clickCard('bayushi-kachiko');
             });
 
-            it('should not be able to target a character who cannot be sent home', function() {
+            it('should not be able to target a character who cannot be sent home or bowed', function() {
                 this.borderlandsDefender = this.player2.findCardByName('borderlands-defender');
                 expect(this.player1).not.toBeAbleToSelect(this.borderlandsDefender);
             });
 
-            it('should send an defender home', function() {
+            it('should be able to target a character who cannot be sent home but can be bowed', function() {
+                this.protector = this.player2.findCardByName('kaito-temple-protector');
+                expect(this.player1).toBeAbleToSelect(this.protector);
+            });
+
+            it('should send an defender home if able', function() {
                 this.shrewdYasuki = this.player1.clickCard('shrewd-yasuki', 'any', 'opponent');
                 expect(this.shrewdYasuki.inConflict).toBe(false);
                 expect(this.game.currentConflict.defenders).not.toContain(this.shrewdYasuki);
@@ -65,7 +70,7 @@ describe('Bayushi Kachiko', function() {
         });
 
         describe('if her ability is used and the target is not sent home', function() {
-            it('her controller should not be prompted to bow the target', function() {
+            it('her controller should still be prompted to bow the target', function() {
                 this.initiateConflict({
                     type: 'political',
                     attackers: ['bayushi-kachiko'],
@@ -91,7 +96,7 @@ describe('Bayushi Kachiko', function() {
 
                 expect(this.shrewdYasuki.inConflict).toBe(true);
                 expect(this.game.currentConflict.defenders).toContain(this.shrewdYasuki);
-                expect(this.player1).not.toHavePrompt('Do you want to bow Shrewd Yasuki?');
+                expect(this.player1).toHavePrompt('Do you want to bow Shrewd Yasuki?');
             });
         });
 

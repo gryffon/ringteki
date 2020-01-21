@@ -50,7 +50,7 @@ describe('Fire Elemental Guard', function() {
                 this.player1.playAttachment(this.embraceTheVoid, this.fireElementalGuard);
                 this.player2.pass();
                 this.player1.clickCard(this.againstTheWaves);
-                this.player1.clickCard(this.soshiIllusionist);
+                this.player1.clickCard(this.fireElementalGuard);
                 this.player2.pass();
                 this.player1.playAttachment(this.graspOfEarth, this.fireElementalGuard);
                 this.player2.pass();
@@ -74,7 +74,7 @@ describe('Fire Elemental Guard', function() {
                         this.player1.playAttachment(this.embraceTheVoid, this.fireElementalGuard);
                         this.player2.pass();
                         this.player1.clickCard(this.againstTheWaves);
-                        this.player1.clickCard(this.soshiIllusionist);
+                        this.player1.clickCard(this.fireElementalGuard);
                         this.player2.playAttachment(this.cloudTheMind, this.soshiIllusionist);
                         this.player1.playAttachment(this.graspOfEarth, this.fireElementalGuard);
                         this.player2.pass();
@@ -101,8 +101,6 @@ describe('Fire Elemental Guard', function() {
 
                     it('should not be triggerable after the conflict ends', function() {
                         this.player1.pass();
-                        this.player1.clickPrompt('Yes');
-                        this.player1.clickPrompt('Don\'t resolve');
                         expect(this.player1).toHavePrompt('Action Window');
                         this.player1.clickCard(this.fireElementalGuard);
                         expect(this.player1).toHavePrompt('Action Window');
@@ -114,7 +112,7 @@ describe('Fire Elemental Guard', function() {
                     this.player1.playAttachment(this.embraceTheVoid, this.fireElementalGuard);
                     this.player2.pass();
                     this.player1.clickCard(this.againstTheWaves);
-                    this.player1.clickCard(this.soshiIllusionist);
+                    this.player1.clickCard(this.fireElementalGuard);
                     this.player2.playAttachment(this.cloudTheMind, this.fireElementalGuard);
                     expect(this.player1).toHavePrompt('Conflict Action Window');
                     this.player1.clickCard(this.fireElementalGuard);

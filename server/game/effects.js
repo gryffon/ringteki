@@ -161,6 +161,7 @@ const Effects = {
     setConflictTotalSkill: (value) => EffectBuilder.player.static(EffectNames.SetConflictTotalSkill, value),
     showTopConflictCard: () => EffectBuilder.player.static(EffectNames.ShowTopConflictCard),
     showTopDynastyCard: () => EffectBuilder.player.static(EffectNames.ShowTopDynastyCard),
+    eventsCannotBeCancelled: () => EffectBuilder.player.static(EffectNames.EventsCannotBeCancelled),
     // Conflict effects
     cannotContribute: (func) => EffectBuilder.conflict.dynamic(EffectNames.CannotContribute, func),
     changeConflictSkillFunction: (func) => EffectBuilder.conflict.static(EffectNames.ChangeConflictSkillFunction, func), // TODO: Add this to lasting effect checks

@@ -51,7 +51,7 @@ import { RefillFaceupAction, RefillFaceupProperties } from './RefillFaceupAction
 import { RemoveFateAction, RemoveFateProperties } from './RemoveFateAction';
 import { RemoveFromGameAction, RemoveFromGameProperties } from './RemoveFromGameAction';
 import { ResolveAbilityAction, ResolveAbilityProperties } from './ResolveAbilityAction';
-import { ResolveConflictRingAction, ResolveConflictRingProperties } from './ResolveConflictRingAction';
+import { ResolveConflictRingAction } from './ResolveConflictRingAction';
 import { ResolveElementAction, ResolveElementProperties } from './ResolveElementAction';
 import { ReturnRingAction, ReturnRingProperties } from './ReturnRingAction';
 import { ReturnToDeckAction, ReturnToDeckProperties } from './ReturnToDeckAction';
@@ -73,6 +73,7 @@ import { TransferHonorAction, TransferHonorProperties } from './TransferHonorAct
 import { TurnCardFacedownAction, TurnCardFacedownProperties } from './TurnCardFacedownAction';
 import { GloryCountAction, GloryCountProperties } from './GloryCountAction';
 import { ClaimFavorAction, ClaimFavorProperties } from './ClaimFavorAction';
+import { RingActionProperties } from './RingAction';
 
 const GameActions = {
     // card
@@ -130,7 +131,7 @@ const GameActions = {
     takeHonor: (propertyFactory: TransferHonorProperties | ((context: TriggeredAbilityContext) => TransferHonorProperties) = {}) => new TransferHonorAction(propertyFactory), // amount = 1
     // ring actions
     placeFateOnRing: (propertyFactory: PlaceFateRingProperties | ((context: TriggeredAbilityContext) => PlaceFateRingProperties) = {}) => new PlaceFateRingAction(propertyFactory), // amount = 1, origin
-    resolveConflictRing: (propertyFactory: ResolveConflictRingProperties | ((context: TriggeredAbilityContext) => ResolveConflictRingProperties) = {}) => new ResolveConflictRingAction(propertyFactory), // resolveAsAttacker = true
+    resolveConflictRing: (propertyFactory: RingActionProperties | ((context: TriggeredAbilityContext) => RingActionProperties) = {}) => new ResolveConflictRingAction(propertyFactory), // resolveAsAttacker = true
     resolveRingEffect: (propertyFactory: ResolveElementProperties | ((context: TriggeredAbilityContext) => ResolveElementProperties) = {}) => new ResolveElementAction(propertyFactory), // options = false
     returnRing: (propertyFactory: ReturnRingProperties | ((context: TriggeredAbilityContext) => ReturnRingProperties) = {}) => new ReturnRingAction(propertyFactory),
     ringLastingEffect: (propertyFactory: LastingEffectRingProperties | ((context: TriggeredAbilityContext) => LastingEffectRingProperties)) => new LastingEffectRingAction(propertyFactory), // duration = 'untilEndOfConflict', effect, condition, until

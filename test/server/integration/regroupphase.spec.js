@@ -1,4 +1,4 @@
-describe('regroup phase', function() {
+xdescribe('regroup phase', function() {
     integration(function() {
         // Action window opens
         describe('Regroup Action Phase', function() {

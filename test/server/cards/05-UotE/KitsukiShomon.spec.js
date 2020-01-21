@@ -102,7 +102,7 @@ describe('Kitsuki Shomon', function() {
                 expect(this.kitsukiShomon.bowed).toBe(true);
             });
 
-            it('should stop Mark of Shame if the pre-then dishonor is redirected', function() {
+            it('should not stop Mark of Shame if the pre-then dishonor is redirected', function() {
                 this.kitsukiShomon.honor();
                 expect(this.kitsukiShomon.isHonored).toBe(true);
                 this.markOfShame = this.player2.playAttachment('mark-of-shame', this.doomedShugenja);
@@ -112,7 +112,7 @@ describe('Kitsuki Shomon', function() {
                 expect(this.player1).toHavePrompt('Triggered Abilities');
                 expect(this.player1).toBeAbleToSelect(this.kitsukiShomon);
                 this.player1.clickCard(this.kitsukiShomon);
-                expect(this.doomedShugenja.isDishonored).toBe(false);
+                expect(this.doomedShugenja.isDishonored).toBe(true);
                 expect(this.kitsukiShomon.isDishonored).toBe(false);
                 expect(this.kitsukiShomon.isHonored).toBe(false);
                 expect(this.kitsukiShomon.bowed).toBe(false);

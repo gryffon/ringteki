@@ -13,7 +13,7 @@ const DynastyPhase = require('./gamesteps/dynastyphase.js');
 const DrawPhase = require('./gamesteps/drawphase.js');
 const ConflictPhase = require('./gamesteps/conflictphase.js');
 const FatePhase = require('./gamesteps/fatephase.js');
-const RegroupPhase = require('./gamesteps/regroupphase.js');
+const EndRoundPrompt = require('./gamesteps/regroup/endroundprompt.js');
 const SimpleStep = require('./gamesteps/simplestep.js');
 const MenuPrompt = require('./gamesteps/menuprompt.js');
 const HandlerMenuPrompt = require('./gamesteps/handlermenuprompt.js');
@@ -824,8 +824,13 @@ class Game extends EventEmitter {
         this.queueStep(new DrawPhase(this));
         this.queueStep(new ConflictPhase(this));
         this.queueStep(new FatePhase(this));
-        this.queueStep(new RegroupPhase(this));
+        this.queueStep(new EndRoundPrompt(this)),
+        this.queueStep(new SimpleStep(this, () => this.roundEnded()));
         this.queueStep(new SimpleStep(this, () => this.beginRound()));
+    }
+
+    roundEnded() {
+        this.raiseEvent(EventNames.OnRoundEnded);
     }
 
     /*
@@ -1116,6 +1121,11 @@ class Game extends EventEmitter {
                 _.each(player.getProvinces(), card => {
                     card && card.checkForIllegalAttachments();
                 });
+
+                if(!player.checkRestrictions('haveImperialFavor') && player.imperialFavor !== '') {
+                    this.addMessage('The imperial favor is discarded as {0} cannot have it', player.name);
+                    player.loseImperialFavor();
+                }
             }
             if(this.currentConflict) {
                 // conflicts with illegal participants

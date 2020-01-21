@@ -383,7 +383,7 @@ class DrawCard extends BaseCard {
 
     get militarySkillSummary() {
         if(!this.showStats) {
-            return;
+            return {};
         }
         let modifiers = this.getMilitaryModifiers().map(modifier => Object.assign({}, modifier));
         let skill = modifiers.reduce((total, modifier) => total + modifier.amount, 0);
@@ -395,7 +395,7 @@ class DrawCard extends BaseCard {
 
     get politicalSkillSummary() {
         if(!this.showStats) {
-            return;
+            return {};
         }
         let modifiers = this.getPoliticalModifiers().map(modifier => Object.assign({}, modifier));
         modifiers.forEach(modifier => modifier = Object.assign({}, modifier));
@@ -408,7 +408,7 @@ class DrawCard extends BaseCard {
 
     get glorySummary() {
         if(!this.showStats) {
-            return;
+            return {};
         }
         let modifiers = this.getGloryModifiers().map(modifier => Object.assign({}, modifier));
         modifiers.forEach(modifier => modifier = Object.assign({}, modifier));

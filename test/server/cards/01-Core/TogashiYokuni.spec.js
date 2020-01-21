@@ -330,7 +330,7 @@ describe('Togashi Yokuni', function() {
                 this.player1.clickCard(this.illustriousPlagiarist);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
-                this.player1.clickCard(this.legionOfOne);
+                this.player2.clickCard(this.legionOfOne);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickPrompt('Give a solitary character +3/+0');
@@ -343,7 +343,7 @@ describe('Togashi Yokuni', function() {
                 expect(this.togashiYokuni.getMilitarySkill()).toBe(12);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
-                this.player1.clickCard(this.legionOfOne);
+                this.player2.clickCard(this.legionOfOne);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickCard(this.togashiYokuni);
@@ -365,7 +365,7 @@ describe('Togashi Yokuni', function() {
                 this.player2.pass();
                 // Yokuni copies Banzai!
                 this.player1.clickCard(this.togashiYokuni);
-                this.player1.clickCard(this.banzai);
+                this.player2.clickCard(this.banzai);
                 // Legion of One on Plagiarist
                 this.legionOfOne = this.player2.clickCard('a-legion-of-one');
                 this.player2.clickCard(this.illustriousPlagiarist);
@@ -382,7 +382,7 @@ describe('Togashi Yokuni', function() {
                 expect(this.togashiYokuni.getMilitarySkill()).toBe(10);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
-                this.player1.clickCard(this.legionOfOne);
+                this.player2.clickCard(this.legionOfOne);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 this.player1.clickCard(this.togashiYokuni);
@@ -492,20 +492,18 @@ describe('Togashi Yokuni', function() {
             });
 
             it('should only allow Yokuni to use the ability when his controller has played 3 spells', function() {
-                this.player2.clickCard('against-the-waves');
-                this.player2.clickCard(this.togashiYokuni);
-                expect(this.togashiYokuni.bowed).toBe(true);
+                this.player2.pass();
                 this.player1.clickCard('against-the-waves');
                 this.player1.clickCard(this.togashiYokuni);
-                expect(this.togashiYokuni.bowed).toBe(false);
+                expect(this.togashiYokuni.bowed).toBe(true);
                 this.fieryMadness = this.player2.playAttachment('fiery-madness', this.togashiYokuni);
                 this.player1.playAttachment('cloud-the-mind', this.elementalGuard);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 expect(this.player1).toHavePrompt('Conflict Action Window');
                 this.player1.clickCard('against-the-waves', 'hand');
-                this.player1.clickCard(this.elementalGuard);
-                expect(this.elementalGuard.bowed).toBe(true);
+                this.player1.clickCard(this.togashiYokuni);
+                expect(this.togashiYokuni.bowed).toBe(false);
                 this.player2.pass();
                 this.player1.clickCard(this.togashiYokuni);
                 expect(this.player1).toHavePrompt('Togashi Yokuni');

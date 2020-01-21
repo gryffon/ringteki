@@ -47,7 +47,8 @@ describe('Mark of Shame', function() {
                 this.player1.clickCard(this.mos);
                 this.player1.clickCard(this.rumor);
                 this.player1.clickCard(this.zerk);
-                expect(this.toturi.isHonored).toBe(true);
+                expect(this.toturi.isHonored).toBe(false);
+                expect(this.toturi.isDishonored).toBe(false);
                 expect(this.zerk.isDishonored).toBe(true);
                 expect(this.player1).toHavePrompt('Waiting for opponent to take an action or pass');
             });

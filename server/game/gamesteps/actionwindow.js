@@ -136,7 +136,6 @@ class ActionWindow extends UiPrompt {
         }
 
         this.currentPlayerConsecutiveActions += 1;
-
         if(this.currentPlayerConsecutiveActions > this.currentPlayer.sumEffects(EffectNames.AdditionalAction)) {
             this.prevPlayerPassed = true;
             this.nextPlayer();
