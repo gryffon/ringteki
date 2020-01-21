@@ -39,7 +39,8 @@ export class SelectRingAction extends RingAction {
         if(properties.player === Players.Opponent && !context.player.opponent) {
             return false;
         }
-        return super.canAffect(ring, context) && properties.ringCondition(ring, context);
+        return super.canAffect(ring, context) && properties.ringCondition(ring, context) &&
+            properties.gameAction.hasLegalTarget(context, Object.assign({}, additionalProperties, properties.subActionProperties(ring)));
     }
 
     hasLegalTarget(context: AbilityContext, additionalProperties = {}): boolean {
@@ -69,7 +70,9 @@ export class SelectRingAction extends RingAction {
                 return true;
             }
         };
-        context.game.promptForRingSelect(player, Object.assign(defaultProperties, properties));
+        context.game.promptForRingSelect(player, Object.assign(defaultProperties, properties, {
+            ringCondition: (ring, context) => properties.ringCondition(ring, context) && properties.gameAction.hasLegalTarget(context, Object.assign({}, additionalProperties, properties.subActionProperties(ring)))
+        }));
     }
 
     hasTargetsChosenByInitiatingPlayer(context: AbilityContext, additionalProperties = {}): boolean {
