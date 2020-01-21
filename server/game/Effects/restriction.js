@@ -37,6 +37,14 @@ const checkRestrictions = {
     equalOrMoreExpensiveCharacterKeywords: (context, effect, card) => context.source.type === CardTypes.Character && context.ability.isKeywordAbility && context.source.printedCost >= card.printedCost
 };
 
+const leavePlayTypes = [
+    'discardFromPlay',
+    'sacrifice',
+    'returnToHand',
+    'returnToDeck',
+    'removeFromGame'
+];
+
 class Restriction extends EffectValue {
     constructor(properties) {
         super();
@@ -55,6 +63,9 @@ class Restriction extends EffectValue {
     }
 
     isMatch(type, context, card) {
+        if(this.type === 'leavePlay') {
+            return leavePlayTypes.includes(type) && this.checkCondition(context, card);
+        }
         return (!this.type || this.type === type) && this.checkCondition(context, card);
     }
 
