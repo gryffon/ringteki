@@ -1,4 +1,5 @@
 import AbilityContext = require('../AbilityContext');
+import TriggeredAbilityContext = require('../TriggeredAbilityContext');
 import AbilityResolver = require('../gamesteps/abilityresolver');
 import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
@@ -188,12 +189,20 @@ export class PlayCardAction extends CardGameAction {
     }
 
     getPlayCardEvent(card: DrawCard, context: AbilityContext, actionContext: AbilityContext, additionalProperties): Event {
+        //Specific for defend your honor & dragon tattoo
+        this.updateForDragonTattoo_DYH(context, actionContext);
         let properties = this.getProperties(context, additionalProperties);
         let event = this.createEvent(card, context, additionalProperties);
         this.updateEvent(event, card, context, additionalProperties);
         this.setPlayType(actionContext, properties.playType, card.location);
         event.replaceHandler(() => context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties)));
         return event;    
+    }
+
+    updateForDragonTattoo_DYH(context: AbilityContext, actionContext: AbilityContext) {
+        if ((context as TriggeredAbilityContext).event && (context as TriggeredAbilityContext).event.context && (context as TriggeredAbilityContext).event.context) {
+            (actionContext as TriggeredAbilityContext).event = (context as TriggeredAbilityContext).event.context.event;
+        }
     }
 
     checkEventCondition(): boolean {

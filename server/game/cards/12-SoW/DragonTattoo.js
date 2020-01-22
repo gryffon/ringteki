@@ -1,7 +1,7 @@
 const _ = require('underscore');
 const DrawCard = require('../../drawcard.js');
 const AbilityDsl = require('../../abilitydsl');
-const { Players, Locations, CardTypes, EventNames, AbilityTypes, PlayTypes } = require('../../Constants');
+const { Locations, CardTypes, EventNames, AbilityTypes, PlayTypes } = require('../../Constants');
 
 const EventRegistrar = require('../../eventregistrar.js');
 
@@ -15,17 +15,25 @@ class DragonTattoo extends DrawCard {
             [EventNames.OnInitiateAbilityEffects + ':' + AbilityTypes.WouldInterrupt]: 'onInitiateAbility'
         }]);
 
+        this.attachmentConditions({
+            myControl: true
+        });
+
+        this.whileAttached({
+            effect: AbilityDsl.effects.addTrait('tattooed')
+        });
+
         this.reaction({
             when: {
                 onCardPlayed: (event, context) => {
-                    if(event.card.type === CardTypes.Event && event.card.controller === context.player && 
+                    if(event.card.type === CardTypes.Event && event.card.controller === context.player &&
                         (event.card.location === Locations.ConflictDiscardPile || event.card.location === Locations.DynastyDiscardPile)) {
                         return this.checkTargets(event, context);
                     }
                 }},
             title: 'Play card again',
             gameAction: AbilityDsl.actions.ifAble(context => ({
-                ifAbleAction: AbilityDsl.actions.playCard(() => { 
+                ifAbleAction: AbilityDsl.actions.playCard(() => {
                     this.cardPlayed = true;
                     return ({
                         target: context.event.card,
@@ -34,14 +42,14 @@ class DragonTattoo extends DrawCard {
                         destination: Locations.RemovedFromGame,
                         payCosts: true,
                         allowReactions: true
-                    })
+                    });
                 }),
-                otherwiseAction: AbilityDsl.actions.moveCard(() => { 
+                otherwiseAction: AbilityDsl.actions.moveCard(() => {
                     this.cardPlayed = false;
                     return ({
                         target: context.event.card,
-                        destination: Locations.RemovedFromGame 
-                    })
+                        destination: Locations.RemovedFromGame
+                    });
                 })
             })),
             effect: '{1}{2}{3}',
