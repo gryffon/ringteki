@@ -123,15 +123,15 @@ export class PlayCardAction extends CardGameAction {
 
         let legalAbilities = legalActions.concat(legalReactions);
 
-        return legalAbilities.filter(reaction => {
+        return legalAbilities.filter(ability => {
             const ignoredRequirements = ['location', 'player'];
             if(!properties.payCosts) {
                 ignoredRequirements.push('cost');
             }
-            let newContext = reaction.createContext(context.player);
+            let newContext = ability.createContext(context.player);
             newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
             this.setPlayType(newContext, properties.playType, card.location);
-            return !reaction.meetsRequirements(newContext, ignoredRequirements);
+            return !ability.meetsRequirements(newContext, ignoredRequirements);
         });
     }
 
