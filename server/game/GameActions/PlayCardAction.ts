@@ -121,31 +121,9 @@ export class PlayCardAction extends CardGameAction {
         let legalActions = this.getLegalActions(card, context, properties);
         let legalReactions = this.getLegalReactions(card, context, properties);
 
-        return legalActions.concat(legalReactions);
-    }
+        let legalAbilities = legalActions.concat(legalReactions);
 
-    getLegalActions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
-        const actions = card.getPlayActions();
-        // filter actions to exclude actions which involve this game action, or which are not legal
-        return actions.filter(action => {
-            const ignoredRequirements = ['location', 'player'];
-            if(!properties.payCosts) {
-                ignoredRequirements.push('cost');
-            }
-            let newContext = action.createContext(context.player);
-            newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
-            this.setPlayType(newContext, properties.playType, card.location);
-            return !action.meetsRequirements(newContext, ignoredRequirements);
-        });
-    }
-
-    getLegalReactions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
-        if (!properties.allowReactions) {
-            return [];
-        }
-        const reactions = card.getReactions();
-        // filter actions to exclude actions which involve this game action, or which are not legal
-        return reactions.filter(reaction => {
+        return legalAbilities.filter(reaction => {
             const ignoredRequirements = ['location', 'player'];
             if(!properties.payCosts) {
                 ignoredRequirements.push('cost');
@@ -157,6 +135,16 @@ export class PlayCardAction extends CardGameAction {
         });
     }
 
+    getLegalActions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        return card.getPlayActions();
+    }
+
+    getLegalReactions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        if (!properties.allowReactions) {
+            return [];
+        }
+        return card.getReactions();
+    }
 
     setPlayType(context: AbilityContext, playType: PlayTypes, location: Locations): void {
         context.playType = playType || context.playType || location.includes('province') && PlayTypes.PlayFromProvince ||

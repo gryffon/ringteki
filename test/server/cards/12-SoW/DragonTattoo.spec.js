@@ -434,6 +434,33 @@ describe('Dragon Tattoo', function() {
             expect(this.player1.fate).toBe(fate - 8); //4 fate, twice
         });
 
+        it('should only remove from game if you can\'t pay the fate cost twice', function() {
+            this.player1.fate = 5;
+            this.noMoreActions();
+            let fate = this.player1.fate;
+            this.initiateConflict({
+                attackers: [this.kazue, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.pass();
+            this.player1.clickCard(this.afwtd);
+            expect(this.player1).toBeAbleToSelect(this.kazue);
+            expect(this.player1).toBeAbleToSelect(this.challenger);
+            expect(this.player1).toBeAbleToSelect(this.kuwanan);
+
+            this.player1.clickCard(this.kazue);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dragonTattoo1);
+            this.player1.clickCard(this.dragonTattoo1);
+            expect(this.player2).toHavePrompt('Conflict Action Window');
+
+            expect(this.afwtd.location).toBe('removed from game');
+            expect(this.getChatLogs(3)).toContain('player1 uses Dragon Tattoo to remove A Fate Worse Than Death from the game');
+            expect(this.player1.fate).toBe(fate - 4);
+        });
+
         it('should make you pay triggering costs twice', function() {
             this.noMoreActions();
             this.initiateConflict({
@@ -468,6 +495,36 @@ describe('Dragon Tattoo', function() {
             expect(this.scholar.bowed).toBe(true);
 
             expect(this.bentens.location).toBe('removed from game');
+        });
+
+        it('should remove from game if you cannot pay the triggering costs twice', function() {
+            this.noMoreActions();
+            this.scholar.bowed = true;
+            this.initiateConflict({
+                attackers: [this.kazue, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.pass();
+            this.player1.clickCard(this.bentens);
+            expect(this.player1).toBeAbleToSelect(this.kazue);
+            expect(this.player1).toBeAbleToSelect(this.challenger);
+
+            this.player1.clickCard(this.kazue);
+            expect(this.player1).not.toBeAbleToSelect(this.scholar);
+            expect(this.player1).toBeAbleToSelect(this.atsuko);
+            this.player1.clickCard(this.atsuko);
+            expect(this.kazue.isHonored).toBe(true);
+            expect(this.atsuko.bowed).toBe(true);
+
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dragonTattoo1);
+            this.player1.clickCard(this.dragonTattoo1);
+            expect(this.player2).toHavePrompt('Conflict Action Window');
+
+            expect(this.bentens.location).toBe('removed from game');
+            expect(this.getChatLogs(3)).toContain('player1 uses Dragon Tattoo to remove Benten\'s Touch from the game');
         });
 
         it('should not react if you choose a target without a tattoo', function() {
