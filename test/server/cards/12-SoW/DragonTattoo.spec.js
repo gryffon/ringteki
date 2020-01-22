@@ -22,6 +22,7 @@ describe('Dragon Tattoo', function() {
             this.dragonTattoo2 = this.player1.filterCardsByName('dragon-tattoo')[1];
             this.mantraOfFire = this.player1.findCardByName('mantra-of-fire');
             this.kata = this.player1.findCardByName('rising-stars-kata');
+            this.dyh = this.player1.findCardByName('defend-your-honor');
 
             this.kuwanan = this.player2.findCardByName('doji-kuwanan');
             this.scorpion2 = this.player2.findCardByName('way-of-the-scorpion');
@@ -208,6 +209,90 @@ describe('Dragon Tattoo', function() {
 
             expect(this.getChatLogs(4)).toContain('player1 plays Rising Stars Kata to give Togashi Kazue +3 military skill until the end of the conflict');
             expect(this.getChatLogs(3)).toContain('player1 uses Dragon Tattoo to remove Rising Stars Kata from the game');
+        });
+
+        it('should work with defend your honor - case 1: fail, fail', function() {
+            this.player1.moveCard(this.dyh, 'hand');
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.kazue, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.clickCard(this.scorpion2);
+            this.player2.clickCard(this.kazue);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dyh);
+            this.player1.clickCard(this.dyh);
+            this.player1.clickCard(this.kazue);
+            this.player2.clickCard(this.kuwanan);
+
+            this.player1.clickPrompt('1');
+            this.player2.clickPrompt('2');
+
+            expect(this.kazue.isDishonored).toBe(false);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dragonTattoo1);
+            this.player1.clickCard(this.dragonTattoo1);
+
+            this.player1.clickCard(this.kazue);
+            this.player2.clickCard(this.kuwanan);
+
+            this.player1.clickPrompt('1');
+            this.player2.clickPrompt('2');
+
+            expect(this.kazue.isDishonored).toBe(true);
+            expect(this.dyh.location).toBe('removed from game');
+
+            expect(this.getChatLogs(20)).toContain('player1 plays Defend Your Honor to initiate a military duel : Togashi Kazue vs. Doji Kuwanan');
+            expect(this.getChatLogs(13)).toContain('The duel has no effect');
+            expect(this.getChatLogs(12)).toContain('player1 uses Dragon Tattoo to play Defend Your Honor');
+            expect(this.getChatLogs(11)).toContain('player1 plays Defend Your Honor to initiate a military duel : Togashi Kazue vs. Doji Kuwanan');
+            expect(this.getChatLogs(4)).toContain('The duel has no effect');
+            expect(this.getChatLogs(3)).toContain('Defend Your Honor is removed from the game by Dragon Tattoo\'s effect');
+        });
+
+        it('should work with defend your honor - case 1: fail, success', function() {
+            this.player1.moveCard(this.dyh, 'hand');
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.kazue, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.clickCard(this.scorpion2);
+            this.player2.clickCard(this.kazue);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dyh);
+            this.player1.clickCard(this.dyh);
+            this.player1.clickCard(this.kazue);
+            this.player2.clickCard(this.kuwanan);
+
+            this.player1.clickPrompt('1');
+            this.player2.clickPrompt('2');
+
+            expect(this.kazue.isDishonored).toBe(false);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dragonTattoo1);
+            this.player1.clickCard(this.dragonTattoo1);
+
+            this.player1.clickCard(this.kazue);
+            this.player2.clickCard(this.kuwanan);
+
+            this.player1.clickPrompt('5');
+            this.player2.clickPrompt('2');
+
+            expect(this.kazue.isDishonored).toBe(false);
+            expect(this.dyh.location).toBe('removed from game');
+
+            expect(this.getChatLogs(20)).toContain('player1 plays Defend Your Honor to initiate a military duel : Togashi Kazue vs. Doji Kuwanan');
+            expect(this.getChatLogs(13)).toContain('The duel has no effect');
+            expect(this.getChatLogs(12)).toContain('player1 uses Dragon Tattoo to play Defend Your Honor');
+            expect(this.getChatLogs(11)).toContain('player1 plays Defend Your Honor to initiate a military duel : Togashi Kazue vs. Doji Kuwanan');
+            expect(this.getChatLogs(4)).toContain('Duel Effect: cancel the effects of Way of the Scorpion');
+            expect(this.getChatLogs(3)).toContain('Defend Your Honor is removed from the game by Dragon Tattoo\'s effect');
         });
     });
 });

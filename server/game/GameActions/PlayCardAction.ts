@@ -143,12 +143,9 @@ export class PlayCardAction extends CardGameAction {
             return [];
         }
         const reactions = card.getReactions();
-        if (properties.allowReactions) {
-            reactions.concat(card.getReactions());
-        }
         // filter actions to exclude actions which involve this game action, or which are not legal
         return reactions.filter(reaction => {
-            const ignoredRequirements = ['location', 'player', 'condition'];
+            const ignoredRequirements = ['location', 'player'];
             if(!properties.payCosts) {
                 ignoredRequirements.push('cost');
             }
