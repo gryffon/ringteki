@@ -153,5 +153,34 @@ describe('Dragon Tattoo', function() {
             expect(this.getChatLogs(3)).toContain('player1 plays Mantra of Fire to add a fate to Togashi Kazue and draw a card');
             expect(this.getChatLogs(2)).toContain('Mantra of Fire is removed from the game by Dragon Tattoo\'s effect');
         });
+
+        it('should react after you target your own character with an event to remove from game even if the copy has no legal targets', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.kazue, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.pass();
+            this.player1.clickCard(this.crane);
+            expect(this.player1).not.toBeAbleToSelect(this.kazue);
+            expect(this.player1).toBeAbleToSelect(this.challenger);
+            expect(this.player1).not.toBeAbleToSelect(this.kuwanan);
+
+            this.player1.clickCard(this.challenger);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dragonTattoo2);
+            expect(this.player1).not.toBeAbleToSelect(this.dragonTattoo1);
+
+            this.player1.clickCard(this.dragonTattoo2);
+            expect(this.player2).toHavePrompt('Conflict Action Window');
+
+            expect(this.challenger.isHonored).toBe(true);
+            expect(this.crane.location).toBe('removed from game');
+
+            expect(this.getChatLogs(4)).toContain('player1 plays Way of the Crane to honor Doji Challenger');
+            expect(this.getChatLogs(3)).toContain('player1 uses Dragon Tattoo to remove Way of the Crane from the game');
+        });
     });
 });

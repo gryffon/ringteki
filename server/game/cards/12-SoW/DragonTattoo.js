@@ -7,6 +7,7 @@ const EventRegistrar = require('../../eventregistrar.js');
 
 class DragonTattoo extends DrawCard {
     extraBanzaiTarget = null;
+    cardPlayed = true
 
     setupCardAbilities() {
         this.abilityRegistrar = new EventRegistrar(this.game, this);
@@ -24,18 +25,27 @@ class DragonTattoo extends DrawCard {
                 }},
             title: 'Play card again',
             gameAction: AbilityDsl.actions.ifAble(context => ({
-                ifAbleAction: AbilityDsl.actions.playCard({
-                    target: context.event.card,
-                    resetOnCancel: true,
-                    playType: PlayTypes.Other,
-                    destination: Locations.RemovedFromGame,
-                    payCosts: true,
-                    allowReactions: true
+                ifAbleAction: AbilityDsl.actions.playCard(() => { 
+                    this.cardPlayed = true;
+                    return ({
+                        target: context.event.card,
+                        resetOnCancel: true,
+                        playType: PlayTypes.Other,
+                        destination: Locations.RemovedFromGame,
+                        payCosts: true,
+                        allowReactions: true
+                    })
                 }),
-                otherwiseAction: AbilityDsl.actions.moveCard({ target: context.event.card, destination: Locations.RemovedFromGame })
+                otherwiseAction: AbilityDsl.actions.moveCard(() => { 
+                    this.cardPlayed = false;
+                    return ({
+                        target: context.event.card,
+                        destination: Locations.RemovedFromGame 
+                    })
+                })
             })),
-            effect: 'play {1}',
-            effectArgs: context => context.event.card.name
+            effect: '{1}{2}{3}',
+            effectArgs: context => [this.cardPlayed ? 'play ' : 'remove ', context.event.card.name, this.cardPlayed ? '' : ' from the game']
         });
     }
 
