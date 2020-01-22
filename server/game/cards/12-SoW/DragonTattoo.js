@@ -23,26 +23,19 @@ class DragonTattoo extends DrawCard {
                     }
                 }},
             title: 'Play card again',
-            gameAction: AbilityDsl.actions.playCard(context => ({
-                target: context.event.card,
-                resetOnCancel: true,
-                playType: PlayTypes.Other,
-                destination: Locations.RemovedFromGame
-                // postHandler: spellContext => {
-                //     let card = spellContext.source;
-                //     context.game.addMessage('{0} is removed from the game by {1}\'s ability', card, context.source);
-                //     context.player.moveCard(card, Locations.RemovedFromGame);
-                // }
+            gameAction: AbilityDsl.actions.ifAble(context => ({
+                ifAbleAction: AbilityDsl.actions.playCard({
+                    target: context.event.card,
+                    resetOnCancel: true,
+                    playType: PlayTypes.Other,
+                    destination: Locations.RemovedFromGame,
+                    payCosts: true,
+                    allowReactions: true
+                }),
+                otherwiseAction: AbilityDsl.actions.moveCard({ target: context.event.card, destination: Locations.RemovedFromGame })
             })),
             effect: 'play {1}',
             effectArgs: context => context.event.card.name
-            // gameAction: AbilityDsl.actions.multiple
-            // AbilityDsl.actions.resolveAbility(context => ({
-            //     target: context.event.card,
-            //     ability: context.event.context.ability,
-            //     ignoredRequirements: ['cost', 'condition', 'limit'],
-            //     event: context.event.context.event
-            // }))
         });
     }
 

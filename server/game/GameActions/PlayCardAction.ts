@@ -87,6 +87,7 @@ export interface PlayCardProperties extends CardActionProperties {
     destination?: Locations;
     destinationOptions?: object;
     payCosts?: boolean;
+    allowReactions?: boolean;
 }
 
 export class PlayCardAction extends CardGameAction {
@@ -96,7 +97,8 @@ export class PlayCardAction extends CardGameAction {
         resetOnCancel: false,
         postHandler: () => true,
         destinationOptions: {},
-        payCosts: true
+        payCosts: true,
+        allowReactions: false
     };
     constructor(properties: ((context: AbilityContext) => PlayCardProperties) | PlayCardProperties) {
         super(properties);
@@ -111,7 +113,14 @@ export class PlayCardAction extends CardGameAction {
             return false;
         }
         const properties = this.getProperties(context, additionalProperties);
-        return this.getLegalActions(card, context, properties).length > 0;
+        return this.getLegalAbilities(card, context, properties).length > 0;
+    }
+
+    getLegalAbilities(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        let legalActions = this.getLegalActions(card, context, properties);
+        let legalReactions = this.getLegalReactions(card, context, properties);
+
+        return legalActions.concat(legalReactions);
     }
 
     getLegalActions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
@@ -128,6 +137,28 @@ export class PlayCardAction extends CardGameAction {
             return !action.meetsRequirements(newContext, ignoredRequirements);
         });
     }
+
+    getLegalReactions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        if (!properties.allowReactions) {
+            return [];
+        }
+        const reactions = card.getReactions();
+        if (properties.allowReactions) {
+            reactions.concat(card.getReactions());
+        }
+        // filter actions to exclude actions which involve this game action, or which are not legal
+        return reactions.filter(reaction => {
+            const ignoredRequirements = ['location', 'player', 'condition'];
+            if(!properties.payCosts) {
+                ignoredRequirements.push('cost');
+            }
+            let newContext = reaction.createContext(context.player);
+            newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
+            this.setPlayType(newContext, properties.playType, card.location);
+            return !reaction.meetsRequirements(newContext, ignoredRequirements);
+        });
+    }
+
 
     setPlayType(context: AbilityContext, playType: PlayTypes, location: Locations): void {
         context.playType = playType || context.playType || location.includes('province') && PlayTypes.PlayFromProvince ||
@@ -147,15 +178,15 @@ export class PlayCardAction extends CardGameAction {
             return;
         }
         let card = properties.target[0];
-        let actions = this.getLegalActions(card, context, properties);
-        if(actions.length === 1) {
-            events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), additionalProperties));
+        let abilities = this.getLegalAbilities(card, context, properties);
+        if(abilities.length === 1) {
+            events.push(this.getPlayCardEvent(card, context, abilities[0].createContext(context.player), additionalProperties));
             return;
         }
         context.game.promptWithHandlerMenu(context.player, {
             source: card,
-            choices: actions.map(action => action.title).concat(properties.resetOnCancel ? 'Cancel' : []),
-            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), additionalProperties))).concat(() => this.cancelAction(context, properties))
+            choices: abilities.map(action => action.title).concat(properties.resetOnCancel ? 'Cancel' : []),
+            handlers: abilities.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), additionalProperties))).concat(() => this.cancelAction(context, properties))
         });
     }
 

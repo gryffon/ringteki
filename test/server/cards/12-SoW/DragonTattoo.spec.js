@@ -5,7 +5,8 @@ describe('Dragon Tattoo', function() {
                 phase: 'conflict',
                 player1: {
                     inPlay: ['togashi-kazue', 'doji-challenger'],
-                    hand: ['way-of-the-scorpion', 'way-of-the-crane', 'dragon-tattoo', 'dragon-tattoo', 'mantra-of-fire']
+                    hand: ['way-of-the-scorpion', 'way-of-the-crane', 'dragon-tattoo', 'dragon-tattoo', 'mantra-of-fire'],
+                    conflictDiscard: ['defend-your-honor']
                 },
                 player2: {
                     inPlay: ['doji-kuwanan'],
@@ -147,11 +148,10 @@ describe('Dragon Tattoo', function() {
             expect(this.player1.hand.length).toBe(hand + 1); //+2 from drawing, -1 from playing mantra
 
             expect(this.mantraOfFire.location).toBe('removed from game');
-            expect(this.getChatLogs(10)).toContain('hi');
-            // expect(this.getChatLogs(6)).toContain('player1 plays Way of the Scorpion to dishonor Togashi Kazue');
-            // expect(this.getChatLogs(5)).toContain('player1 uses Dragon Tattoo to play Way of the Scorpion');
-            // expect(this.getChatLogs(4)).toContain('player1 plays Way of the Scorpion to dishonor Doji Kuwanan');
-            // expect(this.getChatLogs(3)).toContain('Way of the Scorpion is removed from the game by Dragon Tattoo\'s effect');
+            expect(this.getChatLogs(5)).toContain('player1 plays Mantra of Fire to add a fate to Togashi Kazue and draw a card');
+            expect(this.getChatLogs(4)).toContain('player1 uses Dragon Tattoo to play Mantra of Fire');
+            expect(this.getChatLogs(3)).toContain('player1 plays Mantra of Fire to add a fate to Togashi Kazue and draw a card');
+            expect(this.getChatLogs(2)).toContain('Mantra of Fire is removed from the game by Dragon Tattoo\'s effect');
         });
     });
 });
