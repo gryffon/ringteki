@@ -251,8 +251,7 @@ describe('Monastery Protector', function() {
             expect(this.player2).toBeAbleToSelect(this.protector);
             expect(this.player2).toBeAbleToSelect(this.ancientMaster);
             this.player2.clickCard(this.protector);
-
-            expect(this.getChatLogs(3)).toContain('player2 uses Yogo Hiroue to move Monastery Protector into the conflict');
+            expect(this.game.currentConflict.attackers).toContain(this.protector);
         });
 
         it('should not cost a fate to target with an attachment ability', function() {
