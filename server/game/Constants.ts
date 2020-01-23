@@ -56,6 +56,7 @@ export enum EffectNames {
     DoesNotBow = 'doesNotBow',
     DoesNotReady = 'doesNotReady',
     FateCostToAttack = 'fateCostToAttack',
+    FateCostToTarget = 'fateCostToTarget',
     GainAbility = 'gainAbility',
     GainExtraFateWhenPlayed = 'gainExtraFateWhenPlayed',
     GainPlayAction = 'gainPlayAction',

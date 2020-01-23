@@ -1,4 +1,4 @@
-describe('Ichiro', function() {
+describe('Hida Kotoe', function() {
     integration(function() {
         beforeEach(function() {
             this.setupTest({

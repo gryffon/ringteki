@@ -9,8 +9,8 @@ class MaxStatCardSelector extends BaseCardSelector {
         this.numCards = properties.numCards;
     }
 
-    canTarget(card, context, choosingPlayer) {
-        return super.canTarget(card, context, choosingPlayer) && this.cardStat(card) <= this.maxStat();
+    canTarget(card, context, choosingPlayer, selectedCards = []) {
+        return super.canTarget(card, context, choosingPlayer, selectedCards) && this.cardStat(card) <= this.maxStat();
     }
 
     wouldExceedLimit(selectedCards, card) {

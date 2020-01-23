@@ -166,11 +166,13 @@ describe('BaseAbility', function () {
             this.properties.target = { cardCondition: this.cardCondition, location: 'any' };
             this.ability = new BaseAbility(this.properties);
 
-            this.card1 = jasmine.createSpyObj('card', ['checkRestrictions', 'getType']);
+            this.card1 = jasmine.createSpyObj('card', ['checkRestrictions', 'getType', 'canBeTargeted']);
             this.card1.checkRestrictions.and.returnValue(true);
+            this.card1.canBeTargeted.and.returnValue(true);
             this.card1.getType.and.returnValue('character');
-            this.card2 = jasmine.createSpyObj('card', ['checkRestrictions', 'getType']);
+            this.card2 = jasmine.createSpyObj('card', ['checkRestrictions', 'getType', 'canBeTargeted']);
             this.card2.checkRestrictions.and.returnValue(true);
+            this.card2.canBeTargeted.and.returnValue(true);
             this.card2.getType.and.returnValue('holding');
             let game = { allCards: _([this.card1, this.card2]) };
             this.context = { game: game, stage: Stages.Target, targets: {} };
@@ -219,12 +221,14 @@ describe('BaseAbility', function () {
             this.target1 = { target: 1, mode: 'single', location: 'any' };
             this.target2 = { target: 2, mode: 'single', location: 'any' };
 
-            this.card1 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType', 'getEffects']);
+            this.card1 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType', 'getEffects', 'canBeTargeted']);
             this.card1.checkRestrictions.and.returnValue(true);
+            this.card1.canBeTargeted.and.returnValue(true);
             this.card1.getType.and.returnValue('character');
             this.card1.getEffects.and.returnValue([]);
-            this.card2 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType', 'getEffects']);
+            this.card2 = jasmine.createSpyObj('card1', ['checkRestrictions', 'getType', 'getEffects', 'canBeTargeted']);
             this.card2.checkRestrictions.and.returnValue(true);
+            this.card2.canBeTargeted.and.returnValue(true);
             this.card2.getType.and.returnValue('character');
             this.card2.getEffects.and.returnValue([]);
 

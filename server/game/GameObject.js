@@ -1,7 +1,7 @@
 const uuid = require('uuid');
 const _ = require('underscore');
 const GameActions = require('./GameActions/GameActions');
-const { EffectNames } = require('./Constants');
+const { EffectNames, Stages } = require('./Constants');
 
 class GameObject {
     constructor(game, name) {
@@ -105,6 +105,36 @@ class GameObject {
             facedown: this.facedown,
             type: this.getType()
         };
+    }
+
+    canBeTargeted(context, selectedCards = []) {
+        if(!this.checkRestrictions('target', context)) {
+            return false;
+        }
+        let targets = selectedCards;
+        if(!Array.isArray(targets)) {
+            targets = [targets];
+        }
+
+        targets = targets.concat(this);
+        let targetingCost = context.player.getTargetingCost(context.source, targets);
+
+        if(context.stage === Stages.PreTarget) {
+            //We haven't paid the cost yet, so figure out what it will cost to play this so we can know how much fate we'll have available for targeting
+            let fateCost = 0;
+            if(context.ability.getReducedCost) { //we only want to consider the ability cost, not the card cost
+                fateCost = context.ability.getReducedCost(context);
+            }
+            let alternateFate = context.player.getAvailableAlternateFate(context.playType, context);
+            let availableFate = Math.max(context.player.fate - Math.max(fateCost - alternateFate, 0), 0);
+
+            return availableFate >= targetingCost && (targetingCost === 0 || context.player.checkRestrictions('spendFate', context));
+        } else if(context.stage === Stages.Target || context.stage === Stages.Effect) {
+            //We paid costs first, or targeting has to be done after costs have been paid
+            return context.player.fate >= targetingCost && (targetingCost === 0 || context.player.checkRestrictions('spendFate', context));
+        }
+
+        return true;
     }
 
     getShortSummaryForControls(activePlayer) {

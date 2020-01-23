@@ -75,11 +75,12 @@ class BaseCardSelector {
         return possibleCards;
     }
 
-    canTarget(card, context, choosingPlayer) {
+    canTarget(card, context, choosingPlayer, selectedCards = []) {
         if(!card) {
             return false;
         }
-        if(this.checkTarget && !card.checkRestrictions('target', context)) {
+
+        if(this.checkTarget && !card.canBeTargeted(context, selectedCards)) {
             return false;
         }
         if(this.controller === Players.Self && card.controller !== context.player) {
