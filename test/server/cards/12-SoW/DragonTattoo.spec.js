@@ -10,7 +10,7 @@ describe('Dragon Tattoo', function() {
                 },
                 player2: {
                     inPlay: ['doji-kuwanan'],
-                    hand: ['way-of-the-scorpion']
+                    hand: ['way-of-the-scorpion', 'watch-commander']
                 }
             });
 
@@ -33,6 +33,7 @@ describe('Dragon Tattoo', function() {
 
             this.kuwanan = this.player2.findCardByName('doji-kuwanan');
             this.scorpion2 = this.player2.findCardByName('way-of-the-scorpion');
+            this.watchCommander = this.player2.findCardByName('watch-commander');
 
             this.player1.playAttachment(this.dragonTattoo1, this.kazue);
             this.player2.pass();
@@ -566,6 +567,89 @@ describe('Dragon Tattoo', function() {
             expect(this.player2).toHavePrompt('Conflict Action Window');
 
             expect(this.hurricanePunch.location).toBe('conflict deck');
+        });
+
+        it('watch commander - actions - should get two watch commander triggers', function() {
+            let honor = this.player1.honor;
+            this.player2.playAttachment(this.watchCommander, this.kuwanan);
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.kazue, this.challenger],
+                defenders: [this.kuwanan],
+                type: 'military'
+            });
+
+            this.player2.pass();
+            this.player1.clickCard(this.scorpion);
+            expect(this.player1).toBeAbleToSelect(this.kazue);
+            expect(this.player1).toBeAbleToSelect(this.challenger);
+            expect(this.player1).toBeAbleToSelect(this.kuwanan);
+
+            this.player1.clickCard(this.kazue);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player2).not.toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dragonTattoo1);
+            expect(this.player1).not.toBeAbleToSelect(this.dragonTattoo2);
+
+            this.player1.clickCard(this.dragonTattoo1);
+            expect(this.player1).not.toBeAbleToSelect(this.kazue);
+            expect(this.player1).toBeAbleToSelect(this.challenger);
+            expect(this.player1).toBeAbleToSelect(this.kuwanan);
+
+            this.player1.clickCard(this.kuwanan);
+            expect(this.player2).toHavePrompt('Triggered Abilities');
+            expect(this.player2).toBeAbleToSelect(this.watchCommander);
+            this.player2.clickCard(this.watchCommander);
+            expect(this.player2).toHavePrompt('Triggered Abilities');
+            expect(this.player2).toBeAbleToSelect(this.watchCommander);
+            this.player2.clickCard(this.watchCommander);
+
+            expect(this.kazue.isDishonored).toBe(true);
+            expect(this.kuwanan.isDishonored).toBe(true);
+            expect(this.challenger.isDishonored).toBe(false);
+            expect(this.scorpion.location).toBe('removed from game');
+            expect(this.player1.honor).toBe(honor - 2);
+
+            expect(this.getChatLogs(4)).toContain('player2 uses Watch Commander to make player1 lose 1 honor');
+            expect(this.getChatLogs(3)).toContain('player2 uses Watch Commander to make player1 lose 1 honor');
+        });
+
+        it('watch commander - reactions - should get two watch commander triggers', function() {
+            let honor = this.player1.honor;
+            this.player2.playAttachment(this.watchCommander, this.kuwanan);
+            this.noMoreActions();
+            this.player1.passConflict();
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.kuwanan],
+                type: 'military',
+                ring: 'fire'
+            });
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.mantraOfFire);
+            this.player1.clickCard(this.mantraOfFire);
+            expect(this.player1).toBeAbleToSelect(this.kazue);
+            this.player1.clickCard(this.kazue);
+            expect(this.player1).toHavePrompt('Triggered Abilities');
+            expect(this.player2).not.toHavePrompt('Triggered Abilities');
+            expect(this.player1).toBeAbleToSelect(this.dragonTattoo1);
+            this.player1.clickCard(this.dragonTattoo1);
+            expect(this.player1).toBeAbleToSelect(this.kazue);
+            this.player1.clickCard(this.kazue);
+
+            expect(this.player2).toHavePrompt('Triggered Abilities');
+            expect(this.player2).toBeAbleToSelect(this.watchCommander);
+            this.player2.clickCard(this.watchCommander);
+            expect(this.player2).toHavePrompt('Triggered Abilities');
+            expect(this.player2).toBeAbleToSelect(this.watchCommander);
+            this.player2.clickCard(this.watchCommander);
+
+            expect(this.kazue.fate).toBe(2);
+            expect(this.player1.honor).toBe(honor - 2);
+
+            expect(this.mantraOfFire.location).toBe('removed from game');
+            expect(this.getChatLogs(3)).toContain('player2 uses Watch Commander to make player1 lose 1 honor');
+            expect(this.getChatLogs(2)).toContain('player2 uses Watch Commander to make player1 lose 1 honor');
         });
     });
 });
