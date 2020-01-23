@@ -41,7 +41,7 @@ class PlayCardResolver extends AbilityResolver {
             this.cancelPressed = true;
         }
     }
-    
+
     resolveCosts() {
         if(this.gameActionProperties.payCosts) {
             super.resolveCosts();
@@ -184,11 +184,11 @@ export class PlayCardAction extends CardGameAction {
         this.updateEvent(event, card, context, additionalProperties);
         this.setPlayType(actionContext, properties.playType, card.location);
         event.replaceHandler(() => context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties)));
-        return event;    
+        return event;
     }
 
     updateForDragonTattoo_DYH(context: AbilityContext, actionContext: AbilityContext) {
-        if ((context as TriggeredAbilityContext).event && (context as TriggeredAbilityContext).event.context && (context as TriggeredAbilityContext).event.context) {
+        if ((context as TriggeredAbilityContext).event && (context as TriggeredAbilityContext).event.context) {
             (actionContext as TriggeredAbilityContext).event = (context as TriggeredAbilityContext).event.context.event;
         }
     }
