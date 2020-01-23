@@ -443,6 +443,10 @@ class BaseCard extends EffectSource {
         return this.actions.slice();
     }
 
+    getReactions(): any[] {
+        return this.reactions.slice();
+    }
+
     getProvinceStrengthBonus(): number {
         return 0;
     }

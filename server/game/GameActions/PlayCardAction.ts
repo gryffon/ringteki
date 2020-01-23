@@ -1,4 +1,5 @@
 import AbilityContext = require('../AbilityContext');
+import TriggeredAbilityContext = require('../TriggeredAbilityContext');
 import AbilityResolver = require('../gamesteps/abilityresolver');
 import DrawCard = require('../drawcard');
 import Event = require('../Events/Event');
@@ -40,7 +41,7 @@ class PlayCardResolver extends AbilityResolver {
             this.cancelPressed = true;
         }
     }
-    
+
     resolveCosts() {
         if(this.gameActionProperties.payCosts) {
             super.resolveCosts();
@@ -87,6 +88,7 @@ export interface PlayCardProperties extends CardActionProperties {
     destination?: Locations;
     destinationOptions?: object;
     payCosts?: boolean;
+    allowReactions?: boolean;
 }
 
 export class PlayCardAction extends CardGameAction {
@@ -96,7 +98,8 @@ export class PlayCardAction extends CardGameAction {
         resetOnCancel: false,
         postHandler: () => true,
         destinationOptions: {},
-        payCosts: true
+        payCosts: true,
+        allowReactions: false
     };
     constructor(properties: ((context: AbilityContext) => PlayCardProperties) | PlayCardProperties) {
         super(properties);
@@ -111,22 +114,36 @@ export class PlayCardAction extends CardGameAction {
             return false;
         }
         const properties = this.getProperties(context, additionalProperties);
-        return this.getLegalActions(card, context, properties).length > 0;
+        return this.getLegalAbilities(card, context, properties).length > 0;
     }
 
-    getLegalActions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
-        const actions = card.getPlayActions();
-        // filter actions to exclude actions which involve this game action, or which are not legal
-        return actions.filter(action => {
+    getLegalAbilities(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        let legalActions = this.getLegalActions(card, context, properties);
+        let legalReactions = this.getLegalReactions(card, context, properties);
+
+        let legalAbilities = legalActions.concat(legalReactions);
+
+        return legalAbilities.filter(ability => {
             const ignoredRequirements = ['location', 'player'];
             if(!properties.payCosts) {
                 ignoredRequirements.push('cost');
             }
-            let newContext = action.createContext(context.player);
+            let newContext = ability.createContext(context.player);
             newContext.gameActionsResolutionChain = context.gameActionsResolutionChain.concat(this);
             this.setPlayType(newContext, properties.playType, card.location);
-            return !action.meetsRequirements(newContext, ignoredRequirements);
+            return !ability.meetsRequirements(newContext, ignoredRequirements);
         });
+    }
+
+    getLegalActions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        return card.getPlayActions();
+    }
+
+    getLegalReactions(card: DrawCard, context: AbilityContext, properties: PlayCardProperties) {
+        if (!properties.allowReactions) {
+            return [];
+        }
+        return card.getReactions();
     }
 
     setPlayType(context: AbilityContext, playType: PlayTypes, location: Locations): void {
@@ -147,25 +164,33 @@ export class PlayCardAction extends CardGameAction {
             return;
         }
         let card = properties.target[0];
-        let actions = this.getLegalActions(card, context, properties);
-        if(actions.length === 1) {
-            events.push(this.getPlayCardEvent(card, context, actions[0].createContext(context.player), additionalProperties));
+        let abilities = this.getLegalAbilities(card, context, properties);
+        if(abilities.length === 1) {
+            events.push(this.getPlayCardEvent(card, context, abilities[0].createContext(context.player), additionalProperties));
             return;
         }
         context.game.promptWithHandlerMenu(context.player, {
             source: card,
-            choices: actions.map(action => action.title).concat(properties.resetOnCancel ? 'Cancel' : []),
-            handlers: actions.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), additionalProperties))).concat(() => this.cancelAction(context, properties))
+            choices: abilities.map(action => action.title).concat(properties.resetOnCancel ? 'Cancel' : []),
+            handlers: abilities.map(action => () => events.push(this.getPlayCardEvent(card, context, action.createContext(context.player), additionalProperties))).concat(() => this.cancelAction(context, properties))
         });
     }
 
     getPlayCardEvent(card: DrawCard, context: AbilityContext, actionContext: AbilityContext, additionalProperties): Event {
+        //Specific for defend your honor & dragon tattoo
+        this.updateForDragonTattoo_DYH(context, actionContext);
         let properties = this.getProperties(context, additionalProperties);
         let event = this.createEvent(card, context, additionalProperties);
         this.updateEvent(event, card, context, additionalProperties);
         this.setPlayType(actionContext, properties.playType, card.location);
         event.replaceHandler(() => context.game.queueStep(new PlayCardResolver(context.game, actionContext, this, context, properties)));
-        return event;    
+        return event;
+    }
+
+    updateForDragonTattoo_DYH(context: AbilityContext, actionContext: AbilityContext) {
+        if ((context as TriggeredAbilityContext).event && (context as TriggeredAbilityContext).event.context) {
+            (actionContext as TriggeredAbilityContext).event = (context as TriggeredAbilityContext).event.context.event;
+        }
     }
 
     checkEventCondition(): boolean {
