@@ -15,7 +15,7 @@ class SpecializedDefenses extends DrawCard {
                     }
                     return this.game.rings[element].isConsideredClaimed(context.player) ||
                            this.game.currentConflict.ring.getElements().includes(element);
-                }); 
+                });
             },
             effect: 'double {1}\'s province strength',
             effectArgs: context => context.game.currentConflict.conflictProvince,
