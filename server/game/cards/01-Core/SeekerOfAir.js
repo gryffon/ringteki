@@ -8,7 +8,7 @@ class SeekerOfAir extends RoleCard {
             when: {
                 onCardRevealed: (event, context) =>
                     event.card.controller === context.player && event.card.isProvince &&
-                    context.source.hasTrait(event.card.getElement())
+                    event.card.getElement().some(element => context.source.hasTrait(element))
             },
             gameAction: ability.actions.gainFate()
         });
