@@ -56,6 +56,7 @@ export enum EffectNames {
     DoesNotBow = 'doesNotBow',
     DoesNotReady = 'doesNotReady',
     FateCostToAttack = 'fateCostToAttack',
+    FateCostToTarget = 'fateCostToTarget',
     GainAbility = 'gainAbility',
     GainExtraFateWhenPlayed = 'gainExtraFateWhenPlayed',
     GainPlayAction = 'gainPlayAction',
@@ -71,8 +72,10 @@ export enum EffectNames {
     ModifyBothSkills = 'modifyBothSkills',
     ModifyGlory = 'modifyGlory',
     ModifyMilitarySkill = 'modifyMilitarySkill',
+    AttachmentMilitarySkillModifier = 'attachmentMilitarySkillModifier',
     ModifyMilitarySkillMultiplier = 'modifyMilitarySkillMultiplier',
     ModifyPoliticalSkill = 'modifyPoliticalSkill',
+    AttachmentPoliticalSkillModifier = 'attachmentPoliticalSkillModifier',
     ModifyPoliticalSkillMultiplier = 'modifyPoliticalSkillMultiplier',
     ModifyProvinceStrengthBonus = 'modifyProvinceStrengthBonus',
     ModifyProvinceStrength = 'modifyProvinceStrength',
@@ -160,10 +163,12 @@ export enum TargetModes {
     Token = 'token',
     AutoSingle = 'autoSingle',
     Exactly = 'exactly',
+    ExactlyVariable = 'exactlyVariable',
     MaxStat = 'maxStat',
     Single = 'single',
     Unlimited = 'unlimited',
-    UpTo = 'upTo'
+    UpTo = 'upTo',
+    UpToVariable = 'upToVariable'
 };
 
 export enum Phases {
@@ -224,6 +229,7 @@ export enum EventNames {
     OnRoundEnded = 'onRoundEnded',
     OnFateCollected = 'onFateCollected',
     OnCardAttached = 'onCardAttached',
+    OnCardDetached = 'onCardDetached',
     OnCardHonored = 'onCardHonored',
     OnCardDishonored = 'onCardDishonored',
     OnCardBowed = 'onCardBowed',

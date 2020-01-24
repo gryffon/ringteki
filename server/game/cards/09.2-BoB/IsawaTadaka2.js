@@ -12,13 +12,18 @@ class IsawaTadaka2 extends DrawCard {
                 location: Locations.DynastyDiscardPile,
                 mode: TargetModes.Unlimited
             }),
-            gameAction: AbilityDsl.actions.cardMenu(context => ({
-                cards: context.player.opponent && context.costs.removeFromGame ?
-                    context.player.opponent.hand.shuffle().slice(0, context.costs.removeFromGame.length) :
-                    [context.source],
-                gameAction: AbilityDsl.actions.discardCard(),
-                message: '{0} chooses {1} to be discarded from {2}',
-                messageArgs: (card, player, cards) => [player, card, cards]
+            gameAction: AbilityDsl.actions.ifAble(() => ({
+                ifAbleAction: AbilityDsl.actions.cardMenu(context => ({
+                    cards: context.player.opponent && context.costs.removeFromGame ?
+                        context.player.opponent.hand.shuffle().slice(0, context.costs.removeFromGame.length) :
+                        [context.source],
+                    gameAction: AbilityDsl.actions.discardCard(),
+                    message: '{0} chooses {1} to be discarded from {2}',
+                    messageArgs: (card, player, cards) => [player, card, cards]
+                })),
+                otherwiseAction: AbilityDsl.actions.lookAt(context => ({
+                    target: context.player.opponent.hand.shuffle().slice(0, context.costs.removeFromGame.length)
+                }))
             })),
             effect: 'look at {1} random card{3} in {2}\'s hand',
             effectArgs: context => [context.costs.removeFromGame.length, context.player.opponent, context.costs.removeFromGame.length === 1 ? '' : 's']

@@ -66,7 +66,7 @@ export class CardMenuAction extends CardGameAction {
         let cardCondition = (card, context) =>
             properties.gameAction.hasLegalTarget(context, Object.assign({}, additionalProperties, properties.subActionProperties(card)))
             && properties.cardCondition(card, context);
-        if((properties.cards.length === 0 && properties.choices.length === 0) || properties.player === Players.Opponent && !context.player.opponent) {
+        if(!this.hasLegalTarget(context, additionalProperties) || ((properties.cards.length === 0 && properties.choices.length === 0) || properties.player === Players.Opponent && !context.player.opponent)) {
             return;
         }
         let player = properties.player === Players.Opponent ? context.player.opponent : context.player;

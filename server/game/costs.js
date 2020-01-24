@@ -5,7 +5,7 @@ const GameActions = require('./GameActions/GameActions');
 const GameActionCost = require('./costs/GameActionCost');
 const MetaActionCost = require('./costs/MetaActionCost');
 const Event = require('./Events/Event');
-const { EventNames, Locations } = require('./Constants');
+const { EventNames, Locations, Players, TargetModes } = require('./Constants');
 
 function getSelectCost(action, properties, activePromptTitle) {
     return new MetaActionCost(GameActions.selectCard(Object.assign({ gameAction: action }, properties)), activePromptTitle);
@@ -68,7 +68,7 @@ const Costs = {
     /**
      * Cost that requires discarding a card to be selected by the player.
      */
-    discardCard: properties => getSelectCost(GameActions.discardCard(), properties, 'Select card to discard'),
+    discardCard: properties => getSelectCost(GameActions.discardCard(), Object.assign({ location: Locations.Hand }, properties), 'Select card to discard'),
     /**
      * Cost that will discard a fate from the card
      */
@@ -306,6 +306,83 @@ const Costs = {
             },
             pay: function (context) {
                 context.player.fate -= context.chooseFate;
+            },
+            promptsPlayer: true
+        };
+    },
+
+    discardCardsUpToVariableX: function (amountFunc) {
+        return {
+            canPay: function (context) {
+                return amountFunc(context) > 0 && context.game.actions.chosenDiscard().canAffect(context.player, context);
+            },
+            resolve: function (context, result) {
+                let amount = amountFunc(context);
+                let max = Math.min(amount, context.player.hand.size());
+                context.game.promptForSelect(context.player, {
+                    activePromptTitle: 'Choose up to ' + max + ' card' + (amount === 1 ? '' : ('s')) + ' to discard',
+                    context: context,
+                    mode: TargetModes.UpTo,
+                    numCards: amount,
+                    ordered: false,
+                    location: Locations.Hand,
+                    controller: Players.Self,
+                    onSelect: (player, cards) => {
+                        if(cards.length === 0) {
+                            context.costs.discardCardsUpToVariableX = [];
+                            result.cancelled = true;
+                        } else {
+                            context.costs.discardCardsUpToVariableX = cards;
+                        }
+                        return true;
+                    },
+                    onCancel: () => {
+                        result.cancelled = true;
+                        return true;
+                    }
+                });
+            },
+            payEvent: function (context) {
+                let action = context.game.actions.discardCard({ target: context.costs.discardCardsUpToVariableX });
+                return action.getEvent(context.costs.discardCardsUpToVariableX, context);
+            },
+            promptsPlayer: true
+        };
+    },
+
+    discardCardsExactlyVariableX: function (amountFunc) {
+        return {
+            canPay: function (context) {
+                return amountFunc(context) > 0 && context.game.actions.chosenDiscard().canAffect(context.player, context);
+            },
+            resolve: function (context, result) {
+                let amount = amountFunc(context);
+                context.game.promptForSelect(context.player, {
+                    activePromptTitle: 'Choose ' + amount + ' card' + (amount === 1 ? '' : ('s')) + ' to discard',
+                    context: context,
+                    mode: TargetModes.Exactly,
+                    numCards: amount,
+                    ordered: false,
+                    location: Locations.Hand,
+                    controller: Players.Self,
+                    onSelect: (player, cards) => {
+                        if(cards.length === 0) {
+                            context.costs.discardCardsExactlyVariableX = [];
+                            result.cancelled = true;
+                        } else {
+                            context.costs.discardCardsExactlyVariableX = cards;
+                        }
+                        return true;
+                    },
+                    onCancel: () => {
+                        result.cancelled = true;
+                        return true;
+                    }
+                });
+            },
+            payEvent: function (context) {
+                let action = context.game.actions.discardCard({ target: context.costs.discardCardsExactlyVariableX });
+                return action.getEvent(context.costs.discardCardsExactlyVariableX, context);
             },
             promptsPlayer: true
         };

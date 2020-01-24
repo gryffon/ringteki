@@ -137,7 +137,7 @@ class SelectCardPrompt extends UiPrompt {
 
     activePrompt() {
         let buttons = this.properties.buttons;
-        if(!this.selector.automaticFireOnSelect() && this.selector.hasEnoughSelected(this.selectedCards) || this.selector.optional) {
+        if(!this.selector.automaticFireOnSelect(this.context) && this.selector.hasEnoughSelected(this.selectedCards, this.context) || this.selector.optional) {
             if(buttons.every(button => button.arg !== 'done')) {
                 buttons = [{ text: 'Done', arg: 'done' }].concat(buttons);
             }
@@ -149,7 +149,7 @@ class SelectCardPrompt extends UiPrompt {
             selectCard: this.properties.selectCard,
             selectRing: true,
             selectOrder: this.properties.ordered,
-            menuTitle: this.properties.activePromptTitle || this.selector.defaultActivePromptTitle(),
+            menuTitle: this.properties.activePromptTitle || this.selector.defaultActivePromptTitle(this.context),
             buttons: buttons,
             promptTitle: this.properties.source ? this.properties.source.name : undefined,
             controls: this.properties.controls
@@ -173,7 +173,7 @@ class SelectCardPrompt extends UiPrompt {
             return false;
         }
 
-        if(this.selector.automaticFireOnSelect() && this.selector.hasReachedLimit(this.selectedCards)) {
+        if(this.selector.automaticFireOnSelect(this.context) && this.selector.hasReachedLimit(this.selectedCards, this.context)) {
             this.fireOnSelect();
         }
     }
@@ -186,13 +186,13 @@ class SelectCardPrompt extends UiPrompt {
         }
 
         return (
-            this.selector.canTarget(card, this.context, this.choosingPlayer) &&
+            this.selector.canTarget(card, this.context, this.choosingPlayer, this.selectedCards) &&
             !this.selector.wouldExceedLimit(this.selectedCards, card)
         );
     }
 
     selectCard(card) {
-        if(this.selector.hasReachedLimit(this.selectedCards) && !this.selectedCards.includes(card)) {
+        if(this.selector.hasReachedLimit(this.selectedCards, this.context) && !this.selectedCards.includes(card)) {
             return false;
         } else if(this.cannotUnselectMustSelect && this.properties.mustSelect.includes(card)) {
             return false;
@@ -227,7 +227,7 @@ class SelectCardPrompt extends UiPrompt {
             this.properties.onCancel(player);
             this.complete();
             return true;
-        } else if(arg === 'done' && this.selector.hasEnoughSelected(this.selectedCards)) {
+        } else if(arg === 'done' && this.selector.hasEnoughSelected(this.selectedCards, this.context)) {
             return this.fireOnSelect();
         } else if(this.properties.onMenuCommand(player, arg)) {
             this.complete();

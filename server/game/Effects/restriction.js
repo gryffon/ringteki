@@ -32,8 +32,18 @@ const checkRestrictions = {
     source: (context, effect) => context.source === effect.context.source,
     keywordAbilities: context => context.ability.isKeywordAbility(),
     nonKeywordAbilities: context => !context.ability.isKeywordAbility(),
-    nonForcedAbilities: context => context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt
+    nonForcedAbilities: context => context.ability.isTriggeredAbility() && context.ability.abilityType !== AbilityTypes.ForcedReaction && context.ability.abilityType !== AbilityTypes.ForcedInterrupt,
+    equalOrMoreExpensiveCharacterTriggeredAbilities: (context, effect, card) => context.source.type === CardTypes.Character && !context.ability.isKeywordAbility && context.source.printedCost >= card.printedCost,
+    equalOrMoreExpensiveCharacterKeywords: (context, effect, card) => context.source.type === CardTypes.Character && context.ability.isKeywordAbility && context.source.printedCost >= card.printedCost
 };
+
+const leavePlayTypes = [
+    'discardFromPlay',
+    'sacrifice',
+    'returnToHand',
+    'returnToDeck',
+    'removeFromGame'
+];
 
 class Restriction extends EffectValue {
     constructor(properties) {
@@ -53,6 +63,9 @@ class Restriction extends EffectValue {
     }
 
     isMatch(type, context, card) {
+        if(this.type === 'leavePlay') {
+            return leavePlayTypes.includes(type) && this.checkCondition(context, card);
+        }
         return (!this.type || this.type === type) && this.checkCondition(context, card);
     }
 

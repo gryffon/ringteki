@@ -324,6 +324,11 @@ describe('(4) Fate Phase', function() {
                 this.player1.player.promptedActionWindows.fate = true;
                 this.player2.player.promptedActionWindows.fate = true;
 
+                this.adept1 = this.player1.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept2 = this.player2.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+
                 //4.2
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
@@ -356,6 +361,12 @@ describe('(4) Fate Phase', function() {
             beforeEach(function() {
                 this.player1.player.promptedActionWindows.fate = true;
                 this.player2.player.promptedActionWindows.fate = true;
+
+                this.adept1 = this.player1.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept2 = this.player2.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+
                 //4.2
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');
@@ -378,6 +389,12 @@ describe('(4) Fate Phase', function() {
             beforeEach(function() {
                 this.player1.player.promptedActionWindows.fate = true;
                 this.player2.player.promptedActionWindows.fate = true;
+
+                this.adept1 = this.player1.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept2 = this.player2.findCardByName('adept-of-the-waves', 'province 1');
+                this.adept1.facedown = false;
+                this.adept2.facedown = false;
+
                 //4.2
                 this.player1.clickPrompt('Done');
                 this.player2.clickPrompt('Done');

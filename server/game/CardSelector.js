@@ -1,13 +1,16 @@
 const ExactlyXCardSelector = require('./CardSelectors/ExactlyXCardSelector');
+const ExactlyVariableXCardSelector = require('./CardSelectors/ExactlyVariableXCardSelector');
 const MaxStatCardSelector = require('./CardSelectors/MaxStatCardSelector');
 const SingleCardSelector = require('./CardSelectors/SingleCardSelector');
 const UnlimitedCardSelector = require('./CardSelectors/UnlimitedCardSelector');
 const UpToXCardSelector = require('./CardSelectors/UpToXCardSelector');
+const UpToVariableXCardSelector = require('./CardSelectors/UpToVariableXCardSelector');
 const { TargetModes, CardTypes } = require('./Constants');
 
 const defaultProperties = {
     numCards: 1,
     cardCondition: () => true,
+    numCardsFunc: () => 1,
     cardType: [CardTypes.Attachment, CardTypes.Character, CardTypes.Event, CardTypes.Holding, CardTypes.Stronghold, CardTypes.Role, CardTypes.Province],
     multiSelect: false
 };
@@ -16,11 +19,13 @@ const ModeToSelector = {
     ability: p => new SingleCardSelector(p),
     autoSingle: p => new SingleCardSelector(p),
     exactly: p => new ExactlyXCardSelector(p.numCards, p),
+    exactlyVariable: p => new ExactlyVariableXCardSelector(p.numCardsFunc, p),
     maxStat: p => new MaxStatCardSelector(p),
     single: p => new SingleCardSelector(p),
     token: p => new SingleCardSelector(p),
     unlimited: p => new UnlimitedCardSelector(p),
-    upTo: p => new UpToXCardSelector(p.numCards, p)
+    upTo: p => new UpToXCardSelector(p.numCards, p),
+    upToVariable: p => new UpToVariableXCardSelector(p.numCardsFunc, p)
 };
 
 class CardSelector {

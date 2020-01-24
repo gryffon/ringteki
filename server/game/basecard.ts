@@ -443,6 +443,10 @@ class BaseCard extends EffectSource {
         return this.actions.slice();
     }
 
+    getReactions(): any[] {
+        return this.reactions.slice();
+    }
+
     getProvinceStrengthBonus(): number {
         return 0;
     }
@@ -497,7 +501,7 @@ class BaseCard extends EffectSource {
             this.persistentEffect({
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyMilitarySkill(militaryBonus)
+                effect: AbilityDsl.effects.attachmentMilitarySkillModifier(militaryBonus)
             });
         }
         let politicalBonus = parseInt(this.cardData.political_bonus);
@@ -505,7 +509,7 @@ class BaseCard extends EffectSource {
             this.persistentEffect({
                 match: (card) => card === this.parent,
                 targetController: Players.Any,
-                effect: AbilityDsl.effects.modifyPoliticalSkill(politicalBonus)
+                effect: AbilityDsl.effects.attachmentPoliticalSkillModifier(politicalBonus)
             });
         }
     }
@@ -609,7 +613,7 @@ class BaseCard extends EffectSource {
         if(!parent || parent.getType() !== CardTypes.Character || !ignoreType && this.getType() !== CardTypes.Attachment) {
             return false;
         }
-        if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller) {
+        if(this.anyEffect(EffectNames.AttachmentMyControlOnly) && context.player !== parent.controller && this.controller !== parent.controller) {
             return false;
         } else if(this.anyEffect(EffectNames.AttachmentUniqueRestriction) && !parent.isUnique()) {
             return false;
