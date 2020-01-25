@@ -11,8 +11,8 @@ class TaoistAdept extends DrawCard {
                 message: 'choose whether to place a fate on a ring',
                 gameAction: duel => AbilityDsl.actions.menuPrompt(context => ({
                     activePromptTitle: 'Place a fate on a ring?',
-                    player: duel.winner.controller === context.player ? Players.Self : Players.Opponent,
-                    choices: ['Yes', 'No'],
+                    player: (duel.winner && duel.winner.controller === context.player) ? Players.Self : Players.Opponent,
+                    choices: duel.winner ? ['Yes', 'No'] : [],
                     choiceHandler: (choice, displayMessage) => {
                         if(displayMessage && choice === 'Yes') {
                             this.game.promptForRingSelect(duel.winner.controller, {

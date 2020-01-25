@@ -84,6 +84,25 @@ describe('Taoist Adept', function() {
             expect(this.getChatLogs(3)).toContain('player2 chooses to place a fate on the Void Ring');
         });
 
+        it('should do nothing in a draw', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.borderRider],
+                defenders: [this.adept],
+                type: 'military',
+                ring: 'air'
+            });
+
+            this.player2.clickCard(this.adept);
+            this.player2.clickCard(this.borderRider);
+            this.player2.clickPrompt('2');
+            this.player1.clickPrompt('1');
+
+            expect(this.getChatLogs(4)).toContain('The duel ends in a draw');
+            expect(this.getChatLogs(3)).toContain('The duel has no effect');
+            expect(this.player1).toHavePrompt('Conflict Action Window');
+        });
+
         it('should allow the winner to decide not to put a fate on a ring (self wins)', function() {
             this.noMoreActions();
             this.initiateConflict({
