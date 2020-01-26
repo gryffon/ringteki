@@ -45,6 +45,27 @@ describe('Bayushi Gensato', function() {
             expect(this.gensato.isDishonored).toBe(true);
         });
 
+        it('nothing should happen on a tie', function() {
+            this.noMoreActions();
+            this.initiateConflict({
+                attackers: [this.borderRider],
+                defenders: [this.gensato],
+                type: 'military'
+            });
+
+            this.player2.clickCard(this.gensato);
+            this.player2.clickCard(this.borderRider);
+            this.player2.clickPrompt('1');
+            this.player1.clickPrompt('2');
+
+            expect(this.getChatLogs(4)).toContain('The duel ends in a draw');
+            expect(this.getChatLogs(3)).toContain('The duel has no effect');
+            expect(this.borderRider.bowed).toBe(false);
+            expect(this.borderRider.isDishonored).toBe(false);
+            expect(this.gensato.bowed).toBe(false);
+            expect(this.gensato.isDishonored).toBe(false);
+        });
+
         it('should ignore attachments', function() {
             this.noMoreActions();
             this.initiateConflict({
