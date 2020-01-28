@@ -2,7 +2,7 @@ const ProvinceCard = require('../../provincecard.js');
 const AbilityDsl = require('../../abilitydsl.js');
 const { CardTypes, Locations, Players } = require('../../Constants');
 
-class KuniWastelands extends ProvinceCard {
+class KuniWasteland extends ProvinceCard {
     setupCardAbilities() {
         this.persistentEffect({
             condition: (context) => context.source.isConflictProvince(),
@@ -23,6 +23,6 @@ class KuniWastelands extends ProvinceCard {
     }
 }
 
-KuniWastelands.id = 'kuni-wastelands';
+KuniWasteland.id = 'kuni-wasteland';
 
-module.exports = KuniWastelands;
+module.exports = KuniWasteland;

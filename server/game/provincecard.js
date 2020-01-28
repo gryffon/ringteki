@@ -52,7 +52,7 @@ class ProvinceCard extends BaseCard {
     }
 
     isElement(element) {
-        return this.element === 'all' || this.element === element;
+        return this.element === 'all' || this.element.includes(element);
     }
 
     flipFaceup() {

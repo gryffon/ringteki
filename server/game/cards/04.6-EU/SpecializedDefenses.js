@@ -9,12 +9,13 @@ class SpecializedDefenses extends DrawCard {
                 if(!this.game.isDuringConflict()) {
                     return false;
                 }
-                let element = this.game.currentConflict.conflictProvince.element;
-                if(element === 'all') {
-                    return true;
-                }
-                return this.game.rings[element].isConsideredClaimed(context.player) ||
-                       this.game.currentConflict.ring.getElements().includes(element);
+                return this.game.currentConflict.conflictProvince.element.some(element => {
+                    if(element === 'all') {
+                        return true;
+                    }
+                    return this.game.rings[element].isConsideredClaimed(context.player) ||
+                           this.game.currentConflict.ring.getElements().includes(element);
+                });
             },
             effect: 'double {1}\'s province strength',
             effectArgs: context => context.game.currentConflict.conflictProvince,

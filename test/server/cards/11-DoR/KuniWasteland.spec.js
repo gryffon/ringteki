@@ -1,6 +1,6 @@
-describe('Kuni Wastelands', function() {
+describe('Kuni Wasteland', function() {
     integration(function() {
-        describe('Kuni Wastelands\'s constant ability', function() {
+        describe('Kuni Wasteland\'s constant ability', function() {
             beforeEach(function() {
                 this.setupTest({
                     phase: 'conflict',
@@ -11,7 +11,7 @@ describe('Kuni Wastelands', function() {
                     player2: {
                         inPlay: ['doji-whisperer'],
                         hand: ['assassination'],
-                        provinces: ['kuni-wastelands']
+                        provinces: ['kuni-wasteland']
                     }
                 });
                 this.challenger = this.player1.findCardByName('doji-challenger');
@@ -22,7 +22,7 @@ describe('Kuni Wastelands', function() {
 
                 this.whisperer = this.player2.findCardByName('doji-whisperer');
                 this.assassination = this.player2.findCardByName('assassination');
-                this.wastelands = this.player2.findCardByName('kuni-wastelands');
+                this.wasteland = this.player2.findCardByName('kuni-wasteland');
             });
 
             it('should stop triggered abilities', function() {
@@ -31,7 +31,7 @@ describe('Kuni Wastelands', function() {
                     type: 'military',
                     attackers: [this.challenger],
                     defenders: [],
-                    province: this.wastelands
+                    province: this.wasteland
                 });
                 this.player2.pass();
                 expect(this.player1).toHavePrompt('Conflict Action Window');
@@ -45,7 +45,7 @@ describe('Kuni Wastelands', function() {
                     type: 'military',
                     attackers: [this.envoy],
                     defenders: [],
-                    province: this.wastelands
+                    province: this.wasteland
                 });
                 let cards = this.player1.hand.length;
                 let fate = this.player1.fate;
@@ -63,7 +63,7 @@ describe('Kuni Wastelands', function() {
                     type: 'military',
                     attackers: [this.kabeGuard],
                     defenders: [],
-                    province: this.wastelands
+                    province: this.wasteland
                 });
                 this.noMoreActions();
                 this.player1.clickPrompt('Don\'t Resolve');
@@ -73,17 +73,17 @@ describe('Kuni Wastelands', function() {
             it('should allow covert (if facedown)', function() {
                 this.noMoreActions();
                 this.player1.clickRing('air');
-                this.player1.clickCard(this.wastelands);
+                this.player1.clickCard(this.wasteland);
                 this.player1.clickCard(this.shahai);
                 this.player1.clickPrompt('Initiate Conflict');
                 expect(this.player1).toHavePrompt('Choose covert target for Iuchi Shahai');
             });
 
             it('should not allow covert (if faceup)', function() {
-                this.wastelands.facedown = false;
+                this.wasteland.facedown = false;
                 this.noMoreActions();
                 this.player1.clickRing('air');
-                this.player1.clickCard(this.wastelands);
+                this.player1.clickCard(this.wasteland);
                 this.player1.clickCard(this.shahai);
                 this.player1.clickPrompt('Initiate Conflict');
                 expect(this.player1).not.toHavePrompt('Choose covert target for Iuchi Shahai');
@@ -97,7 +97,7 @@ describe('Kuni Wastelands', function() {
                     attackers: [this.ujina],
                     defenders: [],
                     ring: 'void',
-                    province: this.wastelands
+                    province: this.wasteland
                 });
                 this.player2.pass();
                 this.player1.pass();
